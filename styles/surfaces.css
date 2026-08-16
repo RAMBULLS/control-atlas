@@ -187,7 +187,7 @@ a {
 
 .brand-key-word {
   display: inline-block;
-  min-width: 9.5ch;
+  min-width: 78px;
   text-align: center;
 }
 
@@ -1368,11 +1368,13 @@ a {
   border-color: color-mix(in srgb, var(--ca-primary) 70%, var(--ca-ink));
   border-bottom-color: color-mix(in srgb, var(--ca-primary) 50%, var(--ca-ink));
   color: var(--ca-paper);
-  min-inline-size: 9ch;
+  min-inline-size: 78px;
   text-align: center;
 }
 .brand-key-word {
   display: inline-block;
+  min-width: 78px;
+  text-align: center;
 }
 .brand-key-word.word-enter {
   animation: word-in 0.3s ease forwards;

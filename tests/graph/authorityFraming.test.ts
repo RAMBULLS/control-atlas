@@ -15,7 +15,7 @@ test("the Atlas canvas uses the locked slim purpose line without a competing int
     "Federal cybersecurity material is spread across separate laws, agencies, and publications that were never organized together. Publishers wrote their own documents; Control Atlas drew the lines between them.";
 
   assert.equal(atlasTree.split(explanation).length - 1, 0);
-  assert.match(atlasPage, /<h1 id="atlas-page-title">Atlas<\/h1>/);
+  assert.match(atlasPage, /<h1 [^>]*id="page-title"[^>]*>\{?SITE_COPY\.routes\.atlas\.title\}?<\/h1>|<MissionPageHeader[^>]*title=\{SITE_COPY\.routes\.atlas\.title\}/);
   assert.match(atlasPage, /SITE_COPY\.routes\.atlas\.purpose/);
   assert.doesNotMatch(
     atlasTree,
@@ -32,7 +32,7 @@ test("orientation names all four mandate kinds", () => {
 
 test("curated organization is positively attributed to Control Atlas", () => {
   assert.match(aboutPage, /Control Atlas structure/);
-  assert.match(aboutPage, /Control Atlas's organizing spine connects federal authority/);
+  assert.match(aboutPage, /How Control Atlas organizes topics connects federal authority/);
   assert.doesNotMatch(aboutPage, /Not a publisher source|never a publisher/i);
   assert.doesNotMatch(sourcesPage, /Not a publisher source|never a publisher/i);
 });
@@ -40,7 +40,7 @@ test("curated organization is positively attributed to Control Atlas", () => {
 test("Atlas names the product surface consistently", () => {
   assert.match(explorePage, /label: "Map", value: "map"/);
   assert.match(objectDetailPage, /See connections/);
-  assert.match(atlasPage, /<h1 id="atlas-page-title">Atlas<\/h1>/);
+  assert.match(atlasPage, /<h1 [^>]*id="page-title"[^>]*>\{?SITE_COPY\.routes\.atlas\.title\}?<\/h1>|<MissionPageHeader[^>]*title=\{SITE_COPY\.routes\.atlas\.title\}/);
   assert.match(routeIdentity, /label: "Atlas"/);
   assert.doesNotMatch(atlasTree, /Federal cybersecurity, from authority to action/);
 });

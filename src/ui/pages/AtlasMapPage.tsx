@@ -342,8 +342,8 @@ export function AtlasMapPage(props: AtlasMapPageProps) {
     >
       <MissionPageHeader
         eyebrow="CYBERSECURITY LANDSCAPE"
-        title="Atlas"
-        summary="Explore areas, publications, and the published connections between them."
+        title={SITE_COPY.routes.atlas.title}
+        summary={SITE_COPY.routes.atlas.purpose}
         action={
           <form className="atlas-map-command" onSubmit={submitSearch}>
             <label className="visually-hidden" htmlFor="atlas-search">

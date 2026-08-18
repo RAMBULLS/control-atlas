@@ -263,15 +263,15 @@ test("high-density task surfaces bound results and name download actions", () =>
   assert.match(startHere, /Search the Library/);
 });
 
-test("Compare choices are native buttons and About cards form named heading regions", () => {
+test("Compare choices are native buttons and About sections form named heading regions", () => {
   const comparePage = readFileSync("src/ui/pages/ComparePage.tsx", "utf8");
   const aboutPage = readFileSync("src/ui/pages/AboutPage.tsx", "utf8");
   const primitives = readFileSync("src/ui/lib/pagePrimitives.tsx", "utf8");
 
   assert.doesNotMatch(comparePage, /aria-label="Comparison modes"[\s\S]*role="tablist"/);
   assert.doesNotMatch(comparePage, /aria-selected=\{false\}/);
-  assert.match(aboutPage, /<SummaryCard headingLevel=\{2\} title="What It Is">/);
-  assert.match(aboutPage, /<SummaryCard headingLevel=\{2\} title="About the Project">/);
+  assert.match(aboutPage, /<section aria-labelledby="heading-what-it-is"/);
+  assert.match(aboutPage, /<section aria-labelledby="heading-about-the-project"/);
   assert.match(primitives, /aria-labelledby=\{props\.headingLevel \? titleId : undefined\}/);
   assert.match(primitives, /aria-label=\{props\.headingLevel \? undefined : props\.title\}/);
 });

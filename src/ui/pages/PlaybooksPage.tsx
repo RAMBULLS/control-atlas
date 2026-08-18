@@ -20,11 +20,10 @@ import {
   practitionerGuides,
 } from "../../app/learn-content.mjs";
 import { SITE_COPY } from "../../shared/site-copy.mjs";
-import { Panel } from "../components/lsm";
 import { AppLink } from "../components/AppLink";
 import { BucketTag } from "../components/TaxonomyTag";
 import { TaxonomyTagLinks } from "../components/ContextualTaxonomyLinks";
-import { PageHeader, SummaryCard } from "../lib/pagePrimitives";
+import { PageHeader } from "../lib/pagePrimitives";
 import type { RuntimeBundle } from "../lib/runtimeLoader";
 import type { ViewState } from "../lib/viewState";
 
@@ -67,6 +66,7 @@ export function PlaybooksPage(props: {
         data-visual-identity="practitioner-field-manual"
       >
         <PageHeader
+          eyebrow="PRACTITIONER FIELD MANUAL / 12 GUIDES"
           primary
           summary={SITE_COPY.routes.guides.purpose}
           title={<span id="guides-title">Guides</span>}
@@ -114,69 +114,156 @@ export function PlaybooksPage(props: {
     );
   }
 
+  const guideIndex = practitionerGuides.findIndex((g) => g.id === selected.id);
+  const guideNumber = guideIndex >= 0 ? String(guideIndex + 1).padStart(2, "0") : "01";
+  const eyebrowText =
+    selected.kind === "practitioner"
+      ? `Guide ${guideNumber} / ${selectedPresentation?.area || "Practitioner guide"}`
+      : "Control Atlas explanation";
+
   return (
-    <Panel data-visual-identity="practitioner-field-manual">
+    <div className="guide-page ca-mission-page" data-visual-identity="practitioner-field-manual">
       <PageHeader
         action={
           <AppLink onNavigate={onNavigate} patch={{ pattern: "" }} variant="secondary" view="patterns">
             Back to Guides
           </AppLink>
         }
-        eyebrow={selected.kind === "practitioner" ? "Practitioner guide" : "Control Atlas explanation"}
+        eyebrow={eyebrowText}
         summary={selected.summary}
         title={selected.title}
       />
-      <div className="learn-article">
-        {selected.whereItSits ? (
-          <SummaryCard title="Where it sits">
-            <p>{selected.whereItSits}</p>
-          </SummaryCard>
-        ) : null}
-        {selected.whenItMatters ? (
-          <SummaryCard title="When it matters">
-            <p>{selected.whenItMatters}</p>
-          </SummaryCard>
-        ) : null}
-        <SummaryCard title="What this means">
-          <p>{selected.explanation}</p>
-        </SummaryCard>
-        <SummaryCard title="Limitations" tone="warning">
-          <p>{selected.limitations}</p>
-        </SummaryCard>
-        <section aria-labelledby="learn-citations">
-          <h2 id="learn-citations">Official references</h2>
-          <ul>
-            {selected.citations.map((citation) => (
-              <li key={citation.url}>
-                <a href={citation.url} rel="noopener noreferrer" target="_blank">
-                  {citation.label}
-                  <IconExternalLink aria-hidden="true" size={14} />
-                </a>
-                <p>
-                  <strong>Supports:</strong> {citation.supports}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </section>
-        {selectedPresentation?.tagIds?.length ? (
-          <section className="ca-contextual-taxonomy" aria-label={`Related Library tags for ${selected.title}`}>
-            <h3>Explore related Library records</h3>
-            <p>
-              These tags link to related records for this topic. They don't mean every one applies to your system.
-            </p>
-            <TaxonomyTagLinks onNavigate={onNavigate} tagIds={selectedPresentation.tagIds} />
+
+      <div className="doc-shell">
+        <nav aria-label="Guides navigation" className="doc-nav">
+          <span className="doc-nav-heading">All Guides</span>
+          <AppLink className="doc-nav-back" onNavigate={onNavigate} patch={{ pattern: "" }} view="patterns">
+            ← All Guides
+          </AppLink>
+          {practitionerGuides.map((guide, idx) => {
+            const isCurrent = guide.id === selected.id;
+            return (
+              <AppLink
+                aria-current={isCurrent ? "page" : undefined}
+                className="doc-nav-link"
+                key={guide.id}
+                onNavigate={onNavigate}
+                patch={{ pattern: guide.id }}
+                view="patterns"
+              >
+                <span className="doc-nav-link-step">Step {String(idx + 1).padStart(2, "0")}</span>
+                <span className="doc-nav-link-title">{guide.title}</span>
+              </AppLink>
+            );
+          })}
+        </nav>
+
+        <article className="guide-article prose">
+          <p className="guide-article-lead">{selected.summary}</p>
+
+          {selected.whenItMatters ? (
+            <section className="guide-section" id="when-it-matters">
+              <h3>When it matters</h3>
+              <p>{selected.whenItMatters}</p>
+            </section>
+          ) : null}
+
+          {selected.whereItSits ? (
+            <section className="guide-section" id="where-it-sits">
+              <h3>Where it sits</h3>
+              <p>{selected.whereItSits}</p>
+            </section>
+          ) : null}
+
+          <section className="guide-section" id="what-this-means">
+            <h3>What this means</h3>
+            <p>{selected.explanation}</p>
           </section>
-        ) : null}
-        <AppLink
-          onNavigate={onNavigate}
-          patch={selected.nextAction.patch as Partial<ViewState> | undefined}
-          variant="primary"
-          view={selected.nextAction.view as ViewState["view"]}
-        >
-          {selected.nextAction.label}
-        </AppLink>
+
+          <div className="callout guide-limitations-callout" id="limitations">
+            <strong>Operating limitation / Limitations</strong>
+            <p>{selected.limitations}</p>
+          </div>
+
+          <section aria-labelledby="learn-citations" className="guide-citations-section" id="official-references">
+            <h3 id="learn-citations">Official references</h3>
+            <ul className="guide-citations-list">
+              {selected.citations.map((citation) => (
+                <li key={citation.url}>
+                  <a href={citation.url} rel="noopener noreferrer" target="_blank" className="citation-link">
+                    <span>{citation.label}</span>
+                    <IconExternalLink aria-hidden="true" size={14} />
+                  </a>
+                  <p>
+                    <strong>Supports:</strong> {citation.supports}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {selectedPresentation?.tagIds?.length ? (
+            <section className="ca-contextual-taxonomy" aria-label={`Related Library tags for ${selected.title}`} id="related-records">
+              <h3>Explore related Library records</h3>
+              <p>
+                These tags link to related records for this topic. They don't mean every one applies to your system.
+              </p>
+              <TaxonomyTagLinks onNavigate={onNavigate} tagIds={selectedPresentation.tagIds} />
+            </section>
+          ) : null}
+
+          <div className="actions guide-actions" id="next-action">
+            <AppLink
+              onNavigate={onNavigate}
+              patch={selected.nextAction.patch as Partial<ViewState> | undefined}
+              variant="primary"
+              view={selected.nextAction.view as ViewState["view"]}
+            >
+              {selected.nextAction.label}
+            </AppLink>
+            <AppLink
+              onNavigate={onNavigate}
+              patch={{ pattern: "" }}
+              variant="secondary"
+              view="patterns"
+            >
+              All guides
+            </AppLink>
+          </div>
+        </article>
+
+        <aside aria-label="On this page" className="toc guide-source-rail">
+          <strong className="toc-heading">On this page</strong>
+          <nav aria-label="Article sections" className="toc-links">
+            {selected.whenItMatters ? <a href="#when-it-matters">When it matters</a> : null}
+            {selected.whereItSits ? <a href="#where-it-sits">Where it sits</a> : null}
+            <a href="#what-this-means">What this means</a>
+            <a href="#limitations">Limitations</a>
+            <a href="#official-references">Official references</a>
+            {selectedPresentation?.tagIds?.length ? <a href="#related-records">Related records</a> : null}
+            <a href="#next-action">Next action</a>
+          </nav>
+          <div className="toc-meta" style={{ marginTop: 16, borderTop: "1px solid var(--ca-border)", paddingTop: 12 }}>
+            <strong className="toc-heading">Guide Context</strong>
+            <div className="system-stat">
+              <span>Area</span>
+              <strong>{selectedPresentation?.area || "General"}</strong>
+            </div>
+            <div className="system-stat">
+              <span>Sequence</span>
+              <strong>Step {guideNumber} of {practitionerGuides.length}</strong>
+            </div>
+            <div className="system-stat">
+              <span>Citations</span>
+              <strong>{selected.citations.length} source{selected.citations.length === 1 ? "" : "s"}</strong>
+            </div>
+            <div className="system-stat">
+              <span>Audience</span>
+              <strong>Practitioner</strong>
+            </div>
+          </div>
+        </aside>
       </div>
-    </Panel>
+    </div>
   );
 }

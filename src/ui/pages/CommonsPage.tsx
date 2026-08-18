@@ -182,7 +182,7 @@ export function CommonsPage(props: {
       compareControl={(
         <button
           aria-pressed={compareMode}
-          className="button button--secondary"
+          className={`workspace-compare-toggle ${compareMode ? "is-active" : ""}`}
           onClick={() => {
             setCompareMode((value) => !value);
             setSelectedResourceIds([]);
@@ -190,16 +190,11 @@ export function CommonsPage(props: {
           }}
           type="button"
         >
-          <IconGitCompare aria-hidden="true" size={17} />Compare
+          <IconGitCompare aria-hidden="true" size={15} />
+          <span>{compareMode ? `Compare (${selectedResourceIds.length})` : "Compare"}</span>
         </button>
       )}
       facetLabel="Resource filters"
-      headerAction={(
-        <div className="workspace-header-actions">
-          <a href="https://github.com/BackslashBryant/control-atlas/issues/new?template=submit-resource.yml" rel="noopener noreferrer" target="_blank"><IconPlus aria-hidden="true" size={16} />Submit resource</a>
-          <a href="https://github.com/BackslashBryant/control-atlas/issues/new?template=report-broken-link.yml" rel="noopener noreferrer" target="_blank"><IconFlag aria-hidden="true" size={16} />Report a problem</a>
-        </div>
-      )}
       onClearQuery={() => {
         setQueryDraft("");
         update({ query: "", showAll: activeFilters.length ? state.showAll : "" });
@@ -234,7 +229,7 @@ export function CommonsPage(props: {
       {!resultsVisible ? (
         <section aria-labelledby="resource-collections-heading" className="workspace-browse-state" data-browse-state="resources">
           <div className="workspace-browse-heading">
-            <div><p className="eyebrow">Resources</p><h2 id="resource-collections-heading">Browse by Collection</h2></div>
+            <div><h2 id="resource-collections-heading">Browse by Collection</h2></div>
             <button onClick={() => update({ showAll: "true" })} type="button">Browse all {resources.length} resources <IconArrowRight aria-hidden="true" size={16} /></button>
           </div>
           <div className="workspace-browse-grid">
@@ -337,6 +332,25 @@ export function CommonsPage(props: {
           <button onClick={reset} type="button">Clear filters</button>
         </section>
       )}
+
+      <section aria-label="Contribute to directory" className="resources-contribute-section">
+        <div className="resources-contribute-card">
+          <div className="resources-contribute-copy">
+            <strong>Contribute to the directory</strong>
+            <p>Know of a valuable tool, catalog, or community not listed here? Submit a resource or report a problem.</p>
+          </div>
+          <div className="resources-contribute-actions">
+            <a href="https://github.com/BackslashBryant/control-atlas/issues/new?template=submit-resource.yml" rel="noopener noreferrer" target="_blank">
+              <IconPlus aria-hidden="true" size={15} />
+              <span>Submit resource</span>
+            </a>
+            <a href="https://github.com/BackslashBryant/control-atlas/issues/new?template=report-broken-link.yml" rel="noopener noreferrer" target="_blank">
+              <IconFlag aria-hidden="true" size={15} />
+              <span>Report a problem</span>
+            </a>
+          </div>
+        </div>
+      </section>
     </WorkspaceTemplate>
   );
 }

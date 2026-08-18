@@ -37,19 +37,23 @@ interface ButtonProps
   variant?: ButtonVariant;
 }
 
-export function Button({ variant = 'primary', className = '', ...props }: ButtonProps) {
-  return (
-    <button className={buttonClassName(variant, className)} {...props} />
-  );
-}
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  function Button({ variant = 'primary', className = '', ...props }, ref) {
+    return (
+      <button ref={ref} className={buttonClassName(variant, className)} {...props} />
+    );
+  }
+);
 
 interface ButtonLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   variant?: ButtonVariant;
 }
 
 /** For external/navigational links that need button styling — an <a>, never a <button>, so it keeps native link semantics (open-in-new-tab, middle-click, screen-reader "link" role). */
-export function ButtonLink({ variant = 'primary', className = '', ...props }: ButtonLinkProps) {
-  return (
-    <a className={buttonClassName(variant, className)} {...props} />
-  );
-}
+export const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
+  function ButtonLink({ variant = 'primary', className = '', ...props }, ref) {
+    return (
+      <a ref={ref} className={buttonClassName(variant, className)} {...props} />
+    );
+  }
+);

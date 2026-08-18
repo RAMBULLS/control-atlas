@@ -83,7 +83,6 @@ export function HomePage({ onNavigate, onOpenSearch }: HomePageProps) {
         <div className="home-tag-constellation__heading">
           <div>
             <h2 id="home-tag-heading">Browse by tag</h2>
-            <p>More records, bigger tag.</p>
           </div>
           <AppLink className="home-tag-constellation__all" onNavigate={onNavigate} view="search">
             See all tags

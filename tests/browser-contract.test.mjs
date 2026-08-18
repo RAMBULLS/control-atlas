@@ -376,7 +376,7 @@ test('landing page states what the product is before asking for action', () => {
   assert.match(homePage, /HOME_TAG_GROUPS\.map/);
   assert.match(homePage, /home-tag-galaxies/);
   assert.match(homePage, /data-record-count/);
-  assert.match(homePage, /More records, bigger tag\./);
+  assert.doesNotMatch(homePage, /More records, bigger tag\./);
 });
 
 test('Guides implement the numbered Template F directory contract', () => {

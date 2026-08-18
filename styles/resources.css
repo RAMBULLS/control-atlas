@@ -666,3 +666,186 @@
     border-inline-start-width: 3px;
   }
 }
+
+/* Phase 4: Contribute section after results / collections */
+.resources-contribute-section {
+  margin-block-start: clamp(2rem, 4vw, 3rem);
+  padding-block-start: 1.5rem;
+  border-top: 1px solid var(--ca-border);
+}
+
+.resources-contribute-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--ca-border);
+  border-radius: var(--ca-radius-sm, 0.25rem);
+  background: var(--ca-surface);
+}
+
+.resources-contribute-copy strong {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--ca-text);
+  margin-bottom: 0.25rem;
+}
+
+.resources-contribute-copy p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--ca-text-muted);
+}
+
+.resources-contribute-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.resources-contribute-actions a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.85rem;
+  min-height: 38px;
+  border: 1px solid var(--ca-border-strong);
+  border-radius: var(--ca-radius-sm, 0.25rem);
+  background: var(--ca-surface-raised);
+  color: var(--ca-text);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+
+.resources-contribute-actions a:hover,
+.resources-contribute-actions a:focus-visible {
+  border-color: var(--ca-primary);
+  background: color-mix(in srgb, var(--ca-primary) 8%, var(--ca-surface-raised));
+}
+
+/* Phase 4: Subtle compare toggle in workspace result bar */
+.workspace-compare-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 32px;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--ca-border);
+  border-radius: var(--ca-radius-sm, 0.25rem);
+  background: transparent;
+  color: var(--ca-text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.workspace-compare-toggle:hover,
+.workspace-compare-toggle:focus-visible {
+  border-color: var(--ca-border-strong);
+  color: var(--ca-text);
+}
+
+.workspace-compare-toggle.is-active,
+.workspace-compare-toggle[aria-pressed="true"] {
+  border-color: var(--ca-primary);
+  background: color-mix(in srgb, var(--ca-primary) 12%, var(--ca-surface-raised));
+  color: var(--ca-text);
+}
+
+/* Phase 4: Knowledge-base resource article reading flow */
+.resource-detail-prose-section {
+  display: grid;
+  gap: 0.75rem;
+  padding-block-end: 1.5rem;
+  border-bottom: 1px solid var(--ca-border);
+}
+
+.resource-detail-prose-section:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.resource-detail-prose-section h2 {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.25rem;
+  text-transform: uppercase;
+  color: var(--ca-text-muted);
+  font-weight: 700;
+}
+
+.resource-subblock {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.5rem;
+}
+
+.resource-subblock h3 {
+  font-size: 0.85rem;
+  margin: 0;
+  color: var(--ca-text);
+}
+
+.resource-detail-prose-note {
+  font-size: 0.8rem;
+  color: var(--ca-text-muted);
+  margin-block: 0;
+}
+
+.resource-detail-muted {
+  font-size: 0.82rem;
+  color: var(--ca-text-muted);
+}
+
+/* Phase 4: Collapsible Source & Maintenance Disclosure */
+.resource-maintenance-disclosure {
+  border: 1px solid var(--ca-border);
+  border-radius: var(--ca-radius-sm, 0.25rem);
+  background: var(--ca-surface);
+  overflow: hidden;
+}
+
+.resource-maintenance-disclosure__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.1rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ca-text-muted);
+  user-select: none;
+}
+
+.resource-maintenance-disclosure__summary:hover,
+.resource-maintenance-disclosure__summary:focus-visible {
+  color: var(--ca-text);
+  background: var(--ca-surface-raised);
+}
+
+.resource-maintenance-disclosure__summary::-webkit-details-marker {
+  display: none;
+}
+
+.disclosure-chevron {
+  transition: transform 200ms ease;
+  color: var(--ca-text-muted);
+}
+
+.resource-maintenance-disclosure[open] .disclosure-chevron {
+  transform: rotate(180deg);
+}
+
+.resource-maintenance-disclosure__body {
+  padding: 1.1rem;
+  border-top: 1px solid var(--ca-border);
+  background: var(--ca-surface-deep);
+}
+

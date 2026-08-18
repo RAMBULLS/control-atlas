@@ -991,7 +991,7 @@ export function TemplatesPage(props: {
   }
 
   return (
-    <Panel data-visual-identity="staged-production-workflow">
+    <div className="templates-page ca-mission-page" data-visual-identity="staged-production-workflow">
       {!buildOverview ? (
         <BuildLocalNav
           active={documentBrowser || selectedTemplate ? "documents" : "tasks"}
@@ -1007,17 +1007,30 @@ export function TemplatesPage(props: {
             </AppLink>
           ) : undefined
         }
+        eyebrow={
+          buildOverview
+            ? "DOCUMENT WORKFLOWS / 3 PRODUCTION LANES"
+            : selectedTemplate
+              ? "STARTER DOCUMENT / CONFIGURE"
+              : documentBrowser
+                ? `STARTER DOCUMENTS / ${templates.length} AVAILABLE`
+                : `TASK WORKFLOWS / ${workflows.length} TASKS`
+        }
         summary={buildOverview
           ? SITE_COPY.routes.documents.purpose
-          : documentBrowser || selectedTemplate
-          ? "Choose a starter document and adapt it to your work."
-          : "Pick a task to see its public references and starter documents."}
+          : selectedTemplate
+            ? selectedTemplate.description
+            : documentBrowser
+              ? "Choose what you need to produce, configure parameters, and download starter files."
+              : "Pick a task to see its public references and starter documents."}
         title={
           buildOverview
             ? "Documents"
-            : documentBrowser || selectedTemplate
-              ? "Choose a starter document"
-              : "Tasks"
+            : selectedTemplate
+              ? selectedTemplate.display_name
+              : documentBrowser
+                ? "Documents"
+                : "Tasks"
         }
       />
 
@@ -1234,9 +1247,6 @@ export function TemplatesPage(props: {
           >
             <div className="section-header nexus-section-header">
               <div>
-                <p className="eyebrow">
-                  Starter document
-                </p>
                 <h2 id="companion-heading">
                   {selectedWorkflow && declaredCompanions.length === 1
                     ? `Create ${declaredCompanions[0].display_name}`
@@ -1487,67 +1497,176 @@ export function TemplatesPage(props: {
               )}
             </Badge>
           </div>
-          <SummaryCard title="Configure this starter document" tone="trust">
-            <p>{selectedTemplate.description}</p>
-            <div className="filter-grid template-essential-options">
-              {inputOptions.includes("framework") ? (
+
+          <nav aria-label="Step progress" className="progress-trajectory progress-trajectory--step-2">
+            <div className="step done">01 / Choose document</div>
+            <div className="step active">02 / Configure inputs</div>
+            <div className="step">03 / Preview &amp; download</div>
+          </nav>
+
+          <section aria-label="Document configuration" className="template-flow-grid">
+            <article className="panel template-inputs-panel">
+              <span className="label">02 / INPUTS</span>
+              <h3 className="template-step-title">Configure parameters</h3>
+              <p className="template-step-desc">
+                Select the catalog scope and target parameters for this document.
+              </p>
+              <div className="form-grid template-essential-options">
+                {inputOptions.includes("framework") ? (
+                  <div className="field full">
+                    <SelectField
+                      emptyLabel="Select a catalog or program"
+                      hint="Which control catalog the starter document should reference."
+                      label="Catalog or program"
+                      onChange={(value) =>
+                        onNavigate("templates", {
+                          framework: value,
+                          baseline: "",
+                          controlFamily: "",
+                        })
+                      }
+                      options={catalogOptions}
+                      value={state.framework || ""}
+                    />
+                  </div>
+                ) : null}
+                {inputOptions.includes("baseline") ? (
+                  <div className="field full">
+                    <SelectField
+                      emptyLabel="Select a baseline"
+                      hint="Required. Choose a published baseline or All controls."
+                      label="Baseline"
+                      onChange={(value) =>
+                        onNavigate("templates", {
+                          baseline: value,
+                        })
+                      }
+                      options={[
+                        { value: "ALL", label: "All controls" },
+                        ...baselineOptions,
+                      ]}
+                      value={state.baseline || ""}
+                    />
+                  </div>
+                ) : null}
+                {inputOptions.includes("environment_archetype") ? (
+                  <div className="field full">
+                    <SelectField
+                      emptyLabel="Not selected"
+                      hint="Where the system runs — cloud, on-premises, or hybrid."
+                      label="Environment"
+                      onChange={(value) => onNavigate("templates", { environment: value })}
+                      options={[
+                        { value: "Generic", label: "Generic" },
+                        { value: "Cloud SaaS", label: "Cloud SaaS" },
+                        { value: "Platform service", label: "Platform service" },
+                        { value: "Enclave", label: "Enclave" },
+                        { value: "On-premises", label: "On-premises" },
+                        { value: "Hybrid", label: "Hybrid" },
+                        { value: "Enterprise service", label: "Enterprise service" },
+                      ]}
+                      value={state.environment || ""}
+                    />
+                  </div>
+                ) : null}
+                {inputOptions.includes("control_family") ? (
+                  <div className="field full">
+                    <SelectField
+                      emptyLabel="All families"
+                      hint="Limit to one control family (e.g. Access Control)."
+                      label="Control family"
+                      onChange={(value) =>
+                        onNavigate("templates", {
+                          controlFamily: value,
+                        })
+                      }
+                      options={familyOptions}
+                      value={state.controlFamily || ""}
+                    />
+                  </div>
+                ) : null}
+              </div>
+            </article>
+
+            <aside aria-label="Preserved context" className="panel route-preview surface-blueprint template-context-panel">
+              <span className="label">SELECTED CONTEXT</span>
+              <div className="system-stat" style={{ marginTop: 8 }}>
+                <span>Document</span>
+                <strong>{selectedTemplate.display_name}</strong>
+              </div>
+              {catalogSource ? (
+                <div className="system-stat">
+                  <span>Source publication</span>
+                  <strong>
+                    {catalogSource.display_name || catalogSource.name}
+                    {catalogSource.version ? ` (v${catalogSource.version})` : ""}
+                  </strong>
+                </div>
+              ) : activeFramework ? (
+                <div className="system-stat">
+                  <span>Source publication</span>
+                  <strong>
+                    {catalogOptions.find((c: any) => c.value === activeFramework)?.label || activeFramework}
+                  </strong>
+                </div>
+              ) : (
+                <div className="system-stat">
+                  <span>Source publication</span>
+                  <strong style={{ color: "var(--ca-text-muted)" }}>Select a catalog</strong>
+                </div>
+              )}
+              <div className="system-stat">
+                <span>Format</span>
+                <strong>{FORMAT_LABELS[activeFormat] || activeFormat}</strong>
+              </div>
+
+              <div className="template-format-field" style={{ marginTop: 12 }}>
                 <SelectField
-                  hint="Which control catalog the starter document should reference."
-                  label="Catalog or program"
-                  emptyLabel="Select a catalog or program"
-                  onChange={(value) =>
-                    onNavigate("templates", {
-                      framework: value,
-                      baseline: "",
-                      controlFamily: "",
-                    })
-                  }
-                  options={catalogOptions}
-                  value={state.framework || ""}
+                  hint={FORMAT_HELP[activeFormat] || "File type for the downloaded template."}
+                  label="Download format"
+                  onChange={(value) => onNavigate("templates", { format: value })}
+                  options={supportedFormats.map((format: string) => ({
+                    value: format,
+                    label: FORMAT_LABELS[format] || format,
+                  }))}
+                  value={activeFormat}
                 />
+              </div>
+
+              {selectedTemplate.compatibility?.classification || selectedTemplate.compatibility_level ? (
+                <div className="system-stat" style={{ marginTop: 8 }}>
+                  <span>Compatibility</span>
+                  <strong>
+                    {compatibilityLabel(
+                      selectedTemplate.compatibility?.classification ||
+                        selectedTemplate.compatibility_level,
+                    )}
+                  </strong>
+                </div>
               ) : null}
-              {inputOptions.includes("baseline") ? (
-                <SelectField
-                  emptyLabel="Select a baseline"
-                  hint="Required. Choose a published baseline or All controls."
-                  label="Baseline"
-                  onChange={(value) =>
-                    onNavigate("templates", {
-                      baseline: value,
-                    })
-                  }
-                  options={[
-                    { value: "ALL", label: "All controls" },
-                    ...baselineOptions,
-                  ]}
-                  value={state.baseline || ""}
-                />
+
+              {selectedTemplate.limitations?.length ? (
+                <p className="nexus-limitation" style={{ marginTop: 12 }}>
+                  <IconInfoCircle aria-hidden="true" size={16} stroke={1.8} />
+                  {selectedTemplate.limitations[0]}
+                </p>
+              ) : selectedTemplate.compatibility?.limitations ? (
+                <p className="nexus-limitation" style={{ marginTop: 12 }}>
+                  <IconInfoCircle aria-hidden="true" size={16} stroke={1.8} />
+                  {selectedTemplate.compatibility.limitations}
+                </p>
               ) : null}
-              {inputOptions.includes("environment_archetype") ? (
-                <SelectField
-                  hint="Where the system runs — cloud, on-premises, or hybrid."
-                  label="Environment"
-                  emptyLabel="Not selected"
-                  onChange={(value) => onNavigate("templates", { environment: value })}
-                  options={[
-                    { value: "Generic", label: "Generic" },
-                    { value: "Cloud SaaS", label: "Cloud SaaS" },
-                    { value: "Platform service", label: "Platform service" },
-                    { value: "Enclave", label: "Enclave" },
-                    { value: "On-premises", label: "On-premises" },
-                    { value: "Hybrid", label: "Hybrid" },
-                    { value: "Enterprise service", label: "Enterprise service" },
-                  ]}
-                  value={state.environment || ""}
-                />
-              ) : null}
-              <SelectField
-                hint={FORMAT_HELP[activeFormat] || "File type for the downloaded template."}
-                label="Format"
-                onChange={(value) => onNavigate("templates", { format: value })}
-                options={supportedFormats.map((format: string) => ({ value: format, label: FORMAT_LABELS[format] || format }))}
-                value={activeFormat}
-              />
+            </aside>
+          </section>
+
+          <section aria-labelledby="document-preview-heading-wrapper" className="template-preview-section">
+            <div className="section-header" style={{ marginBottom: 12 }}>
+              <div>
+                <p className="eyebrow">03 / PREVIEW &amp; DOWNLOAD</p>
+                <h3 id="document-preview-heading-wrapper" className="template-step-title">
+                  Document preview
+                </h3>
+              </div>
             </div>
             {documentPreview?.doc && generationState?.previewAvailable ? (
               <TemplateDocumentPreview doc={documentPreview.doc} format={activeFormat} />
@@ -1557,35 +1676,43 @@ export function TemplatesPage(props: {
                   "Select the required inputs before previewing or downloading."}
               </p>
             )}
-            <div className="card-actions">
+            <div className="actions" style={{ marginTop: 20 }}>
               <Button
                 variant="primary"
                 disabled={generating || !generationState?.downloadEnabled}
                 onClick={createTemplate}
+                ref={generateButtonRef}
               >
-                {generating ? "Preparing download…" : `Download ${selectedTemplate.display_name} (${FORMAT_LABELS[activeFormat] || activeFormat})`}
+                {generating
+                  ? "Preparing download…"
+                  : `Download ${selectedTemplate.display_name} (${FORMAT_LABELS[activeFormat] || activeFormat})`}
               </Button>
             </div>
-            {generationStatus ? <p className={`generation-status tone-${generationTone}`} role="status">{generationStatus}</p> : null}
-          </SummaryCard>
+            {generationStatus ? (
+              <p className={`generation-status tone-${generationTone}`} role="status" style={{ marginTop: 12 }}>
+                {generationStatus}
+              </p>
+            ) : null}
+          </section>
+
           {selectedTemplateArtifacts.length > 0 ? (
-            <details className="template-supporting-details">
-            <summary>Sources used by this document</summary>
-            <section aria-labelledby="template-official-heading" className="stack disclosure-content">
-              <div>
-                <p className="eyebrow">Published sources</p>
-                <h3 id="template-official-heading">Sources used by this document</h3>
-              </div>
-              <div className="nexus-grid">
-                {selectedTemplateArtifacts.map((artifact) => (
-                  <OfficialArtifactCard
-                    artifact={artifact}
-                    fedrampTransition={fedrampTransition}
-                    key={artifact.artifact_id}
-                  />
-                ))}
-              </div>
-            </section>
+            <details className="template-supporting-details" style={{ marginTop: 16 }}>
+              <summary>Sources used by this document</summary>
+              <section aria-labelledby="template-official-heading" className="stack disclosure-content">
+                <div>
+                  <p className="eyebrow">Published sources</p>
+                  <h3 id="template-official-heading">Sources used by this document</h3>
+                </div>
+                <div className="nexus-grid">
+                  {selectedTemplateArtifacts.map((artifact) => (
+                    <OfficialArtifactCard
+                      artifact={artifact}
+                      fedrampTransition={fedrampTransition}
+                      key={artifact.artifact_id}
+                    />
+                  ))}
+                </div>
+              </section>
             </details>
           ) : selectedTemplate.official_alternative ? (
             <SummaryCard title="Official resource">
@@ -1608,24 +1735,7 @@ export function TemplatesPage(props: {
               </p>
             </SummaryCard>
           ) : null}
-          <SummaryCard title="What this template is for" tone="trust">
-            <p>{selectedTemplate.description}</p>
-            {selectedTemplate.compatibility?.claim ? (
-              <p>{selectedTemplate.compatibility.claim}</p>
-            ) : null}
-            {selectedTemplate.limitations?.length ? (
-              <ul className="nexus-list">
-                {selectedTemplate.limitations.map((limitation) => (
-                  <li key={limitation}>{limitation}</li>
-                ))}
-              </ul>
-            ) : selectedTemplate.compatibility?.limitations ? (
-              <p className="nexus-limitation">
-                <IconInfoCircle aria-hidden="true" size={16} stroke={1.8} />
-                {selectedTemplate.compatibility.limitations}
-              </p>
-            ) : null}
-          </SummaryCard>
+
           {activeFramework ? (
             <ContextualTaxonomyLinks
               catalogIds={[activeFramework]}
@@ -1635,38 +1745,9 @@ export function TemplatesPage(props: {
               subjectLabel="starter document"
             />
           ) : null}
-          <SummaryCard title="What it includes">
-            <p>
-              Download formats:{" "}
-              {supportedFormats
-                .map((format: string) => FORMAT_LABELS[format] || format)
-                .join(", ")}
-              .
-            </p>
-            <p>Every download starts from the preview above and carries the same headings, prompts, and source context.</p>
-            {selectedTemplate.input_options.length > 0 ? (
-              <p>
-                Optional inputs:{" "}
-                {selectedTemplate.input_options
-                  .map((input: string) => INPUT_LABELS[input] || input)
-                  .join(", ")}
-                .
-              </p>
-            ) : null}
-          </SummaryCard>
-          {catalogSource ? (
-            <SummaryCard title="Catalog data used">
-              <p>
-                {catalogSource.display_name || catalogSource.name}
-                {catalogSource.version
-                  ? ` (version ${catalogSource.version})`
-                  : ""}
-                . You'll see the source cited in the document you download.
-              </p>
-            </SummaryCard>
-          ) : null}
+
           {selectedTemplateTools.length > 0 ? (
-            <section aria-labelledby="template-tools-heading" className="stack">
+            <section aria-labelledby="template-tools-heading" className="stack" style={{ marginTop: 16 }}>
               <div>
                 <p className="eyebrow">Related tooling</p>
                 <h3 id="template-tools-heading">Tools that use this artifact family</h3>
@@ -1678,24 +1759,9 @@ export function TemplatesPage(props: {
               </div>
             </section>
           ) : null}
+
           <Accordion.Root className="accordion-root" collapsible type="single">
             <DisclosurePanel title="More options" value="options">
-              <div className="filter-grid">
-                {inputOptions.includes("control_family") ? (
-                  <SelectField
-                    emptyLabel="All families"
-                    hint="Limit to one control family (e.g. Access Control)."
-                    label="Control family"
-                    onChange={(value) =>
-                      onNavigate("templates", {
-                        controlFamily: value,
-                      })
-                    }
-                    options={familyOptions}
-                    value={state.controlFamily || ""}
-                  />
-                ) : null}
-              </div>
               {supportedFormats.length > 1 ? (
                 <ul className="format-help-list">
                   {supportedFormats.map((format: string) => (
@@ -1710,6 +1776,6 @@ export function TemplatesPage(props: {
           </Accordion.Root>
         </section>
       ) : null}
-    </Panel>
+    </div>
   );
 }

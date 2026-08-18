@@ -287,38 +287,17 @@ export function ExplorePage(props: {
   const renderFacets = (scope: "desktop" | "mobile") => (
     <div className="workspace-facet-controls" data-facet-set="publisher,kind,publication,area,tags,connections">
       <TypeaheadFacet
-        id={`library-${scope}-publisher`}
-        label="Publisher"
-        onChange={(publisher) => onNavigate("search", { publisher })}
-        options={publishers.map((publisher) => ({ label: publisher, value: publisher }))}
-        value={state.publisher}
+        id={`library-${scope}-publication`}
+        label="Publication"
+        onChange={(filter) => onNavigate("search", { filter })}
+        options={runtimeCatalogs.map((catalog: any) => ({ label: catalog.name, value: catalog.id }))}
+        value={state.filter}
       />
       <CheckboxFacet
         label="Content kind"
         onChange={(kind) => onNavigate("search", { kind })}
         options={kindCounts.map((kind) => ({ count: kind.count, label: kind.label, textLabel: kind.label, value: kind.id }))}
         value={state.kind}
-      />
-      {tagFacetOptions.map((dimension) => (
-        <TagFacet
-          key={dimension.id}
-          label={dimension.label}
-          onChange={(tags) => onNavigate("search", {
-            tags: [
-              ...state.tags.filter((id) => TAXONOMY_TAG_BY_ID.get(id)?.dimension !== dimension.id),
-              ...tags,
-            ].sort(),
-          })}
-          options={dimension.options}
-          selected={state.tags.filter((id) => TAXONOMY_TAG_BY_ID.get(id)?.dimension === dimension.id)}
-        />
-      ))}
-      <TypeaheadFacet
-        id={`library-${scope}-publication`}
-        label="Publication"
-        onChange={(filter) => onNavigate("search", { filter })}
-        options={runtimeCatalogs.map((catalog: any) => ({ label: catalog.name, value: catalog.id }))}
-        value={state.filter}
       />
       <CheckboxFacet
         label="Area"
@@ -331,17 +310,41 @@ export function ExplorePage(props: {
         }))}
         value={state.area}
       />
-      <label className="workspace-boolean-facet">
-        <input
-          checked={connectedOnly}
-          onChange={(event) => {
-            onNavigate("search", { connectedOnly: event.target.checked ? "true" : "" });
-            if (event.target.checked && !graphReady) onRequestFullGraph();
-          }}
-          type="checkbox"
+      <details className="workspace-advanced-facets">
+        <summary>Advanced filters</summary>
+        <TypeaheadFacet
+          id={`library-${scope}-publisher`}
+          label="Publisher"
+          onChange={(publisher) => onNavigate("search", { publisher })}
+          options={publishers.map((publisher) => ({ label: publisher, value: publisher }))}
+          value={state.publisher}
         />
-        <span>Has published connections</span>
-      </label>
+        {tagFacetOptions.map((dimension) => (
+          <TagFacet
+            key={dimension.id}
+            label={dimension.label}
+            onChange={(tags) => onNavigate("search", {
+              tags: [
+                ...state.tags.filter((id) => TAXONOMY_TAG_BY_ID.get(id)?.dimension !== dimension.id),
+                ...tags,
+              ].sort(),
+            })}
+            options={dimension.options}
+            selected={state.tags.filter((id) => TAXONOMY_TAG_BY_ID.get(id)?.dimension === dimension.id)}
+          />
+        ))}
+        <label className="workspace-boolean-facet">
+          <input
+            checked={connectedOnly}
+            onChange={(event) => {
+              onNavigate("search", { connectedOnly: event.target.checked ? "true" : "" });
+              if (event.target.checked && !graphReady) onRequestFullGraph();
+            }}
+            type="checkbox"
+          />
+          <span>Has published connections</span>
+        </label>
+      </details>
       {activeFilters.length ? <button className="workspace-clear-filters" onClick={clearFilters} type="button">Clear all filters</button> : null}
     </div>
   );

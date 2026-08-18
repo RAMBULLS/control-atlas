@@ -46,7 +46,7 @@ import {
   type AtlasDrilldownModel,
 } from "../lib/atlasDrilldown";
 import { resolveAtlasSearchTransition } from "../lib/atlasSearch";
-import { scrollElementBelowHeader } from "../lib/pagePrimitives";
+import { scrollElementBelowHeader, MissionPage, MissionPageHeader } from "../lib/pagePrimitives";
 import { relationshipExplanation } from "../lib/relationshipProvenance";
 import { catalogDisplayNameFor } from "../lib/catalogProfiles";
 import {
@@ -58,7 +58,7 @@ import {
 import { runtimeRecordIdentityFor } from "../lib/runtimeRecordIdentity";
 import { nodeIdFromItemId, type ViewState } from "../lib/viewState";
 
-import { Button, Panel } from "../components/lsm";
+import { Button } from "../components/lsm";
 import { AppLink, shouldInterceptAppLink } from "../components/AppLink";
 import { RecordLink } from "../components/RecordLink";
 
@@ -331,38 +331,40 @@ export function AtlasMapPage(props: AtlasMapPageProps) {
   }
 
   return (
-    <Panel
+    <MissionPage
       className="atlas-workspace"
+      maxWidth="workspace"
       data-page-template="canvas"
       data-visual-identity="technical-cartography"
       data-route-content-ready={
         recordStatus === "loading" ? "false" : "true"
       }
     >
-      <header className="atlas-canvas-header">
-        <div>
-          <h1 id="atlas-page-title">Atlas</h1>
-          <p>{SITE_COPY.routes.atlas.purpose}</p>
-        </div>
-        <form className="atlas-map-command" onSubmit={submitSearch}>
-          <label className="visually-hidden" htmlFor="atlas-search">
-            Jump to a record
-          </label>
-          <div className="search-input">
-            <IconSearch aria-hidden="true" size={20} stroke={1.8} />
-            <input
-              aria-label="Jump to a record"
-              id="atlas-search"
-              name="query"
-              onChange={(event) => setMapSearchDraft(event.target.value)}
-              placeholder="Jump to a record"
-              type="search"
-              value={mapSearchDraft}
-            />
-          </div>
-          <button className="visually-hidden" type="submit">Search</button>
-        </form>
-      </header>
+      <MissionPageHeader
+        eyebrow="CYBERSECURITY LANDSCAPE"
+        title="Atlas"
+        summary="Explore areas, publications, and the published connections between them."
+        action={
+          <form className="atlas-map-command" onSubmit={submitSearch}>
+            <label className="visually-hidden" htmlFor="atlas-search">
+              Jump to a record
+            </label>
+            <div className="search-input">
+              <IconSearch aria-hidden="true" size={20} stroke={1.8} />
+              <input
+                aria-label="Jump to a record"
+                id="atlas-search"
+                name="query"
+                onChange={(event) => setMapSearchDraft(event.target.value)}
+                placeholder="Jump to a record"
+                type="search"
+                value={mapSearchDraft}
+              />
+            </div>
+            <button className="visually-hidden" type="submit">Search</button>
+          </form>
+        }
+      />
       <span
         aria-atomic="true"
         className="visually-hidden"
@@ -451,7 +453,7 @@ export function AtlasMapPage(props: AtlasMapPageProps) {
         </p>
       ) : null}
       </div>
-    </Panel>
+    </MissionPage>
   );
 }
 

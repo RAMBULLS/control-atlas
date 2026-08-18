@@ -555,7 +555,7 @@ export function ObjectDetailPage(props: {
             <section className="record-connections record-connections--inline" data-record-section="related-records">
               <div className="section-header">
                 <div>
-                  <h2>Evidence-backed connected records</h2>
+                  <h2>Related records</h2>
                   <p>Start with these {immediateConnectionGroups.reduce((total, group) => total + group.items.length, 0)} of {connectionCount} published links.</p>
                 </div>
                 <Badge tone="info">{connectionCount}</Badge>
@@ -740,11 +740,14 @@ export function ObjectDetailPage(props: {
                           <span className="relationship-meta">
                             {[
                               formatRelationshipLabel({ relationship_type: item.relationshipType }),
-                              displayNameFor("provenance_class", item.provenanceClass),
+                              "Published connection",
                             ].filter(Boolean).join(" · ")}
                           </span>
                           {sourceLabels.length ? (
-                            <span className="relationship-citation">{sourceLabels.join(" · ")}</span>
+                            <details className="relationship-citation-details">
+                              <summary>Source evidence</summary>
+                              <div className="relationship-citation">{sourceLabels.join(" · ")}</div>
+                            </details>
                           ) : null}
                         </li>
                       );

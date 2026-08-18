@@ -417,7 +417,7 @@ test('concise DISA CCI records orient the user before the publisher requirement'
   assert.match(detail, /Explore connections/);
   assert.match(detail, /Compare this CCI/);
   assert.match(detail, /props\.kind === "references"/);
-  assert.match(detail, /Evidence-backed connected records/);
+  assert.match(detail, /Related records/);
   assert.match(detail, /Explore all connections in Atlas/);
 });
 
@@ -426,7 +426,7 @@ test('Catalog controls stay anchored to the records section', () => {
   const surfaces = readFileSync('styles/surfaces.css', 'utf8');
   assert.match(catalogPage, /aria-label="Catalog record controls"/);
   assert.match(catalogPage, /className="catalog-record-toolbar"/);
-  assert.match(catalogPage, />Published group</);
+  assert.match(catalogPage, /catalog\.tier_label/);
   assert.match(catalogPage, /Search records/);
   assert.match(catalogPage, /Search \$\{catalog\.tier_label_plural/);
   assert.match(catalogPage, /data-published-tier/);

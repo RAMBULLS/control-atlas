@@ -45,8 +45,8 @@ export function ContextualTaxonomyLinks(props: {
   }, [catalogKey, props.runtime]);
   if (!tagIds.length) return null;
   return (
-    <section className="ca-contextual-taxonomy" aria-label={`Governed record tags for ${props.contextLabel}`}>
-      <h3>Explore governed record tags</h3>
+    <section className="ca-contextual-taxonomy" aria-label={`Related topics for ${props.contextLabel}`}>
+      <h3>Related topics</h3>
       <p>
         These tags summarize reviewed structured fields on records in the referenced publication.
         They help search the Library; they do not classify this {props.subjectLabel}.

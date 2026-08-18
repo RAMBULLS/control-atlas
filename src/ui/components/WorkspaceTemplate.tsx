@@ -32,6 +32,8 @@ export function TypeaheadFacet(props: {
   value: string;
   onChange: (value: string) => void;
 }) {
+  if (props.options.length === 0) return null;
+
   const selected = props.options.find((option) => option.value === props.value);
   const [draft, setDraft] = useState(selected?.label || "");
 
@@ -82,6 +84,7 @@ export function CheckboxFacet(props: {
   value: string;
   onChange: (value: string) => void;
 }) {
+  if (props.options.length === 0) return null;
   return (
     <fieldset className="workspace-checkbox-facet">
       <legend>{props.label}</legend>
@@ -117,6 +120,9 @@ export function TagFacet(props: {
       .some((value) => value.toLocaleLowerCase().includes(needle));
   });
 
+  if (props.options.length === 0) return null;
+
+
   return (
     <fieldset className="workspace-checkbox-facet workspace-tag-facet">
       <legend>{props.label}</legend>
@@ -148,7 +154,6 @@ export function TagFacet(props: {
           </label>
         );
       })}
-      {!visible.length ? <p className="muted">No governed tags are available in this context.</p> : null}
     </fieldset>
   );
 }

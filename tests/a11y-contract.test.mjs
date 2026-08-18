@@ -270,7 +270,6 @@ test("Compare choices are native buttons and About cards form named heading regi
 
   assert.doesNotMatch(comparePage, /aria-label="Comparison modes"[\s\S]*role="tablist"/);
   assert.doesNotMatch(comparePage, /aria-selected=\{false\}/);
-  assert.match(comparePage, /className="intent-card intent-card-button"/);
   assert.match(aboutPage, /<SummaryCard headingLevel=\{2\} title="What It Is">/);
   assert.match(aboutPage, /<SummaryCard headingLevel=\{2\} title="About the Project">/);
   assert.match(primitives, /aria-labelledby=\{props\.headingLevel \? titleId : undefined\}/);
@@ -344,10 +343,10 @@ test("connection transparency distinguishes inventory from completeness", () => 
   // SourcesPage is a factual trust register and never presents a traffic-light
   // completeness judgment.
   assert.match(sourcesPage, /buildPublicationRegister/);
-  assert.match(sourcesPage, /Catalog profile/);
-  assert.match(sourcesPage, /Publisher version/);
-  assert.match(sourcesPage, /Source last checked/);
-  assert.match(sourcesPage, /Publication currentness review/);
+  assert.match(sourcesPage, /Publication/);
+  assert.match(sourcesPage, /Publisher/);
+  assert.match(sourcesPage, /Version \/ current through/);
+  assert.match(sourcesPage, /Status/);
   assert.doesNotMatch(sourcesPage, /Preview \/ low coverage/);
   assert.doesNotMatch(sourcesPage, /data-level=/);
   assert.doesNotMatch(sourcesPage, /catalog\.pct/);

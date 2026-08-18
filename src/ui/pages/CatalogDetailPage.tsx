@@ -136,7 +136,7 @@ export function CatalogDetailPage(props: {
     onNavigate("catalog-detail", { ...state, ...patch });
 
   return (
-    <section className="panel catalog-detail-page" data-visual-identity="publisher-research-library">
+    <section className="catalog-detail-page" data-visual-identity="publisher-research-library">
       <AppLink
         className="back-link"
         onNavigate={onNavigate}
@@ -146,13 +146,11 @@ export function CatalogDetailPage(props: {
       </AppLink>
 
       <header className="catalog-detail-hero" data-route-primary-header="true">
-        <p className="eyebrow" data-route-primary-copy="true">Publication</p>
-        <h1 data-route-primary-copy="true">{catalog.name}</h1>
-        {profile.synopsis ? (
-          <p className="catalog-synopsis" data-route-primary-copy="true">
-            Control Atlas note: {profile.synopsis}
-          </p>
-        ) : null}
+        <p className="eyebrow" data-route-primary-copy="true">PUBLICATION</p>
+        <h1 data-route-primary-copy="true">{catalogName}</h1>
+        <p className="catalog-synopsis" data-route-primary-copy="true">
+          {publisherName}
+        </p>
         <div className="catalog-facts" aria-label="Catalog summary" data-route-primary-support="true">
           <span>
             <strong>
@@ -179,7 +177,7 @@ export function CatalogDetailPage(props: {
             target="_blank"
             variant="secondary"
           >
-            View official source
+            Open official publication
             <IconExternalLink aria-hidden="true" size={16} />
           </ButtonLink>
         ) : null}
@@ -212,9 +210,9 @@ export function CatalogDetailPage(props: {
             <div className="catalog-record-filters">
               {families.length > 1 && !showTierBrowser ? (
                 <label className="catalog-record-filter">
-                  <span>Published group</span>
+                  <span>{catalog.tier_label || "Published group"}</span>
                   <select
-                    aria-label="Filter by published group"
+                    aria-label={`Filter by ${catalog.tier_label?.toLowerCase() || "published group"}`}
                     onChange={(event) =>
                       update({
                         family: event.target.value,
@@ -224,7 +222,7 @@ export function CatalogDetailPage(props: {
                     }
                     value={state.family}
                   >
-                    <option value="">All published groups</option>
+                    <option value="">All {catalog.tier_label_plural || "published groups"}</option>
                     {families.map((name) => (
                       <option key={name} value={name}>{name}</option>
                     ))}
@@ -297,7 +295,7 @@ export function CatalogDetailPage(props: {
                   <h3>No {catalog.tier_label_plural || "published groups"} match this search.</h3>
                   <p>Try a product, platform, or benchmark name.</p>
                   <Button onClick={() => update({ query: "", page: "" })} type="button" variant="secondary">
-                    Clear benchmark search
+                    Clear {catalog.tier_label?.toLowerCase() || "published group"} search
                   </Button>
                 </div>
               ) : null}
@@ -365,7 +363,7 @@ export function CatalogDetailPage(props: {
           ) : (
             <div className="empty-state">
               <h3>No records match these filters.</h3>
-              <p>Try an identifier, official title, published group, or broader term.</p>
+              <p>Try an identifier, official title, {catalog.tier_label?.toLowerCase() || "published group"}, or broader term.</p>
               <Button
                 onClick={() =>
                   update({

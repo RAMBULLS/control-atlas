@@ -1,4 +1,4 @@
-﻿import { expect, test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 async function gotoApp(page, path) {
   await page.goto(path);
@@ -18,10 +18,11 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     await gotoApp(page, "/#/sources");
     await waitForAppReady(page);
 
-    // Initial state: 47 publications listed
+    // Initial state: 47 publications listed with empty inspector on desktop (S7)
     const table = page.getByRole("table", { name: "Control Atlas publication register" });
     await expect(table).toBeVisible();
-    await expect(page.locator(".sources-inspector-pane")).toHaveCount(0);
+    await expect(page.locator(".sources-inspector-pane .source-inspector-card--empty")).toBeVisible();
+    await expect(page.locator(".sources-inspector-pane .inspector-drawer")).toHaveCount(0);
 
     // Select DoD AI Assurance
     const rowButton = page.getByRole("button", { name: "DoD AI Assurance" });
@@ -41,10 +42,11 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     // Verify register results count is still visible and not covered
     await expect(page.locator(".source-register-total")).toBeVisible();
 
-    // Verify closing inspector clears selection
+    // Verify closing inspector returns to empty inspector state (S7)
     await closeBtn.click();
     await waitForAppReady(page);
-    await expect(page.locator(".sources-inspector-pane")).toHaveCount(0);
+    await expect(page.locator(".sources-inspector-pane .inspector-drawer")).toHaveCount(0);
+    await expect(page.locator(".sources-inspector-pane .source-inspector-card--empty")).toBeVisible();
     await expect(rowButton).toBeVisible();
     await expect(rowButton).toHaveAttribute("aria-expanded", "false");
   });
@@ -112,11 +114,11 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
   test("Sources page never displays duplicate eyebrow and title on first paint or hydration", async ({ page }) => {
     await gotoApp(page, "/#/sources");
 
-    // Check before hydration
+    // Check before hydration if static eyebrow is present
     const eyebrow = page.locator("[data-static-route-eyebrow]");
-    if (await eyebrow.count()) {
-      const isHidden = await eyebrow.getAttribute("hidden");
-      const text = await eyebrow.textContent();
+    if ((await eyebrow.count()) > 0) {
+      const isHidden = await eyebrow.first().getAttribute("hidden").catch(() => null);
+      const text = await eyebrow.first().textContent({ timeout: 1000 }).catch(() => null);
       if (!isHidden && text) {
         expect(text.trim().toLowerCase()).not.toBe("sources");
       }

@@ -274,6 +274,7 @@
   --ca-content-md: var(--ca-reading-measure);
   --ca-content-lg: 60rem;
   --ca-content-max: 75rem;
+  --ca-workspace-max: 88rem;
   --ca-content-xl: var(--ca-content-max);
   --ca-grid-gutter: var(--ca-space-6);
   --ca-section-gap: var(--ca-space-12);

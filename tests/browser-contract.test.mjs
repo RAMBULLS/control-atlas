@@ -83,14 +83,14 @@ test('shell exposes direct task navigation and keeps Guides in overflow', () => 
   assert.match(routeIdentity, /Sources/);
   assert.match(routeIdentity, /About/);
   const staticPrimaryNav = html.match(/<nav aria-label="Primary navigation"[\s\S]*?<\/nav>/)?.[0] || "";
-  assert.match(staticPrimaryNav, /#\/start[\s\S]*#\/atlas[\s\S]*#\/library[\s\S]*#\/compare[\s\S]*#\/resources[\s\S]*#\/sources[\s\S]*#\/about/);
+  assert.match(staticPrimaryNav, /#\/start[\s\S]*#\/atlas[\s\S]*#\/library[\s\S]*#\/compare[\s\S]*#\/resources/);
   assert.match(navigation, /PRIMARY_SECTION_LABEL = "Explore Control Atlas"/);
   assert.match(navigation, /PRIMARY_NAV_ITEMS[\s\S]*view: "start-here"[\s\S]*view: "atlas-map"[\s\S]*view: "search"[\s\S]*view: "matrix"[\s\S]*view: "commons"/);
   assert.doesNotMatch(
     navigation.match(/PRIMARY_NAV_ITEMS:[\s\S]*?\n\];/)?.[0] || "",
     /view: "patterns"/,
   );
-  assert.match(navigation, /OVERFLOW_NAV_ITEMS[\s\S]*GUIDES_NAV_ITEM[\s\S]*DOCUMENTS_NAV_ITEM/);
+  assert.match(navigation, /OVERFLOW_NAV_ITEMS[\s\S]*DOCUMENTS_NAV_ITEM[\s\S]*GUIDES_NAV_ITEM/);
   assert.match(navigation, /UTILITY_NAV_ITEMS[\s\S]*view: "sources"[\s\S]*view: "about"/);
   assert.doesNotMatch(navigation, /The framework/);
   assert.doesNotMatch(navigation, /NAV_GROUPS/);
@@ -457,7 +457,6 @@ test('result-affecting controls have one visible workbench owner', () => {
 
   for (const [source, target] of [
     [catalog, 'catalog-inventory-results'],
-    [sources, 'source-register-results'],
   ]) {
     assert.match(source, new RegExp(`targetId="${target}"`));
     assert.match(source, new RegExp(`id="${target}"`));

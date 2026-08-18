@@ -73,19 +73,19 @@ export const PRIMARY_NAV_ITEMS: NavItem[] = [
   },
 ];
 
-export const GUIDES_NAV_ITEM: NavItem = {
-  label: routeIdentityFor("patterns").label,
-  view: "patterns",
-  path: routeIdentityFor("patterns").path,
-  icon: IconCompass,
-  section: "toolkit",
-};
-
 export const DOCUMENTS_NAV_ITEM: NavItem = {
   label: routeIdentityFor("templates").label,
   view: "templates",
   path: routeIdentityFor("templates").path,
   icon: IconFileText,
+  section: "toolkit",
+};
+
+export const GUIDES_NAV_ITEM: NavItem = {
+  label: routeIdentityFor("patterns").label,
+  view: "patterns",
+  path: routeIdentityFor("patterns").path,
+  icon: IconCompass,
   section: "toolkit",
 };
 
@@ -107,8 +107,9 @@ export const UTILITY_NAV_ITEMS: NavItem[] = [
 ];
 
 export const OVERFLOW_NAV_ITEMS: NavItem[] = [
-  GUIDES_NAV_ITEM,
   DOCUMENTS_NAV_ITEM,
+  GUIDES_NAV_ITEM,
+  ...UTILITY_NAV_ITEMS,
 ];
 
 export const MOBILE_NAV_SECTIONS: NavSection[] = [
@@ -116,11 +117,10 @@ export const MOBILE_NAV_SECTIONS: NavSection[] = [
     label: PRIMARY_SECTION_LABEL,
     items: PRIMARY_NAV_ITEMS,
   },
-  { label: UTILITY_SECTION_LABEL, items: [...UTILITY_NAV_ITEMS, ...OVERFLOW_NAV_ITEMS] },
+  { label: UTILITY_SECTION_LABEL, items: OVERFLOW_NAV_ITEMS },
 ];
 
 export const ALL_NAV_ITEMS = [
   ...PRIMARY_NAV_ITEMS,
-  ...UTILITY_NAV_ITEMS,
   ...OVERFLOW_NAV_ITEMS,
 ];

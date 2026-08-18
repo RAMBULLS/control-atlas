@@ -9,7 +9,6 @@ import {
   MOBILE_NAV_SECTIONS,
   OVERFLOW_NAV_ITEMS,
   PRIMARY_NAV_ITEMS,
-  UTILITY_NAV_ITEMS,
 } from "../lib/navigation";
 
 import type { ViewState } from "../lib/viewState";
@@ -132,18 +131,6 @@ export function TopNav(props: TopNavProps) {
         <nav aria-label="Primary navigation" className="primary-nav ml-[16px] self-end mb-[-1px]">
           <div className="border-b-0 h-full gap-[2px]">
             {PRIMARY_NAV_ITEMS.map((item) => (
-              <AppLink
-                aria-current={activeView === item.view ? "page" : undefined}
-                className={activeView === item.view ? "nav-active" : undefined}
-                key={item.view}
-                onNavigate={onNavigate}
-                patch={item.patch}
-                view={item.view}
-              >
-                {item.label}
-              </AppLink>
-            ))}
-            {UTILITY_NAV_ITEMS.map((item) => (
               <AppLink
                 aria-current={activeView === item.view ? "page" : undefined}
                 className={activeView === item.view ? "nav-active" : undefined}

@@ -104,7 +104,6 @@ function syncStaticRouteShell() {
   if (!shell) return;
   const identity = progressiveRouteIdentity();
   if (identity) {
-    rootElement.dataset.staticRoutePersistent = 'true';
     rootElement.dataset.staticRouteKind = identity.kind;
     const eyebrow = shell.querySelector<HTMLElement>('[data-static-route-eyebrow]');
     const title = shell.querySelector<HTMLElement>('[data-static-route-title]');
@@ -119,13 +118,13 @@ function syncStaticRouteShell() {
       summary.textContent = identity.summary;
     }
   } else {
-    delete rootElement.dataset.staticRoutePersistent;
     delete rootElement.dataset.staticRouteKind;
   }
   const active =
     (Boolean(identity) || rootElement.dataset.routeHydrated !== 'true') &&
     !isHomeHash() &&
-    !isSearchHash();
+    !isSearchHash() &&
+    rootElement.dataset.routeHydrated !== 'true';
   shell.toggleAttribute('hidden', !active);
   if (!active) {
     delete rootElement.dataset.staticRouteActive;
@@ -152,26 +151,13 @@ function observeRouteHydration() {
     ) {
       return false;
     }
-    if (
-      rootElement.dataset.staticRoutePersistent === 'true' &&
-      reactRootElement.querySelector('[data-route-suspense-pending="true"]')
-    ) {
-      return false;
-    }
     rootElement.dataset.routeHydrated = 'true';
+    delete rootElement.dataset.staticRouteActive;
     const shell = rootElement.querySelector<HTMLElement>('[data-static-route]');
     shell?.setAttribute('aria-hidden', 'true');
     shell?.setAttribute('inert', '');
     shell?.removeAttribute('role');
-    // It had only been made inert, not hidden. Its 620px reservation kept
-    // occupying layout after hydration, so at mobile widths the "Opening
-    // workspace" placeholder sat above the real page on every non-home route.
-    if (rootElement.dataset.staticRoutePersistent !== 'true') {
-      shell?.setAttribute('hidden', '');
-    } else {
-      shell?.removeAttribute('aria-hidden');
-      shell?.removeAttribute('inert');
-    }
+    shell?.setAttribute('hidden', '');
     return true;
   };
   const scheduleHydration = () => {

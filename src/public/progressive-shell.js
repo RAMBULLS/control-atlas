@@ -198,7 +198,6 @@
     else delete root.dataset.staticSearchActive;
 
     if (identity && shell && !home && !search) {
-      root.dataset.staticRoutePersistent = "true";
       root.dataset.staticRouteActive = "true";
       root.dataset.staticRouteKind = identity.kind;
       var eyebrowNode = shell.querySelector("[data-static-route-eyebrow]");

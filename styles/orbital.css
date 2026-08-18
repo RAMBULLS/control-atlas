@@ -406,64 +406,9 @@ body {
   visibility: visible;
 }
 
-/* Hash routes cannot be server-rendered independently on GitHub Pages. The
-   small progressive masthead therefore remains the route's authoritative
-   identity while React takes ownership of the task-specific body below it. */
-#root[data-static-route-persistent="true"] > [data-static-route] {
-  min-height: 0;
-}
-
-#root[data-static-route-persistent="true"] .static-route-summary {
-  min-height: 0;
-}
-
-#root[data-static-route-persistent="true"] > [data-react-root] #workspace {
-  grid-row: 4;
-  padding-top: 0;
-}
-
-/* Keep the footer below the first viewport while a persistent progressive
-   masthead hands off to route data. Without this reservation the empty React
-   workspace was only a few pixels tall, so the footer painted in-view and
-   then jumped hundreds of pixels when Documents, Resources, Catalog, or Atlas
-   content arrived. */
-#root[data-static-route-persistent="true"]:not([data-route-hydrated="true"])
-  > [data-react-root]
-  #workspace {
-  min-height: max(620px, calc(100svh - 200px));
-}
-
+/* On hydration, React fully owns the route masthead and workspace geometry. */
 #root[data-route-hydrated="true"] > [data-react-root] #workspace {
   min-height: 0;
-}
-
-/* The progressive Atlas masthead already names and explains the landscape on
-   first paint. Do not repaint a larger duplicate intro after data arrives;
-   the interactive circuit tree becomes the immediate next object instead. */
-#root[data-static-route-kind="atlas"]
-  > [data-react-root]
-  .atlas-universe__intro {
-  display: none;
-}
-
-#root[data-static-route-persistent="true"] > [data-react-root] footer {
-  grid-row: 5;
-}
-
-#root[data-static-route-persistent="true"]
-  > [data-react-root]
-  [data-route-primary-header]
-  [data-route-primary-copy],
-#root[data-static-route-persistent="true"]
-  > [data-react-root]
-  [data-route-primary-header][data-route-primary-copy] {
-  display: none;
-}
-
-#root[data-static-route-persistent="true"]
-  > [data-react-root]
-  [data-route-primary-header]:not(:has([data-route-primary-support])) {
-  display: none;
 }
 
 .static-search-form {
@@ -872,54 +817,101 @@ body {
   white-space: nowrap;
 }
 
-/* Shared page composition. The route title is a compact strip; explanatory
-   copy and actions follow as content instead of inflating the strip into a
-   second hero below the global header. */
-/* Orbital task header: eyebrow, precise title, one sentence of decision
-   context, and at most one primary action at the end of the row. It sizes to
-   its content instead of being clipped into a fixed bar. */
+/* Mission page frame primitives (Phase 1 / F1.1 - F1.3) */
+.mission-page {
+  position: relative;
+  width: 100%;
+  max-width: var(--ca-workspace-max, 88rem);
+  margin-inline: auto;
+  padding: var(--ca-space-4) var(--ca-space-6) var(--ca-space-12);
+  min-height: calc(100vh - var(--ca-header-height, 62px));
+  box-sizing: border-box;
+}
+
+.mission-page--workspace {
+  max-width: var(--ca-workspace-max, 88rem);
+}
+
+.mission-page--content {
+  max-width: var(--ca-content-max, 75rem);
+}
+
+.mission-page--reading {
+  max-width: var(--ca-reading-measure, 45rem);
+}
+
+.mission-page--full {
+  max-width: 100%;
+}
+
+.mission-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(20rem, 1fr);
+  gap: var(--ca-space-4);
+  align-items: start;
+  width: 100%;
+}
+
+.mission-workspace--single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (max-width: 64rem) {
+  .mission-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.support-rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ca-space-4);
+  min-width: 0;
+}
+
+.support-rail--sticky {
+  position: sticky;
+  top: calc(var(--ca-header-height, 62px) + var(--ca-space-4));
+}
+
+/* Orbital task header (§3.4):
+   Eyebrow / Current scope / count (Mono, Teal)
+   H1 (Oswald display face, Bone)
+   One-sentence purpose (Inter, Dust, max 65ch) with optional single action
+   Thin datum rule beneath with teal registration tick */
 .page-header {
   position: relative;
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   justify-content: space-between;
   gap: var(--ca-space-6);
   width: 100%;
   margin-bottom: var(--ca-space-6);
-  padding: var(--ca-space-2) var(--ca-space-4) var(--ca-space-5);
-  border-bottom: 1px solid var(--ca-border);
-  background: color-mix(in srgb, var(--ca-surface-deep) 72%, transparent);
-}
-
-.page-header::before {
-  position: absolute;
-  top: var(--ca-space-2);
-  bottom: var(--ca-space-2);
-  left: 0;
-  width: 2px;
-  background: linear-gradient(var(--ca-primary), transparent);
-  content: "";
+  padding: var(--ca-space-2) 0 var(--ca-space-5);
+  border-bottom: 1px solid color-mix(in srgb, var(--ca-border-strong) 65%, transparent);
+  background: transparent;
 }
 
 .page-header::after {
   position: absolute;
-  right: 0;
-  bottom: -3px;
-  width: 56px;
-  height: 5px;
-  border-inline: 1px solid var(--ca-priority);
+  left: 0;
+  bottom: -1px;
+  width: min(36%, 360px);
+  height: 1px;
+  background: linear-gradient(90deg, var(--ca-accent), transparent);
   content: "";
-  opacity: 0.72;
+  opacity: 0.85;
 }
 
-.page-header h1,
-.panel h1,
-.detail-page h1 {
-  font-size: clamp(1.5rem, 3vw, 2.1rem);
+.page-header h1 {
+  font-family: var(--ca-font-display);
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
   font-weight: 700;
-  line-height: var(--line-height-heading);
-  letter-spacing: -0.01em;
-  text-transform: none;
+  line-height: var(--line-height-heading, 1.08);
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  color: var(--lsm-bone);
+  margin: 0;
 }
 
 /* Title block stacks: eyebrow over title over the one context sentence. */
@@ -930,9 +922,12 @@ body {
 }
 
 .page-header-title .page-summary {
-  max-width: var(--ca-reading-measure);
+  max-width: 65ch;
   margin: 0;
   color: var(--ca-text-muted);
+  font-family: var(--ca-font-body);
+  font-size: var(--ca-text-base);
+  line-height: var(--line-height-normal);
 }
 
 .page-header > .page-header-row,
@@ -954,12 +949,7 @@ body {
 
 .page-header-action {
   flex: none;
-  align-self: end;
-}
-
-.page-header > .eyebrow,
-.page-header > .page-header-row .page-summary {
-  display: none;
+  align-self: flex-end;
 }
 
 @media (max-width: 40rem) {
@@ -997,11 +987,11 @@ body {
 .summary-card-title,
 .result-meta,
 .mobile-nav-sheet-group-label {
-  color: var(--ca-text);
+  color: var(--ca-accent);
   font-family: var(--ca-font-mono);
   font-size: var(--ca-text-micro);
   font-weight: 500;
-  letter-spacing: 0.18em;
+  letter-spacing: var(--ca-tracking-eyebrow, 0.18em);
   text-transform: uppercase;
 }
 

@@ -118,7 +118,7 @@ test("item mappings require a named published structure before resolving an iden
   assert.equal(nextMissingCompareInput(state, ["nist-olir"]), "source");
   assert.equal(
     compareConfigurationReady(
-      { ...state, source: "nist-800-53" },
+      { ...state, source: "nist-800-53", target: "csf-2" },
       ["nist-olir"],
     ),
     true,
@@ -242,25 +242,29 @@ test("T3.12/T3.14: real-graph capability feeds the state machine end to end — 
 test("staged flow steps and current step index reflect progressive completion across framework crosswalk modes", () => {
   // 1. Frameworks mode
   const fwSteps = getCompareSteps("frameworks");
-  assert.equal(fwSteps.length, 4);
+  assert.equal(fwSteps.length, 3);
   assert.equal(fwSteps[0].id, "source");
   assert.equal(fwSteps[1].id, "target");
-  assert.equal(fwSteps[2].id, "mapping");
-  assert.equal(fwSteps[3].id, "results");
+  assert.equal(fwSteps[2].id, "results");
 
   const fwInit = normalizeViewState("matrix", { view: "matrix", ...activateCompareMode("frameworks") });
   assert.equal(getCompareCurrentStep("frameworks", fwInit), 1);
   assert.equal(getCompareCurrentStep("frameworks", { ...fwInit, source: "nist-800-53" }), 2);
-  assert.equal(getCompareCurrentStep("frameworks", { ...fwInit, source: "nist-800-53", target: "csf-2" }), 3);
-  assert.equal(getCompareCurrentStep("frameworks", { ...fwInit, source: "nist-800-53", target: "csf-2", compareRun: "true" }), 4);
+  assert.equal(getCompareCurrentStep("frameworks", { ...fwInit, source: "nist-800-53", target: "csf-2" }), 2);
+  assert.equal(getCompareCurrentStep("frameworks", { ...fwInit, source: "nist-800-53", target: "csf-2", compareRun: "true" }), 3);
 
   // 2. Item mapping mode
   const itemSteps = getCompareSteps("item-mapping");
-  assert.equal(itemSteps.length, 4);
+  assert.equal(itemSteps.length, 3);
+  assert.equal(itemSteps[0].id, "item");
+  assert.equal(itemSteps[1].id, "target");
+  assert.equal(itemSteps[2].id, "results");
+
   const itemInit = normalizeViewState("matrix", { view: "matrix", ...activateCompareMode("item-mapping") });
   assert.equal(getCompareCurrentStep("item-mapping", itemInit), 1);
-  assert.equal(getCompareCurrentStep("item-mapping", { ...itemInit, source: "nist-800-53" }), 2);
-  assert.equal(getCompareCurrentStep("item-mapping", { ...itemInit, source: "nist-800-53", items: "AC-2" }), 3);
-  assert.equal(getCompareCurrentStep("item-mapping", { ...itemInit, source: "nist-800-53", items: "AC-2", compareRun: "true" }), 4);
+  assert.equal(getCompareCurrentStep("item-mapping", { ...itemInit, source: "nist-800-53" }), 1);
+  assert.equal(getCompareCurrentStep("item-mapping", { ...itemInit, source: "nist-800-53", items: "AC-2" }), 2);
+  assert.equal(getCompareCurrentStep("item-mapping", { ...itemInit, source: "nist-800-53", items: "AC-2", target: "csf-2" }), 2);
+  assert.equal(getCompareCurrentStep("item-mapping", { ...itemInit, source: "nist-800-53", items: "AC-2", target: "csf-2", compareRun: "true" }), 3);
 });
 

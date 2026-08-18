@@ -9,7 +9,7 @@ type CompareState = Extract<ViewState, { view: "matrix" }>;
 export const COMPARE_MODES = Object.freeze([
   {
     id: "frameworks",
-    label: "Catalog to catalog",
+    label: "Frameworks",
     crosswalk: "relationships",
     // "mappingSource" is deliberately absent here: it is never a mandatory
     // user choice. resolveMappingSource below decides, from the pair's real
@@ -20,9 +20,9 @@ export const COMPARE_MODES = Object.freeze([
   },
   {
     id: "item-mapping",
-    label: "Item mappings",
+    label: "Specific item",
     crosswalk: "relationships",
-    required: ["source", "items"],
+    required: ["source", "items", "target"],
   },
 ] as const);
 
@@ -34,16 +34,14 @@ export type CompareStep = {
 
 export const COMPARE_MODE_STEPS: Record<CompareModeId, readonly CompareStep[]> = {
   frameworks: [
-    { id: "source", label: "Publication A", description: "Choose primary framework" },
-    { id: "target", label: "Publication B", description: "Choose target framework" },
-    { id: "mapping", label: "Mapping source", description: "Select evidence source" },
-    { id: "results", label: "Results", description: "Review comparison" },
+    { id: "source", label: "01 / Source", description: "Choose a framework" },
+    { id: "target", label: "02 / Target", description: "Choose framework to compare" },
+    { id: "results", label: "03 / Results", description: "Review published mappings" },
   ],
   "item-mapping": [
-    { id: "source", label: "Publication", description: "Choose framework" },
-    { id: "item", label: "Control or rule", description: "Specify item ID" },
-    { id: "target", label: "Target / Scope", description: "Select comparison target" },
-    { id: "results", label: "Results", description: "Review mappings" },
+    { id: "item", label: "01 / Item", description: "Choose publication & item" },
+    { id: "target", label: "02 / Target", description: "Choose target framework" },
+    { id: "results", label: "03 / Results", description: "Review published mappings" },
   ],
 };
 
@@ -57,14 +55,12 @@ export function getCompareCurrentStep(
 ): number {
   switch (modeId) {
     case "frameworks":
-      if (state.compareRun === "true" && state.source && state.target) return 4;
-      if (state.target) return 3;
+      if (state.compareRun === "true" && state.source && state.target) return 3;
       if (state.source) return 2;
       return 1;
     case "item-mapping":
-      if (state.compareRun === "true" && state.source && state.items) return 4;
-      if (state.items) return 3;
-      if (state.source) return 2;
+      if (state.compareRun === "true" && state.source && state.items && state.target) return 3;
+      if (state.source && state.items) return 2;
       return 1;
     default:
       return 1;

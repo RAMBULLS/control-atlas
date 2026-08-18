@@ -81,7 +81,7 @@ export const SITE_COPY = Object.freeze({
     }),
     compare: Object.freeze({
       title: "Compare",
-      purpose: "Compare frameworks and related records.",
+      purpose: "See how frameworks connect using published crosswalks.",
     }),
     documents: Object.freeze({
       title: "Documents",

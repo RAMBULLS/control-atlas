@@ -23,6 +23,7 @@ import {
 import { SITE_COPY } from "../../shared/site-copy.mjs";
 import { AcronymText } from "../components/AccessibleTerm";
 import { AtlasGraph } from "../components/AtlasGraph";
+import { AtlasConnectionMap } from "../components/AtlasConnectionMap";
 import type { AtlasProjectionDrill } from "../lib/atlasGraphProjection";
 import {
   AtlasTree,
@@ -680,6 +681,15 @@ function FocusedAtlas(props: {
     </section>
   );
 
+  const [compactConnectionMap, setCompactConnectionMap] = useState(
+    typeof window !== "undefined" ? window.innerWidth < 800 : false
+  );
+  useEffect(() => {
+    const handleResize = () => setCompactConnectionMap(window.innerWidth < 800);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div className="atlas-focused-shell">
       {/* One record workspace, not three competing modes. Connections is the
@@ -916,6 +926,27 @@ function FocusedAtlas(props: {
                   </AppLink>
                 </div>
               </section>
+            ) : null}
+
+            {!hierarchyOpen ? (
+              rows.length === 0 ? (
+                <div className="atlas-map-empty">
+                  <h3>No published connections to show.</h3>
+                </div>
+              ) : (
+                <AtlasConnectionMap
+                  center={record.center_node}
+                  compact={compactConnectionMap}
+                  expandedGroupId={state.relationshipGroup}
+                  groups={groups}
+                  identityForNode={identityForNode}
+                  onExpandedGroupChange={(lensKey) => patchAtlas({ relationshipGroup: lensKey })}
+                  onOpenList={() => patchAtlas({ relationshipView: "list" })}
+                  onOpenRecord={onOpenNode}
+                  onSelectItem={setSelectedRow}
+                  selectedItemId={selectedRow?.counterpart.id || ""}
+                />
+              )
             ) : null}
 
             {/* The complete relationship set supports the canvas instead of
@@ -1431,7 +1462,7 @@ function AtlasNoConnections(props: {
   return (
     <section className="atlas-no-connections" role="status">
       <IconMap aria-hidden="true" size={28} />
-      <h2>No connections found.</h2>
+      <h2>No published connections to show.</h2>
       <p>
         {props.filtersActive
           ? "No connections match the current filters."

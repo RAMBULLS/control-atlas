@@ -120,13 +120,13 @@ test("V1 workflow 07 — compare with a shareable explicit configuration", async
   );
   await expect(page).toHaveURL(/#\/compare\/relationships\?source=nist-800-53&target=csf-2$/);
   await expect(
-    page.getByRole("heading", { name: "Catalog to catalog" }),
+    page.getByRole("heading", { name: "Compare", level: 1 }),
   ).toBeVisible();
   // This pair has exactly one published mapping source, so Compare
   // auto-resolves it and renders "Mapping publication" as static text
   // rather than a selectable dropdown (T3 capability rule: never offer a
   // choice with only one completion).
-  await expect(page.getByText("Mapping publication")).toBeVisible();
+  await expect(page.getByText("Mapping publication").first()).toBeVisible();
   await page.getByRole("button", { name: "Show mappings" }).click();
   await expect(page).toHaveURL(/compareRun=true/);
   await expect(
@@ -180,7 +180,7 @@ test("source detail routes use specific identity at every governed width", async
       await gotoApp(page, `/#/sources?source=${source.id}`);
       await waitForAppReady(page);
       await dismissOnboarding(page);
-      await expect(page.getByRole("heading", { name: source.name, level: 1 })).toBeVisible();
+      await expect(page.getByRole("heading", { name: source.name, level: 2 })).toBeVisible();
       await expect(page).toHaveTitle(`${source.name} — Control Atlas`);
       const copy = page.getByRole("button", { name: `Copy source ID ${source.id}` });
       await expect(copy).toBeVisible();
@@ -196,11 +196,11 @@ test("source detail routes use specific identity at every governed width", async
   await waitForAppReady(page);
   await page.goBack();
   await waitForAppReady(page);
-  await expect(page.getByRole("heading", { name: sources[0].name, level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: sources[0].name, level: 2 })).toBeVisible();
   await expect(page).toHaveTitle(`${sources[0].name} — Control Atlas`);
   await page.goForward();
   await waitForAppReady(page);
-  await expect(page.getByRole("heading", { name: sources[1].name, level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: sources[1].name, level: 2 })).toBeVisible();
   await expect(page).toHaveTitle(`${sources[1].name} — Control Atlas`);
 
   const copy = page.getByRole("button", { name: `Copy source ID ${sources[1].id}` });
@@ -221,7 +221,7 @@ test("a supplemental source material resolves to its parent publication's identi
   for (const materialId of ["cyber-mil-stig-downloads", "cyber-mil-stig-compilations"]) {
     await open(page, `/#/sources?source=${materialId}`);
     await expect(
-      page.getByRole("heading", { name: "DISA Public STIG Library", level: 1 }),
+      page.getByRole("heading", { name: "DISA Public STIG Library", level: 2 }),
     ).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Copy source ID disa-stig-library" }),
@@ -269,7 +269,7 @@ test("source detail has one return action and preserves the Sources workspace", 
     await page.goBack();
     await waitForAppReady(page);
     await expect(
-      page.getByRole("heading", { name: "DISA Public STIG Library", level: 1 }),
+      page.getByRole("heading", { name: "DISA Public STIG Library", level: 2 }),
     ).toBeVisible();
     await expect(returnLink).toHaveCount(1);
 
@@ -294,7 +294,7 @@ test("unknown Source detail links fail closed and preserve recovery state", asyn
     await page.reload();
     await waitForAppReady(page);
 
-    await expect(page.getByRole("heading", { name: "Source not found", level: 1 })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Sources", level: 1 })).toBeVisible();
     await expect(page).toHaveTitle("Source not found — Control Atlas");
     await expect(
       page.getByText(
@@ -302,7 +302,7 @@ test("unknown Source detail links fail closed and preserve recovery state", asyn
       ),
     ).toBeVisible();
     await expect(page.locator("h1")).toContainText(sourceId);
-    const requestedSourceId = page.locator(".ca-source-not-found-id code");
+    const requestedSourceId = page.locator(".source-not-found-banner code");
     await expect(requestedSourceId).toHaveText(sourceId);
     const requestedSourceIdBox = await requestedSourceId.boundingBox();
     expect(requestedSourceIdBox).not.toBeNull();
@@ -332,9 +332,9 @@ test("unknown Source detail links fail closed and preserve recovery state", asyn
 
     await page.goBack();
     await waitForAppReady(page);
-    await expect(page.getByRole("heading", { name: "Source not found", level: 1 })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Sources", level: 1 })).toBeVisible();
     await expect(page.locator("h1")).toContainText(sourceId);
-    await expect(page.locator(".ca-source-not-found-id code")).toHaveText(sourceId);
+    await expect(page.locator(".source-not-found-banner code")).toHaveText(sourceId);
     await page.goForward();
     await waitForAppReady(page);
     await expect(page.getByRole("heading", { name: "Sources", level: 1 })).toBeVisible();

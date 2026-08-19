@@ -120,7 +120,7 @@ test("Atlas root presents an authority-rooted interactive hierarchy", async ({
   await expect(page.locator('[data-atlas-node-id^="atlas:LIMB-"]')).toHaveCount(9);
   await expect(page.locator(".react-flow")).toHaveCount(1);
   await expect(
-    page.getByText("Start with a topic and work toward the details.", { exact: true }),
+    page.getByText("Explore areas, publications, and the published connections between them.", { exact: true }),
   ).toBeVisible();
   await expect(page.getByRole("tab", { name: "Map", exact: true })).toHaveCount(
     0,

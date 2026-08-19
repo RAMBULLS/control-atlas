@@ -176,7 +176,7 @@ test("WS2 CCI records expose publisher references and a bounded first set of con
   await expect(source.locator('[data-source-field="references"] li')).toHaveCount(4);
 
   const connected = page.locator('[data-record-section="related-records"]');
-  await expect(connected.getByRole("heading", { name: "Evidence-backed connected records", exact: true })).toBeVisible();
+  await expect(connected.getByRole("heading", { name: "Related records", exact: true })).toBeVisible();
   await expect(connected.locator('[data-record-connection-id]')).toHaveCount(12);
   await expect(connected.getByRole("link", { name: "Explore all connections in Atlas", exact: true })).toBeVisible();
 });

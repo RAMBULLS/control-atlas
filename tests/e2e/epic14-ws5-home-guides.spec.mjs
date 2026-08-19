@@ -106,13 +106,11 @@ test("WS6 About states the research boundary exactly", async ({ page }) => {
     { exact: true },
   )).toBeVisible();
   for (const title of [
-    "What It Is",
-    "Why It Exists",
-    "How It Works",
-    "Built for Shared Work",
-    "Private by Default",
-    "Limits",
-    "About the Project",
+    "What Control Atlas is",
+    "How it is organized",
+    "How sources and crosswalks work",
+    "What Control Atlas does not decide",
+    "About the project",
   ]) {
     const heading = page.getByRole("heading", { level: 2, name: title });
     await expect(heading).toBeVisible();

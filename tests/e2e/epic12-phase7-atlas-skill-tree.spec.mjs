@@ -36,7 +36,7 @@ test("Atlas overview hands off to publisher-native navigation and preserves hist
 
   const tree = page.locator(".atlas-tree");
   await expect(tree).toHaveAttribute("data-tree-node-count", "13");
-  await expect(page.getByText("Start with a topic and work toward the details.", { exact: true })).toBeVisible();
+  await expect(page.getByText("Explore areas, publications, and the published connections between them.", { exact: true })).toBeVisible();
   await expect(tree.locator('[data-atlas-node-id="atlas:TRUNK"]')).toBeVisible();
   await expect(tree.locator('[data-atlas-node-id^="authority-aggregate:"]')).toHaveCount(3);
   await expect(tree.locator('[data-atlas-node-id^="atlas:LIMB-"]')).toHaveCount(9);

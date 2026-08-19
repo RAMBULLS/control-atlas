@@ -39,7 +39,7 @@ test("Atlas overview aggregates the ecosystem and drills directly", async ({ pag
   await waitForAppReady(page);
 
   await expect(page.getByRole("heading", { name: "Atlas", level: 1 })).toBeVisible();
-  await expect(page.getByText("Start with a topic and work toward the details.", { exact: true })).toBeVisible();
+  await expect(page.getByText("Explore areas, publications, and the published connections between them.", { exact: true })).toBeVisible();
   await expect(page.locator(".atlas-tree")).toHaveAttribute("data-tree-node-count", "13");
   await expect(page.locator(".atlas-tree")).toHaveAttribute("data-layout-status", "ready");
   await expect(page.locator(".react-flow__node")).toHaveCount(13);

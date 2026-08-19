@@ -172,6 +172,19 @@ export function filterAtlasEdges(
       return false;
     }
     const counterpart = counterpartFor(record, edge);
+    if (edge.relationship_class === "structural") {
+      const type = counterpart?.node_type;
+      if (
+        type === "trunk" ||
+        type === "limb" ||
+        type === "catalog" ||
+        type === "group" ||
+        type === "family" ||
+        type === "policy_directive"
+      ) {
+        return false;
+      }
+    }
     if (filters.nodeType && counterpart?.node_type !== filters.nodeType) {
       return false;
     }

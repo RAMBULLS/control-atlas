@@ -252,17 +252,17 @@ export function MissionPage(props: {
           : "mission-page--workspace";
 
   return (
-    <main
+    <div
       aria-label={props["aria-label"]}
       aria-labelledby={props["aria-labelledby"]}
       className={`mission-page ${widthClass} ${props.className || ""}`.trim()}
-      id={props.id || "workspace"}
+      id={props.id}
       role={props.role}
       style={props.style}
       tabIndex={-1}
     >
       {props.children}
-    </main>
+    </div>
   );
 }
 

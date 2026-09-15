@@ -127,7 +127,7 @@ export function atlasStructuralRowIdentity(
   node: Pick<AtlasRecordChoice, "itemId" | "label" | "nodeType">,
   projectedLabel = "",
 ): AtlasStructuralRowIdentity {
-  const usesPublisherLabel = usesScaffoldStableId(node.nodeType);
+  const usesPublisherLabel = usesScaffoldStableId(node.nodeType, node.itemId);
   const primary = usesPublisherLabel
     ? projectedLabel.trim() || node.label.trim() || node.itemId.trim()
     : node.itemId.trim() || projectedLabel.trim() || node.label.trim();

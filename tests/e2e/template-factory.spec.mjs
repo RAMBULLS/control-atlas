@@ -39,7 +39,7 @@ test("fresh starter-document state has no inferred catalog, baseline, or environ
     page.getByRole("button", { name: /Download Security Plan Starter \(/ }),
   ).toBeDisabled();
   await expect(page.locator(".generation-status")).toContainText(
-    /framework, baseline/i,
+    /Catalog or program and Baseline/i,
   );
 });
 

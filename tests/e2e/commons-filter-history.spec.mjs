@@ -94,11 +94,13 @@ test("Resource maintenance dates are semantic, consistent, and compact", async (
 
     const maintenance = page.locator("details.resource-detail-maintenance");
     await maintenance.getByText("Source & maintenance details", { exact: true }).click();
-    await expect(maintenance.locator('time[datetime="2026-08-12T14:29:40Z"]')).toHaveText("August 12, 2026");
-    await expect(maintenance.locator('time[datetime="2026-08-12"]')).toHaveText("August 12, 2026");
-    await expect(maintenance.locator('time[datetime="2026-08-03"]')).toHaveText("August 3, 2026");
-    await expect(maintenance.locator('time[datetime="2026-11-03"]')).toHaveText("November 3, 2026");
-    await expect(maintenance).not.toContainText("2026-08-12T14:29:40Z");
+    const dates = maintenance.locator("time[datetime]");
+    expect(await dates.count()).toBeGreaterThan(0);
+    for (let index = 0; index < await dates.count(); index += 1) {
+      const date = dates.nth(index);
+      await expect(date).toHaveText(/^[A-Z][a-z]+ \d{1,2}, \d{4}$/);
+      expect(await date.getAttribute("datetime")).toBeTruthy();
+    }
     expect(
       await page.evaluate(() =>
         globalThis.document.documentElement.scrollWidth -

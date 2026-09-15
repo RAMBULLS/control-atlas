@@ -172,7 +172,10 @@ export const SCAFFOLD_STABLE_ID_TYPES: ReadonlySet<string> = new Set([
 ]);
 
 /** True when the record's item_id is a Control Atlas key rather than a published ID. */
-export function usesScaffoldStableId(objectType: string): boolean {
+export function usesScaffoldStableId(objectType: string, stableId = ""): boolean {
+  if (objectType === "tactic") {
+    return !/^TA\d{4}$/i.test(stableId.trim());
+  }
   return (
     SCAFFOLD_STABLE_ID_TYPES.has(objectType) ||
     GENERATED_STABLE_ID_TYPES.has(objectType)
@@ -205,7 +208,7 @@ export function recordIdentityPresentationFor(input: {
   metadata?: TitledNode["metadata"];
 }): RecordIdentityPresentation {
   const stableId = input.itemId.trim();
-  const stableIdIsGenerated = usesScaffoldStableId(input.objectType);
+  const stableIdIsGenerated = usesScaffoldStableId(input.objectType, stableId);
   const publisherItemId = input.metadata?.publisher_item_id?.trim() || "";
   const displayId = publisherItemId || stableId;
   const nativePrimary = recordIdentityFor({ ...input, itemId: displayId });
@@ -294,7 +297,7 @@ export function recordDisplayTitle(node: TitledNode | null | undefined): string 
     const familyCode = itemId.replace(/^FAMILY-/, "");
     return `${title} (${familyCode}) family`;
   }
-  if (usesScaffoldStableId(node.node_type ?? "")) {
+  if (usesScaffoldStableId(node.node_type ?? "", itemId)) {
     return title;
   }
   return formatRecordTitle(itemId, title);

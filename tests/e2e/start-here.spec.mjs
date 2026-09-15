@@ -110,7 +110,7 @@ test("catalog detail keeps source context and opens a specific record", async ({
     page.getByRole("heading", { name: "SP 800-171 Rev. 2", exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByRole("link", { name: /Open official publication/ }),
+    page.getByRole("link", { name: /(?:Open|Download) official publication/ }),
   ).toBeVisible();
   await page.getByRole("button", { name: /Family Access Control/ }).click();
   await page.getByRole("searchbox", { name: "Search SP 800-171 Rev. 2" }).fill("3.1.1");

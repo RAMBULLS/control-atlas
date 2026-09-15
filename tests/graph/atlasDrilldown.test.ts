@@ -47,6 +47,18 @@ test("structural rows use immutable projected identity without changing atomic c
     accessibleName: "AC-2 \u2014 Account Management",
     usesPublisherLabel: false,
   });
+
+  const tactic = atlasStructuralRowIdentity({
+    itemId: "TA0001",
+    label: "Initial Access",
+    nodeType: "tactic",
+  });
+  assert.deepEqual(tactic, {
+    primary: "TA0001",
+    secondary: "Initial Access",
+    accessibleName: "TA0001 \u2014 Initial Access",
+    usesPublisherLabel: false,
+  });
 });
 
 const nodes: AtlasDrillNode[] = [

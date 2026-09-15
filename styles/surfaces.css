@@ -13267,6 +13267,7 @@ input[type="checkbox"] {
   justify-content: space-between;
   gap: var(--ca-space-2);
   width: 100%;
+  min-width: 0;
   min-height: 44px;
   padding: var(--ca-space-2);
   border: 1px solid color-mix(in srgb, var(--ca-area-color) 50%, transparent);
@@ -13418,6 +13419,8 @@ button.atlas-area__cell[data-floored="true"]:hover,
    its keep on a plate headline and nowhere else. */
 .atlas-area__name {
   display: -webkit-box;
+  min-width: 0;
+  flex: 1 1 auto;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   line-clamp: 3;

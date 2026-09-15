@@ -41,6 +41,15 @@ commits = [
   "b03a094863bb7b1a315a1db9cd42aa22621dbd94",
   "15655ec80c838678f4da2da326c5a4c3f3e9c970",
   "61686939ee7ae11a3f11a5b9b83fc7fe8e55939c",
+  # Historical Gitleaks trace, 2026-09-15: these commits contain only the
+  # public generated source records or their public source-key adapter. The
+  # trace emitted rule, path, line, and commit metadata
+  # without retaining matching material; current content is clean.
+  "0574ecaef0933f0136133559660fc5a50a611727",
+  "2da438d4b0c7e02d19fd23d219467830c4604de4",
+  "49dcda5f71cc1bcda2727e9c2b156c9449b38030",
+  "773ff5383f45b4ed2c7171a7033397469567dfe5",
+  "1b0ae0976adb129c969701c2aa97b2eba93fb6e9",
 ]
 paths = [
   '''data/attack-techniques-enterprise.json''',

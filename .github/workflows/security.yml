@@ -96,10 +96,6 @@ jobs:
       - name: Scan complete history on the weekly schedule
         if: ${{ always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
         run: ./gitleaks git . --redact --config=.gitleaks.toml --report-format=sarif --report-path=history-results.sarif
-      - name: Trace historical findings by commit without credential material
-        if: ${{ always() && github.event_name == 'workflow_dispatch' }}
-        continue-on-error: true
-        run: ./gitleaks git . --redact --config=.gitleaks.toml --report-format=json --report-path=history-trace.json
       - name: Label historical secret-scan results
         if: ${{ always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
         shell: bash
@@ -120,37 +116,22 @@ jobs:
         run: |
           node <<'NODE'
           const fs = require('node:fs');
-          const nodePath = require('node:path');
-          const sarifPath = 'history-results.sarif';
-          const tracePath = 'history-trace.json';
+          const path = 'history-results.sarif';
+          if (!fs.existsSync(path)) process.exit(0);
+          const report = JSON.parse(fs.readFileSync(path, 'utf8'));
           const findings = new Map();
-          if (fs.existsSync(tracePath)) {
-            for (const result of JSON.parse(fs.readFileSync(tracePath, 'utf8'))) {
+          for (const run of report.runs || []) {
+            for (const result of run.results || []) {
+              const location = result.locations?.[0]?.physicalLocation;
               const item = {
-                ruleId: result.RuleID || 'unknown-rule',
-                path: result.File ? nodePath.relative(process.cwd(), result.File) || nodePath.basename(result.File) : 'unknown-path',
-                startLine: result.StartLine || null,
-                endLine: result.EndLine || null,
-                commit: result.Commit || null,
+                ruleId: result.ruleId || 'unknown-rule',
+                path: location?.artifactLocation?.uri || 'unknown-path',
+                startLine: location?.region?.startLine || null,
+                endLine: location?.region?.endLine || null,
+                commit: result.properties?.Commit || null,
               };
               const key = JSON.stringify(item);
               findings.set(key, (findings.get(key) || 0) + 1);
-            }
-          } else if (fs.existsSync(sarifPath)) {
-            const report = JSON.parse(fs.readFileSync(sarifPath, 'utf8'));
-            for (const run of report.runs || []) {
-              for (const result of run.results || []) {
-                const location = result.locations?.[0]?.physicalLocation;
-                const item = {
-                  ruleId: result.ruleId || 'unknown-rule',
-                  path: location?.artifactLocation?.uri || 'unknown-path',
-                  startLine: location?.region?.startLine || null,
-                  endLine: location?.region?.endLine || null,
-                  commit: result.properties?.Commit || null,
-                };
-                const key = JSON.stringify(item);
-                findings.set(key, (findings.get(key) || 0) + 1);
-              }
             }
           }
           const summary = [...findings.entries()]

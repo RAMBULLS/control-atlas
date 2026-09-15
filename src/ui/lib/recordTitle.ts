@@ -165,7 +165,6 @@ export const SCAFFOLD_STABLE_ID_TYPES: ReadonlySet<string> = new Set([
   "policy",
   "program",
   "rmf_step",
-  "tactic",
   "zt_document",
   "zt_pillar",
   "zt_tenet",

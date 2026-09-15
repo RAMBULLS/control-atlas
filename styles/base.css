@@ -107,7 +107,7 @@ mark {
      reads without the fill having to shout. */
   background: color-mix(in srgb, var(--ca-primary) 35%, transparent);
   box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--ca-primary) 85%, transparent);
-  color: inherit;
+  color: var(--ca-text);
 }
 
 a {

@@ -79,15 +79,43 @@ jobs:
           tar --extract --gzip --file "$archive" --no-same-owner gitleaks
       - name: Scan the complete checked-out snapshot
         run: ./gitleaks dir . --redact --config=.gitleaks.toml --report-format=sarif --report-path=results.sarif
+      - name: Label snapshot secret-scan results
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = 'results.sarif';
+          if (!fs.existsSync(path)) process.exit(0);
+          const report = JSON.parse(fs.readFileSync(path, 'utf8'));
+          for (const run of report.runs || []) {
+            run.automationDetails = { ...(run.automationDetails || {}), id: '.github/workflows/security.yml:secrets-snapshot' };
+          }
+          fs.writeFileSync(path, JSON.stringify(report));
+          NODE
       - name: Scan complete history on the weekly schedule
-        if: ${{ always() && github.event_name == 'schedule' }}
+        if: ${{ always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
         run: ./gitleaks git . --redact --config=.gitleaks.toml --report-format=sarif --report-path=history-results.sarif
+      - name: Label historical secret-scan results
+        if: ${{ always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = 'history-results.sarif';
+          if (!fs.existsSync(path)) process.exit(0);
+          const report = JSON.parse(fs.readFileSync(path, 'utf8'));
+          for (const run of report.runs || []) {
+            run.automationDetails = { ...(run.automationDetails || {}), id: '.github/workflows/security.yml:secrets-history' };
+          }
+          fs.writeFileSync(path, JSON.stringify(report));
+          NODE
       - uses: github/codeql-action/upload-sarif@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
         if: always()
         with:
           sarif_file: results.sarif
       - uses: github/codeql-action/upload-sarif@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
-        if: ${{ always() && github.event_name == 'schedule' }}
+        if: ${{ always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
         with:
           sarif_file: history-results.sarif
 

@@ -38,7 +38,13 @@ test("columnar Library index preserves benchmark search answers without eager re
   assert.equal(runtime.searchLibrary("NIST AC-02")[0].id, "nist-800-53:AC-2");
   assert.equal(runtime.searchLibrary("account management")[0].id, "nist-800-53:AC-2");
   assert.equal(runtime.searchLibrary("V-205646")[0].id, "disa-stig:V-205646");
+  assert.equal(runtime.searchLibrary("205646")[0].id, "disa-stig:V-205646");
+  assert.equal(runtime.searchLibrary("V205646")[0].id, "disa-stig:V-205646");
+  assert.equal(runtime.searchLibrary("v 205646")[0].id, "disa-stig:V-205646");
+  assert.equal(runtime.searchLibrary("SV-205646")[0].id, "disa-stig:V-205646");
   assert.equal(runtime.searchLibrary("WN19-DC-000290")[0].id, "disa-stig:V-205646");
+  assert.equal(runtime.searchLibrary("WN19 DC 000290")[0].id, "disa-stig:V-205646");
+  assert.ok(runtime.searchLibrary("2019").length > 0);
   assert.ok(
     runtime.searchLibrary("zero trust").some((record) => record.catalog_id === "nist-zt"),
   );

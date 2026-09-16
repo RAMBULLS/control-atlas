@@ -192,15 +192,6 @@ export function resolveControlAliases(rawNeedle) {
       continue;
     }
 
-    // Base control IDs: "ac-02", "ac-2", "ac02", "ac2", "ac 02", "ac 2"
-    const baseMatch = input.match(/^([a-z]{2,4})[-\s]?0*(\d+)$/i);
-    if (baseMatch) {
-      const family = baseMatch[1].toLowerCase();
-      const controlNum = Number.parseInt(baseMatch[2], 10);
-      aliases.add(`${family}-${controlNum}`);
-      continue;
-    }
-
     // 4. CSF style: e.g. "pr.ac-01", "pr.ac-1", "pr ac 1", "pr-ac-1"
     const csfMatch = input.match(/^([a-z]{2})[.\-\s]([a-z]{2})[-\s]?0*(\d+)$/i);
     if (csfMatch) {
@@ -208,6 +199,43 @@ export function resolveControlAliases(rawNeedle) {
       const cat = csfMatch[2].toLowerCase();
       const num = Number.parseInt(csfMatch[3], 10);
       aliases.add(`${func}.${cat}-${num}`);
+      continue;
+    }
+
+    // 5. DISA STIG Vuln ID: "v-205646", "v205646", "v 205646", or bare 5-7 digit number "205646"
+    const stigVulnMatch = input.match(/^v[-\s]?(\d{4,7})$/i);
+    if (stigVulnMatch) {
+      aliases.add(`v-${stigVulnMatch[1]}`);
+      continue;
+    }
+    const bareVulnMatch = input.match(/^(\d{5,7})$/);
+    if (bareVulnMatch) {
+      aliases.add(`v-${bareVulnMatch[1]}`);
+      continue;
+    }
+
+    // 6. DISA STIG Rule ID: "sv-205646", "sv205646", "sv-205646r1153437_rule"
+    const svMatch = input.match(/^sv[-\s]?(\d{4,7})/i);
+    if (svMatch) {
+      aliases.add(`v-${svMatch[1]}`);
+      continue;
+    }
+
+    // 7. DISA STIG ID with spaces or alternate delimiters: "wn19 dc 000290" -> "wn19-dc-000290"
+    if (/\d/.test(input)) {
+      const stigIdMatch = input.match(/^([a-z0-9]{2,8})[-\s_]+([a-z0-9]{2,8})[-\s_]+([a-z0-9]{4,10})$/i);
+      if (stigIdMatch) {
+        aliases.add(`${stigIdMatch[1]}-${stigIdMatch[2]}-${stigIdMatch[3]}`.toLowerCase());
+        continue;
+      }
+    }
+
+    // 8. Base control IDs: "ac-02", "ac-2", "ac02", "ac2", "ac 02", "ac 2"
+    const baseMatch = input.match(/^([a-z]{2,4})[-\s]?0*(\d+)$/i);
+    if (baseMatch) {
+      const family = baseMatch[1].toLowerCase();
+      const controlNum = Number.parseInt(baseMatch[2], 10);
+      aliases.add(`${family}-${controlNum}`);
       continue;
     }
   }
@@ -1224,7 +1252,7 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
       const normalizedItemId = normalize(indexedLibraryValue(index, "item_id"));
       const normalizedId = normalize(indexedLibraryValue(index, "id"));
       const officialPreview = normalize(indexedLibraryValue(index, "official_text_preview"));
-      const isStigNeedle = aliases.some((a) => /^[a-z0-9]{2,8}-[a-z0-9]{2,8}-[a-z0-9]{4,10}$/i.test(a));
+      const isStigNeedle = aliases.some((a) => /\d/.test(a) && /^[a-z0-9]{2,8}-[a-z0-9]{2,8}-[a-z0-9]{4,10}$/i.test(a));
       if (
         needle && (
           aliases.includes(normalizedItemId) ||
@@ -1270,7 +1298,7 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
     if (!needle) {
       return candidates.map((document) => ({ document, rankBoost: 0, score: 0 }));
     }
-    const isStigNeedle = aliases.some((a) => /^[a-z0-9]{2,8}-[a-z0-9]{2,8}-[a-z0-9]{4,10}$/i.test(a));
+    const isStigNeedle = aliases.some((a) => /\d/.test(a) && /^[a-z0-9]{2,8}-[a-z0-9]{2,8}-[a-z0-9]{4,10}$/i.test(a));
     const exactMatches = candidates.filter((document) => {
       const itemId = document.search_item_id || normalize(document.item_id);
       const id = document.search_id || normalize(document.id);

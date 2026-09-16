@@ -19,13 +19,14 @@ test("WS2 record template leads with qualified identity and one source action", 
   await expect(page.locator("[data-canonical-breadcrumb]"))
     .toHaveAttribute("data-canonical-breadcrumb", /3\.1\.1$/);
   await expect(page.locator(".record-official-name")).toHaveCount(0);
-  await expect(template.locator(".bucket-tag")).toHaveCount(1);
-  await expect(template.locator(".bucket-tag")).toContainText("Compliance");
-  // Four chips: the publisher category and its governed taxonomy twin render
-  // the same words, so the duplicate is collapsed.
-  await expect(page.locator(".record-classification-tags").locator(":scope > *"))
-    .toHaveCount(4);
-  await expect(page.getByRole("link", { name: "Filter the Library by Access Control", exact: true })).toBeVisible();
+  const contextSection = page.locator('[data-record-section="taxonomy-context"]');
+  await expect(contextSection).toBeVisible();
+  await expect(contextSection.getByRole("heading", { name: "Find more like this", level: 2 })).toBeVisible();
+  await expect(page.locator(".related-in-atlas")).toHaveCount(0);
+  await expect(page.locator("main")).not.toContainText("Explore by context");
+  await expect(page.locator("main")).not.toContainText("source-backed facets");
+  await expect(contextSection.getByRole("link", { name: "Filter the Library by Access Control", exact: true })).toBeVisible();
+  await expect(page.locator(".record-source-facts")).toContainText("Record type");
   await expect(page.getByRole("link", { name: OFFICIAL_SOURCE_ACTION })).toHaveCount(1);
 
   await expect(page.getByRole("heading", { name: "Requirement", level: 2 })).toBeVisible();
@@ -374,10 +375,12 @@ test("WS6 record identities and derived category explanations stay source-truthf
   const acronym = page.locator("h1 abbr", { hasText: "DISA" });
   await acronym.focus();
   await expect(acronym).toHaveAttribute("data-tooltip", "Defense Information Systems Agency");
-  const referencedCategory = page.locator('.line-tag--explained[data-tooltip="Referenced category."]');
-  await referencedCategory.focus();
-  await expect(referencedCategory).toContainText("Access Control");
-  const inferredArea = page.locator('.bucket-tag--explained[data-tooltip="Inferred category."]');
-  await inferredArea.focus();
-  await expect(inferredArea).toContainText("Implementation");
+  const contextSection = page.locator('[data-record-section="taxonomy-context"]');
+  await expect(contextSection).toBeVisible();
+  await expect(contextSection.getByRole("link", { name: "Filter the Library by Access Control", exact: true })).toBeVisible();
+  const provenanceDisclosure = contextSection.locator("details.taxonomy-provenance-disclosure");
+  await expect(provenanceDisclosure).toBeVisible();
+  await expect(provenanceDisclosure.locator("summary")).toHaveText("Why these are shown");
+  await expect(provenanceDisclosure).toContainText("Access Control");
+  await expect(contextSection).not.toContainText("Implementation");
 });

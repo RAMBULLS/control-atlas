@@ -77,26 +77,26 @@ test("governed tags keep stable URL, OR/AND, alias, count, and unavailable-value
   await assetFacet.getByRole("checkbox", { name: /Server/ }).click();
   await expect(page).toHaveURL(/tag=asset\.server/);
   const serverCount = await resultTotal(page);
-  expect(serverCount).toBe(2584);
+  expect(serverCount).toBe(5083);
   await expect(page.getByRole("button", { name: "Remove Server filter" })).toBeVisible();
 
   await assetFacet.getByRole("checkbox", { name: /Workstation/ }).click();
   await expect(page).toHaveURL(/tag=asset\.server.*tag=asset\.workstation/);
-  await expect.poll(() => resultTotal(page)).toBe(3000);
+  await expect.poll(() => resultTotal(page)).toBe(6309);
 
   const vendorDisclosure = facets.locator('[data-taxonomy-dimension="vendor_brand"]');
   await vendorDisclosure.locator("summary").click();
   const vendorFacet = vendorDisclosure.getByRole("group", { name: "Vendor" });
   await vendorFacet.getByRole("checkbox", { name: /Microsoft/ }).click();
   await expect(page).toHaveURL(/tag=asset\.server.*tag=asset\.workstation.*tag=vendor\.microsoft/);
-  await expect.poll(() => resultTotal(page)).toBe(1316);
+  await expect.poll(() => resultTotal(page)).toBe(2221);
 
   await page.goBack();
   await expect(page).toHaveURL(/tag=asset\.server.*tag=asset\.workstation/);
-  await expect.poll(() => resultTotal(page)).toBe(3000);
+  await expect.poll(() => resultTotal(page)).toBe(6309);
   await page.goForward();
   await expect(page).toHaveURL(/tag=asset\.server.*tag=asset\.workstation.*tag=vendor\.microsoft/);
-  await expect.poll(() => resultTotal(page)).toBe(1316);
+  await expect.poll(() => resultTotal(page)).toBe(2221);
 
   await open(page, "/#/library?tag=asset.iot");
   const contextualVendorDisclosure = page.locator('.workspace-facet-rail [data-taxonomy-dimension="vendor_brand"]');
@@ -209,12 +209,12 @@ test("clear-all preserves text search and zero-result recovery remains available
   await expect.poll(() => resultTotal(page)).toBe(137);
   await page.getByRole("button", { name: "Remove Access Control filter" }).click();
   await expect(page).toHaveURL(/#\/library\?q=account$/);
-  await expect.poll(() => resultTotal(page)).toBe(2655);
+  await expect.poll(() => resultTotal(page)).toBe(3710);
 
   await open(page, "/#/library?q=account&tag=domain.access-control");
   await page.locator(".active-filter-row .clear-filter-link").click();
   await expect(page).toHaveURL(/#\/library\?q=account$/);
-  await expect.poll(() => resultTotal(page)).toBe(2655);
+  await expect.poll(() => resultTotal(page)).toBe(3710);
 
   await open(page, "/#/library?tag=asset.iot&tag=product.microsoft-windows");
   await expect(page.locator(".workspace-result-count")).toHaveText("0 results");

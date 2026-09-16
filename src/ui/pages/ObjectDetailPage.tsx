@@ -18,8 +18,7 @@ import {
   RecordNativeFacts,
   RecordPublishedText,
 } from "../components/RecordPublishedText";
-import { AtlasTag } from "../components/AtlasTag";
-import { BucketTag, LineTag } from "../components/TaxonomyTag";
+import { TaxonomyContext } from "../components/TaxonomyContext";
 import { catalogDisplayNameFor, catalogProfileFor } from "../lib/catalogProfiles";
 import {
   buildAtlasTreeModel,
@@ -43,9 +42,7 @@ import {
   recordDisplayTitle,
   recordPublisherName,
 } from "../lib/recordTitle";
-import { recordTagsFor, tagProvenanceExplanation } from "../lib/recordTags";
-import { taxonomyTagsForRecord } from "../../shared/record-taxonomy.mjs";
-import { TAXONOMY_TAG_BY_ID } from "../../shared/taxonomy-contract.mjs";
+import { extractGovernedRecordTaxonomy } from "../lib/taxonomyContext";
 import type { RuntimeBundle } from "../lib/runtimeLoader";
 import { runtimeRecordIdentityFor } from "../lib/runtimeRecordIdentity";
 import { normalizeViewState, type ViewState } from "../lib/viewState";
@@ -54,8 +51,6 @@ import {
   sourceLifecycleDisplayName,
   sourcePublicationTitle,
 } from "../lib/sourcePresentation";
-
-const ATLAS_TAG_DIMENSIONS = new Set(["organization", "framework", "program", "tool", "artifact", "topic"]);
 
 /**
  * Lower-case a record-kind label only when it is an ordinary noun phrase.
@@ -260,13 +255,12 @@ export function ObjectDetailPage(props: {
     (group) => group.treatment !== RELATIONSHIP_TREATMENTS.ATLAS_ONLY,
   );
   const visibleConnectionCount = visibleConnectionGroups.reduce((total, group) => total + group.items.length, 0);
-  const recordTags = recordTagsFor({
-    area,
-    category: family,
-    kind,
-    publication: catalogName,
+  const governedTaxonomyTags = extractGovernedRecordTaxonomy({
+    catalogId: document.catalog_id,
+    nodeTaxonomyTags: node.metadata?.taxonomy_tags,
+    metadata: node.metadata,
+    family,
     relatedCategories: node.metadata?.related_categories,
-    taxonomyTags: node.metadata?.taxonomy_tags,
   });
 
   return (
@@ -455,103 +449,6 @@ export function ObjectDetailPage(props: {
               ) : <p>No directly contained records are loaded for this publication object.</p>}
             </section>
           ) : null}
-        </article>
-
-        <aside
-          className="record-template-sidebar"
-          data-displayed-trace={displayedTrace.map((entry) => entry.id).join(">")}
-        >
-          {(() => {
-            // Generated container nodes (families, categories, benchmarks) carry
-            // no per-record tags, so fall back to the same catalog-identity rule
-            // the publication page uses. Never a new claim: publisher, framework,
-            // and program follow from catalog_id alone.
-            const nodeTagIds = (node.metadata?.taxonomy_tags || [])
-              .filter((t: { id?: string; kind?: string }) => t.id && ATLAS_TAG_DIMENSIONS.has(t.kind ?? ""))
-              .map((t: { id: string }) => t.id);
-            const catalogTagIds = taxonomyTagsForRecord({ catalog_id: document.catalog_id })
-              .filter((t: { id?: string; kind?: string }) => t.id && ATLAS_TAG_DIMENSIONS.has(t.kind ?? ""))
-              .map((t: { id: string }) => t.id);
-            const atlasTagIds = [...new Set([...nodeTagIds, ...catalogTagIds])];
-            return atlasTagIds.length > 0 ? (
-              <section className="related-in-atlas">
-                <h2>Related in Control Atlas</h2>
-                <div className="related-in-atlas__tags">
-                  {atlasTagIds.map((tagId: string) => (
-                    <AtlasTag key={tagId} onNavigate={onNavigate} showIdentity size="sm" tagId={tagId} />
-                  ))}
-                </div>
-              </section>
-            ) : null;
-          })()}
-          <section>
-            <h2>About This Record</h2>
-            <div className="record-classification-tags">
-              {recordTags.filter((tag) => !ATLAS_TAG_DIMENSIONS.has(tag.kind as string)).map((tag) => {
-                const content = tag.kind === "area" ? (
-                  <BucketTag
-                    area={tag.label}
-                    explanation={tagProvenanceExplanation(tag.provenance)}
-                  >
-                    {tag.label}
-                  </BucketTag>
-                ) : (
-                  <LineTag explanation={tagProvenanceExplanation(tag.provenance)}>
-                    <AcronymText>{tag.label}</AcronymText>
-                  </LineTag>
-                );
-                const governedId = TAXONOMY_TAG_BY_ID.has(tag.id)
-                  ? tag.id
-                  : (node.metadata?.taxonomy_tags || []).find(
-                      (candidate: { id?: string; label?: string }) => candidate.label === tag.label,
-                    )?.id;
-                const tagPatch = governedId
-                  ? { tags: [governedId] }
-                  : tag.kind === "area"
-                    ? { area: tag.id.replace(/^area:/, "") }
-                    : { query: tag.label };
-                return (
-                  <AppLink
-                    aria-label={`Filter the Library by ${tag.label}`}
-                    className="record-taxonomy-link"
-                    key={tag.id}
-                    onNavigate={onNavigate}
-                    patch={tagPatch}
-                    view="search"
-                  >
-                    {content}
-                  </AppLink>
-                );
-              })}
-            </div>
-            <dl className="record-source-facts">
-              {publisherName ? <div>
-                <dt>Publisher</dt>
-                <dd>{publisherName}</dd>
-              </div> : null}
-              <div>
-                <dt>Publication</dt>
-                <dd>{sourcePublicationName}{source?.version ? ` · ${source.version}` : ""}</dd>
-              </div>
-              <div>
-                <dt>Status</dt>
-                <dd>{sourceLifecycleDisplayName(source?.lifecycle_status)}</dd>
-              </div>
-              <div>
-                <dt>{sourceFreshness.label}</dt>
-                <dd>{sourceFreshness.dateTime ? (
-                  <time dateTime={sourceFreshness.dateTime}>{sourceFreshness.value}</time>
-                ) : sourceFreshness.value}</dd>
-              </div>
-            </dl>
-            <AppLink
-              onNavigate={onNavigate}
-              patch={{ source: source?.id || "" }}
-              view="sources"
-            >
-              View source details
-            </AppLink>
-          </section>
           {governedConnectionGroups.length ? (
             <section className="record-connections record-connections--related" data-record-section="related-records">
               <div className="section-header">
@@ -683,7 +580,54 @@ export function ObjectDetailPage(props: {
               </AppLink>
             </section>
           ) : null}
+        </article>
+
+        <aside
+          className="record-template-sidebar"
+          data-displayed-trace={displayedTrace.map((entry) => entry.id).join(">")}
+        >
+          <TaxonomyContext
+            onNavigate={onNavigate}
+            tags={governedTaxonomyTags}
+          />
+          <section>
+            <h2>About This Record</h2>
+            <dl className="record-source-facts">
+              <div>
+                <dt>Record type</dt>
+                <dd>{kind}</dd>
+              </div>
+              {publisherName ? (
+                <div>
+                  <dt>Publisher</dt>
+                  <dd>{publisherName}</dd>
+                </div>
+              ) : null}
+              <div>
+                <dt>Publication</dt>
+                <dd>{sourcePublicationName}{source?.version ? ` · ${source.version}` : ""}</dd>
+              </div>
+              <div>
+                <dt>Status</dt>
+                <dd>{sourceLifecycleDisplayName(source?.lifecycle_status)}</dd>
+              </div>
+              <div>
+                <dt>{sourceFreshness.label}</dt>
+                <dd>{sourceFreshness.dateTime ? (
+                  <time dateTime={sourceFreshness.dateTime}>{sourceFreshness.value}</time>
+                ) : sourceFreshness.value}</dd>
+              </div>
+            </dl>
+            <AppLink
+              onNavigate={onNavigate}
+              patch={{ source: source?.id || "" }}
+              view="sources"
+            >
+              View source details
+            </AppLink>
+          </section>
         </aside>
+
       </div>
 
     </section>

@@ -339,12 +339,12 @@ export function parseViewState(search: string): ViewState {
   const params = new URLSearchParams(search);
   const query = params.get("q") || "";
 
-  if (/^[A-Z]{3}-\d{4}-\d+$/i.test(query) || /^\d{4,}$/.test(query)) {
-    return { view: "retired", query };
-  }
-
   const rawView = params.get("view");
   const view = rawView ? canonicalViewParam(rawView) : "home";
+
+  if (view === "retired" || (!rawView && /^[A-Z]{3}-\d{4}-\d+$/i.test(query))) {
+    return { view: "retired", query };
+  }
 
   if (view === "home") {
     return { view: "home" };

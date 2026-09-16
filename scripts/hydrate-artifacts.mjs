@@ -171,9 +171,9 @@ export const BASE_RESOLUTIONS = Object.freeze([
   // not WAF-blocked) plus the extracted STIG/SRG/CCI-map data files
   // (generated-from-download, hashed from their committed copies).
   { id: 'artifact-disa-compilation-zip', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'other', parser: 'disa-compilation', parser_version: '1.0.0' },
-  { id: 'artifact-disa-stig-library', local: 'data/stig-rules.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0' },
-  { id: 'artifact-disa-srg-library', local: 'data/srg-requirements.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0' },
-  { id: 'artifact-disa-stig-srg-cci-references', local: 'maps/stig-srg-to-cci.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0' },
+  { id: 'artifact-disa-stig-library', local: 'data/stig-rules.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0', count: 'json_records' },
+  { id: 'artifact-disa-srg-library', local: 'data/srg-requirements.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0', count: 'json_records' },
+  { id: 'artifact-disa-stig-srg-cci-references', local: 'maps/stig-srg-to-cci.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0', count: 'json_relationships' },
   // 800-53B baselines: the generated baseline data (generated-from-download of
   // the OSCAL rev5 baseline profiles), hashed from its committed copy.
   { id: 'artifact-nist-800-53b-baselines', local: 'data/800-53b-baselines.json', url: `${OSCAL}/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json`, format: 'oscal_json', parser: 'oscal-profile', parser_version: '1.5.0' },
@@ -215,6 +215,7 @@ const COUNTERS = {
   jsonld: (bytes) => countJsonLdEntries(JSON.parse(Buffer.from(bytes).toString('utf8'))),
   csv: (bytes) => countCsvRows(Buffer.from(bytes).toString('utf8')),
   cci: (bytes) => countCciItems(bytes),
+  json_records: (bytes) => JSON.parse(Buffer.from(bytes).toString('utf8')).records?.length || 0,
 };
 
 // XLSX row count is async (read-excel-file/node reads a file/stream).
@@ -386,9 +387,12 @@ export async function hydrateArtifacts({ root = ROOT, only = null, onlyPrefix = 
       art.parser = r.parser;
       art.parser_version = r.parser_version;
       art.sha256 = sha256;
-      art.byte_length = byteLength;
-      art.retrieved_at = retrievedAt;
-      if (recordCount !== null) art.record_count = recordCount;
+      if (r.count === 'json_relationships') {
+        art.relationship_count = JSON.parse(buf.toString('utf8')).relationships?.length || 0;
+        art.record_count = 0;
+      } else if (recordCount !== null) {
+        art.record_count = recordCount;
+      }
       if (typeof art.relationship_count !== 'number') art.relationship_count = 0;
 
       changed += 1;

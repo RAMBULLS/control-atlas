@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-10T19:40:55.352Z",
-  "hydrated": 1,
+  "generated_at": "2026-09-16T00:07:04.454Z",
+  "hydrated": 87,
   "removed_orphans": [],
   "results": [
     {
@@ -68,10 +68,10 @@
       "status": "OK",
       "http": 200,
       "url": "https://raw.githubusercontent.com/FedRAMP/rules/main/fedramp-consolidated-rules.json",
-      "sha256": "sha256:135707003f0aaa5ceb10d7d32c2681e5b1585a4eaf4403d0d135837787e5ae8e",
-      "byte_length": 567435,
+      "sha256": "sha256:64915d88e72353c95f321ea4a9014516ac9441972cbd7f3d1abef7d1514c8fc8",
+      "byte_length": 564946,
       "record_count": 5,
-      "retrieved_at": "2026-09-10"
+      "retrieved_at": "2026-09-16"
     },
     {
       "id": "artifact-disa-cci-list",
@@ -422,10 +422,10 @@
       "status": "OK",
       "http": 200,
       "url": "https://www.ai.mil/Initiatives/About/Resources/Pathway-to-AI-Readiness/Responsible-AI/",
-      "sha256": "sha256:2a1d64fbcdc30c26ee087655923bfe7a1e46b90866a3ca4cc1d846bea5108662",
+      "sha256": "sha256:1e841cca806dbd99208286b629625bd400a65447906c3e2f6a5cfd5ff3348585",
       "byte_length": 105052,
       "record_count": null,
-      "retrieved_at": "2026-09-10"
+      "retrieved_at": "2026-09-16"
     },
     {
       "id": "artifact-isoo-cui-regulation",
@@ -462,10 +462,10 @@
       "status": "OK",
       "http": 200,
       "url": "https://csrc.nist.gov/extensions/nudp/services/json/csf/download?olirids=all",
-      "sha256": "sha256:39960ce2396d1af0c3acc7d94036484de4cb008f907d1c124f813247800ef8e0",
+      "sha256": "sha256:927ea3cebebdfbfde715af8089a7a5c437b66da8d373cd900cdb7e38011197d4",
       "byte_length": 144518,
       "record_count": null,
-      "retrieved_at": "2026-09-10"
+      "retrieved_at": "2026-09-16"
     },
     {
       "id": "artifact-nist-fips-199",
@@ -505,7 +505,7 @@
       "sha256": "sha256:df371dc0ebb163e1a0434b141bc2f16b56c97b2062622d6811191fbe4f093c01",
       "byte_length": 368971055,
       "record_count": 0,
-      "retrieved_at": "2026-09-10",
+      "retrieved_at": "2026-09-16",
       "attestation": "fresh DISA compilation range download and parse"
     },
     {
@@ -513,19 +513,19 @@
       "status": "OK",
       "http": "local",
       "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip",
-      "sha256": "sha256:7f213e611a8dee13aad088a057205904f21ab55c3fe6217e00e32f315f2b3a9c",
-      "byte_length": 52649162,
-      "record_count": null,
-      "retrieved_at": "2026-09-10"
+      "sha256": "sha256:07eb2ccd6a2182e20a97d6ac9349186c0a33afe40fac934ed74c5fe85b52f7ec",
+      "byte_length": 81980193,
+      "record_count": 26957,
+      "retrieved_at": "2026-09-16"
     },
     {
       "id": "artifact-disa-srg-library",
       "status": "OK",
       "http": "local",
       "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip",
-      "sha256": "sha256:12620195626af0b981d4738e9083c5cc33224b0d538d3658c569dbaa2b2ea5da",
-      "byte_length": 6596282,
-      "record_count": null,
+      "sha256": "sha256:8514a42950d62bfdd62c630b448cdb4b880449eac628d5f94551a5f0b3bd12ec",
+      "byte_length": 6689794,
+      "record_count": 2550,
       "retrieved_at": "2026-08-13"
     },
     {
@@ -533,8 +533,8 @@
       "status": "OK",
       "http": "local",
       "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip",
-      "sha256": "sha256:668d049b8a490d008c33dcd06cd8a1f70dfe1fcb7dd62841e5270944cd998dd5",
-      "byte_length": 13257105,
+      "sha256": "sha256:406171ce17b9d1f6c9656801a9beef1a9e116a0374571e442afbc4bcada42da6",
+      "byte_length": 19006785,
       "record_count": null,
       "retrieved_at": "2026-08-08"
     },

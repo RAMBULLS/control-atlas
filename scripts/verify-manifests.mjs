@@ -262,6 +262,20 @@ if (disa) {
   if ((disa.reconciliation?.failed_files || 0) > 0) {
     err(`DISA discovery contains ${disa.reconciliation.failed_files} failed file(s); source completeness cannot pass`);
   }
+  if (disa.publications) {
+    if ((disa.publications.failed_publications || 0) > 0) {
+      err(`DISA discovery contains ${disa.publications.failed_publications} failed publication(s); source completeness cannot pass`);
+    }
+    if ((disa.publications.missing_publications || 0) > 0) {
+      err(`DISA discovery contains ${disa.publications.missing_publications} missing publication(s); source completeness cannot pass`);
+    }
+    const expected = disa.publications.expected_canonical_publications || 0;
+    const accounted = (disa.publications.represented_in_compilation || 0)
+      + (disa.publications.standalone_ingested || 0);
+    if (expected > 0 && accounted < expected) {
+      err(`DISA publication reconciliation incomplete: ${accounted}/${expected} accounted for`);
+    }
+  }
   const hits = []; scanForbidden(disa, 'disa', hits);
   for (const h of hits) err(`DISA manifest forbidden marker: ${h}`);
 }

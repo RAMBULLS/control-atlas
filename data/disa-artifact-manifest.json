@@ -1,19 +1,1089 @@
 {
+  "schema_version": "2.0",
   "discovery_source": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/",
+  "compilation_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip",
   "artifact_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip",
   "byte_length": 368971055,
-  "retrieval_timestamp": "2026-09-10T19:40:10.512Z",
+  "retrieval_timestamp": "2026-09-16T00:06:18.920Z",
   "checksum": "sha256:df371dc0ebb163e1a0434b141bc2f16b56c97b2062622d6811191fbe4f093c01",
+  "publications": {
+    "total_discovered_archives": 1009,
+    "expected_canonical_publications": 292,
+    "represented_in_compilation": 175,
+    "standalone_ingested": 117,
+    "excluded_archives": 717,
+    "failed_publications": 0,
+    "missing_publications": 0
+  },
   "reconciliation": {
     "discovered_urls": 1009,
     "compilation_entries": 2616,
-    "ingested_files": 379,
+    "ingested_files": 496,
     "excluded_files": 84,
     "failed_files": 0,
     "ignored_files": 2153,
-    "stig_records_parsed": 17021,
-    "srg_records_parsed": 2516,
-    "cci_relationships": 28412,
+    "stig_records_parsed": 26957,
+    "srg_records_parsed": 2550,
+    "cci_relationships": 41406,
+    "compilation_stig_records": 17021,
+    "compilation_srg_records": 2516,
+    "standalone_stig_records": 11000,
+    "standalone_srg_records": 34,
+    "standalone_packages": [
+      {
+        "filename": "U_A10_Networks_ADC_Y24M07_STIG.zip",
+        "family": "A10_Networks_ADC",
+        "kind": "stig",
+        "versionStr": "Y24M07",
+        "stigRecords": 72,
+        "srgRecords": 0,
+        "checksum": "sha256:a4cd46131e83ecd6b183d451d6084beb38d04b8956eba89c17a59ba2d72c61f1"
+      },
+      {
+        "filename": "U_Adobe_Acrobat_Pro_DC_Classic_V2R1_STIG.zip",
+        "family": "Adobe_Acrobat_Pro_DC_Classic",
+        "kind": "stig",
+        "versionStr": "V2R1",
+        "stigRecords": 23,
+        "srgRecords": 0,
+        "checksum": "sha256:c0ebb815d799c964f8176c5e4b040c5ebaf85b77463ff64a3990ea9d2b6c2457"
+      },
+      {
+        "filename": "U_Apple_iOS-iPadOS_15_V1R4_STIG.zip",
+        "family": "Apple_iOS-iPadOS_15",
+        "kind": "stig",
+        "versionStr": "V1R4",
+        "stigRecords": 64,
+        "srgRecords": 0,
+        "checksum": "sha256:2052c6c2ee82a9c11a2b43087fa19a5c0267ec8429208a203872d5fda254692e"
+      },
+      {
+        "filename": "U_Apple_iOS-iPadOS_16_BYOAD_Y25M07_STIG.zip",
+        "family": "Apple_iOS-iPadOS_16_BYOAD",
+        "kind": "stig",
+        "versionStr": "Y25M07",
+        "stigRecords": 51,
+        "srgRecords": 0,
+        "checksum": "sha256:dfc74e74fb7f7c8a8485cc6d7c978b3b4f52c8e9e4b5cf22b303db73a1dab3fd"
+      },
+      {
+        "filename": "U_Apple_iOS-iPadOS_16_V2R2_STIG.zip",
+        "family": "Apple_iOS-iPadOS_16",
+        "kind": "stig",
+        "versionStr": "V2R2",
+        "stigRecords": 65,
+        "srgRecords": 0,
+        "checksum": "sha256:5429186c2f84ed484d08b763fea8ea0047dc2d1bb77c777552a46aeb465e4a3e"
+      },
+      {
+        "filename": "U_Apple_iOS-iPadOS_17_BYOAD_Y25M07_STIG.zip",
+        "family": "Apple_iOS-iPadOS_17_BYOAD",
+        "kind": "stig",
+        "versionStr": "Y25M07",
+        "stigRecords": 54,
+        "srgRecords": 0,
+        "checksum": "sha256:c5b0d11532b3cc3e32499d1a45c245f2661aa87b5507aea08f6d15b1a15f9c26"
+      },
+      {
+        "filename": "U_Apple_iOS-iPadOS_17_V2R2_STIG.zip",
+        "family": "Apple_iOS-iPadOS_17",
+        "kind": "stig",
+        "versionStr": "V2R2",
+        "stigRecords": 65,
+        "srgRecords": 0,
+        "checksum": "sha256:93bde138e3da6984a730aa8ff8700ee1a370e7a348388ee3fc5b6bebc1341a53"
+      },
+      {
+        "filename": "U_Apple_macOS_12_V1R9_STIG.zip",
+        "family": "Apple_macOS_12",
+        "kind": "stig",
+        "versionStr": "V1R9",
+        "stigRecords": 113,
+        "srgRecords": 0,
+        "checksum": "sha256:c40028a7cc77b985c1e0047a10e3aee677339bbe931bc3ea561a0c6ca76fe62d"
+      },
+      {
+        "filename": "U_Apple_macOS_13_V1R5_STIG.zip",
+        "family": "Apple_macOS_13",
+        "kind": "stig",
+        "versionStr": "V1R5",
+        "stigRecords": 113,
+        "srgRecords": 0,
+        "checksum": "sha256:cf438542be4945ec408a3fac87df2822d50463a28a459f6222039514c8b62141"
+      },
+      {
+        "filename": "U_Apple_macOS_14_V2R4_STIG.zip",
+        "family": "Apple_macOS_14",
+        "kind": "stig",
+        "versionStr": "V2R4",
+        "stigRecords": 156,
+        "srgRecords": 0,
+        "checksum": "sha256:d25991aba59c1fd7ec245ba915138c97be4078fc10aded852cb04f8708855f65"
+      },
+      {
+        "filename": "U_Apple_macOS_26_V1R3_STIG.zip",
+        "family": "Apple_macOS_26",
+        "kind": "stig",
+        "versionStr": "V1R3",
+        "stigRecords": 160,
+        "srgRecords": 0,
+        "checksum": "sha256:3096e133ff5f435c3a74eb5cd623f5bc2085782b3d36a60831904fa1671ae398"
+      },
+      {
+        "filename": "U_Apple_visionOS_26_Y26M05_STIG.zip",
+        "family": "Apple_visionOS_26",
+        "kind": "stig",
+        "versionStr": "Y26M05",
+        "stigRecords": 50,
+        "srgRecords": 0,
+        "checksum": "sha256:b06c06c7187967c187d84e7a564df2a1d78af4c4dd9be7dfbf748fc596dbadb0"
+      },
+      {
+        "filename": "U_ArcGIS_Server_10-3_V2R1_STIG.zip",
+        "family": "ArcGIS_Server_10-3",
+        "kind": "stig",
+        "versionStr": "V2R1",
+        "stigRecords": 23,
+        "srgRecords": 0,
+        "checksum": "sha256:b6295ed734a2bf8917c338727b457e5ae941c612f378e96ad30d2f93eaa6e0e3"
+      },
+      {
+        "filename": "U_Arista_MLS_DCS-7000_Series_Y24M07_STIG.zip",
+        "family": "Arista_MLS_DCS-7000_Series",
+        "kind": "stig",
+        "versionStr": "Y24M07",
+        "stigRecords": 58,
+        "srgRecords": 0,
+        "checksum": "sha256:b1e87ac50fc8a9abd3f0f948056f1ecbfc4fbc53d54c3dbbacee21c6c4d6387d"
+      },
+      {
+        "filename": "U_CA_API_Gateway_Y24M07_STIG.zip",
+        "family": "CA_API_Gateway",
+        "kind": "stig",
+        "versionStr": "Y24M07",
+        "stigRecords": 112,
+        "srgRecords": 0,
+        "checksum": "sha256:63633174c7739d5a8d317e8e8d447c944d2582dc97ff2f6e58b4838e3886a1df"
+      },
+      {
+        "filename": "U_CAN_Ubuntu_18-04_LTS_V2R15_STIG.zip",
+        "family": "CAN_Ubuntu_18-04_LTS",
+        "kind": "stig",
+        "versionStr": "V2R15",
+        "stigRecords": 176,
+        "srgRecords": 0,
+        "checksum": "sha256:1e00d9de2f31f8960ab8b6a104d4f17dd7e3ad5eb6de6846d8df025fd3e1cded"
+      },
+      {
+        "filename": "U_CAN_Ubuntu_20-04_LTS_V2R4_STIG.zip",
+        "family": "CAN_Ubuntu_20-04_LTS",
+        "kind": "stig",
+        "versionStr": "V2R4",
+        "stigRecords": 173,
+        "srgRecords": 0,
+        "checksum": "sha256:3efd167f182f5827ed691be6d98874fe011cf36f86baea4c3bacc2165ec75bbc"
+      },
+      {
+        "filename": "U_CD_PGSQL_V3R2_STIG.zip",
+        "family": "CD_PGSQL",
+        "kind": "stig",
+        "versionStr": "V3R2",
+        "stigRecords": 113,
+        "srgRecords": 0,
+        "checksum": "sha256:b73a6f3492a1f365bb82f01a29727df9236b9960c001aac4701fbe99ec67815c"
+      },
+      {
+        "filename": "U_Cisco_SNA_V1R1_STIG.zip",
+        "family": "Cisco_SNA",
+        "kind": "stig",
+        "versionStr": "V1R1",
+        "stigRecords": 31,
+        "srgRecords": 0,
+        "checksum": "sha256:0c7a3ff607642a0e76e4924a307d19334dec407265deb3e134cea69bae4ad1b4"
+      },
+      {
+        "filename": "U_Citrix_VAD_7-x_Y25M07_STIG.zip",
+        "family": "Citrix_VAD_7-x",
+        "kind": "stig",
+        "versionStr": "Y25M07",
+        "stigRecords": 27,
+        "srgRecords": 0,
+        "checksum": "sha256:3bc7e31f3597760ca09a172d5584d9afec0a71bf9a421581eec8d217f742a8d5"
+      },
+      {
+        "filename": "U_Citrix_XenDesktop_7-x_Y25M07_STIG.zip",
+        "family": "Citrix_XenDesktop_7-x",
+        "kind": "stig",
+        "versionStr": "Y25M07",
+        "stigRecords": 21,
+        "srgRecords": 0,
+        "checksum": "sha256:58a032eedb6e01d04602dc753c395bc0abffab0702f946187329eeeb8235d6cd"
+      },
+      {
+        "filename": "U_DBN-6300_Y24M07_STIG.zip",
+        "family": "DBN-6300",
+        "kind": "stig",
+        "versionStr": "Y24M07",
+        "stigRecords": 76,
+        "srgRecords": 0,
+        "checksum": "sha256:5306e9cf13de6299f311bf4dd0caafa77a7b1fd85a3889c7d48b54f44613e23a"
+      },
+      {
+        "filename": "U_Docker_Enterprise_2-x_Linux-Unix_V2R2_STIG.zip",
+        "family": "Docker_Enterprise_2-x_Linux-Unix",
+        "kind": "stig",
+        "versionStr": "V2R2",
+        "stigRecords": 101,
+        "srgRecords": 0,
+        "checksum": "sha256:c126f1ac8559cae38ba12e0ab4ff235976bfef556e0d29953fe427076a864642"
+      },
+      {
+        "filename": "U_EDB_PGS_Advanced_Server_v11_Windows_V2R4_STIG.zip",
+        "family": "EDB_PGS_Advanced_Server_v11_Windows",
+        "kind": "stig",
+        "versionStr": "V2R4",
+        "stigRecords": 82,
+        "srgRecords": 0,
+        "checksum": "sha256:8fadfca7346d209ee5905f668451bb74c38be5bcffb5e28732e1e5efb9857f32"
+      },
+      {
+        "filename": "U_EDB_PGS_Advanced_Server_v9-6_V2R3_STIG.zip",
+        "family": "EDB_PGS_Advanced_Server_v9-6",
+        "kind": "stig",
+        "versionStr": "V2R3",
+        "stigRecords": 109,
+        "srgRecords": 0,
+        "checksum": "sha256:e9eebd1e818338f76d32e87121504dfa163a3a1f9c9ecf4131eee1e1e2a8728a"
+      },
+      {
+        "filename": "U_F5_BIG-IP_Y25M01_STIG.zip",
+        "family": "F5_BIG-IP",
+        "kind": "stig",
+        "versionStr": "Y25M01",
+        "stigRecords": 187,
+        "srgRecords": 0,
+        "checksum": "sha256:9fa7382e5fc3a6e09ebcdf01be065b5710454e7ca138a760776a89b515f285ad"
+      },
+      {
+        "filename": "U_ForeScout_CounterACT_ALG_V1R3_STIG.zip",
+        "family": "ForeScout_CounterACT_ALG",
+        "kind": "stig",
+        "versionStr": "V1R3",
+        "stigRecords": 13,
+        "srgRecords": 0,
+        "checksum": "sha256:835dc8aa6fa336a98542204218d28e76d09eb3b2238e3b3e112d36a490f5ab9e"
+      },
+      {
+        "filename": "U_ForeScout_CounterACT_NDM_V1R2_STIG.zip",
+        "family": "ForeScout_CounterACT_NDM",
+        "kind": "stig",
+        "versionStr": "V1R2",
+        "stigRecords": 39,
+        "srgRecords": 0,
+        "checksum": "sha256:14a386fd9dfca2d1f2ff6fa54e194e5de2aa8b6cffd9d6233b4c76c1971ecc4c"
+      },
+      {
+        "filename": "U_GDIT_PitBull_8_V1R1_STIG.zip",
+        "family": "GDIT_PitBull_8",
+        "kind": "stig",
+        "versionStr": "V1R1",
+        "stigRecords": 209,
+        "srgRecords": 0,
+        "checksum": "sha256:3cb60f48dad62851b3c814f27e9ba1c3727a63f45af1880b0bc16884a7c1a67a"
+      },
+      {
+        "filename": "U_Google_Android_13_BYOAD_Y25M10_STIG.zip",
+        "family": "Google_Android_13_BYOAD",
+        "kind": "stig",
+        "versionStr": "Y25M10",
+        "stigRecords": 37,
+        "srgRecords": 0,
+        "checksum": "sha256:8047732743d90959c8fe65e0eb38d476e1ec4615b386710e1e1873cd269e24f0"
+      },
+      {
+        "filename": "U_Google_Android_13_Y25M10_STIG.zip",
+        "family": "Google_Android_13",
+        "kind": "stig",
+        "versionStr": "Y25M10",
+        "stigRecords": 69,
+        "srgRecords": 0,
+        "checksum": "sha256:4b6ba5ff0eafc5470511964fd9ea0b0622424fccdb68a2f8050afa2c6b5be22d"
+      },
+      {
+        "filename": "U_Google_Android_17_Y26M06_STIG.zip",
+        "family": "Google_Android_17",
+        "kind": "stig",
+        "versionStr": "Y26M06",
+        "stigRecords": 91,
+        "srgRecords": 0,
+        "checksum": "sha256:8f407d84be65bd55f12d6c0781be82f45d432c7ffb0f205782159dcbd8f7c050"
+      },
+      {
+        "filename": "U_HPE_3PAR_StoreServ_3-2-x_V2R2_STIG.zip",
+        "family": "HPE_3PAR_StoreServ_3-2-x",
+        "kind": "stig",
+        "versionStr": "V2R2",
+        "stigRecords": 20,
+        "srgRecords": 0,
+        "checksum": "sha256:daaf96a76ff84a93b8efab7d886081ca9c61baf798d4b2f15a99174a8280610b"
+      },
+      {
+        "filename": "U_HPE_3PAR_StoreServ_OS_Y26M07_STIG.zip",
+        "family": "HPE_3PAR_StoreServ_OS",
+        "kind": "stig",
+        "versionStr": "Y26M07",
+        "stigRecords": 64,
+        "srgRecords": 0,
+        "checksum": "sha256:8cb712f585e285181fdda29d065b15053201ed6b740d74a83498d10e3f331c90"
+      },
+      {
+        "filename": "U_HW_Android_9-x_Y24M01_STIG.zip",
+        "family": "HW_Android_9-x",
+        "kind": "stig",
+        "versionStr": "Y24M01",
+        "stigRecords": 62,
+        "srgRecords": 0,
+        "checksum": "sha256:9349fcbd429d87eed80122f60951697d005fc3152621b14cad3b886190064958"
+      },
+      {
+        "filename": "U_IBM_Aspera_Platform_4-2_V1R3_STIG.zip",
+        "family": "IBM_Aspera_Platform_4-2",
+        "kind": "stig",
+        "versionStr": "V1R3",
+        "stigRecords": 95,
+        "srgRecords": 0,
+        "checksum": "sha256:44da94dcc5b3e62cc72002b9d0da239c4d8b0f4d2778c4d3c2661abbeb331699"
+      },
+      {
+        "filename": "U_IBM_HMC_Y23M04_STIG.zip",
+        "family": "IBM_HMC",
+        "kind": "stig",
+        "versionStr": "Y23M04",
+        "stigRecords": 39,
+        "srgRecords": 0,
+        "checksum": "sha256:174c814004587456adc037066ed5c7a9b9b8dd2d3b02c670364e30d57c6d97ff"
+      },
+      {
+        "filename": "U_IBM_MQ_Appliance_v9-0_Y24M07_STIG.zip",
+        "family": "IBM_MQ_Appliance_v9-0",
+        "kind": "stig",
+        "versionStr": "Y24M07",
+        "stigRecords": 93,
+        "srgRecords": 0,
+        "checksum": "sha256:63917b30d4bb2e39c94d94f265de6db6738ea6beb83ebae3c2bd30d3650204ae"
+      },
+      {
+        "filename": "U_Infoblox_7-x_DNS_V2R2_STIG.zip",
+        "family": "Infoblox_7-x_DNS",
+        "kind": "stig",
+        "versionStr": "V2R2",
+        "stigRecords": 67,
+        "srgRecords": 0,
+        "checksum": "sha256:5122b5665fcddd4ce972b4a75f74d64d7591daf77a25e8cd44994435e1349468"
+      },
+      {
+        "filename": "U_Infoblox_NIOS_9-x_V1R1_STIG.zip",
+        "family": "Infoblox_NIOS_9-x",
+        "kind": "stig",
+        "versionStr": "V1R1",
+        "stigRecords": 45,
+        "srgRecords": 0,
+        "checksum": "sha256:60e1f7a36e689ead0847de1a1953122b073245914d17fc90db3b05ffcfb3a6ea"
+      },
+      {
+        "filename": "U_Ivanti_MI_Core_MDM_Server_V1R1_STIG.zip",
+        "family": "Ivanti_MI_Core_MDM_Server",
+        "kind": "stig",
+        "versionStr": "V1R1",
+        "stigRecords": 26,
+        "srgRecords": 0,
+        "checksum": "sha256:0b121ab940481462c37fc59a376d88ecf3717d378d01e8ad4465d0bc909a5834"
+      },
+      {
+        "filename": "U_Ivanti_MI_Sentry_9-x_STIG.zip",
+        "family": "Ivanti_MI_Sentry_9-x",
+        "kind": "stig",
+        "versionStr": "V1R0",
+        "stigRecords": 58,
+        "srgRecords": 0,
+        "checksum": "sha256:d475138c15716b9f5cf6a714c34a2b857b44d2cec873d38b1c49d492eb070217"
+      },
+      {
+        "filename": "U_Ivanti_Policy_Secure_Y26M06_STIG.zip",
+        "family": "Ivanti_Policy_Secure",
+        "kind": "stig",
+        "versionStr": "Y26M06",
+        "stigRecords": 43,
+        "srgRecords": 0,
+        "checksum": "sha256:ff2b3c9ff6585c2648cc84e77f0d62c83ccd69bdf5e6f7334b935e307fce0a21"
+      },
+      {
+        "filename": "U_McAfee_Application_Control_7-x_V1R4_STIG.zip",
+        "family": "McAfee_Application_Control_7-x",
+        "kind": "stig",
+        "versionStr": "V1R4",
+        "stigRecords": 33,
+        "srgRecords": 0,
+        "checksum": "sha256:5b4e75f3472023dc6f4b484f880aeecbf7ce32a665f56adcfc4ca547bf5e01b1"
+      },
+      {
+        "filename": "U_MDB_Enterprise_Advanced_3-x_V2R3_STIG.zip",
+        "family": "MDB_Enterprise_Advanced_3-x",
+        "kind": "stig",
+        "versionStr": "V2R3",
+        "stigRecords": 44,
+        "srgRecords": 0,
+        "checksum": "sha256:42823e11a55c0aade0855a36dfc27afb14928e9c90c7a7c34d05c57b2eed9c3c"
+      },
+      {
+        "filename": "U_MDB_Enterprise_Advanced_4-x_V1R4_STIG.zip",
+        "family": "MDB_Enterprise_Advanced_4-x",
+        "kind": "stig",
+        "versionStr": "V1R4",
+        "stigRecords": 52,
+        "srgRecords": 0,
+        "checksum": "sha256:6e11a25fec08e8d0d6d4083475f11da72d84fb44e2c2962dee0d651ff5c29dc9"
+      },
+      {
+        "filename": "U_Microsoft_Access_2016_V1R1_STIG.zip",
+        "family": "Microsoft_Access_2016",
+        "kind": "stig",
+        "versionStr": "V1R1",
+        "stigRecords": 16,
+        "srgRecords": 0,
+        "checksum": "sha256:d50c7524c814fbef36255864c402e464cfd38a1736eb50bc993859ffbbbab6fe"
+      },
+      {
+        "filename": "U_Microsoft_OneNote_2016_V1R2_STIG.zip",
+        "family": "Microsoft_OneNote_2016",
+        "kind": "stig",
+        "versionStr": "V1R2",
+        "stigRecords": 10,
+        "srgRecords": 0,
+        "checksum": "sha256:0cff06732fa26adf552d2888d7a317f80ed2bb66889724d91d83f466059ec884"
+      },
+      {
+        "filename": "U_Microsoft_Project_2016_V1R1_STIG.zip",
+        "family": "Microsoft_Project_2016",
+        "kind": "stig",
+        "versionStr": "V1R1",
+        "stigRecords": 14,
+        "srgRecords": 0,
+        "checksum": "sha256:3c0080642e359b704a7c20035c6f00a760f6a0d2b76986f289571dadf9e40499"
+      },
+      {
+        "filename": "U_Microsoft_Skype_for_Business_2016_V1R1_STIG.zip",
+        "family": "Microsoft_Skype_for_Business_2016",
+        "kind": "stig",
+        "versionStr": "V1R1",
+        "stigRecords": 3,
+        "srgRecords": 0,
+        "checksum": "sha256:f35dc2c91a26fd3147b661a6f35b50ec9841d88dc457280ea20c6f15bd454315"
+      },
+      {
+        "filename": "U_Microsoft_Visio_2016_V1R1_STIG.zip",
+        "family": "Microsoft_Visio_2016",
+        "kind": "stig",
+        "versionStr": "V1R1",
+        "stigRecords": 13,
+        "srgRecords": 0,
+        "checksum": "sha256:c82a66419f6d90816933fa965d8adfa587f77c3dd19618b493875d3bd936e742"
+      },
+      {
+        "filename": "U_Microsoft_Word_2016_V1R1_STIG.zip",
+        "family": "Microsoft_Word_2016",
+        "kind": "stig",
+        "versionStr": "V1R1",
+        "stigRecords": 34,
+        "srgRecords": 0,
+        "checksum": "sha256:0772f0ba75f60b9120343d226892602b148bf25e66d584c9375e2abf46108242"
+      },
+      {
+        "filename": "U_MOT_Solutions_Android_13_Y25M03_STIG.zip",
+        "family": "MOT_Solutions_Android_13",
+        "kind": "stig",
+        "versionStr": "Y25M03",
+        "stigRecords": 61,
+        "srgRecords": 0,
+        "checksum": "sha256:497720d0953aef9308cc6bc41738487eb18eda5ce8cbdab921bdd69345891f4a"
+      },
+      {
+        "filename": "U_MS_Access_2016_V2R1_STIG.zip",
+        "family": "MS_Access_2016",
+        "kind": "stig",
+        "versionStr": "V2R1",
+        "stigRecords": 17,
+        "srgRecords": 0,
+        "checksum": "sha256:3464062414dfa2200428e6b2d7da69d162c80d42a20c292aca618eefa08c5720"
+      },
+      {
+        "filename": "U_MS_DotNet_Framework_4-0_V2R9_STIG.zip",
+        "family": "MS_DotNet_Framework_4-0",
+        "kind": "stig",
+        "versionStr": "V2R9",
+        "stigRecords": 17,
+        "srgRecords": 0,
+        "checksum": "sha256:a546d14c66603ef8a8eaacb4447d2deb1cbe7def4875f5fbda85d47f2ccc8c65"
+      },
+      {
+        "filename": "U_MS_Excel_2010_V1R12_STIG.zip",
+        "family": "MS_Excel_2010",
+        "kind": "stig",
+        "versionStr": "V1R12",
+        "stigRecords": 47,
+        "srgRecords": 0,
+        "checksum": "sha256:7b12d973a85a8b7b4ba8d2604ed562a84eb5c44a587726f1dae3820b047a01ae"
+      },
+      {
+        "filename": "U_MS_Excel_2016_V2R2_STIG.zip",
+        "family": "MS_Excel_2016",
+        "kind": "stig",
+        "versionStr": "V2R2",
+        "stigRecords": 42,
+        "srgRecords": 0,
+        "checksum": "sha256:f89b13179a442f559734fc79e590726718bcc4427919b74efbe40ee1ec10ee18"
+      },
+      {
+        "filename": "U_MS_IE11_V2R7_STIG.zip",
+        "family": "MS_IE11",
+        "kind": "stig",
+        "versionStr": "V2R7",
+        "stigRecords": 137,
+        "srgRecords": 0,
+        "checksum": "sha256:44f2dca102061c04b46c3994fa604272db38bea4cb878a0354487c4214d65e28"
+      },
+      {
+        "filename": "U_MS_Office_System_2016_V2R5_STIG.zip",
+        "family": "MS_Office_System_2016",
+        "kind": "stig",
+        "versionStr": "V2R5",
+        "stigRecords": 21,
+        "srgRecords": 0,
+        "checksum": "sha256:fc1020aabfa0f5720bb875650744bf86a959111589758bd5566bc733077fe5c3"
+      },
+      {
+        "filename": "U_MS_OneNote_2016_V2R1_STIG.zip",
+        "family": "MS_OneNote_2016",
+        "kind": "stig",
+        "versionStr": "V2R1",
+        "stigRecords": 11,
+        "srgRecords": 0,
+        "checksum": "sha256:0ef015f329cace450c753afc9628ef3dddb71bff1bf89a0f37b4fe933ae3df2f"
+      },
+      {
+        "filename": "U_MS_Outlook_2016_V2R4_STIG.zip",
+        "family": "MS_Outlook_2016",
+        "kind": "stig",
+        "versionStr": "V2R4",
+        "stigRecords": 64,
+        "srgRecords": 0,
+        "checksum": "sha256:b25043d3154203d2f3aa438685577aebc5b757fc0bf47c4db6d50a7c725452fe"
+      },
+      {
+        "filename": "U_MS_PowerPoint_2016_V2R1_STIG.zip",
+        "family": "MS_PowerPoint_2016",
+        "kind": "stig",
+        "versionStr": "V2R1",
+        "stigRecords": 38,
+        "srgRecords": 0,
+        "checksum": "sha256:cefa1af5ae430cc85c6ea29ac849b8ebd5efac066fe98d4d377bdb8f75d67f83"
+      },
+      {
+        "filename": "U_MS_Project_2016_V2R1_STIG.zip",
+        "family": "MS_Project_2016",
+        "kind": "stig",
+        "versionStr": "V2R1",
+        "stigRecords": 15,
+        "srgRecords": 0,
+        "checksum": "sha256:66151af032c8186d401d950924b0c70ed0ac318dd4ac0c9d09c21a9b0b61fd63"
+      },
+      {
+        "filename": "U_MS_Publisher_2016_V2R1_STIG.zip",
+        "family": "MS_Publisher_2016",
+        "kind": "stig",
+        "versionStr": "V2R1",
+        "stigRecords": 16,
+        "srgRecords": 0,
+        "checksum": "sha256:ee1452c20c4c2ea3d7879f8290abf28014aa9d713ad761e50e929e2c090b865c"
+      },
+      {
+        "filename": "U_MS_SCOM_V1R2_STIG.zip",
+        "family": "MS_SCOM",
+        "kind": "stig",
+        "versionStr": "V1R2",
+        "stigRecords": 19,
+        "srgRecords": 0,
+        "checksum": "sha256:00c06774520bfc1c520b7c967a6f462fba517802be13e8f2bd9c18dc115af88a"
+      },
+      {
+        "filename": "U_MS_Skype_for_Business_2016_V2R1_STIG.zip",
+        "family": "MS_Skype_for_Business_2016",
+        "kind": "stig",
+        "versionStr": "V2R1",
+        "stigRecords": 4,
+        "srgRecords": 0,
+        "checksum": "sha256:894d1284a4dfee9dffdbf62b46a1625416b21839db4fa3486f4da8b074b54137"
+      },
+      {
+        "filename": "U_MS_SQL_Server_2014_Y24M07_STIG.zip",
+        "family": "MS_SQL_Server_2014",
+        "kind": "stig",
+        "versionStr": "Y24M07",
+        "stigRecords": 136,
+        "srgRecords": 0,
+        "checksum": "sha256:b6afab96797665f6753e849b5b514d1548359249efa0ac6556192843789f18f0"
+      },
+      {
+        "filename": "U_MS_Visio_2016_V2R1_STIG.zip",
+        "family": "MS_Visio_2016",
+        "kind": "stig",
+        "versionStr": "V2R1",
+        "stigRecords": 14,
+        "srgRecords": 0,
+        "checksum": "sha256:0ca344fa2862c1b6a49610b15d49217d669311c4bc784b29730c3c5359d2d508"
+      },
+      {
+        "filename": "U_MS_Windows_10_V3R6_STIG.zip",
+        "family": "MS_Windows_10",
+        "kind": "stig",
+        "versionStr": "V3R6",
+        "stigRecords": 267,
+        "srgRecords": 0,
+        "checksum": "sha256:bee65d971714589e58963be80fbe3e8ca04493e040fc94cf87336a06f9e882f5"
+      },
+      {
+        "filename": "U_MS_Windows_11_V2R9_STIG.zip",
+        "family": "MS_Windows_11",
+        "kind": "stig",
+        "versionStr": "V2R9",
+        "stigRecords": 257,
+        "srgRecords": 0,
+        "checksum": "sha256:a452b0ec21c877539ed6a11477b1303eed1a5788a20ca4b6de29217fa89cf5a7"
+      },
+      {
+        "filename": "U_MS_Windows_2012_Server_DNS_V2R7_STIG.zip",
+        "family": "MS_Windows_2012_Server_DNS",
+        "kind": "stig",
+        "versionStr": "V2R7",
+        "stigRecords": 82,
+        "srgRecords": 0,
+        "checksum": "sha256:5323a3017d0526a8900a9776a84260377ae3db06c2946bc0d926c0f1539f4404"
+      },
+      {
+        "filename": "U_MS_Windows_Server_2016_V2R10_STIG.zip",
+        "family": "MS_Windows_Server_2016",
+        "kind": "stig",
+        "versionStr": "V2R10",
+        "stigRecords": 273,
+        "srgRecords": 0,
+        "checksum": "sha256:46fd732925b9c4073b72d5c6536d1bf8b93a6307133ab604e4be28377e767139"
+      },
+      {
+        "filename": "U_MS_Windows_Server_2019_V3R9_STIG.zip",
+        "family": "MS_Windows_Server_2019",
+        "kind": "stig",
+        "versionStr": "V3R9",
+        "stigRecords": 282,
+        "srgRecords": 0,
+        "checksum": "sha256:b8b1ab26fcf08ddfe99cc1e5faece4638770c7236ae69b860336ca9e217c5812"
+      },
+      {
+        "filename": "U_MS_Windows_Server_2022_V2R10_STIG.zip",
+        "family": "MS_Windows_Server_2022",
+        "kind": "stig",
+        "versionStr": "V2R10",
+        "stigRecords": 278,
+        "srgRecords": 0,
+        "checksum": "sha256:13cbe77e5d87e106e459de21ed051ed51ddbdef59dd0ce16a8aa64f9c1e6e88b"
+      },
+      {
+        "filename": "U_MS_Windows_Server_2025_V1R3_STIG.zip",
+        "family": "MS_Windows_Server_2025",
+        "kind": "stig",
+        "versionStr": "V1R3",
+        "stigRecords": 291,
+        "srgRecords": 0,
+        "checksum": "sha256:b6ce0d9b411eeba602fe705e2b1d3b378ecd5e2e11f8851197bc6e081756bcbe"
+      },
+      {
+        "filename": "U_MS_Word_2010_V1R11_Manual_STIG.zip",
+        "family": "MS_Word_2010",
+        "kind": "stig",
+        "versionStr": "V1R11",
+        "stigRecords": 35,
+        "srgRecords": 0,
+        "checksum": "sha256:3b7488ee8da5d391d201d1f13f9af201977dc56278fff73a2590fb20a7972e80"
+      },
+      {
+        "filename": "U_MS_Word_2016_V2R1_STIG.zip",
+        "family": "MS_Word_2016",
+        "kind": "stig",
+        "versionStr": "V2R1",
+        "stigRecords": 35,
+        "srgRecords": 0,
+        "checksum": "sha256:d5e6f8e0fbc54618aff17677d663cbc67aa0802dd4b5960e94ce5aec43379821"
+      },
+      {
+        "filename": "U_Multifunction_Device_and_Network_Printers_V2R15_STIG.zip",
+        "family": "Multifunction_Device_and_Network_Printers",
+        "kind": "stig",
+        "versionStr": "V2R15",
+        "stigRecords": 22,
+        "srgRecords": 0,
+        "checksum": "sha256:5107dd51f918bceb5313ca701acb1b46ec72f4713c369917ec54e659e0df3f2a"
+      },
+      {
+        "filename": "U_Nutanix_AOS_5-20-x_Y24M07_STIG.zip",
+        "family": "Nutanix_AOS_5-20-x",
+        "kind": "stig",
+        "versionStr": "Y24M07",
+        "stigRecords": 142,
+        "srgRecords": 0,
+        "checksum": "sha256:1e7c1bc1bfbd0dcfd3307ef668711f5e327c0dd038eedf6e44dd3298ffbbb777"
+      },
+      {
+        "filename": "U_Oracle_Database_11-2g_V2R5_STIG.zip",
+        "family": "Oracle_Database_11-2g",
+        "kind": "stig",
+        "versionStr": "V2R5",
+        "stigRecords": 142,
+        "srgRecords": 0,
+        "checksum": "sha256:7ca77839d8973d046bd1d09982585df3c9f04679f7de6f69577118e014e14d1d"
+      },
+      {
+        "filename": "U_Oracle_Database_12c_V3R5_STIG.zip",
+        "family": "Oracle_Database_12c",
+        "kind": "stig",
+        "versionStr": "V3R5",
+        "stigRecords": 136,
+        "srgRecords": 0,
+        "checksum": "sha256:75398ae44f48578c74cb566ede9347b9af432ef642cf41a237c3dba377d5e8bc"
+      },
+      {
+        "filename": "U_Oracle_HTTP_Server_12-1-3_V2R3_STIG.zip",
+        "family": "Oracle_HTTP_Server_12-1-3",
+        "kind": "stig",
+        "versionStr": "V2R3",
+        "stigRecords": 280,
+        "srgRecords": 0,
+        "checksum": "sha256:8fa754d39cd73289d1d4a1b1e427cbb0a2ca8c6dcec6d6c65b971f8b1ceb7a06"
+      },
+      {
+        "filename": "U_Oracle_Linux_7_V3R5_STIG.zip",
+        "family": "Oracle_Linux_7",
+        "kind": "stig",
+        "versionStr": "V3R5",
+        "stigRecords": 243,
+        "srgRecords": 0,
+        "checksum": "sha256:aa97204b562f75c59d4593cd7bed5c4831e2bb86aac34cf0ef52beb6551c2af0"
+      },
+      {
+        "filename": "U_Oracle_WebLogic_Server_12c_V2R2_STIG.zip",
+        "family": "Oracle_WebLogic_Server_12c",
+        "kind": "stig",
+        "versionStr": "V2R2",
+        "stigRecords": 73,
+        "srgRecords": 0,
+        "checksum": "sha256:381bde2e2c41b2b24dce8cbb91a2cd6505907f8d3cc95ef55504a25de4242949"
+      },
+      {
+        "filename": "U_PAN_Y26M07_STIG.zip",
+        "family": "PAN",
+        "kind": "stig",
+        "versionStr": "Y26M07",
+        "stigRecords": 114,
+        "srgRecords": 0,
+        "checksum": "sha256:6d955317ad3f7c5bd797fbdde07eefb0c84d0087d749b2b73082cfa9e8ea5109"
+      },
+      {
+        "filename": "U_PGS_SQL_9-x_V2R5_STIG.zip",
+        "family": "PGS_SQL_9-x",
+        "kind": "stig",
+        "versionStr": "V2R5",
+        "stigRecords": 110,
+        "srgRecords": 0,
+        "checksum": "sha256:4088023d34ba6aedee1ad7eb77b9625c5a89ce2eb5bfd8c0b13cb78a6434401d"
+      },
+      {
+        "filename": "U_RH_OpenShift_Container_Platform_4-12_V2R2_STIG.zip",
+        "family": "RH_OpenShift_Container_Platform_4-12",
+        "kind": "stig",
+        "versionStr": "V2R2",
+        "stigRecords": 83,
+        "srgRecords": 0,
+        "checksum": "sha256:54406217f5de732285650f12f202af62b283f63e8f34c028921db24cc571a50f"
+      },
+      {
+        "filename": "U_RHEL_6_V2R2_STIG.zip",
+        "family": "RHEL_6",
+        "kind": "stig",
+        "versionStr": "V2R2",
+        "stigRecords": 268,
+        "srgRecords": 0,
+        "checksum": "sha256:d4e97af229a93d0f255caa5501eb4fb82aaa55ef6eed79c97a08f32e45ca2f5a"
+      },
+      {
+        "filename": "U_RHEL_7_V3R15_STIG.zip",
+        "family": "RHEL_7",
+        "kind": "stig",
+        "versionStr": "V3R15",
+        "stigRecords": 244,
+        "srgRecords": 0,
+        "checksum": "sha256:89cf7d04b1ca6536b51cad2fe7ff5b729c9022a77522156f8a9c7b6967e6c52f"
+      },
+      {
+        "filename": "U_Riverbed_SteelHead_CX_v8_Y24M07_STIG.zip",
+        "family": "Riverbed_SteelHead_CX_v8",
+        "kind": "stig",
+        "versionStr": "Y24M07",
+        "stigRecords": 74,
+        "srgRecords": 0,
+        "checksum": "sha256:88ed1f85d819cfc2b70f36cd58b3959dd91946eb955b7a72d3dc85d63d36dab9"
+      },
+      {
+        "filename": "U_SDN_Controller_V2R2_SRG.zip",
+        "family": "SDN_Controller",
+        "kind": "srg",
+        "versionStr": "V2R2",
+        "stigRecords": 0,
+        "srgRecords": 34,
+        "checksum": "sha256:fac876148377cf553ae631563fd3ca37a2425309f8c23086bef7c99da149d926"
+      },
+      {
+        "filename": "U_SDN_NV_V1R2_STIG.zip",
+        "family": "SDN_NV",
+        "kind": "stig",
+        "versionStr": "V1R2",
+        "stigRecords": 26,
+        "srgRecords": 0,
+        "checksum": "sha256:69f43b7f4981995d8245f02333bebe959c20152518022d2512dc63a3e9a1a010"
+      },
+      {
+        "filename": "U_SLES_12_V3R5_STIG.zip",
+        "family": "SLES_12",
+        "kind": "stig",
+        "versionStr": "V3R5",
+        "stigRecords": 210,
+        "srgRecords": 0,
+        "checksum": "sha256:32f360f67333a00b070464334512b152383d76e7cb73e7f6c889d7906c06bf09"
+      },
+      {
+        "filename": "U_SLES_V11_for_System_z_V1R12_STIG.zip",
+        "family": "SLES_V11_for_System_z",
+        "kind": "stig",
+        "versionStr": "V1R12",
+        "stigRecords": 550,
+        "srgRecords": 0,
+        "checksum": "sha256:4a849e95ae5c5186500b20f145717aa69e7b5b3a74ec6d6b2eea25a0c71e7689"
+      },
+      {
+        "filename": "U_Splunk_Enterprise_7-x_for_Windows_V3R2_STIG.zip",
+        "family": "Splunk_Enterprise_7-x_for_Windows",
+        "kind": "stig",
+        "versionStr": "V3R2",
+        "stigRecords": 37,
+        "srgRecords": 0,
+        "checksum": "sha256:9d2e1797403adcef606a6a787906af93f72d205fbda98e6486ca53b444bc9ea2"
+      },
+      {
+        "filename": "U_Splunk_Enterprise_8-x_for_Linux_V2R2_STIG.zip",
+        "family": "Splunk_Enterprise_8-x_for_Linux",
+        "kind": "stig",
+        "versionStr": "V2R2",
+        "stigRecords": 36,
+        "srgRecords": 0,
+        "checksum": "sha256:ac8e804e8f4fdd69f3a4cd5935f2507c3e46723c2d669778d41da322f527238b"
+      },
+      {
+        "filename": "U_Splunk_Enterprise_8-x_for-Linux_V1R5_STIG.zip",
+        "family": "Splunk_Enterprise_8-x_for-Linux",
+        "kind": "stig",
+        "versionStr": "V1R5",
+        "stigRecords": 36,
+        "srgRecords": 0,
+        "checksum": "sha256:37822e750fbd9c76cc0c3efb1c23672ee842b20e75087fa9c67733a488ae52ec"
+      },
+      {
+        "filename": "U_Splunk_Enterprise_8-x_for%20Linux_V2R3_STIG.zip",
+        "family": "Splunk_Enterprise_8-x_for%20Linux",
+        "kind": "stig",
+        "versionStr": "V2R3",
+        "stigRecords": 37,
+        "srgRecords": 0,
+        "checksum": "sha256:0a97d694c3d9c6ff1c5a66609f251238a7c2abe1e35bb5a36cb61394cf7e9d5f"
+      },
+      {
+        "filename": "U_SS_Android_14_BYOAD_Y26M04_STIG.zip",
+        "family": "SS_Android_14_BYOAD",
+        "kind": "stig",
+        "versionStr": "Y26M04",
+        "stigRecords": 41,
+        "srgRecords": 0,
+        "checksum": "sha256:51661f2d91efa161cf0c0fb13242fef31a76ec4e67d7d20def84589c625e4f45"
+      },
+      {
+        "filename": "U_SS_Android_15_BYOAD_Y26M04_STIG.zip",
+        "family": "SS_Android_15_BYOAD",
+        "kind": "stig",
+        "versionStr": "Y26M04",
+        "stigRecords": 44,
+        "srgRecords": 0,
+        "checksum": "sha256:e9bcea9e354944cc968b2de23df7ae74c1b51b08f192e9758e9b6e2a5acfbc78"
+      },
+      {
+        "filename": "U_SS_Android_15_KPE_3-x_Y26M04_STIG.zip",
+        "family": "SS_Android_15_KPE_3-x",
+        "kind": "stig",
+        "versionStr": "Y26M04",
+        "stigRecords": 95,
+        "srgRecords": 0,
+        "checksum": "sha256:7668c219f9c013d3934c2b4651e4fbe04992d39648d8292f426bd3e0a2c4eb2a"
+      },
+      {
+        "filename": "U_SS_Android_OS_13_KPE_3-x_Y25M10_STIG.zip",
+        "family": "SS_Android_OS_13_KPE_3-x",
+        "kind": "stig",
+        "versionStr": "Y25M10",
+        "stigRecords": 62,
+        "srgRecords": 0,
+        "checksum": "sha256:6c76e11e0f953888a70404929dec32955a2c59d6932423e851dfb5d9fb4ac34c"
+      },
+      {
+        "filename": "U_SS_Android_OS_14_KPE_3-x_Y26M04_STIG.zip",
+        "family": "SS_Android_OS_14_KPE_3-x",
+        "kind": "stig",
+        "versionStr": "Y26M04",
+        "stigRecords": 93,
+        "srgRecords": 0,
+        "checksum": "sha256:1a31a25ab22398932f7c3bb4b9f639e4c7dc820ab8e39c4aa4283e28ed08dfb9"
+      },
+      {
+        "filename": "U_SS_Android_OS_17_KPE_3-x_Y26M07_STIG.zip",
+        "family": "SS_Android_OS_17_KPE_3-x",
+        "kind": "stig",
+        "versionStr": "Y26M07",
+        "stigRecords": 93,
+        "srgRecords": 0,
+        "checksum": "sha256:53f60a8b9102ac2795ef11d94b3460b8738fccababccf7e443998ea10969e3a6"
+      },
+      {
+        "filename": "U_Storage_Area_Network_V2R5_STIG.zip",
+        "family": "Storage_Area_Network",
+        "kind": "stig",
+        "versionStr": "V2R5",
+        "stigRecords": 28,
+        "srgRecords": 0,
+        "checksum": "sha256:c2e4eb43a962020e63d39edc9af259dc265585cf5c109b7ecf8cc5f5f0b73da6"
+      },
+      {
+        "filename": "U_Tanium_7-0_V2R1_STIG.zip",
+        "family": "Tanium_7-0",
+        "kind": "stig",
+        "versionStr": "V2R1",
+        "stigRecords": 132,
+        "srgRecords": 0,
+        "checksum": "sha256:df17134ac4b787c2117d0fa06f9d46505a83d779439490f697287f1a3063ebdf"
+      },
+      {
+        "filename": "U_Tanium_7-3_V2R3_STIG.zip",
+        "family": "Tanium_7-3",
+        "kind": "stig",
+        "versionStr": "V2R3",
+        "stigRecords": 102,
+        "srgRecords": 0,
+        "checksum": "sha256:86b4456bd9c7ca516453d494a0fc9a58daeb558f694339df7092f086747ac2fc"
+      },
+      {
+        "filename": "U_Trend_Micro_Deep_Security_9-x_V2R1_STIG.zip",
+        "family": "Trend_Micro_Deep_Security_9-x",
+        "kind": "stig",
+        "versionStr": "V2R1",
+        "stigRecords": 85,
+        "srgRecords": 0,
+        "checksum": "sha256:33224e19d14e49ac299d9c0e6c827ad7b242fcf6fc1f41963435dcea5aa61b04"
+      },
+      {
+        "filename": "U_VMW_Horizon_7-13_Y24M04_STIG.zip",
+        "family": "VMW_Horizon_7-13",
+        "kind": "stig",
+        "versionStr": "Y24M04",
+        "stigRecords": 57,
+        "srgRecords": 0,
+        "checksum": "sha256:985f12769518a1d0758f25efe993316f8f74368e1fd65df70bfb96146f835863"
+      },
+      {
+        "filename": "U_VMW_vRealize_Automation_7-x_Y23M10_STIG.zip",
+        "family": "VMW_vRealize_Automation_7-x",
+        "kind": "stig",
+        "versionStr": "Y23M10",
+        "stigRecords": 611,
+        "srgRecords": 0,
+        "checksum": "sha256:bc3107bb9d07db70af8d4897ad0a0c98765c5aef844e21bf7cf4f6f2f1198c67"
+      },
+      {
+        "filename": "U_VMW_vRealize_Ops_6-x_Y23M10_STIG.zip",
+        "family": "VMW_vRealize_Ops_6-x",
+        "kind": "stig",
+        "versionStr": "Y23M10",
+        "stigRecords": 460,
+        "srgRecords": 0,
+        "checksum": "sha256:2d14e32d284af4d5168e320e6217f3c4d9ec170f6d34799377e3aab6e6eecf4e"
+      },
+      {
+        "filename": "U_VMW_vRealize_Ops_Mgr_Cassandra_V1R2_STIG.zip",
+        "family": "VMW_vRealize_Ops_Mgr_Cassandra",
+        "kind": "stig",
+        "versionStr": "V1R2",
+        "stigRecords": 57,
+        "srgRecords": 0,
+        "checksum": "sha256:2337ed584d1204df002356fa81d14757b31b30fb9fbedc46b71093f1a4d660fd"
+      },
+      {
+        "filename": "U_VMW_WS1_UEM_V2R2_STIG.zip",
+        "family": "VMW_WS1_UEM",
+        "kind": "stig",
+        "versionStr": "V2R2",
+        "stigRecords": 20,
+        "srgRecords": 0,
+        "checksum": "sha256:b8bf68f088b61aa88f9d4ccc27c59b78b1a78da0d4f4587998870b3cbbefedf4"
+      },
+      {
+        "filename": "U_VMware_NSX_Distributed_Logical_Router_V1R1_STIG.zip",
+        "family": "VMware_NSX_Distributed_Logical_Router",
+        "kind": "stig",
+        "versionStr": "V1R1",
+        "stigRecords": 4,
+        "srgRecords": 0,
+        "checksum": "sha256:cc641aa051b2a375cde80c2f35aa85bda7b8f72b58a0d9a31156b575ac8edc79"
+      },
+      {
+        "filename": "U_VMware_NSX_Manager_V1R1_STIG.zip",
+        "family": "VMware_NSX_Manager",
+        "kind": "stig",
+        "versionStr": "V1R1",
+        "stigRecords": 30,
+        "srgRecords": 0,
+        "checksum": "sha256:54b8ccaa5e9031192833bce674faaf6c35e0c4fe0754fd98035ddfcd640a7d78"
+      },
+      {
+        "filename": "U_Zebra_Android_11_COBO_V1R4_STIG.zip",
+        "family": "Zebra_Android_11_COBO",
+        "kind": "stig",
+        "versionStr": "V1R4",
+        "stigRecords": 32,
+        "srgRecords": 0,
+        "checksum": "sha256:87ee7a37a11820c1531360c7889d06de3013783b350788537cd281bc9062e029"
+      },
+      {
+        "filename": "U_Zebra_Android_13_Y26M07_STIG.zip",
+        "family": "Zebra_Android_13",
+        "kind": "stig",
+        "versionStr": "Y26M07",
+        "stigRecords": 68,
+        "srgRecords": 0,
+        "checksum": "sha256:ce309f7eab55fec92b630f5973d8de64a53c5a0a94b830afcdc5e83785b9be95"
+      }
+    ],
     "inventory_details": [
       {
         "entryPath": "_SRG-STIG_Library_Revision_History.pdf",

@@ -87,7 +87,7 @@ test("the record rail and Atlas trace use the same full authority hop sequence",
 test("CCI-000366 ranks 24 highlights plus one Compare summary chip without mutating tree identity", () => {
   const overlay = rankAtlasMappingOverlay(neighborhood("disa-cci:CCI-000366"));
   assert.equal(overlay.highlights.length, 24);
-  assert.equal(overlay.overflowCount, 3_467);
+  assert.equal(overlay.overflowCount, 5_500);
   assert.equal(overlay.summaryChip?.destination, "compare");
   const nodes = [{ id: "atlas:TRUNK" }];
   const edges = [{ id: "tree:trunk-area" }];

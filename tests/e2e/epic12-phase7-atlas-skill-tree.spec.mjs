@@ -106,9 +106,9 @@ test("focused trace matches the record rail and local connections never replace 
   expect(atlasTrace).toBe(recordTrace);
 
   await expect(page.locator(".react-flow")).toHaveCount(0);
-  await focused.getByRole("button", { name: /^Implementation 3490/ }).click();
+  await focused.getByRole("button", { name: /^Implementation 5523/ }).click();
   expect(await focused.locator("[data-displayed-trace]").getAttribute("data-displayed-trace")).toBe(recordTrace);
-  await expect(focused.getByRole("button", { name: /View all 3490 in List/ })).toBeVisible();
+  await expect(focused.getByRole("button", { name: /View all 5523 in List/ })).toBeVisible();
   expect(monolithic).toEqual([]);
 });
 

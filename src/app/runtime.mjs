@@ -1223,10 +1223,13 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
       if (!indexedLibraryFacetMatches(index, filters)) continue;
       const normalizedItemId = normalize(indexedLibraryValue(index, "item_id"));
       const normalizedId = normalize(indexedLibraryValue(index, "id"));
+      const officialPreview = normalize(indexedLibraryValue(index, "official_text_preview"));
+      const isStigNeedle = aliases.some((a) => /^[a-z0-9]{2,8}-[a-z0-9]{2,8}-[a-z0-9]{4,10}$/i.test(a));
       if (
         needle && (
           aliases.includes(normalizedItemId) ||
-          aliases.includes(normalizedId)
+          aliases.includes(normalizedId) ||
+          (isStigNeedle && aliases.some((a) => officialPreview.startsWith(a + " -") || officialPreview.startsWith(a + ":")))
         )
       ) {
         exactMatches.push({ index, rankBoost: 0, score: 0 });
@@ -1267,10 +1270,16 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
     if (!needle) {
       return candidates.map((document) => ({ document, rankBoost: 0, score: 0 }));
     }
+    const isStigNeedle = aliases.some((a) => /^[a-z0-9]{2,8}-[a-z0-9]{2,8}-[a-z0-9]{4,10}$/i.test(a));
     const exactMatches = candidates.filter((document) => {
       const itemId = document.search_item_id || normalize(document.item_id);
       const id = document.search_id || normalize(document.id);
-      return aliases.includes(itemId) || aliases.includes(id);
+      const officialPreview = normalize(document.official_text_preview);
+      return (
+        aliases.includes(itemId) ||
+        aliases.includes(id) ||
+        (isStigNeedle && aliases.some((a) => officialPreview.startsWith(a + " -") || officialPreview.startsWith(a + ":")))
+      );
     });
     if (exactMatches.length) {
       return exactMatches.map((document) => ({ document, rankBoost: 0, score: 0 }));
@@ -1334,7 +1343,8 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
         if (!nodeMatchesFilter(node)) return false;
         const itemId = normalize(node.metadata?.item_id);
         const id = normalize(node.id);
-        return aliases.includes(itemId) || aliases.includes(id);
+        const stigId = normalize(node.metadata?.stig_id);
+        return aliases.includes(itemId) || aliases.includes(id) || (stigId && aliases.includes(stigId));
       });
       if (exactMatches.length > 0) {
         return exactMatches;
@@ -1344,12 +1354,13 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
         .filter(nodeMatchesFilter)
         .map((node) => {
           const itemId = normalize(node.metadata?.item_id);
+          const stigId = normalize(node.metadata?.stig_id);
           const label = normalize(node.label);
           const description = normalize(node.metadata?.description);
           const score =
-            aliases.includes(itemId)
+            aliases.includes(itemId) || (stigId && aliases.includes(stigId))
               ? 0
-              : aliases.some((a) => itemId.startsWith(a))
+              : aliases.some((a) => itemId.startsWith(a)) || (stigId && aliases.some((a) => stigId.startsWith(a)))
                 ? 1
                 : label.includes(needle)
                   ? 2

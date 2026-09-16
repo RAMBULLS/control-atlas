@@ -1,6 +1,6 @@
 {
   "schema_version": "4.0",
-  "generated_at": "2026-09-10T16:11:31.945Z",
+  "generated_at": "2026-09-16T00:08:04.560Z",
   "completeness": {
     "total_publications": 101,
     "total_artifacts": 92,
@@ -100,11 +100,11 @@
     {
       "catalog_id": "disa-srg",
       "completeness_status": "reconciled",
-      "expected_records": 2516,
-      "imported_records": 2516,
+      "expected_records": 2550,
+      "imported_records": 2550,
       "excluded_records": 0,
       "missing_records": 0,
-      "expected_basis": "Full parse of the official DISA July 2026 SRG/STIG compilation (U_SRG-STIG_Library_July_2026.zip). Expected = SRG XCCDF requirement records across all ingested benchmarks.",
+      "expected_basis": "Full parse of the official DISA publication catalog (aggregate compilation plus all standalone current publications discovered from dl.dod.cyber.mil). Expected = SRG XCCDF requirement records across all ingested current benchmarks.",
       "expected_evidence": "data/disa-artifact-manifest.json#reconciliation.srg_records_parsed",
       "imported_evidence": "data/generated/catalog-source-inventory.json#catalogs.disa-srg.normalized_records",
       "exclusions": [],
@@ -120,11 +120,11 @@
     {
       "catalog_id": "disa-stig",
       "completeness_status": "reconciled",
-      "expected_records": 17021,
-      "imported_records": 17021,
+      "expected_records": 26957,
+      "imported_records": 26957,
       "excluded_records": 0,
       "missing_records": 0,
-      "expected_basis": "Full parse of the official DISA July 2026 SRG/STIG compilation (U_SRG-STIG_Library_July_2026.zip). Expected = STIG XCCDF rule records across all ingested benchmarks.",
+      "expected_basis": "Full parse of the official DISA publication catalog (aggregate compilation plus all standalone current publications discovered from dl.dod.cyber.mil). Expected = STIG XCCDF rule records across all ingested current benchmarks.",
       "expected_evidence": "data/disa-artifact-manifest.json#reconciliation.stig_records_parsed",
       "imported_evidence": "data/generated/catalog-source-inventory.json#catalogs.disa-stig.normalized_records",
       "exclusions": [],
@@ -134,7 +134,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-09-10",
+      "last_refresh": "2026-09-16",
       "has_shard": true
     },
     {

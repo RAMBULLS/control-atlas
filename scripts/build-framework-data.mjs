@@ -102,10 +102,9 @@ const RUNTIME_COLLECTIONS = [
 const SHARDED_RUNTIME_COLLECTIONS = new Set(["nodes", "edges", "evidence"]);
 const RUNTIME_COLLECTION_SHARD_COUNT = 64;
 // Search is intentionally a bounded, on-demand payload rather than an
-// initial-route payload. Ten chunks keep every compressed artifact under the
-// public 300 KB budget while avoiding the 64-request/worker fan-out that made
-// a cold Library deep link slow to become usable.
-const LIBRARY_SEARCH_SHARD_COUNT = 10;
+// initial-route payload. Sixteen chunks keep every compressed artifact under the
+// public 300 KB budget while avoiding excessive request fan-out.
+const LIBRARY_SEARCH_SHARD_COUNT = 16;
 const LIBRARY_SEARCH_INDEX_FIELDS = [
   "id",
   "item_id",
@@ -2864,12 +2863,15 @@ function buildLibraryDocuments(graph) {
     const source = sourceById.get(node.source_id);
     const itemId = node.metadata?.item_id || node.id;
     const title = node.metadata?.title || node.label;
+    const stigId = node.metadata?.stig_id;
+    const desc = node.metadata?.description || "";
+    const previewSource = stigId && desc ? `${stigId} - ${desc}` : (stigId || desc);
     return {
       id: node.id,
       item_id: itemId,
       title,
       description_available: Boolean(node.metadata?.description?.trim()),
-      official_text_preview: compactOfficialText(node.metadata?.description),
+      official_text_preview: compactOfficialText(previewSource),
       object_type: node.node_type,
       source_id: node.source_id,
       source_name: source?.display_name || source?.name || "",

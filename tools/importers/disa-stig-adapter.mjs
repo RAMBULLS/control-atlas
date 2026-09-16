@@ -198,7 +198,13 @@ function shouldIgnoreEntry(entryPath) {
   // "..._Supplemental/" folders (e.g. U_VMW_vSphere_8-0_Supplemental/) are
   // not their own path segment named exactly "Supplemental" — match the
   // word anywhere within a segment, not just as a whole segment.
-  return /Supplemental\//i.test(entryPath);
+  if (/Supplemental\//i.test(entryPath)) return true;
+  if (/(^|\/)(Supporting Files|Templates)\//i.test(entryPath)) return true;
+  return false;
+}
+
+export function isBenchmarkXml(xml) {
+  return /<(?:cdf:)?Benchmark\b/i.test(xml);
 }
 
 function createDocument(sourceKey, artifactUrl, checksumValue, records, sourceMetadata) {
@@ -436,4 +442,66 @@ export async function parseDisaCompilationStream(filePath, { artifactUrl, source
     accumulator.sourceMetadata.stig.source_version ? accumulator.sourceMetadata.stig : accumulator.sourceMetadata.srg,
   );
   return { stig, srg, relationships, checksum: checksumValue, failed, inventory };
+}
+
+export function parseDisaStandalonePackage(buffer, {
+  artifactUrl,
+  sourceKeys = { stig: 'disa-stig-library', srg: 'disa-srg-library' },
+  hintKind,
+  publicationFilename = '',
+} = {}) {
+  const archive = unzipSync(new Uint8Array(buffer));
+  const accumulator = createAccumulator();
+  const failed = [];
+  const inventory = [];
+
+  for (const entry of walkArchiveEntries(archive)) {
+    if (shouldIgnoreEntry(entry.entryPath)) {
+      inventory.push({ entryPath: entry.entryPath, status: 'excluded', reason: 'restricted, sunset, draft, or supporting content' });
+      continue;
+    }
+    if (!/\.(xml|xccdf)$/i.test(entry.entryPath)) {
+      inventory.push({ entryPath: entry.entryPath, status: 'ignored', reason: 'not an XML/XCCDF file' });
+      continue;
+    }
+    const xml = strFromU8(entry.value);
+    if (!isBenchmarkXml(xml)) {
+      inventory.push({ entryPath: entry.entryPath, status: 'ignored', reason: 'non-benchmark XML file' });
+      continue;
+    }
+
+    const classification = classifyCompilationEntry(entry.entryPath, hintKind);
+    try {
+      const document = parseDisaXccdf(xml, {
+        sourceKey: classification.kind === 'srg' ? sourceKeys.srg : sourceKeys.stig,
+        artifactUrl,
+        entryPath: entry.entryPath,
+        hintKind: classification.kind,
+        classificationBasis: classification.basis,
+      });
+      appendDocument(accumulator, document);
+      inventory.push({
+        entryPath: entry.entryPath,
+        status: 'ingested',
+        catalogKind: document.catalogKind,
+        classificationBasis: document.classification_basis,
+        benchmarkId: document.records[0]?.metadata?.benchmark_id || null,
+        recordCount: document.records.length,
+      });
+    } catch (error) {
+      failed.push({ entryPath: entry.entryPath, reason: error.message });
+      inventory.push({ entryPath: entry.entryPath, status: 'failed', reason: error.message });
+    }
+  }
+
+  const checksumValue = checksum(buffer);
+  return {
+    stigRecords: accumulator.records.stig,
+    srgRecords: accumulator.records.srg,
+    relationshipSeeds: accumulator.relationshipSeeds,
+    checksum: checksumValue,
+    failed,
+    inventory,
+    publicationFilename,
+  };
 }

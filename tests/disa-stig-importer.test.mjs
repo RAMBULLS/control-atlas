@@ -8,6 +8,7 @@ import {
   parseDisaXccdf,
   parseDisaCompilationArchive,
   parseDisaCompilationStream,
+  parseDisaStandalonePackage,
 } from '../tools/importers/disa-stig-adapter.mjs';
 import { extractDisaZipUrlsFromHtml, findOfficialDisaCompilationUrl } from '../scripts/fetch-disa-stigs.mjs';
 
@@ -367,4 +368,25 @@ test('DISA XCCDF parser repairs known UTF-8 mojibake before publication', () => 
   });
   assert.match(result.records[0].description, /'quoted' values and an "example" label/);
   assert.doesNotMatch(result.records[0].description, /â€|Ã|Â/);
+});
+
+test('parseDisaStandalonePackage extracts records and safely ignores supporting/template files', () => {
+  const zipBuffer = zipSync({
+    'U_MS_Windows_Server_2019_STIG/Windows_Server_2019_Benchmark.xml': strToU8(sampleStigXml),
+    'Supporting Files/DOD_EP_V3.xml': strToU8('<manifest><item>not a benchmark</item></manifest>'),
+    'Templates/Template.xml': strToU8('<template>data</template>'),
+    'Documentation/Readme.txt': strToU8('Release notes'),
+  });
+
+  const parsed = parseDisaStandalonePackage(zipBuffer, {
+    artifactUrl: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Windows_Server_2019_V3R9_STIG.zip',
+    publicationFilename: 'U_MS_Windows_Server_2019_V3R9_STIG.zip',
+    hintKind: 'stig',
+  });
+
+  assert.equal(parsed.stigRecords.length, 1);
+  assert.equal(parsed.stigRecords[0].id, 'V-100001');
+  assert.equal(parsed.failed.length, 0);
+  assert.equal(parsed.relationshipSeeds.length, 2);
+  assert.ok(parsed.checksum.startsWith('sha256:'));
 });

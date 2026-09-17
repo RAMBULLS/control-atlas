@@ -86,22 +86,27 @@ publication-native levels and immediate children.
 Every supported catalog/type resolves to one of six roles: atomic record, container, publication/document, entity/contributor, assessment/question, or implementation artifact. All roles share identity, official source action, source facts, publisher hierarchy, and a bounded relationship handoff; role composers control only the source-native middle of the page.
 
 Six concepts remain strictly separated across all record details:
-1. **Record identity:** What exact item this is (publisher-native or governed stable ID).
-2. **Published/source-native content:** Primary content authored by the publisher.
-3. **Record context (governed classification):** Discovery classification grouped by canonical dimension under the heading **"Find more like this"** with no default supporting copy. Short, natural dimension labels are used on the page (`Organization`, `Program`, `Framework`, `Security domain`, `Vendor`, `Product`, `Asset`, `Technology`, `Environment`, `Tool`, `Topic`, `Artifact`). If explanation is needed, an accessible disclosure labeled **"Why these are shown"** provides plain-English reasons without exposing internal jargon (`source_field`, `rule`, `atlas_evidence`, `inferred`, `provenance`). Phrases such as `Explore by context`, `source-backed facets`, and `Related in Control Atlas` (for classification) are strictly prohibited on public surfaces.
-4. **Source and record facts:** Metadata such as record type, publisher, publication title, lifecycle status, freshness, and stable ID under **"About this record"**. Record type, publication title, and Control Atlas area are facts/navigation concepts and never appear as generic classification chips.
-5. **Publisher hierarchy:** Structural ancestry kept distinct from external relationships. Structural parents and children never appear in "Related records".
-6. **Governed relationships:** Evidence-backed cross-publication mappings and references under **"Related records"**, with compact counts (never stretched across the section), evidence disclosures, bounded samples, and Atlas handoff. Empty relationship cards disappear.
+1. **Record identity:** What exact item this is (publisher-native or governed stable ID) with official title and canonical breadcrumb.
+2. **Record discovery tags:** One compact wrapping row of clickable discovery tags directly beneath the title block, hashtag-style (`#DISA`, `#STIG`, `#Microsoft`, etc.), canonically ordered by internal taxonomy dimensions without visible dimension rows, table scaffolding, or dimension headings. Clicking a tag filters the Library using stable taxonomy identifiers.
+3. **Primary section navigation:** Compact jump navigation (`Overview`, `Discussion`, `Check`, `Fix`, `References`, `Related records` as applicable) allowing quick movement through long source material.
+4. **Published/source-native content:** Primary content authored by the publisher (or container structure/inventory depending on role).
+5. **Governed relationships:** Evidence-backed cross-publication mappings and references under **"Related records"**, with compact counts (never stretched across the section), counterpart cards, evidence disclosures, bounded samples, and Atlas handoff. Empty relationship sections disappear.
+6. **Utility side rail (desktop):** Exactly four ordered sections:
+   - **About this record:** Factual metadata (record type, publisher, publication/benchmark title preserving full publisher title, version/release, status, freshness, and source details).
+   - **In this publication:** Publication navigation (view publication, browse all rules/records, open in publisher).
+   - **Explore related:** Plain practitioner discovery pivots (more from publisher, more from program, other product content, asset class content, related CCIs/controls). Strictly free of internal data-model jargon (`facets`, `taxonomy`, `governed context`, `provenance`, `classification`).
+   - **Do more:** Useful next actions (view in Atlas, add to Compare, share this record with copy confirmation, report an issue).
 
 Compact flow and DOM order:
-On compact viewports and single-column collapse, document order follows natural reading priorities without CSS `order` tricks. For atomic records, important governed relationships immediately follow published/implementation content and precede discovery classification ("Find more like this") and source facts. Side rails on desktop preserve this sensible linear DOM sequence when stacked.
+On compact viewports and single-column collapse, document order follows a natural linear reading sequence without CSS `order` tricks. The four side-rail sections appear strictly after primary source content and Related records:
+Breadcrumb -> Title -> Wrapping tags -> Primary actions -> Section nav -> Source content -> Related records -> About this record -> In this publication -> Explore related -> Do more.
 
-- Atomic records lead with official content, then implementation or assessment material and important governed relationships, followed by "Find more like this" and source facts.
-- Containers lead with publisher description when one exists, hierarchy, child inventory, counts/facets, external governed relationships, "Find more like this", and source facts. Missing optional publisher prose is an honest absence, not a record error.
-- Publications/documents lead with publisher/version/status, summary, structure/content, contained objects, related publications, "Find more like this", and source details.
-- Entities/contributors lead with publisher context, participation, important related records, "Find more like this", and source details.
-- Assessments/questions lead with subject, procedure/question, objectives/options, methods, related requirement, "Find more like this", and source details.
-- Implementation artifacts lead with what they implement, architecture/function, guidance, mappings, "Find more like this", and source details.
+- Atomic records lead with official content, then implementation or assessment material and important governed relationships, followed by the utility rail sections.
+- Containers lead with publisher description when one exists, hierarchy, child inventory, counts/facets, external governed relationships, followed by the utility rail sections. Missing optional publisher prose is an honest absence, not a record error.
+- Publications/documents lead with publisher/version/status, summary, structure/content, contained objects, related publications, and utility sections.
+- Entities/contributors lead with publisher context, participation, important related records, and utility sections.
+- Assessments/questions lead with subject, procedure/question, objectives/options, methods, related requirement, and utility sections.
+- Implementation artifacts lead with what they implement, architecture/function, guidance, mappings, and utility sections.
 
 Commands and exact configuration render as copyable snippets. Explicit sequences render as ordered lists; independent actions render as bullets; ambiguous source text remains prose. `Related records` is grouped by publication and relationship type. Structural parents and children never appear in it. Presentation policy may promote, summarize, collapse, or route valid relationships to Atlas only; the underlying graph remains exhaustive.
 

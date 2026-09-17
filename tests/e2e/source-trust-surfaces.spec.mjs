@@ -31,11 +31,16 @@ test("source register, inspector, catalog, and record use one official publicati
   await expect(page.getByRole("link", { name: "Review source details" })).toBeVisible();
 
   await open(page, "/#/record/disa-stig/V-256609");
-  await expect(page.locator("[data-record-source-identity]")).toContainText("DISA Public STIG Library");
+  await expect(page.locator("[data-record-source-identity]")).toHaveCount(0);
   const facts = page.locator(".record-template-sidebar .record-source-facts");
-  await expect(facts).toContainText("PublicationDISA Public STIG Library · V3R7");
   await expect(facts).toContainText("StatusActive");
   await expect(facts).toContainText(/Source last checked\w{3} \d{1,2}, \d{4}/);
+  await expect(facts).not.toContainText("DISA Public STIG Library");
+  const sourceDetails = page.locator("[data-record-source-details]");
+  await expect(sourceDetails).not.toHaveAttribute("open", "");
+  await sourceDetails.locator("summary").click();
+  await expect(sourceDetails.locator("dl")).toContainText("PublicationDISA Public STIG Library · V3R7");
+  await expect(sourceDetails.getByRole("link", { name: "Open source record" })).toBeVisible();
 });
 
 test("NIST publication headings and OSCAL mapping evidence keep distinct identities", async ({ page }) => {
@@ -105,9 +110,13 @@ test("representative publisher-native records expose official identity and sourc
   for (const route of routes) {
     await open(page, route);
     await expect(page.locator("[data-record-source-error]"), route).toHaveCount(0);
-    await expect(page.locator("[data-record-source-identity]"), route).toBeVisible();
-    await expect(page.locator(".record-template-sidebar .record-source-facts"), route).toContainText("Publication");
-    await expect(page.getByRole("link", { name: "View source details" }), route).toBeVisible();
+    // Publisher/source facts have one home in the rail; no repeated attribution
+    // line is needed for normalized publisher text. Non-publisher notices remain.
+    await expect(page.locator(".record-template-main")).not.toContainText("Publisher source ·");
+    const about = page.locator('[data-rail-section="about-this-record"]');
+    await about.locator(":scope > summary").click();
+    await expect(about.locator(".record-source-facts"), route).toContainText("Publication");
+    await expect(about.getByRole("link", { name: "View source details" }), route).toBeVisible();
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth),
       route,

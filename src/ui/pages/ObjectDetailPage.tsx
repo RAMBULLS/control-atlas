@@ -160,6 +160,11 @@ export function ObjectDetailPage(props: {
   });
   const exploreRelatedItems = buildExploreRelatedPivots({ tags: governedTaxonomyTags, connectionGroups: visibleConnectionGroups });
   const isTechnicalRule = ["stig_rule", "srg_requirement"].includes(presentation.record_type);
+  // The benchmark and publisher already frame a finding. Keep its H1 to the
+  // native identifier without changing qualified identities in search/Atlas.
+  const recordHeading = isTechnicalRule && !identityPresentation.stableIdIsGenerated
+    ? String(node.metadata?.publisher_item_id || itemId).trim() || recordIdentity
+    : recordIdentity;
   // Publication metadata belongs to the rail. Keep the publisher fields intact in the data.
   const overviewFields = presentation.metadata_facts.filter((field: string) => !field.startsWith("benchmark_"));
   const sectionNavItems: Array<{ id: string; label: string }> = [];
@@ -171,6 +176,7 @@ export function ObjectDetailPage(props: {
   if (visibleConnectionGroups.length) sectionNavItems.push({ id: "section-related-records", label: "Related records" });
 
   const benchmarkTitle = String(node.metadata?.benchmark_title || "");
+  const deferPublicationFacts = isTechnicalRule && Boolean(benchmarkTitle);
   const publicationLabel = String(node.metadata?.benchmark_short_title || benchmarkTitle || sourcePublicationName)
     .replace(/Security Technical Implementation Guide/g, "STIG");
   const benchmarkParent = [...displayPath].reverse().find((entry) => entry.node_type === "benchmark" && bundle.runtime.getNode(entry.id));
@@ -182,12 +188,12 @@ export function ObjectDetailPage(props: {
 
   return (
     <section className="detail-page record-template ca-record-page" data-page-role={presentation.page_role} data-template="E">
-      <CanonicalBreadcrumb bundle={bundle} nodeId={node.id} recordLabel={recordIdentity} />
+      <CanonicalBreadcrumb bundle={bundle} nodeId={node.id} recordLabel={recordHeading} />
       <div className="record-template-grid ca-record-layout">
         <header className={`record-title-block${identityPresentation.stableIdIsGenerated ? " record-title-block--generated" : ""}`}
           data-route-primary-header="true" data-route-primary-copy="true">
           <div className="ca-record-heading">
-            <h1><AcronymText>{recordIdentity}</AcronymText></h1>
+            <h1><AcronymText>{recordHeading}</AcronymText></h1>
             {publishedName ? <p className="record-official-name"><AcronymText>{publishedName}</AcronymText></p> : null}
             {identityPresentation.stableIdIsGenerated ? <p className="record-identity-context"><AcronymText>{identityPresentation.context}</AcronymText></p> : null}
             {lifecycleStatus !== "active" ? <p className="record-identity-context" data-record-lifecycle={lifecycleStatus}>
@@ -230,7 +236,7 @@ export function ObjectDetailPage(props: {
           {isTechnicalRule && overviewFields.length ? <div id="section-overview">
             <RecordNativeFacts fields={overviewFields} metadata={sourceMetadata} title="Overview" />
           </div> : null}
-          {source ? <p className="support-meta" data-record-source-identity>{sourceIdentityLabel} · {sourcePublicationName}</p> : null}
+          {source && claimOrigin !== "publisher_normalized" ? <p className="support-meta" data-record-source-identity>{sourceIdentityLabel} · {sourcePublicationName}</p> : null}
           {!source ? <section className="notice" data-record-source-error role="alert">
             <h2>Source identity unavailable</h2><p>Can't confirm which publisher this came from, so it isn't shown as official yet.</p>
           </section> : missingSourceFields.length ? <section className="notice" data-record-source-error role="alert">
@@ -319,12 +325,21 @@ export function ObjectDetailPage(props: {
               {publisherName ? <div><dt>Publisher</dt><dd>{publisherName}</dd></div> : null}
               {benchmarkTitle ? <div><dt>Benchmark</dt><dd>{benchmarkTitle}</dd></div> : null}
               {node.metadata?.benchmark_version ? <div><dt>Version</dt><dd>{node.metadata.benchmark_version}</dd></div> : null}
-              {node.metadata?.benchmark_status_date ? <div><dt>Benchmark date</dt><dd>{node.metadata.benchmark_status_date}</dd></div> : null}
-              <div><dt>Publication</dt><dd>{sourcePublicationName}{source?.version ? ` · ${source.version}` : ""}</dd></div>
+              {!deferPublicationFacts && node.metadata?.benchmark_status_date ? <div><dt>Benchmark date</dt><dd>{node.metadata.benchmark_status_date}</dd></div> : null}
+              {!deferPublicationFacts ? <div><dt>Publication</dt><dd>{sourcePublicationName}{source?.version ? ` · ${source.version}` : ""}</dd></div> : null}
               <div><dt>Status</dt><dd>{sourceLifecycleDisplayName(source?.lifecycle_status)}</dd></div>
               <div><dt>{sourceFreshness.label}</dt><dd>{sourceFreshness.dateTime ? <time dateTime={sourceFreshness.dateTime}>{sourceFreshness.value}</time> : sourceFreshness.value}</dd></div>
             </dl>
-            {source?.id ? <AppLink onNavigate={onNavigate} patch={{ source: source.id }} view="sources">View source details</AppLink> : null}
+            {deferPublicationFacts ? (
+              <details className="ca-tag-explanations ca-record-source-details" key={`${node.id}:source-details`} data-record-source-details>
+                <summary>View source details</summary>
+                <dl className="record-source-detail-facts">
+                  {node.metadata?.benchmark_status_date ? <div><dt>Benchmark date</dt><dd>{node.metadata.benchmark_status_date}</dd></div> : null}
+                  <div><dt>Publication</dt><dd>{sourcePublicationName}{source?.version ? ` · ${source.version}` : ""}</dd></div>
+                </dl>
+                {source?.id ? <AppLink className="ca-record-source-details__link" onNavigate={onNavigate} patch={{ source: source.id }} view="sources">Open source record</AppLink> : null}
+              </details>
+            ) : source?.id ? <AppLink onNavigate={onNavigate} patch={{ source: source.id }} view="sources">View source details</AppLink> : null}
             <TagExplanations tags={governedTaxonomyTags} />
           </RecordRailSection>
           {catalog ? <RecordRailSection icon={<IconBook2 size={20} />} id="in-this-publication" key={`${node.id}:publication`} title="In this publication">

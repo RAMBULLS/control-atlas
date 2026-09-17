@@ -90,7 +90,7 @@ test("publisher-native record headings remain identifier-led at every governed w
   const nativeRecords = [
     ["/#/record/nist-800-53/AC-2", /NIST AC-2/],
     ["/#/record/disa-cci/CCI-000366", /DISA Policy and Technical CCI-000366/],
-    ["/#/record/disa-stig/V-256609", /DISA .* V-256609/],
+    ["/#/record/disa-stig/V-256609", /^V-256609$/],
   ];
 
   for (const width of [320, 375, 390, 768, 1024, 1440]) {
@@ -362,7 +362,7 @@ test("WS6 record identities and derived category explanations stay source-truthf
     // published fact on the record rather than part of its identity.
     ["/#/record/mitre-attack/T1195.002", "MITRE T1195.002"],
     ["/#/record/mitre-d3fend/D3-AA", "MITRE Harden D3-AA"],
-    ["/#/record/disa-stig/V-256876", "DISA HMC V-256876"],
+    ["/#/record/disa-stig/V-256876", "V-256876"],
   ];
   for (const [route, identity] of identities) {
     await openRecord(page, route);

@@ -151,8 +151,10 @@
 .ca-record-rail__body { display: grid; gap: var(--ca-space-2); padding: 0 var(--ca-space-3) var(--ca-space-3); }
 .ca-record-rail:not([open]) > .ca-record-rail__body { display: none; }
 .ca-record-rail__body > p { margin: 0; font-size: var(--ca-text-xs); line-height: 1.5; }
-.ca-record-rail .record-source-facts { display: grid; gap: 0; margin: 0; }
-.ca-record-rail .record-source-facts > div {
+.ca-record-rail .record-source-facts,
+.ca-record-rail .record-source-detail-facts { display: grid; gap: 0; margin: 0; }
+.ca-record-rail .record-source-facts > div,
+.ca-record-rail .record-source-detail-facts > div {
   display: grid;
   grid-template-columns: 76px minmax(0, 1fr);
   gap: var(--ca-space-2);
@@ -160,21 +162,28 @@
   border-bottom: 1px solid var(--ca-border-subtle);
 }
 .ca-record-rail .record-source-facts dt,
-.ca-record-rail .record-source-facts dd {
+.ca-record-rail .record-source-facts dd,
+.ca-record-rail .record-source-detail-facts dt,
+.ca-record-rail .record-source-detail-facts dd {
   margin: 0;
   font: 400 var(--ca-text-xs) / 1.5 var(--ca-font-body);
   text-transform: none;
   letter-spacing: normal;
   overflow-wrap: anywhere;
 }
-.ca-record-rail .record-source-facts dt { color: var(--ca-text-muted); }
-.ca-record-rail .record-source-facts dd { color: var(--ca-text); }
+.ca-record-rail .record-source-facts dt,
+.ca-record-rail .record-source-detail-facts dt { color: var(--ca-text-muted); }
+.ca-record-rail .record-source-facts dd,
+.ca-record-rail .record-source-detail-facts dd { color: var(--ca-text); }
+.ca-record-source-details { font-size: var(--ca-text-xs); }
+.ca-record-source-details > summary:focus-visible { outline: 2px solid var(--ca-focus); outline-offset: 2px; }
 .ca-record-rail .record-rail-nav-list { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
 .ca-record-rail .record-rail-nav-list > li { min-width: 0; border-bottom: 1px solid var(--ca-border-subtle); }
 .ca-record-rail .record-rail-nav-list > li:last-child { border-bottom: 0; }
 .ca-record-rail .record-rail-nav-list a,
 .ca-record-rail .record-rail-nav-list button,
-.ca-record-rail__body > a {
+.ca-record-rail__body > a,
+.ca-record-source-details__link {
   display: flex;
   align-items: center;
   justify-content: space-between;

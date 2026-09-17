@@ -1,103 +1,64 @@
-import { TAXONOMY_TAG_BY_ID } from "../../shared/taxonomy-contract.mjs";
+import { useId } from "react";
+
+import "../../../styles/record-detail.css";
 import {
+  extractOrderedRecordDiscoveryTags,
   formatPlainLanguageProvenance,
-  groupTaxonomyByDimension,
   type GovernedTaxonomyTag,
 } from "../lib/taxonomyContext";
 import type { ViewState } from "../lib/viewState";
 import { AppLink } from "./AppLink";
-import { AtlasTag } from "./AtlasTag";
+import { DimensionGlyph } from "./DimensionGlyph";
 
+/** Additional explanation is useful for derived context, not every self-evident tag. */
+export function TagExplanations({ tags }: { tags?: GovernedTaxonomyTag[] }) {
+  const explanations = extractOrderedRecordDiscoveryTags(tags)
+    .filter((tag) => tag.assignment === "derived" || tag.origin_tag_id || tag.provenance === "referenced")
+    .map((tag) => ({ id: tag.id, text: formatPlainLanguageProvenance(tag) }))
+    .filter((entry) => entry.text);
+  if (!explanations.length) return null;
+  return (
+    <details className="ca-tag-explanations">
+      <summary>Why these are shown</summary>
+      <ul>{explanations.map((entry) => <li key={entry.id}>{entry.text}</li>)}</ul>
+    </details>
+  );
+}
+
+/** A shared wrapping tag strip. Dimensions govern behavior without becoming a visible table. */
 export function TaxonomyContext(props: {
   tags?: GovernedTaxonomyTag[];
   onNavigate: (view: ViewState["view"], patch?: Partial<ViewState>) => void;
-  heading?: string;
-  description?: string;
   showProvenance?: boolean;
   className?: string;
 }) {
-  const {
-    tags,
-    onNavigate,
-    heading = "Find more like this",
-    description,
-    showProvenance = true,
-    className,
-  } = props;
-
-  const grouped = groupTaxonomyByDimension(tags);
-  if (grouped.length === 0) {
-    return null;
-  }
-
-  // Collect unique tags that carry explanation or derived provenance
-  const seenExplanationIds = new Set<string>();
-  const tagsWithProvenance: GovernedTaxonomyTag[] = [];
-  for (const group of grouped) {
-    for (const tag of group.tags) {
-      if (seenExplanationIds.has(tag.id)) continue;
-      seenExplanationIds.add(tag.id);
-      if (tag.provenance === "inferred" || tag.basis || tag.origin_tag_id) {
-        tagsWithProvenance.push(tag);
-      }
-    }
-  }
-
+  const id = useId();
+  const tags = extractOrderedRecordDiscoveryTags(props.tags);
+  if (!tags.length) return null;
   return (
-    <section
-      aria-labelledby="taxonomy-context-heading"
-      className={`record-taxonomy-context${className ? ` ${className}` : ""}`}
-      data-record-section="taxonomy-context"
-    >
-      <div className="section-header">
-        <div>
-          <h2 id="taxonomy-context-heading">{heading}</h2>
-          {description ? <p>{description}</p> : null}
-        </div>
-      </div>
-      <dl className="taxonomy-dimension-list">
-        {grouped.map((group) => (
-          <div className="taxonomy-dimension-row" key={group.dimensionId}>
-            <dt className="taxonomy-dimension-label">{group.label}</dt>
-            <dd className="taxonomy-dimension-values">
-              {group.tags.map((tag) =>
-                TAXONOMY_TAG_BY_ID.has(tag.id) ? (
-                  <AtlasTag
-                    ariaLabel={`Filter the Library by ${tag.label}`}
-                    key={tag.id}
-                    onNavigate={onNavigate}
-                    size="sm"
-                    tagId={tag.id}
-                  />
-                ) : (
-                  <AppLink
-                    aria-label={`Filter the Library by ${tag.label}`}
-                    className="record-taxonomy-link"
-                    key={tag.id}
-                    onNavigate={onNavigate}
-                    patch={{ query: tag.label }}
-                    view="search"
-                  >
-                    <span className="atlas-tag atlas-tag--sm">
-                      <span className="atlas-tag__label">{tag.label}</span>
-                    </span>
-                  </AppLink>
-                ),
-              )}
-            </dd>
-          </div>
-        ))}
-      </dl>
-      {showProvenance && tagsWithProvenance.length > 0 ? (
-        <details className="taxonomy-provenance-disclosure">
-          <summary>Why these are shown</summary>
-          <ul>
-            {tagsWithProvenance.map((tag) => (
-              <li key={tag.id}>{formatPlainLanguageProvenance(tag)}</li>
-            ))}
-          </ul>
-        </details>
-      ) : null}
-    </section>
+    <div className={`ca-record-tags${props.className ? ` ${props.className}` : ""}`} data-record-section="taxonomy-context">
+      <nav aria-label="Browse by tag" className="record-discovery-tags" data-discovery-tags>
+        {tags.map((tag) => {
+          const explanation = formatPlainLanguageProvenance(tag);
+          const explanationId = `${id}-${tag.id}`;
+          return (
+            <AppLink
+              aria-describedby={explanation ? explanationId : undefined}
+              aria-label={`Filter the Library by ${tag.label}`}
+              className="record-discovery-tag"
+              key={tag.id}
+              onNavigate={props.onNavigate}
+              patch={{ tags: [tag.id] }}
+              view="search"
+            >
+              <DimensionGlyph decorative dimension={tag.kind} size={16} />
+              <span className="record-discovery-tag__label">{tag.label}</span>
+              {explanation ? <span className="visually-hidden" id={explanationId}>{explanation}</span> : null}
+            </AppLink>
+          );
+        })}
+      </nav>
+      {props.showProvenance !== false ? <TagExplanations tags={tags} /> : null}
+    </div>
   );
 }

@@ -2,7 +2,7 @@
 
 - **Owner:** Product owner and Muse
 - **Status:** Canonical
-- **Last reviewed:** 2026-08-14
+- **Last reviewed:** 2026-09-17
 - **Supersession:** New owner-approved page direction replaces the affected section here and its tests in the same change.
 
 Every route uses one of six shared jobs. A route renders one `<main>` and must not mount another page beneath it.
@@ -85,21 +85,22 @@ publication-native levels and immediate children.
 
 Every supported catalog/type resolves to one of six roles: atomic record, container, publication/document, entity/contributor, assessment/question, or implementation artifact. All roles share identity, official source action, source facts, publisher hierarchy, and a bounded relationship handoff; role composers control only the source-native middle of the page.
 
-Six concepts remain strictly separated across all record details:
-1. **Record identity:** What exact item this is (publisher-native or governed stable ID) with official title and canonical breadcrumb.
-2. **Record discovery tags:** One compact wrapping row of clickable discovery tags directly beneath the title block, hashtag-style (`#DISA`, `#STIG`, `#Microsoft`, etc.), canonically ordered by internal taxonomy dimensions without visible dimension rows, table scaffolding, or dimension headings. Clicking a tag filters the Library using stable taxonomy identifiers.
-3. **Primary section navigation:** Compact jump navigation (`Overview`, `Discussion`, `Check`, `Fix`, `References`, `Related records` as applicable) allowing quick movement through long source material.
-4. **Published/source-native content:** Primary content authored by the publisher (or container structure/inventory depending on role).
-5. **Governed relationships:** Evidence-backed cross-publication mappings and references under **"Related records"**, with compact counts (never stretched across the section), counterpart cards, evidence disclosures, bounded samples, and Atlas handoff. Empty relationship sections disappear.
-6. **Utility side rail (desktop):** Exactly four ordered sections:
-   - **About this record:** Factual metadata (record type, publisher, publication/benchmark title preserving full publisher title, version/release, status, freshness, and source details).
-   - **In this publication:** Publication navigation (view publication, browse all rules/records, open in publisher).
-   - **Explore related:** Plain practitioner discovery pivots (more from publisher, more from program, other product content, asset class content, related CCIs/controls). Strictly free of internal data-model jargon (`facets`, `taxonomy`, `governed context`, `provenance`, `classification`).
-   - **Do more:** Useful next actions (view in Atlas, add to Compare, share this record with copy confirmation, report an issue).
+The owner-approved record mockup for issue #254 governs this composition:
 
-Compact flow and DOM order:
-On compact viewports and single-column collapse, document order follows a natural linear reading sequence without CSS `order` tricks. The four side-rail sections appear strictly after primary source content and Related records:
-Breadcrumb -> Title -> Wrapping tags -> Primary actions -> Section nav -> Source content -> Related records -> About this record -> In this publication -> Explore related -> Do more.
+1. **Identity and actions:** Canonical breadcrumb, qualified publisher-native identity, and publisher-authored title. On desktop, the primary source, connections, and secondary-action controls form a compact cluster beside the identity. The utility rail begins alongside the identity, not beneath the entire header.
+2. **Discovery tags:** One compact wrapping strip of clickable pill tags with decorative dimension glyphs. No literal hash prefixes, visible dimension rows, or explanatory heading. Records and Resources share this tag grammar. Only registered stable IDs produce tag filters. Record kind, Atlas area, and publication titles remain facts/navigation, never synthetic tags.
+3. **Section navigation:** Visible source sections determine the jump controls. A jump scrolls and moves focus within the current record; it must not replace the hash-router record URL. Absent sections have no jump control.
+4. **Source content and hierarchy:** Preserve complete publisher text, source-native fields, and the role-specific structure. For STIG/SRG Overview, show finding identifiers and severity. The full benchmark title/version belong to the rail, not a duplicate Overview fact.
+5. **Related records:** Render inline-visible evidence-backed relationships, compact counts, counterpart navigation, source evidence, bounded samples, and an Atlas handoff. Structural parents/children remain separate. Atlas-only relationships do not create a fake zero-count panel; Atlas navigation remains available.
+6. **Utility rail:** The following supported sections occur in this order. Omit a section only when no real content or valid destination supports it; never fabricate material to fill four cards.
+   - **About this record:** Record type, publisher, full benchmark identity where present, benchmark version/date, source publication, lifecycle, freshness, and source details. Benchmark and source compilation are distinct facts. Additional explanations distinguish direct evidence from derived discovery associations; an organization's derived tag never becomes a publisher claim.
+   - **In this publication:** Publication navigation and browsing scoped to the actual publication/benchmark. Link labels use publisher-native record nouns. Do not repeat the primary official-source destination under a second label.
+   - **Explore related:** Useful source-supported discovery pivots and actual relationship handoffs. Labels are plain language; technical data-model terminology stays internal. Tag combinations retain existing AND/OR semantics. In-page relationship handoffs preserve the current record route.
+   - **Do more:** Supported Atlas, comparison, sharing, and reporting actions. The card uses a restrained existing orange accent. A comparison opener is labeled "Compare this record", not an unsupported promise to add to a tray. Sharing copies the canonical record link and confirms success only after the clipboard write succeeds; failure is explained without false confirmation.
+
+At 900px and below, the rail becomes four compact accessible disclosures after primary content and Related records. They are closed initially on compact screens and expanded initially on desktop; each uses one copy of its content. Keyboard and touch operation, visible focus, breakpoint changes, and record changes are verified. Mobile actions follow the tag strip and do not split ordinary words mid-word.
+
+Compact DOM order is: breadcrumb → identity → wrapping tags → primary actions → section navigation → source content → Related records → About this record → In this publication → Explore related → Do more. Do not simulate this using CSS `order` or duplicate desktop/mobile content.
 
 - Atomic records lead with official content, then implementation or assessment material and important governed relationships, followed by the utility rail sections.
 - Containers lead with publisher description when one exists, hierarchy, child inventory, counts/facets, external governed relationships, followed by the utility rail sections. Missing optional publisher prose is an honest absence, not a record error.
@@ -123,3 +124,5 @@ Compare, Templates, and other task flows present scope, working controls, result
 ## Responsive verification widths
 
 All page contracts are checked at 320, 375, 390, 768, 1024, and 1440 pixels. Required assertions cover visible primary content, document height, useful-space utilization, DOM size, overflow, focus order, keyboard operation, and preserved back/forward and deep-link state. Atlas mobile is list-first; it never presents a shrunken canvas as the only way to reach evidence.
+
+The record acceptance matrix is part of the required browser gate, not only an optional local command. New record screenshots are captured as review-only visual evidence alongside existing committed pixel baselines; capturing an image is not itself an assertion that it matches the approved mockup. Review those images before accepting a record-layout change.

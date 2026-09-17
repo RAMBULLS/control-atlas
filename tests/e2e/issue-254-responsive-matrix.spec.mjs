@@ -51,7 +51,7 @@ for (const sample of REPRESENTATIVES) {
       await expect(record.locator(".record-template-main")).not.toBeEmpty();
       await expect(record.locator(".taxonomy-dimension-row")).toHaveCount(0);
       await expect(record.locator(".record-discovery-tag__hash")).toHaveCount(0);
-      expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+      expect(await page.evaluate(() => globalThis.document.documentElement.scrollWidth - globalThis.document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
       await checkTagTargets(page);
 
       const rail = record.locator(".record-template-sidebar");

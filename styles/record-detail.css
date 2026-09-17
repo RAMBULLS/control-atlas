@@ -19,6 +19,11 @@
 
 .ca-record-heading { grid-column: 1; display: grid; gap: var(--ca-space-2); }
 .ca-record-heading > * { margin: 0; }
+.ca-record-layout .record-title-block .record-official-name {
+  font: 400 var(--ca-text-base) / 1.5 var(--ca-font-body);
+  letter-spacing: normal;
+}
+.ca-record-layout .ca-record-heading h1 { line-height: 1.15; }
 .ca-record-layout .record-title-block > .ca-record-tags { grid-column: 1; }
 .ca-record-layout .record-title-actions {
   grid-column: 2;
@@ -30,8 +35,20 @@
   margin: 0;
 }
 .ca-record-layout .record-title-actions > * { width: 100%; }
-.ca-record-layout .record-title-actions .ca-button { min-height: 44px; padding: var(--ca-space-2); }
-.ca-record-layout .record-actions-menu > summary { min-height: 44px; }
+.ca-record-layout .record-title-actions .ca-button,
+.ca-record-layout .record-actions-menu > summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  padding: var(--ca-space-2);
+  font: 600 var(--ca-text-sm) / 1.35 var(--ca-font-body);
+  text-transform: none;
+  letter-spacing: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+}
 .ca-record-layout > .record-template-main { grid-column: 1; grid-row: 2; max-width: none; }
 .ca-record-layout > .record-template-sidebar {
   grid-column: 2;
@@ -135,7 +152,7 @@
 .ca-record-rail .record-source-facts { display: grid; gap: 0; margin: 0; }
 .ca-record-rail .record-source-facts > div {
   display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  grid-template-columns: 76px minmax(0, 1fr);
   gap: var(--ca-space-2);
   padding: var(--ca-space-2) 0;
   border-bottom: 1px solid var(--ca-border-subtle);
@@ -172,6 +189,7 @@
   cursor: pointer;
 }
 .ca-record-rail .record-rail-nav-list :is(a, button)::after { content: "\203A"; flex: 0 0 auto; color: var(--ca-secondary); font-size: var(--ca-text-lg); }
+.ca-record-rail .record-rail-nav-list a[target="_blank"]::after { content: none; }
 .ca-record-rail .record-rail-nav-list :is(a, button):hover,
 .ca-record-rail__body > a:hover { color: var(--ca-secondary); }
 .ca-record-rail .record-rail-nav-list :is(a, button):focus-visible { outline: 2px solid var(--ca-focus); outline-offset: 2px; }
@@ -190,6 +208,7 @@
 .ca-record-page .record-connections .section-header > .badge { flex: 0 0 auto; width: fit-content; }
 
 @media (min-width: 1200px) {
+  .ca-record-page #section-overview .record-source-facts,
   .ca-record-page #section-overview dl { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @media (max-width: 900px) {

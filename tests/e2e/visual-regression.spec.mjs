@@ -1,3 +1,5 @@
+import { mkdir } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
 import { expect, test } from '@playwright/test';
 import { dismissOnboarding, waitForAppReady } from './support.mjs';
 
@@ -49,6 +51,17 @@ test('resource directory mobile composition', async ({ page }) => {
   await expect(page).toHaveScreenshot('resources-mobile.png', { fullPage: false });
 });
 
+// New record compositions have no approved committed pixel baseline yet.
+// Save review-only evidence in a separate artifact subdirectory; never overwrite
+// a committed baseline or call a captured image a visual acceptance result.
+// The required issue-254 matrix checks real geometry, interactions and content.
+async function captureReviewImage(subject, name) {
+  const path = join(import.meta.dirname, 'visual-regression.spec.mjs-snapshots', 'review-only', name);
+  await mkdir(dirname(path), { recursive: true });
+  await subject.screenshot({ path, animations: 'disabled' });
+  await test.info().attach(name, { path, contentType: 'image/png' });
+}
+
 const records = [
   ['stig', '#/record/disa-stig/V-205646'],
   ['control', '#/record/nist-800-53/AC-2'],
@@ -62,22 +75,22 @@ const records = [
 
 for (const [name, route] of records) {
   for (const width of [375, 1440]) {
-    test(`approved record composition: ${name} at ${width}`, async ({ page }) => {
+    test(`record visual review evidence: ${name} at ${width}`, async ({ page }) => {
       await openStableWorkspace(page, route, { width, height: width === 375 ? 844 : 1100 });
       await waitForAppReady(page, { allowPartial: true });
       await dismissOnboarding(page);
       await expect(page.locator('[data-template="E"]')).toBeVisible();
       await expect(page.locator('[data-record-source-error]')).toHaveCount(0);
-      await expect(page).toHaveScreenshot(`record-${name}-${width}.png`, { fullPage: false });
+      await captureReviewImage(page, `record-${name}-${width}.png`);
       if (name === 'stig') {
         const rail = page.locator('.record-template-sidebar');
         if (width === 375) {
           await expect(rail.locator('details[open]')).toHaveCount(0);
-          await expect(rail).toHaveScreenshot('record-stig-mobile-utilities.png');
+          await captureReviewImage(rail, 'record-stig-mobile-utilities.png');
           await rail.locator('[data-rail-section="about-this-record"] > summary').click();
-          await expect(rail).toHaveScreenshot('record-stig-mobile-utilities-expanded.png');
+          await captureReviewImage(rail, 'record-stig-mobile-utilities-expanded.png');
         } else {
-          await expect(rail).toHaveScreenshot('record-stig-desktop-utilities.png');
+          await captureReviewImage(rail, 'record-stig-desktop-utilities.png');
         }
       }
     });
@@ -89,5 +102,5 @@ test('resource discovery tags share the compact record treatment', async ({ page
   await waitForAppReady(page, { allowPartial: true });
   await dismissOnboarding(page);
   await expect(page.locator('[data-discovery-tags]')).toHaveCount(1);
-  await expect(page.locator('.ca-record-tags')).toHaveScreenshot('resource-detail-mobile-tags.png');
+  await captureReviewImage(page.locator('.ca-record-tags'), 'resource-detail-mobile-tags.png');
 });

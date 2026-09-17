@@ -34,7 +34,7 @@
     "lint:stig-observer": "eslint scripts/fetch-stig-source-observations.mjs tools/importers/stig-source-observer.mjs tests/stig-source-observer.test.mjs --max-warnings=0",
     "test:stig-observer": "node --test tests/stig-source-observer.test.mjs",
     "lint:incremental-data": "eslint scripts/lib/strict-conditional-fetch.mjs scripts/lib/write-json-atomically.mjs tests/strict-conditional-fetch.test.mjs tests/write-json-atomically.test.mjs --max-warnings=0",
-    "test:incremental-data": "node --test tests/strict-conditional-fetch.test.mjs tests/write-json-atomically.test.mjs tests/write-json-atomically.test.mjs",
+    "test:incremental-data": "node --test tests/strict-conditional-fetch.test.mjs tests/write-json-atomically.test.mjs",
     "lint:source-refresh": "eslint scripts/discover-nist-pages.mjs scripts/discover-nist-structured-assets.mjs scripts/enrich-commons-resources.mjs scripts/fetch-800-53-rev4-rev5-crosswalk.mjs scripts/fetch-ccis.mjs scripts/fetch-fedramp-2026-rules.mjs scripts/fetch-framework-catalogs.mjs scripts/fetch-mitre-data.mjs scripts/fetch-nara-cui-registry.mjs scripts/fetch-nist-structured-catalogs.mjs scripts/fetch-nist-zero-trust-pages.mjs scripts/fetch-olir-catalog.mjs scripts/fetch-zero-trust-workbooks.mjs scripts/hydrate-artifacts.mjs scripts/refresh-data.mjs scripts/lib/ingestion-pipeline.mjs scripts/lib/source-refresh-contract.mjs scripts/lib/strict-conditional-fetch.mjs tests/olir-retrieval.test.mjs tests/source-refresh-contract.test.mjs tests/strict-conditional-fetch.test.mjs tests/write-json-atomically.test.mjs tools/importers/catalog-adapters-ext.mjs tools/relationship-builders/800-171-mapping-adapter.mjs tools/relationship-builders/olir-adapter.mjs tools/relationship-builders/olir-retrieval.mjs tools/relationship-builders/olir-html.mjs --max-warnings=0",
     "test:source-refresh": "node --test tests/source-refresh-contract.test.mjs tests/strict-conditional-fetch.test.mjs tests/write-json-atomically.test.mjs tests/olir-retrieval.test.mjs",
     "test:process-launch": "node --test tests/process-runner.test.mjs",
@@ -117,7 +117,7 @@
     "test:runtime": "node --test ./tests/search-quality.test.mjs ./tests/library-search-index.test.mjs ./tests/framework-runtime.test.mjs ./tests/graph-layout.test.mjs ./tests/graph-clustering.test.mjs ./tests/catalog-publication-identity.test.mjs ./tests/hygiene-check.test.mjs",
     "test:graph": "tsx --test ./tests/graph/ancestorPath.test.ts ./tests/graph/areaVisualLanguage.test.ts ./tests/graph/atlasDrilldown.test.ts ./tests/graph/atlasSearch.test.ts ./tests/graph/atlasModel.test.ts ./tests/graph/atlasExplorerReconciliation.test.ts ./tests/graph/atlasPivotTrail.test.ts ./tests/graph/atlasSharedGround.test.ts ./tests/graph/atlasUniverse.test.ts ./tests/graph/atlasTreeLayout.test.ts ./tests/graph/atlasTreeAggregation.test.ts ./tests/graph/atlasTreeModelOverlay.test.ts ./tests/graph/atlasGraphModel.test.ts ./tests/graph/atlasGraphProjection.test.ts ./tests/graph/atlasLensFamilies.test.ts ./tests/graph/atlasProjectionBudgets.test.ts ./tests/graph/authorityFraming.test.ts ./tests/graph/runtimeLoader.test.ts ./tests/graph/recordTitle.test.ts ./tests/graph/contextualMatching.test.ts ./tests/graph/relationshipProvenance.test.ts ./tests/graph/routeIdentity.test.ts ./tests/graph/informationArchitecture.test.ts ./tests/graph/buildRouteState.test.ts ./tests/graph/brandRotation.test.ts ./tests/graph/catalogCoverage.test.ts ./tests/graph/catalogInventory.test.ts ./tests/graph/compareModeState.test.ts ./tests/graph/sourceRegister.test.ts ./tests/graph/templateGenerationState.test.ts ./tests/graph/librarySearchTransport.test.ts ./tests/graph/officialSource.test.ts ./tests/graph/officialText.test.ts ./tests/graph/workspaceTemplateState.test.ts ./tests/graph/taxonomyContract.test.ts ./tests/graph/atlasAreaPacking.test.ts ./tests/graph/atlasTag.test.ts ./tests/graph/homeTagConstellation.test.ts ./tests/graph/uiStateContracts.test.ts",
     "test:whole-product-final-sprint": "playwright test --config playwright.e2e.config.mjs tests/e2e/epic14-ws4-atlas-canvas.spec.mjs tests/e2e/epic14-ws5-home-guides.spec.mjs tests/e2e/taxonomy-discovery.spec.mjs",
-    "test:epic12:phase7": "tsx --test ./tests/graph/atlasUniverse.test.ts ./tests/graph/atlasTreeLayout.test.ts ./tests/graph/atlasTreeModelOverlay.test.ts ./tests/graph/authorityFraming.test.ts",
+    "test:epic12:phase7": "tsx --test ./tests/graph/atlasUniverse.test.ts ./tests/graph/atlasTreeLayout.test.ts ./tests/graph/atlasTreeAggregation.test.ts ./tests/graph/atlasTreeModelOverlay.test.ts ./tests/graph/authorityFraming.test.ts",
     "test:browser": "node --test ./tests/browser-contract.test.mjs",
     "smoke:dom": "node ./scripts/dom-smoke.mjs",
     "audit:coverage": "node ./scripts/audit-coverage.mjs",
@@ -141,19 +141,29 @@
     "verify:contracts": "npm run verify:profiles && npm run verify:source-truth && npm run verify:discovery && npm run verify:manifests && npm run verify:completeness && npm run verify:ingestion && node ./tools/hygiene-check.mjs && npm run check:oscal && npm run test:browser && npm run smoke:dom && npm run verify:public",
     "verify:quality": "npm run verify:contracts && npm run lint:ci && npm run typecheck && npm test",
     "test:refresh-safety": "node --test tests/automerge-source-refresh.test.mjs tests/catalog-source-inventory.test.mjs tests/catalog-baseline-fetch.test.mjs tests/publisher-inventory.test.mjs tests/publisher-inventory-integration.test.mjs tests/publisher-volume.test.mjs tests/refresh-alerts.test.mjs tests/refresh-candidate-gate.test.mjs tests/refresh-isolation.test.mjs tests/source-baseline.test.mjs tests/source-freshness-ownership.test.mjs tests/source-partial-failure.test.mjs tests/source-transaction.test.mjs tests/source-unit-selection.test.mjs tests/source-url-policy.test.mjs tests/mitre-release-admission.test.mjs tests/cci-inventory.test.mjs",
-    "lint:refresh-safety": "eslint scripts/lib/catalog-refresh-profiles.mjs scripts/lib/publisher-inventory.mjs scripts/lib/refresh-candidate-gate.mjs scripts/lib/refresh-source-outputs.mjs scripts/lib/source-baseline.mjs scripts/lib/source-transaction.mjs scripts/lib/source-url-policy.mjs tools/automerge-source-refresh.mjs tools/report-refresh-alerts.mjs tools/verify-refresh-admission.mjs tests/helpers/publisher-volume.mjs tests/automerge-source-refresh.test.mjs tests/catalog-source-inventory.test.mjs tests/catalog-baseline-fetch.test.mjs tests/publisher-inventory.test.mjs tests/publisher-volume.test.mjs tests/refresh-alerts.test.mjs tests/refresh-candidate-gate.test.mjs tests/refresh-isolation.test.mjs tests/source-baseline.test.mjs tests/source-freshness-ownership.test.mjs tests/source-partial-failure.test.mjs tests/source-transaction.test.mjs tests/source-unit-selection.test.mjs tests/source-url-policy.test.mjs tests/mitre-release-admission.test.mjs scripts/lib/cci-inventory.mjs tests/cci-inventory.test.mjs --max-warnings=0",
+    "lint:refresh-safety": "eslint scripts/lib/catalog-refresh-profiles.mjs scripts/lib/publisher-inventory.mjs scripts/lib/refresh-candidate-gate.mjs scripts/lib/refresh-source-outputs.mjs scripts/lib/source-baseline.mjs scripts/lib/source-transaction.mjs scripts/lib/source-url-policy.mjs tools/automerge-source-refresh.mjs tools/report-refresh-alerts.mjs tools/verify-refresh-admission.mjs tests/helpers/publisher-volume.mjs tests/automerge-source-refresh.test.mjs tests/catalog-source-inventory.test.mjs tests/catalog-baseline-fetch.test.mjs tests/publisher-inventory.test.mjs tests/publisher-inventory-integration.test.mjs tests/publisher-volume.test.mjs tests/refresh-alerts.test.mjs tests/refresh-candidate-gate.test.mjs tests/refresh-isolation.test.mjs tests/source-baseline.test.mjs tests/source-freshness-ownership.test.mjs tests/source-partial-failure.test.mjs tests/source-transaction.test.mjs tests/source-unit-selection.test.mjs tests/source-url-policy.test.mjs tests/mitre-release-admission.test.mjs scripts/lib/cci-inventory.mjs tests/cci-inventory.test.mjs --max-warnings=0",
     "verify:refresh-admission": "node tools/verify-refresh-admission.mjs",
     "lighthouse:production": "node tools/collect-production-lighthouse.mjs",
     "test:pipeline-reliability": "node --test tests/pipeline-reliability.test.mjs",
     "lint:pipeline-reliability": "eslint tools/collect-production-lighthouse.mjs tools/lighthouse-metrics.mjs tests/pipeline-reliability.test.mjs tools/report-refresh-alerts.mjs --max-warnings=0"
   },
-  "engines": { "node": "^22.22.2 || ^24.15.0 || >=26.0.0" },
+  "engines": {
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
+  },
   "overrides": {
     "tmp": "0.2.7",
-    "@lhci/cli": { "uuid": "11.1.1", "lighthouse": "13.4.1" },
-    "exceljs": { "uuid": "11.1.1", "unzipper": "0.12.3" },
+    "@lhci/cli": {
+      "uuid": "11.1.1",
+      "lighthouse": "13.4.1"
+    },
+    "exceljs": {
+      "uuid": "11.1.1",
+      "unzipper": "0.12.3"
+    },
     "nanoid": "^3.3.17",
-    "express": { "qs": "6.16.0" }
+    "express": {
+      "qs": "6.16.0"
+    }
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",

@@ -75,11 +75,20 @@ test("ATT&CK tactic uses publisher identity without changing its stable route", 
 });
 
 test("DISA rule and benchmark expose native identity, release, and inventory facts", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
   await openRecord(page, "/#/record/disa-stig/V-256609");
   const facts = page.locator('[data-record-section="native-facts"]');
-  for (const label of ["Finding / Vuln ID", "Rule ID", "STIG ID", "Benchmark", "Version / release", "Published status date", "Severity"]) {
+  for (const label of ["Finding / Vuln ID", "Rule ID", "STIG ID", "Severity"]) {
     await expect(facts.getByText(label, { exact: true })).toBeVisible();
   }
+  // The approved layout moves publication facts to the rail, not out of the page.
+  const about = page.locator('[data-rail-section="about-this-record"]');
+  for (const label of ["Benchmark", "Version", "Benchmark date"]) {
+    const field = about.locator("dl > div").filter({ has: page.locator("dt", { hasText: new RegExp(`^${label}$`) }) });
+    await expect(field.locator("dt")).toBeVisible();
+    await expect(field.locator("dd")).not.toBeEmpty();
+  }
+  await expect(facts.getByText("Benchmark", { exact: true })).toHaveCount(0);
   await expect(page.locator('[data-record-section="official-text"] > section > h2')).toHaveText(["Discussion", "Check", "Fix"]);
   await openRecord(page, "/#/record/disa-stig/BENCHMARK-VMW-VSPHERE-7-0-VCA-POSTGRESQL-STIG");
   await expect(page.locator('[data-page-role="container"]')).toBeVisible();
@@ -118,4 +127,31 @@ test("collapsed relationship groups are keyboard-operable and bounded by default
   await expect(page.locator('[data-relationship-treatment="ATLAS_ONLY"]')).toHaveCount(0);
   expect(await page.locator("details.record-relationship-disclosure").count()).toBeGreaterThan(0);
   await expect(page.locator("details.record-relationship-disclosure").first()).not.toHaveAttribute("open", "");
+});
+
+test("short record headers do not absorb the height of the desktop rail", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  for (const [, route] of roleRecords) {
+    await openRecord(page, route);
+    const header = await page.locator(".record-title-block").boundingBox();
+    const main = await page.locator(".record-template-main").boundingBox();
+    expect(main.y - (header.y + header.height), `Excessive title-to-content gap on ${route}`).toBeLessThanOrEqual(40);
+    expect(main.y).toBeGreaterThanOrEqual(header.y + header.height);
+  }
+});
+
+test("publication records expose their actual contents in publisher order", async ({ page }) => {
+  await openRecord(page, "/#/record/csf-2/CATALOG");
+  await expect(page.locator('[data-page-role="publication_document"]')).toBeVisible();
+  const inventory = page.locator('[data-record-section="child-inventory"]');
+  await expect(inventory.getByRole("heading", { name: "Contents", exact: true })).toBeVisible();
+  const children = inventory.locator("li a");
+  await expect(children).toHaveCount(6);
+  const hrefs = await children.evaluateAll((links) => links.map((link) => link.getAttribute("href")));
+  expect(hrefs.map((href) => href.split("/").at(-1))).toEqual([
+    "FUNCTION-GV", "FUNCTION-ID", "FUNCTION-PR", "FUNCTION-DE", "FUNCTION-RS", "FUNCTION-RC",
+  ]);
+  await children.first().click();
+  await expect(page).toHaveURL(/#\/record\/csf-2\/FUNCTION-GV$/);
+  await expect(page.locator('[data-page-role="container"]')).toBeVisible();
 });

@@ -136,7 +136,11 @@ export function ObjectDetailPage(props: {
   const hasPublishedSectionContent = publishedSections.length > 0;
   const structuralChildren = edges
     .filter((edge: any) => edge.relationship_class === "structural" && edge.source_node_id === node.id)
+    .sort((left: any, right: any) => (left.publisher_order ?? Number.MAX_SAFE_INTEGER) - (right.publisher_order ?? Number.MAX_SAFE_INTEGER))
     .map((edge: any) => bundle.runtime.getNode(edge.target_node_id)).filter(Boolean);
+  const showChildInventory = presentation.page_role === PAGE_ROLES.CONTAINER
+    || (presentation.page_role === PAGE_ROLES.PUBLICATION_DOCUMENT && structuralChildren.length > 0);
+  const childHeading = presentation.page_role === PAGE_ROLES.PUBLICATION_DOCUMENT ? "Contents" : "Contained records";
   const structuralTrace = displayedTrace.filter((entry) => entry.origin === "structural");
   const governedConnectionGroups = relatedConnectionGroups.map((group) => {
     const counterpart = group.items[0] ? bundle.runtime.getNode(group.items[0].nodeId) : null;
@@ -163,7 +167,7 @@ export function ObjectDetailPage(props: {
   if (source && !missingSourceFields.length) {
     for (const section of publishedSections) sectionNavItems.push({ id: `section-${section.field}`, label: section.heading });
   }
-  if (presentation.page_role === PAGE_ROLES.CONTAINER) sectionNavItems.push({ id: "section-children", label: "Contained records" });
+  if (showChildInventory) sectionNavItems.push({ id: "section-children", label: childHeading });
   if (visibleConnectionGroups.length) sectionNavItems.push({ id: "section-related-records", label: "Related records" });
 
   const benchmarkTitle = String(node.metadata?.benchmark_title || "");
@@ -192,10 +196,10 @@ export function ObjectDetailPage(props: {
           </div>
           <TaxonomyContext onNavigate={onNavigate} showProvenance={false} tags={governedTaxonomyTags} />
           <div className="record-title-actions" data-route-primary-support="true">
-            {officialSource.url ? <ButtonLink href={officialSource.url} rel="noopener noreferrer" target="_blank" variant="primary">
+            {officialSource.url ? <ButtonLink className="normal-case font-medium tracking-normal" href={officialSource.url} rel="noopener noreferrer" target="_blank" variant="primary">
               {claimOrigin === "atlas_editorial" ? "View Atlas source" : officialSourceActionLabel(officialSource)}
             </ButtonLink> : null}
-            <AppLink onNavigate={onNavigate} patch={{ node: node.id }} variant="secondary" view="atlas-map">See connections</AppLink>
+            <AppLink className="normal-case font-medium tracking-normal" onNavigate={onNavigate} patch={{ node: node.id }} variant="secondary" view="atlas-map">See connections</AppLink>
             <details className="record-actions-menu" onKeyDown={(event) => {
               if (event.key !== "Escape" || !event.currentTarget.open) return;
               event.preventDefault(); event.currentTarget.open = false;
@@ -239,13 +243,14 @@ export function ObjectDetailPage(props: {
           {structuralTrace.length > 1 ? <section className="record-hierarchy" data-record-section="publisher-hierarchy">
             <h2>Publisher hierarchy</h2><ol>{structuralTrace.map((entry) => <li key={entry.id}>{entry.label}</li>)}</ol>
           </section> : null}
-          {presentation.page_role === PAGE_ROLES.CONTAINER ? <section className="record-child-inventory" data-record-section="child-inventory" id="section-children">
-            <div className="section-header"><div><h2>Contained records</h2><p>Objects published directly beneath this record.</p></div>
+          {showChildInventory ? <section className="record-child-inventory" data-record-section="child-inventory" id="section-children">
+            <div className="section-header"><div><h2>{childHeading}</h2><p>Objects published directly beneath this record.</p></div>
               <Badge tone="info">{structuralChildren.length || sourceMetadata.child_count || 0}</Badge>
             </div>
             {structuralChildren.length ? <ul>{structuralChildren.slice(0, 25).map((child: any) => <li key={child.id}>
               <AppLink onNavigate={onNavigate} patch={{ node: child.id }} view="library-detail">{recordDisplayTitle(child)}</AppLink>
             </li>)}</ul> : <p>No directly contained records are loaded for this publication object.</p>}
+            {structuralChildren.length > 25 ? <AppLink onNavigate={onNavigate} patch={{ node: node.id }} view="atlas-map">Browse all contents in Atlas</AppLink> : null}
           </section> : null}
           {visibleConnectionGroups.length > 0 ? (
             <section className="record-connections record-connections--related" data-record-section="related-records" id="section-related-records">

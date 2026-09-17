@@ -2,6 +2,7 @@
 .ca-record-page > .ca-record-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 300px);
+  grid-template-rows: min-content minmax(0, 1fr);
   align-items: start;
   column-gap: var(--ca-space-6);
   row-gap: var(--ca-space-4);
@@ -55,7 +56,8 @@
   grid-row: 1 / span 2;
   display: grid;
   gap: var(--ca-space-3);
-  position: static;
+  position: sticky;
+  top: var(--ca-header-safe-offset);
   max-height: none;
   overflow: visible;
 }
@@ -188,7 +190,17 @@
   font: 400 var(--ca-text-xs) / 1.5 var(--ca-font-body);
   cursor: pointer;
 }
-.ca-record-rail .record-rail-nav-list :is(a, button)::after { content: "\203A"; flex: 0 0 auto; color: var(--ca-secondary); font-size: var(--ca-text-lg); }
+/* A drawn chevron is decorative; generated text would pollute accessible names. */
+.ca-record-rail .record-rail-nav-list :is(a, button)::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  margin-right: 3px;
+  border-top: 1px solid var(--ca-secondary);
+  border-right: 1px solid var(--ca-secondary);
+  transform: rotate(45deg);
+  flex: 0 0 auto;
+}
 .ca-record-rail .record-rail-nav-list a[target="_blank"]::after { content: none; }
 .ca-record-rail .record-rail-nav-list :is(a, button):hover,
 .ca-record-rail__body > a:hover { color: var(--ca-secondary); }
@@ -212,7 +224,7 @@
   .ca-record-page #section-overview dl { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @media (max-width: 900px) {
-  .ca-record-page > .ca-record-layout { grid-template-columns: minmax(0, 1fr); }
+  .ca-record-page > .ca-record-layout { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
   .ca-record-layout > .record-title-block,
   .ca-record-layout > .record-template-main,
   .ca-record-layout > .record-template-sidebar { grid-column: 1; grid-row: auto; }
@@ -226,7 +238,7 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .ca-record-layout .record-title-actions > .ca-button-primary { grid-column: 1 / -1; }
-  .ca-record-layout > .record-template-sidebar { grid-template-columns: minmax(0, 1fr); }
+  .ca-record-layout > .record-template-sidebar { grid-template-columns: minmax(0, 1fr); position: static; }
   .ca-record-rail__heading { min-height: 52px; }
   .ca-record-rail__heading h2 { font-size: var(--ca-text-base); }
 }

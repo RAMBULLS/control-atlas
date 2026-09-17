@@ -3,7 +3,7 @@ import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 
 import "../../../styles/record-detail.css";
 
-/** One copy of each utility section: expanded on desktop, closed on compact screens. */
+/** Native details owns user toggles; breakpoint changes set the initial layout state. */
 export function RecordRailSection(props: {
   id: string;
   title: string;
@@ -13,16 +13,18 @@ export function RecordRailSection(props: {
 }) {
   const headingId = useId();
   const element = useRef<HTMLDetailsElement>(null);
-  const [open, setOpen] = useState(true);
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 900px)");
     const sync = () => {
       const details = element.current;
-      if (media.matches && details?.contains(document.activeElement)) {
+      if (!details) return;
+      if (media.matches && details.contains(document.activeElement)) {
         details.querySelector<HTMLElement>("summary")?.focus();
       }
-      setOpen(!media.matches);
+      // Do not mirror native toggle events into React state: delayed toggle
+      // events can otherwise undo a rapid keyboard or breakpoint transition.
+      details.open = !media.matches;
     };
     sync();
     media.addEventListener("change", sync);
@@ -34,8 +36,7 @@ export function RecordRailSection(props: {
       aria-labelledby={headingId}
       className={`ca-record-rail${props.accent ? " ca-record-rail--actions" : ""}`}
       data-rail-section={props.id}
-      onToggle={(event) => setOpen(event.currentTarget.open)}
-      open={open}
+      open
       ref={element}
     >
       <summary className="ca-record-rail__heading">

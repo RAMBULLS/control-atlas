@@ -1,0 +1,216 @@
+/* Record/detail components. Keep these rules scoped; do not change the site shell. */
+.ca-record-page > .ca-record-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 300px);
+  align-items: start;
+  column-gap: var(--ca-space-6);
+  row-gap: var(--ca-space-4);
+}
+
+.ca-record-layout > .record-title-block {
+  grid-column: 1;
+  grid-row: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 180px);
+  gap: var(--ca-space-3) var(--ca-space-4);
+  padding-bottom: var(--ca-space-3);
+  border-bottom: 0;
+}
+
+.ca-record-heading { grid-column: 1; display: grid; gap: var(--ca-space-2); }
+.ca-record-heading > * { margin: 0; }
+.ca-record-layout .record-title-block > .ca-record-tags { grid-column: 1; }
+.ca-record-layout .record-title-actions {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--ca-space-2);
+  margin: 0;
+}
+.ca-record-layout .record-title-actions > * { width: 100%; }
+.ca-record-layout .record-title-actions .ca-button { min-height: 44px; padding: var(--ca-space-2); }
+.ca-record-layout .record-actions-menu > summary { min-height: 44px; }
+.ca-record-layout > .record-template-main { grid-column: 1; grid-row: 2; max-width: none; }
+.ca-record-layout > .record-template-sidebar {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: grid;
+  gap: var(--ca-space-3);
+  position: static;
+  max-height: none;
+  overflow: visible;
+}
+
+/* Shared clickable tag grammar, used by records and resources alike. */
+.ca-record-tags { min-width: 0; }
+.ca-record-tags .record-discovery-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ca-space-2);
+  margin: 0;
+}
+.ca-record-tags .record-discovery-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ca-space-2);
+  min-height: 44px;
+  max-width: 100%;
+  padding: var(--ca-space-2) var(--ca-space-3);
+  border: 1px solid var(--ca-border-strong);
+  border-radius: 999px;
+  background: var(--ca-surface-raised);
+  color: var(--ca-text);
+  font: 500 var(--ca-text-xs) / 1.35 var(--ca-font-body);
+  text-decoration: none;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.ca-record-tags .record-discovery-tag > svg { flex: 0 0 auto; color: var(--ca-secondary); }
+.ca-record-tags .record-discovery-tag:hover { border-color: var(--ca-secondary); background: var(--ca-surface-lifted); }
+.ca-record-tags .record-discovery-tag:focus-visible { outline: 2px solid var(--ca-focus); outline-offset: 3px; }
+.ca-record-tags .ca-tag-explanations { margin-top: var(--ca-space-2); font-size: var(--ca-text-xs); }
+.ca-tag-explanations > summary { min-height: 44px; align-content: center; cursor: pointer; }
+.ca-tag-explanations ul { padding-left: var(--ca-space-4); }
+
+/* Section controls scroll within a record without overwriting its route. */
+.ca-record-section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ca-space-1);
+  padding: 0;
+  margin: 0 0 var(--ca-space-2);
+  border-bottom: 1px solid var(--ca-border);
+}
+.ca-record-section-nav__item {
+  min-height: 44px;
+  padding: var(--ca-space-2) var(--ca-space-3);
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--ca-text-muted);
+  font: 500 var(--ca-text-xs) / 1.4 var(--ca-font-body);
+  cursor: pointer;
+}
+.ca-record-section-nav__item[aria-current="location"] { color: var(--ca-text); border-bottom-color: var(--ca-action-primary); }
+.ca-record-section-nav__item:hover { color: var(--ca-text); }
+.ca-record-section-nav__item:focus-visible { outline: 2px solid var(--ca-focus); outline-offset: -2px; }
+.ca-record-page [id^="section-"] { scroll-margin-top: var(--ca-header-safe-offset); }
+
+/* Four utility cards, with one semantic disclosure and one copy of the content. */
+.ca-record-rail {
+  min-width: 0;
+  border: 1px solid var(--ca-border);
+  border-radius: var(--ca-radius-md);
+  background: var(--ca-surface-raised);
+  color: var(--ca-text);
+}
+.ca-record-rail__heading {
+  display: flex;
+  align-items: center;
+  gap: var(--ca-space-2);
+  min-height: 48px;
+  padding: var(--ca-space-3);
+  cursor: pointer;
+  list-style: none;
+}
+.ca-record-rail__heading::-webkit-details-marker { display: none; }
+.ca-record-rail__heading h2 {
+  flex: 1;
+  margin: 0;
+  color: var(--ca-text);
+  font: 600 var(--ca-text-lg) / 1.2 var(--ca-font-display);
+  text-transform: none;
+  letter-spacing: normal;
+}
+.ca-record-rail__icon { display: inline-flex; color: var(--ca-secondary); }
+.ca-record-rail__chevron { flex: 0 0 auto; transition: transform 120ms ease; }
+.ca-record-rail[open] > summary .ca-record-rail__chevron { transform: rotate(90deg); }
+.ca-record-rail__heading:focus-visible { outline: 2px solid var(--ca-focus); outline-offset: -3px; border-radius: inherit; }
+.ca-record-rail__body { display: grid; gap: var(--ca-space-2); padding: 0 var(--ca-space-3) var(--ca-space-3); }
+.ca-record-rail:not([open]) > .ca-record-rail__body { display: none; }
+.ca-record-rail__body > p { margin: 0; font-size: var(--ca-text-xs); line-height: 1.5; }
+.ca-record-rail .record-source-facts { display: grid; gap: 0; margin: 0; }
+.ca-record-rail .record-source-facts > div {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  gap: var(--ca-space-2);
+  padding: var(--ca-space-2) 0;
+  border-bottom: 1px solid var(--ca-border-subtle);
+}
+.ca-record-rail .record-source-facts dt,
+.ca-record-rail .record-source-facts dd {
+  margin: 0;
+  font: 400 var(--ca-text-xs) / 1.5 var(--ca-font-body);
+  text-transform: none;
+  letter-spacing: normal;
+  overflow-wrap: anywhere;
+}
+.ca-record-rail .record-source-facts dt { color: var(--ca-text-muted); }
+.ca-record-rail .record-source-facts dd { color: var(--ca-text); }
+.ca-record-rail .record-rail-nav-list { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+.ca-record-rail .record-rail-nav-list > li { min-width: 0; border-bottom: 1px solid var(--ca-border-subtle); }
+.ca-record-rail .record-rail-nav-list > li:last-child { border-bottom: 0; }
+.ca-record-rail .record-rail-nav-list a,
+.ca-record-rail .record-rail-nav-list button,
+.ca-record-rail__body > a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ca-space-2);
+  width: 100%;
+  min-height: 44px;
+  padding: var(--ca-space-2) 0;
+  border: 0;
+  background: none;
+  color: var(--ca-text);
+  text-align: left;
+  text-decoration: none;
+  font: 400 var(--ca-text-xs) / 1.5 var(--ca-font-body);
+  cursor: pointer;
+}
+.ca-record-rail .record-rail-nav-list :is(a, button)::after { content: "\203A"; flex: 0 0 auto; color: var(--ca-secondary); font-size: var(--ca-text-lg); }
+.ca-record-rail .record-rail-nav-list :is(a, button):hover,
+.ca-record-rail__body > a:hover { color: var(--ca-secondary); }
+.ca-record-rail .record-rail-nav-list :is(a, button):focus-visible { outline: 2px solid var(--ca-focus); outline-offset: 2px; }
+.ca-record-rail--actions { border-color: var(--ca-action-primary); }
+.ca-record-rail--actions .ca-record-rail__icon,
+.ca-record-rail--actions .ca-record-rail__heading h2 { color: var(--ca-action-primary); }
+
+/* Keep the STIG overview about the finding, not the publication. */
+.ca-record-page #section-overview .record-source-facts,
+.ca-record-page #section-overview dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ca-space-3);
+}
+.ca-record-page .record-connections .section-header { display: flex; flex-direction: row; align-items: flex-start; }
+.ca-record-page .record-connections .section-header > .badge { flex: 0 0 auto; width: fit-content; }
+
+@media (min-width: 1200px) {
+  .ca-record-page #section-overview dl { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  .ca-record-page > .ca-record-layout { grid-template-columns: minmax(0, 1fr); }
+  .ca-record-layout > .record-title-block,
+  .ca-record-layout > .record-template-main,
+  .ca-record-layout > .record-template-sidebar { grid-column: 1; grid-row: auto; }
+  .ca-record-layout > .record-title-block { grid-template-columns: minmax(0, 1fr); }
+  .ca-record-heading,
+  .ca-record-layout .record-title-block > .ca-record-tags { grid-column: 1; }
+  .ca-record-layout .record-title-actions {
+    grid-column: 1;
+    grid-row: auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ca-record-layout .record-title-actions > .ca-button-primary { grid-column: 1 / -1; }
+  .ca-record-layout > .record-template-sidebar { grid-template-columns: minmax(0, 1fr); }
+  .ca-record-rail__heading { min-height: 52px; }
+  .ca-record-rail__heading h2 { font-size: var(--ca-text-base); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ca-record-rail__chevron { transition: none; }
+}

@@ -63,15 +63,24 @@ test("OSCAL-fed records display exact publication identity, not ingestion identi
   page,
 }) => {
   attachPageDiagnostics(page);
+  await page.setViewportSize({ width: 1440, height: 1000 });
 
   for (const [catalog, item, publication, ingestion] of publicationRecords) {
     await gotoApp(page, `/#/record/${catalog}/${item}`);
     await waitForAppReady(page);
     await dismissOnboarding(page);
 
-    const sourceIdentity = page.locator("[data-record-source-identity]");
-    await expect(sourceIdentity).toContainText(`Publisher source · ${publication}`);
+    // The exact source identity now has one home in About, not a repeated
+    // publisher line above the source text. Keep the identity distinction strict.
+    const about = page.locator('[data-rail-section="about-this-record"]');
+    const sourceIdentity = about.locator(".record-source-facts > div").filter({
+      has: page.locator("dt", { hasText: /^Publication$/ }),
+    }).locator("dd");
+    await expect(sourceIdentity).toBeVisible();
+    await expect(sourceIdentity).toContainText(publication);
     await expect(sourceIdentity).not.toContainText(ingestion);
+    await expect(about.getByRole("link", { name: "View source details" })).toBeVisible();
+    await expect(page.locator(".record-template-main")).not.toContainText("Publisher source ·");
   }
 });
 

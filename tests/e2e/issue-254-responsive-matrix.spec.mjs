@@ -106,7 +106,7 @@ test("mobile disclosures expand with keyboard and reset correctly across breakpo
   await expect(cards).toHaveCount(4);
   for (const card of await cards.all()) {
     await expect(card).not.toHaveAttribute("open", "");
-    await card.locator("summary").focus();
+    await card.locator(":scope > summary").focus();
     await page.keyboard.press("Enter");
     await expect(card).toHaveAttribute("open", "");
     await expect(card.locator(".ca-record-rail__body")).toBeVisible();

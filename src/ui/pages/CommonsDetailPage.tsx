@@ -18,11 +18,9 @@ import { resourceAccessLabel, resourceFieldLabel, resourceTypeLabel } from "../l
 
 import { taxonomyTagsForResource, deriveTags } from "../../shared/record-taxonomy.mjs";
 import { effectiveProfile } from "../../shared/entity-profiles.mjs";
-import { AtlasTag } from "../components/AtlasTag";
+import { TaxonomyContext } from "../components/TaxonomyContext";
 import type { RuntimeBundle } from "../lib/runtimeLoader";
 import { normalizeViewState, type ViewState } from "../lib/viewState";
-
-const ATLAS_TAG_DIMENSIONS = new Set(["organization", "framework", "program", "tool", "artifact", "topic"]);
 
 type Props = {
   bundle: RuntimeBundle | null;
@@ -64,11 +62,7 @@ export function CommonsDetailPage({ bundle, viewState, onNavigate }: Props) {
   const collections = dataset?.collections.filter((collection) => resource.featuredCollections?.includes(collection.id)) || [];
   const usefulFor = [...resource.lifecycleStages, ...(resource.technologyScopes || []), ...resource.audiences].filter(Boolean);
   const allTags = taxonomyTagsForResource(resource);
-  const taxonomyTags = allTags.filter((t: { kind?: string }) => !ATLAS_TAG_DIMENSIONS.has(t.kind ?? ""));
-  const atlasTagIds = [
-    ...allTags.filter((t: { kind?: string }) => ATLAS_TAG_DIMENSIONS.has(t.kind ?? "")),
-    ...deriveTags(allTags),
-  ].reduce<string[]>((acc, t: { id: string }) => { if (!acc.includes(t.id)) acc.push(t.id); return acc; }, []);
+  const resourceTaxonomyTags = [...allTags, ...deriveTags(allTags)];
   const warning = resource.resourceType === "community_forum"
     ? "Do not post CUI, credentials, system details, assessment evidence, or other non-public organizational information."
     : resource.warnings?.[0];
@@ -218,28 +212,14 @@ export function CommonsDetailPage({ bundle, viewState, onNavigate }: Props) {
             </DetailSection> : null}
             {collections.length ? <DetailSection id="filed-under" title="Filed under">{collections.map((collection) => <AppLink className="resource-context-link" key={collection.id} onNavigate={onNavigate} patch={{ collection: collection.id, showAll: "true" }} view="commons"><span>Collection</span><strong>{collection.title}</strong></AppLink>)}</DetailSection> : null}
             {(resource.frameworks[0] || resource.programs?.[0] || resource.shortName) ? <AppLink className="resource-library-search" onNavigate={onNavigate} patch={{ query: resource.frameworks[0] || resource.programs?.[0] || resource.shortName }} view="search"><IconBook2 aria-hidden="true" size={16} />Find related publications</AppLink> : null}
-            {taxonomyTags.length ? (
-              <DetailSection id="related-topics" title="Related topics">
-                <div className="resource-detail-tags">
-                  {taxonomyTags.map((tag) => (
-                    <AppLink key={tag.id} onNavigate={onNavigate} patch={{ tags: [tag.id] }} view="search">{tag.label}</AppLink>
-                  ))}
-                </div>
-              </DetailSection>
-            ) : null}
           </article>
 
           <aside className="resource-detail-side">
-            {atlasTagIds.length > 0 ? (
-              <section className="related-in-atlas">
-                <h2>Related in Control Atlas</h2>
-                <div className="related-in-atlas__tags">
-                  {atlasTagIds.map((tagId: string) => (
-                    <AtlasTag key={tagId} onNavigate={onNavigate} showIdentity size="sm" tagId={tagId} />
-                  ))}
-                </div>
-              </section>
-            ) : null}
+            <TaxonomyContext
+              onNavigate={onNavigate}
+              tags={resourceTaxonomyTags}
+            />
+
             <nav aria-label="On this page" className="resource-detail-toc">
               <strong>On this page</strong>
               {hasOverview ? <a href="#what-it-is">What it is</a> : null}
@@ -249,7 +229,6 @@ export function CommonsDetailPage({ bundle, viewState, onNavigate }: Props) {
               {hasLimitations ? <a href="#limitations">Limitations</a> : null}
               {hasRelatedResources ? <a href="#related-resources">Related resources</a> : null}
               {collections.length ? <a href="#filed-under">Filed under</a> : null}
-              {taxonomyTags.length ? <a href="#related-topics">Related topics</a> : null}
             </nav>
             <dl className="resource-detail-brief"><div><dt>Type</dt><dd>{resourceTypeLabel(resource.resourceType)}</dd></div>{resource.maintainer && resource.maintainer !== resource.publisher ? <div><dt>Maintained by</dt><dd>{resource.maintainer}</dd></div> : null}{resource.whyIncluded ? <div><dt>Atlas context</dt><dd>{resource.whyIncluded}</dd></div> : null}</dl>
             {hasMaintenanceDetails ? <details className="resource-detail-maintenance">
@@ -257,7 +236,6 @@ export function CommonsDetailPage({ bundle, viewState, onNavigate }: Props) {
               <div>
                 <dl className="resource-detail-facts stacked">{resource.currentVersion ? <div><dt>Release</dt><dd>{resource.currentVersion}</dd></div> : null}{resource.maintenanceStatus ? <div><dt>Maintenance</dt><dd>{resourceFieldLabel(resource.maintenanceStatus)}</dd></div> : null}{resource.license ? <div><dt>License</dt><dd>{resource.license}</dd></div> : null}{resource.lastCommitAt ? <div><dt>Last repository activity</dt><dd><ResourceDate fallback="" value={resource.lastCommitAt} /></dd></div> : null}{resource.publisherUpdatedAt ? <div><dt>Publisher updated</dt><dd><ResourceDate fallback="" value={resource.publisherUpdatedAt} /></dd></div> : null}{resource.lastCheckedAt ? <div><dt>Last checked</dt><dd><ResourceDate fallback="" value={resource.lastCheckedAt} /></dd></div> : null}{resource.nextCheckAt ? <div><dt>Next review</dt><dd><ResourceDate fallback="" value={resource.nextCheckAt} /></dd></div> : null}{resource.verificationMethod ? <div><dt>Verification method</dt><dd>{resourceFieldLabel(resource.verificationMethod)}</dd></div> : null}{resource.repositoryEvidence ? <div><dt>Evidence commit</dt><dd><a href={resource.repositoryEvidence.commitUrl} rel="noopener noreferrer" target="_blank">{resource.repositoryEvidence.commitSha.slice(0, 7)} <IconExternalLink aria-hidden="true" size={13} /></a></dd></div> : null}</dl>
                 {resource.compatibility?.status === "documented" ? <section><h3>Compatibility evidence</h3><div className="resource-detail-tags">{[...resource.compatibility.operatingSystems, ...resource.compatibility.environments].map((item) => <span key={item}>{item}</span>)}</div>{resource.compatibility.note ? <p>{resource.compatibility.note}</p> : null}<p className="resource-detail-evidence"><a href={resource.compatibility.sourceUrl} rel="noopener noreferrer" target="_blank">View evidence <IconExternalLink aria-hidden="true" size={14} /></a></p></section> : null}
-                {taxonomyTags.length ? <section><h3>Topic basis</h3><p>Related topics are derived from reviewed technology scope and compatibility fields.</p></section> : null}
               </div>
             </details> : null}
           </aside>

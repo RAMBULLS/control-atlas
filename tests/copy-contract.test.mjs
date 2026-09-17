@@ -102,7 +102,7 @@ test("record page is contract-driven and contains no generic source or advice fa
   assert.doesNotMatch(recordPage, /"View official source"/);
   assert.match(read("src/ui/lib/officialSource.ts"), /View official source/);
   assert.match(recordPage, /See connections/);
-  assert.match(recordPage, /About This Record/);
+  assert.match(recordPage, /About (?:this|This) [rR]ecord/);
   assert.doesNotMatch(recordPage, />Official text</i);
   assert.doesNotMatch(recordPage, /What this is|What you need to do|How to satisfy it/i);
 });

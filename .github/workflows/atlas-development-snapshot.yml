@@ -1,0 +1,35 @@
+name: Atlas development snapshot
+on:
+  push:
+    branches: [feat/259-atlas-workbench]
+    paths: [.github/workflows/atlas-development-snapshot.yml]
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Package public tracked sources and installed dependencies only
+        shell: bash
+        run: |
+          mkdir -p development-artifact
+          git archive --format=tar.gz HEAD > development-artifact/source.tar.gz
+          tar -czf development-artifact/dependencies.tar.gz node_modules
+          cp "$(command -v node)" development-artifact/node
+          node --version > development-artifact/node-version.txt
+          git rev-parse HEAD > development-artifact/source-commit.txt
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: atlas-isolated-development
+          path: development-artifact/
+          retention-days: 1
+          if-no-files-found: error

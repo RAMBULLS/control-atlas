@@ -3,34 +3,34 @@ import { taxonomyTagsForRecord } from "../../shared/record-taxonomy.mjs";
 
 export const CANONICAL_DIMENSION_ORDER = [
   "organization",
-  "framework",
   "program",
+  "framework",
+  "domain",
   "vendor_brand",
   "product",
   "asset_class",
   "technology",
   "environment",
-  "domain",
   "tool",
-  "artifact",
   "topic",
+  "artifact",
 ] as const;
 
 export type CanonicalDimension = (typeof CANONICAL_DIMENSION_ORDER)[number];
 
 const DIMENSION_DISPLAY_NAMES: Record<string, string> = {
   organization: "Organization",
-  framework: "Framework",
   program: "Program",
+  framework: "Framework",
+  domain: "Security domain",
   vendor_brand: "Vendor",
   product: "Product",
   asset_class: "Asset",
   technology: "Technology",
   environment: "Environment",
-  domain: "Security domain",
   tool: "Tool",
-  artifact: "Artifact",
   topic: "Topic",
+  artifact: "Artifact",
 };
 
 export function dimensionDisplayName(dimensionId: string): string {
@@ -130,33 +130,51 @@ export function groupTaxonomyByDimension(
 }
 
 export function formatPlainLanguageProvenance(tag: GovernedTaxonomyTag): string {
-  if (tag.provenance === "publisher") {
-    return `${tag.label} is assigned directly by the publisher.`;
+  const dim = tag.kind || TAXONOMY_TAG_BY_ID.get(tag.id)?.dimension || "";
+  const label = tag.label;
+
+  if (dim === "organization" || tag.id.startsWith("org.")) {
+    return `${label} publishes this material.`;
   }
-  const sourceField = tag.basis?.source_field || "";
-  if (sourceField === "metadata.benchmark_title") {
-    return `${tag.label} is shown because this publication benchmark identifies it.`;
+  if (dim === "program" || tag.id.startsWith("program.")) {
+    if (tag.id === "program.stig") {
+      return "This record is part of a STIG.";
+    }
+    return `This record is part of the ${label} program.`;
   }
-  if (sourceField === "catalog_id") {
-    return `${tag.label} is shown because this belongs to the publication.`;
+  if (dim === "product" || tag.id.startsWith("product.")) {
+    return `This publication covers ${label}.`;
   }
-  if (sourceField === "family") {
-    return `${tag.label} is shown because the publisher groups this under ${tag.label}.`;
+  if (dim === "asset_class" || tag.id.startsWith("asset.")) {
+    return `This publication is for ${label}.`;
   }
-  if (sourceField === "metadata.related_categories[]") {
-    return `${tag.label} is shown because the publisher lists this category.`;
+  if (dim === "domain" || tag.id.startsWith("domain.")) {
+    return `The publisher places this under ${label}.`;
   }
-  if (sourceField === "taxonomy-relationship") {
-    return `${tag.label} is connected through related classifications.`;
+  if (dim === "framework" || tag.id.startsWith("framework.")) {
+    return `This record belongs to ${label}.`;
   }
-  if (sourceField === "technologyScopes" || sourceField.includes("compatibility")) {
-    return `${tag.label} is shown based on documented technology scope and compatibility.`;
+  if (dim === "vendor_brand" || tag.id.startsWith("vendor.")) {
+    return `This publication covers ${label} products.`;
   }
+  if (dim === "technology" || tag.id.startsWith("tech.")) {
+    return `This publication covers ${label.toLowerCase()} technology.`;
+  }
+  if (dim === "environment" || tag.id.startsWith("env.")) {
+    return `This material applies to ${label.toLowerCase()} environments.`;
+  }
+  if (dim === "tool" || tag.id.startsWith("tool.")) {
+    return `This material references the ${label} tool.`;
+  }
+
   if (tag.origin_tag_id) {
     const origin = TAXONOMY_TAG_BY_ID.get(tag.origin_tag_id);
-    return `${tag.label} is shown because of ${origin?.label || tag.origin_tag_id}.`;
+    if (origin?.label) {
+      return `${label} is included because this covers ${origin.label}.`;
+    }
   }
-  return `${tag.label} is shown based on published source evidence.`;
+
+  return `This publication relates to ${label}.`;
 }
 
 export function extractGovernedRecordTaxonomy(input: {

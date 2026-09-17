@@ -234,8 +234,8 @@ test("record and Resource governed tags hand off to the filtered Library", async
   await expect(page.getByRole("button", { name: /Configuration Management/ })).toBeVisible();
 
   await open(page, "/#/resources/tool-cisa-cset");
-  const relatedTopics = page.getByRole("heading", { name: "Related topics" }).locator("..");
-  await relatedTopics.getByRole("link", { name: "Microsoft Windows" }).click();
+  const taxonomyContext = page.locator('[data-record-section="taxonomy-context"]');
+  await taxonomyContext.getByRole("link", { name: /Microsoft Windows/ }).click();
   await expect(page).toHaveURL(/#\/library\?tag=product\.microsoft-windows/);
   await expect(page.getByRole("button", { name: /Microsoft Windows/ })).toBeVisible();
 });

@@ -516,10 +516,11 @@ test("Resource routes follow the Orbital catalog and knowledge-base compositions
     "How to use or access",
     "Limitations",
     "Related resources",
-    "Related topics",
   ]) {
     assert.ok(detail.includes(`title="${heading}"`), heading);
   }
+  assert.doesNotMatch(detail, /title="Related topics"/);
+  assert.match(detail, /<TaxonomyContext/);
   assert.match(detail, /<details className="resource-detail-maintenance">/);
   assert.match(detail, /Source &amp; maintenance details/);
   assert.doesNotMatch(detail, /Governed discovery tags/);
@@ -555,4 +556,18 @@ test("Resource summaries disclose whether Atlas or the publisher wrote the brows
     claimEvidence: [{ fieldPath: "/summary", origin: "publisher_normalized" }],
   }), { text: "Publisher text", origin: "publisher_normalized", label: "Publisher summary" });
   assert.ok(resources.every((resource) => resourceSummaryPresentation(resource).label === "Control Atlas summary"));
+});
+
+test("Resource detail presents single classification section without duplicating governed tags", () => {
+  const detail = readFileSync(resolve("src/ui/pages/CommonsDetailPage.tsx"), "utf8");
+
+  // Only one classification/discovery section: TaxonomyContext ("Find more like this")
+  const taxonomyMatches = detail.match(/<TaxonomyContext/g) || [];
+  assert.equal(taxonomyMatches.length, 1, "Expected exactly one TaxonomyContext on CommonsDetailPage");
+
+  // Assert no duplicate legacy taxonomy/tag sections
+  assert.doesNotMatch(detail, /DetailSection id="related-topics"/);
+  assert.doesNotMatch(detail, /Related topics<\/a>/);
+  assert.doesNotMatch(detail, /Topic basis<\/h3>/);
+  assert.doesNotMatch(detail, /AtlasCard title="Related in Control Atlas"/);
 });

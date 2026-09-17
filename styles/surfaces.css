@@ -1638,14 +1638,6 @@ li {
   padding-left: var(--ca-space-3);
 }
 
-.section-header .badge,
-.section-header > .badge {
-  align-self: flex-start;
-  flex-shrink: 0;
-  width: fit-content;
-  max-width: max-content;
-}
-
 .result-card-badges {
   display: flex;
   flex-direction: column;

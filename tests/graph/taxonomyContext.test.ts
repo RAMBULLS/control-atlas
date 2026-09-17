@@ -28,23 +28,23 @@ test("groupTaxonomyByDimension groups tags in canonical dimension order", () => 
   const grouped = groupTaxonomyByDimension(sampleTags);
   const dimensionIds = grouped.map((g) => g.dimensionId);
 
-  // Expected canonical order: organization, program, vendor_brand, product, asset_class, domain
+  // Expected canonical order: organization, program, domain, vendor_brand, product, asset_class
   assert.deepEqual(dimensionIds, [
     "organization",
     "program",
+    "domain",
     "vendor_brand",
     "product",
     "asset_class",
-    "domain",
   ]);
 
   // Labels match canonical short public dimension names
   assert.equal(grouped.find((g) => g.dimensionId === "organization")?.label, "Organization");
   assert.equal(grouped.find((g) => g.dimensionId === "program")?.label, "Program");
+  assert.equal(grouped.find((g) => g.dimensionId === "domain")?.label, "Security domain");
   assert.equal(grouped.find((g) => g.dimensionId === "vendor_brand")?.label, "Vendor");
   assert.equal(grouped.find((g) => g.dimensionId === "product")?.label, "Product");
   assert.equal(grouped.find((g) => g.dimensionId === "asset_class")?.label, "Asset");
-  assert.equal(grouped.find((g) => g.dimensionId === "domain")?.label, "Security domain");
 });
 
 test("groupTaxonomyByDimension supports multiple values per dimension and deduplicates identical IDs", () => {
@@ -103,19 +103,36 @@ test("formatPlainLanguageProvenance produces human-readable text without develop
     provenance: "inferred",
     basis: { source_field: "catalog_id", rule: "disa-catalog" },
   };
+  const stigTag: GovernedTaxonomyTag = {
+    id: "program.stig",
+    kind: "program",
+    label: "STIG",
+    provenance: "inferred",
+  };
+  const productTag: GovernedTaxonomyTag = {
+    id: "product.microsoft-windows",
+    kind: "product",
+    label: "Microsoft Windows",
+    provenance: "inferred",
+  };
 
   const pubText = formatPlainLanguageProvenance(publisherTag);
   const benchText = formatPlainLanguageProvenance(benchmarkTag);
   const catText = formatPlainLanguageProvenance(catalogTag);
+  const stigText = formatPlainLanguageProvenance(stigTag);
+  const prodText = formatPlainLanguageProvenance(productTag);
 
   // Prohibited internal/developer terms
-  for (const text of [pubText, benchText, catText]) {
+  for (const text of [pubText, benchText, catText, stigText, prodText]) {
     assert.doesNotMatch(text, /atlas_evidence|source_field|rule-stig|disa-catalog|inferred|provenance|basis/i);
+    assert.doesNotMatch(text, /assigned directly by the publisher|publication benchmark identifies it|connected through related classifications|documented technology scope/i);
   }
 
-  assert.match(pubText, /publisher/i);
-  assert.match(benchText, /benchmark/i);
-  assert.match(catText, /publication/i);
+  assert.equal(pubText, "The publisher places this under Access Control.");
+  assert.equal(benchText, "This publication is for Server.");
+  assert.equal(catText, "DISA publishes this material.");
+  assert.equal(stigText, "This record is part of a STIG.");
+  assert.equal(prodText, "This publication covers Microsoft Windows.");
 });
 
 test("dimensionDisplayName handles all canonical dimensions consistently", () => {

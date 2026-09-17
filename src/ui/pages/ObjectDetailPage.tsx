@@ -449,7 +449,7 @@ export function ObjectDetailPage(props: {
               ) : <p>No directly contained records are loaded for this publication object.</p>}
             </section>
           ) : null}
-          {governedConnectionGroups.length ? (
+          {visibleConnectionGroups.length > 0 ? (
             <section className="record-connections record-connections--related" data-record-section="related-records">
               <div className="section-header">
                 <div>
@@ -597,6 +597,12 @@ export function ObjectDetailPage(props: {
                 <dt>Record type</dt>
                 <dd>{kind}</dd>
               </div>
+              {node.metadata?.benchmark_title ? (
+                <div>
+                  <dt>Benchmark</dt>
+                  <dd>{node.metadata.benchmark_title}</dd>
+                </div>
+              ) : null}
               {publisherName ? (
                 <div>
                   <dt>Publisher</dt>

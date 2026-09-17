@@ -120,15 +120,53 @@ for (const { role, route } of REPRESENTATIVES) {
         await expect(provenanceDisclosure).toBeVisible();
         await expect(provenanceDisclosure.locator("summary")).toHaveText("Why these are shown");
 
-        // Verify full publication title is NOT a taxonomy pill
+        // Verify full publication/benchmark title is NOT a taxonomy pill
         await expect(
           contextSection.getByText("Microsoft Windows Server 2019 Security Technical Implementation Guide", { exact: true }),
         ).toHaveCount(0);
+        await expect(
+          page.locator(".atlas-tag", { hasText: "Microsoft Windows Server 2019 Security Technical Implementation Guide" }),
+        ).toHaveCount(0);
 
-        // Verify record type "STIG rule" is in source facts
+        // Verify factual metadata: full benchmark identity is present as a fact under About this record
         const sourceFactsSection = page.locator(".record-template-sidebar .record-source-facts");
         await expect(sourceFactsSection).toContainText("STIG rule");
+        await expect(sourceFactsSection.locator("dt", { hasText: "Benchmark" })).toBeVisible();
+        await expect(
+          sourceFactsSection.locator("dd", { hasText: "Microsoft Windows Server 2019 Security Technical Implementation Guide" }),
+        ).toBeVisible();
+
+        // Verify full benchmark identity is also visible in Overview facts
+        const nativeFacts = page.locator(".record-native-facts");
+        await expect(nativeFacts.locator("dt", { hasText: "Benchmark" })).toBeVisible();
+        await expect(
+          nativeFacts.locator("dd", { hasText: "Microsoft Windows Server 2019 Security Technical Implementation Guide" }),
+        ).toBeVisible();
       }
     }
   });
 }
+
+test("records without visible relationships do not render empty Related records section or fake 0 badge", async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 800 });
+  await page.goto("/#/record/dod-zt/DOC-OVERLAYS");
+  await waitForAppReady(page, { allowPartial: true });
+  await dismissOnboarding(page);
+
+  // No empty Related records wrapper or fake 0 badge
+  await expect(page.locator('[data-record-section="related-records"]')).toHaveCount(0);
+  await expect(page.locator("main")).not.toContainText("Related records");
+
+  // Top action bar still retains the Atlas connection navigation
+  await expect(page.getByRole("link", { name: "See connections" })).toBeVisible();
+});
+
+test("records with zero relationships do not render empty Related records section", async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 800 });
+  // CSF-2 CATALOG has no correlation relationships
+  await page.goto("/#/record/csf-2/CATALOG");
+  await waitForAppReady(page, { allowPartial: true });
+  await dismissOnboarding(page);
+
+  await expect(page.locator('[data-record-section="related-records"]')).toHaveCount(0);
+});

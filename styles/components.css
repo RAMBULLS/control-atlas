@@ -2858,3 +2858,12 @@
   line-height: 1.4;
   color: var(--ca-text-muted);
 }
+
+/* Scoped compact count badge alignment for record relationship headers */
+.record-connections .section-header > .badge,
+.record-child-inventory .section-header > .badge {
+  align-self: flex-start;
+  flex-shrink: 0;
+  width: fit-content;
+  max-width: max-content;
+}

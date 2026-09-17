@@ -30,14 +30,14 @@ export function TaxonomyContext(props: {
     return null;
   }
 
-  // Collect unique tags that carry explanation or provenance
+  // Collect unique tags that carry explanation or derived provenance
   const seenExplanationIds = new Set<string>();
   const tagsWithProvenance: GovernedTaxonomyTag[] = [];
   for (const group of grouped) {
     for (const tag of group.tags) {
       if (seenExplanationIds.has(tag.id)) continue;
       seenExplanationIds.add(tag.id);
-      if (tag.provenance === "publisher" || tag.basis || tag.origin_tag_id) {
+      if (tag.provenance === "inferred" || tag.basis || tag.origin_tag_id) {
         tagsWithProvenance.push(tag);
       }
     }

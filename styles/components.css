@@ -2867,3 +2867,137 @@
   width: fit-content;
   max-width: max-content;
 }
+
+/* Record discovery wrapping tags (hashtag-style) */
+.record-discovery-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ca-space-1-5);
+  margin-top: var(--ca-space-2-5);
+  margin-bottom: var(--ca-space-2);
+}
+
+.record-discovery-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 8px;
+  font-size: var(--ca-text-xs);
+  line-height: 1.35;
+  color: var(--ca-text-muted);
+  background: var(--ca-surface-subtle);
+  border: 1px solid var(--ca-border);
+  border-radius: var(--ca-radius-sm);
+  text-decoration: none;
+  transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease;
+}
+
+.record-discovery-tag:hover,
+.record-discovery-tag:focus-visible {
+  color: var(--ca-text);
+  background: var(--ca-surface-hover);
+  border-color: var(--ca-border-emphasis);
+}
+
+.record-discovery-tag__hash {
+  color: var(--ca-text-dim);
+  font-weight: 500;
+  user-select: none;
+}
+
+.record-discovery-tag__label {
+  font-weight: 400;
+}
+
+/* Primary record section jump navigation */
+.record-section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ca-space-2);
+  padding: var(--ca-space-2) 0;
+  border-bottom: 1px solid var(--ca-border);
+  margin-bottom: var(--ca-space-3);
+}
+
+.record-section-nav__link {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--ca-space-1) var(--ca-space-2-5);
+  font-size: var(--ca-text-xs);
+  font-weight: 500;
+  color: var(--ca-text-muted);
+  background: transparent;
+  border-radius: var(--ca-radius-sm);
+  text-decoration: none;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+
+.record-section-nav__link:hover,
+.record-section-nav__link:focus-visible {
+  color: var(--ca-text);
+  background: var(--ca-surface-hover);
+}
+
+/* Four-part record side rail sections */
+.record-rail-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ca-space-2-5);
+}
+
+.record-rail-section h2 {
+  margin: 0;
+  font-size: var(--ca-text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ca-text-muted);
+}
+
+.record-rail-publication-name {
+  margin: 0;
+  font-size: var(--ca-text-sm);
+  font-weight: 500;
+  color: var(--ca-text);
+  line-height: 1.4;
+}
+
+.record-rail-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ca-space-2);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.record-rail-nav-list li {
+  margin: 0;
+  padding: 0;
+}
+
+.record-rail-nav-list a,
+.record-rail-action-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ca-space-1-5);
+  font-size: var(--ca-text-sm);
+  color: var(--ca-link);
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+
+.record-rail-nav-list a:hover,
+.record-rail-nav-list a:focus-visible,
+.record-rail-action-button:hover,
+.record-rail-action-button:focus-visible {
+  text-decoration: underline;
+  color: var(--ca-link-hover);
+}

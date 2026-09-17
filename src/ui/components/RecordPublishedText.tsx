@@ -443,7 +443,7 @@ export function RecordPublishedText(props: {
       data-source-text="published"
     >
       {shown.map((section) => (
-        <section data-source-field={section.field} key={section.field}>
+        <section data-source-field={section.field} id={`section-${section.field}`} key={section.field}>
           <Heading>{section.heading}</Heading>
           <SourceSectionContent
             kind={section.kind}

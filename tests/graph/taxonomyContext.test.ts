@@ -2,9 +2,11 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  buildExploreRelatedPivots,
   CANONICAL_DIMENSION_ORDER,
   dimensionDisplayName,
   extractGovernedRecordTaxonomy,
+  extractOrderedRecordDiscoveryTags,
   formatPlainLanguageProvenance,
   groupTaxonomyByDimension,
   type GovernedTaxonomyTag,
@@ -249,6 +251,62 @@ test("public copy guardrail: prohibited data-model jargon never appears in dimen
     const text = formatPlainLanguageProvenance(tag).toLowerCase();
     for (const jargon of prohibitedJargon) {
       assert.ok(!text.includes(jargon), `Provenance text "${text}" contains prohibited jargon "${jargon}"`);
+    }
+  }
+});
+
+test("extractOrderedRecordDiscoveryTags returns flat canonically ordered discovery tags", () => {
+  const sampleTags: GovernedTaxonomyTag[] = [
+    { id: "tech.operating-system", kind: "technology", label: "Operating system", provenance: "inferred" },
+    { id: "domain.access-control", kind: "domain", label: "Access Control", provenance: "publisher" },
+    { id: "asset.server", kind: "asset_class", label: "Server", provenance: "inferred" },
+    { id: "organization.disa", kind: "organization", label: "DISA", provenance: "inferred" },
+    { id: "program.stig", kind: "program", label: "STIG", provenance: "inferred" },
+    { id: "product.microsoft-windows", kind: "product", label: "Microsoft Windows", provenance: "inferred" },
+  ];
+
+  const ordered = extractOrderedRecordDiscoveryTags(sampleTags);
+  const labels = ordered.map((t) => t.label);
+
+  assert.deepEqual(labels, [
+    "DISA",
+    "STIG",
+    "Access Control",
+    "Microsoft Windows",
+    "Server",
+    "Operating system",
+  ]);
+});
+
+test("buildExploreRelatedPivots generates plain-language discovery pivots without data-model jargon", () => {
+  const sampleTags: GovernedTaxonomyTag[] = [
+    { id: "organization.disa", kind: "organization", label: "DISA", provenance: "inferred" },
+    { id: "program.stig", kind: "program", label: "STIG", provenance: "inferred" },
+    { id: "product.microsoft-windows", kind: "product", label: "Microsoft Windows", provenance: "inferred" },
+    { id: "asset.server", kind: "asset_class", label: "Server", provenance: "inferred" },
+    { id: "technology.operating-system", kind: "technology", label: "Operating system", provenance: "inferred" },
+  ];
+  const connectionGroups = [
+    { catalogId: "disa-cci", label: "DISA CCI", items: [{ nodeId: "disa-cci:CCI-000366" }] },
+  ];
+
+  const pivots = buildExploreRelatedPivots({
+    tags: sampleTags,
+    connectionGroups,
+  });
+
+  const pivotLabels = pivots.map((p) => p.label);
+  assert.ok(pivotLabels.includes("More from DISA"));
+  assert.ok(pivotLabels.includes("More from STIG"));
+  assert.ok(pivotLabels.includes("Other Microsoft Windows content"));
+  assert.ok(pivotLabels.includes("Server operating system content"));
+  assert.ok(pivotLabels.includes("Related CCIs"));
+
+  // Check that prohibited jargon never appears in pivot labels
+  const prohibitedWords = ["facet", "taxonomy", "source-backed", "governed context", "provenance", "classification"];
+  for (const pivot of pivots) {
+    for (const word of prohibitedWords) {
+      assert.ok(!pivot.label.toLowerCase().includes(word), `Pivot "${pivot.label}" contains "${word}"`);
     }
   }
 });

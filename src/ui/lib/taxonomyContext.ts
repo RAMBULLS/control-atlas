@@ -222,3 +222,118 @@ export function extractGovernedRecordTaxonomy(input: {
 
   return [...nodeTags, ...catalogTags];
 }
+
+export function extractOrderedRecordDiscoveryTags(
+  tags: GovernedTaxonomyTag[] | undefined | null,
+): GovernedTaxonomyTag[] {
+  const groups = groupTaxonomyByDimension(tags);
+  return groups.flatMap((group) => group.tags);
+}
+
+export type ExploreRelatedPivot = {
+  key: string;
+  label: string;
+  patch?: Record<string, any>;
+  href?: string;
+};
+
+export function buildExploreRelatedPivots(input: {
+  tags?: GovernedTaxonomyTag[] | null;
+  connectionGroups?: Array<{
+    catalogId: string;
+    label: string;
+    items?: Array<{ nodeId: string }>;
+  }>;
+}): ExploreRelatedPivot[] {
+  const pivots: ExploreRelatedPivot[] = [];
+  const tags = input.tags || [];
+
+  // 1. Organization pivot
+  const orgTag = tags.find((t) => t.kind === "organization" || t.id.startsWith("organization."));
+  if (orgTag) {
+    pivots.push({
+      key: `org-${orgTag.id}`,
+      label: `More from ${orgTag.label}`,
+      patch: { tags: [orgTag.id] },
+    });
+  }
+
+  // 2. Program pivot
+  const progTag = tags.find((t) => t.kind === "program" || t.id.startsWith("program."));
+  if (progTag) {
+    pivots.push({
+      key: `prog-${progTag.id}`,
+      label: `More from ${progTag.label}`,
+      patch: { tags: [progTag.id] },
+    });
+  }
+
+  // 3. Product or Vendor pivot
+  const prodTag = tags.find((t) => t.kind === "product" || t.id.startsWith("product."));
+  if (prodTag) {
+    pivots.push({
+      key: `prod-${prodTag.id}`,
+      label: `Other ${prodTag.label} content`,
+      patch: { tags: [prodTag.id] },
+    });
+  } else {
+    const vendorTag = tags.find((t) => t.kind === "vendor_brand" || t.id.startsWith("vendor."));
+    if (vendorTag) {
+      pivots.push({
+        key: `vendor-${vendorTag.id}`,
+        label: `Other ${vendorTag.label} content`,
+        patch: { tags: [vendorTag.id] },
+      });
+    }
+  }
+
+  // 4. Asset / Technology combined or single pivot
+  const assetTag = tags.find((t) => t.kind === "asset_class" || t.id.startsWith("asset."));
+  const techTag = tags.find((t) => t.kind === "technology" || t.id.startsWith("technology."));
+  if (assetTag && techTag) {
+    pivots.push({
+      key: `asset-tech-${assetTag.id}-${techTag.id}`,
+      label: `${assetTag.label} ${techTag.label.toLowerCase()} content`,
+      patch: { tags: [assetTag.id, techTag.id] },
+    });
+  } else if (assetTag) {
+    pivots.push({
+      key: `asset-${assetTag.id}`,
+      label: `${assetTag.label} content`,
+      patch: { tags: [assetTag.id] },
+    });
+  } else if (techTag) {
+    pivots.push({
+      key: `tech-${techTag.id}`,
+      label: `${techTag.label} content`,
+      patch: { tags: [techTag.id] },
+    });
+  }
+
+  // 5. Related correlation counterpart link (e.g. Related CCIs)
+  if (input.connectionGroups && input.connectionGroups.length > 0) {
+    for (const group of input.connectionGroups) {
+      if (pivots.length >= 5) break;
+      const groupLabel = group.catalogId === "disa-cci" ? "Related CCIs" : `Related ${group.label}`;
+      pivots.push({
+        key: `rel-${group.catalogId}`,
+        label: groupLabel,
+        href: "#section-related-records",
+      });
+    }
+  }
+
+  // 6. Security Domain or Framework fallback if space permits
+  if (pivots.length < 5) {
+    const domainTag = tags.find((t) => t.kind === "domain" || t.id.startsWith("domain."));
+    if (domainTag && !pivots.some((p) => p.key.startsWith("domain-"))) {
+      pivots.push({
+        key: `domain-${domainTag.id}`,
+        label: `Other ${domainTag.label} content`,
+        patch: { tags: [domainTag.id] },
+      });
+    }
+  }
+
+  return pivots.slice(0, 5);
+}

@@ -19,13 +19,12 @@ test("WS2 record template leads with qualified identity and one source action", 
   await expect(page.locator("[data-canonical-breadcrumb]"))
     .toHaveAttribute("data-canonical-breadcrumb", /3\.1\.1$/);
   await expect(page.locator(".record-official-name")).toHaveCount(0);
-  const contextSection = page.locator('[data-record-section="taxonomy-context"]');
-  await expect(contextSection).toBeVisible();
-  await expect(contextSection.getByRole("heading", { name: "Find more like this", level: 2 })).toBeVisible();
+  const discoveryTags = page.locator(".record-discovery-tags");
+  await expect(discoveryTags).toBeVisible();
   await expect(page.locator(".related-in-atlas")).toHaveCount(0);
   await expect(page.locator("main")).not.toContainText("Explore by context");
   await expect(page.locator("main")).not.toContainText("source-backed facets");
-  await expect(contextSection.getByRole("link", { name: "Filter the Library by Access Control", exact: true })).toBeVisible();
+  await expect(discoveryTags.getByRole("link", { name: "Filter the Library by Access Control", exact: true })).toBeVisible();
   await expect(page.locator(".record-source-facts")).toContainText("Record type");
   await expect(page.getByRole("link", { name: OFFICIAL_SOURCE_ACTION })).toHaveCount(1);
 
@@ -33,7 +32,7 @@ test("WS2 record template leads with qualified identity and one source action", 
   await expect(page.locator('[data-source-field="description"]')).toContainText(
     /Limit system access to authorized users, processes acting on behalf/,
   );
-  await expect(page.getByRole("heading", { name: "About This Record", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "About this record", exact: true })).toBeVisible();
   await expect(page.getByText(/What this is|What you need to do|How to satisfy it/i)).toHaveCount(0);
 });
 
@@ -375,12 +374,8 @@ test("WS6 record identities and derived category explanations stay source-truthf
   const acronym = page.locator("h1 abbr", { hasText: "DISA" });
   await acronym.focus();
   await expect(acronym).toHaveAttribute("data-tooltip", "Defense Information Systems Agency");
-  const contextSection = page.locator('[data-record-section="taxonomy-context"]');
-  await expect(contextSection).toBeVisible();
-  await expect(contextSection.getByRole("link", { name: "Filter the Library by Access Control", exact: true })).toBeVisible();
-  const provenanceDisclosure = contextSection.locator("details.taxonomy-provenance-disclosure");
-  await expect(provenanceDisclosure).toBeVisible();
-  await expect(provenanceDisclosure.locator("summary")).toHaveText("Why these are shown");
-  await expect(provenanceDisclosure).toContainText("Access Control");
-  await expect(contextSection).not.toContainText("Implementation");
+  const discoveryTags = page.locator(".record-discovery-tags");
+  await expect(discoveryTags).toBeVisible();
+  await expect(discoveryTags.getByRole("link", { name: "Filter the Library by Access Control", exact: true })).toBeVisible();
+  await expect(discoveryTags).not.toContainText("Implementation");
 });

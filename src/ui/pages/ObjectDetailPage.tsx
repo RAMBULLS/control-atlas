@@ -1,4 +1,5 @@
 import { Fragment, useState } from "react";
+import { IconExternalLink } from "@tabler/icons-react";
 
 import { displayNameFor } from "../../app/display-names.mjs";
 import {
@@ -18,7 +19,6 @@ import {
   RecordNativeFacts,
   RecordPublishedText,
 } from "../components/RecordPublishedText";
-import { TaxonomyContext } from "../components/TaxonomyContext";
 import { catalogDisplayNameFor, catalogProfileFor } from "../lib/catalogProfiles";
 import {
   buildAtlasTreeModel,
@@ -42,7 +42,11 @@ import {
   recordDisplayTitle,
   recordPublisherName,
 } from "../lib/recordTitle";
-import { extractGovernedRecordTaxonomy } from "../lib/taxonomyContext";
+import {
+  extractGovernedRecordTaxonomy,
+  extractOrderedRecordDiscoveryTags,
+  buildExploreRelatedPivots,
+} from "../lib/taxonomyContext";
 import type { RuntimeBundle } from "../lib/runtimeLoader";
 import { runtimeRecordIdentityFor } from "../lib/runtimeRecordIdentity";
 import { normalizeViewState, type ViewState } from "../lib/viewState";
@@ -125,6 +129,7 @@ export function ObjectDetailPage(props: {
   // Show at most this many representative items per connection group.
   // Complete exploration is available via the Atlas link below.
   const RECORD_GROUP_SAMPLE = 5;
+  const [shareCopied, setShareCopied] = useState(false);
 
   if (!node || !document) {
     return <RecordNotFound attemptedId={state.node} onNavigate={onNavigate} />;
@@ -262,6 +267,29 @@ export function ObjectDetailPage(props: {
     family,
     relatedCategories: node.metadata?.related_categories,
   });
+  const orderedDiscoveryTags = extractOrderedRecordDiscoveryTags(governedTaxonomyTags);
+  const exploreRelatedItems = buildExploreRelatedPivots({
+    tags: governedTaxonomyTags,
+    connectionGroups: visibleConnectionGroups,
+  });
+
+  const hasOverview = ["stig_rule", "srg_requirement"].includes(presentation.record_type) && presentation.metadata_facts.length > 0;
+  const publishedSections = publishedSectionsWithContent(presentation.sections, sourceMetadata);
+  const sectionNavItems: Array<{ id: string; label: string }> = [];
+  if (hasOverview) {
+    sectionNavItems.push({ id: "section-overview", label: "Overview" });
+  }
+  for (const section of publishedSections) {
+    const label = section.field === "check_text"
+      ? "Check"
+      : section.field === "fix_text"
+        ? "Fix"
+        : section.heading;
+    sectionNavItems.push({ id: `section-${section.field}`, label });
+  }
+  if (visibleConnectionGroups.length > 0) {
+    sectionNavItems.push({ id: "section-related-records", label: "Related records" });
+  }
 
   return (
     <section className="detail-page record-template" data-page-role={presentation.page_role} data-template="E">
@@ -285,6 +313,23 @@ export function ObjectDetailPage(props: {
           <p className="record-identity-context" data-record-lifecycle={lifecycleStatus}>
             <Badge tone="warning">{displayNameFor("lifecycle_status", lifecycleStatus)}</Badge>
           </p>
+        ) : null}
+        {orderedDiscoveryTags.length > 0 ? (
+          <nav aria-label="Related discovery tags" className="record-discovery-tags">
+            {orderedDiscoveryTags.map((tag) => (
+              <AppLink
+                aria-label={`Filter the Library by ${tag.label}`}
+                className="record-discovery-tag"
+                key={tag.id}
+                onNavigate={onNavigate}
+                patch={{ tags: [tag.id] }}
+                view="search"
+              >
+                <span className="record-discovery-tag__hash" aria-hidden="true">#</span>
+                <span className="record-discovery-tag__label">{tag.label}</span>
+              </AppLink>
+            ))}
+          </nav>
         ) : null}
         <div className="record-title-actions" data-route-primary-support="true">
           {officialSource.url ? (
@@ -357,6 +402,15 @@ export function ObjectDetailPage(props: {
 
       <div className="record-template-grid">
         <article className="record-template-main">
+          {sectionNavItems.length > 1 ? (
+            <nav aria-label="Record sections" className="record-section-nav">
+              {sectionNavItems.map((item) => (
+                <a className="record-section-nav__link" href={`#${item.id}`} key={item.id}>
+                  {item.label}
+                </a>
+              ))}
+            </nav>
+          ) : null}
           {document.catalog_id === "disa-cci" ? (
             <section className="record-context-note" aria-labelledby="cci-context-heading">
               <h2 id="cci-context-heading">Start here</h2>
@@ -382,7 +436,9 @@ export function ObjectDetailPage(props: {
             </section>
           ) : null}
           {["stig_rule", "srg_requirement"].includes(presentation.record_type) ? (
-            <RecordNativeFacts fields={presentation.metadata_facts} metadata={sourceMetadata} title="Overview" />
+            <div id="section-overview">
+              <RecordNativeFacts fields={presentation.metadata_facts} metadata={sourceMetadata} title="Overview" />
+            </div>
           ) : null}
           {source ? (
             <p className="support-meta" data-record-source-identity>
@@ -450,7 +506,7 @@ export function ObjectDetailPage(props: {
             </section>
           ) : null}
           {visibleConnectionGroups.length > 0 ? (
-            <section className="record-connections record-connections--related" data-record-section="related-records">
+            <section className="record-connections record-connections--related" data-record-section="related-records" id="section-related-records">
               <div className="section-header">
                 <div>
                   <h2>Related records</h2>
@@ -586,27 +642,23 @@ export function ObjectDetailPage(props: {
           className="record-template-sidebar"
           data-displayed-trace={displayedTrace.map((entry) => entry.id).join(">")}
         >
-          <TaxonomyContext
-            onNavigate={onNavigate}
-            tags={governedTaxonomyTags}
-          />
-          <section>
-            <h2>About This Record</h2>
+          <section className="record-rail-section" data-rail-section="about-this-record">
+            <h2>About this record</h2>
             <dl className="record-source-facts">
               <div>
                 <dt>Record type</dt>
                 <dd>{kind}</dd>
               </div>
-              {node.metadata?.benchmark_title ? (
-                <div>
-                  <dt>Benchmark</dt>
-                  <dd>{node.metadata.benchmark_title}</dd>
-                </div>
-              ) : null}
               {publisherName ? (
                 <div>
                   <dt>Publisher</dt>
                   <dd>{publisherName}</dd>
+                </div>
+              ) : null}
+              {node.metadata?.benchmark_title ? (
+                <div>
+                  <dt>Benchmark</dt>
+                  <dd>{node.metadata.benchmark_title}</dd>
                 </div>
               ) : null}
               <div>
@@ -631,6 +683,106 @@ export function ObjectDetailPage(props: {
             >
               View source details
             </AppLink>
+          </section>
+
+          <section className="record-rail-section" data-rail-section="in-this-publication">
+            <h2>In this publication</h2>
+            <p className="record-rail-publication-name">
+              {node.metadata?.benchmark_short_title || node.metadata?.benchmark_title || sourcePublicationName}
+            </p>
+            <ul className="record-rail-nav-list">
+              {document.catalog_id ? (
+                <li>
+                  <AppLink onNavigate={onNavigate} patch={{ catalog: document.catalog_id }} view="catalog-detail">
+                    View publication
+                  </AppLink>
+                </li>
+              ) : null}
+              {document.catalog_id ? (
+                <li>
+                  <AppLink
+                    onNavigate={onNavigate}
+                    patch={{ catalog: document.catalog_id, browseAll: "true" }}
+                    view="catalog-detail"
+                  >
+                    Browse all {["disa-stig", "disa-srg"].includes(document.catalog_id) ? "rules" : "records"}
+                  </AppLink>
+                </li>
+              ) : null}
+              {officialSource.url ? (
+                <li>
+                  <a href={officialSource.url} rel="noopener noreferrer" target="_blank">
+                    Open in {publisherName || "publisher"} <IconExternalLink aria-hidden="true" size={13} />
+                  </a>
+                </li>
+              ) : null}
+            </ul>
+          </section>
+
+          {exploreRelatedItems.length > 0 ? (
+            <section className="record-rail-section" data-rail-section="explore-related">
+              <h2>Explore related</h2>
+              <ul className="record-rail-nav-list">
+                {exploreRelatedItems.map((item) => (
+                  <li key={item.key}>
+                    {item.href ? (
+                      <a href={item.href}>{item.label}</a>
+                    ) : (
+                      <AppLink onNavigate={onNavigate} patch={item.patch} view="search">
+                        {item.label}
+                      </AppLink>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+
+          <section className="record-rail-section" data-rail-section="do-more">
+            <h2>Do more</h2>
+            <ul className="record-rail-nav-list">
+              <li>
+                <AppLink onNavigate={onNavigate} patch={{ node: node.id }} view="atlas-map">
+                  View in Atlas
+                </AppLink>
+              </li>
+              <li>
+                <AppLink
+                  onNavigate={onNavigate}
+                  patch={{
+                    crosswalk: "relationships",
+                    intent: "item-mapping",
+                    items: document.item_id,
+                    source: document.catalog_id,
+                  }}
+                  view="matrix"
+                >
+                  Add to Compare
+                </AppLink>
+              </li>
+              <li>
+                <button
+                  className="record-rail-action-button"
+                  onClick={() => {
+                    void copyText(window.location.href);
+                    setShareCopied(true);
+                    window.setTimeout(() => setShareCopied(false), 1800);
+                  }}
+                  type="button"
+                >
+                  {shareCopied ? "Link copied" : "Share this record"}
+                </button>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/rambulls/control-atlas/issues/new?template=report-broken-link.yml"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Report an issue <IconExternalLink aria-hidden="true" size={13} />
+                </a>
+              </li>
+            </ul>
           </section>
         </aside>
 

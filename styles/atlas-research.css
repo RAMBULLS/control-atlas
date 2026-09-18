@@ -42,7 +42,10 @@
 .atlas-research__path { border-left: 2px solid var(--ca-secondary); padding-left: var(--ca-space-4); margin-left: var(--ca-space-2); }
 .atlas-research__waypoint { position: relative; padding: var(--ca-space-3); border: 1px solid var(--ca-border); border-radius: var(--ca-radius-md); background: var(--ca-surface-raised); }
 .atlas-research__waypoint::before { content: ""; position: absolute; left: calc(-1 * var(--ca-space-4) - 6px); top: 24px; width: 10px; height: 10px; border-radius: 50%; background: var(--ca-secondary); }
-.atlas-research__waypoint a { display: grid; align-content: center; min-height: 44px; gap: var(--ca-space-1); text-decoration: none; }
+/* Matches the specificity of the mobile touch-target contract in orbital.css
+   (body a[href]:not(.visually-hidden)) so the waypoint keeps its stacked grid
+   layout instead of silently reverting to inline-flex under 640px. */
+body .atlas-research__waypoint a[href] { display: grid; align-content: center; min-height: 44px; gap: var(--ca-space-1); text-decoration: none; }
 .atlas-research__waypoint a strong { color: var(--ca-text); font-size: var(--ca-text-lg); }
 .atlas-research__waypoint span { color: var(--ca-text-muted); font-size: var(--ca-text-xs); }
 .atlas-research .atlas-research__hop { display: flex; align-items: center; gap: var(--ca-space-3); width: 100%; margin-block: var(--ca-space-2); text-align: left; color: var(--ca-secondary); }

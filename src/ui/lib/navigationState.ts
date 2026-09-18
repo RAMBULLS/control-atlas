@@ -24,6 +24,7 @@ export function requiresFullGraph(state: ViewState) {
     // focused record uses its neighborhood shard. These boundaries are
     // enforced by the bootstrap payload tests.
     (state.view === "atlas-map" &&
+      !state.atlasResearch &&
       !state.node &&
       Boolean(
         state.atlasBaseline ||

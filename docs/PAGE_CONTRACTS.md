@@ -81,6 +81,10 @@ Publisher-native columns remain addressable by URL beneath the map
 (`atlasLimb`, `atlasFramework`, `atlasFamily` without a lens group) and render
 publication-native levels and immediate children.
 
+### Atlas research (draft, issue #260)
+
+The opt-in research view and its evidence, state, loading and bounded-search contracts are specified in [ATLAS_RESEARCH.md](ATLAS_RESEARCH.md). This does not supersede the map composition above or claim the stable-map redesign is complete.
+
 ## D. Record detail
 
 Every supported catalog/type resolves to one of six roles: atomic record, container, publication/document, entity/contributor, assessment/question, or implementation artifact. All roles share identity, official source action, source facts, publisher hierarchy, and a bounded relationship handoff; role composers control only the source-native middle of the page.

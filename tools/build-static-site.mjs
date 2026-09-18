@@ -166,6 +166,11 @@ if (reuseStagedData) {
   );
 }
 
+// Research data is requested only when a visitor opens the research view.
+// Build against the same accepted corpus even when application assets are reused.
+runNodeSync(["--import", "tsx", join(ROOT, "scripts/build-atlas-research-artifact.mjs"),
+  "--output", join(DIST, "data/generated")], { cwd: ROOT, stdio: "inherit" });
+
 console.log(reuseStagedData ? "Compressing changed JSON files with gzip..." : "Compressing JSON files with gzip...");
 function getFiles(dir) {
   const result = [];

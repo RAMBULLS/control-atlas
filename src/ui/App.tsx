@@ -89,6 +89,9 @@ const AboutPage = lazyRoute(() =>
     default: module.AboutPage,
   })),
 );
+const AtlasResearchPage = lazyRoute(() =>
+  import("./pages/AtlasResearchPage").then((module) => ({ default: module.AtlasResearchPage })),
+);
 const AtlasMapPage = lazyRoute(() =>
   import("./pages/AtlasMapPage").then((module) => ({
     default: module.AtlasMapPage,
@@ -209,6 +212,7 @@ function routeTransitionScope(state: ViewState): string {
         state.atlasFamily,
         state.atlasRmfStep,
         state.atlasStage,
+        state.atlasResearch,
       ].join(":");
     case "catalog-detail":
       return `${state.view}:${state.catalog}`;
@@ -326,7 +330,7 @@ export function App() {
     viewState.view === "library-detail"
       ? `${viewState.view}:${viewState.node}`
       : viewState.view === "atlas-map"
-        ? `${viewState.view}:${viewState.atlasAxis || "landing"}:${viewState.atlasFramework || "none"}:${viewState.atlasBenchmark || "none"}`
+        ? `${viewState.view}:${viewState.atlasResearch ? "research" : "map"}:${viewState.atlasAxis || "landing"}:${viewState.atlasFramework || "none"}:${viewState.atlasBenchmark || "none"}`
       : viewState.view === "catalog-detail"
         ? `${viewState.view}:${viewState.catalog}:${viewState.family || "all"}`
       : viewState.view === "matrix"
@@ -486,6 +490,7 @@ export function App() {
   // with record pages resolving to the official record name once the graph is
   // loaded.
   const routeEntityName = (() => {
+    if (viewState.view === "atlas-map" && viewState.atlasResearch) return "Find a connection";
     const activeNodeId =
       viewState.view === "library-detail" || viewState.view === "atlas-map"
         ? viewState.node
@@ -658,9 +663,9 @@ export function App() {
 
   const canRenderWithoutBundle = isStaticViewWithoutBundle(viewState.view);
   const hasRequiredRouteArtifacts =
-    viewState.view !== "atlas-map" || Boolean(bundle?.atlasSpine);
+    viewState.view !== "atlas-map" || Boolean(viewState.atlasResearch) || Boolean(bundle?.atlasSpine);
   const hasRequiredSearchArtifacts =
-    viewState.view !== "atlas-map" || Boolean(bundle?.librarySearchReady);
+    viewState.view !== "atlas-map" || Boolean(viewState.atlasResearch) || Boolean(bundle?.librarySearchReady);
   const readyState = loadError
     ? "error"
     : canRenderWithoutBundle && viewState.view !== "search"
@@ -933,6 +938,7 @@ function AppContent(props: {
         <DataPendingNotice onRetry={onRetryLoad} slow={loadSlow} title="Loading the Atlas" />
       );
     }
+    if (state.atlasResearch) return <AtlasResearchPage bundle={bundle} onNavigate={onNavigate} state={state} />;
     return (
       <AtlasMapPage
         bundle={bundle}

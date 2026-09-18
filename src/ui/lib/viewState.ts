@@ -1,3 +1,5 @@
+import { normalizeResearchState } from "./atlasResearchState";
+
 export type AppView =
   | "home"
   | "atlas-map"
@@ -49,6 +51,12 @@ export type ViewState =
   | { view: "home" }
   | {
       view: "atlas-map";
+      atlasResearch?: string;
+      atlasPins?: string;
+      atlasFrom?: string;
+      atlasTo?: string;
+      atlasDirection?: string;
+      atlasHops?: string;
       node: string;
       atlasParent: string;
       atlasAxis: string;
@@ -251,6 +259,7 @@ function searchState(): ViewState {
 function atlasMapState(): Extract<ViewState, { view: "atlas-map" }> {
   return {
     view: "atlas-map",
+    ...normalizeResearchState({}),
     node: "",
     atlasParent: "",
     atlasAxis: "",
@@ -353,6 +362,7 @@ export function parseViewState(search: string): ViewState {
   if (view === "atlas-map") {
     return {
       view,
+      ...normalizeResearchState(Object.fromEntries(params)),
       node: params.get("node") || "",
       atlasParent: params.get("atlasParent") || "",
       atlasAxis: params.get("atlasAxis") || "",
@@ -569,6 +579,7 @@ export function normalizeViewState(
     return {
       ...atlasMapState(),
       ...incoming,
+      ...normalizeResearchState(incoming),
       view,
     };
   }
@@ -757,6 +768,13 @@ export function serializeViewState(state: ViewState): string {
     setIfValue(params, "view", "home");
   } else if (state.view === "atlas-map") {
     params.set("view", "atlas-map");
+    const research = normalizeResearchState(state);
+    setIfValue(params, "atlasResearch", research.atlasResearch);
+    setIfValue(params, "atlasPins", research.atlasPins);
+    setIfValue(params, "atlasFrom", research.atlasFrom);
+    setIfValue(params, "atlasTo", research.atlasTo);
+    if (research.atlasDirection === "either") params.set("atlasDirection", "either");
+    if (research.atlasHops !== "4") params.set("atlasHops", research.atlasHops);
     setIfValue(params, "node", state.node);
     setIfValue(params, "atlasParent", state.atlasParent);
     setIfValue(params, "atlasAxis", state.atlasAxis);

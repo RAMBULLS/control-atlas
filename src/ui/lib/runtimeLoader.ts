@@ -303,6 +303,7 @@ export type RuntimeArtifactPlan = {
 function isAtlasOrientationState(state: ViewState) {
   return (
     state.view === "atlas-map" &&
+    !state.atlasResearch &&
     !state.node &&
     (!state.atlasAxis ||
       (state.atlasAxis === "landscape" && !state.atlasFramework))
@@ -316,6 +317,14 @@ export function runtimeArtifactPlan(
     searchOverlayOpen?: boolean;
   } = {},
 ): RuntimeArtifactPlan {
+  // Research owns an opt-in worker/index. Old map scope remains in the URL
+  // for the return journey, but must not trigger unrelated catalog/RMF loads.
+  if (state.view === "atlas-map" && state.atlasResearch) {
+    return { atlasNetwork: false, atlasSpine: false, catalogBootstrap: false,
+      catalogId: "", catalogFamily: "", commons: false, fullGraph: false,
+      librarySearch: Boolean(options.searchOverlayOpen), recordNodeId: "",
+      registries: false, sources: true };
+  }
   // Templates now lands directly on the document browser, so every visit needs
   // the small template registries to render the list at all.
   const buildDetailRequested = state.view === "templates";

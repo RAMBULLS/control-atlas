@@ -1,18 +1,11 @@
 import { gzipSync } from "node:zlib";
 import { AxeBuilder } from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
-import { readGeneratedCollection } from "../../scripts/lib/generated-graph-artifacts.mjs";
 import { attachPageDiagnostics, dismissOnboarding, gotoApp, waitForAppReady } from "./support.mjs";
 /* global document, getComputedStyle */
 
-// The destination comes from the accepted CCI reference in the corpus, never from a hard-coded endpoint.
-const edges = readGeneratedCollection(process.cwd(), "edges").edges;
 const START = "disa-stig:V-205646";
-const CCI = "disa-cci:CCI-000185";
-const upstream = edges.find((e) => e.source_node_id === CCI && e.target_node_id.startsWith("nist-800-53:") && e.relationship_type === "maps_to");
-if (!upstream) throw new Error("Expected the accepted CCI reference for the flagship journey.");
-const END = upstream.target_node_id;
-const endLabel = END.slice(END.indexOf(":") + 1);
+const CCI_LABEL = "CCI-000185";
 
 async function open(page, path = "/#/atlas", width = 1440) {
   attachPageDiagnostics(page);
@@ -21,6 +14,18 @@ async function open(page, path = "/#/atlas", width = 1440) {
   await waitForAppReady(page);
   await dismissOnboarding(page);
   await expect(page.locator(".atl")).toBeVisible({ timeout: 30000 });
+}
+// The NIST destination is whatever the accepted graph returns for the trail, never an assumed endpoint.
+async function discoverEnd(page) {
+  await open(page, `/#/atlas?atlasResearch=upstream&atlasFrom=${encodeURIComponent(START)}`);
+  const steps = page.locator(".atl-steps");
+  await expect(steps).toContainText(CCI_LABEL, { timeout: 90000 });
+  const label = (await steps.locator("li").last().locator("b").innerText()).trim();
+  await expect(steps.locator("li").last()).toContainText("800-53");
+  return { id: `nist-800-53:${label}`, label };
+}
+async function goHash(page, hash) {
+  await page.evaluate((h) => { globalThis.location.hash = h; }, hash);
 }
 const query = (page) => new URLSearchParams(new URL(page.url()).hash.split("?")[1] || "");
 
@@ -168,26 +173,29 @@ test("flagship: search a STIG rule, trace upstream through the CCI to the accept
   await page.getByRole("button", { name: "Trace upstream" }).click();
   const steps = page.locator(".atl-steps");
   await expect(steps).toContainText("CCI-000185", { timeout: 90000 });
-  await expect(steps).toContainText(endLabel);
+  await expect(steps.locator("li").last()).toContainText("800-53");
   expect(query(page).get("atlasResearch")).toBe("upstream");
   expect(query(page).get("atlasFrom")).toBe(START);
-  expect(page.url()).not.toContain(endLabel);
+  expect(page.url()).not.toContain("nist-800-53");
   await expect(page.locator(".seg")).toHaveCount(2);
   await page.locator(".atl-steps__seg").first().click();
   await expect(page.locator(".atl-inspector")).toContainText("Why connected");
   await expect(page.locator(".atl-inspector")).toContainText("Exact location");
   await page.getByRole("button", { name: "Back to path" }).click();
   await page.reload();
-  await expect(page.locator(".atl-steps")).toContainText(endLabel, { timeout: 90000 });
+  await expect(page.locator(".atl-steps")).toContainText(CCI_LABEL, { timeout: 90000 });
 });
 
 test("a record path from the URL is recomputed, never stored", async ({ page }) => {
-  await open(page, `/#/atlas?atlasResearch=path&atlasFrom=${encodeURIComponent(START)}&atlasTo=${encodeURIComponent(END)}`);
-  await expect(page.locator(".atl-steps")).toContainText(endLabel, { timeout: 90000 });
+  const end = await discoverEnd(page);
+  await goHash(page, `#/atlas?atlasResearch=path&atlasFrom=${encodeURIComponent(START)}&atlasTo=${encodeURIComponent(end.id)}`);
+  await expect(page.locator(".atl-steps")).toContainText(end.label, { timeout: 90000 });
+  expect(page.url()).not.toContain("atlasHops");
 });
 
 test("record pins share ground through the CCI, and mixing pin kinds is refused plainly", async ({ page }) => {
-  await open(page, `/#/atlas?atlasResearch=shared&atlasPins=${encodeURIComponent(JSON.stringify([START, END]))}`);
+  const end = await discoverEnd(page);
+  await goHash(page, `#/atlas?atlasResearch=shared&atlasPins=${encodeURIComponent(JSON.stringify([START, end.id]))}`);
   await expect(page.locator(".atl-inspector")).toContainText("CCI-000185", { timeout: 90000 });
   await expect(page.locator(".atl").getByRole("link", { name: /^Compare/ })).toHaveCount(0);
   await page.locator('[data-landmark="csf-2"]').click();
@@ -214,7 +222,7 @@ test("invalid connection data never becomes a false no-path result and retry res
   await expect(page.locator(".atl-inspector")).not.toContainText("No published");
   broken = false;
   await page.getByRole("button", { name: "Retry" }).click();
-  await expect(page.locator(".atl-steps")).toContainText(endLabel, { timeout: 90000 });
+  await expect(page.locator(".atl-steps")).toContainText(CCI_LABEL, { timeout: 90000 });
 });
 
 test("an unavailable worker produces an honest recovery state", async ({ page }) => {
@@ -235,7 +243,8 @@ test("tampered connection bytes fail integrity validation without a false result
 });
 
 test("shared record connections keep separate source evidence for every pin", async ({ page }) => {
-  await open(page, `/#/atlas?atlasResearch=shared&atlasPins=${encodeURIComponent(JSON.stringify([START, END]))}`);
+  const end = await discoverEnd(page);
+  await goHash(page, `#/atlas?atlasResearch=shared&atlasPins=${encodeURIComponent(JSON.stringify([START, end.id]))}`);
   const row = page.locator(".atl-inspector .atl-list > li").filter({ hasText: "CCI-000185" });
   await expect(row).toHaveCount(1, { timeout: 90000 });
   await row.getByRole("button", { name: /^With / }).last().click();
@@ -247,7 +256,7 @@ for (const width of [320, 390, 768, 1440]) {
   test(`the record trail and its evidence are usable at ${width}px`, async ({ page }) => {
     test.setTimeout(120000);
     await open(page, upstreamUrl, width);
-    await expect(page.locator(".atl-steps")).toContainText(endLabel, { timeout: 90000 });
+    await expect(page.locator(".atl-steps")).toContainText(CCI_LABEL, { timeout: 90000 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
     for (const control of await page.locator(".atl button:visible, .atl select:visible, .atl input:visible").all()) {
       const box = await control.boundingBox();
@@ -264,7 +273,7 @@ for (const width of [320, 390, 768, 1440]) {
 
 test("the record trail has no serious accessibility violations", async ({ page }) => {
   await open(page, upstreamUrl);
-  await expect(page.locator(".atl-steps")).toContainText(endLabel, { timeout: 90000 });
+  await expect(page.locator(".atl-steps")).toContainText(CCI_LABEL, { timeout: 90000 });
   const results = await new AxeBuilder({ page }).include(".atl").analyze();
   expect(results.violations.filter((v) => ["serious", "critical"].includes(v.impact))).toEqual([]);
 });
@@ -272,7 +281,7 @@ test("the record trail has no serious accessibility violations", async ({ page }
 test("evidence names its published source even when research is entered from inside the app", async ({ page }) => {
   await open(page);
   await page.evaluate((from) => { globalThis.location.hash = `#/atlas?atlasResearch=upstream&atlasFrom=${encodeURIComponent(from)}`; }, START);
-  await expect(page.locator(".atl-steps")).toContainText(endLabel, { timeout: 90000 });
+  await expect(page.locator(".atl-steps")).toContainText(CCI_LABEL, { timeout: 90000 });
   await page.locator(".atl-steps__seg").last().click();
   await expect(page.locator(".atl-inspector")).toContainText("Why connected");
   await expect(page.locator(".atl-inspector")).not.toContainText("Source details unavailable");

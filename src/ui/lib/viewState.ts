@@ -1,4 +1,5 @@
 import { normalizeResearchState } from "./atlasResearchState";
+import { normalizeContextIds } from "./atlasTerritoryContext";
 
 export type AppView =
   | "home"
@@ -45,6 +46,17 @@ const SOURCE_LAYER_MODES = new Set<SourceLayerMode>([
 export function normalizeAtlasLayer(value: unknown): string {
   const text = typeof value === "string" ? value.trim() : "";
   return text.startsWith("publisher:") && text.length > 10 && text.length <= 130 && ![...text].some((c) => c.charCodeAt(0) < 32) ? text : "";
+}
+
+/** Context choices: bounded governed tag ids, sorted so equal choices give equal URLs. */
+export function normalizeAtlasContext(value: unknown): string {
+  return normalizeContextIds(value).sort().join(",");
+}
+
+/** A dataset identity is 12 hex characters or nothing. */
+export function normalizeAtlasDataset(value: unknown): string {
+  const text = typeof value === "string" ? value.trim().toLowerCase() : "";
+  return /^[a-f0-9]{12}$/.test(text) ? text : "";
 }
 
 function sourceLayerMode(value: unknown): SourceLayerMode {
@@ -101,6 +113,10 @@ export type ViewState =
       atlasLensFamily: string;
       /** Territory map layer: "" or "publisher:<publisher name>". */
       atlasLayer: string;
+      /** Territory context: comma-separated governed tag ids (program, product, asset). */
+      atlasContext: string;
+      /** The accepted dataset a shared view was made from; kept so a later comparison is possible. */
+      atlasDataset: string;
       relationshipView: string;
       relationshipType: string;
       provenance: string;
@@ -281,6 +297,8 @@ function atlasMapState(): Extract<ViewState, { view: "atlas-map" }> {
     atlasLanding: "",
     atlasLensFamily: "",
     atlasLayer: "",
+    atlasContext: "",
+    atlasDataset: "",
     relationshipView: "",
     relationshipType: "",
     provenance: "",
@@ -388,6 +406,8 @@ export function parseViewState(search: string): ViewState {
       atlasLanding: normalizeAtlasLanding(params.get("atlasLanding") || ""),
       atlasLensFamily: params.get("atlasLensFamily") || "",
       atlasLayer: normalizeAtlasLayer(params.get("atlasLayer") || ""),
+      atlasContext: normalizeAtlasContext(params.get("atlasContext") || ""),
+      atlasDataset: normalizeAtlasDataset(params.get("atlasDataset") || ""),
       // Empty means "the default for this state" — Connections when a record
       // is focused, the board otherwise (AtlasMapPage.atlasView decides). It is
       // deliberately not forced to "path": serializing a default the user never
@@ -798,6 +818,8 @@ export function serializeViewState(state: ViewState): string {
     setIfValue(params, "atlasLanding", state.atlasLanding);
     setIfValue(params, "atlasLensFamily", state.atlasLensFamily);
     setIfValue(params, "atlasLayer", normalizeAtlasLayer(state.atlasLayer));
+    setIfValue(params, "atlasContext", normalizeAtlasContext(state.atlasContext));
+    setIfValue(params, "atlasDataset", normalizeAtlasDataset(state.atlasDataset));
     if (state.relationshipView === "path") {
       params.set("relationshipView", "path");
     } else if (state.relationshipView === "map") {
@@ -954,6 +976,8 @@ export type AtlasMapUrlOptions = {
   atlasLanding?: string;
   atlasLensFamily?: string;
   atlasLayer?: string;
+  atlasContext?: string;
+  atlasDataset?: string;
   sourceView?: "default" | "purpose" | "rmf";
   relationshipView?: RelationshipViewMode;
   relationshipType?: string;
@@ -998,6 +1022,8 @@ export function buildAtlasMapUrl(options: AtlasMapUrlOptions = {}): string {
     atlasLanding: normalizeAtlasLanding(options.atlasLanding || ""),
     atlasLensFamily: options.atlasLensFamily || "",
     atlasLayer: normalizeAtlasLayer(options.atlasLayer || ""),
+    atlasContext: normalizeAtlasContext(options.atlasContext || ""),
+    atlasDataset: normalizeAtlasDataset(options.atlasDataset || ""),
     sourceView: options.sourceView || "default",
     relationshipView: options.relationshipView || "",
     relationshipType: options.relationshipType || "",

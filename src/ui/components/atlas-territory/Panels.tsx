@@ -146,7 +146,7 @@ export function TerritoryCard(props: { model: TerritoryModel; areaId: string; on
 
 export function PublicationCard(props: {
   model: TerritoryModel; id: string; reveal: RouteReveal; types: readonly string[]; onToggleType: (type: string) => void; onShowAll: () => void;
-  onRoute: (key: string) => void; pin: ReactNode; onNavigate: AppNavigate;
+  onRoute: (key: string) => void; pin: ReactNode; onNavigate: AppNavigate; extra?: ReactNode;
 }) {
   const { model, id, reveal } = props;
   const p = model.publicationById.get(id)!;
@@ -161,7 +161,7 @@ export function PublicationCard(props: {
         <dt>Where it sits</dt><dd>{model.areaOf(id).label} territory</dd>
         {p.records ? <dt>Records</dt> : null}{p.records ? <dd>{p.records.toLocaleString()}</dd> : null}
         <dt>Published connections</dt>
-        <dd>{total ? `${plural(total, "other publication")} share published connections with this one.` : "No published relationship is currently available between this and other mapped publications."}</dd>
+        <dd>{total ? `${plural(total, "other publication")} ${total === 1 ? "shares" : "share"} published connections with this one.` : "No published relationship is currently available between this and other mapped publications."}</dd>
       </dl>
       {total ? (
         <>
@@ -175,6 +175,7 @@ export function PublicationCard(props: {
           <ul className="atl-chips">{reveal.matching.map((r) => { const other = r.a === id ? r.b : r.a; return <li key={r.key}><button onClick={() => props.onRoute(r.key)} type="button">{model.alias(other)}</button></li>; })}</ul>
         </>
       ) : null}
+      {props.extra}
       <div className="atl-actions">
         {props.pin}
         <AppLink onNavigate={props.onNavigate} patch={{ catalog: id }} view="catalog-detail">Open in the Library</AppLink>

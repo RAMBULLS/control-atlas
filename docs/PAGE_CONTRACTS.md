@@ -23,16 +23,18 @@ Library and Resources share search, visible desktop facets, a compact responsive
 
 Atlas is one route, `/atlas`, drawn as a territory sheet: nine areas laid out as one landmass, with each publication a named place inside its area. The design, its rules and its data are specified in [ATLAS_VNEXT_DESIGN.md](ATLAS_VNEXT_DESIGN.md); this section is the page contract.
 
-The page has six parts and never shows an empty inspector:
+The page has these parts and never shows an empty inspector:
 
 1. **Atlas** — the title and, once something is selected, a breadcrumb (`Atlas › Area › Publication › Record`).
 2. **Search** — one box for records and publications. An exact record identifier opens that record; a publication name or alias opens the publication; ambiguous text hands off to Library search; no match stays on the page with "Search all records" and "Browse the Library".
 3. **Authority · N** — the statutes, regulations and directives that carry no crosswalks. A visible list, never a hidden drawer.
-4. **Layers** — only layers the data supports. Today that is Publisher. A layer changes styling and never moves a landmark.
-5. **Info** — what the map does and does not claim.
-6. **Map** — the sheet itself, with a details panel that exists only when something is selected, a pin tray that exists only when something is pinned, and "Other publications · N".
+4. **Context** — narrow by Program, Product and Asset. Choices show as "Showing material for:" chips with Clear context; a publication is highlighted when some of its records match, never because it carries the choice itself.
+5. **Layers** — only layers the data supports. Today that is Publisher. A layer changes styling and never moves a landmark.
+6. **Share this view** — copies the canonical link and says "Link copied" only after the clipboard accepts it.
+7. **Info** — what the map does and does not claim.
+8. **Map** — the sheet itself, with a details panel that exists only when something is selected, a pin tray that exists only when something is pinned, and "Other publications · N".
 
-Selection is URL state, so refresh, back, forward and shared links all restore it (`atlasLimb` area, `atlasFramework` publication, `node` record, `atlasPins`, `atlasResearch` = `path`, `shared` or `upstream`, `atlasFrom`, `atlasTo`, `atlasDirection`, `atlasLayer`). A computed path is never written to the URL, only its endpoints. Older scoped links (`atlasAxis=framework`, `atlasFamily`, `atlasBenchmark`, `atlasBaseline`, `atlasRmfStep`, `relationshipView`, and the relationship filters) keep opening the earlier workspace, which is also where "Full connection list" leads.
+Selection is URL state, so refresh, back, forward and shared links all restore it (`atlasLimb` area, `atlasFramework` publication, `node` record, `atlasPins`, `atlasResearch` = `path`, `shared` or `upstream`, `atlasFrom`, `atlasTo`, `atlasDirection`, `atlasLayer`, `atlasContext`, `atlasDataset`). A computed path is never written to the URL, only its endpoints. Older scoped links (`atlasAxis=framework`, `atlasFamily`, `atlasBenchmark`, `atlasBaseline`, `atlasRmfStep`, `relationshipView`, and the relationship filters) keep opening the earlier workspace, which is also where "Full connection list" leads.
 
 Rules the drawing must keep:
 

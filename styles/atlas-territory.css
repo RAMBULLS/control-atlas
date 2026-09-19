@@ -17,7 +17,7 @@
 .atl-status h1 { margin: 0; font-size: 1.4rem; }
 .atl-status p { margin: 0; color: var(--atl-muted); }
 
-.atl { position: relative; display: grid; grid-template-rows: auto minmax(0, 1fr); height: calc(100dvh - var(--atl-offset, 122px)); min-height: 560px; background: var(--atl-sea); overflow: hidden; isolation: isolate; }
+.atl { position: relative; display: flex; flex-direction: column; height: calc(100dvh - var(--atl-offset, 122px)); min-height: 560px; background: var(--atl-sea); overflow: hidden; isolation: isolate; }
 .atl :is(button, select, input) { font: inherit; color: var(--atl-text); }
 .atl button, .atl .atl-linkbtn { min-height: 44px; padding: 0 14px; border: 1px solid var(--atl-border-strong); border-radius: 8px; background: color-mix(in srgb, var(--atl-surface) 92%, transparent); cursor: pointer; transition: border-color 0.12s, background 0.12s; text-decoration: none; display: inline-flex; align-items: center; }
 .atl button:hover:not(:disabled), .atl .atl-linkbtn:hover { border-color: var(--atl-accent); background: color-mix(in srgb, var(--atl-accent) 14%, var(--atl-surface)); }
@@ -42,7 +42,7 @@
 .atl-search__results small, .atl-search__none, .atl-note { color: var(--atl-muted); font-size: 0.8rem; }
 .atl-search__none { padding: 10px; }
 
-.atl-map { position: relative; overflow: hidden; min-height: 0; }
+.atl-map { position: relative; overflow: hidden; min-height: 0; flex: 1 1 0; }
 .atl-map__actions { position: absolute; z-index: 3; left: 12px; top: 12px; display: flex; gap: 8px; }
 .atl-pill { border-radius: 22px !important; }
 .atl-pill--other { position: absolute; z-index: 3; right: 12px; bottom: 12px; }
@@ -175,7 +175,7 @@
 .atl-m-district p { margin: 0 0 6px; font-size: 0.92rem; }
 .atl-m-district--rest { grid-template-columns: minmax(0, 1fr); }
 .atl--mobile .atl-crumb { display: block; overflow-wrap: anywhere; }
-@media (max-width: 420px) { .atl-m-district { grid-template-columns: minmax(0, 1fr); } .atl-m-district .mini { width: 100%; max-width: 280px; } }
+@media (max-width: 420px) { .atl-m-district:not(.atl-m-district--rest) { grid-template-columns: 112px minmax(0, 1fr); gap: 10px; } .atl-m-district:not(.atl-m-district--rest) .mini { width: 112px; } }
 .atl--mobile .atl-card { padding: 14px; border: 1px solid var(--atl-border); border-radius: 12px; background: var(--atl-raised); margin-bottom: 10px; }
 .atl--mobile .atl-card h2 { margin-right: 0; }
 .atl--mobile .atl-tray, .atl--mobile .atl-pop { position: static; width: auto; box-shadow: none; margin: 8px 0; }
@@ -206,3 +206,19 @@
 
 .atl-search__recovery { position: absolute; z-index: 8; top: 48px; left: 0; right: 0; padding: 10px 12px; border: 1px solid var(--atl-border-strong); border-radius: 12px; background: var(--atl-raised); box-shadow: 0 14px 36px var(--atl-shadow); font-size: 0.9rem; }
 .atl-search__recovery p { margin: 0 0 6px; }
+
+/* Context: what you are working with, always visible while on. Styling only; landmarks never move. */
+.atl-pop--context { top: 100%; right: 16px; width: min(440px, calc(100% - 32px)); display: grid; gap: 8px; max-height: 70vh; overflow: auto; }
+.atl-context__group h3 { margin: 4px 0; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--atl-muted); }
+.atl-context { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 6px 16px; border-bottom: 1px solid var(--atl-border); background: color-mix(in srgb, var(--atl-accent) 8%, var(--atl-surface)); font-size: 0.9rem; }
+.atl-context__lead { color: var(--atl-muted); }
+.atl-context ul { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.atl-context li { display: inline-flex; align-items: center; gap: 2px; padding-left: 10px; border: 1px solid var(--atl-accent); border-radius: 999px; }
+.atl .atl-context li button { border: 0; background: transparent; width: 44px; padding: 0; justify-content: center; font-size: 18px; }
+.atl-context__note { margin: 0; }
+.atl--mobile .atl-context { margin: 8px 0; border: 1px solid var(--atl-border); border-radius: 12px; padding: 8px 12px; }
+.atl-breakdown { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 4px 0 0; padding: 0; list-style: none; color: var(--atl-muted); font-size: 0.8rem; }
+.atl-copied { color: var(--atl-gold); font-size: 0.85rem; }
+.lm.is-match .lm__ring { opacity: 1; stroke: var(--atl-gold); }
+.lm.is-match .lm__dot { stroke: var(--atl-gold); }
+.lm__count { fill: var(--atl-gold); }

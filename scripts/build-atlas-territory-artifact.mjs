@@ -14,10 +14,16 @@ const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const nodes = readGeneratedCollection(root, "nodes").nodes;
 const edges = readGeneratedCollection(root, "edges").edges;
 if (!nodes?.length || !edges?.length) throw new Error("Incomplete graph collections; do not publish territory data.");
+// Identity of the accepted dataset: the content digests of the node and edge collections.
+const digestOf = name => read(`data/generated/${name}.json`).sharded_collection?.content_sha256 || "";
+if (!digestOf("nodes") || !digestOf("edges")) throw new Error("Missing collection digests; cannot identify the dataset.");
+const datasetId = hash(digestOf("nodes") + digestOf("edges")).slice(0, 12);
 const spine = read("data/curated/tree-spine.json");
 const geometry = read("data/curated/atlas-territory-geography.json");
 const { index, admittedEdgeCount } = buildTerritoryIndex({
   generatedAt: read("data/generated/edges.json").generated_at,
+  datasetId,
+  taxonomy: read("data/generated/taxonomy-registry.json"),
   geometryVersion: geometry.version,
   catalogIds: [...Object.keys(spine.catalogLimbs), ...spine.syntheticCatalogs.map(c => c.catalog_id)],
   identities: read("data/generated/publication-identity-index.json").identities,
@@ -32,5 +38,5 @@ const dir = resolve(output);
 mkdirSync(join(dir, "atlas-territory"), { recursive: true });
 writeFileSync(join(dir, "atlas-territory", `${sha256}.json`), text);
 writeFileSync(join(dir, "atlas-territory-manifest.json"), JSON.stringify({ schemaVersion: TERRITORY_INDEX_VERSION,
-  generatedAt: index.generatedAt, sha256, bytes, publicationCount: index.publications.length, routeCount: index.routes.length, admittedEdgeCount }) + "\n");
+  generatedAt: index.generatedAt, datasetId, sha256, bytes, publicationCount: index.publications.length, routeCount: index.routes.length, admittedEdgeCount }) + "\n");
 console.log(`Territory index: ${index.publications.length} publications, ${index.routes.length} routes from ${admittedEdgeCount} published connections, ${bytes} bytes; sha256 ${sha256}.`);

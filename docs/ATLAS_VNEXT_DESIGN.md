@@ -1,8 +1,8 @@
 # Atlas vNext — the territory sheet
 
 - **Owner:** Product owner and Muse
-- **Status:** Implemented on PR #261 and tracked by #260. Awaiting owner acceptance; not merged or deployed.
-- **Last reviewed:** 2026-09-18
+- **Status:** Implemented on PR #261 as the first production delivery of Atlas vNext; #260 remains the umbrella program and stays open. Awaiting owner acceptance; not merged or deployed.
+- **Last reviewed:** 2026-09-19
 - **Supersession:** Replaces docs/ATLAS_RESEARCH.md (folded in below) and the landing, decomposition-column and "Find a connection" designs. Page-level rules live in docs/PAGE_CONTRACTS.md section C.
 
 ## What this is
@@ -33,7 +33,7 @@ Routes are transit-style: octilinear segments, the variant that crosses the fewe
 
 | Artifact | Built | Size | Loaded when |
 | --- | --- | --- | --- |
-| `atlas-territory/<sha>.json` + manifest | with the site, from published connections only | 15 KB (3 KB gz) | every Atlas view |
+| `atlas-territory/<sha>.json` + manifest | with the site, from published connections and record tags | 20 KB | every Atlas view |
 | `atlas-research/<sha>.json` | with the site, same admission rule | 67 MB (2.8 MB gz) | in a worker, when a record is focused or a record-level question is asked |
 | `library-search` shards | existing | 54 MB (3.4 MB gz) | when the reader focuses the search box |
 
@@ -50,6 +50,9 @@ The research index keeps original admitted edge objects, verifies its SHA-256 an
 - **Trace upstream.** From a record, follow recorded connections outward to the nearest records in publications whose governed kind is "Control catalog". Endpoints are discovered from the accepted graph; no control is named in code. Direction is forward by default; reverse traversal is an explicit, labeled choice. The flagship check is V-205646 → CCI-000185 → the accepted NIST endpoint, asserted in tests from the corpus.
 - **Pins.** Two to six publications, or two to six records; not mixed. State is in the URL.
 - **Shared ground.** Publications: connected to all, connected to some, only one, direct routes. Records: all and some, each with per-pin evidence. Zero is stated as an answer.
+- **Context.** Narrow the sheet by Program, Product and Asset (for example STIG + Microsoft Windows + Server). The rule is the Library's own: choices within one dimension widen (OR), choices across dimensions narrow (AND). Values no record carries are not offered. Tags live on **records**, so context is a **record-match projection**: a publication is highlighted because some of its records carry the choices, with the number of matching records and a per-choice breakdown. It never means the publication has those choices, that every record in it matches, or that the material applies to the reader. Public copy says "Showing publications containing records associated with this context" and never uses internal vocabulary. Context only dims, highlights and counts: no coordinate, boundary or slot changes (a unit test and a browser test assert zero drift). Program is treated exactly like Product and Asset: the governed program assignments are recorded on records (derived from catalog scope by a governed rule), not on publications, so the record-match behavior applies and nothing is inferred from publisher or name. An impossible combination says "No records match this context" and offers to clear one choice or all. "View matching records" opens the Library with the same tags and the publication as its filter.
+- **Share this view.** Copies the canonical URL and says "Link copied" only after the clipboard accepts it; a failure says "Copy failed. Use your browser's share menu." The URL holds only bounded state: focus, pins, path endpoints and settings, context, layer. A computed path is never serialized.
+- **Change-view foundation.** Every shared link is stamped with `atlasDataset`, a 12-character identity of the accepted dataset (a digest of the node and edge collections). Opening a link from a different dataset keeps that identity through navigation and says plainly that results may differ. No comparison control exists; saved-view comparison is #262.
 - **Compare.** Offered only for exactly two publication pins, as a link into the existing Compare with those two publications; otherwise absent, not disabled.
 - **Layers.** Only Publisher, because it is the only layer with governed publication-level data. Product, security domain, lifecycle and change layers are not shown until their data exists.
 - **Search.** Existing infrastructure: `resolveAtlasSearchTransition` for records, reviewed aliases for publications. An identifier opens the record; a publication name opens the publication; ambiguous text goes to Library search; no match stays on the page with recovery links.
@@ -58,7 +61,7 @@ The research index keeps original admitted edge objects, verifies its SHA-256 an
 
 ## URL state
 
-`atlasLimb` (area), `atlasFramework` (publication), `node` (record), `atlasPins`, `atlasResearch` (`path`, `shared`, `upstream`), `atlasFrom`, `atlasTo`, `atlasDirection`, `atlasLayer` (`publisher:<name>`). A computed path is never serialized. Older scoped links (`atlasAxis=framework`, `atlasFamily`, `atlasBenchmark`, `atlasBaseline`, `atlasRmfStep`, `relationshipView`, relationship filters) keep opening the earlier workspace, which is also where "Full connection list" leads.
+`atlasLimb` (area), `atlasFramework` (publication), `node` (record), `atlasPins`, `atlasResearch` (`path`, `shared`, `upstream`), `atlasFrom`, `atlasTo`, `atlasDirection`, `atlasLayer` (`publisher:<name>`), `atlasContext` (comma-separated tag ids), `atlasDataset` (12 hex characters). A computed path is never serialized. Older scoped links (`atlasAxis=framework`, `atlasFamily`, `atlasBenchmark`, `atlasBaseline`, `atlasRmfStep`, `relationshipView`, relationship filters) keep opening the earlier workspace, which is also where "Full connection list" leads.
 
 ## Verification
 
@@ -70,7 +73,7 @@ The research index keeps original admitted edge objects, verifies its SHA-256 an
 | Measure | Result |
 | --- | --- |
 | Overview ready (`.terr` drawn) | about 0.36 s; 311 KB transferred including the app shell |
-| Overview data fetched | catalog bootstrap 4 KB, territory index 3 KB. No network, spine, research index or search shards |
+| Overview data fetched | catalog bootstrap 4 KB, territory index (routes, evidence samples and context) 20 KB raw. No network, spine, research index or search shards |
 | Territory route JS | 21 KB gzip (the replaced page was 94 KB gzip) |
 | Territory focus, click to focused | 23 ms |
 | Hub focus with routes drawn | 39 ms |
@@ -81,8 +84,8 @@ The research index keeps original admitted edge objects, verifies its SHA-256 an
 
 ## Not done, on purpose
 
+- **Saved-view and accepted-dataset change comparison** is deferred to #262 because the repository has no trustworthy retained history. There is no "Show changes" control and no invented baseline. #260 stays open until #262 is complete.
+- Lifecycle and source-status layers are not built. Lifecycle appears only when governed lifecycle data supports it. Kind and job layers may return later only as non-geographic layers that earn a place.
+- The earlier landing grammar (by kind, by publisher, by job) and the FedRAMP active/historical badges are intentionally not restored; Publisher remains a layer.
 - Library map duplication (`LibraryAtlasMap`) is deferred until this design is accepted.
 - The earlier workspace (decomposition columns, benchmark, baseline and RMF scoping, the full relationship workspace) stays for deep links. Removing it, and the components only it uses, is a separate cleanup once the owner accepts the sheet.
-- The FedRAMP active/historical badges and the "Grouped by kind / publisher / job" lenses of the earlier landing are not carried over; lifecycle is not a governed publication-level layer yet.
-- The old "Share this view" button is not carried over; the URL is the shared state.
-- Saved-snapshot change comparison, taxonomy/system layers and lifecycle layers remain separate acceptance work in #260.

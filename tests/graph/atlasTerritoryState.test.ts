@@ -53,9 +53,9 @@ test("a patch clears what it does not name, and unsupported layers are dropped",
 });
 
 test("clear actions are offered only when there is something to clear", () => {
-  assert.deepEqual(territoryHasWork(atlas()), { pins: false, path: false, layer: false, focus: false });
+  assert.deepEqual(territoryHasWork(atlas()), { pins: false, path: false, layer: false, focus: false, context: false });
   const w = territoryHasWork(atlas(territoryPatch({ limb: "atlas:LIMB-RISK", pins: ["a", "b"], mode: "path", from: "a", to: "b", publisher: "DISA" })));
-  assert.deepEqual(w, { pins: true, path: true, layer: true, focus: true });
+  assert.deepEqual(w, { pins: true, path: true, layer: true, focus: true, context: false });
 });
 
 test("pins are limited to six and de-duplicated", () => {
@@ -84,4 +84,21 @@ test("entering research inside the app changes the runtime scope, so record sour
   const app = await import("node:fs").then((fs) => fs.readFileSync("src/ui/App.tsx", "utf8"));
   assert.match(app, /territory:\$\{viewState\.node \|\| "none"\}:\$\{viewState\.atlasResearch \? "research" : ""\}/);
   assert.equal(runtimeArtifactPlan(atlas({ atlasResearch: "upstream", atlasFrom: "disa-stig:V-205646" }) as never).sources, true);
+});
+
+test("context choices and the source dataset round-trip through the URL, bounded and validated", () => {
+  const patch = territoryPatch({ context: ["product.microsoft-windows", "program.stig", "asset.server"], dataset: "0123456789ab" });
+  const back = roundTrip(atlas(patch));
+  assert.equal(back.atlasContext, "asset.server,product.microsoft-windows,program.stig");
+  assert.deepEqual(territoryTargetOf(back).context, ["asset.server", "product.microsoft-windows", "program.stig"]);
+  assert.equal(back.atlasDataset, "0123456789ab");
+  assert.equal(roundTrip(atlas({ atlasDataset: "not-a-dataset" })).atlasDataset, "");
+  assert.equal(roundTrip(atlas({ atlasContext: "<script>,program.stig" })).atlasContext, "program.stig");
+  assert.equal(territoryHasWork(back).context, true);
+  assert.equal(atlasSurfaceFor(back), "territory", "context never sends a link to the earlier workspace");
+});
+
+test("context and dataset never carry a computed result", () => {
+  const url = serializeViewState(atlas(territoryPatch({ context: ["program.stig"], dataset: "0123456789ab", mode: "path", from: "a", to: "b" })) as never);
+  assert.deepEqual([...new URLSearchParams(url)].map(([k]) => k).sort(), ["atlasContext", "atlasDataset", "atlasFrom", "atlasResearch", "atlasTo", "view"]);
 });

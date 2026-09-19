@@ -3,8 +3,9 @@ import type { AtlasGraphSourceEdge } from "./atlasGraphModel";
 import { catalogDisplayNameFor, catalogProfileFor } from "./catalogProfiles";
 import { areaPresentationForCatalog } from "./areaVisualLanguage";
 import type { TerritoryRoute } from "./atlasTerritoryRoutes";
+import { CONTEXT_DIMENSIONS, type ContextIndex, type ContextSignature } from "./atlasTerritoryContext";
 
-export const TERRITORY_INDEX_VERSION = 1;
+export const TERRITORY_INDEX_VERSION = 2;
 export const TERRITORY_INDEX_MAX_BYTES = 256 * 1024;
 
 export type TerritoryPublication = {
@@ -21,21 +22,26 @@ export type TerritoryIndexRoute = TerritoryRoute & {
 export type TerritoryIndex = {
   schemaVersion: number;
   generatedAt: string;
+  /** Identity of the accepted dataset this index was built from; stamped on shared views. */
+  datasetId: string;
   geometryVersion: string;
+  context: ContextIndex;
   publications: TerritoryPublication[];
   routes: TerritoryIndexRoute[];
   authority: TerritoryListed[];
   other: TerritoryListed[];
 };
 export type TerritoryManifest = {
-  schemaVersion: number; generatedAt: string; sha256: string; bytes: number;
+  schemaVersion: number; generatedAt: string; datasetId: string; sha256: string; bytes: number;
   publicationCount: number; routeCount: number; admittedEdgeCount: number;
 };
 
 type Row = Record<string, any>;
 export type TerritoryBuildInput = {
   generatedAt: string;
+  datasetId: string;
   geometryVersion: string;
+  taxonomy: { terms: readonly Row[] };
   /** Catalog ids that own a landmark (tree-spine catalogLimbs plus syntheticCatalogs). */
   catalogIds: readonly string[];
   identities: readonly Row[];
@@ -98,13 +104,38 @@ export function buildTerritoryIndex(input: TerritoryBuildInput): { index: Territ
     };
   });
 
+  // Context: which records carry which governed tags, folded into one row per distinct combination.
+  const contextDims = new Set<string>(CONTEXT_DIMENSIONS.map((d) => d.id));
+  const contextTerms = input.taxonomy.terms.filter((t) => contextDims.has(t.dimension));
+  const dimensionOf = new Map<string, string>(contextTerms.map((t) => [t.id, t.dimension]));
+  const combos = new Map<string, ContextSignature>();
+  const termRecords = new Map<string, number>();
+  for (const node of input.nodes) {
+    const catalog = node.metadata?.catalog_id || "";
+    if (!mapped.has(catalog)) continue;
+    const tags = [...new Set<string>((node.metadata?.taxonomy_tags || []).map((t: any) => (typeof t === "string" ? t : t?.id)).filter((id: string) => dimensionOf.has(id)))].sort();
+    if (!tags.length) continue;
+    for (const id of tags) termRecords.set(id, (termRecords.get(id) || 0) + 1);
+    const key = catalog + "|" + tags.join(",");
+    const row = combos.get(key) || { p: catalog, t: tags, n: 0 };
+    row.n += 1;
+    combos.set(key, row);
+  }
+  const context: ContextIndex = {
+    dimensions: CONTEXT_DIMENSIONS.map((d) => ({ id: d.id, label: d.label })),
+    // Only values that at least one record carries are offered.
+    terms: contextTerms.filter((t) => termRecords.get(t.id)).map((t) => ({ id: t.id, label: t.label, dimension: t.dimension, records: termRecords.get(t.id)! }))
+      .sort((a, b) => a.dimension.localeCompare(b.dimension) || a.label.localeCompare(b.label)),
+    signatures: [...combos.values()].sort((a, b) => (a.p + a.t.join()).localeCompare(b.p + b.t.join())),
+  };
+
   const unmapped = input.identities.filter((i) => !i.catalog_id).sort((a, b) => a.id.localeCompare(b.id));
   const listed = (i: Row): TerritoryListed => ({ id: i.id, name: i.name, publisher: i.publisher || "" });
   return {
     admittedEdgeCount: admitted.length,
     index: {
-      schemaVersion: TERRITORY_INDEX_VERSION, generatedAt: input.generatedAt, geometryVersion: input.geometryVersion,
-      publications, routes,
+      schemaVersion: TERRITORY_INDEX_VERSION, generatedAt: input.generatedAt, datasetId: input.datasetId, geometryVersion: input.geometryVersion,
+      context, publications, routes,
       authority: unmapped.filter((i) => String(i.id).startsWith("authority-")).map(listed),
       other: unmapped.filter((i) => !String(i.id).startsWith("authority-")).map(listed),
     },
@@ -121,6 +152,7 @@ export function validateTerritoryManifest(value: unknown): TerritoryManifest {
 export function validateTerritoryIndex(value: unknown, manifest: TerritoryManifest, catalogIds: readonly string[] = []): TerritoryIndex {
   const idx = value as TerritoryIndex;
   if (!idx || idx.schemaVersion !== manifest.schemaVersion || idx.generatedAt !== manifest.generatedAt
+    || idx.datasetId !== manifest.datasetId || !/^[a-f0-9]{12}$/.test(idx.datasetId || "") || !Array.isArray(idx.context?.terms) || !Array.isArray(idx.context?.signatures)
     || !Array.isArray(idx.publications) || !Array.isArray(idx.routes) || !Array.isArray(idx.authority) || !Array.isArray(idx.other)
     || idx.publications.length !== manifest.publicationCount || idx.routes.length !== manifest.routeCount) throw new Error("Territory data does not match its release.");
   const known = new Set(idx.publications.map((p) => p.id));

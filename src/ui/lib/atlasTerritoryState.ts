@@ -1,5 +1,6 @@
 import { parseResearchPins } from "./atlasResearchState";
-import type { ViewState } from "./viewState";
+import { normalizeContextIds } from "./atlasTerritoryContext";
+import { normalizeAtlasContext, normalizeAtlasDataset, type ViewState } from "./viewState";
 
 type AtlasViewState = Extract<ViewState, { view: "atlas-map" }>;
 
@@ -54,6 +55,10 @@ export type TerritoryTarget = {
   to?: string;
   /** Publisher name for the Publisher layer; empty for no layer. */
   publisher?: string;
+  /** Governed tag ids chosen as context. */
+  context?: readonly string[];
+  /** Dataset a shared view was made from. */
+  dataset?: string;
 };
 
 /**
@@ -72,6 +77,8 @@ export function territoryPatch(target: TerritoryTarget = {}): Partial<AtlasViewS
     atlasFrom: mode && target.from ? target.from : "",
     atlasTo: mode === "path" && target.to ? target.to : "",
     atlasLayer: target.publisher ? `publisher:${target.publisher}` : "",
+    atlasContext: normalizeAtlasContext([...(target.context || [])]),
+    atlasDataset: normalizeAtlasDataset(target.dataset || ""),
   };
 }
 
@@ -81,15 +88,18 @@ export function territoryTargetOf(state: Partial<AtlasViewState>): TerritoryTarg
     limb: state.atlasLimb || "", framework: state.atlasFramework || "", node: state.node || "",
     pins: parseResearchPins(state.atlasPins), mode: territoryModeOf(state),
     from: state.atlasFrom || "", to: state.atlasTo || "", publisher: (state.atlasLayer || "").replace(/^publisher:/, ""),
+    context: normalizeContextIds(state.atlasContext || ""),
+    dataset: state.atlasDataset || "",
   };
 }
 
 /** True when something the reader added (pins, path, layer) could be cleared. */
-export function territoryHasWork(state: Partial<AtlasViewState>): { pins: boolean; path: boolean; layer: boolean; focus: boolean } {
+export function territoryHasWork(state: Partial<AtlasViewState>): { pins: boolean; path: boolean; layer: boolean; focus: boolean; context: boolean } {
   return {
     pins: parseResearchPins(state.atlasPins).length > 0,
     path: territoryModeOf(state) === "path" || territoryModeOf(state) === "upstream",
     layer: !!state.atlasLayer,
+    context: normalizeContextIds(state.atlasContext || "").length > 0,
     focus: territoryFocusOf(state).kind !== "overview",
   };
 }

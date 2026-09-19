@@ -15,7 +15,7 @@ const nodes = readGeneratedCollection(process.cwd(), "nodes").nodes;
 const edges = readGeneratedCollection(process.cwd(), "edges").edges;
 const input: TerritoryBuildInput = {
   generatedAt: read("data/generated/edges.json").generated_at, geometryVersion: geometry.version, catalogIds,
-  identities: read("data/generated/publication-identity-index.json").identities, sources: read("data/source-registry.json").sources, nodes, edges,
+  identities: read("data/generated/publication-identity-index.json").identities, datasetId: "0123456789ab", taxonomy: read("data/generated/taxonomy-registry.json"), sources: read("data/source-registry.json").sources, nodes, edges,
 };
 const { index, admittedEdgeCount } = buildTerritoryIndex(input);
 const routeOf = (a: string, b: string) => index.routes.find((r) => r.key === (a < b ? `${a}|${b}` : `${b}|${a}`));
@@ -77,14 +77,14 @@ test("the index is small, deterministic and validates against its manifest", () 
   assert.deepEqual(again, index);
   const text = JSON.stringify(index);
   assert.ok(Buffer.byteLength(text) < TERRITORY_INDEX_MAX_BYTES / 4, "should stay far inside its transfer budget");
-  const manifest = validateTerritoryManifest({ schemaVersion: 1, generatedAt: index.generatedAt, sha256: "a".repeat(64), bytes: Buffer.byteLength(text),
+  const manifest = validateTerritoryManifest({ schemaVersion: 2, datasetId: "0123456789ab", generatedAt: index.generatedAt, sha256: "a".repeat(64), bytes: Buffer.byteLength(text),
     publicationCount: index.publications.length, routeCount: index.routes.length, admittedEdgeCount });
   assert.equal(validateTerritoryIndex(JSON.parse(text), manifest, catalogIds).routes.length, index.routes.length);
 });
 
 test("validation rejects a wrong release, a missing publication and a bad route", () => {
   const text = JSON.stringify(index);
-  const base = { schemaVersion: 1, generatedAt: index.generatedAt, sha256: "b".repeat(64), bytes: text.length, publicationCount: index.publications.length, routeCount: index.routes.length, admittedEdgeCount };
+  const base = { schemaVersion: 2, datasetId: "0123456789ab", generatedAt: index.generatedAt, sha256: "b".repeat(64), bytes: text.length, publicationCount: index.publications.length, routeCount: index.routes.length, admittedEdgeCount };
   assert.throws(() => validateTerritoryManifest({ ...base, sha256: "nope" }));
   assert.throws(() => validateTerritoryManifest({ ...base, bytes: TERRITORY_INDEX_MAX_BYTES + 1 }));
   const manifest = validateTerritoryManifest(base);

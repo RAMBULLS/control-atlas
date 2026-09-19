@@ -5,6 +5,7 @@ import { boundsOf, fitView, type TerritoryModel, type View } from "../../lib/atl
 import type { TerritoryRoute } from "../../lib/atlasTerritoryRoutes";
 import { hitsRects, rectsOverlap, routeBetween, type Rect, type Routed } from "../../lib/atlasTerritoryRouting";
 import type { TerritoryListed } from "../../lib/atlasTerritoryIndex";
+import type { ContextMatch } from "../../lib/atlasTerritoryContext";
 
 export type MapRecord = { id: string; code: string; catalogId: string; pinned: boolean; focused: boolean };
 export type MapHop = { key: string; from: string; to: string; fromCatalog: string; toCatalog: string; label: string; selected: boolean };
@@ -35,6 +36,8 @@ export type MapProps = {
   hops: readonly MapHop[];
   authority: readonly TerritoryListed[];
   inspectorInset: number;
+  /** Publications containing records that match the chosen context; null when no context is on. Styling only. */
+  context: ReadonlyMap<string, ContextMatch> | null;
 };
 
 const onKey = (run: () => void) => (e: KeyboardEvent) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); run(); } };
@@ -52,7 +55,7 @@ const styleFor = (areaId: string) => {
 const relationLabel = (types: readonly string[]) => types.join(" · ").replace(/_/g, " ");
 
 export function TerritoryMap(props: MapProps & { actions: MapActions }) {
-  const { model, size, focusAreaId, focusPublication, selectedRouteKey, revealed, pins, active, sharedLines, publisher, records, hops, authority, inspectorInset, actions } = props;
+  const { model, size, focusAreaId, focusPublication, selectedRouteKey, revealed, pins, active, sharedLines, publisher, records, hops, authority, inspectorInset, context, actions } = props;
   const [hover, setHover] = useState<{ kind: "publication" | "district" | "route" | "shore"; id: string } | null>(null);
   const aspect = size.w / Math.max(1, size.h);
   const dimming = active.size > 0 || !!selectedRouteKey || hops.length > 0;
@@ -105,7 +108,7 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
     }
     return partners.reduce((s, q) => s + (q[0] - p[0]), 0) / partners.length > 0 ? -1 : 1;
   };
-  const showName = (id: string) => model.isMajor(id) || focusAreaId === model.areaOf(id).id || hoverPublication === id || focusPublication === id
+  const showName = (id: string) => (context ? context.has(id) : model.isMajor(id)) || focusAreaId === model.areaOf(id).id || hoverPublication === id || focusPublication === id
     || pinned.has(id) || active.has(id) || connected.has(id) || recordCatalogs.has(id);
   const labelRect = (id: string, lines = 1): Rect => {
     const p = pos(id); const side = labelSide(id);
@@ -239,7 +242,8 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
       <g className="landmarks">
         {model.publications.map((l) => {
           const p = pos(l.id); const isActive = active.has(l.id); const major = model.isMajor(l.id);
-          const dim = (dimming && !isActive) || (publisherOn && l.publisher !== publisher);
+          const matched = !!context && context.has(l.id);
+          const dim = (dimming && !isActive) || (publisherOn && l.publisher !== publisher) || (!!context && !matched);
           const isPinned = pinned.has(l.id); const selected = focusPublication === l.id; const hov = hoverPublication === l.id;
           const label = showName(l.id) && (!dim || hov); const side = labelSide(l.id); const lift = selected || hov;
           const areaId = l.area;
@@ -247,7 +251,7 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
             <g
               aria-label={`${model.alias(l.id)}, ${l.name}, ${l.publisher}, ${model.areaOf(l.id).label} territory${isPinned ? ", pinned" : ""}`}
               aria-pressed={selected}
-              className={`lm${dim ? " is-dim" : ""}${isActive ? " is-active" : ""}${selected ? " is-selected" : ""}${hov ? " is-hover" : ""}${major ? " is-major" : ""}${publisherOn && !dim ? " is-layer" : ""}`}
+              className={`lm${dim ? " is-dim" : ""}${isActive ? " is-active" : ""}${selected ? " is-selected" : ""}${hov ? " is-hover" : ""}${major ? " is-major" : ""}${matched ? " is-match" : ""}${publisherOn && !dim ? " is-layer" : ""}`}
               data-landmark={l.id}
               key={l.id}
               onClick={() => actions.selectPublication(l.id)}
@@ -260,11 +264,12 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
             >
               <circle className="lm__hit" cx={p[0]} cy={p[1]} r={24 * u} />
               <circle className="lm__ring" cx={p[0]} cy={p[1]} r={(lift ? 14 : 11) * u} />
-              <circle className="lm__dot" cx={p[0]} cy={p[1]} r={(lift ? 8.2 : major ? 6.6 : 5.2) * u} />
+              <circle className="lm__dot" cx={p[0]} cy={p[1]} r={(lift ? 8.2 : matched ? 7.4 : major ? 6.6 : 5.2) * u} />
               {label ? (
                 <>
                   <text className="lm__name" fontSize={(major || lift ? 14.5 : 13.5) * u} strokeWidth={4 * u} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 4.5 * u}>{model.alias(l.id)}</text>
-                  {(!recordCatalogs.has(l.id) && (lift || (focusAreaId === areaId && !isActive))) ? <text className="lm__type" fontSize={11.5 * u} strokeWidth={4 * u} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 19 * u}>{l.kind}</text> : null}
+                  {matched && !recordCatalogs.has(l.id) ? <text className="lm__type lm__count" fontSize={11.5 * u} strokeWidth={4 * u} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 19 * u}>{context!.get(l.id)!.records.toLocaleString()} matching {context!.get(l.id)!.records === 1 ? "record" : "records"}</text>
+                    : (!recordCatalogs.has(l.id) && (lift || (focusAreaId === areaId && !isActive))) ? <text className="lm__type" fontSize={11.5 * u} strokeWidth={4 * u} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 19 * u}>{l.kind}</text> : null}
                 </>
               ) : null}
               {isPinned ? <g className="pin-anim"><path className="pin" d={PIN} transform={`translate(${p[0]} ${p[1] - 9 * u}) scale(${u * 0.95})`} /></g> : null}

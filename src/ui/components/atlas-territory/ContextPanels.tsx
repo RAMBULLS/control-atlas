@@ -30,8 +30,8 @@ export function ContextMenu(props: { context: ContextIndex; selected: readonly s
 }
 
 /** The current context, always visible while it is on. */
-export function ContextBar(props: { terms: readonly ContextTerm[]; onRemove: (id: string) => void; onClear: () => void; older: boolean }) {
-  if (!props.terms.length && !props.older) return null;
+export function ContextBar(props: { terms: readonly ContextTerm[]; onRemove: (id: string) => void; onClear: () => void; differentData: boolean }) {
+  if (!props.terms.length && !props.differentData) return null;
   return (
     <section aria-label="Current context" className="atl-context">
       {props.terms.length ? (
@@ -41,7 +41,7 @@ export function ContextBar(props: { terms: readonly ContextTerm[]; onRemove: (id
           <button onClick={props.onClear} type="button">Clear context</button>
         </>
       ) : null}
-      {props.older ? <p className="atl-note atl-context__note">This link was made from an earlier version of the data, so results here may differ from what its sender saw.</p> : null}
+      {props.differentData ? <p className="atl-note atl-context__note">This link was made with a different data version, so results may differ from what its sender saw.</p> : null}
     </section>
   );
 }

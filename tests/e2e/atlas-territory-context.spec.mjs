@@ -131,7 +131,7 @@ test("share this view: copies the scene only after the clipboard accepts it, and
   await expect(fresh.locator(".atl-tray")).toContainText("Pinned · 2");
   await expect(fresh.locator(".atl-inspector")).toContainText("DISA STIG");
   await expect(fresh.locator('.lm.is-match[data-landmark="disa-stig"]')).toHaveCount(1);
-  await expect(fresh.getByText(/earlier version of the data/)).toHaveCount(0);
+  await expect(fresh.getByText(/different data version/)).toHaveCount(0);
 });
 
 test("share this view: a clipboard failure is stated honestly and never reported as copied", async ({ page }) => {
@@ -159,9 +159,11 @@ test("back and forward restore context changes", async ({ page }) => {
   await expect(page.getByRole("region", { name: "Current context" })).toContainText("Server");
 });
 
-test("a view from an earlier version of the data keeps its source and offers no invented change view", async ({ page }) => {
+test("a view made with a different data version is stated neutrally, keeps its source, and offers no invented change view", async ({ page }) => {
   await open(page, contextUrl("&atlasDataset=000000000000"));
-  await expect(page.getByText(/earlier version of the data/)).toBeVisible();
+  await expect(page.getByText("This link was made with a different data version, so results may differ from what its sender saw.")).toBeVisible();
+  // An unknown but valid id says only that it differs; it never claims to be earlier or older.
+  expect(await page.locator(".atl").innerText()).not.toMatch(/earlier|older|outdated|stale|newer/i);
   expect(query(page).get("atlasDataset")).toBe("000000000000");
   await page.locator('[data-landmark="disa-stig"]').click();
   expect(query(page).get("atlasDataset"), "the saved dataset survives navigation").toBe("000000000000");
@@ -170,7 +172,7 @@ test("a view from an earlier version of the data keeps its source and offers no 
 
   const manifest = await (await page.request.get("/data/generated/atlas-territory-manifest.json")).json();
   await open(page, contextUrl(`&atlasDataset=${manifest.datasetId}`));
-  await expect(page.getByText(/earlier version of the data/)).toHaveCount(0);
+  await expect(page.getByText(/different data version/)).toHaveCount(0);
 });
 
 for (const width of [320, 375, 390, 768, 1024, 1440]) {

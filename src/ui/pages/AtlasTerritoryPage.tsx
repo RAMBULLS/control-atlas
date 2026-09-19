@@ -6,7 +6,7 @@ import type { TerritoryIndex } from "../lib/atlasTerritoryIndex";
 import { loadTerritoryIndex } from "../lib/atlasTerritoryLoader";
 import { revealRoutes } from "../lib/atlasTerritoryRoutes";
 import { MAX_PINS, addPin, compareHandoff, removePin, sharedGround } from "../lib/atlasTerritoryShared";
-import { territoryFocusOf, territoryHasWork, territoryModeOf, territoryPatch, territoryTargetOf, type TerritoryTarget } from "../lib/atlasTerritoryState";
+import { clearContextTarget, clearLayerTarget, clearPathTarget, clearPinsTarget, overviewTarget, territoryClearActions, territoryFocusOf, territoryHasWork, territoryModeOf, territoryPatch, territoryTargetOf, type TerritoryTarget } from "../lib/atlasTerritoryState";
 import { resolveAtlasSearchTransition } from "../lib/atlasSearch";
 import { evaluateContext, normalizeContextIds, orderedSelection, toggleContext } from "../lib/atlasTerritoryContext";
 import { catalogDisplayNameFor } from "../lib/catalogProfiles";
@@ -125,7 +125,8 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
   const contextResult = useMemo(() => evaluateContext(index.context, selectedContext), [index, selectedContext]);
   const contextTerms = useMemo(() => orderedSelection(index.context, selectedContext), [index, selectedContext]);
   const contextOn = contextResult.active;
-  const olderView = !!state.atlasDataset && state.atlasDataset !== index.datasetId;
+  // A different data version is stated as such. Nothing here knows or claims which one is newer.
+  const differentData = !!state.atlasDataset && state.atlasDataset !== index.datasetId;
   const direction: "forward" | "either" = state.atlasDirection === "either" ? "either" : "forward";
 
   const go = useCallback((next: TerritoryTarget & { direction?: "forward" | "either" }, keepMenuOpen = false) => {
@@ -303,9 +304,12 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
     closeInspector: () => { setClosedFor(cardKey); setMenu(""); },
   };
 
-  const overview = () => go({ pins, publisher });
-  const reset = () => go({ context: [], dataset: "" });
-  const setContext = (ids: string[]) => go(keep({ context: ids }), true);
+  const clear = territoryClearActions(state);
+  const overview = () => go(overviewTarget(keep({})));
+  const clearPath = () => go(clearPathTarget(keep({})));
+  const clearPins = () => go(clearPinsTarget(keep({})));
+  const clearLayer = () => go(clearLayerTarget(keep({})));
+  const setContext = (ids: string[]) => go(ids.length ? keep({ context: ids }) : clearContextTarget(keep({})), true);
   const viewRecords = (catalogId: string | null) => (
     <AppLink onNavigate={onNavigate} patch={{ filter: catalogId || "", tags: selectedContext } as Partial<ViewState>} view="search">View matching records</AppLink>
   );
@@ -320,7 +324,6 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
   };
   const inspectorInset = inspectorOpen && !narrow ? 372 : 0;
   const toggleMenu = (m: Menu) => setMenu((cur) => (cur === m ? "" : m));
-  const anyWork = work.pins || work.layer || work.context;
   const zoomed = focus.kind !== "overview" || !!selectedRoute || sharing || recordShared || tracing;
 
   const pinControl = (id: string) => <PinButton full={pins.length >= MAX_PINS} label={label(id)} onToggle={() => togglePin(id)} pinned={pins.includes(id)} />;
@@ -355,7 +358,7 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
   const tray = (
     <PinTray
       canShare={pins.length >= 2} canTrace={!!directRoute || (recordPins.length === 2 && pubPins.length === 0)} compare={compare} label={label}
-      onClear={() => go(keep({ pins: [], mode: mode === "shared" ? "explore" : target.mode }))}
+      onClear={clearPins}
       onShare={() => go(keep({ mode: "shared" }))}
       onTrace={() => { if (directRoute) actions.selectRoute(directRoute.key); else go({ pins, publisher, mode: "path", from: recordPins[0], to: recordPins[1], direction }); }}
       onUnpin={togglePin} pins={pins} traceLabel={directRoute ? "Open route evidence" : "Trace path"}
@@ -363,7 +366,7 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
   );
   const status = <p aria-live="polite" className={notice.startsWith("Pin publications") || notice.startsWith("Six") ? "atl-warn" : "atl-sr"} role="status">{notice}</p>;
   const contextMenu = <ContextMenu context={index.context} onClear={() => setContext([])} onToggle={(id) => setContext(toggleContext(selectedContext, id))} selected={selectedContext} />;
-  const contextBar = <ContextBar older={olderView} onClear={() => setContext([])} onRemove={(id) => setContext(toggleContext(selectedContext, id))} terms={contextTerms} />;
+  const contextBar = <ContextBar differentData={differentData} onClear={() => setContext([])} onRemove={(id) => setContext(toggleContext(selectedContext, id))} terms={contextTerms} />;
   const shareButton = (
     <>
       <button onClick={() => { void share(); }} type="button">Share this view</button>
@@ -390,7 +393,7 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
     const area = contextAreaId ? model.areaById.get(contextAreaId)! : null;
     return (
       <section aria-labelledby="atl-title" className="atl atl--mobile" data-route-content-ready="true">
-        <header className="atl-m-head" data-route-primary-header="true"><h1 id="atl-title">Atlas</h1>{zoomed || anyWork ? <button onClick={reset} type="button">Reset</button> : null}</header>
+        <header className="atl-m-head" data-route-primary-header="true"><h1 id="atl-title">Atlas</h1></header>
         {search}
         <div className="atl-m-row">
           <button aria-expanded={menu === "context"} onClick={() => toggleMenu("context")} type="button">Context{contextOn ? ` · ${selectedContext.length}` : ""}</button>
@@ -399,6 +402,13 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
           <button aria-expanded={menu === "other"} onClick={() => toggleMenu("other")} type="button">Other · {index.other.length}</button>
           {shareButton}
         </div>
+        {zoomed || clear.path || clear.layer ? (
+          <div className="atl-m-row atl-m-actions">
+            {zoomed ? <button onClick={overview} type="button">Atlas overview</button> : null}
+            {clear.path ? <button onClick={clearPath} type="button">Clear path</button> : null}
+            {clear.layer ? <button onClick={clearLayer} type="button">Clear layer</button> : null}
+          </div>
+        ) : null}
         {menus}
         {contextBar}
         {showContextCard && inspector ? focusedSection : null}
@@ -446,7 +456,8 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
         />
         <div className="atl-map__actions">
           {zoomed ? <button className="atl-pill" onClick={overview} type="button">◂ Atlas overview</button> : null}
-          {zoomed || anyWork ? <button className="atl-pill" onClick={reset} type="button">Reset</button> : null}
+          {clear.path ? <button className="atl-pill" onClick={clearPath} type="button">Clear path</button> : null}
+          {clear.layer ? <button className="atl-pill" onClick={clearLayer} type="button">Clear layer</button> : null}
         </div>
         {menu === "authority" || menu === "other" ? menus : null}
         <button aria-expanded={menu === "other"} className="atl-pill atl-pill--other" onClick={() => toggleMenu("other")} type="button">Other publications · {index.other.length}</button>

@@ -103,3 +103,44 @@ export function territoryHasWork(state: Partial<AtlasViewState>): { pins: boolea
     focus: territoryFocusOf(state).kind !== "overview",
   };
 }
+
+/**
+ * Contextual clear actions. Each returns a complete target that changes only what its name says and
+ * keeps everything else (focus, pins, path, context, layer, source dataset) exactly as it was.
+ * There is deliberately no action that clears the whole scene.
+ */
+export type ClearableTarget = TerritoryTarget & { direction?: "forward" | "either" };
+
+/** Return to the geographic overview: leaves focus and any path or shared-ground presentation. Keeps pins, context, layer and dataset. */
+export const overviewTarget = (t: ClearableTarget): ClearableTarget => ({
+  ...t, limb: "", framework: "", node: "", mode: "explore", from: "", to: "", direction: "forward",
+});
+
+/** Remove the research path (mode, endpoints, direction). Keeps focus, pins, context, layer and dataset. */
+export const clearPathTarget = (t: ClearableTarget): ClearableTarget => ({
+  ...t, mode: t.mode === "shared" ? t.mode : "explore", from: "", to: "", direction: "forward",
+});
+
+/** Remove pins, and leave shared-ground mode because it needs pins. Keeps everything else. */
+export const clearPinsTarget = (t: ClearableTarget): ClearableTarget => ({
+  ...t, pins: [], mode: t.mode === "shared" ? "explore" : t.mode,
+});
+
+/** Remove the Program/Product/Asset context only. */
+export const clearContextTarget = (t: ClearableTarget): ClearableTarget => ({ ...t, context: [] });
+
+/** Turn the publisher layer off. */
+export const clearLayerTarget = (t: ClearableTarget): ClearableTarget => ({ ...t, publisher: "" });
+
+/** Which clear actions apply right now. Irrelevant ones are not shown. */
+export function territoryClearActions(state: Partial<AtlasViewState>): { overview: boolean; path: boolean; pins: boolean; context: boolean; layer: boolean } {
+  const work = territoryHasWork(state);
+  const mode = territoryModeOf(state);
+  return {
+    overview: work.focus || mode !== "explore",
+    path: work.path,
+    pins: work.pins,
+    context: work.context,
+    layer: work.layer,
+  };
+}

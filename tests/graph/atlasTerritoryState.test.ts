@@ -102,3 +102,55 @@ test("context and dataset never carry a computed result", () => {
   const url = serializeViewState(atlas(territoryPatch({ context: ["program.stig"], dataset: "0123456789ab", mode: "path", from: "a", to: "b" })) as never);
   assert.deepEqual([...new URLSearchParams(url)].map(([k]) => k).sort(), ["atlasContext", "atlasDataset", "atlasFrom", "atlasResearch", "atlasTo", "view"]);
 });
+
+import { clearContextTarget, clearLayerTarget, clearPathTarget, clearPinsTarget, overviewTarget, territoryClearActions, type ClearableTarget } from "../../src/ui/lib/atlasTerritoryState";
+
+const SCENE: ClearableTarget = {
+  limb: "atlas:LIMB-IMPLEMENTATION", framework: "disa-stig", node: "", pins: ["cmmc-2", "fedramp-rev5"], mode: "path", from: "disa-cci", to: "disa-stig",
+  publisher: "DISA", context: ["asset.server", "product.microsoft-windows", "program.stig"], dataset: "0123456789ab", direction: "either",
+};
+const changed = (a: ClearableTarget, b: ClearableTarget) => (Object.keys({ ...a, ...b }) as (keyof ClearableTarget)[]).filter((k) => JSON.stringify(a[k]) !== JSON.stringify(b[k])).sort();
+
+test("each clear action changes only the fields it names and never the others", () => {
+  assert.deepEqual(changed(SCENE, clearPathTarget(SCENE)), ["direction", "from", "mode", "to"]);
+  assert.deepEqual(changed(SCENE, clearContextTarget(SCENE)), ["context"]);
+  assert.deepEqual(changed(SCENE, clearLayerTarget(SCENE)), ["publisher"]);
+  assert.deepEqual(changed(SCENE, clearPinsTarget(SCENE)), ["pins"]);
+  assert.deepEqual(changed(SCENE, overviewTarget(SCENE)), ["direction", "framework", "from", "limb", "mode", "to"]);
+});
+
+test("Atlas overview keeps pins, context, layer and the source dataset", () => {
+  const t = overviewTarget(SCENE);
+  assert.deepEqual([t.pins, t.context, t.publisher, t.dataset], [SCENE.pins, SCENE.context, SCENE.publisher, SCENE.dataset]);
+  assert.deepEqual([t.limb, t.framework, t.node, t.mode, t.from, t.to], ["", "", "", "explore", "", ""]);
+});
+
+test("Clear path keeps focus, pins, context, layer and dataset", () => {
+  const t = clearPathTarget(SCENE);
+  assert.deepEqual([t.limb, t.framework, t.pins, t.context, t.publisher, t.dataset], [SCENE.limb, SCENE.framework, SCENE.pins, SCENE.context, SCENE.publisher, SCENE.dataset]);
+  assert.deepEqual([t.mode, t.from, t.to], ["explore", "", ""]);
+});
+
+test("Clear pins leaves shared ground because it needs pins, and keeps context, layer and focus", () => {
+  const sharing: ClearableTarget = { ...SCENE, mode: "shared", from: "", to: "" };
+  const t = clearPinsTarget(sharing);
+  assert.deepEqual([t.pins, t.mode], [[], "explore"]);
+  assert.deepEqual([t.limb, t.framework, t.context, t.publisher, t.dataset], [sharing.limb, sharing.framework, sharing.context, sharing.publisher, sharing.dataset]);
+  assert.equal(clearPinsTarget(SCENE).mode, "path", "a path does not depend on pins");
+});
+
+test("Clear context keeps pins, path, focus and layer; Clear layer keeps everything else", () => {
+  const c = clearContextTarget(SCENE);
+  assert.deepEqual([c.pins, c.mode, c.from, c.to, c.limb, c.framework, c.publisher], [SCENE.pins, SCENE.mode, SCENE.from, SCENE.to, SCENE.limb, SCENE.framework, SCENE.publisher]);
+  assert.deepEqual(c.context, []);
+  const l = clearLayerTarget(SCENE);
+  assert.deepEqual([l.pins, l.mode, l.context, l.limb, l.dataset], [SCENE.pins, SCENE.mode, SCENE.context, SCENE.limb, SCENE.dataset]);
+});
+
+test("only relevant clear actions are offered, and there is no clear-everything action", () => {
+  assert.deepEqual(territoryClearActions(atlas()), { overview: false, path: false, pins: false, context: false, layer: false });
+  const full = atlas({ atlasLimb: "atlas:LIMB-IMPLEMENTATION", atlasFramework: "disa-stig", atlasPins: JSON.stringify(["a", "b"]), atlasResearch: "path", atlasFrom: "a", atlasTo: "b", atlasLayer: "publisher:DISA", atlasContext: "program.stig" });
+  assert.deepEqual(territoryClearActions(full), { overview: true, path: true, pins: true, context: true, layer: true });
+  assert.deepEqual(territoryClearActions(atlas({ atlasPins: JSON.stringify(["a", "b"]) })), { overview: false, path: false, pins: true, context: false, layer: false });
+  assert.deepEqual(territoryClearActions(atlas({ atlasLayer: "publisher:DISA" })), { overview: false, path: false, pins: false, context: false, layer: true });
+});

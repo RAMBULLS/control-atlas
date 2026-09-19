@@ -332,7 +332,7 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
     const area = contextAreaId ? model.areaById.get(contextAreaId)! : null;
     return (
       <section aria-labelledby="atl-title" className="atl atl--mobile" data-route-content-ready="true">
-        <header className="atl-m-head"><h1 id="atl-title">Atlas</h1>{zoomed || work.pins || work.layer ? <button onClick={reset} type="button">Reset</button> : null}</header>
+        <header className="atl-m-head" data-route-primary-header="true"><h1 id="atl-title">Atlas</h1>{zoomed || work.pins || work.layer ? <button onClick={reset} type="button">Reset</button> : null}</header>
         {search}
         <div className="atl-m-row">
           <button aria-expanded={menu === "layers"} onClick={() => toggleMenu("layers")} type="button">Layers</button>
@@ -363,7 +363,7 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
 
   return (
     <section aria-labelledby="atl-title" className="atl" data-route-content-ready="true" ref={sheetRef} style={{ ["--atl-offset" as string]: `${offset}px` }}>
-      <header className="atl-top">
+      <header className="atl-top" data-route-primary-header="true">
         <h1 className="atl-mark" id="atl-title">Atlas</h1>
         {search}
         {crumb}

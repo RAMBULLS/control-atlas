@@ -79,7 +79,7 @@ test("explore bootstrap avoids graph JSON until record open", async ({
   expect(graphArtifactUrls(requested)).toEqual([]);
 });
 
-test("expanding an Atlas area uses the semantic network without monolithic graph JSON", async ({
+test("the Atlas territory sheet uses its own small index without monolithic graph JSON", async ({
   page,
 }) => {
   const requested = [];
@@ -91,20 +91,16 @@ test("expanding an Atlas area uses the semantic network without monolithic graph
   await page.goto("/#/atlas");
   await waitForAppReady(page);
   await dismissOnboarding(page);
-  const landscape = page.getByTestId("atlas-area-map");
-  await expect(landscape).toBeVisible();
-  expect(
-    requested.some((url) => url.includes("atlas-network.json")),
-  ).toBeTruthy();
+  const sheet = page.locator(".terr");
+  await expect(sheet).toBeVisible();
+  expect(requested.some((url) => url.includes("atlas-territory"))).toBeTruthy();
+  expect(requested.some((url) => /atlas-network|atlas-spine|atlas-research\//.test(url))).toBe(false);
   expect(graphArtifactUrls(requested)).toEqual([]);
 
-  // Opening a group and then a publication inside it both come out of the same
-  // semantic artifact — neither reaches for the monolithic node and edge JSON.
-  await landscape.getByRole("button", { name: /^Control catalogs/ }).click();
-  await expect(page).toHaveURL(/atlasLensFamily=control-catalogs/);
-  expect(graphArtifactUrls(requested)).toEqual([]);
-
-  await landscape.getByRole("button", { name: /^800-53 / }).first().click();
+  // Opening a territory and then a publication inside it needs no further artifact.
+  await sheet.locator('[data-district="atlas:LIMB-COMPLIANCE"] .district__shape').click();
+  await expect(page).toHaveURL(/atlasLimb=/);
+  await sheet.locator('[data-landmark="nist-800-53"]').click();
   await expect(page).toHaveURL(/atlasFramework=nist-800-53/);
   expect(graphArtifactUrls(requested)).toEqual([]);
 });
@@ -114,7 +110,7 @@ test("Atlas reaches its first usable source map within the local render budget",
 }) => {
   await page.goto("/#/atlas");
   await waitForAppReady(page);
-  await expect(page.getByTestId("atlas-area-map")).toBeVisible();
+  await expect(page.locator(".terr")).toBeVisible();
 
   const firstUsableMs = await page.evaluate(() =>
     Math.round(globalThis.performance.now()),

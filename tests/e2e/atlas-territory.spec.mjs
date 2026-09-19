@@ -36,7 +36,7 @@ test("overview names only reviewed major landmarks and mutes empty territories",
   expect(named).toEqual(expect.arrayContaining(["SP 800-53 Rev. 5", "CSF 2.0", "CMMC 2.0", "DISA STIG", "ATT&CK Enterprise"]));
   expect(named).not.toContain("DISA CCI");
   expect(await page.locator(".district.is-empty").count()).toBe(2);
-  expect(await page.locator(".dname.is-empty").count(), "empty territories show no name at rest").toBe(0);
+  expect(await page.locator(".dname.is-empty").count(), "empty territories are named at rest").toBe(2);
   await expect(page.getByRole("button", { name: /Authority · \d+/ })).toBeVisible();
   await expect(page.getByRole("button", { name: /Other publications · 2/ })).toBeVisible();
   await expect(page.locator(".atl-inspector")).toHaveCount(0);

@@ -111,7 +111,9 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
     }
     return partners.reduce((s, q) => s + (q[0] - p[0]), 0) / partners.length > 0 ? -1 : 1;
   };
-  const showName = (id: string) => (context ? context.has(id) : model.isMajor(id)) || focusAreaId === model.areaOf(id).id || hoverPublication === id || focusPublication === id
+  // With a publication open and little free map beside the inspector, name only what the view is about; the inspector lists the rest.
+  const tight = (!!focusPublication || records.length > 0) && inspectorInset > 0 && size.w - inspectorInset < 720;
+  const showName = (id: string) => (context ? context.has(id) : !tight && model.isMajor(id)) || (!tight && focusAreaId === model.areaOf(id).id) || hoverPublication === id || focusPublication === id
     || pinned.has(id) || active.has(id) || connected.has(id) || recordCatalogs.has(id);
   const labelRect = (id: string, lines = 1): Rect => {
     const p = pos(id); const side = labelSide(id);
@@ -119,7 +121,7 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
     const x0 = side === 1 ? p[0] + 8 * u : p[0] - 8 * u - w;
     return { x0, y0: p[1] - fontPx * 0.75, x1: x0 + w, y1: p[1] - fontPx * 0.75 + h };
   };
-  const nameRects: Rect[] = model.areas.filter((a) => !a.empty || focusAreaId === a.id).map((a) => {
+  const nameRects: Rect[] = model.areas.map((a) => {
     const chars = Math.max(...a.name.lines.map((l) => l.length)); const focused = focusAreaId === a.id;
     const blurbW = a.blurb.length * 12.5 * 0.56 * ut;
     return { x0: a.name.x - 4 * u, y0: a.name.y - 26 * ut, x1: a.name.x + Math.max(chars * 19.5 * ut, focused ? blurbW : 0), y1: a.name.y + (a.name.lines.length - 1) * 27 * ut + (focused ? 26 * ut : 8 * ut) };
@@ -175,13 +177,13 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
       <g className="terr__names">
         {model.areas.map((a) => {
           const shown = focusAreaId === a.id || isHoverDistrict(a.id);
-          if (a.empty && !shown) return null;
+          const rest = a.empty && !shown;
           return (
             <g className={`dname${shown ? " is-shown" : ""}${a.empty ? " is-empty" : ""}`} key={a.id} style={styleFor(a.id)}>
               <text aria-hidden="true" className="dname__text" fontSize={25 * ut} strokeWidth={4 * ut} x={a.name.x} y={a.name.y}>
                 {a.name.lines.map((l, i) => <tspan dy={i ? 27 * ut : 0} key={l} x={a.name.x}>{l}</tspan>)}
               </text>
-              <text aria-hidden="true" className="dname__blurb" fontSize={12.5 * ut} strokeWidth={4 * ut} x={a.name.x} y={a.name.y + (a.name.lines.length - 1) * 27 * ut + 21 * ut}>{a.blurb}</text>
+              <text aria-hidden="true" className="dname__blurb" fontSize={12.5 * ut} strokeWidth={4 * ut} x={a.name.x} y={a.name.y + (a.name.lines.length - 1) * 27 * ut + 21 * ut}>{rest ? "No publications placed yet" : a.blurb}</text>
             </g>
           );
         })}
@@ -246,7 +248,7 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
         {model.publications.map((l) => {
           const p = pos(l.id); const isActive = active.has(l.id); const major = model.isMajor(l.id);
           const matched = !!context && context.has(l.id);
-          const dim = (dimming && !isActive) || (publisherOn && l.publisher !== publisher) || (!!context && !matched);
+          const dim = (dimming && !isActive) || (publisherOn && l.publisher !== publisher) || (!!context && !matched && !connected.has(l.id) && !pinned.has(l.id));
           const isPinned = pinned.has(l.id); const selected = focusPublication === l.id; const hov = hoverPublication === l.id;
           const label = showName(l.id) && (!dim || hov); const side = labelSide(l.id); const lift = selected || hov;
           const areaId = l.area;
@@ -272,7 +274,7 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
                 <>
                   <text className="lm__name" fontSize={(major || lift ? 14.5 : 13.5) * ut} strokeWidth={4 * ut} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 4.5 * u}>{model.alias(l.id)}</text>
                   {matched && !recordCatalogs.has(l.id) ? <text className="lm__type lm__count" fontSize={11.5 * ut} strokeWidth={4 * ut} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 19 * u}>{context!.get(l.id)!.records.toLocaleString()} matching {context!.get(l.id)!.records === 1 ? "record" : "records"}</text>
-                    : (!recordCatalogs.has(l.id) && (lift || (focusAreaId === areaId && !isActive))) ? <text className="lm__type" fontSize={11.5 * ut} strokeWidth={4 * ut} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 19 * u}>{l.kind}</text> : null}
+                    : (!recordCatalogs.has(l.id) && !tight && (lift || (focusAreaId === areaId && !isActive))) ? <text className="lm__type" fontSize={11.5 * ut} strokeWidth={4 * ut} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 19 * u}>{l.kind}</text> : null}
                 </>
               ) : null}
               {isPinned ? <g className="pin-anim"><path className="pin" d={PIN} transform={`translate(${p[0]} ${p[1] - 9 * u}) scale(${u * 0.95})`} /></g> : null}
@@ -315,7 +317,7 @@ export function MiniMap(props: { model: TerritoryModel; focusAreaId: string | nu
           role={onPick ? "button" : undefined} style={styleFor(a.id)} tabIndex={onPick ? 0 : undefined}
         />
       ))}
-      {large ? model.areas.filter((a) => !a.empty).map((a) => <text aria-hidden="true" className="mini__name" key={a.id} style={styleFor(a.id)} x={a.name.x + 30} y={a.name.y}>{a.name.lines.join(" ")}</text>) : null}
+      {large ? model.areas.map((a) => <text aria-hidden="true" className={`mini__name${a.empty ? " is-empty" : ""}`} key={a.id} style={styleFor(a.id)} x={a.name.x + 30} y={a.name.y}>{a.name.lines.join(" ")}</text>) : null}
       {[...active].map((id) => { const p = model.position(id); return <circle className="mini__pt" cx={p[0]} cy={p[1]} key={id} r={18} />; })}
     </svg>
   );

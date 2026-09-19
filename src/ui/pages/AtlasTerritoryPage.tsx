@@ -244,7 +244,9 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
         return { type: "record" as const, id: doc.id, label: doc.item_id || id.primary, sub: `Record · ${model.publicationById.has(doc.catalog_id) ? model.alias(doc.catalog_id) : doc.catalog_name || "Publication"}${doc.title ? ` · ${doc.title}` : ""}` };
       });
     }
-    setHits([...records.slice(0, 1), ...publications, ...records.slice(1)].slice(0, 7));
+    // A name the query matches at a word boundary is a publication lookup; anything else leads with the best record.
+    const byName = publications.length > 0 && publications[0].strong;
+    setHits((byName ? [...publications, ...records] : [...records.slice(0, 1), ...publications, ...records.slice(1)]).slice(0, 7));
   }, [query, model, libraryReady, bundle]);
 
   const pick = (hit: AnyHit) => {
@@ -329,6 +331,7 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
   const pinControl = (id: string) => <PinButton full={pins.length >= MAX_PINS} label={label(id)} onToggle={() => togglePin(id)} pinned={pins.includes(id)} />;
   const getSource = (id: string) => bundle.runtime.getSource(id);
   const focusInfo = focusRecord ? describe(focusRecord) : null;
+  const recordMissing = !!focusRecord && !focusInfo && libraryReady && research.status === "ready";
   const inspector = evidenceEdge ? (
     <EvidenceCard edge={evidenceEdge} getSource={getSource} onBack={() => setEdgeId("")} onNavigate={onNavigate} records={research.records} />
   ) : selectedRoute ? <RouteCard model={model} route={selectedRoute} />
@@ -342,7 +345,7 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
         openRecord={<AppLink onNavigate={onNavigate} patch={{ node: focusRecord }} view="library-detail">Open the full record</AppLink>}
         notice={research.failed ? <ResearchNotice research={research} what="Connection data" /> : null}
         fullList={<AppLink onNavigate={onNavigate} patch={{ node: focusRecord, relationshipView: "list" }} view="atlas-map">Full connection list</AppLink>}
-        label={focusInfo?.label || recordLabel(research.records, focusRecord)} loading={!focusInfo} onTrace={() => go({ node: focusRecord, pins, publisher, mode: "upstream", from: focusRecord })}
+        label={focusInfo?.label || recordLabel(research.records, focusRecord)} loading={!focusInfo && !recordMissing} missing={recordMissing} onTrace={() => go({ node: focusRecord, pins, publisher, mode: "upstream", from: focusRecord })}
         pin={pinControl(focusRecord)} publication={focusInfo?.publication || ""} title={focusInfo?.title || ""} tracing={false} />
     ) : focusPublication ? (
       <PublicationCard id={focusPublication} model={model} onNavigate={onNavigate} onRoute={actions.selectRoute} onShowAll={() => setShowAll(true)}
@@ -449,16 +452,18 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
         {menu === "layers" || menu === "help" || menu === "context" ? menus : null}
       </header>
       {contextBar}
-      <div className="atl-map" ref={wrapRef}>
-        <TerritoryMap
-          actions={actions} active={active} authority={index.authority} focusAreaId={focusAreaId} focusPublication={focusPublication} hops={hops} inspectorInset={inspectorInset} model={model}
-          context={contextOn ? contextResult.publications : null} pins={pubPins} publisher={publisher} records={mapRecords} revealed={sharing || selectedRoute || tracing ? [] : reveal.visible} selectedRouteKey={selectedRoute?.key || null} sharedLines={sharedLines} size={size}
-        />
+      {zoomed || clear.path || clear.layer ? (
         <div className="atl-map__actions">
           {zoomed ? <button className="atl-pill" onClick={overview} type="button">◂ Atlas overview</button> : null}
           {clear.path ? <button className="atl-pill" onClick={clearPath} type="button">Clear path</button> : null}
           {clear.layer ? <button className="atl-pill" onClick={clearLayer} type="button">Clear layer</button> : null}
         </div>
+      ) : null}
+      <div className="atl-map" ref={wrapRef}>
+        <TerritoryMap
+          actions={actions} active={active} authority={index.authority} focusAreaId={focusAreaId} focusPublication={focusPublication} hops={hops} inspectorInset={inspectorInset} model={model}
+          context={contextOn ? contextResult.publications : null} pins={pubPins} publisher={publisher} records={mapRecords} revealed={sharing || selectedRoute || tracing ? [] : reveal.visible} selectedRouteKey={selectedRoute?.key || null} sharedLines={sharedLines} size={size}
+        />
         {menu === "authority" || menu === "other" ? menus : null}
         <button aria-expanded={menu === "other"} className="atl-pill atl-pill--other" onClick={() => toggleMenu("other")} type="button">Other publications · {index.other.length}</button>
         {inspectorOpen && inspector ? (

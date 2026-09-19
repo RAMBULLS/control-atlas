@@ -93,6 +93,8 @@ export type ViewState =
       atlasLanding: string;
       /** The group opened within the current lens, if any. */
       atlasLensFamily: string;
+      /** Territory map layer: "" or "publisher". */
+      atlasLayer: string;
       relationshipView: string;
       relationshipType: string;
       provenance: string;
@@ -272,6 +274,7 @@ function atlasMapState(): Extract<ViewState, { view: "atlas-map" }> {
     atlasPivotTrail: "",
     atlasLanding: "",
     atlasLensFamily: "",
+    atlasLayer: "",
     relationshipView: "",
     relationshipType: "",
     provenance: "",
@@ -378,6 +381,7 @@ export function parseViewState(search: string): ViewState {
       // existed still opens on a survey rather than on nothing.
       atlasLanding: normalizeAtlasLanding(params.get("atlasLanding") || ""),
       atlasLensFamily: params.get("atlasLensFamily") || "",
+      atlasLayer: params.get("atlasLayer") === "publisher" ? "publisher" : "",
       // Empty means "the default for this state" — Connections when a record
       // is focused, the board otherwise (AtlasMapPage.atlasView decides). It is
       // deliberately not forced to "path": serializing a default the user never
@@ -787,6 +791,7 @@ export function serializeViewState(state: ViewState): string {
     setIfValue(params, "atlasPivotTrail", state.atlasPivotTrail);
     setIfValue(params, "atlasLanding", state.atlasLanding);
     setIfValue(params, "atlasLensFamily", state.atlasLensFamily);
+    if (state.atlasLayer === "publisher") params.set("atlasLayer", "publisher");
     if (state.relationshipView === "path") {
       params.set("relationshipView", "path");
     } else if (state.relationshipView === "map") {
@@ -942,6 +947,7 @@ export type AtlasMapUrlOptions = {
   atlasPivotTrail?: string;
   atlasLanding?: string;
   atlasLensFamily?: string;
+  atlasLayer?: string;
   sourceView?: "default" | "purpose" | "rmf";
   relationshipView?: RelationshipViewMode;
   relationshipType?: string;
@@ -985,6 +991,7 @@ export function buildAtlasMapUrl(options: AtlasMapUrlOptions = {}): string {
     atlasPivotTrail: options.atlasPivotTrail || "",
     atlasLanding: normalizeAtlasLanding(options.atlasLanding || ""),
     atlasLensFamily: options.atlasLensFamily || "",
+    atlasLayer: options.atlasLayer === "publisher" ? "publisher" : "",
     sourceView: options.sourceView || "default",
     relationshipView: options.relationshipView || "",
     relationshipType: options.relationshipType || "",

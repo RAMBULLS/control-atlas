@@ -1,4 +1,5 @@
 import { createFederalGraphRuntime } from "../../app/runtime.mjs";
+import { atlasSurfaceFor } from "./atlasTerritoryState";
 import { atlasNeighborhoodShardId } from "../../app/atlas-neighborhood.mjs";
 import { RUNTIME_CACHE_VERSION } from "../../shared/runtime-cache-version.mjs";
 import type {
@@ -303,6 +304,7 @@ export type RuntimeArtifactPlan = {
 function isAtlasOrientationState(state: ViewState) {
   return (
     state.view === "atlas-map" &&
+    atlasSurfaceFor(state) === "classic" &&
     !state.atlasResearch &&
     !state.node &&
     (!state.atlasAxis ||
@@ -364,6 +366,13 @@ export function runtimeArtifactPlan(
     state.node !== "foundation" &&
     state.node !== "landscape" &&
     !state.node.startsWith("hierarchy:");
+  // The territory sheet draws from its own small index. It needs neither the 11 MB relationship
+  // network nor the hierarchy spine; a focused record adds only its own neighborhood shard.
+  if (state.view === "atlas-map" && atlasSurfaceFor(state) === "territory") {
+    return { atlasNetwork: false, atlasSpine: false, catalogBootstrap: true, catalogId: "", catalogFamily: "",
+      commons: false, fullGraph: false, librarySearch: true, recordNodeId: atlasRecordFocused ? state.node : "",
+      registries: false, sources: atlasRecordFocused };
+  }
   return {
     atlasNetwork: state.view === "atlas-map",
     atlasSpine: state.view === "atlas-map" || state.view === "library-detail",

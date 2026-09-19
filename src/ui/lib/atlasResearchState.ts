@@ -1,6 +1,6 @@
 /** Bounded, shareable research state. This is navigation state, never a mapping. */
 export type AtlasResearchState = {
-  atlasResearch: "" | "path" | "shared";
+  atlasResearch: "" | "path" | "shared" | "upstream";
   atlasPins: string;
   atlasFrom: string;
   atlasTo: string;
@@ -27,7 +27,7 @@ export function normalizeResearchState(input: Partial<Record<keyof AtlasResearch
   const from = researchId(input.atlasFrom);
   const to = researchId(input.atlasTo);
   return {
-    atlasResearch: input.atlasResearch === "shared" ? "shared" : input.atlasResearch === "path" ? "path" : "",
+    atlasResearch: input.atlasResearch === "shared" ? "shared" : input.atlasResearch === "path" ? "path" : input.atlasResearch === "upstream" ? "upstream" : "",
     atlasPins: pins.length ? JSON.stringify(pins) : "",
     atlasFrom: from,
     atlasTo: to,

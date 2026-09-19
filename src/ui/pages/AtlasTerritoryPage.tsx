@@ -385,7 +385,7 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
   const crumbLabel = evidenceEdge ? "Why connected" : selectedRoute ? "Published connection" : sharing || recordShared ? "Shared ground" : tracing ? "Research path" : focusRecord ? label(focusRecord) : undefined;
   const crumbPublication = focusPublication || (focusRecord && isPublication(focusPublicationOfRecord) ? focusPublicationOfRecord : null);
   const crumb = <Breadcrumb areaId={contextAreaId} label={crumbLabel} model={model} publicationId={crumbPublication} />;
-  const search = <SearchBox hits={hits} noMatch={noMatch} onClose={() => { setQuery(""); setNoMatch(""); }} onNavigate={onNavigate} onPick={pick} onQuery={(value) => { setNoMatch(""); setQuery(value); }} onSubmit={() => submitSearch()} open={query.trim().length >= 2} query={query} ready={libraryReady} />;
+  const search = <SearchBox placeholder={narrow ? "Search, e.g. V-205646" : undefined} hits={hits} noMatch={noMatch} onClose={() => { setQuery(""); setNoMatch(""); }} onNavigate={onNavigate} onPick={pick} onQuery={(value) => { setNoMatch(""); setQuery(value); }} onSubmit={() => submitSearch()} open={query.trim().length >= 2} query={query} ready={libraryReady} />;
 
   const focusedSection = inspector ? <section aria-labelledby="atl-focus-h" className="atl-m-sec" id="atl-focus" ref={focusRef} tabIndex={-1}><h2 id="atl-focus-h">{showContextCard ? "Context results" : "Focused"}</h2>{inspector}</section> : null;
 

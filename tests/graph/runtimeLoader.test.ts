@@ -160,8 +160,8 @@ test("route bootstrap loads only the smallest faithful artifact scope", () => {
   assert.equal(atlasLanding.atlasNetwork, false);
   assert.equal(
     atlasLanding.librarySearch,
-    true,
-    "the visible Atlas search needs the complete compact search corpus",
+    false,
+    "the territory sheet loads record search only when the reader reaches for the search box",
   );
   assert.equal(atlasLanding.fullGraph, false);
 

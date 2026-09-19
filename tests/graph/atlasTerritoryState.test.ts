@@ -72,9 +72,16 @@ test("layer and pin changes do not enter the route transition scope", async () =
 test("the territory sheet skips the relationship network and hierarchy; classic views still load them", () => {
   const overview = runtimeArtifactPlan(atlas() as never);
   assert.deepEqual([overview.atlasNetwork, overview.atlasSpine, overview.fullGraph, overview.recordNodeId], [false, false, false, ""]);
-  assert.equal(overview.librarySearch, true);
+  assert.equal(overview.librarySearch, false, "record search shards load only when the reader reaches for search");
+  assert.equal(runtimeArtifactPlan(atlas() as never, { librarySearchRequested: true }).librarySearch, true);
   const record = runtimeArtifactPlan(atlas({ node: "disa-stig:V-205646" }) as never);
   assert.deepEqual([record.atlasNetwork, record.recordNodeId, record.sources], [false, "disa-stig:V-205646", true]);
   const classic = runtimeArtifactPlan(atlas({ atlasAxis: "framework" }) as never);
   assert.deepEqual([classic.atlasNetwork, classic.atlasSpine], [true, true]);
+});
+
+test("entering research inside the app changes the runtime scope, so record sources load", async () => {
+  const app = await import("node:fs").then((fs) => fs.readFileSync("src/ui/App.tsx", "utf8"));
+  assert.match(app, /territory:\$\{viewState\.node \|\| "none"\}:\$\{viewState\.atlasResearch \? "research" : ""\}/);
+  assert.equal(runtimeArtifactPlan(atlas({ atlasResearch: "upstream", atlasFrom: "disa-stig:V-205646" }) as never).sources, true);
 });

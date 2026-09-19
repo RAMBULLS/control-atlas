@@ -34,6 +34,7 @@ export function SearchBox(props: {
     <div className="atl-search" role="search">
       <label className="atl-sr" htmlFor="atlas-search">Search records and publications</label>
       <input
+        onFocus={() => window.dispatchEvent(new Event("control-atlas:request-search-index"))}
         aria-controls="atlas-results" aria-expanded={open} aria-haspopup="listbox" autoComplete="off" id="atlas-search"
         onChange={(e) => onQuery(e.target.value)}
         onKeyDown={(e) => { if (e.key === "Escape") onClose(); if (e.key === "Enter") { e.preventDefault(); props.onSubmit(); } }}

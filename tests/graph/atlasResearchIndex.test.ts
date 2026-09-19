@@ -94,7 +94,7 @@ test("ordinary Atlas URLs never acquire research fields or load its graph", () =
   const research=normalizeViewState("atlas-map",{view:"atlas-map",atlasResearch:"path",atlasBaseline:"fedramp-rev5:HIGH",atlasRmfStep:"RMF-SELECT"});
   assert.equal(requiresFullGraph(research),false);
   const plan=runtimeArtifactPlan(research);
-  assert.equal(plan.fullGraph,false);assert.equal(plan.atlasNetwork,false);assert.equal(plan.catalogId,"");assert.equal(plan.atlasSpine,false);assert.equal(plan.librarySearch,true,"the territory sheet search needs the small compact index");assert.equal(plan.sources,true);
+  assert.equal(plan.fullGraph,false);assert.equal(plan.atlasNetwork,false);assert.equal(plan.catalogId,"");assert.equal(plan.atlasSpine,false);assert.equal(plan.librarySearch,true,"record-level research shows record search");assert.equal(plan.sources,true);
 });
 
 

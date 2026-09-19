@@ -185,6 +185,11 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
     : focusPublication ? model.areaOf(focusPublication).id
       : focusPublicationOfRecord && isPublication(focusPublicationOfRecord) ? model.areaOf(focusPublicationOfRecord).id : null;
 
+  const tracing = (mode === "upstream" || (mode === "path" && !pubPath)) && !!target.from;
+  // Where the reader is, for the breadcrumb and the phone layout. The map itself keeps its own focus rules.
+  const contextCatalog = focusPublication || (tracing || recordShared ? catalogOfRecord(target.from || recordPins[0] || "") : "") || (selectedRoute ? selectedRoute.a : "") || (sharing ? pubPins[0] : "");
+  const contextAreaId = focusAreaId || (contextCatalog && isPublication(contextCatalog) ? model.areaOf(contextCatalog).id : null);
+
   const active = useMemo(() => {
     const s = new Set<string>();
     if (selectedRoute) { s.add(selectedRoute.a); s.add(selectedRoute.b); }
@@ -198,7 +203,6 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
     : []), [sharing, ground, model, pubPins.join("|")]);
 
   // ---- what the details panel shows ----
-  const tracing = (mode === "upstream" || (mode === "path" && !pubPath)) && !!target.from;
   const cardKey = evidenceEdge ? `edge:${evidenceEdge.id}` : selectedRoute ? `route:${selectedRoute.key}` : sharing ? "shared" : recordShared ? "rshared"
     : tracing ? `trail:${target.from}` : focusRecord ? `rec:${focusRecord}` : focusPublication ? `pub:${focusPublication}` : focusAreaId ? `area:${focusAreaId}` : "";
   const inspectorOpen = !!cardKey && closedFor !== cardKey;
@@ -321,11 +325,11 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
   );
   const crumbLabel = evidenceEdge ? "Why connected" : selectedRoute ? "Published connection" : sharing || recordShared ? "Shared ground" : tracing ? "Research path" : focusRecord ? label(focusRecord) : undefined;
   const crumbPublication = focusPublication || (focusRecord && isPublication(focusPublicationOfRecord) ? focusPublicationOfRecord : null);
-  const crumb = <Breadcrumb areaId={focusAreaId} label={crumbLabel} model={model} publicationId={crumbPublication} />;
+  const crumb = <Breadcrumb areaId={contextAreaId} label={crumbLabel} model={model} publicationId={crumbPublication} />;
   const search = <SearchBox hits={hits} noMatch={noMatch} onClose={() => { setQuery(""); setNoMatch(""); }} onNavigate={onNavigate} onPick={pick} onQuery={(value) => { setNoMatch(""); setQuery(value); }} onSubmit={submitSearch} open={query.trim().length >= 2} query={query} ready={libraryReady} />;
 
   if (narrow) {
-    const area = focusAreaId ? model.areaById.get(focusAreaId)! : null;
+    const area = contextAreaId ? model.areaById.get(contextAreaId)! : null;
     return (
       <section aria-labelledby="atl-title" className="atl atl--mobile" data-route-content-ready="true">
         <header className="atl-m-head"><h1 id="atl-title">Atlas</h1>{zoomed || work.pins || work.layer ? <button onClick={reset} type="button">Reset</button> : null}</header>
@@ -339,7 +343,7 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
         <section aria-labelledby="atl-where" className="atl-m-sec">
           <h2 id="atl-where">{area ? `Current area · ${area.label}` : "Territories"}</h2>
           <div className={`atl-m-district${area ? "" : " atl-m-district--rest"}`}>
-            <MiniMap active={active} focusAreaId={focusAreaId} large={!area} model={model} onPick={(id) => actions.selectDistrict(id)} />
+            <MiniMap active={active} focusAreaId={contextAreaId} large={!area} model={model} onPick={(id) => actions.selectDistrict(id)} />
             <div>{area ? <p>{area.blurb}</p> : <p>Pick a territory, or search for something you know.</p>}{crumb}</div>
           </div>
           {!area ? <ul className="atl-list">{model.areas.map((a) => <li key={a.id}><button onClick={() => actions.selectDistrict(a.id)} type="button"><b>{a.label}</b><small>{a.empty ? "No publications placed yet" : a.blurb}</small></button></li>)}</ul> : null}

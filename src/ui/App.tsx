@@ -275,8 +275,16 @@ export function App() {
   const [glossaryFocusTermId, setGlossaryFocusTermId] = useState("");
   const [searchOverlayOpen, setSearchOverlayOpen] = useState(false);
   const [graphRequested, setGraphRequested] = useState(false);
+  const [searchRequested, setSearchRequested] = useState(false);
   const [routeRecovery, setRouteRecovery] = useState("");
   const [chromeReady, setChromeReady] = useState(false);
+
+  // The territory sheet asks for record search only when the reader reaches for the search box.
+  useEffect(() => {
+    const request = () => setSearchRequested(true);
+    window.addEventListener("control-atlas:request-search-index", request);
+    return () => window.removeEventListener("control-atlas:request-search-index", request);
+  }, []);
 
   const closeOverlays = useCallback(() => {
     window.dispatchEvent(new Event(CLOSE_OVERLAYS_EVENT));
@@ -331,7 +339,7 @@ export function App() {
     viewState.view === "library-detail"
       ? `${viewState.view}:${viewState.node}`
       : viewState.view === "atlas-map"
-        ? `${viewState.view}:${atlasSurfaceFor(viewState) === "territory" ? `territory:${viewState.node || "none"}` : "map"}:${viewState.atlasAxis || "landing"}:${viewState.atlasFramework || "none"}:${viewState.atlasBenchmark || "none"}`
+        ? `${viewState.view}:${atlasSurfaceFor(viewState) === "territory" ? `territory:${viewState.node || "none"}:${viewState.atlasResearch ? "research" : ""}` : "map"}:${viewState.atlasAxis || "landing"}:${viewState.atlasFramework || "none"}:${viewState.atlasBenchmark || "none"}`
       : viewState.view === "catalog-detail"
         ? `${viewState.view}:${viewState.catalog}:${viewState.family || "all"}`
       : viewState.view === "matrix"
@@ -377,6 +385,7 @@ export function App() {
           state: runtimeState,
           graphRequested,
           searchOverlayOpen,
+          librarySearchRequested: searchRequested,
           signal: loadController.signal,
           onSearchReady: (result) => {
             if (!cancelled) {
@@ -453,6 +462,7 @@ export function App() {
     loadAttempt,
     runtimeScopeKey,
     searchOverlayOpen,
+    searchRequested,
   ]);
 
   function retryLoad() {
@@ -665,7 +675,7 @@ export function App() {
   const hasRequiredRouteArtifacts =
     viewState.view !== "atlas-map" || atlasSurfaceFor(viewState) === "territory" || Boolean(bundle?.atlasSpine);
   const hasRequiredSearchArtifacts =
-    viewState.view !== "atlas-map" || Boolean(viewState.atlasResearch) || Boolean(bundle?.librarySearchReady);
+    viewState.view !== "atlas-map" || atlasSurfaceFor(viewState) === "territory" || Boolean(bundle?.librarySearchReady);
   const readyState = loadError
     ? "error"
     : canRenderWithoutBundle && viewState.view !== "search"

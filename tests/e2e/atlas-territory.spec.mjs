@@ -268,3 +268,13 @@ test("the record trail has no serious accessibility violations", async ({ page }
   const results = await new AxeBuilder({ page }).include(".atl").analyze();
   expect(results.violations.filter((v) => ["serious", "critical"].includes(v.impact))).toEqual([]);
 });
+
+test("evidence names its published source even when research is entered from inside the app", async ({ page }) => {
+  await open(page);
+  await page.evaluate((from) => { globalThis.location.hash = `#/atlas?atlasResearch=upstream&atlasFrom=${encodeURIComponent(from)}`; }, START);
+  await expect(page.locator(".atl-steps")).toContainText(endLabel, { timeout: 90000 });
+  await page.locator(".atl-steps__seg").last().click();
+  await expect(page.locator(".atl-inspector")).toContainText("Why connected");
+  await expect(page.locator(".atl-inspector")).not.toContainText("Source details unavailable");
+  await expect(page.locator(".atl-inspector").getByRole("link", { name: "View source details" })).toBeVisible();
+});

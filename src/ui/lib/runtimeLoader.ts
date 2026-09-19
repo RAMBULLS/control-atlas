@@ -1,4 +1,5 @@
 import { createFederalGraphRuntime } from "../../app/runtime.mjs";
+import { atlasSurfaceFor } from "./atlasTerritoryState";
 import { atlasNeighborhoodShardId } from "../../app/atlas-neighborhood.mjs";
 import { RUNTIME_CACHE_VERSION } from "../../shared/runtime-cache-version.mjs";
 import type {
@@ -303,6 +304,7 @@ export type RuntimeArtifactPlan = {
 function isAtlasOrientationState(state: ViewState) {
   return (
     state.view === "atlas-map" &&
+    atlasSurfaceFor(state) === "classic" &&
     !state.node &&
     (!state.atlasAxis ||
       (state.atlasAxis === "landscape" && !state.atlasFramework))
@@ -314,6 +316,8 @@ export function runtimeArtifactPlan(
   options: {
     graphRequested?: boolean;
     searchOverlayOpen?: boolean;
+    /** The territory sheet asks for record search only when the reader reaches for it. */
+    librarySearchRequested?: boolean;
   } = {},
 ): RuntimeArtifactPlan {
   // Templates now lands directly on the document browser, so every visit needs
@@ -355,6 +359,13 @@ export function runtimeArtifactPlan(
     state.node !== "foundation" &&
     state.node !== "landscape" &&
     !state.node.startsWith("hierarchy:");
+  // The territory sheet draws from its own small index. It needs neither the 11 MB relationship
+  // network nor the hierarchy spine; a focused record adds only its own neighborhood shard.
+  if (state.view === "atlas-map" && atlasSurfaceFor(state) === "territory") {
+    return { atlasNetwork: false, atlasSpine: false, catalogBootstrap: true, catalogId: "", catalogFamily: "",
+      commons: false, fullGraph: false, librarySearch: atlasRecordFocused || Boolean(state.atlasResearch) || Boolean(options.librarySearchRequested) || Boolean(options.searchOverlayOpen), recordNodeId: atlasRecordFocused ? state.node : "",
+      registries: false, sources: atlasRecordFocused || Boolean(state.atlasResearch) };
+  }
   return {
     atlasNetwork: state.view === "atlas-map",
     atlasSpine: state.view === "atlas-map" || state.view === "library-detail",
@@ -1332,6 +1343,7 @@ export async function loadRuntimeDatasetStaged(handlers: {
   state: ViewState;
   graphRequested?: boolean;
   searchOverlayOpen?: boolean;
+  librarySearchRequested?: boolean;
   signal?: AbortSignal;
 }) {
   try {
@@ -1339,6 +1351,7 @@ export async function loadRuntimeDatasetStaged(handlers: {
     const plan = runtimeArtifactPlan(handlers.state, {
       graphRequested: handlers.graphRequested,
       searchOverlayOpen: handlers.searchOverlayOpen,
+      librarySearchRequested: handlers.librarySearchRequested,
     });
     if (plan.catalogId) {
       handlers.onSearchReady(await loadCatalogShellPhase(plan));

@@ -104,3 +104,17 @@ test('resource discovery tags share the compact record treatment', async ({ page
   await expect(page.locator('[data-discovery-tags]')).toHaveCount(1);
   await captureReviewImage(page.locator('.ca-record-tags'), 'resource-detail-mobile-tags.png');
 });
+
+for (const width of [375, 1440]) {
+  test(`Atlas research review evidence at ${width}`, async ({ page }) => {
+    await openStableWorkspace(page, '#/atlas?atlasResearch=path&atlasPins=%5B%22disa-stig%3AV-205646%22%2C%22nist-800-53%3AIA-5.2%22%5D&atlasFrom=disa-stig%3AV-205646&atlasTo=nist-800-53%3AIA-5.2&atlasHops=2', { width, height: width === 375 ? 844 : 1100 });
+    await waitForAppReady(page);
+    await dismissOnboarding(page);
+    await expect(page.locator('.atl-steps')).toContainText('IA-5.2', { timeout: 60000 });
+    await captureReviewImage(page, `atlas-research-${width}.png`);
+    await captureReviewImage(page.locator('.atl-steps'), `atlas-research-path-${width}.png`);
+    await page.locator('.atl-steps__seg').last().click();
+    await expect(page.locator('.atl-card').first()).toContainText('Why connected');
+    await captureReviewImage(page.locator('.atl-card').first(), `atlas-research-evidence-${width}.png`);
+  });
+}

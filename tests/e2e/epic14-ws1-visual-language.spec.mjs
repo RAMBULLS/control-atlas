@@ -68,40 +68,30 @@ test("WS1 decorative surfaces resolve to one teal accent", async ({ page }) => {
   expect(new Set(cardAccentColors).size).toBe(1);
 });
 
-test("WS1 Atlas exposes publisher ecosystems and authorities as named, counted cells", async ({ page }) => {
+test("WS1 Atlas names every publication with its publisher and counts its authorities", async ({ page }) => {
   test.setTimeout(120_000);
-  await gotoApp(page, "/#/atlas?atlasLanding=publishers");
+  await gotoApp(page, "/#/atlas");
   await waitForAppReady(page, { allowPartial: true });
 
-  const map = page.getByTestId("atlas-area-map");
+  const map = page.locator(".terr");
   await expect(map).toBeVisible({ timeout: 60_000 });
 
-  // Every publisher is a cell whose area is how many frameworks it issues —
-  // a count that is the same unit for all eight, unlike their record totals.
-  await expect(map.locator("button.atlas-area__cell")).toHaveCount(8);
-  const labels = await map.locator("button.atlas-area__cell").evaluateAll(
-    (cells) => cells.map((cell) => (cell.getAttribute("title") || "").trim()),
-  );
-  for (const publisher of ["NIST", "DISA", "MITRE", "FedRAMP", "CDAO", "DoD", "DoD CIO", "ISOO"]) {
-    expect(
-      labels.some((title) => title.startsWith(`${publisher} —`)),
-      `${publisher} cell`,
-    ).toBe(true);
+  // Every publication is a landmark that states its name, publisher and territory
+  // to assistive technology and never depends on hover.
+  const labels = await map.locator(".lm").evaluateAll((els) => els.map((el) => el.getAttribute("aria-label") || ""));
+  expect(labels).toHaveLength(28);
+  for (const label of labels) expect(label).toMatch(/, .+, .+, .+ territory/);
+  for (const publisher of ["NIST", "DISA", "MITRE", "FedRAMP"]) {
+    expect(labels.some((label) => label.includes(`, ${publisher}`)) || labels.some((label) => label.includes(publisher)), `${publisher} landmark`).toBe(true);
   }
-  // Named and counted, never hover-only.
-  for (const title of labels) expect(title).toMatch(/— \d+ frameworks?$/);
 
-  // The authority landmarks are obligations rather than publishers and nobody
-  // crosswalks to them, so they are named beneath the map instead of drawn in
-  // it. They have never been openable, and still are not.
-  const aside = page.locator(".atlas-mapcol__aside");
-  await expect(aside.first()).toContainText("Law and policy");
-  const landmarks = await aside.locator("em").allTextContents();
-  for (const landmark of ["Statutes", "Regulations & clauses", "Policy & directives"]) {
-    expect(landmarks.some((entry) => entry.startsWith(landmark)), landmark).toBe(true);
-  }
-  await expect(aside.locator("em")).toHaveCount(4);
-  await expect(aside.locator("button")).toHaveCount(0);
+  // Authority documents are obligations, not publishers: counted, listed, never openable as a place.
+  const authority = page.getByRole("button", { name: /^Authority · \d+$/ });
+  await expect(authority).toBeVisible();
+  await authority.click();
+  const list = page.getByRole("region", { name: "Authority documents" });
+  await expect(list).toContainText("no routes lead to them");
+  await expect(list.locator("button")).toHaveCount(0);
 });
 
 test("WS1 no palette token lands in the purple range Orbital forbids", async ({ page }) => {

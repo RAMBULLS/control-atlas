@@ -61,155 +61,19 @@ function column(page, key) {
   return map(page).locator(`.atlas-decomp__column[data-column="${key}"]`);
 }
 
-test("Atlas opens as a labelled decomposition map, not an unlabelled canvas", async ({ page }) => {
-  await openAtlas(page);
-
-  await expect(page.locator("main")).toHaveCount(1);
-  await expect(page.getByRole("heading", { name: "Atlas", level: 1 })).toBeVisible();
-  await expect(page.getByText("THE WHOLE LANDSCAPE", { exact: true })).toBeVisible();
-  await expect(page.getByRole("searchbox", { name: "Jump to a record" })).toBeVisible();
-
-  const atlas = map(page);
-  await expect(atlas).toHaveAttribute("data-scope-level", "ecosystem");
-  // No canvas: the map is DOM, so every node is readable and focusable.
-  await expect(atlas.locator("canvas")).toHaveCount(0);
-
-  // Inside a publisher the first column is that publisher's publications.
-  // Every one of NIST's fifteen opens; none is a bounded label.
-  const areas = column(page, "publication");
-  await expect(areas).toHaveAttribute("data-row-count", "15");
-  await expect(areas.getByRole("button")).toHaveCount(15);
-
-  // Every visible row carries a name and a count — nothing is hover-only.
-  for (const row of await areas.locator(".atlas-decomp__node").all()) {
-    await expect(row.locator(".atlas-decomp__label")).not.toBeEmpty();
-    await expect(row.locator(".atlas-decomp__meta")).not.toBeEmpty();
-  }
-});
-
-test("FedRAMP publications expose active and historical lifecycle state", async ({ page }) => {
-  await openAtlas(page);
-  await column(page, "area").getByRole("button", { name: /^FedRAMP/ }).click();
-  const publications = column(page, "publication");
-  await expect(publications.getByRole("button", { name: /FedRAMP Consolidated Rules.*Active/ })).toBeVisible();
-  await expect(publications.getByRole("button", { name: /FedRAMP Rev\. 5 Baselines.*Historical/ })).toBeVisible();
-  await expect(map(page)).toContainText("Use the Consolidated Rules for 2026");
-});
-
-test("the map drills ecosystem to publication to native section and the breadcrumb reverses it", async ({ page }) => {
-  await openAtlas(page);
-
-  await expect(page).toHaveURL(/atlasLimb=ecosystem(?::|%3A)nist/);
-  await expect(map(page)).toHaveAttribute("data-scope-level", "ecosystem");
-  await expect(column(page, "publication")).toBeVisible();
-
-  await column(page, "publication")
-    .getByRole("button", { name: /SP 800-53 Rev\. 5 Catalog/ })
-    .click();
-  await expect(page).toHaveURL(/atlasFramework=nist-800-53/);
-  await expect(map(page)).toHaveAttribute("data-scope-level", "publication");
-
-  const sections = column(page, "detail");
-  await expect(sections).toBeVisible();
-  await expect(sections.getByRole("button", { name: /Access Control/ })).toBeVisible();
-
-  const trail = page.getByRole("navigation", { name: "Atlas scope" });
-  await expect(trail).toContainText("NIST");
-  await expect(trail).toContainText("SP 800-53 Rev. 5 Catalog");
-
-  await trail.getByRole("button", { name: "NIST", exact: true }).click();
-  await expect(page).toHaveURL(/atlasLimb=ecosystem(?::|%3A)nist/);
-  await expect(page).not.toHaveURL(/atlasFramework=/);
-
-  // The top of the trail is the survey the reader walked down from, which is
-  // the board of publishers rather than a column of them.
-  await trail.getByRole("button", { name: "Cybersecurity", exact: true }).click();
-  await expect(page.getByTestId("atlas-area-map")).toBeVisible();
-});
-
-test("every source ecosystem opens directly from the first column", async ({ page }) => {
-  await openAtlas(page);
-
-  // Every publisher opens on the map, and its own columns stay addressable by
-  // URL underneath it.
-  for (const [id, label] of SOURCE_ECOSYSTEMS) {
-    await gotoApp(page, "/#/atlas?atlasLanding=publishers");
-    await waitForAppReady(page);
-    await openPublisherFromBoard(page, label);
-    await expect(page).toHaveURL(
-      new RegExp(`atlasLensFamily=${id.replace(":", "(?::|%3A)")}`),
-    );
-
-    await gotoApp(page, `/#/atlas?atlasLimb=${encodeURIComponent(id)}`);
-    await waitForAppReady(page);
-    await expect(page.getByRole("navigation", { name: "Atlas scope" })).toContainText(label);
-  }
-});
-
-test("the opened row stays marked as current in its column", async ({ page }) => {
-  await openAtlas(page);
-  await column(page, "area").getByRole("button", { name: /^NIST/ }).click();
-
-  const selected = column(page, "area").locator('.atlas-decomp__node[data-state="selected"]');
-  await expect(selected).toHaveCount(1);
-  await expect(selected).toContainText("NIST");
-});
-
-test("the layout switch offers both orientations above the stacking width", async ({ page }) => {
-  await openAtlas(page);
-  const across = page.getByRole("button", { name: "Across" });
-  const down = page.getByRole("button", { name: "Down" });
-
-  await expect(across).toHaveAttribute("aria-pressed", "true");
-  await down.click();
-  await expect(map(page)).toHaveAttribute("data-orientation", "down");
-  await expect(down).toHaveAttribute("aria-pressed", "true");
-  await across.click();
-  await expect(map(page)).toHaveAttribute("data-orientation", "across");
-});
-
-for (const width of [320, 375, 390, 768, 1024, 1200, 1440]) {
-  test(`Atlas stays readable and free of horizontal overflow at ${width}px`, async ({ page }) => {
-    await openAtlas(page, { width, height: width < 768 ? 844 : 900 });
-
-    const areas = column(page, "area");
-    await expect(areas).toBeVisible();
-    await expect(areas.getByRole("button").first()).toBeVisible();
-
-    const box = await areas.boundingBox();
-    expect(box?.width, `${width}px column width`).toBeGreaterThan(Math.min(260, width * 0.6));
-    expect(box?.y, `${width}px map position`).toBeLessThan(900);
-
-    expect(
-      await page.locator("html").evaluate((element) => element.scrollWidth - element.clientWidth),
-      `${width}px Atlas overflow`,
-    ).toBeLessThanOrEqual(1);
-
-    // The page scrolls, never a pane inside it.
-    expect(
-      await map(page).evaluate((element) =>
-        [element, ...element.querySelectorAll("*")].filter((node) => {
-          const style = globalThis.getComputedStyle(node);
-          return (
-            (style.overflowY === "auto" || style.overflowY === "scroll") &&
-            node.scrollHeight > node.clientHeight + 1
-          );
-        }).length,
-      ),
-      `${width}px nested vertical scroll region`,
-    ).toBe(0);
-  });
-}
-
 test("Atlas keeps generated identifiers out of visible and accessible copy", async ({ page }) => {
-  await openAtlas(page);
-  const atlas = map(page);
-
+  await gotoApp(page, "/#/atlas");
+  await waitForAppReady(page);
+  await dismissOnboarding(page);
+  const atlas = page.locator(".atl");
+  await expect(page.locator(".terr")).toBeVisible();
   await expect(atlas).not.toContainText(/atlas:LIMB-/);
   await expect(atlas).not.toContainText(/ecosystem:/);
   await expect(atlas).not.toContainText(/:CATALOG\b/);
   await expect(atlas).not.toContainText(/\b(?:trunks?|limbs?|twigs?|acorns?)\b/i);
   await expect(atlas).not.toContainText(/nist-zt|nist-iot-cybersecurity|microsoft-zt-maturity/);
+  const labels = await page.locator(".terr [aria-label]").evaluateAll((els) => els.map((e) => e.getAttribute("aria-label")));
+  expect(labels.filter((l) => /atlas:LIMB-|ecosystem:|:CATALOG\b/.test(l))).toEqual([]);
 });
 
 test("Atlas hierarchy and local record controls keep generated IDs out of primary and accessible copy", async ({ page }) => {

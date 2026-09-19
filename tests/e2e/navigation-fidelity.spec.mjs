@@ -176,21 +176,21 @@ test('route transition releases after destination commit while data continues lo
   await waitForAppReady(page);
 });
 
-test('Atlas landing renders the lightweight semantic hierarchy, not the relationship graph bundle', async ({ page }) => {
+test('Atlas landing renders the territory sheet from its own small index, not the relationship graph bundle', async ({ page }) => {
   test.setTimeout(90000);
   const requests = [];
   page.on('request', (request) => requests.push(request.url()));
-  await gotoApp(page, '/#/atlas?atlasLanding=publishers');
+  await gotoApp(page, '/#/atlas');
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
-  const board = page.getByTestId('atlas-area-map');
-  await expect(board).toBeVisible();
-  await expect(board.locator('button.atlas-area__cell')).toHaveCount(8);
-  await expect(page.locator('.atlas-mapcol__aside em')).toHaveCount(4);
-  // Orientation is DOM only: no canvas renderer and no flow graph is loaded
+  const sheet = page.locator('.terr');
+  await expect(sheet).toBeVisible();
+  await expect(sheet.locator('.district')).toHaveCount(9);
+  await expect(sheet.locator('.lm')).toHaveCount(28);
+  // Orientation is SVG and DOM only: no canvas renderer and no flow graph is loaded
   // before the visitor asks for one.
-  await expect(board.locator('canvas')).toHaveCount(0);
+  await expect(page.locator('canvas')).toHaveCount(0);
   await expect(page.locator('.react-flow')).toHaveCount(0);
-  expect(requests.some((url) => /RelationshipGraph-/.test(url))).toBe(false);
+  expect(requests.some((url) => /RelationshipGraph-|atlas-network|atlas-spine|atlas-research\//.test(url))).toBe(false);
 });

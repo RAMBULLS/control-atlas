@@ -33,22 +33,6 @@ async function openNetwork(page) {
 
 test("semantic Atlas hands off to explicit publisher-native navigation and preserves history", async ({ page }) => {
   test.setTimeout(120_000);
-  await openNetwork(page);
-
-  const atlas = page.getByTestId("atlas-map");
-  await expect(page.getByText("Grouped by what each document is, who issues it, or what you're trying to get done.", { exact: true })).toBeVisible();
-  await expect(atlas).toHaveAttribute("data-scope-level", "ecosystem");
-  // Across to another publisher, and on into one of its publications. The
-  // columns stay addressable by URL beneath the map.
-  await gotoApp(page, "/#/atlas?atlasLanding=publishers&atlasLimb=ecosystem%3Adisa");
-  await waitForAppReady(page);
-  await expect(atlas).toHaveAttribute("data-scope-level", "ecosystem");
-  await atlas
-    .locator('.atlas-decomp__column[data-column="publication"]')
-    .getByRole("button", { name: /DISA STIG Catalog/ })
-    .click();
-  await expect(page).toHaveURL(/atlasFramework=disa-stig/);
-
   await gotoApp(page, "/#/atlas?atlasAxis=framework&atlasLimb=atlas%3ALIMB-IMPLEMENTATION&atlasFramework=disa-stig&relationshipView=path");
   await waitForAppReady(page);
   const tree = page.locator(".atlas-tree");

@@ -14,7 +14,7 @@ test.beforeEach(async ({ page }) => {
 // opened on demand. relationshipView still round-trips through the URL (it
 // now selects which panel is open) so every old deep link keeps resolving.
 test("focused Atlas opens straight to Connections, not a structural page", async ({ page }) => {
-  await page.goto("/#/explore?node=nist-800-53%3AAC-2");
+  await page.goto("/#/explore?node=nist-800-53%3AAC-2&relationshipView=map");
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
@@ -48,7 +48,7 @@ test("focused Atlas opens straight to Connections, not a structural page", async
 });
 
 test("Hierarchy panel shows real structural substance, not just breadcrumb lines", async ({ page }) => {
-  await page.goto("/#/explore?node=nist-800-53%3AAC-2");
+  await page.goto("/#/explore?node=nist-800-53%3AAC-2&relationshipView=map");
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
@@ -149,7 +149,7 @@ test("focused Hierarchy opens its publisher-declared parent without inventing an
 });
 
 test("Hierarchy and View all are independently reachable and operable by keyboard", async ({ page }) => {
-  await page.goto("/#/explore?node=nist-800-53%3AAC-2");
+  await page.goto("/#/explore?node=nist-800-53%3AAC-2&relationshipView=map");
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
@@ -232,7 +232,7 @@ test("zero-published-edge records render an honest empty state instead of Connec
 });
 
 test("a sparse STIG keeps structural position separate from its published connections", async ({ page }) => {
-  await page.goto("/#/explore?node=disa-stig%3AV-222387");
+  await page.goto("/#/explore?node=disa-stig%3AV-222387&relationshipView=map");
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
@@ -297,7 +297,7 @@ test("compact Hierarchy preserves structural position without horizontal overflo
 // anchor in <main>. Drilling four columns deep landed on strictly less than
 // the search box already returns, with no route to the record or its source.
 test("a focused record shows what it says and where to read the rest", async ({ page }) => {
-  await page.goto("/#/explore?node=nist-800-53%3AAC-17.2");
+  await page.goto("/#/explore?node=nist-800-53%3AAC-17.2&relationshipView=map");
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
@@ -331,7 +331,7 @@ test("the focused record's text and exits survive every context breakpoint", asy
   // check the boundary rather than only the extremes.
   for (const width of [390, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto("/#/explore?node=nist-800-53%3AAC-17.2");
+    await page.goto("/#/explore?node=nist-800-53%3AAC-17.2&relationshipView=map");
     await waitForAppReady(page);
     await dismissOnboarding(page);
 
@@ -367,7 +367,7 @@ test("the focused record's text and exits survive every context breakpoint", asy
 // exists — nearly 400px below the fold on a 900px viewport.
 test("a long statement stays bounded and the graph stays above the fold", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/#/explore?node=nist-800-53%3AAC-2");
+  await page.goto("/#/explore?node=nist-800-53%3AAC-2&relationshipView=map");
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
@@ -391,7 +391,7 @@ test("a long statement stays bounded and the graph stays above the fold", async 
 });
 
 test("a focused record with no published sections still offers both exits", async ({ page }) => {
-  await page.goto("/#/explore?node=csf-2%3ACATEGORY-PR.AA");
+  await page.goto("/#/explore?node=csf-2%3ACATEGORY-PR.AA&relationshipView=map");
   await waitForAppReady(page);
   await dismissOnboarding(page);
 

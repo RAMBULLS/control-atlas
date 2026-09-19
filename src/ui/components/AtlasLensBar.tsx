@@ -4,8 +4,10 @@ import {
   IconMap2,
   IconTargetArrow,
   IconTopologyStar3,
+  IconRoute,
 } from "@tabler/icons-react";
 
+import { parseHashLocation, serializeHashUrl } from "../lib/hashRoutes";
 import { areaPresentationForCatalog } from "../lib/areaVisualLanguage";
 import { ATLAS_LENS_ENTRIES, type AtlasLensEntry } from "../lib/atlasLensEntries";
 
@@ -41,6 +43,15 @@ export function AtlasLensBar(props: AtlasLensBarProps) {
     onWholeLandscape,
     onLandingChange,
   } = props;
+
+  // A real link preserves browser/new-tab behavior and the map's return scope.
+  const hash = typeof window === "undefined" ? "/atlas" : window.location.hash.slice(1);
+  const split = hash.indexOf("?");
+  const current = parseHashLocation(split < 0 ? hash : hash.slice(0, split), split < 0 ? "" : hash.slice(split));
+  const researchHref = current.view === "atlas-map" ? serializeHashUrl({ ...current,
+    atlasResearch: "path", atlasFrom: current.node || current.atlasFrom,
+    atlasPins: current.atlasPins || (current.node ? JSON.stringify([current.node]) : ""),
+  }) : "#/atlas?atlasResearch=path";
 
   return (
     <nav aria-label="Ways into the Atlas" className="atlas-lens-bar">
@@ -130,6 +141,9 @@ export function AtlasLensBar(props: AtlasLensBarProps) {
           </button>
         </div>
       )}
+      <a className="atlas-lens-bar__reset" href={researchHref}>
+        <IconRoute aria-hidden="true" size={15} stroke={1.8} /> Find a connection
+      </a>
     </nav>
   );
 }

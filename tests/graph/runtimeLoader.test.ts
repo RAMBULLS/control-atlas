@@ -156,11 +156,12 @@ test("route bootstrap loads only the smallest faithful artifact scope", () => {
 
   const atlasLanding = runtimeArtifactPlan(normalizeViewState("atlas-map"));
   assert.equal(atlasLanding.recordNodeId, "");
-  assert.equal(atlasLanding.atlasSpine, true);
+  assert.equal(atlasLanding.atlasSpine, false, "the territory sheet draws from its own small index, not the hierarchy spine");
+  assert.equal(atlasLanding.atlasNetwork, false);
   assert.equal(
     atlasLanding.librarySearch,
-    true,
-    "the visible Atlas search needs the complete compact search corpus",
+    false,
+    "the territory sheet loads record search only when the reader reaches for the search box",
   );
   assert.equal(atlasLanding.fullGraph, false);
 
@@ -191,8 +192,13 @@ test("route bootstrap loads only the smallest faithful artifact scope", () => {
   const selectedFramework = runtimeArtifactPlan(
     normalizeViewState("atlas-map", { atlasFramework: "nist-800-53" }),
   );
-  assert.equal(selectedFramework.catalogId, "nist-800-53");
+  assert.equal(selectedFramework.catalogId, "", "the territory sheet reads publication facts from its own index");
   assert.equal(selectedFramework.fullGraph, false);
+  const classicFramework = runtimeArtifactPlan(
+    normalizeViewState("atlas-map", { atlasAxis: "framework", atlasFramework: "nist-800-53" }),
+  );
+  assert.equal(classicFramework.catalogId, "nist-800-53");
+  assert.equal(classicFramework.fullGraph, false);
 
   for (const atlasState of [
     normalizeViewState("atlas-map", { atlasBaseline: "nist-800-53b:MODERATE" }),

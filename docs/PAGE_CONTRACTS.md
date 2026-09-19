@@ -21,65 +21,33 @@ Library and Resources share search, visible desktop facets, a compact responsive
 
 ## C. Adaptive Explorer
 
-Atlas is one map over one route and one navigation state, all semantic DOM. No
-canvas renderer and no flow-graph bundle loads before a visitor asks for a
-relationship view.
+Atlas is one route, `/atlas`, drawn as a territory sheet: nine areas laid out as one landmass, with each publication a named place inside its area. The design, its rules and its data are specified in [ATLAS_VNEXT_DESIGN.md](ATLAS_VNEXT_DESIGN.md); this section is the page contract.
 
-The map column is roughly seventy per cent of the width and the detail panel
-thirty, stacking below 1100px. Everything is drawn the same way at every depth:
-a cell per thing, its area the quantity it holds, a trail above it for the way
-back. Opening something never leaves the page — the map goes a level deeper and
-the panel becomes about what was opened.
+The page has these parts and never shows an empty inspector:
 
-- Groups: the landing. Three lenses group the same frameworks by what each
-  document is (`atlasLanding=""`), who issues it (`publishers`), or what the
-  reader is trying to get done (`job`), five to eight groups each. Anything a
-  lens cannot file is named beneath the map rather than dropped.
-- Frameworks: the members of one group.
-- Families: what one framework contains.
-- Records: where every child holds one record, area says nothing, so the panel
-  lists them and each one opens.
+1. **Atlas** — the title and, once something is selected, a breadcrumb (`Atlas › Area › Publication › Record`).
+2. **Search** — one box for records and publications. An exact record identifier opens that record; a publication name or alias opens the publication; ambiguous text hands off to Library search; no match stays on the page with "Search all records" and "Browse the Library".
+3. **Authority · N** — the statutes, regulations and directives that carry no crosswalks. A visible list, never a hidden drawer.
+4. **Context** — narrow by Program, Product and Asset. Choices show as "Showing material for:" chips with Clear context; a publication is highlighted when some of its records match, never because it carries the choice itself.
+5. **Layers** — only layers the data supports. Today that is Publisher. A layer changes styling and never moves a landmark.
+6. **Share this view** — copies the canonical link and says "Link copied" only after the clipboard accepts it.
+7. **Info** — what the map does and does not claim.
+8. **Map** — the sheet itself, with a details panel that exists only when something is selected, a pin tray that exists only when something is pinned, and "Other publications · N".
 
-Three rules the drawing must keep:
+Selection is URL state, so refresh, back, forward and shared links all restore it (`atlasLimb` area, `atlasFramework` publication, `node` record, `atlasPins`, `atlasResearch` = `path`, `shared` or `upstream`, `atlasFrom`, `atlasTo`, `atlasDirection`, `atlasLayer`, `atlasContext`, `atlasDataset`). A computed path is never written to the URL, only its endpoints. Older scoped links (`atlasAxis=framework`, `atlasFamily`, `atlasBenchmark`, `atlasBaseline`, `atlasRmfStep`, `relationshipView`, and the relationship filters) keep opening the earlier workspace, which is also where "Full connection list" leads.
 
-- Area may only encode a quantity whose units are the same across the cells
-  being compared. What frameworks hold is not comparable between them — a STIG
-  rule is not an 800-53 control — so groups are sized by how many frameworks
-  they hold, and contents take over one level down.
-- Layout may not assert a claim the data cannot support. The curated dependency
-  spine is hand-written because crosswalks carry no direction, so it appears as
-  a sentence in the panel and never as the shape of the map. Relationship is
-  shown by selection: choosing a cell lights the ones it genuinely crosswalks
-  to and dims the rest.
-- Every count is stated in the word its publisher uses — controls in SP 800-53,
-  techniques in ATT&CK, rules in a STIG, baselines in FedRAMP — taken from
-  `catalogProfiles`' `recordLabel`. "Records" and "publications" are this
-  repository's vocabulary, not the reader's, and never reach a cell or a panel
-  heading. `tests/graph/atlasUnits` fails if a catalog arrives without a noun.
+Rules the drawing must keep:
 
-The map is columns of a fixed width, never narrower than a family name, each
-cell as tall as its share. Width is constant, so height carries the quantity
-and area still reads true, without the aspect-ratio lottery a squarified
-treemap runs — that lottery dealt half the cells inside SP 800-53 narrower than
-the word "Maintenance" while giving the largest 500px of empty paint. Nothing
-is ever cut mid-word.
+- Position is navigation only. A landmark's place comes from its explicit slot id in the governed geography file, never from counts, filters, layers, array order or view state. Neighboring territories imply no authority, applicability, equivalence, dependency or hierarchy.
+- A line means published records connect two places, and every line opens the evidence behind it. Nothing is drawn from the editorial dependency spine, from shared publishers, or from adjacency.
+- A hub shows a bounded, deterministic set of its relationships first (the four with the most published record connections), states how many more exist, offers relationship-type choices and "Show all N", and always lists the complete set in its details.
+- Empty territories are drawn muted and carry no name at rest. Names are never shortened by character count; a short name is a reviewed alias.
+- Shared ground is stated honestly: all, some, and none. "Nothing is shared" is an answer, not an error. Compare is offered only for exactly two publications; otherwise it is absent, not disabled.
+- Motion is decoration and is removed under `prefers-reduced-motion`.
 
-Two consequences the drawing owns:
+On a phone the page is list first: the territories and the selected item's facts are lists, and a small tappable map shows where you are. Nothing the map shows is available only on the map.
 
-- A cell is never shorter than its own name or than a 44px touch target. Below
-  that floor its height is a minimum, not a quantity, so those cells are drawn
-  flat with a dotted edge — the same way a dashed edge already means "nothing
-  published beneath this". Read the number on a floored cell, not its size.
-- Room the encoding buys gets spent. A cell with height to spare names what is
-  inside it, so a reader can see that "Control catalogs" means 800-53, 800-53A
-  and 800-171 without opening it.
-
-The map's height is what the viewport has left below it, so the whole picture
-is on screen rather than running past the fold.
-
-Publisher-native columns remain addressable by URL beneath the map
-(`atlasLimb`, `atlasFramework`, `atlasFamily` without a lens group) and render
-publication-native levels and immediate children.
+The relationship network (11 MB) and the hierarchy spine do not load for the sheet. It reads a 15 KB publication index built with the site; the connection index used for record traces (67 MB, 2.8 MB compressed) loads in a worker only when a record is focused or a record-level question is asked.
 
 ## D. Record detail
 

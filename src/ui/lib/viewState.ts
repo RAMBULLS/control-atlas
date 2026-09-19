@@ -1,3 +1,6 @@
+import { normalizeResearchState } from "./atlasResearchState";
+import { normalizeContextIds } from "./atlasTerritoryContext";
+
 export type AppView =
   | "home"
   | "atlas-map"
@@ -39,6 +42,23 @@ const SOURCE_LAYER_MODES = new Set<SourceLayerMode>([
   "organization",
 ]);
 
+/** A layer is a publisher choice only: "publisher:<name>". Anything else is dropped. */
+export function normalizeAtlasLayer(value: unknown): string {
+  const text = typeof value === "string" ? value.trim() : "";
+  return text.startsWith("publisher:") && text.length > 10 && text.length <= 130 && ![...text].some((c) => c.charCodeAt(0) < 32) ? text : "";
+}
+
+/** Context choices: bounded governed tag ids, sorted so equal choices give equal URLs. */
+export function normalizeAtlasContext(value: unknown): string {
+  return normalizeContextIds(value).sort().join(",");
+}
+
+/** A dataset identity is 12 hex characters or nothing. */
+export function normalizeAtlasDataset(value: unknown): string {
+  const text = typeof value === "string" ? value.trim().toLowerCase() : "";
+  return /^[a-f0-9]{12}$/.test(text) ? text : "";
+}
+
 function sourceLayerMode(value: unknown): SourceLayerMode {
   return SOURCE_LAYER_MODES.has(value as SourceLayerMode)
     ? (value as SourceLayerMode)
@@ -49,6 +69,12 @@ export type ViewState =
   | { view: "home" }
   | {
       view: "atlas-map";
+      atlasResearch?: string;
+      atlasPins?: string;
+      atlasFrom?: string;
+      atlasTo?: string;
+      atlasDirection?: string;
+      atlasHops?: string;
       node: string;
       atlasParent: string;
       atlasAxis: string;
@@ -85,6 +111,12 @@ export type ViewState =
       atlasLanding: string;
       /** The group opened within the current lens, if any. */
       atlasLensFamily: string;
+      /** Territory map layer: "" or "publisher:<publisher name>". */
+      atlasLayer: string;
+      /** Territory context: comma-separated governed tag ids (program, product, asset). */
+      atlasContext: string;
+      /** The accepted dataset a shared view was made from; kept so a later comparison is possible. */
+      atlasDataset: string;
       relationshipView: string;
       relationshipType: string;
       provenance: string;
@@ -251,6 +283,7 @@ function searchState(): ViewState {
 function atlasMapState(): Extract<ViewState, { view: "atlas-map" }> {
   return {
     view: "atlas-map",
+    ...normalizeResearchState({}),
     node: "",
     atlasParent: "",
     atlasAxis: "",
@@ -263,6 +296,9 @@ function atlasMapState(): Extract<ViewState, { view: "atlas-map" }> {
     atlasPivotTrail: "",
     atlasLanding: "",
     atlasLensFamily: "",
+    atlasLayer: "",
+    atlasContext: "",
+    atlasDataset: "",
     relationshipView: "",
     relationshipType: "",
     provenance: "",
@@ -353,6 +389,7 @@ export function parseViewState(search: string): ViewState {
   if (view === "atlas-map") {
     return {
       view,
+      ...normalizeResearchState(Object.fromEntries(params)),
       node: params.get("node") || "",
       atlasParent: params.get("atlasParent") || "",
       atlasAxis: params.get("atlasAxis") || "",
@@ -368,6 +405,9 @@ export function parseViewState(search: string): ViewState {
       // existed still opens on a survey rather than on nothing.
       atlasLanding: normalizeAtlasLanding(params.get("atlasLanding") || ""),
       atlasLensFamily: params.get("atlasLensFamily") || "",
+      atlasLayer: normalizeAtlasLayer(params.get("atlasLayer") || ""),
+      atlasContext: normalizeAtlasContext(params.get("atlasContext") || ""),
+      atlasDataset: normalizeAtlasDataset(params.get("atlasDataset") || ""),
       // Empty means "the default for this state" — Connections when a record
       // is focused, the board otherwise (AtlasMapPage.atlasView decides). It is
       // deliberately not forced to "path": serializing a default the user never
@@ -569,6 +609,7 @@ export function normalizeViewState(
     return {
       ...atlasMapState(),
       ...incoming,
+      ...normalizeResearchState(incoming),
       view,
     };
   }
@@ -757,6 +798,13 @@ export function serializeViewState(state: ViewState): string {
     setIfValue(params, "view", "home");
   } else if (state.view === "atlas-map") {
     params.set("view", "atlas-map");
+    const research = normalizeResearchState(state);
+    setIfValue(params, "atlasResearch", research.atlasResearch);
+    setIfValue(params, "atlasPins", research.atlasPins);
+    setIfValue(params, "atlasFrom", research.atlasFrom);
+    setIfValue(params, "atlasTo", research.atlasTo);
+    if (research.atlasDirection === "either") params.set("atlasDirection", "either");
+    if (research.atlasHops !== "4") params.set("atlasHops", research.atlasHops);
     setIfValue(params, "node", state.node);
     setIfValue(params, "atlasParent", state.atlasParent);
     setIfValue(params, "atlasAxis", state.atlasAxis);
@@ -769,6 +817,9 @@ export function serializeViewState(state: ViewState): string {
     setIfValue(params, "atlasPivotTrail", state.atlasPivotTrail);
     setIfValue(params, "atlasLanding", state.atlasLanding);
     setIfValue(params, "atlasLensFamily", state.atlasLensFamily);
+    setIfValue(params, "atlasLayer", normalizeAtlasLayer(state.atlasLayer));
+    setIfValue(params, "atlasContext", normalizeAtlasContext(state.atlasContext));
+    setIfValue(params, "atlasDataset", normalizeAtlasDataset(state.atlasDataset));
     if (state.relationshipView === "path") {
       params.set("relationshipView", "path");
     } else if (state.relationshipView === "map") {
@@ -924,6 +975,9 @@ export type AtlasMapUrlOptions = {
   atlasPivotTrail?: string;
   atlasLanding?: string;
   atlasLensFamily?: string;
+  atlasLayer?: string;
+  atlasContext?: string;
+  atlasDataset?: string;
   sourceView?: "default" | "purpose" | "rmf";
   relationshipView?: RelationshipViewMode;
   relationshipType?: string;
@@ -967,6 +1021,9 @@ export function buildAtlasMapUrl(options: AtlasMapUrlOptions = {}): string {
     atlasPivotTrail: options.atlasPivotTrail || "",
     atlasLanding: normalizeAtlasLanding(options.atlasLanding || ""),
     atlasLensFamily: options.atlasLensFamily || "",
+    atlasLayer: normalizeAtlasLayer(options.atlasLayer || ""),
+    atlasContext: normalizeAtlasContext(options.atlasContext || ""),
+    atlasDataset: normalizeAtlasDataset(options.atlasDataset || ""),
     sourceView: options.sourceView || "default",
     relationshipView: options.relationshipView || "",
     relationshipType: options.relationshipType || "",

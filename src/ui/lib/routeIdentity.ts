@@ -120,7 +120,8 @@ export type CanonicalRoute = {
 
 const ATLAS_PARAMS = new Set([
   "node", "atlasAxis", "atlasLimb", "atlasFramework", "atlasBenchmark", "atlasBaseline", "atlasFamily",
-  "atlasRmfStep", "atlasPivotTrail", "atlasLanding", "atlasLensFamily", "atlasParent", "relationshipView", "relationshipType", "provenance",
+  "atlasResearch", "atlasPins", "atlasFrom", "atlasTo", "atlasDirection", "atlasHops",
+  "atlasRmfStep", "atlasPivotTrail", "atlasLanding", "atlasLensFamily", "atlasLayer", "atlasContext", "atlasDataset", "atlasParent", "relationshipView", "relationshipType", "provenance",
   "confidence", "type", "nodeType", "includeCandidates", "relationshipSearch",
   "atlasStage", "relationshipGroup", "sourceView", "showSupportingReferences",
   "showDraftOrLegacy", "showRegistryOnly",
@@ -156,7 +157,7 @@ function permittedParams(params: URLSearchParams, permitted: Set<string>): { par
   const tags = new Set<string>();
   let discarded = false;
   for (const [key, value] of params) {
-    if (!permitted.has(key) || value.length > 240) {
+    if (!permitted.has(key) || value.length > (key === "atlasPins" ? 1800 : 240)) {
       discarded = true;
       continue;
     }

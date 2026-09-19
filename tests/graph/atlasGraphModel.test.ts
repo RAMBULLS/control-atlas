@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+// Research traversal is part of the required graph gate.
+import "./atlasResearch.test";
+
 import {
   buildAtlasGraphModel,
   type AtlasGraphModelInput,

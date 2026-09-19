@@ -7,6 +7,7 @@ import { loadTerritoryIndex } from "../lib/atlasTerritoryLoader";
 import { revealRoutes } from "../lib/atlasTerritoryRoutes";
 import { MAX_PINS, addPin, compareHandoff, removePin, sharedGround } from "../lib/atlasTerritoryShared";
 import { territoryFocusOf, territoryHasWork, territoryModeOf, territoryPatch, territoryTargetOf, type TerritoryTarget } from "../lib/atlasTerritoryState";
+import { resolveAtlasSearchTransition } from "../lib/atlasSearch";
 import { catalogDisplayNameFor } from "../lib/catalogProfiles";
 import { recordIdentityPresentationFor } from "../lib/recordTitle";
 import type { RuntimeBundle } from "../lib/runtimeLoader";
@@ -18,7 +19,7 @@ import {
   AuthorityPanel, Breadcrumb, HelpPanel, LayersMenu, OtherPanel, PinButton, PinTray, PublicationCard, RouteCard, SearchBox, SharedCard, TerritoryCard,
   type AnyHit,
 } from "../components/atlas-territory/Panels";
-import { EvidenceCard, RecordCard, RecordSharedCard, TrailCard, recordLabel } from "../components/atlas-territory/RecordPanels";
+import { EvidenceCard, RecordCard, RecordSharedCard, ResearchNotice, TrailCard, recordLabel } from "../components/atlas-territory/RecordPanels";
 import "../../../styles/atlas-territory.css";
 
 type AtlasState = Extract<ViewState, { view: "atlas-map" }>;
@@ -97,6 +98,10 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
   const [notice, setNotice] = useState("");
   const [pathIndex, setPathIndex] = useState(0);
   const [edgeId, setEdgeId] = useState("");
+  const [noMatch, setNoMatch] = useState("");
+  const focusRef = useRef<HTMLElement>(null);
+  // On a phone the evidence sits below the list; bring it into view and move focus to it.
+  useEffect(() => { if (narrow && edgeId) { focusRef.current?.focus({ preventScroll: true }); focusRef.current?.scrollIntoView({ block: "start" }); } }, [narrow, edgeId]);
 
   const focus = territoryFocusOf(state);
   const mode = territoryModeOf(state);
@@ -236,6 +241,23 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
     go(keep({ pins: next }));
   };
 
+  const submitSearch = () => {
+    const q = query.trim();
+    if (q.length < 2) return;
+    const exact = searchPublications(model, q, 1).find((h) => model.alias(h.id).toLowerCase() === q.toLowerCase() || model.publicationById.get(h.id)!.name.toLowerCase() === q.toLowerCase());
+    if (exact) { pick(exact); return; }
+    if (!libraryReady) { if (hits[0]) pick(hits[0]); return; }
+    const transition = resolveAtlasSearchTransition(bundle.runtime, q);
+    setNotice(transition.announcement);
+    if (transition.kind === "focus") { setQuery(""); go({ node: transition.nodeId, pins, publisher }); return; }
+    if (transition.kind === "search") {
+      if (hits.some((h) => h.type === "publication")) { pick(hits.find((h) => h.type === "publication")!); return; }
+      onNavigate("search", { query: q });
+      return;
+    }
+    if (hits.length) { pick(hits[0]); return; }
+    setNoMatch(q);
+  };
   const goRecord = (id: string) => go({ node: id, pins, publisher });
   const actions: MapActions = {
     selectDistrict: (id) => go({ limb: id, pins, publisher }),
@@ -266,6 +288,8 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
         onRecord={goRecord} pathIndex={pathIndex} research={research} selectedHop={selectedHop >= 0 ? selectedHop : null} to={target.to} />
     ) : focusRecord ? (
       <RecordCard areaLabel={focusInfo && isPublication(focusInfo.catalogId) ? model.areaOf(focusInfo.catalogId).label : ""} canTrace={!!focusInfo && research.status !== "error"} degree={research.degree.get(focusRecord) ?? null}
+        openRecord={<AppLink onNavigate={onNavigate} patch={{ node: focusRecord }} view="library-detail">Open the full record</AppLink>}
+        notice={research.failed ? <ResearchNotice research={research} what="Connection data" /> : null}
         fullList={<AppLink onNavigate={onNavigate} patch={{ node: focusRecord, relationshipView: "list" }} view="atlas-map">Full connection list</AppLink>}
         label={focusInfo?.label || recordLabel(research.records, focusRecord)} loading={!focusInfo} onTrace={() => go({ node: focusRecord, pins, publisher, mode: "upstream", from: focusRecord })}
         pin={pinControl(focusRecord)} publication={focusInfo?.publication || ""} title={focusInfo?.title || ""} tracing={false} />
@@ -298,12 +322,12 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
   const crumbLabel = evidenceEdge ? "Why connected" : selectedRoute ? "Published connection" : sharing || recordShared ? "Shared ground" : tracing ? "Research path" : focusRecord ? label(focusRecord) : undefined;
   const crumbPublication = focusPublication || (focusRecord && isPublication(focusPublicationOfRecord) ? focusPublicationOfRecord : null);
   const crumb = <Breadcrumb areaId={focusAreaId} label={crumbLabel} model={model} publicationId={crumbPublication} />;
-  const search = <SearchBox hits={hits} onClose={() => setQuery("")} onPick={pick} onQuery={setQuery} open={query.trim().length >= 2} query={query} ready={libraryReady} />;
+  const search = <SearchBox hits={hits} noMatch={noMatch} onClose={() => { setQuery(""); setNoMatch(""); }} onNavigate={onNavigate} onPick={pick} onQuery={(value) => { setNoMatch(""); setQuery(value); }} onSubmit={submitSearch} open={query.trim().length >= 2} query={query} ready={libraryReady} />;
 
   if (narrow) {
     const area = focusAreaId ? model.areaById.get(focusAreaId)! : null;
     return (
-      <section aria-labelledby="atl-title" className="atl atl--mobile">
+      <section aria-labelledby="atl-title" className="atl atl--mobile" data-route-content-ready="true">
         <header className="atl-m-head"><h1 id="atl-title">Atlas</h1>{zoomed || work.pins || work.layer ? <button onClick={reset} type="button">Reset</button> : null}</header>
         {search}
         <div className="atl-m-row">
@@ -320,7 +344,7 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
           </div>
           {!area ? <ul className="atl-list">{model.areas.map((a) => <li key={a.id}><button onClick={() => actions.selectDistrict(a.id)} type="button"><b>{a.label}</b><small>{a.empty ? "No publications placed yet" : a.blurb}</small></button></li>)}</ul> : null}
         </section>
-        {inspector ? <section aria-labelledby="atl-focus" className="atl-m-sec"><h2 id="atl-focus">Focused</h2>{inspector}</section> : null}
+        {inspector ? <section aria-labelledby="atl-focus-h" className="atl-m-sec" id="atl-focus" ref={focusRef} tabIndex={-1}><h2 id="atl-focus-h">Focused</h2>{inspector}</section> : null}
         {pins.length ? <section aria-labelledby="atl-pins" className="atl-m-sec"><h2 id="atl-pins">Pinned</h2>{tray}</section> : null}
         {area && !focusPublication && !focusRecord && !selectedRoute && !sharing && !tracing ? (
           <section aria-labelledby="atl-near" className="atl-m-sec">
@@ -334,7 +358,7 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
   }
 
   return (
-    <section aria-labelledby="atl-title" className="atl" ref={sheetRef} style={{ ["--atl-offset" as string]: `${offset}px` }}>
+    <section aria-labelledby="atl-title" className="atl" data-route-content-ready="true" ref={sheetRef} style={{ ["--atl-offset" as string]: `${offset}px` }}>
       <header className="atl-top">
         <h1 className="atl-mark" id="atl-title">Atlas</h1>
         {search}

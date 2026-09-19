@@ -12,24 +12,23 @@ test.beforeEach(async ({ page }) => {
   await dismissOnboarding(page);
 });
 
-test("exact Atlas identifier opens its bounded semantic publisher context", async ({
+test("exact Atlas identifier opens the record on the territory sheet", async ({
   page,
 }) => {
   await page
-    .getByRole("searchbox", { name: "Jump to a record" })
+    .getByRole("combobox", { name: "Search records and publications" })
     .fill("nist-800-53:AC-2");
-  await page.getByRole("searchbox", { name: "Jump to a record" }).press("Enter");
+  await page.getByRole("combobox", { name: "Search records and publications" }).press("Enter");
 
   await expect(page).toHaveURL(/#\/atlas\/nist-800-53:AC-2/);
   await expect(page.getByRole("heading", { level: 1, name: "Atlas" })).toBeVisible();
-  await expect(page.getByTestId("atlas-map")).toHaveCount(0);
-  await expect(page.getByRole("region", { name: "Focused Atlas record" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Connections", level: 2 })).toBeVisible();
+  await expect(page.locator(".atl-inspector")).toContainText("AC-2");
+  await expect(page.locator(".rec[data-record]")).toHaveCount(1);
 });
 
 test("ambiguous Atlas text hands off to canonical Search", async ({ page }) => {
-  await page.getByRole("searchbox", { name: "Jump to a record" }).fill("account");
-  await page.getByRole("searchbox", { name: "Jump to a record" }).press("Enter");
+  await page.getByRole("combobox", { name: "Search records and publications" }).fill("account");
+  await page.getByRole("combobox", { name: "Search records and publications" }).press("Enter");
 
   await expect(page).toHaveURL(/\/library\?q=account/);
   await expect(
@@ -44,11 +43,11 @@ test("no-match Atlas search stays local with announced recovery actions", async 
   page,
 }) => {
   const query = "zzzz-epic-one-no-match";
-  await page.getByRole("searchbox", { name: "Jump to a record" }).fill(query);
-  await page.getByRole("searchbox", { name: "Jump to a record" }).press("Enter");
+  await page.getByRole("combobox", { name: "Search records and publications" }).fill(query);
+  await page.getByRole("combobox", { name: "Search records and publications" }).press("Enter");
 
   await expect(page).toHaveURL(/\/atlas/);
-  await expect(page.locator(".atlas-search-recovery")).toContainText(`No record matches ${query}`);
+  await expect(page.locator(".atl-search__recovery")).toContainText(`No record matches ${query}`);
   await expect(page.getByRole("link", { name: "Search all records" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Browse the Library" })).toBeVisible();
   await expect(page.getByRole("status")).toContainText(
@@ -56,10 +55,10 @@ test("no-match Atlas search stays local with announced recovery actions", async 
   );
 });
 
-test("focused Atlas exposes explicit lenses and class-direction List semantics", async ({
+test("the full connection workspace exposes explicit lenses and class-direction List semantics", async ({
   page,
 }) => {
-  await page.goto("/#/atlas?node=nist-800-53%3AAC-2");
+  await page.goto("/#/atlas?node=nist-800-53%3AAC-2&relationshipView=map");
   await waitForAppReady(page);
 
   await page.getByRole("button", { name: "Hierarchy" }).click();

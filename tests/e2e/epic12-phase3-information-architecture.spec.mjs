@@ -162,7 +162,7 @@ test("Phase 3 record identity is canonical across Library, Atlas, and direct pat
   await expect(page.locator('header.site-header nav a[aria-current="page"]')).toHaveCount(0);
   await expect(page.getByRole("link", { name: "See connections", exact: true })).toBeVisible();
 
-  await gotoApp(page, "/#/atlas?node=nist-800-53%3AAC-2");
+  await gotoApp(page, "/#/atlas?node=nist-800-53%3AAC-2&relationshipView=map");
   await waitForAppReady(page, { allowPartial: true });
   const focusedRecord = page.getByRole("region", { name: "NIST AC-2" });
   await expect(focusedRecord.getByRole("heading", { name: "NIST AC-2" })).toBeVisible();
@@ -312,30 +312,14 @@ test("Phase 3 record actions and global footer expose the required hierarchy", a
 
 test("Phase 3 Atlas shows honest integer counts and no obsolete work-surface label", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await gotoApp(page, "/#/atlas?atlasLanding=publishers");
+  await gotoApp(page, "/#/atlas");
   await waitForAppReady(page);
-  const board = page.getByTestId("atlas-area-map");
-  await expect(board).toBeVisible();
+  await expect(page.locator(".terr")).toBeVisible();
   await expect(page.locator("body")).not.toContainText("Connected work surface");
-
-  // The landmarks are cards and named strip entries on the board itself, not a
-  // disclosure beside it, and each one states what it holds without being
-  // hovered: eight publishers plus three authority landmarks and the one
-  // publication issued outside the federal ecosystems.
-  await expect(board.locator("button.atlas-area__cell")).toHaveCount(8);
-  await expect(page.locator(".atlas-mapcol__aside em")).toHaveCount(4);
-  // Every landmark still states what it holds without being hovered, and says
-  // what the number counts. Groups are measured in frameworks because a STIG
-  // rule and an 800-53 control are not the same unit; one level down each
-  // framework counts in its own publisher's word instead.
-  const cards = board.locator("button.atlas-area__cell");
-  for (const card of await cards.all()) {
-    await expect(card).toContainText(/\d[\d,]* frameworks?/);
-  }
-  for (const entry of await page.locator(".atlas-mapcol__aside em").all()) {
-    await expect(entry).toContainText(/\d[\d,]*/);
-  }
-  for (const ecosystem of ["NIST", "DISA", "MITRE", "FedRAMP", "DoD CIO", "CDAO", "ISOO"]) {
-    await expect(cards.filter({ hasText: ecosystem }).first()).toBeVisible();
-  }
+  // Counts are whole numbers stated in the publisher's own words, never estimates.
+  await expect(page.getByRole("button", { name: /^Authority · \d+$/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Other publications · \d+$/ })).toBeVisible();
+  await page.locator('[data-landmark="nist-800-53"]').click();
+  await expect(page.locator(".atl-inspector")).toContainText(/\d[\d,]* other publications? share published connections/);
+  await expect(page.locator(".atl-inspector")).toContainText(/Records\s*1,196/);
 });

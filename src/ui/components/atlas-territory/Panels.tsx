@@ -27,6 +27,7 @@ export function Breadcrumb(props: { model: TerritoryModel; areaId: string | null
 
 export function SearchBox(props: {
   query: string; open: boolean; hits: readonly AnyHit[]; onQuery: (value: string) => void; onPick: (hit: AnyHit) => void; onClose: () => void; ready: boolean;
+  onSubmit: () => void; noMatch: string; onNavigate: AppNavigate;
 }) {
   const { query, open, hits, onQuery, onPick, onClose, ready } = props;
   return (
@@ -35,10 +36,19 @@ export function SearchBox(props: {
       <input
         aria-controls="atlas-results" aria-expanded={open} aria-haspopup="listbox" autoComplete="off" id="atlas-search"
         onChange={(e) => onQuery(e.target.value)}
-        onKeyDown={(e) => { if (e.key === "Escape") onClose(); if (e.key === "Enter" && hits[0]) onPick(hits[0]); }}
+        onKeyDown={(e) => { if (e.key === "Escape") onClose(); if (e.key === "Enter") { e.preventDefault(); props.onSubmit(); } }}
         placeholder="Search a record or publication, e.g. V-205646" role="combobox" type="search" value={query}
       />
-      {open ? (
+      {props.noMatch ? (
+        <div className="atl-search__recovery">
+          <p>No record matches <strong>{props.noMatch}</strong>.</p>
+          <div className="atl-actions">
+            <AppLink onNavigate={props.onNavigate} patch={{ query: props.noMatch }} view="search">Search all records</AppLink>
+            <AppLink onNavigate={props.onNavigate} view="search">Browse the Library</AppLink>
+          </div>
+        </div>
+      ) : null}
+      {open && !props.noMatch ? (
         <ul className="atl-search__results" id="atlas-results" role="listbox">
           {hits.length ? hits.map((h) => (
             <li aria-selected="false" key={`${h.type}:${h.id}`} role="option"><button onClick={() => onPick(h)} type="button"><b>{h.label}</b><small>{h.sub}</small></button></li>

@@ -1,3 +1,4 @@
+import { gzipSync } from "node:zlib";
 import { AxeBuilder } from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { readGeneratedCollection } from "../../scripts/lib/generated-graph-artifacts.mjs";
@@ -192,4 +193,78 @@ test("record pins share ground through the CCI, and mixing pin kinds is refused 
   await page.locator('[data-landmark="csf-2"]').click();
   await page.getByRole("button", { name: "Pin CSF 2.0" }).click();
   await expect(page.getByText(/Pin publications together or records together/).first()).toBeVisible();
+});
+
+const upstreamUrl = `/#/atlas?atlasResearch=upstream&atlasFrom=${encodeURIComponent(START)}`;
+
+test("missing records are recoverable and never reported as an unconnected pair", async ({ page }) => {
+  await open(page, `/#/atlas?atlasResearch=path&atlasFrom=${encodeURIComponent(START)}&atlasTo=does-not-exist`);
+  await expect(page.locator(".atl-inspector")).toContainText("not in the connection data", { timeout: 90000 });
+  await expect(page.locator(".atl-inspector")).not.toContainText("No published path");
+});
+
+test("invalid connection data never becomes a false no-path result and retry restores the trail", async ({ page }) => {
+  let broken = true;
+  await page.context().route("**/atlas-research-manifest.json", async (route) => {
+    if (broken) await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ schemaVersion: 999 }) });
+    else await route.continue();
+  });
+  await open(page, upstreamUrl);
+  await expect(page.locator(".atl-warn")).toContainText("does not mean there is no connection", { timeout: 60000 });
+  await expect(page.locator(".atl-inspector")).not.toContainText("No published");
+  broken = false;
+  await page.getByRole("button", { name: "Retry" }).click();
+  await expect(page.locator(".atl-steps")).toContainText(endLabel, { timeout: 90000 });
+});
+
+test("an unavailable worker produces an honest recovery state", async ({ page }) => {
+  await page.addInitScript(() => {
+    const Native = globalThis.Worker;
+    Object.defineProperty(globalThis, "Worker", { configurable: true, value: class extends Native { constructor(url, options) { if (String(url).includes("atlasResearch")) throw new Error("worker unavailable fixture"); super(url, options); } } });
+  });
+  await open(page, upstreamUrl);
+  await expect(page.locator(".atl-warn")).toContainText("does not mean there is no connection", { timeout: 30000 });
+  await expect(page.locator(".atl")).toBeVisible();
+});
+
+test("tampered connection bytes fail integrity validation without a false result", async ({ page }) => {
+  await page.context().route("**/atlas-research/*.json.gz", (route) => route.fulfill({ status: 200, contentType: "application/gzip", body: gzipSync(Buffer.from('{"schemaVersion":1}')) }));
+  await open(page, upstreamUrl);
+  await expect(page.locator(".atl-warn")).toContainText("does not mean there is no connection", { timeout: 60000 });
+  await expect(page.locator(".atl-steps")).toHaveCount(0);
+});
+
+test("shared record connections keep separate source evidence for every pin", async ({ page }) => {
+  await open(page, `/#/atlas?atlasResearch=shared&atlasPins=${encodeURIComponent(JSON.stringify([START, END]))}`);
+  const row = page.locator(".atl-inspector .atl-list > li").filter({ hasText: "CCI-000185" });
+  await expect(row).toHaveCount(1, { timeout: 90000 });
+  await row.getByRole("button", { name: /^With / }).last().click();
+  await expect(page.locator(".atl-inspector")).toContainText("Why connected");
+  await expect(page.locator(".atl-inspector")).toContainText("Exact location");
+});
+
+for (const width of [320, 390, 768, 1440]) {
+  test(`the record trail and its evidence are usable at ${width}px`, async ({ page }) => {
+    test.setTimeout(120000);
+    await open(page, upstreamUrl, width);
+    await expect(page.locator(".atl-steps")).toContainText(endLabel, { timeout: 90000 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
+    for (const control of await page.locator(".atl button:visible, .atl select:visible, .atl input:visible").all()) {
+      const box = await control.boundingBox();
+      expect(box.height).toBeGreaterThanOrEqual(43.5);
+    }
+    await page.locator(".atl-steps__seg").last().click();
+    await expect(page.locator(".atl-inspector, #atl-focus").first()).toContainText("Why connected");
+    if (width < 760) {
+      await expect(page.locator("#atl-focus")).toBeFocused();
+      await expect(page.locator("#atl-focus")).toBeInViewport();
+    }
+  });
+}
+
+test("the record trail has no serious accessibility violations", async ({ page }) => {
+  await open(page, upstreamUrl);
+  await expect(page.locator(".atl-steps")).toContainText(endLabel, { timeout: 90000 });
+  const results = await new AxeBuilder({ page }).include(".atl").analyze();
+  expect(results.violations.filter((v) => ["serious", "critical"].includes(v.impact))).toEqual([]);
 });

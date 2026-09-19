@@ -203,3 +203,6 @@
 .atl-source { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--atl-border); }
 .atl-source h3 { margin: 0 0 4px; font-size: 0.9rem; }
 .atl-source a { display: inline-block; margin-right: 12px; min-height: 44px; line-height: 44px; }
+
+.atl-search__recovery { position: absolute; z-index: 8; top: 48px; left: 0; right: 0; padding: 10px 12px; border: 1px solid var(--atl-border-strong); border-radius: 12px; background: var(--atl-raised); box-shadow: 0 14px 36px var(--atl-shadow); font-size: 0.9rem; }
+.atl-search__recovery p { margin: 0 0 6px; }

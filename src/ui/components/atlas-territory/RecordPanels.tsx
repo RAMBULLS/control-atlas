@@ -20,7 +20,7 @@ export function ResearchNotice(props: { research: TerritoryResearch; what: strin
 
 export function RecordCard(props: {
   label: string; title: string; publication: string; areaLabel: string; degree: number | null; canTrace: boolean; tracing: boolean;
-  onTrace: () => void; pin: ReactNode; fullList: ReactNode; loading: boolean;
+  onTrace: () => void; pin: ReactNode; fullList: ReactNode; openRecord: ReactNode; loading: boolean; notice?: ReactNode;
 }) {
   return (
     <div className="atl-card">
@@ -28,6 +28,7 @@ export function RecordCard(props: {
       <h2>{props.label}</h2>
       {props.loading ? <p className="atl-note" role="status">Loading the record…</p> : null}
       {props.title ? <p>{props.title}</p> : null}
+      {props.notice}
       <dl>
         <dt>Where it sits</dt><dd>{props.areaLabel ? `${props.areaLabel} › ` : ""}{props.publication}</dd>
         {props.degree !== null ? <><dt>Published connections</dt><dd>{plural(props.degree, "connection")} in the current data</dd></> : null}
@@ -35,6 +36,7 @@ export function RecordCard(props: {
       <div className="atl-actions">
         {props.canTrace && !props.tracing ? <button className="atl-primary" onClick={props.onTrace} type="button">Trace upstream</button> : null}
         {props.pin}
+        {props.openRecord}
         {props.fullList}
       </div>
     </div>

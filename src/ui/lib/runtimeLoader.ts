@@ -1,5 +1,5 @@
 import { createFederalGraphRuntime } from "../../app/runtime.mjs";
-import { atlasSurfaceFor } from "./atlasTerritoryState";
+import { atlasSurfaceFor, researchIsPublicationLevel } from "./atlasTerritoryState";
 import { atlasNeighborhoodShardId } from "../../app/atlas-neighborhood.mjs";
 import { RUNTIME_CACHE_VERSION } from "../../shared/runtime-cache-version.mjs";
 import type {
@@ -305,7 +305,7 @@ function isAtlasOrientationState(state: ViewState) {
   return (
     state.view === "atlas-map" &&
     atlasSurfaceFor(state) === "classic" &&
-    !state.atlasResearch &&
+    (!state.atlasResearch || researchIsPublicationLevel(state)) &&
     !state.node &&
     (!state.atlasAxis ||
       (state.atlasAxis === "landscape" && !state.atlasFramework))
@@ -321,7 +321,7 @@ export function runtimeArtifactPlan(
 ): RuntimeArtifactPlan {
   // Research owns an opt-in worker/index. Old map scope remains in the URL
   // for the return journey, but must not trigger unrelated catalog/RMF loads.
-  if (state.view === "atlas-map" && state.atlasResearch) {
+  if (state.view === "atlas-map" && state.atlasResearch && !researchIsPublicationLevel(state)) {
     return { atlasNetwork: false, atlasSpine: false, catalogBootstrap: false,
       catalogId: "", catalogFamily: "", commons: false, fullGraph: false,
       librarySearch: Boolean(options.searchOverlayOpen), recordNodeId: "",

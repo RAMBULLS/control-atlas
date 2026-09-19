@@ -41,6 +41,12 @@ const SOURCE_LAYER_MODES = new Set<SourceLayerMode>([
   "organization",
 ]);
 
+/** A layer is a publisher choice only: "publisher:<name>". Anything else is dropped. */
+export function normalizeAtlasLayer(value: unknown): string {
+  const text = typeof value === "string" ? value.trim() : "";
+  return text.startsWith("publisher:") && text.length > 10 && text.length <= 130 && ![...text].some((c) => c.charCodeAt(0) < 32) ? text : "";
+}
+
 function sourceLayerMode(value: unknown): SourceLayerMode {
   return SOURCE_LAYER_MODES.has(value as SourceLayerMode)
     ? (value as SourceLayerMode)
@@ -93,7 +99,7 @@ export type ViewState =
       atlasLanding: string;
       /** The group opened within the current lens, if any. */
       atlasLensFamily: string;
-      /** Territory map layer: "" or "publisher". */
+      /** Territory map layer: "" or "publisher:<publisher name>". */
       atlasLayer: string;
       relationshipView: string;
       relationshipType: string;
@@ -381,7 +387,7 @@ export function parseViewState(search: string): ViewState {
       // existed still opens on a survey rather than on nothing.
       atlasLanding: normalizeAtlasLanding(params.get("atlasLanding") || ""),
       atlasLensFamily: params.get("atlasLensFamily") || "",
-      atlasLayer: params.get("atlasLayer") === "publisher" ? "publisher" : "",
+      atlasLayer: normalizeAtlasLayer(params.get("atlasLayer") || ""),
       // Empty means "the default for this state" — Connections when a record
       // is focused, the board otherwise (AtlasMapPage.atlasView decides). It is
       // deliberately not forced to "path": serializing a default the user never
@@ -791,7 +797,7 @@ export function serializeViewState(state: ViewState): string {
     setIfValue(params, "atlasPivotTrail", state.atlasPivotTrail);
     setIfValue(params, "atlasLanding", state.atlasLanding);
     setIfValue(params, "atlasLensFamily", state.atlasLensFamily);
-    if (state.atlasLayer === "publisher") params.set("atlasLayer", "publisher");
+    setIfValue(params, "atlasLayer", normalizeAtlasLayer(state.atlasLayer));
     if (state.relationshipView === "path") {
       params.set("relationshipView", "path");
     } else if (state.relationshipView === "map") {
@@ -991,7 +997,7 @@ export function buildAtlasMapUrl(options: AtlasMapUrlOptions = {}): string {
     atlasPivotTrail: options.atlasPivotTrail || "",
     atlasLanding: normalizeAtlasLanding(options.atlasLanding || ""),
     atlasLensFamily: options.atlasLensFamily || "",
-    atlasLayer: options.atlasLayer === "publisher" ? "publisher" : "",
+    atlasLayer: normalizeAtlasLayer(options.atlasLayer || ""),
     sourceView: options.sourceView || "default",
     relationshipView: options.relationshipView || "",
     relationshipType: options.relationshipType || "",

@@ -30,9 +30,10 @@ test("focus resolves record over publication over territory over overview", () =
 });
 
 test("territory state survives refresh: layer, pins, mode and endpoints round-trip through the URL", () => {
-  const patch = territoryPatch({ limb: "atlas:LIMB-COMPLIANCE", pins: ["cmmc-2", "fedramp-rev5"], mode: "shared", layer: "publisher" });
+  const patch = territoryPatch({ limb: "atlas:LIMB-COMPLIANCE", pins: ["cmmc-2", "fedramp-rev5"], mode: "shared", publisher: "DISA" });
   const back = roundTrip(atlas(patch));
-  assert.equal(back.atlasLayer, "publisher");
+  assert.equal(back.atlasLayer, "publisher:DISA");
+  assert.equal(territoryTargetOf(back).publisher, "DISA");
   assert.equal(back.atlasResearch, "shared");
   assert.deepEqual(territoryTargetOf(back).pins, ["cmmc-2", "fedramp-rev5"]);
   assert.equal(territoryModeOf(roundTrip(atlas(territoryPatch({ node: "disa-stig:V-205646", mode: "upstream", from: "disa-stig:V-205646" })))), "upstream");
@@ -48,13 +49,12 @@ test("a computed path is never written to the URL, only its endpoints", () => {
 test("a patch clears what it does not name, and unsupported layers are dropped", () => {
   const p = territoryPatch({ framework: "nist-800-53" });
   assert.deepEqual([p.node, p.atlasLimb, p.atlasPins, p.atlasResearch, p.atlasFrom, p.atlasTo, p.atlasLayer], ["", "", "", "", "", "", ""]);
-  const bad = roundTrip(atlas({ atlasLayer: "count" }));
-  assert.equal(bad.atlasLayer, "");
+  for (const value of ["count", "publisher", "publisher:", "lifecycle:x"]) assert.equal(roundTrip(atlas({ atlasLayer: value })).atlasLayer, "", value);
 });
 
 test("clear actions are offered only when there is something to clear", () => {
   assert.deepEqual(territoryHasWork(atlas()), { pins: false, path: false, layer: false, focus: false });
-  const w = territoryHasWork(atlas(territoryPatch({ limb: "atlas:LIMB-RISK", pins: ["a", "b"], mode: "path", from: "a", to: "b", layer: "publisher" })));
+  const w = territoryHasWork(atlas(territoryPatch({ limb: "atlas:LIMB-RISK", pins: ["a", "b"], mode: "path", from: "a", to: "b", publisher: "DISA" })));
   assert.deepEqual(w, { pins: true, path: true, layer: true, focus: true });
 });
 

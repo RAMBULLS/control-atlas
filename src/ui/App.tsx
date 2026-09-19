@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { atlasSurfaceFor, researchIsPublicationLevel } from "./lib/atlasTerritoryState";
 import {
   DataPendingNotice,
   LoadErrorPanel,
@@ -91,6 +92,9 @@ const AboutPage = lazyRoute(() =>
 );
 const AtlasResearchPage = lazyRoute(() =>
   import("./pages/AtlasResearchPage").then((module) => ({ default: module.AtlasResearchPage })),
+);
+const AtlasTerritoryPage = lazyRoute(() =>
+  import("./pages/AtlasTerritoryPage").then((module) => ({ default: module.AtlasTerritoryPage })),
 );
 const AtlasMapPage = lazyRoute(() =>
   import("./pages/AtlasMapPage").then((module) => ({
@@ -330,7 +334,7 @@ export function App() {
     viewState.view === "library-detail"
       ? `${viewState.view}:${viewState.node}`
       : viewState.view === "atlas-map"
-        ? `${viewState.view}:${viewState.atlasResearch ? "research" : "map"}:${viewState.atlasAxis || "landing"}:${viewState.atlasFramework || "none"}:${viewState.atlasBenchmark || "none"}`
+        ? `${viewState.view}:${viewState.atlasResearch && !researchIsPublicationLevel(viewState) ? "research" : atlasSurfaceFor(viewState) === "territory" ? "territory" : "map"}:${viewState.atlasAxis || "landing"}:${viewState.atlasFramework || "none"}:${viewState.atlasBenchmark || "none"}`
       : viewState.view === "catalog-detail"
         ? `${viewState.view}:${viewState.catalog}:${viewState.family || "all"}`
       : viewState.view === "matrix"
@@ -490,7 +494,7 @@ export function App() {
   // with record pages resolving to the official record name once the graph is
   // loaded.
   const routeEntityName = (() => {
-    if (viewState.view === "atlas-map" && viewState.atlasResearch) return "Find a connection";
+    if (viewState.view === "atlas-map" && viewState.atlasResearch && !researchIsPublicationLevel(viewState)) return "Find a connection";
     const activeNodeId =
       viewState.view === "library-detail" || viewState.view === "atlas-map"
         ? viewState.node
@@ -663,7 +667,7 @@ export function App() {
 
   const canRenderWithoutBundle = isStaticViewWithoutBundle(viewState.view);
   const hasRequiredRouteArtifacts =
-    viewState.view !== "atlas-map" || Boolean(viewState.atlasResearch) || Boolean(bundle?.atlasSpine);
+    viewState.view !== "atlas-map" || (Boolean(viewState.atlasResearch) && !researchIsPublicationLevel(viewState)) || atlasSurfaceFor(viewState) === "territory" || Boolean(bundle?.atlasSpine);
   const hasRequiredSearchArtifacts =
     viewState.view !== "atlas-map" || Boolean(viewState.atlasResearch) || Boolean(bundle?.librarySearchReady);
   const readyState = loadError
@@ -938,7 +942,10 @@ function AppContent(props: {
         <DataPendingNotice onRetry={onRetryLoad} slow={loadSlow} title="Loading the Atlas" />
       );
     }
-    if (state.atlasResearch) return <AtlasResearchPage bundle={bundle} onNavigate={onNavigate} state={state} />;
+    if (state.atlasResearch && !researchIsPublicationLevel(state)) return <AtlasResearchPage bundle={bundle} onNavigate={onNavigate} state={state} />;
+    if (!state.node && atlasSurfaceFor(state) === "territory") {
+      return <AtlasTerritoryPage bundle={bundle} onNavigate={onNavigate} onOpenNode={onOpenNode} state={state} />;
+    }
     return (
       <AtlasMapPage
         bundle={bundle}

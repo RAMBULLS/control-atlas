@@ -1,4 +1,5 @@
 import { parseResearchPins } from "./atlasResearchState";
+import { TERRITORY_GEOMETRY } from "./atlasTerritoryGeography";
 import type { ViewState } from "./viewState";
 
 type AtlasViewState = Extract<ViewState, { view: "atlas-map" }>;
@@ -20,6 +21,18 @@ export function atlasSurfaceFor(state: Partial<AtlasViewState>): AtlasSurface {
     || state.relationshipView || state.relationshipType || state.relationshipGroup
     || state.provenance || state.confidence || state.nodeType || state.includeCandidates || state.relationshipSearch;
   return legacyScope ? "classic" : "territory";
+}
+
+/**
+ * Research states whose every endpoint is a mapped publication are answered by the territory sheet
+ * from published routes. Record-level states still use the record research view.
+ */
+export function researchIsPublicationLevel(state: Partial<AtlasViewState>): boolean {
+  const known = (id: string) => id in TERRITORY_GEOMETRY.assignments;
+  const mode = state.atlasResearch;
+  if (mode !== "shared" && mode !== "path") return false;
+  const ids = [...parseResearchPins(state.atlasPins), ...(mode === "path" ? [state.atlasFrom || "", state.atlasTo || ""] : [])];
+  return ids.length > 0 && ids.every(known);
 }
 
 export type TerritoryFocus =
@@ -50,7 +63,8 @@ export type TerritoryTarget = {
   mode?: TerritoryMode;
   from?: string;
   to?: string;
-  layer?: "" | "publisher";
+  /** Publisher name for the Publisher layer; empty for no layer. */
+  publisher?: string;
 };
 
 /**
@@ -68,7 +82,7 @@ export function territoryPatch(target: TerritoryTarget = {}): Partial<AtlasViewS
     atlasResearch: mode,
     atlasFrom: mode && target.from ? target.from : "",
     atlasTo: mode === "path" && target.to ? target.to : "",
-    atlasLayer: target.layer === "publisher" ? "publisher" : "",
+    atlasLayer: target.publisher ? `publisher:${target.publisher}` : "",
   };
 }
 
@@ -77,7 +91,7 @@ export function territoryTargetOf(state: Partial<AtlasViewState>): TerritoryTarg
   return {
     limb: state.atlasLimb || "", framework: state.atlasFramework || "", node: state.node || "",
     pins: parseResearchPins(state.atlasPins), mode: territoryModeOf(state),
-    from: state.atlasFrom || "", to: state.atlasTo || "", layer: state.atlasLayer === "publisher" ? "publisher" : "",
+    from: state.atlasFrom || "", to: state.atlasTo || "", publisher: (state.atlasLayer || "").replace(/^publisher:/, ""),
   };
 }
 
@@ -86,7 +100,7 @@ export function territoryHasWork(state: Partial<AtlasViewState>): { pins: boolea
   return {
     pins: parseResearchPins(state.atlasPins).length > 0,
     path: territoryModeOf(state) === "path" || territoryModeOf(state) === "upstream",
-    layer: state.atlasLayer === "publisher",
+    layer: !!state.atlasLayer,
     focus: territoryFocusOf(state).kind !== "overview",
   };
 }

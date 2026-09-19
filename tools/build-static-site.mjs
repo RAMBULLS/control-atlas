@@ -171,6 +171,10 @@ if (reuseStagedData) {
 runNodeSync(["--import", "tsx", join(ROOT, "scripts/build-atlas-research-artifact.mjs"),
   "--output", join(DIST, "data/generated")], { cwd: ROOT, stdio: "inherit" });
 
+// The territory index is small (publication routes only); rebuilt with the corpus like research data.
+runNodeSync(["--import", "tsx", join(ROOT, "scripts/build-atlas-territory-artifact.mjs"),
+  "--output", join(DIST, "data/generated")], { cwd: ROOT, stdio: "inherit" });
+
 console.log(reuseStagedData ? "Compressing changed JSON files with gzip..." : "Compressing JSON files with gzip...");
 function getFiles(dir) {
   const result = [];

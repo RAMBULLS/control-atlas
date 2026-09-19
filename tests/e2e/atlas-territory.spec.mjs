@@ -59,6 +59,7 @@ test("a hub shows a bounded set first, then the complete set on request", async 
   await page.getByRole("button", { name: /Show all \d+/ }).click();
   const total = await page.locator(".route--sel").count();
   expect(total).toBeGreaterThan(4);
+  await page.getByText("Filter by relationship type").click();
   await page.getByRole("button", { name: /^Maps to/ }).click();
   expect(await page.locator(".route--sel").count()).toBeLessThan(total);
 });

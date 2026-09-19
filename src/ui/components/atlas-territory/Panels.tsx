@@ -27,7 +27,7 @@ export function Breadcrumb(props: { model: TerritoryModel; areaId: string | null
 
 export function SearchBox(props: {
   query: string; open: boolean; hits: readonly AnyHit[]; onQuery: (value: string) => void; onPick: (hit: AnyHit) => void; onClose: () => void; ready: boolean;
-  onSubmit: () => void; noMatch: string; onNavigate: AppNavigate;
+  onSubmit: () => void; noMatch: string; onNavigate: AppNavigate; placeholder?: string;
 }) {
   const { query, open, hits, onQuery, onPick, onClose, ready } = props;
   return (
@@ -38,7 +38,7 @@ export function SearchBox(props: {
         aria-controls="atlas-results" aria-expanded={open} aria-haspopup="listbox" autoComplete="off" id="atlas-search"
         onChange={(e) => onQuery(e.target.value)}
         onKeyDown={(e) => { if (e.key === "Escape") onClose(); if (e.key === "Enter") { e.preventDefault(); props.onSubmit(); } }}
-        placeholder="Search a record or publication, e.g. V-205646" role="combobox" type="search" value={query}
+        placeholder={props.placeholder || "Search a record or publication, e.g. V-205646"} role="combobox" type="search" value={query}
       />
       {props.noMatch ? (
         <div className="atl-search__recovery">
@@ -165,14 +165,17 @@ export function PublicationCard(props: {
       </dl>
       {total ? (
         <>
-          {reveal.typeCounts.length > 1 ? (
-            <div aria-label="Relationship types" className="atl-types" role="group">
-              {reveal.typeCounts.map((t) => <button aria-pressed={props.types.includes(t.type)} key={t.type} onClick={() => props.onToggleType(t.type)} type="button">{relation(t.type)} · {t.count}</button>)}
-            </div>
-          ) : null}
           <p className="atl-note">{reveal.expanded ? `Showing all ${plural(reveal.matching.length, "connection")} on the map.` : `Showing ${reveal.visible.length} of ${reveal.matching.length} on the map, the ones with the most published record connections.`}</p>
           {!reveal.expanded ? <button onClick={props.onShowAll} type="button">Show all {reveal.matching.length}</button> : null}
           <ul className="atl-chips">{reveal.matching.map((r) => { const other = r.a === id ? r.b : r.a; return <li key={r.key}><button onClick={() => props.onRoute(r.key)} type="button">{model.alias(other)}</button></li>; })}</ul>
+          {reveal.typeCounts.length > 1 ? (
+            <details className="atl-inline" open={props.types.length > 0}>
+              <summary>Filter by relationship type</summary>
+              <div aria-label="Relationship types" className="atl-types" role="group">
+                {reveal.typeCounts.map((t) => <button aria-pressed={props.types.includes(t.type)} key={t.type} onClick={() => props.onToggleType(t.type)} type="button">{relation(t.type)} · {t.count}</button>)}
+              </div>
+            </details>
+          ) : null}
         </>
       ) : null}
       {props.extra}

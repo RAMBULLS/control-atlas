@@ -75,13 +75,18 @@ function candidates(a: Pt, b: Pt): Pt[][] {
  * the fewest label rectangles (then the shortest), trimmed to clear both markers, with rounded
  * corners. A route is drawn only for a published connection; this function never invents one.
  */
-export function routeBetween(a: Pt, b: Pt, avoid: readonly Rect[], clear: number, radius: number): Routed {
-  let best: { pts: Pt[]; hits: number; length: number } | null = null;
+const leavesView = (pts: readonly Pt[], view: Rect) => samples(pts).some((p) => p[0] < view.x0 || p[0] > view.x1 || p[1] < view.y0 || p[1] > view.y1);
+
+export function routeBetween(a: Pt, b: Pt, avoid: readonly Rect[], clear: number, radius: number, view?: Rect): Routed {
+  let best: { pts: Pt[]; hits: number; length: number; out: number } | null = null;
   for (const v of candidates(a, b)) {
     const t = trim(v, clear, clear);
+    const out = view && leavesView(t, view) ? 1 : 0;
     const hits = hitsRects(t, avoid);
     const length = len(t);
-    if (!best || hits < best.hits || (hits === best.hits && length < best.length)) best = { pts: t, hits, length };
+    // Crossing one label is cheaper than a long detour; two or more are not. Leaving the view is worst.
+    const cost = hits * 12 + length;
+    if (!best || out < best.out || (out === best.out && cost < best.hits * 12 + best.length)) best = { pts: t, hits, length, out };
   }
   const pts = best!.pts;
   const lens = pts.slice(1).map((p, i) => Math.hypot(p[0] - pts[i][0], p[1] - pts[i][1]));

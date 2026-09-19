@@ -87,7 +87,10 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
   }, [target.x, target.y, target.w, target.h]);
 
   const u = view.w / Math.max(1, size.w);
-  const fontPx = 14 * u;
+  // Text is screen-constant, so on a narrow map it is scaled down to keep names inside their territories.
+  const ut = u * Math.min(1, Math.max(0.72, size.w / 1100));
+  const fontPx = 14 * ut;
+  const viewRect: Rect = { x0: target.x, y0: target.y, x1: target.x + target.w, y1: target.y + target.h };
   const hoverPublication = hover?.kind === "publication" ? hover.id : null;
   const recordCatalogs = new Set(records.map((r) => r.catalogId));
   const pinned = new Set(pins.filter((p) => model.publicationById.has(p)));
@@ -108,7 +111,9 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
     }
     return partners.reduce((s, q) => s + (q[0] - p[0]), 0) / partners.length > 0 ? -1 : 1;
   };
-  const showName = (id: string) => (context ? context.has(id) : model.isMajor(id)) || focusAreaId === model.areaOf(id).id || hoverPublication === id || focusPublication === id
+  // With a publication open and little free map beside the inspector, name only what the view is about; the inspector lists the rest.
+  const tight = (!!focusPublication || records.length > 0) && inspectorInset > 0 && size.w - inspectorInset < 720;
+  const showName = (id: string) => (context ? context.has(id) : !tight && model.isMajor(id)) || (!tight && focusAreaId === model.areaOf(id).id) || hoverPublication === id || focusPublication === id
     || pinned.has(id) || active.has(id) || connected.has(id) || recordCatalogs.has(id);
   const labelRect = (id: string, lines = 1): Rect => {
     const p = pos(id); const side = labelSide(id);
@@ -116,14 +121,14 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
     const x0 = side === 1 ? p[0] + 8 * u : p[0] - 8 * u - w;
     return { x0, y0: p[1] - fontPx * 0.75, x1: x0 + w, y1: p[1] - fontPx * 0.75 + h };
   };
-  const nameRects: Rect[] = model.areas.filter((a) => !a.empty || focusAreaId === a.id).map((a) => {
+  const nameRects: Rect[] = model.areas.map((a) => {
     const chars = Math.max(...a.name.lines.map((l) => l.length)); const focused = focusAreaId === a.id;
-    const blurbW = a.blurb.length * 12.5 * 0.56 * u;
-    return { x0: a.name.x - 4 * u, y0: a.name.y - 26 * u, x1: a.name.x + Math.max(chars * 19.5 * u, focused ? blurbW : 0), y1: a.name.y + (a.name.lines.length - 1) * 27 * u + (focused ? 26 * u : 8 * u) };
+    const blurbW = a.blurb.length * 12.5 * 0.56 * ut;
+    return { x0: a.name.x - 4 * u, y0: a.name.y - 26 * ut, x1: a.name.x + Math.max(chars * 19.5 * ut, focused ? blurbW : 0), y1: a.name.y + (a.name.lines.length - 1) * 27 * ut + (focused ? 26 * ut : 8 * ut) };
   });
   const avoid: Rect[] = [...[...active].map((id) => labelRect(id, recordCatalogs.has(id) ? 2 : 1)), ...nameRects];
   const labeledRects: Rect[] = [...model.publications.filter((p) => showName(p.id)).map((p) => labelRect(p.id, 1)), ...nameRects];
-  const routeFor = (a: string, b: string): Routed => routeBetween(pos(a), pos(b), avoid, 12 * u, 30 * u);
+  const routeFor = (a: string, b: string): Routed => routeBetween(pos(a), pos(b), avoid, 12 * u, 30 * u, viewRect);
   const placeLabel = (g: Routed, text: string): Pt => {
     const mid = g.mid; const w = text.length * 0.62 * 12.5 * u + 6 * u; const gap = 16 * u;
     const cands: Pt[] = [
@@ -172,27 +177,27 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
       <g className="terr__names">
         {model.areas.map((a) => {
           const shown = focusAreaId === a.id || isHoverDistrict(a.id);
-          if (a.empty && !shown) return null;
+          const rest = a.empty && !shown;
           return (
             <g className={`dname${shown ? " is-shown" : ""}${a.empty ? " is-empty" : ""}`} key={a.id} style={styleFor(a.id)}>
-              <text aria-hidden="true" className="dname__text" fontSize={25 * u} strokeWidth={4 * u} x={a.name.x} y={a.name.y}>
-                {a.name.lines.map((l, i) => <tspan dy={i ? 27 * u : 0} key={l} x={a.name.x}>{l}</tspan>)}
+              <text aria-hidden="true" className="dname__text" fontSize={25 * ut} strokeWidth={4 * ut} x={a.name.x} y={a.name.y}>
+                {a.name.lines.map((l, i) => <tspan dy={i ? 27 * ut : 0} key={l} x={a.name.x}>{l}</tspan>)}
               </text>
-              <text aria-hidden="true" className="dname__blurb" fontSize={12.5 * u} strokeWidth={4 * u} x={a.name.x} y={a.name.y + (a.name.lines.length - 1) * 27 * u + 21 * u}>{a.blurb}</text>
+              <text aria-hidden="true" className="dname__blurb" fontSize={12.5 * ut} strokeWidth={4 * ut} x={a.name.x} y={a.name.y + (a.name.lines.length - 1) * 27 * ut + 21 * ut}>{rest ? "No publications placed yet" : a.blurb}</text>
             </g>
           );
         })}
       </g>
 
       <g className="shore">
-        <text aria-hidden="true" className="shore__label" fontSize={11.5 * u} textAnchor="end" x={410} y={50}>AUTHORITY</text>
+        <text aria-hidden="true" className="shore__label" fontSize={11.5 * ut} textAnchor="end" x={410} y={50}>AUTHORITY</text>
         {authority.map((a, i) => {
           const x = 430 + i * 40; const on = hover?.kind === "shore" && hover.id === a.id;
           return (
             <g aria-label={`Authority: ${a.name}. Open the authority list.`} className={`shore__item${on ? " is-hover" : ""}`} key={a.id} onClick={actions.openAuthority} onKeyDown={onKey(actions.openAuthority)} onPointerEnter={() => setHover({ kind: "shore", id: a.id })} onPointerLeave={() => setHover(null)} role="button" tabIndex={0}>
               <circle className="hit" cx={x} cy={44} r={24 * u} />
               <rect className="shore__mark" height={9 * u} transform={`rotate(45 ${x} 44)`} width={9 * u} x={x - 4.5 * u} y={44 - 4.5 * u} />
-              {on ? <text className="shore__name" fontSize={12.5 * u} strokeWidth={4 * u} textAnchor="middle" x={x} y={22}>{a.name}</text> : null}
+              {on ? <text className="shore__name" fontSize={12.5 * ut} strokeWidth={4 * ut} textAnchor="middle" x={x} y={22}>{a.name}</text> : null}
             </g>
           );
         })}
@@ -204,13 +209,13 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
           return <path className="route route--preview" d={g.d} key={r.key} markerEnd="url(#terr-tip)" strokeWidth={2.2 * u} />;
         }) : null}
         {revealed.map((r) => {
-          const g = routeBetween(pos(r.from), pos(r.to), labeledRects, 12 * u, 28 * u);
+          const g = routeBetween(pos(r.from), pos(r.to), labeledRects, 12 * u, 28 * u, viewRect);
           const on = hover?.kind === "route" && hover.id === r.key;
           return (
             <g className={`route route--sel${on ? " is-hover" : ""}`} data-route={r.key} key={r.key}>
               <path className="route__line route--draw" d={g.d} markerEnd="url(#terr-tip)" pathLength={1} strokeWidth={(on ? 4.4 : 3.2) * u} />
               <path aria-label={`Published connection ${model.alias(r.from)} to ${model.alias(r.to)}. Open evidence.`} className="route__hit" d={g.d} onClick={() => actions.selectRoute(r.key)} onKeyDown={onKey(() => actions.selectRoute(r.key))} onPointerEnter={() => setHover({ kind: "route", id: r.key })} onPointerLeave={() => setHover(null)} role="button" strokeWidth={46 * u} tabIndex={0} />
-              {on ? <text className="route__label route__label--on" fontSize={12.5 * u} strokeWidth={4 * u} textAnchor="middle" x={g.mid[0]} y={g.mid[1] - 9 * u}>{relationLabel(r.types)}</text> : null}
+              {on ? <text className="route__label route__label--on" fontSize={12.5 * ut} strokeWidth={4 * ut} textAnchor="middle" x={g.mid[0]} y={g.mid[1] - 9 * u}>{relationLabel(r.types)}</text> : null}
             </g>
           );
         })}
@@ -220,7 +225,7 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
             <g className="route route--focus" data-route={r.key} key={r.key}>
               <path className="route__halo" d={g.d} strokeWidth={11 * u} />
               <path className="route__line route--draw" d={g.d} markerEnd="url(#terr-tip)" pathLength={1} strokeWidth={5.2 * u} />
-              <text className="route__label route__label--on" fontSize={12.5 * u} strokeWidth={4 * u} textAnchor="middle" x={g.mid[0]} y={g.mid[1] - 10 * u}>{relationLabel(r.types)}</text>
+              <text className="route__label route__label--on" fontSize={12.5 * ut} strokeWidth={4 * ut} textAnchor="middle" x={g.mid[0]} y={g.mid[1] - 10 * u}>{relationLabel(r.types)}</text>
             </g>
           );
         })() : null}
@@ -233,7 +238,7 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
               <path className="route__halo" d={g.d} strokeWidth={(h.selected || on ? 15 : 12) * u} />
               <path className="route__line seg__line route--draw" d={g.d} markerEnd="url(#terr-tip)" pathLength={1} strokeWidth={(h.selected || on ? 6.4 : 5.2) * u} />
               <path aria-label={`Route segment ${h.label}. Open evidence.`} className="route__hit" d={g.d} onClick={() => actions.selectHop(i)} onKeyDown={onKey(() => actions.selectHop(i))} onPointerEnter={() => setHover({ kind: "route", id: `hop${i}` })} onPointerLeave={() => setHover(null)} role="button" strokeWidth={46 * u} tabIndex={0} />
-              <text className="route__label route__label--on" fontSize={12.5 * u} strokeWidth={4 * u} textAnchor="middle" x={at[0]} y={at[1]}>{h.label}</text>
+              <text className="route__label route__label--on" fontSize={12.5 * ut} strokeWidth={4 * ut} textAnchor="middle" x={at[0]} y={at[1]}>{h.label}</text>
             </g>
           );
         })}
@@ -243,7 +248,7 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
         {model.publications.map((l) => {
           const p = pos(l.id); const isActive = active.has(l.id); const major = model.isMajor(l.id);
           const matched = !!context && context.has(l.id);
-          const dim = (dimming && !isActive) || (publisherOn && l.publisher !== publisher) || (!!context && !matched);
+          const dim = (dimming && !isActive) || (publisherOn && l.publisher !== publisher) || (!!context && !matched && !connected.has(l.id) && !pinned.has(l.id));
           const isPinned = pinned.has(l.id); const selected = focusPublication === l.id; const hov = hoverPublication === l.id;
           const label = showName(l.id) && (!dim || hov); const side = labelSide(l.id); const lift = selected || hov;
           const areaId = l.area;
@@ -267,9 +272,9 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
               <circle className="lm__dot" cx={p[0]} cy={p[1]} r={(lift ? 8.2 : matched ? 7.4 : major ? 6.6 : 5.2) * u} />
               {label ? (
                 <>
-                  <text className="lm__name" fontSize={(major || lift ? 14.5 : 13.5) * u} strokeWidth={4 * u} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 4.5 * u}>{model.alias(l.id)}</text>
-                  {matched && !recordCatalogs.has(l.id) ? <text className="lm__type lm__count" fontSize={11.5 * u} strokeWidth={4 * u} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 19 * u}>{context!.get(l.id)!.records.toLocaleString()} matching {context!.get(l.id)!.records === 1 ? "record" : "records"}</text>
-                    : (!recordCatalogs.has(l.id) && (lift || (focusAreaId === areaId && !isActive))) ? <text className="lm__type" fontSize={11.5 * u} strokeWidth={4 * u} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 19 * u}>{l.kind}</text> : null}
+                  <text className="lm__name" fontSize={(major || lift ? 14.5 : 13.5) * ut} strokeWidth={4 * ut} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 4.5 * u}>{model.alias(l.id)}</text>
+                  {matched && !recordCatalogs.has(l.id) ? <text className="lm__type lm__count" fontSize={11.5 * ut} strokeWidth={4 * ut} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 19 * u}>{context!.get(l.id)!.records.toLocaleString()} matching {context!.get(l.id)!.records === 1 ? "record" : "records"}</text>
+                    : (!recordCatalogs.has(l.id) && !tight && (lift || (focusAreaId === areaId && !isActive))) ? <text className="lm__type" fontSize={11.5 * ut} strokeWidth={4 * ut} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 19 * u}>{l.kind}</text> : null}
                 </>
               ) : null}
               {isPinned ? <g className="pin-anim"><path className="pin" d={PIN} transform={`translate(${p[0]} ${p[1] - 9 * u}) scale(${u * 0.95})`} /></g> : null}
@@ -286,7 +291,7 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
               <circle className="lm__hit" cx={p[0]} cy={p[1]} r={24 * u} />
               {r.focused ? <circle className="rec__pulse" cx={p[0]} cy={p[1]} r={17 * u} /> : null}
               <rect className="rec__mark" height={15 * u} transform={`rotate(45 ${p[0]} ${p[1]})`} width={15 * u} x={p[0] - 7.5 * u} y={p[1] - 7.5 * u} />
-              <text className="rec__code" fontSize={14.5 * u} strokeWidth={4 * u} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 26 * u}>{r.code}</text>
+              <text className="rec__code" fontSize={14.5 * ut} strokeWidth={4 * ut} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 26 * u}>{r.code}</text>
               {r.pinned ? <g className="pin-anim"><path className="pin" d={PIN} transform={`translate(${p[0]} ${p[1] - 12 * u}) scale(${u * 0.95})`} /></g> : null}
             </g>
           );
@@ -312,7 +317,7 @@ export function MiniMap(props: { model: TerritoryModel; focusAreaId: string | nu
           role={onPick ? "button" : undefined} style={styleFor(a.id)} tabIndex={onPick ? 0 : undefined}
         />
       ))}
-      {large ? model.areas.filter((a) => !a.empty).map((a) => <text aria-hidden="true" className="mini__name" key={a.id} style={styleFor(a.id)} x={a.name.x + 30} y={a.name.y}>{a.name.lines.join(" ")}</text>) : null}
+      {large ? model.areas.map((a) => <text aria-hidden="true" className={`mini__name${a.empty ? " is-empty" : ""}`} key={a.id} style={styleFor(a.id)} x={a.name.x + 30} y={a.name.y}>{a.name.lines.join(" ")}</text>) : null}
       {[...active].map((id) => { const p = model.position(id); return <circle className="mini__pt" cx={p[0]} cy={p[1]} key={id} r={18} />; })}
     </svg>
   );

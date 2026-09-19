@@ -54,7 +54,7 @@ export function buildTerritoryModel(index: TerritoryIndex, geometry: TerritoryGe
   };
 }
 
-export type Hit = { type: "publication"; id: string; label: string; sub: string };
+export type Hit = { type: "publication"; id: string; label: string; sub: string; strong?: boolean };
 
 /** Publication search over names, reviewed aliases, publishers and kinds. Records use the library index. */
 export function searchPublications(model: TerritoryModel, query: string, limit = 5): Hit[] {
@@ -63,14 +63,16 @@ export function searchPublications(model: TerritoryModel, query: string, limit =
   const score = (p: TerritoryPublication) => {
     const alias = model.alias(p.id).toLowerCase(); const name = p.name.toLowerCase();
     if (alias === q || name === q || p.id === q) return 0;
-    if (alias.startsWith(q) || name.startsWith(q)) return 1;
+    const boundary = (t: string) => t.startsWith(q) && !/[a-z0-9]/.test(t.charAt(q.length));
+    if (boundary(alias) || boundary(name)) return 1;
+    if (alias.startsWith(q) || name.startsWith(q)) return 1.5;
     if (alias.includes(q) || name.includes(q)) return 2;
     if (p.publisher.toLowerCase().includes(q) || p.kind.toLowerCase().includes(q)) return 3;
     return 99;
   };
   return model.publications.map((p) => ({ p, s: score(p) })).filter((x) => x.s < 99)
     .sort((a, b) => a.s - b.s || model.alias(a.p.id).localeCompare(model.alias(b.p.id))).slice(0, limit)
-    .map(({ p }) => ({ type: "publication" as const, id: p.id, label: model.alias(p.id),
+    .map(({ p, s }) => ({ type: "publication" as const, id: p.id, strong: s <= 1, label: model.alias(p.id),
       sub: `${p.kind} · ${p.publisher} · ${model.areaOf(p.id).label}` }));
 }
 

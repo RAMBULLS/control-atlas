@@ -21,7 +21,7 @@ The approved reference is the "Territory Edition" prototype. The prototype branc
 - Each publication has a reviewed short **alias** (for example "SP 800-53 Rev. 5", "ATT&CK Enterprise") and a **major** flag. Major landmarks are an explicit reviewed list, not derived from counts. Names are never shortened by character count.
 - `validateTerritoryGeometry` enforces: exactly the canonical areas, shared borders, one slot per mapped publication inside its own territory, unique aliases, no truncation.
 
-Empty territories (Operations, Knowledge today) are drawn muted and carry no name at rest.
+Empty territories (Operations, Knowledge today) are drawn muted, named, and marked "No publications placed yet", so they read as deliberately empty rather than missing.
 
 ## Semantic zoom
 

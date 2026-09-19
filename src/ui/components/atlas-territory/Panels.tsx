@@ -18,16 +18,16 @@ export function Breadcrumb(props: { model: TerritoryModel; areaId: string | null
   return (
     <nav aria-label="Where you are" className="atl-crumb">
       <span>Atlas</span>
-      {areaId ? <><i aria-hidden="true">›</i><span>{model.areaById.get(areaId)?.label}</span></> : null}
-      {publicationId ? <><i aria-hidden="true">›</i><span>{model.alias(publicationId)}</span></> : null}
-      {label ? <><i aria-hidden="true">›</i><b>{label}</b></> : null}
+      {areaId ? <><i aria-hidden="true">›</i>{" "}<span>{model.areaById.get(areaId)?.label}</span></> : null}
+      {publicationId ? <><i aria-hidden="true">›</i>{" "}<span>{model.alias(publicationId)}</span></> : null}
+      {label ? <><i aria-hidden="true">›</i>{" "}<b>{label}</b></> : null}
     </nav>
   );
 }
 
 export function SearchBox(props: {
   query: string; open: boolean; hits: readonly AnyHit[]; onQuery: (value: string) => void; onPick: (hit: AnyHit) => void; onClose: () => void; ready: boolean;
-  onSubmit: () => void; noMatch: string; onNavigate: AppNavigate;
+  onSubmit: () => void; noMatch: string; onNavigate: AppNavigate; placeholder?: string;
 }) {
   const { query, open, hits, onQuery, onPick, onClose, ready } = props;
   return (
@@ -38,7 +38,7 @@ export function SearchBox(props: {
         aria-controls="atlas-results" aria-expanded={open} aria-haspopup="listbox" autoComplete="off" id="atlas-search"
         onChange={(e) => onQuery(e.target.value)}
         onKeyDown={(e) => { if (e.key === "Escape") onClose(); if (e.key === "Enter") { e.preventDefault(); props.onSubmit(); } }}
-        placeholder="Search a record or publication, e.g. V-205646" role="combobox" type="search" value={query}
+        placeholder={props.placeholder || "Search a record or publication, e.g. V-205646"} role="combobox" type="search" value={query}
       />
       {props.noMatch ? (
         <div className="atl-search__recovery">
@@ -165,14 +165,17 @@ export function PublicationCard(props: {
       </dl>
       {total ? (
         <>
-          {reveal.typeCounts.length > 1 ? (
-            <div aria-label="Relationship types" className="atl-types" role="group">
-              {reveal.typeCounts.map((t) => <button aria-pressed={props.types.includes(t.type)} key={t.type} onClick={() => props.onToggleType(t.type)} type="button">{relation(t.type)} · {t.count}</button>)}
-            </div>
-          ) : null}
           <p className="atl-note">{reveal.expanded ? `Showing all ${plural(reveal.matching.length, "connection")} on the map.` : `Showing ${reveal.visible.length} of ${reveal.matching.length} on the map, the ones with the most published record connections.`}</p>
           {!reveal.expanded ? <button onClick={props.onShowAll} type="button">Show all {reveal.matching.length}</button> : null}
           <ul className="atl-chips">{reveal.matching.map((r) => { const other = r.a === id ? r.b : r.a; return <li key={r.key}><button onClick={() => props.onRoute(r.key)} type="button">{model.alias(other)}</button></li>; })}</ul>
+          {reveal.typeCounts.length > 1 ? (
+            <details className="atl-inline" open={props.types.length > 0}>
+              <summary>Filter by relationship type</summary>
+              <div aria-label="Relationship types" className="atl-types" role="group">
+                {reveal.typeCounts.map((t) => <button aria-pressed={props.types.includes(t.type)} key={t.type} onClick={() => props.onToggleType(t.type)} type="button">{relation(t.type)} · {t.count}</button>)}
+              </div>
+            </details>
+          ) : null}
         </>
       ) : null}
       {props.extra}
@@ -209,12 +212,12 @@ export function SharedCard(props: { model: TerritoryModel; pins: readonly string
     <div className="atl-card">
       <p className="atl-eyebrow">Shared ground · {pins.length} pinned</p>
       <h2>{names(pins)}</h2>
-      {ground.none ? <p><b>Nothing is shared.</b> No published route joins these directly, and no publication connects to more than one of them. That is an answer, not a failure to load.</p> : null}
+      {ground.none ? <p><b>Nothing is shared</b> in the published connections we have. No published route joins these directly, and no publication connects to {pins.length > 2 ? "two or more of them" : "both"}.</p> : null}
       {ground.direct.length ? <><p>Published routes between them:</p><ul className="atl-chips">{ground.direct.map((r) => <li key={r.key}><button onClick={() => props.onRoute(r.key)} type="button">{model.alias(r.a)} · {model.alias(r.b)}</button></li>)}</ul></> : null}
       {ground.all.length ? <><p>Connected to every pin:</p><ul className="atl-chips">{ground.all.map((id) => <li key={id}><button onClick={() => props.onSelect(id)} type="button">{model.alias(id)}</button></li>)}</ul></> : null}
       {ground.some.length ? <><p>Connected to some:</p><ul className="atl-list">{ground.some.map((s) => <li key={s.id}><button onClick={() => props.onSelect(s.id)} type="button"><b>{model.alias(s.id)}</b><small>with {names(s.pins)}</small></button></li>)}</ul></> : null}
-      {pins.some((p) => ground.unique[p]?.length) ? <details className="atl-inline"><summary>Connected to only one pin</summary>{pins.map((p) => ground.unique[p]?.length ? <p key={p}><b>{model.alias(p)}</b>: {names(ground.unique[p])}</p> : null)}</details> : null}
-      <p className="atl-note">Territories that sit next to each other are neighbors for navigation only. A shared connection does not mean equivalence.</p>
+      {pins.some((p) => ground.unique[p]?.length) ? <details className="atl-inline"><summary>Connected to only one of these pins</summary>{pins.map((p) => ground.unique[p]?.length ? <p key={p}><b>{model.alias(p)}</b>: {names(ground.unique[p])}</p> : null)}</details> : null}
+      <p className="atl-note">A shared connection does not mean the publications are equivalent.</p>
     </div>
   );
 }

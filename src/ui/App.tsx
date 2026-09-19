@@ -730,7 +730,7 @@ export function App() {
         onOpenSearch={openSearchOverlay}
         viewState={viewState}
       /> : null}
-      {chromeReady ? <OrbitalContextBar entityName={routeEntityName} onNavigate={navigate} state={viewState} /> : null}
+      {chromeReady ? <OrbitalContextBar entityName={viewState.view === "atlas-map" && atlasSurfaceFor(viewState) === "territory" ? "" : routeEntityName} onNavigate={navigate} state={viewState} /> : null}
 
       <main id="workspace" tabIndex={-1}>
         {routeRecovery ? (

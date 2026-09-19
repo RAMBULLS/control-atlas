@@ -40,3 +40,12 @@ test("the path string is deterministic and rounded", () => {
   assert.match(a.d, /^M[\d. -]+L[\d. -]+Q/);
   assert.equal(roundedPath([[0, 0], [10, 0]], 5), "M0 0L10 0");
 });
+
+test("a route prefers crossing a label to leaving the visible view", () => {
+  const label = { x0: 200, y0: 80, x1: 260, y1: 120 };
+  const view = { x0: 0, y0: 60, x1: 500, y1: 140 };
+  const free = routeBetween([100, 100], [400, 100], [label], 12, 30);
+  assert.equal(free.hits, 0, "with room to detour it goes around the label");
+  const tight = routeBetween([100, 100], [400, 100], [label], 12, 30, view);
+  assert.ok(tight.pts.every((p) => p[0] >= view.x0 && p[0] <= view.x1 && p[1] >= view.y0 && p[1] <= view.y1), "never leaves the view");
+});

@@ -20,8 +20,17 @@ export function ResearchNotice(props: { research: TerritoryResearch; what: strin
 
 export function RecordCard(props: {
   label: string; title: string; publication: string; areaLabel: string; degree: number | null; canTrace: boolean; tracing: boolean;
-  onTrace: () => void; pin: ReactNode; fullList: ReactNode; openRecord: ReactNode; loading: boolean; notice?: ReactNode;
+  onTrace: () => void; pin: ReactNode; fullList: ReactNode; openRecord: ReactNode; loading: boolean; missing?: boolean; notice?: ReactNode;
 }) {
+  if (props.missing) {
+    return (
+      <div className="atl-card">
+        <p className="atl-eyebrow">Record</p>
+        <h2>{props.label}</h2>
+        <p>We could not find this record in the current data. The link may be mistyped or made with a different data version. Try the search box above.</p>
+      </div>
+    );
+  }
   return (
     <div className="atl-card">
       <p className="atl-eyebrow">Record</p>
@@ -155,7 +164,7 @@ export function RecordSharedCard(props: {
       <p className="atl-eyebrow">Shared ground · {props.pins.length} pinned</p>
       <h2>{props.pins.map(label).join(", ")}</h2>
       <ResearchNotice research={research} what="The search" />
-      {answer && !all.length && !some.length ? <p><b>Nothing is shared.</b> No record has a published link to {props.pins.length > 2 ? "two or more of" : "both"} these records in the current data. That is an answer, not a failure to load.</p> : null}
+      {answer && !all.length && !some.length ? <p><b>Nothing is shared</b> in the published connections we have. No record has a published link to {props.pins.length > 2 ? "two or more of" : "both"} these records.</p> : null}
       {all.length ? <><p>Connected to every pin · {(answer?.sharedTotal || all.length).toLocaleString()}</p><ul className="atl-list">{all.map(row)}</ul></> : null}
       {some.length ? <><p>Connected to some</p><ul className="atl-list">{some.map(row)}</ul></> : null}
       <p className="atl-note">A shared connection does not mean the records are equivalent.</p>

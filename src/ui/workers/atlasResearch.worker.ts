@@ -52,6 +52,8 @@ self.addEventListener("message", async (event: MessageEvent) => {
       if (command.kind === "search") value = engine.search(String(command.query));
       else if (command.kind === "records") value = engine.records(command.ids.slice(0, 8).map(researchId).filter(Boolean));
       else if (command.kind === "path") value = engine.path(researchId(command.from), researchId(command.to), command.direction, command.maxHops);
+      else if (command.kind === "upstream") value = engine.upstream(researchId(command.from), command.catalogs.slice(0, 40).map(researchId).filter(Boolean), command.maxHops);
+      else if (command.kind === "degree") value = engine.degree(researchId(command.id));
       else if (command.kind === "shared") value = engine.shared(command.pins, command.offset);
       else throw new Error("Unknown research request.");
     }

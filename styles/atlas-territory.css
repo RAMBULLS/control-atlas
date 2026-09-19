@@ -190,3 +190,16 @@
 .mini__d:focus-visible { stroke: var(--atl-focus); stroke-width: 9; outline: none; }
 .mini__pt { fill: var(--atl-accent); }
 .mini__name { --c: var(--ca-area-color-on-dark, var(--ca-area-color, var(--atl-accent))); font: 700 46px var(--ca-font-display, sans-serif); letter-spacing: 0.1em; text-transform: uppercase; fill: var(--c); pointer-events: none; paint-order: stroke; stroke: var(--atl-sea); stroke-width: 8px; }
+
+/* Record research: steps, warnings, evidence sources */
+.atl-primary { background: var(--ca-action-primary); color: var(--ca-on-primary); border-color: var(--ca-action-primary); font-weight: 700; }
+.atl .atl-primary:hover:not(:disabled) { background: var(--ca-action-primary-hover); border-color: var(--ca-action-primary-hover); }
+.atl-steps { list-style: none; margin: 0 0 8px; padding: 0 0 0 14px; border-left: 3px solid var(--atl-accent); display: grid; gap: 2px; }
+.atl .atl-steps button { display: grid; width: 100%; text-align: left; gap: 1px; border: 0; background: transparent; padding: 4px 6px; border-radius: 6px; }
+.atl .atl-steps__seg { color: var(--atl-accent); font-weight: 600; }
+.atl-steps small { color: var(--atl-muted); font-size: 0.75rem; }
+.atl-warn { margin: 8px 0; padding: 8px 12px; border: 1px solid var(--atl-gold); border-radius: 8px; color: var(--atl-text); font-size: 0.85rem; }
+.atl-map > .atl-warn { position: absolute; z-index: 5; left: 50%; bottom: 14px; transform: translateX(-50%); background: var(--atl-raised); max-width: min(520px, calc(100% - 32px)); }
+.atl-source { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--atl-border); }
+.atl-source h3 { margin: 0 0 4px; font-size: 0.9rem; }
+.atl-source a { display: inline-block; margin-right: 12px; min-height: 44px; line-height: 44px; }

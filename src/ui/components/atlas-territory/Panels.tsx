@@ -93,7 +93,7 @@ export const HelpPanel = () => (
 
 export function PinTray(props: {
   pins: readonly string[]; label: (id: string) => string; onUnpin: (id: string) => void; onClear: () => void;
-  canShare: boolean; onShare: () => void; canTrace: boolean; onTrace: () => void; compare: ReactNode;
+  canShare: boolean; onShare: () => void; canTrace: boolean; onTrace: () => void; traceLabel: string; compare: ReactNode;
 }) {
   const { pins } = props;
   if (!pins.length) return null;
@@ -105,9 +105,9 @@ export function PinTray(props: {
       </div>
       <div className="atl-tray__actions">
         {props.canShare ? <button onClick={props.onShare} type="button">Find shared connections</button> : null}
-        {props.canTrace ? <button onClick={props.onTrace} type="button">Open route evidence</button> : null}
+        {props.canTrace ? <button onClick={props.onTrace} type="button">{props.traceLabel}</button> : null}
         {props.compare}
-        {pins.length < 2 ? <small>Pin one more publication to find what they share.</small> : null}
+        {pins.length < 2 ? <small>Pin one more to find what they share.</small> : null}
         <button onClick={props.onClear} type="button">Clear pins</button>
       </div>
     </section>

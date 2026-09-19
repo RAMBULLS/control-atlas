@@ -3,6 +3,8 @@ export type ResearchCommand =
   | { kind: "search"; query: string }
   | { kind: "records"; ids: string[] }
   | { kind: "path"; from: string; to: string; direction: "forward" | "either"; maxHops: number }
+  | { kind: "upstream"; from: string; catalogs: string[]; maxHops: number }
+  | { kind: "degree"; id: string }
   | { kind: "shared"; pins: string[]; offset: number };
 
 /** Owned by the mounted research view: no graph payload on ordinary Atlas arrival. */

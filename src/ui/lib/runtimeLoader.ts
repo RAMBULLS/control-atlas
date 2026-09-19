@@ -1,5 +1,5 @@
 import { createFederalGraphRuntime } from "../../app/runtime.mjs";
-import { atlasSurfaceFor, researchIsPublicationLevel } from "./atlasTerritoryState";
+import { atlasSurfaceFor } from "./atlasTerritoryState";
 import { atlasNeighborhoodShardId } from "../../app/atlas-neighborhood.mjs";
 import { RUNTIME_CACHE_VERSION } from "../../shared/runtime-cache-version.mjs";
 import type {
@@ -305,7 +305,6 @@ function isAtlasOrientationState(state: ViewState) {
   return (
     state.view === "atlas-map" &&
     atlasSurfaceFor(state) === "classic" &&
-    (!state.atlasResearch || researchIsPublicationLevel(state)) &&
     !state.node &&
     (!state.atlasAxis ||
       (state.atlasAxis === "landscape" && !state.atlasFramework))
@@ -319,14 +318,6 @@ export function runtimeArtifactPlan(
     searchOverlayOpen?: boolean;
   } = {},
 ): RuntimeArtifactPlan {
-  // Research owns an opt-in worker/index. Old map scope remains in the URL
-  // for the return journey, but must not trigger unrelated catalog/RMF loads.
-  if (state.view === "atlas-map" && state.atlasResearch && !researchIsPublicationLevel(state)) {
-    return { atlasNetwork: false, atlasSpine: false, catalogBootstrap: false,
-      catalogId: "", catalogFamily: "", commons: false, fullGraph: false,
-      librarySearch: Boolean(options.searchOverlayOpen), recordNodeId: "",
-      registries: false, sources: true };
-  }
   // Templates now lands directly on the document browser, so every visit needs
   // the small template registries to render the list at all.
   const buildDetailRequested = state.view === "templates";
@@ -371,7 +362,7 @@ export function runtimeArtifactPlan(
   if (state.view === "atlas-map" && atlasSurfaceFor(state) === "territory") {
     return { atlasNetwork: false, atlasSpine: false, catalogBootstrap: true, catalogId: "", catalogFamily: "",
       commons: false, fullGraph: false, librarySearch: true, recordNodeId: atlasRecordFocused ? state.node : "",
-      registries: false, sources: atlasRecordFocused };
+      registries: false, sources: atlasRecordFocused || Boolean(state.atlasResearch) };
   }
   return {
     atlasNetwork: state.view === "atlas-map",

@@ -1,7 +1,17 @@
 import { AxeBuilder } from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { readGeneratedCollection } from "../../scripts/lib/generated-graph-artifacts.mjs";
 import { attachPageDiagnostics, dismissOnboarding, gotoApp, waitForAppReady } from "./support.mjs";
 /* global document, getComputedStyle */
+
+// The destination comes from the accepted CCI reference in the corpus, never from a hard-coded endpoint.
+const edges = readGeneratedCollection(process.cwd(), "edges").edges;
+const START = "disa-stig:V-205646";
+const CCI = "disa-cci:CCI-000185";
+const upstream = edges.find((e) => e.source_node_id === CCI && e.target_node_id.startsWith("nist-800-53:") && e.relationship_type === "maps_to");
+if (!upstream) throw new Error("Expected the accepted CCI reference for the flagship journey.");
+const END = upstream.target_node_id;
+const endLabel = END.slice(END.indexOf(":") + 1);
 
 async function open(page, path = "/#/atlas", width = 1440) {
   attachPageDiagnostics(page);
@@ -145,4 +155,41 @@ test("the territory sheet has no serious accessibility violations", async ({ pag
   await open(page, "/#/atlas?atlasLimb=atlas:LIMB-COMPLIANCE&atlasFramework=nist-800-53");
   const results = await new AxeBuilder({ page }).include(".atl").analyze();
   expect(results.violations.filter((v) => ["serious", "critical"].includes(v.impact))).toEqual([]);
+});
+
+test("flagship: search a STIG rule, trace upstream through the CCI to the accepted NIST control, and inspect the evidence", async ({ page }) => {
+  await open(page);
+  await page.locator("#atlas-search").click();
+  await page.keyboard.type("V-205646", { delay: 20 });
+  await page.locator("#atlas-results button").first().click();
+  await expect(page.locator(".atl-inspector")).toContainText("V-205646");
+  await expect(page.locator(".rec[data-record]")).toHaveCount(1);
+  await page.getByRole("button", { name: "Trace upstream" }).click();
+  const steps = page.locator(".atl-steps");
+  await expect(steps).toContainText("CCI-000185", { timeout: 90000 });
+  await expect(steps).toContainText(endLabel);
+  expect(query(page).get("atlasResearch")).toBe("upstream");
+  expect(query(page).get("atlasFrom")).toBe(START);
+  expect(page.url()).not.toContain(endLabel);
+  await expect(page.locator(".seg")).toHaveCount(2);
+  await page.locator(".atl-steps__seg").first().click();
+  await expect(page.locator(".atl-inspector")).toContainText("Why connected");
+  await expect(page.locator(".atl-inspector")).toContainText("Exact location");
+  await page.getByRole("button", { name: "Back to path" }).click();
+  await page.reload();
+  await expect(page.locator(".atl-steps")).toContainText(endLabel, { timeout: 90000 });
+});
+
+test("a record path from the URL is recomputed, never stored", async ({ page }) => {
+  await open(page, `/#/atlas?atlasResearch=path&atlasFrom=${encodeURIComponent(START)}&atlasTo=${encodeURIComponent(END)}`);
+  await expect(page.locator(".atl-steps")).toContainText(endLabel, { timeout: 90000 });
+});
+
+test("record pins share ground through the CCI, and mixing pin kinds is refused plainly", async ({ page }) => {
+  await open(page, `/#/atlas?atlasResearch=shared&atlasPins=${encodeURIComponent(JSON.stringify([START, END]))}`);
+  await expect(page.locator(".atl-inspector")).toContainText("CCI-000185", { timeout: 90000 });
+  await expect(page.locator(".atl").getByRole("link", { name: /^Compare/ })).toHaveCount(0);
+  await page.locator('[data-landmark="csf-2"]').click();
+  await page.getByRole("button", { name: "Pin CSF 2.0" }).click();
+  await expect(page.getByText(/Pin publications together or records together/).first()).toBeVisible();
 });

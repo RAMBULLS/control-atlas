@@ -1,5 +1,5 @@
 import { buildAtlasGraphModel, type AtlasGraph, type AtlasGraphSourceEdge, type AtlasGraphSourceNode } from "./atlasGraphModel";
-import { findAtlasResearchPaths, isAtlasResearchEdge, sharedAtlasNeighbors, type AtlasResearchResult } from "./atlasResearch";
+import { findAtlasResearchPaths, findNearestResearchTargets, isAtlasResearchEdge, sharedAtlasNeighbors, type AtlasNearestResult, type AtlasResearchResult } from "./atlasResearch";
 
 export const RESEARCH_INDEX_VERSION = 1;
 export const RESEARCH_POLICY_VERSION = 1;
@@ -29,8 +29,10 @@ export type ResearchManifest = {
   inputEdgeCount: number;
 };
 export type ResearchAnswer = {
-  kind: "path" | "shared";
-  result?: AtlasResearchResult;
+  kind: "path" | "shared" | "upstream";
+  result?: AtlasResearchResult | AtlasNearestResult;
+  /** Records connected to some, but not every, pin (three or more pins). */
+  some?: Array<{ nodeId: string; connections: Array<{ pinId: string; edgeIds: string[] }> }>;
   shared?: Array<{ nodeId: string; connections: Array<{ pinId: string; edgeIds: string[] }> }>;
   sharedTotal?: number;
   sharedOffset?: number;
@@ -98,13 +100,25 @@ export class AtlasResearchEngine {
     const ids = [...new Set([from, to, ...edges.flatMap(edge => [edge.source_node_id, edge.target_node_id])])];
     return { kind: "path", result, nodes: this.records(ids), edges };
   }
+  /** The nearest records in the given publications, following recorded connections outward. */
+  upstream(from: string, catalogs: string[], maxHops: number): ResearchAnswer {
+    const wanted = new Set(catalogs);
+    const result = findNearestResearchTargets(this.graph, from, id => wanted.has(this.byId.get(id)?.identity.catalogId || ""), { inputCoverage: "complete", direction: "forward", maxHops });
+    const edges = [...new Map(result.paths.flatMap(path => path.map(hop => [hop.edge.id, hop.edge] as const))).values()];
+    const ids = [...new Set([from, ...result.endpoints, ...edges.flatMap(edge => [edge.source_node_id, edge.target_node_id])])];
+    return { kind: "upstream", result, nodes: this.records(ids), edges };
+  }
+  /** Published connections a record has in this index. */
+  degree(id: string): number { return this.graph.hasNode(id) ? this.graph.degree(id) : 0; }
   shared(pins: string[], offset = 0): ResearchAnswer {
     if (!Number.isSafeInteger(offset) || offset < 0 || offset > 100000) throw new Error("Invalid results page.");
-    const all = sharedAtlasNeighbors(this.graph, pins);
+    const rows = sharedAtlasNeighbors(this.graph, pins, { minPins: 2 });
+    const all = rows.filter(row => row.connections.length === new Set(pins).size);
+    const some = new Set(pins).size > 2 ? rows.filter(row => row.connections.length < new Set(pins).size).slice(0, 40) : [];
     const shared = all.slice(offset, offset + 40);
-    const edgeIds = [...new Set(shared.flatMap(row => row.connections.flatMap(connection => connection.edgeIds)))];
-    return { kind: "shared", shared, sharedTotal: all.length, sharedOffset: offset,
-      nodes: this.records([...pins, ...shared.map(row => row.nodeId)]),
+    const edgeIds = [...new Set([...shared, ...some].flatMap(row => row.connections.flatMap(connection => connection.edgeIds)))];
+    return { kind: "shared", shared, some, sharedTotal: all.length, sharedOffset: offset,
+      nodes: this.records([...pins, ...shared.map(row => row.nodeId), ...some.map(row => row.nodeId)]),
       edges: edgeIds.map(id => this.graph.getEdgeAttribute(id, "source")) };
   }
 }

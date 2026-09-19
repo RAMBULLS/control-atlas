@@ -79,17 +79,21 @@ function step(graph: AtlasGraph, from: string, edgeId: string, options: Pick<Atl
   return { from, to, traversal: undirected ? "undirected" : reverse ? "reverse" : "forward", edge };
 }
 
+export type AtlasNearestResult = AtlasResearchResult & {
+  /** Depth of the nearest target(s), in hops. Zero when nothing was found. */
+  depth: number;
+  /** Every target reached at that depth, in stable id order. */
+  endpoints: string[];
+};
+
+type SearchInput = { graph: AtlasGraph; from: string; isTarget: (id: string) => boolean; options: AtlasResearchOptions };
+
 /**
- * Deterministic, bounded shortest research trails. Parallel source assertions
- * remain distinct. Reverse traversal is opt-in and explicitly labeled per hop.
+ * Deterministic, bounded breadth-first search shared by point-to-point and nearest-target trails.
+ * Parallel source assertions remain distinct. Reverse traversal is opt-in and labeled per hop.
  * An empty result is scoped to these bounds and this supplied index only.
  */
-export function findAtlasResearchPaths(
-  graph: AtlasGraph,
-  from: string,
-  to: string,
-  options: AtlasResearchOptions,
-): AtlasResearchResult {
+function searchTrails({ graph, from, isTarget, options }: SearchInput): AtlasNearestResult {
   if (!["complete", "partial"].includes(options.inputCoverage)) throw new Error("inputCoverage must be declared.");
   if (options.direction && !["forward", "either"].includes(options.direction)) throw new Error("Invalid traversal direction.");
   const bounds = {
@@ -98,13 +102,11 @@ export function findAtlasResearchPaths(
     maxExaminedEdges: bounded(options.maxExaminedEdges, 25000, 250000, "maxExaminedEdges"),
     maxPaths: bounded(options.maxPaths, 3, 8, "maxPaths"),
   };
-  const result: AtlasResearchResult = {
+  const result: AtlasNearestResult = {
     status: "not_found_within_bounds", inputCoverage: options.inputCoverage, paths: [],
-    visitedNodes: 0, examinedEdges: 0, limitedBy: "", moreShortestPaths: false, bounds,
+    visitedNodes: 0, examinedEdges: 0, limitedBy: "", moreShortestPaths: false, bounds, depth: 0, endpoints: [],
   };
-  if (from === to || !inScope(graph, from, options) || !inScope(graph, to, options)) {
-    return { ...result, status: "invalid_selection" };
-  }
+  if (!inScope(graph, from, options)) return { ...result, status: "invalid_selection" };
   const queue = [from];
   const distance = new Map([[from, 0]]);
   const parents = new Map<string, AtlasResearchHop[]>();
@@ -135,17 +137,19 @@ export function findAtlasResearchPaths(
         parents.set(hop.to, []);
       }
       parents.get(hop.to)!.push(hop);
-      if (hop.to === to) shortest = nextDepth;
+      if (isTarget(hop.to) && nextDepth < shortest) shortest = nextDepth;
     }
   }
   result.visitedNodes = distance.size;
-  if (distance.has(to)) {
+  if (shortest < Infinity) {
+    result.depth = shortest;
+    result.endpoints = [...distance].filter(([id, d]) => d === shortest && id !== from && isTarget(id)).map(([id]) => id).sort();
     const collect = (id: string, suffix: AtlasResearchHop[]) => {
       if (result.paths.length > bounds.maxPaths) return;
       if (id === from) { result.paths.push(suffix); return; }
       for (const hop of parents.get(id) || []) collect(hop.from, [hop, ...suffix]);
     };
-    collect(to, []);
+    for (const endpoint of result.endpoints) collect(endpoint, []);
     result.moreShortestPaths = result.paths.length > bounds.maxPaths;
     result.paths = result.paths.slice(0, bounds.maxPaths);
     result.status = "found";
@@ -155,6 +159,34 @@ export function findAtlasResearchPaths(
   return result;
 }
 
+export function findAtlasResearchPaths(
+  graph: AtlasGraph,
+  from: string,
+  to: string,
+  options: AtlasResearchOptions,
+): AtlasResearchResult {
+  if (from === to || !inScope(graph, from, options) || !inScope(graph, to, options)) {
+    const bounds = searchTrails({ graph, from: "", isTarget: () => false, options }).bounds;
+    return { status: "invalid_selection", inputCoverage: options.inputCoverage, paths: [], visitedNodes: 0, examinedEdges: 0, limitedBy: "", moreShortestPaths: false, bounds };
+  }
+  const { depth: _depth, endpoints: _endpoints, ...result } = searchTrails({ graph, from, isTarget: (id) => id === to, options });
+  return result;
+}
+
+/**
+ * The nearest records that satisfy the target test, following recorded connections outward from one
+ * record. The caller decides what counts as a target (for example, records in a set of
+ * publications); no publication or control is named here.
+ */
+export function findNearestResearchTargets(
+  graph: AtlasGraph,
+  from: string,
+  isTarget: (id: string) => boolean,
+  options: AtlasResearchOptions,
+): AtlasNearestResult {
+  return searchTrails({ graph, from, isTarget: (id) => id !== from && isTarget(id), options });
+}
+
 /**
  * Neighbors shared by every distinct pin. These are shared published links,
  * not shared requirements or proof that two programs are equivalent.
@@ -162,7 +194,7 @@ export function findAtlasResearchPaths(
 export function sharedAtlasNeighbors(
   graph: AtlasGraph,
   pinIds: readonly string[],
-  options: Pick<AtlasResearchOptions, "includeHistorical" | "allowedNodeIds"> = {},
+  options: Pick<AtlasResearchOptions, "includeHistorical" | "allowedNodeIds"> & { minPins?: number } = {},
 ): Array<{ nodeId: string; connections: Array<{ pinId: string; edgeIds: string[] }> }> {
   const pins = [...new Set(pinIds)];
   if (pins.length > 6) throw new Error("At most six pins are supported.");
@@ -178,9 +210,10 @@ export function sharedAtlasNeighbors(
       byPin.set(pinId, [...(byPin.get(pinId) || []), edgeId]);
     }
   }
-  return [...candidates].filter(([, byPin]) => byPin.size === pins.length)
+  const minPins = Math.min(pins.length, Math.max(2, options.minPins ?? pins.length));
+  return [...candidates].filter(([, byPin]) => byPin.size >= minPins)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([nodeId, byPin]) => ({
-      nodeId, connections: pins.map((pinId) => ({ pinId, edgeIds: byPin.get(pinId)! })),
+      nodeId, connections: pins.filter((pinId) => byPin.has(pinId)).map((pinId) => ({ pinId, edgeIds: byPin.get(pinId)! })),
     }));
 }

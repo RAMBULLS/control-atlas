@@ -1,5 +1,4 @@
 import { parseResearchPins } from "./atlasResearchState";
-import { TERRITORY_GEOMETRY } from "./atlasTerritoryGeography";
 import type { ViewState } from "./viewState";
 
 type AtlasViewState = Extract<ViewState, { view: "atlas-map" }>;
@@ -13,6 +12,8 @@ export type AtlasSurface = "territory" | "classic";
  * `atlasLanding` only ever grouped the overview, so both open the territory sheet.
  */
 export function atlasSurfaceFor(state: Partial<AtlasViewState>): AtlasSurface {
+  // A research question is always answered on the territory sheet, whatever older scope rides along.
+  if (state.atlasResearch) return "territory";
   const legacyScope =
     (state.atlasAxis && state.atlasAxis !== "landscape")
     || state.atlasFamily || state.atlasBenchmark || state.atlasBaseline || state.atlasRmfStep
@@ -21,18 +22,6 @@ export function atlasSurfaceFor(state: Partial<AtlasViewState>): AtlasSurface {
     || state.relationshipView || state.relationshipType || state.relationshipGroup
     || state.provenance || state.confidence || state.nodeType || state.includeCandidates || state.relationshipSearch;
   return legacyScope ? "classic" : "territory";
-}
-
-/**
- * Research states whose every endpoint is a mapped publication are answered by the territory sheet
- * from published routes. Record-level states still use the record research view.
- */
-export function researchIsPublicationLevel(state: Partial<AtlasViewState>): boolean {
-  const known = (id: string) => id in TERRITORY_GEOMETRY.assignments;
-  const mode = state.atlasResearch;
-  if (mode !== "shared" && mode !== "path") return false;
-  const ids = [...parseResearchPins(state.atlasPins), ...(mode === "path" ? [state.atlasFrom || "", state.atlasTo || ""] : [])];
-  return ids.length > 0 && ids.every(known);
 }
 
 export type TerritoryFocus =

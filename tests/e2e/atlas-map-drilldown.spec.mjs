@@ -117,4 +117,3 @@ test("guided structural identity is identical before and after optional catalog 
   await row.click();
   await expect(page).toHaveURL(/#\/atlas\/mitre-attack:TACTIC-TA0001\?/);
 });
-

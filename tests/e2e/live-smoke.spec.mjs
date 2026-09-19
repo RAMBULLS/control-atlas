@@ -65,18 +65,22 @@ test("live smoke: Resources and Atlas workbench are first-class routes", async (
   await expect(page.getByRole("searchbox", { name: "Find resources" })).toHaveValue("OSCAL");
   await expect(page.locator(".workspace-result-row--resource").first()).toBeVisible();
 
+  // An old bookmarked landing URL must still resolve into the Territory Edition.
   await gotoApp(page, "/#/atlas?atlasLanding=publishers");
   await waitForAppReady(page);
-  const board = page.getByTestId("atlas-area-map");
-  await expect(board).toBeVisible();
-  const cards = board.locator("button.atlas-area__cell");
-  await expect(cards).not.toHaveCount(0);
-  // Every landmark is a labelled card, so the smoke check reads names rather
-  // than probing a canvas that carried none.
-  await expect(board.locator("canvas")).toHaveCount(0);
-  await board.getByRole("button", { name: /^NIST —/ }).click();
-  await expect(page).toHaveURL(/atlasLensFamily=ecosystem(?::|%3A)nist/);
-  await expect(board.getByRole("button", { name: /^800-53 —/ }).first()).toBeVisible();
+  const territoryMap = page.getByRole("group", { name: /Control Atlas territory map/ });
+  await expect(territoryMap).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Atlas", level: 1 })).toBeVisible();
+  // Nine territories, each a labelled control, and a known major landmark by name.
+  await expect(territoryMap.getByRole("button", { name: /territory.*Zoom in/ })).toHaveCount(9);
+  await expect(territoryMap.getByRole("button", { name: /^SP 800-53 Rev\. 5, / })).toBeVisible();
+  await expect(page.getByText("The Atlas could not load")).toHaveCount(0);
+  await expect(page.getByText("Record not found")).toHaveCount(0);
+  await expect(page.locator("canvas")).toHaveCount(0);
+  expect(
+    await page.evaluate(() => globalThis.document.documentElement.scrollWidth - globalThis.document.documentElement.clientWidth),
+    "horizontal overflow",
+  ).toBeLessThanOrEqual(0);
 });
 
 test("live smoke: compare hub loads", async ({ page }) => {

@@ -1,6 +1,9 @@
 # Atlas research — browser integration checkpoint
 
-Status: draft implementation in PR #261, tracked by #260. This is not the completed Atlas vNext redesign.
+- **Owner:** Product owner and Muse
+- **Status:** Draft, tracked by #260 and PR #261; this is not the completed Atlas vNext redesign.
+- **Last reviewed:** 2026-09-18
+- **Supersession:** Replaced by docs/ATLAS_VNEXT_DESIGN.md when Atlas vNext is accepted.
 
 ## What this checkpoint owns
 

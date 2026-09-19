@@ -18,6 +18,7 @@ const canonicalDocs = [
   "docs/BACKLOG.md",
   "docs/THIRD_PARTY_NOTICES.md",
   "docs/SOURCE_TRUTH_PROFILES.md",
+  "docs/ATLAS_RESEARCH.md",
 ];
 
 function docFiles(path = "docs") {

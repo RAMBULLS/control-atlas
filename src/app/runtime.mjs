@@ -116,6 +116,33 @@ function normalizeLibrarySearchQuery(value) {
     .join(" ");
 }
 
+// Library search matching semantics:
+// 1. Identifier notation ("ac 2", "wn19 dc 000290") is tried first. It may rewrite
+//    the query into hyphenated tokens, and every token must appear in a record's text.
+// 2. If that finds nothing, the query's own words are used instead (all words must
+//    appear; a bare number must appear as a whole number, so "8" does not match "18").
+//    Notation rewriting is an aid for identifiers and must never turn a query about
+//    "red hat 8" or "windows server 2019" into a zero-result search.
+function literalLibrarySearchTerms(value) {
+  const terms = expandLibrarySearchIntent(value).toLowerCase().match(/[a-z0-9][a-z0-9.()-]*/g) || [];
+  return terms.filter(
+    (term) => (term.length > 1 || /^\d$/.test(term)) && !SEARCH_STOP_WORDS.has(term),
+  );
+}
+
+// Compiled once per term; the caller applies it to every record.
+function libraryTermMatcher(term, wholeNumbers) {
+  if (!wholeNumbers || !/^\d+$/.test(term)) return (text) => text.includes(term);
+  const whole = new RegExp(`(^|[^a-z0-9])${term}([^a-z0-9]|$)`);
+  return (text) => whole.test(text);
+}
+
+// A record from the publication the query names (its governed source name contains the
+// typed phrase, e.g. "DISA STIG", "SP 800-53") outranks incidental text matches.
+function librarySourceNamesQuery(sourceName, phrase) {
+  return phrase.length >= 3 && normalize(sourceName).includes(phrase);
+}
+
 function librarySearchRankBoost(document, query) {
   const normalizedQuery = normalize(query);
   const title = document?.search_title || normalize(document?.title);
@@ -1245,6 +1272,10 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
       primaryAlias && primaryAlias !== needle ? primaryAlias : query,
     ).toLowerCase();
     const searchTerms = searchNeedle.split(/\s+/).filter(Boolean);
+    const literalTerms = literalLibrarySearchTerms(query);
+    const literalNeedle = literalTerms.join(" ");
+    const literalMatchers = literalTerms.map((term) => libraryTermMatcher(term, true));
+    const typedPhrase = needle.replace(/\s+/g, " ");
     const exactMatches = [];
     const matches = [];
     for (let index = 0; index < indexedLibraryDocumentCount; index += 1) {
@@ -1283,12 +1314,39 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
         rankBoost: indexedLibraryRankBoost(index, searchNeedle),
         score: aliases.some((a) => normalizedItemId.startsWith(a))
           ? 1
-          : title.includes(searchNeedle)
+          : librarySourceNamesQuery(indexedLibraryValue(index, "source_name"), typedPhrase)
+            ? 1.5
+            : title.includes(searchNeedle)
+              ? 2
+              : 3,
+      });
+    }
+    if (exactMatches.length) return exactMatches;
+    if (matches.length || !searchTerms.length) return matches.sort(compareLibraryMatches);
+    // Nothing matched the identifier-style rewrite; retry with the words the user typed.
+    for (let index = 0; index < indexedLibraryDocumentCount; index += 1) {
+      if (!indexedLibraryFacetMatches(index, filters)) continue;
+      const title = normalize(indexedLibraryValue(index, "title"));
+      const searchableText = [
+        normalize(indexedLibraryValue(index, "item_id")),
+        title,
+        normalize(indexedLibraryValue(index, "control_family")),
+        normalize(indexedLibraryValue(index, "source_name")),
+        normalize(indexedLibraryValue(index, "publisher_name")),
+        normalize(indexedLibraryValue(index, "official_text_preview")),
+      ].join(" ");
+      if (!literalMatchers.every((matches) => matches(searchableText))) continue;
+      matches.push({
+        index,
+        rankBoost: indexedLibraryRankBoost(index, literalNeedle),
+        score: librarySourceNamesQuery(indexedLibraryValue(index, "source_name"), typedPhrase)
+          ? 1.5
+          : title.includes(literalNeedle)
             ? 2
             : 3,
       });
     }
-    return exactMatches.length ? exactMatches : matches.sort(compareLibraryMatches);
+    return matches.sort(compareLibraryMatches);
   }
 
   function documentLibraryMatches(query, filters = {}) {
@@ -1318,36 +1376,54 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
     ).toLowerCase();
     const searchTerms = searchNeedle.split(/\s+/).filter(Boolean);
     if (!searchTerms.length) return [];
-    const matches = [];
-    for (const document of candidates) {
-      const itemId = document.search_item_id || normalize(document.item_id);
-      const title = document.search_title || normalize(document.title);
-      const searchableText = document.search_text || [
-        itemId,
-        title,
-        normalize(document.control_family),
-        normalize(document.source_name),
-        normalize(document.publisher_name),
-        normalize(document.official_text_preview),
-      ].join(" ");
-      if (!searchTerms.every((term) => searchableText.includes(term))) continue;
-      matches.push({
-        document,
-        rankBoost: librarySearchRankBoost(document, searchNeedle),
-        score: aliases.some((a) => itemId.startsWith(a))
-          ? 1
-          : title.includes(searchNeedle)
-            ? 2
-            : 3,
-      });
-    }
+    const literalTerms = literalLibrarySearchTerms(query);
+    const literalNeedle = literalTerms.join(" ");
+    const typedPhrase = needle.replace(/\s+/g, " ");
+    const collect = (needle, terms, wholeNumbers) => {
+      const found = [];
+      const matchers = terms.map((term) => libraryTermMatcher(term, wholeNumbers));
+      for (const document of candidates) {
+        const itemId = document.search_item_id || normalize(document.item_id);
+        const title = document.search_title || normalize(document.title);
+        const searchableText = document.search_text || [
+          itemId,
+          title,
+          normalize(document.control_family),
+          normalize(document.source_name),
+          normalize(document.publisher_name),
+          normalize(document.official_text_preview),
+        ].join(" ");
+        if (!matchers.every((matches) => matches(searchableText))) continue;
+        found.push({
+          document,
+          rankBoost: librarySearchRankBoost(document, needle),
+          score: aliases.some((a) => itemId.startsWith(a))
+            ? 1
+            : librarySourceNamesQuery(document.source_name, typedPhrase)
+              ? 1.5
+              : title.includes(needle)
+                ? 2
+                : 3,
+        });
+      }
+      return found;
+    };
+    let matches = collect(searchNeedle, searchTerms, false);
+    if (!matches.length && literalTerms.length) matches = collect(literalNeedle, literalTerms, true);
     return matches.sort(compareLibraryMatches);
   }
 
+  // The Library asks for the same query several times per render (results, tag counts,
+  // kind counts). The dataset never changes for a runtime, so the last answer is reused.
+  let lastLibraryMatches = null;
   function libraryMatches(query, filters = {}) {
-    return indexedLibraryDocumentCount
+    const key = JSON.stringify([query, filters]);
+    if (lastLibraryMatches?.key === key) return lastLibraryMatches.matches;
+    const matches = indexedLibraryDocumentCount
       ? indexedLibraryMatches(query, filters)
       : documentLibraryMatches(query, filters);
+    lastLibraryMatches = { key, matches };
+    return matches;
   }
 
   function matchTaxonomyTags(match) {

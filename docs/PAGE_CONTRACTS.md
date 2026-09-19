@@ -19,6 +19,8 @@ Home presents the product purpose, one primary search action, and concise entran
 
 Library and Resources share search, visible desktop facets, a compact responsive filter drawer, result count, sorting, and incrementally rendered results. Empty search presents useful browse choices rather than the full corpus.
 
+Library search semantics (`src/app/runtime.mjs`): every word typed must appear somewhere in a record's identifier, title, family, publication name, publisher or official text. An exact identifier, including spaced or zero-padded notation such as `ac 2` or `wn19 dc 000290`, resolves first. Identifier notation is tried before the query's own words, but it is only an aid: if it finds nothing, the search retries with the words as typed, so a query about a product and version (`windows server 2019`, `red hat 8`, `sp 800-53`) never becomes an empty page because it resembled an identifier. Bare numbers match whole numbers only. A query that contains the name of a publication (its governed source name) ranks that publication's records first. A genuine zero says so, keeps the query, and offers only recovery options counted against the real index: dropping one word, or clearing filters.
+
 ## C. Adaptive Explorer
 
 Atlas is one route, `/atlas`, drawn as a territory sheet: nine areas laid out as one landmass, with each publication a named place inside its area. The design, its rules and its data are specified in [ATLAS_VNEXT_DESIGN.md](ATLAS_VNEXT_DESIGN.md); this section is the page contract.

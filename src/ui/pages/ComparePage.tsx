@@ -18,12 +18,13 @@ import {
 } from "../lib/compareExport";
 import {
   activateCompareMode,
+  compareEmptyKind,
   getCompareCurrentStep,
   getCompareSteps,
   resolveMappingSource,
   type CompareModeId,
 } from "../lib/compareModeState";
-import { paginateCompareRows } from "../lib/comparePagination";
+import { COMPARE_TARGET_PREVIEW, paginateCompareRows } from "../lib/comparePagination";
 import { compareTaxonomyTags } from "../lib/compareTaxonomy.mjs";
 import {
   Field,
@@ -287,6 +288,32 @@ function LazyEvidenceDetails({ targets }: { targets: any[] }) {
   );
 }
 
+function TargetItem({
+  onOpenNode,
+  target,
+}: {
+  onOpenNode: (nodeId: string) => void;
+  target: any;
+}) {
+  return (
+    <li className="target-mapping-item">
+      <div>
+        <span className="target-mapping-line">
+          <RecordLink nodeId={target.to_id} onOpenNode={onOpenNode}>
+            <strong>{target.to_item_id}</strong>
+          </RecordLink>
+          {target.relationship_type && target.relationship_type !== "maps_to" ? (
+            <span className="target-mapping-relationship">
+              {displayNameFor("relationship_type", target.relationship_type)}
+            </span>
+          ) : null}
+        </span>
+        <span className="target-item-title">{target.to_title}</span>
+      </div>
+    </li>
+  );
+}
+
 export function ComparePage(props: {
   bundle: RuntimeBundle;
   state: CompareState;
@@ -501,7 +528,11 @@ export function ComparePage(props: {
     itemIsReady &&
     mappingResolution.status !== "none" &&
     mappingResolution.status !== "invalid";
+  // Choosing the target in the page is the request and sets compareRun. A link that only
+  // names a source and target waits for an explicit action, because results download the
+  // full connection graph (about 22 MB).
   const showResults = state.compareRun === "true" && comparisonReady;
+  const scopeComplete = sourceIsValid && targetIsValid && itemIsReady;
   const currentStep = getCompareCurrentStep(mode, {
     ...state,
     compareRun: showResults ? "true" : "",
@@ -553,6 +584,28 @@ export function ComparePage(props: {
       target: "",
     });
   };
+
+  // Clearing the target (not just a run flag) keeps re-choosing the same target possible.
+  const changeTarget = () => {
+    patchCompare({
+      compareRun: "",
+      mappingSource: "",
+      relationshipType: "",
+      target: "",
+    });
+  };
+
+  const narrowed = Boolean(
+    resultQuery.trim() ||
+      state.relationshipType ||
+      mappingResolution.status === "filtered",
+  );
+  const exportScope = `Exports all ${visibleMappingCount.toLocaleString()} ${visibleMappingCount === 1 ? "mapping" : "mappings"}${narrowed ? " matching your search and filters" : ""}, not just this page.`;
+  const emptyKind = compareEmptyKind({
+    pairRows: pairRelationshipRows?.rows.length ?? 0,
+    searching: Boolean(resultQuery.trim()),
+    visibleRows: visibleAggregatedRows.length,
+  });
 
   const exportRows = async (format: "csv" | "xlsx") => {
     if (!sourceCatalog || !targetCatalog || !visibleAggregatedRows.length) return;
@@ -685,7 +738,7 @@ export function ComparePage(props: {
                 label="Target publication"
                 onChange={(target) =>
                   patchCompare({
-                    compareRun: "",
+                    compareRun: target ? "true" : "",
                     mappingSource: "",
                     relationshipType: "",
                     target,
@@ -698,6 +751,31 @@ export function ComparePage(props: {
               {mode === "item-mapping" && !targetOptions.length ? (
                 <p className="generation-status tone-warning" role="status">
                   No published item mapping is available for that identifier.
+                </p>
+              ) : null}
+              {scopeComplete && !comparisonReady ? (
+                <section className="empty-state compare-results-empty" role="status">
+                  <h3>No published mappings were found between these selections.</h3>
+                  <p>This reflects the published crosswalks in the current data.</p>
+                  <div className="actions">
+                    <Button onClick={changeTarget} type="button" variant="secondary">
+                      Change target
+                    </Button>
+                    {state.relationshipType || state.mappingSource ? (
+                      <Button
+                        onClick={() => patchCompare({ mappingSource: "", relationshipType: "" })}
+                        type="button"
+                        variant="secondary"
+                      >
+                        Clear filters
+                      </Button>
+                    ) : null}
+                  </div>
+                </section>
+              ) : null}
+              {comparisonReady && !showResults ? (
+                <p className="field-hint compare-run-prompt">
+                  This link names both publications but has not been run. Showing the mappings loads the full published connection data, which takes a few seconds.
                 </p>
               ) : null}
               <div className="actions compare-step-actions">
@@ -731,48 +809,25 @@ export function ComparePage(props: {
                     {targetLabel}
                   </h2>
                 </div>
-                <Button
-                  onClick={() => patchCompare({ compareRun: "" })}
-                  type="button"
-                  variant="secondary"
-                >
+                <Button onClick={changeTarget} type="button" variant="secondary">
                   Change target
                 </Button>
               </header>
 
-              {singleMappingSource ? (
-                <p className="compare-crosswalk-source">
-                  <span>Crosswalk source</span>
-                  <strong>{singleMappingSource.label}</strong>
-                </p>
-              ) : mappingSourceOptions.length > 1 ? (
-                <div className="compare-crosswalk-filter">
-                  <SelectField
-                    emptyLabel="All published sources"
-                    label="Crosswalk source"
-                    onChange={(mappingSource) => patchCompare({ mappingSource })}
-                    options={mappingSourceOptions}
-                    value={
-                      mappingResolution.status === "filtered"
-                        ? state.mappingSource
-                        : ""
-                    }
-                  />
+              <div className="compare-answer">
+                <div className="compare-answer-count">
+                  <p aria-live="polite" className="compare-mapping-total" role="status">
+                    {resultQuery.trim()
+                      ? `${visibleMappingCount.toLocaleString()} of ${filteredMappingCount.toLocaleString()} published mappings match`
+                      : `${visibleMappingCount.toLocaleString()} published mapping${visibleMappingCount === 1 ? "" : "s"} across ${visibleAggregatedRows.length.toLocaleString()} source record${visibleAggregatedRows.length === 1 ? "" : "s"}`}
+                  </p>
+                  {singleMappingSource ? (
+                    <p className="compare-crosswalk-source">
+                      <span>Crosswalk source</span>
+                      <strong>{singleMappingSource.label}</strong>
+                    </p>
+                  ) : null}
                 </div>
-              ) : null}
-
-              <div className="compare-refine-fields compare-results-toolbar">
-                <Field label="Search results by ID or title">
-                  <input
-                    onChange={(event) => {
-                      setResultQuery(event.target.value);
-                      if (state.page) patchCompare({ page: "" });
-                    }}
-                    placeholder="Search source or target IDs and titles"
-                    type="search"
-                    value={resultQuery}
-                  />
-                </Field>
                 <div className="compare-export-actions">
                   <span className="field-label">Export crosswalk</span>
                   <div className="actions">
@@ -793,40 +848,84 @@ export function ComparePage(props: {
                       Excel workbook
                     </Button>
                   </div>
-                  <small>Includes every row matching the current filters and search.</small>
+                  <small>{exportScope}</small>
                 </div>
               </div>
 
-              <p aria-live="polite" className="compare-mapping-total" role="status">
-                {resultQuery.trim()
-                  ? `${visibleMappingCount.toLocaleString()} of ${filteredMappingCount.toLocaleString()} published mappings match`
-                  : `${visibleMappingCount.toLocaleString()} published mapping${visibleMappingCount === 1 ? "" : "s"} across ${visibleAggregatedRows.length.toLocaleString()} source record${visibleAggregatedRows.length === 1 ? "" : "s"}`}
-              </p>
+              <div className="compare-refine-fields compare-results-toolbar">
+                <Field label="Search results by ID or title">
+                  <input
+                    onChange={(event) => {
+                      setResultQuery(event.target.value);
+                      if (state.page) patchCompare({ page: "" });
+                    }}
+                    placeholder="Search source or target IDs and titles"
+                    type="search"
+                    value={resultQuery}
+                  />
+                </Field>
+                {relationshipTypeOptions.length > 0 ? (
+                  <SelectField
+                    emptyLabel="All connection types"
+                    label="Connection type"
+                    onChange={(relationshipType) => patchCompare({ relationshipType })}
+                    options={relationshipTypeOptions}
+                    value={state.relationshipType}
+                  />
+                ) : null}
+                {!singleMappingSource && mappingSourceOptions.length > 1 ? (
+                  <SelectField
+                    emptyLabel="All published sources"
+                    label="Crosswalk source"
+                    onChange={(mappingSource) => patchCompare({ mappingSource })}
+                    options={mappingSourceOptions}
+                    value={
+                      mappingResolution.status === "filtered"
+                        ? state.mappingSource
+                        : ""
+                    }
+                  />
+                ) : null}
+              </div>
 
-              <section aria-labelledby="compare-taxonomy-title" className="compare-taxonomy-context">
-                <div>
-                  <h3 id="compare-taxonomy-title">Taxonomy context</h3>
-                  <p>Tags summarize the mapped records in each publication; they do not add a new relationship.</p>
-                </div>
-                <div className="compare-taxonomy-groups">
-                  {[
-                    { id: "shared", label: "Shared tags", tags: taxonomyComparison.shared },
-                    { id: "source", label: `Only in ${sourceLabel}`, tags: taxonomyComparison.onlySource },
-                    { id: "target", label: `Only in ${targetLabel}`, tags: taxonomyComparison.onlyTarget },
-                  ].map((group) => (
-                    <section aria-labelledby={`compare-taxonomy-${group.id}`} key={group.id}>
-                      <h4 id={`compare-taxonomy-${group.id}`}>{group.label}</h4>
-                      {group.tags.length ? (
-                        <div className="compare-taxonomy-tags">
-                          {group.tags.map((tag: any) => (
-                            <AtlasTag key={tag.id} onNavigate={onNavigate} showType size="sm" tagId={tag.id} />
-                          ))}
-                        </div>
-                      ) : <p className="muted">None</p>}
-                    </section>
-                  ))}
-                </div>
-              </section>
+              <Accordion.Root className="accordion-root compare-taxonomy-accordion" collapsible type="single">
+                <Accordion.Item className="disclosure-item" value="taxonomy">
+                  <Accordion.Header className="disclosure-header">
+                    <Accordion.Trigger className="disclosure-trigger">
+                      <span aria-hidden="true" className="disclosure-chevron">▾</span>
+                      <span>Taxonomy context</span>
+                      <span className="compare-taxonomy-summary">
+                        {taxonomyComparison.shared.length.toLocaleString()} shared · {taxonomyComparison.onlySource.length.toLocaleString()} only in {sourceLabel} · {taxonomyComparison.onlyTarget.length.toLocaleString()} only in {targetLabel}
+                      </span>
+                    </Accordion.Trigger>
+                  </Accordion.Header>
+                  <Accordion.Content className="disclosure-content">
+                    <div className="compare-taxonomy-context">
+                      <div>
+                        <p>Tags summarize the mapped records in each publication; they do not add a new relationship.</p>
+                      </div>
+                      <div className="compare-taxonomy-groups">
+                        {[
+                          { id: "shared", label: "Shared tags", tags: taxonomyComparison.shared },
+                          { id: "source", label: `Only in ${sourceLabel}`, tags: taxonomyComparison.onlySource },
+                          { id: "target", label: `Only in ${targetLabel}`, tags: taxonomyComparison.onlyTarget },
+                        ].map((group) => (
+                          <section aria-labelledby={`compare-taxonomy-${group.id}`} key={group.id}>
+                            <h4 id={`compare-taxonomy-${group.id}`}>{group.label}</h4>
+                            {group.tags.length ? (
+                              <div className="compare-taxonomy-tags">
+                                {group.tags.map((tag: any) => (
+                                  <AtlasTag key={tag.id} onNavigate={onNavigate} showType size="sm" tagId={tag.id} />
+                                ))}
+                              </div>
+                            ) : <p className="muted">None</p>}
+                          </section>
+                        ))}
+                      </div>
+                    </div>
+                  </Accordion.Content>
+                </Accordion.Item>
+              </Accordion.Root>
 
               {visibleAggregatedRows.length ? (
                 <>
@@ -852,25 +951,30 @@ export function ComparePage(props: {
                             </td>
                             <td data-label="Maps to">
                               <ul className="target-mapping-list">
-                                {row.targets.map((target: any) => (
-                                  <li
-                                    className="target-mapping-item"
+                                {row.targets.slice(0, COMPARE_TARGET_PREVIEW).map((target: any) => (
+                                  <TargetItem
                                     key={target.edge_id || `${row.from_id}-${target.to_id}`}
-                                  >
-                                    <div>
-                                      <RecordLink nodeId={target.to_id} onOpenNode={onOpenNode}>
-                                        <strong>{target.to_item_id}</strong>
-                                      </RecordLink>
-                                      <span className="target-item-title">{target.to_title}</span>
-                                    </div>
-                                    {target.relationship_type && target.relationship_type !== "maps_to" ? (
-                                      <span className="target-mapping-relationship">
-                                        {displayNameFor("relationship_type", target.relationship_type)}
-                                      </span>
-                                    ) : null}
-                                  </li>
+                                    onOpenNode={onOpenNode}
+                                    target={target}
+                                  />
                                 ))}
                               </ul>
+                              {row.targets.length > COMPARE_TARGET_PREVIEW ? (
+                                <details className="target-more">
+                                  <summary>
+                                    Show {(row.targets.length - COMPARE_TARGET_PREVIEW).toLocaleString()} more {row.targets.length - COMPARE_TARGET_PREVIEW === 1 ? "target" : "targets"}
+                                  </summary>
+                                  <ul className="target-mapping-list">
+                                    {row.targets.slice(COMPARE_TARGET_PREVIEW).map((target: any) => (
+                                      <TargetItem
+                                            key={target.edge_id || `${row.from_id}-${target.to_id}`}
+                                        onOpenNode={onOpenNode}
+                                        target={target}
+                                      />
+                                    ))}
+                                  </ul>
+                                </details>
+                              ) : null}
                               <LazyEvidenceDetails targets={row.targets} />
                             </td>
                           </tr>
@@ -911,28 +1015,50 @@ export function ComparePage(props: {
                     </small>
                   </nav>
                 </>
+              ) : emptyKind === "none" ? (
+                <section className="empty-state compare-results-empty" role="status">
+                  <h3>No published mappings were found between these selections.</h3>
+                  <p>This reflects the published crosswalks in the current data.</p>
+                  <div className="actions">
+                    <Button onClick={changeTarget} type="button" variant="secondary">
+                      Change target
+                    </Button>
+                    <Button onClick={resetToSource} type="button" variant="secondary">
+                      Change source
+                    </Button>
+                    {state.relationshipType || state.mappingSource ? (
+                      <Button
+                        onClick={() => patchCompare({ mappingSource: "", relationshipType: "" })}
+                        type="button"
+                        variant="secondary"
+                      >
+                        Clear filters
+                      </Button>
+                    ) : null}
+                  </div>
+                </section>
               ) : (
                 <section className="empty-state compare-results-empty">
                   <h3>
-                    {resultQuery.trim()
+                    {emptyKind === "search"
                       ? "No published mappings match this search."
-                      : "No published mappings match this results filter."}
+                      : "No published mappings match these filters."}
                   </h3>
                   <p>
-                    {resultQuery.trim()
+                    {emptyKind === "search"
                       ? "Search another identifier or title to return to the current published crosswalk."
-                      : "Clear the connection filter to return to every published mapping."}
+                      : "Clear the filters to return to every published mapping."}
                   </p>
                   <Button
                     onClick={() =>
-                      resultQuery.trim()
+                      emptyKind === "search"
                         ? setResultQuery("")
-                        : patchCompare({ relationshipType: "" })
+                        : patchCompare({ mappingSource: "", relationshipType: "" })
                     }
                     type="button"
                     variant="secondary"
                   >
-                    {resultQuery.trim() ? "Clear search" : "Clear connection filter"}
+                    {emptyKind === "search" ? "Clear search" : "Clear filters"}
                   </Button>
                 </section>
               )}
@@ -941,25 +1067,6 @@ export function ComparePage(props: {
                 A published crosswalk shows a cited relationship; it does not by itself establish equivalence or compliance.
               </p>
 
-              <Accordion.Root className="accordion-root compare-refine" collapsible type="single">
-                <Accordion.Item className="disclosure-item" value="refine-results">
-                  <Accordion.Header className="disclosure-header">
-                    <Accordion.Trigger className="disclosure-trigger">
-                      <span aria-hidden="true" className="disclosure-chevron">▾</span>
-                      <span>Refine results</span>
-                    </Accordion.Trigger>
-                  </Accordion.Header>
-                  <Accordion.Content className="disclosure-content">
-                    <SelectField
-                      emptyLabel="All connection types"
-                      label="Connection type"
-                      onChange={(relationshipType) => patchCompare({ relationshipType })}
-                      options={relationshipTypeOptions}
-                      value={state.relationshipType}
-                    />
-                  </Accordion.Content>
-                </Accordion.Item>
-              </Accordion.Root>
             </section>
           ) : null}
         </section>

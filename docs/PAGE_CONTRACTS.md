@@ -89,7 +89,9 @@ Guides and other small curated directories use typed entries, a clear sequence o
 
 ## F. Focused workbench
 
-Compare, Templates, and other task flows present scope, working controls, results, and next action in that order. Dense controls progressively disclose on compact screens.
+Compare, Templates, and other task flows present scope, working controls, results, and next action in that order.
+
+Compare results lead with the answer: what is compared, the exact count of published mappings, then the mappings. Search, connection type and crosswalk source share one compact toolbar; taxonomy context is a collapsed inline disclosure with a one-line summary, never a wall of tags ahead of the rows, and there is no collapsed drawer at the foot of the page. A page holds a bounded window of source records (`COMPARE_PAGE_SIZE`), a record shows its first few targets with the rest one click away, and counts, evidence and exports always cover every matching mapping; the export note says so. On a phone each row is scannable (source, target, relationship, evidence cue) without repeated column labels. Choosing the target in the page runs the comparison. A link that only names a source and a target waits for one explained action ("Show published mappings"), because results download the full connection graph; links that carry `compareRun=true`, including the Atlas and Library handoffs, land on the result. A pair with no published mappings says "No published mappings were found between these selections." and offers change source, change target and clear filters. Dense controls progressively disclose on compact screens.
 
 ## Responsive verification widths
 

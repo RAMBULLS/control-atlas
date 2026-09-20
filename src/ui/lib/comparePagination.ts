@@ -1,4 +1,6 @@
-export const COMPARE_PAGE_SIZE = 100;
+// Source records per page. A page is a bounded window of the answer, not the whole answer:
+// counts and exports always cover every matching mapping.
+export const COMPARE_PAGE_SIZE = 25;
 
 export type ComparePageWindow<T> = {
   end: number;
@@ -37,3 +39,8 @@ export function paginateCompareRows<T>(
     valid,
   };
 }
+
+// Targets listed inline per source record. The rest sit behind an inline "Show N more targets"
+// disclosure in the same row, so one busy record cannot dominate the page. Nothing is dropped:
+// counts, evidence and exports still cover every target.
+export const COMPARE_TARGET_PREVIEW = 5;

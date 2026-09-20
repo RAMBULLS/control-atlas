@@ -14183,3 +14183,157 @@ button.atlas-area__cell[data-floored="true"]:hover,
   font-size: 0.85rem;
   text-align: left;
 }
+
+/* Compare results lead with the answer: what is compared, how many mappings, then the
+   mappings. Refinement sits in one compact toolbar and one collapsed inline disclosure. */
+.compare-answer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ca-space-4);
+  margin: var(--ca-space-4) 0 var(--ca-space-3);
+}
+
+.compare-answer-count {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.compare-answer .compare-mapping-total {
+  color: var(--ca-text);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.compare-answer .compare-crosswalk-source {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ca-space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.compare-results-toolbar {
+  grid-template-columns: repeat(auto-fit, minmax(min(13rem, 100%), 1fr));
+  margin-top: 0;
+}
+
+.compare-taxonomy-accordion {
+  margin: 0 0 var(--ca-space-3);
+}
+
+.compare-taxonomy-summary {
+  margin-left: var(--ca-space-3);
+  color: var(--ca-text-muted);
+  font-size: var(--ca-text-sm);
+}
+
+.target-mapping-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--ca-space-2);
+}
+
+.target-mapping-relationship {
+  padding: 1px 8px;
+  border: 1px solid var(--ca-border);
+  border-radius: 999px;
+  color: var(--ca-text-muted);
+  font: 650 var(--ca-text-xs) / 1.3 var(--ca-font-mono);
+}
+
+.compare-table-scroll .target-mapping-item {
+  gap: 0;
+  padding-block: 2px;
+}
+
+.compare-table-scroll .target-item-title,
+.compare-table-scroll .compare-record-title {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+@media (max-width: 720px) {
+  .compare-answer {
+    flex-direction: column;
+  }
+
+  .compare-taxonomy-summary {
+    display: block;
+    margin-left: 0;
+  }
+
+  .compare-answer .compare-export-actions .actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    width: 100%;
+  }
+
+  .compare-answer .compare-export-actions .actions button {
+    width: 100%;
+    white-space: nowrap;
+  }
+
+  .compare-answer .compare-export-actions small {
+    max-width: none;
+  }
+
+  .compare-table-scroll .detail-table td::before {
+    display: none;
+  }
+
+  .compare-table-scroll .detail-table tr {
+    padding: var(--ca-space-2) 0;
+  }
+
+  .compare-table-scroll .detail-table td {
+    padding: var(--ca-space-1) var(--ca-space-3);
+  }
+
+  .compare-table-scroll .detail-table td:first-child {
+    padding-bottom: 0;
+  }
+}
+
+.compare-taxonomy-accordion .disclosure-trigger {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--ca-space-1) var(--ca-space-3);
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ca-text);
+  cursor: pointer;
+  text-align: left;
+}
+
+.compare-taxonomy-accordion .compare-taxonomy-summary {
+  margin: 0;
+  font: 400 var(--ca-text-sm) / 1.4 var(--ca-font-body, inherit);
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.target-more > summary {
+  padding-block: 10px;
+  color: var(--ca-secondary);
+  cursor: pointer;
+  font-weight: 650;
+}
+
+@media (max-width: 400px) {
+  .compare-answer .compare-export-actions .actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -115,3 +115,27 @@ test("Phase 4 Search teaches its real keyboard shortcut in context", async ({ pa
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
 });
+
+test("Phase 4 STIG worksheet needs a chosen STIG, then lists that STIG's rules", async ({ page }) => {
+  await page.goto("/#/build/documents/stig_evidence_checklist?format=xlsx");
+  await waitForAppReady(page);
+  await dismissOnboarding(page);
+
+  const download = page.locator("#document-download-action");
+  await expect(download).toBeDisabled();
+  await expect(page.locator("#document-download-reason")).toContainText("Choose STIG");
+
+  await page.getByLabel("Find a STIG").fill("Windows 10 Security");
+  const picker = page.getByRole("combobox", { name: "STIG", exact: true });
+  const choices = picker.locator("option:not([value=''])");
+  expect(await choices.count()).toBeGreaterThan(0);
+  expect(await choices.count()).toBeLessThan(10);
+  await picker.selectOption({ index: 1 });
+
+  await expect(download).toBeEnabled();
+  const preview = page.locator(".template-document-preview");
+  await expect(preview).toContainText("STIG Viewer CSV Import Rows");
+  await expect(page).toHaveURL(/stig=BENCHMARK-/);
+  const context = page.getByRole("complementary", { name: "Current document" });
+  await expect(context).toContainText("Windows 10");
+});

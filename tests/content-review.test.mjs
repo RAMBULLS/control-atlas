@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import { learnArticles } from '../src/app/learn-content.mjs';
 import { buildTemplateDocument } from '../src/app/template-engine.mjs';
+import { STIG_ID, addStigFixture } from './helpers/stig-fixture.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const registry = JSON.parse(readFileSync(join(__dirname, '../data/template-registry.json'), 'utf8'));
@@ -90,6 +91,7 @@ const dataset = {
     },
   ],
 };
+addStigFixture(dataset);
 
 test('Learn articles include limitations, citations, and a concrete next action', () => {
   for (const article of learnArticles) {
@@ -372,6 +374,7 @@ test('generated templates use plain-language prompts without raw schema slugs', 
     const { doc } = buildTemplateDocument(
       {
         templateType: template.name,
+        stig: STIG_ID,
         framework: 'nist-800-53',
         environment: 'Cloud SaaS',
         includePlaceholders: true,

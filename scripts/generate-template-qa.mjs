@@ -42,6 +42,11 @@ const dataset = {
 
 mkdirSync(outputDirectory, { recursive: true });
 
+// The STIG worksheet is built around one chosen STIG; QA uses the first published one.
+const firstStigBenchmark = dataset.nodes.find(
+  (node) => node.node_type === 'benchmark' && node.metadata?.catalog_id === 'disa-stig',
+)?.metadata?.item_id;
+
 const manifest = [];
 for (const template of registry.templates) {
   for (const format of template.supported_formats || []) {
@@ -49,6 +54,7 @@ for (const template of registry.templates) {
       templateType: template.name,
       framework: template.input_options.includes('framework') ? 'nist-800-53' : '',
       baseline: template.input_options.includes('baseline') ? 'MODERATE' : '',
+      stig: template.input_options.includes('selected_stig') ? firstStigBenchmark : '',
       environment: 'Cloud SaaS',
       includePlaceholders: true,
       includeImplementationPrompts: true,

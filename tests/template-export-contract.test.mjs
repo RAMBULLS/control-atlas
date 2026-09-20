@@ -6,6 +6,7 @@ import test from 'node:test';
 import { parse as parseYaml } from 'yaml';
 import { buildTemplateDocument, escapeMarkdownTableCell, generateTemplate } from '../src/app/template-engine.mjs';
 import { renderOfficeDocument } from '../src/app/office-export.mjs';
+import { STIG_ID, addStigFixture } from './helpers/stig-fixture.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const registry = JSON.parse(readFileSync(join(__dirname, '../data/template-registry.json'), 'utf8'));
@@ -32,6 +33,7 @@ const dataset = {
     },
   ],
 };
+addStigFixture(dataset);
 
 for (const template of registry.templates) {
   for (const format of template.supported_formats) {
@@ -39,6 +41,7 @@ for (const template of registry.templates) {
       const { doc } = buildTemplateDocument(
         {
           templateType: template.name,
+          stig: STIG_ID,
           framework: 'nist-800-53',
           environment: 'Cloud SaaS',
           format,

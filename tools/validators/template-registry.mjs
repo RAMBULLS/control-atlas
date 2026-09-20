@@ -38,7 +38,7 @@ const COMPATIBILITY_CLASSES = new Set([
 ]);
 
 const FORMATS = new Set(['xlsx', 'docx']);
-const INPUT_OPTIONS = new Set(['framework', 'baseline', 'control_family', 'selected_controls', 'selected_stigs', 'environment_archetype']);
+const INPUT_OPTIONS = new Set(['framework', 'baseline', 'control_family', 'selected_controls', 'selected_stig', 'environment_archetype']);
 
 export function validateTemplateRegistry(registry) {
   const errors = [];

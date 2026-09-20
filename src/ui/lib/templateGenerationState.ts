@@ -3,7 +3,7 @@ export type TemplateInputOption =
   | "baseline"
   | "control_family"
   | "selected_controls"
-  | "selected_stigs"
+  | "selected_stig"
   | "environment_archetype";
 
 /**
@@ -17,7 +17,7 @@ const INPUT_OPTION_LABELS: Record<TemplateInputOption, string> = {
   baseline: "Baseline",
   control_family: "Control family",
   selected_controls: "Controls",
-  selected_stigs: "STIG benchmarks",
+  selected_stig: "STIG",
   environment_archetype: "Environment",
 };
 
@@ -37,7 +37,7 @@ type TemplateRouteState = {
   baseline?: string;
   controlFamily?: string;
   selectedControls?: string[];
-  selectedStigs?: string[];
+  selectedStig?: string;
   environment?: string;
   format?: string;
 };
@@ -59,8 +59,8 @@ function routeValue(
       return routeState.controlFamily || "";
     case "selected_controls":
       return routeState.selectedControls || [];
-    case "selected_stigs":
-      return routeState.selectedStigs || [];
+    case "selected_stig":
+      return routeState.selectedStig || "";
     case "environment_archetype":
       return routeState.environment || "";
   }
@@ -115,9 +115,7 @@ export function buildTemplateGenerationSnapshot({
     selectedControls: Array.isArray(selections.selected_controls)
       ? selections.selected_controls
       : [],
-    selectedStigs: Array.isArray(selections.selected_stigs)
-      ? selections.selected_stigs
-      : [],
+    stig: String(selections.selected_stig || ""),
     format,
   };
   const identity = {

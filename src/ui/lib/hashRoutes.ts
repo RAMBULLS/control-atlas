@@ -280,6 +280,7 @@ export function serializeHashLocation(state: ViewState): string {
       params.delete("environment");
       params.delete("baseline");
       params.delete("controlFamily");
+      params.delete("stig");
       return `/build/tasks/${routeSegment(state.task)}`;
     }
     if (state.buildSection === "tasks") {

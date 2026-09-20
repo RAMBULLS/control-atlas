@@ -98,3 +98,18 @@ Compare results lead with the answer: what is compared, the exact count of publi
 All page contracts are checked at 320, 375, 390, 768, 1024, and 1440 pixels. Required assertions cover visible primary content, document height, useful-space utilization, DOM size, overflow, focus order, keyboard operation, and preserved back/forward and deep-link state. Atlas mobile is list-first; it never presents a shrunken canvas as the only way to reach evidence.
 
 The record acceptance matrix is part of the required browser gate, not only an optional local command. New record screenshots are captured as review-only visual evidence alongside existing committed pixel baselines; capturing an image is not itself an assertion that it matches the approved mockup. Review those images before accepting a record-layout change.
+
+## Templates (working files)
+
+Templates are working files for a practitioner's job. They are not a catalog of things Control Atlas can generate.
+
+- **Entrance.** Files are grouped by the job to be done (for example "Build hardware and software baselines"), not by RMF stage. Each card says what the file is for and what it does not replace. The local navigation offers only the two views of this section, By task and All working files; Resources stays in the main navigation.
+- **Steps.** The step bar reads Choose, Set up, Review & download. Each step is a visible panel on the page, and the bar follows the real state: step 3 lights up only when the file is ready to download.
+- **Context and basis.** "Selected context" is what the reader chose (for example SP 800-53 Rev. 5 and the Moderate baseline). "Artifact basis" is what the file is built on, taken from the template's own `provenance.basis`. Public copy is never chosen by the position of an entry in `source_refs`.
+- **Interoperability labels.** Only three are allowed: Verified interchange (tested with the destination), Field-aligned (documented fields and values, import not verified), Concept-aligned (same working concepts, not an interchange schema). Nothing is called compatible unless it is Verified interchange. The registry validator enforces this.
+- **Program text.** A program's rules and sources (for example FedRAMP) appear in a file only when that program is the selected context.
+- **Validation is per artifact.** Every dropdown, date rule, required flag and column group is declared for one table of one artifact in `src/app/template-columns.mjs`. Nothing is looked up by header name alone. Long lists live on a hidden `_Lists` sheet.
+- **One notice.** A generated file carries one short notice, not the long product disclaimer plus the review notice.
+- **No inferred decisions.** A control baseline selects controls. It is never turned into a statement about a system's impact level. Files do not fill in implementation status, inheritance, Not Applicable, assessment results, findings, cadences or vendor lifecycle dates.
+- **STIG worksheet.** Built around one STIG the reader picks. Its rules come from the published STIG. The import table keeps exactly the 12 headers in the STIG Viewer 3.x User Guide V1R7; the target is entered once on its own sheet. Wording stays Field-aligned until an import has been tested.
+- **Tasks.** Every task in `data/compliance-workflows.json` names its companion templates, and every template is reachable from at least one task. `tests/template-wave3.test.mjs` checks this.

@@ -172,7 +172,7 @@ test('assessment planning labels publisher content and keeps full text on refere
   assert.deepEqual(table(doc, 'Assessment Objectives').rows, [['AC-2', 'AC-02b.', 'account managers are assigned;']]);
   assert.deepEqual(table(doc, 'Assessment Objectives').headers, ['Control ID', 'Objective', 'Assessment objective text (NIST SP 800-53A)']);
   const plan = table(doc, 'Assessment Plan');
-  const source = plan.columns.filter((column) => column.group === 'Source-backed context').map((column) => column.header);
+  const source = plan.columns.filter((column) => column.group === 'From cited sources').map((column) => column.header);
   assert.ok(source.includes('Assessment Objects (NIST SP 800-53A)') && source.includes('800-53A Methods'));
   assert.ok(!source.includes('Assessment Method'), 'the chosen method is the assessor\'s, not source content');
   assert.match(text(doc, 'How to use'), /does not rewrite them and does not invent procedures/);

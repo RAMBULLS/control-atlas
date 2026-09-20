@@ -14337,3 +14337,18 @@ button.atlas-area__cell[data-floored="true"]:hover,
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Disclosure labels inside the template sidebar. The teal secondary colour is
+   4.0:1 on this panel; the body text colour clears 4.5:1 at every width. */
+.compare-flow-support .template-supporting-details > summary,
+.template-sources-panel .nexus-details summary {
+  color: var(--ca-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* .text-link takes its colour from --ca-link with !important, so the token is
+   what changes. The default teal is 4.0:1 on the source cards. */
+.template-sources-panel {
+  --ca-link: color-mix(in srgb, var(--ca-secondary) 55%, white);
+}

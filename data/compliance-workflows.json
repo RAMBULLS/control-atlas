@@ -214,7 +214,7 @@
       "outcomes": ["Inventory scope fixed", "Assets uniquely identified", "Versions and ownership recorded", "Change process connected"],
       "artifact_ids": ["dcsa-hardware-list-2020", "dcsa-software-list-2020", "dcsa-maintenance-change-log-2020", "fedramp-legacy-integrated-inventory", "mitre-emass-api-openapi-v3-22"],
       "tool_ids": ["mitre-emass-client"],
-      "companion_template_ids": [],
+      "companion_template_ids": ["tpl-hw-baseline", "tpl-sw-baseline"],
       "steps": [
         {
           "order": 1,
@@ -252,7 +252,7 @@
       "outcomes": ["Required PPS identified", "Mission need documented", "Boundary controls mapped", "Official registry handoff prepared"],
       "artifact_ids": ["dodi-8551-01-ppsm-2023", "disa-ppsm-registry-training"],
       "tool_ids": [],
-      "companion_template_ids": [],
+      "companion_template_ids": ["tpl-ppsm-prep"],
       "steps": [
         {
           "order": 1,

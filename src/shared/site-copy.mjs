@@ -87,7 +87,7 @@ export const SITE_COPY = Object.freeze({
     }),
     documents: Object.freeze({
       title: "Templates",
-      purpose: "Create starter cybersecurity documents from published sources.",
+      purpose: "Working files for RMF and DoD cybersecurity tasks. Pick the job, set up the file, download it.",
     }),
     sources: Object.freeze({
       title: "Sources",

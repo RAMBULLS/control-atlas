@@ -118,7 +118,7 @@ test('a long controlled list is stored on a hidden sheet, not inline past the 25
 
 test('reciprocity, PPSM, POA&M and hardware status lists are each their own worksheet vocabulary', () => {
   assert.deepEqual(flat('reciprocity_checklist').Status.values, ['Not Started', 'In Review', 'Sufficient', 'Gap', 'Not Applicable']);
-  assert.deepEqual(flat('reciprocity_checklist')['Decision / Disposition'].values, ['Accept', 'Accept with Conditions', 'Supplement', 'Reassess', 'Reject']);
+  assert.deepEqual(flat('reciprocity_checklist')['Recommended Disposition'].values, ['Accept', 'Accept with Conditions', 'Supplement', 'Reassess', 'Reject']);
   assert.deepEqual(flat('ppsm_preparation_worksheet')['Review Status'].values, ['Collecting', 'In review', 'Ready to enter', 'Entered in registry', 'Needs rework']);
   assert.deepEqual(flat('poam_starter').status.values, ['Ongoing', 'Risk Accepted', 'Completed', 'Not Applicable']);
   assert.deepEqual(flat('poam_starter').likelihood.values, ['Very Low', 'Low', 'Moderate', 'High', 'Very High']);
@@ -165,7 +165,7 @@ test('real date fields validate as dates; period and range fields do not', () =>
     software_baseline: ['approvalDate', 'releaseDate', 'maintenanceDate', 'retirementDate', 'endOfLifeSupportDate', 'Last Verified'],
     inheritance_worksheet: ['Review Date'],
     conmon_calendar: ['Next Due', 'Completed Date'],
-    reciprocity_checklist: ['Due Date'],
+    reciprocity_checklist: ['Due Date', 'Granting Decision Date', 'Target Decision Date', 'Decision Date'],
     assessment_planning_worksheet: ['Target Start', 'Target Complete'],
     ppsm_preparation_worksheet: ['Last Verified'],
     implementation_statement_worksheet: ['estimatedCompletionDate'],

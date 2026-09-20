@@ -368,10 +368,10 @@ test("starter-document context preserves the selected document and preview", asy
   await open(page, "/#/build/documents/security_plan_starter?framework=nist-800-53&baseline=LOW");
   expect(await page.evaluate(() => globalThis.scrollY)).toBeLessThanOrEqual(1);
   await expect(page.getByRole("heading", { name: "Templates", level: 1 })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Configure inputs" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Set up your file" })).toBeVisible();
   const context = page.getByRole("complementary", { name: "Current document" });
   await expect(context).toContainText("Security Plan Starter");
-  await expect(page.getByRole("heading", { name: "Preview" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Review and download" })).toBeVisible();
 });
 
 test("retired STIG Compare links recover to the published crosswalk", async ({ page }) => {

@@ -239,6 +239,28 @@ export function ExplorePage(props: {
     }) || null;
   }, [baseLibraryFilters, bundle.runtime, searchStarted, state.query, state.tags]);
 
+  /**
+   * Recovery for a search that found nothing. Every option is counted against the
+   * real index, so a suggestion is offered only when it would return records.
+   */
+  const emptyRecovery = useMemo(() => {
+    if (!searchStarted || documents.length > 0) return null;
+    const count = (query: string, filters: Record<string, unknown>) =>
+      Number((bundle.runtime as any).getLibraryTagContext?.(query, filters)?.result_count || 0);
+    const filters = { ...baseLibraryFilters, taxonomy_tag_groups: taxonomyTagGroups(state.tags) };
+    const words = state.query.trim().split(/\s+/).filter(Boolean);
+    const withoutWord = words.length < 2 ? [] : words
+      .map((word, index) => {
+        const query = words.filter((_, at) => at !== index).join(" ");
+        return { word, query, count: count(query, filters) };
+      })
+      .filter((option) => option.count > 0)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 3);
+    const withoutFilters = hasFilters && state.query.trim() ? count(state.query, {}) : 0;
+    return { withoutWord, withoutFilters };
+  }, [baseLibraryFilters, bundle.runtime, documents.length, hasFilters, searchStarted, state.query, state.tags]);
+
   const rows = useMemo(() => {
     const prepared = documents.map((document: any) => {
       const relationshipCount = Number(document.published_connection_count || 0);
@@ -821,7 +843,21 @@ export function ExplorePage(props: {
                 ) : (
                   <>
                     <h2>{hasFilters ? "Nothing matches these filters." : "No records found."}</h2>
-                    <p>{hasFilters ? "Clear one and try again." : "Try another identifier or keyword."}</p>
+                    <p>{hasFilters ? "Clear one and try again." : "Every word you type must appear in a record. Try another identifier or keyword."}</p>
+                    {emptyRecovery && (emptyRecovery.withoutWord.length > 0 || emptyRecovery.withoutFilters > 0) ? (
+                      <ul className="empty-state__options">
+                        {emptyRecovery.withoutWord.map((option) => (
+                          <li key={option.query}>
+                            <button className="clear-filter-link" onClick={() => onNavigate("search", { query: option.query })} type="button">
+                              Try without “{option.word}” · {option.count.toLocaleString()} {option.count === 1 ? "result" : "results"}
+                            </button>
+                          </li>
+                        ))}
+                        {emptyRecovery.withoutFilters > 0 ? (
+                          <li>Without the filters, this search has {emptyRecovery.withoutFilters.toLocaleString()} {emptyRecovery.withoutFilters === 1 ? "result" : "results"}.</li>
+                        ) : null}
+                      </ul>
+                    ) : null}
                   </>
                 )}
                 <Button onClick={() => onNavigate("search", { area: "", connectedOnly: "", filter: "", kind: "", publisher: "", query: "", sort: "relevance", tags: [], viewMode: "list" })} type="button" variant="primary">{hasFilters ? "Clear filters" : "Clear search"}</Button>

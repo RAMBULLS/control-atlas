@@ -14168,3 +14168,18 @@ button.atlas-area__cell[data-floored="true"]:hover,
     scroll-padding-inline-end: 32px;
   }
 }
+
+.empty-state__options {
+  display: grid;
+  gap: var(--ca-space-2);
+  margin: var(--ca-space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.empty-state__options .clear-filter-link {
+  min-height: 2.75rem;
+  padding-inline: 0;
+  font-size: 0.85rem;
+  text-align: left;
+}

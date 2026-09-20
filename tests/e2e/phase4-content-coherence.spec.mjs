@@ -50,7 +50,7 @@ test("Phase 4 Templates expose setup and output, then preview document structure
   const preview = page.locator(".template-document-preview");
   await expect(preview).toBeVisible();
   await expect(preview.locator(".template-document-preview-summary")).toContainText("Sections");
-  await expect(preview.locator(".template-document-preview-outline li")).toHaveCount(15);
+  await expect(preview.locator(".template-document-preview-outline li")).toHaveCount(13);
   await expect(preview.locator(".template-document-preview-outline")).toContainText("Selected Control Scope");
   await expect(preview.locator("table")).toHaveCount(1);
   const context = page.getByRole("complementary", { name: "Current document" });

@@ -1,14 +1,18 @@
 /**
+ * @typedef {import("./template-columns.mjs").ColumnDefinition} ColumnDefinition
+ *
  * @typedef {Object} TextSection
  * @property {"text"} type
  * @property {string} heading
  * @property {string} content
+ * @property {"program" | "interop" | "source"} [role] Source and program notes the workbook Read Me shows by role.
  *
  * @typedef {Object} TableSection
  * @property {"table"} type
  * @property {string} heading
  * @property {string[]} headers
  * @property {any[][]} rows
+ * @property {ColumnDefinition[]} [columns] Per-column validation, group and required flags.
  *
  * @typedef {TextSection | TableSection} DocSection
  *
@@ -24,6 +28,7 @@ import {
 } from '../shared/disclaimer.mjs';
 import { CROSS_REF_CAP } from '../shared/dense-data.mjs';
 import { stringify as stringifyYaml } from 'yaml';
+import { dateField, listOf, tableSection, TEMPLATE_VOCAB, TRUE_FALSE } from './template-columns.mjs';
 
 const EVIDENCE_TYPE_HINT = "Policy | Procedure | Config screenshot | System report | Access review | Scan output | Interview | Architecture diagram | Change record | Training record | Incident record | Log sample | Inventory export | Exception memo";
 
@@ -47,67 +52,107 @@ const SOURCE_FALLBACK = {
   "disa-ppsm-training": { display_name: "DISA PPSM Registry Training", version: "public training" },
 };
 
-const TEMPLATE_COMPATIBILITY = {
-  security_plan_starter: [
-    "Classification: Control Atlas starter document.",
-    "Basis: NIST RMF concepts plus the current FedRAMP Certification Package Overview and Security Decision Record transition path.",
-    "Limit: Working draft, not an official SSP or FedRAMP package and not directly importable into FedRAMP or eMASS.",
-  ],
-  implementation_statement_worksheet: [
-    "Classification: eMASS API v3.22 schema-aligned preparation aid.",
-    "Basis: Public MITRE emass_client v3.22 control field names and enumerations.",
-    "Limit: This is not an eMASS-generated import template and is not directly importable; instance rules may differ.",
-  ],
-  evidence_expectation_matrix: [
-    "Classification: Control Atlas starter document.",
-    "Basis: NIST SP 800-53A assessment concepts and ingested DISA cross-references.",
-    "Limit: Evidence expectations require assessor and organization validation.",
-  ],
-  stig_evidence_checklist: [
-    "Classification: Officially specified CSV structure with Control Atlas working notes.",
-    "Basis: The primary table uses the 12 headers in the DISA STIG Viewer 3.x User Guide V1R7.",
-    "Limit: Validate the CSV in the target STIG Viewer version; Control Atlas has not certified a round trip.",
-  ],
-  inheritance_worksheet: [
-    "Classification: Control Atlas starter document.",
-    "Basis: NIST RMF and OSCAL inheritance concepts.",
-    "Limit: This does not replace a provider CRM/CIS or approve an inheritance decision.",
-  ],
-  reciprocity_checklist: [
-    "Classification: Control Atlas starter document.",
-    "Basis: NIST RMF authorization-package reuse concepts.",
-    "Limit: This does not grant reciprocity or replace the receiving Authorizing Official's decision.",
-  ],
-  poam_starter: [
-    "Classification: eMASS API v3.22 schema-aligned preparation aid.",
-    "Basis: Public MITRE emass_client v3.22 POA&M schemas plus operational tracking fields and current FedRAMP vulnerability-reporting boundaries.",
-    "Limit: This is not an eMASS-generated or FedRAMP import template; determine whether each action belongs to the provider or agency before using it as a FedRAMP POA&M record.",
-  ],
-  assessment_planning_worksheet: [
-    "Classification: eMASS API v3.22 schema-aligned preparation aid.",
-    "Basis: NIST SP 800-53A methods and public eMASS v3.22 test-result concepts.",
-    "Limit: This is neither a complete SAP nor an eMASS test-result import file; current FedRAMP rules do not require a separate SAP or SAR.",
-  ],
-  conmon_calendar: [
-    "Classification: Control Atlas starter document.",
-    "Basis: NIST SP 800-137 concepts plus current FedRAMP Ongoing Certification Report and vulnerability-reporting rules.",
-    "Limit: Starter cadences must be reconciled with current rule-specific dates, certification profile, authorization conditions, and contracts.",
-  ],
-  hardware_baseline: [
-    "Classification: eMASS API v3.22 schema-aligned preparation aid.",
-    "Basis: DCSA hardware-list guidance and public MITRE eMASS v3.22 hardware fields.",
-    "Limit: This is not an eMASS-generated import template and is not directly importable.",
-  ],
-  software_baseline: [
-    "Classification: eMASS API v3.22 schema-aligned preparation aid.",
-    "Basis: DCSA software-list guidance and public MITRE eMASS v3.22 software fields.",
-    "Limit: This is not an eMASS-generated import template and is not directly importable.",
-  ],
-  ppsm_preparation_worksheet: [
-    "Classification: Control Atlas starter document.",
-    "Basis: DoDI 8551.01 and public DISA PPSM Registry training.",
-    "Limit: Working worksheet, not an official PPSM form, registry receipt, or import file.",
-  ],
+/**
+ * How each artifact relates to the system it prepares information for.
+ * Levels, and only these, are shown publicly:
+ *   Verified interchange - actually tested with the destination.
+ *   Field-aligned        - uses documented fields and values; import not verified.
+ *   Concept-aligned      - same working concepts; not an interchange schema.
+ * `fedramp` is added only when a FedRAMP program is the selected context.
+ */
+export const INTEROPERABILITY = {
+  security_plan_starter: {
+    level: "Concept-aligned",
+    summary: "Follows NIST RMF and OSCAL SSP concepts. It is not an SSP schema.",
+    basis: "NIST SP 800-37 Rev. 2 and the NIST OSCAL SSP model.",
+    limit: "Working draft, not an official SSP, and not directly importable into another system.",
+    fedramp: {
+      basis: "The FedRAMP Certification Package Overview and Security Decision Record transition path.",
+      limit: "Not a FedRAMP package.",
+    },
+  },
+  implementation_statement_worksheet: {
+    level: "Field-aligned",
+    summary: "Uses MITRE eMASS API v3.22 control field names and values. Import into eMASS is not verified.",
+    basis: "Public MITRE eMASS REST API v3.22 (5 Dec 2024) Controls fields.",
+    limit: "Not an eMASS-generated import template and not directly importable; your eMASS instance may differ.",
+  },
+  evidence_expectation_matrix: {
+    level: "Concept-aligned",
+    summary: "Follows NIST SP 800-53A assessment concepts and DISA cross-references. It is not an interchange schema.",
+    basis: "NIST SP 800-53A Rev. 5 and ingested DISA CCI and STIG/SRG cross-references.",
+    limit: "Evidence expectations need assessor and organization validation.",
+  },
+  stig_evidence_checklist: {
+    level: "Field-aligned",
+    summary: "Uses the 12 CSV headers and values in the DISA STIG Viewer 3.x User Guide V1R7. Import into STIG Viewer is not verified.",
+    basis: "DISA STIG Viewer 3.x User Guide V1R7 (13 Feb 2026), section 5.6.3.",
+    limit: "Open the CSV in your STIG Viewer version to check it. Control Atlas has not tested an import.",
+  },
+  inheritance_worksheet: {
+    level: "Concept-aligned",
+    summary: "Follows NIST RMF and OSCAL inheritance concepts. It is not an interchange schema.",
+    basis: "NIST SP 800-37 Rev. 2 and OSCAL implemented-requirement inheritance concepts.",
+    limit: "Does not replace a provider CRM/CIS or approve an inheritance decision.",
+  },
+  reciprocity_checklist: {
+    level: "Concept-aligned",
+    summary: "Follows NIST RMF authorization-package reuse concepts. It is not an interchange schema.",
+    basis: "NIST SP 800-37 Rev. 2.",
+    limit: "Does not grant reciprocity. The receiving Authorizing Official owns the reuse decision.",
+    fedramp: {
+      basis: "The current FedRAMP Certification Package Overview and Security Decision Record.",
+      limit: "",
+    },
+  },
+  poam_starter: {
+    level: "Field-aligned",
+    summary: "Uses MITRE eMASS API v3.22 POA&M field names and values. Import into eMASS is not verified.",
+    basis: "Public MITRE eMASS REST API v3.22 (5 Dec 2024) POA&M fields, plus local tracking fields.",
+    limit: "Not an eMASS-generated import template and not directly importable.",
+    fedramp: {
+      basis: "FedRAMP vulnerability-reporting boundaries.",
+      limit: "Not a FedRAMP import template. Decide whether each action belongs to the provider or the agency before using it as a FedRAMP POA&M record.",
+    },
+  },
+  assessment_planning_worksheet: {
+    level: "Concept-aligned",
+    summary: "Follows NIST SP 800-53A assessment planning and eMASS test-result concepts. It is not an interchange schema.",
+    basis: "NIST SP 800-53A Rev. 5 methods and objectives, and the MITRE eMASS v3.22 test-results concept.",
+    limit: "Neither a complete Security Assessment Plan nor an eMASS test-result import file.",
+    fedramp: {
+      basis: "Current FedRAMP rules do not require a separate SAP or SAR.",
+      limit: "",
+    },
+  },
+  conmon_calendar: {
+    level: "Concept-aligned",
+    summary: "Follows NIST continuous-monitoring concepts. It is not an interchange schema.",
+    basis: "NIST SP 800-137 and NIST SP 800-37 Rev. 2.",
+    limit: "Seeded cadences are planning defaults unless the row names a source. Confirm them against your program's rules and contracts.",
+    fedramp: {
+      basis: "FedRAMP Ongoing Certification Report and vulnerability-reporting rules.",
+      limit: "Rule-specific effective dates, certification profile, and authorization conditions take precedence.",
+    },
+  },
+  hardware_baseline: {
+    level: "Field-aligned",
+    summary: "Uses MITRE eMASS API v3.22 hardware-baseline field names and values. Import into eMASS is not verified.",
+    basis: "Public MITRE eMASS REST API v3.22 (5 Dec 2024) hardware baseline fields, DCSA hardware-list guidance, plus local inventory fields.",
+    limit: "Not an eMASS-generated import template and not directly importable.",
+  },
+  software_baseline: {
+    level: "Field-aligned",
+    summary: "Uses MITRE eMASS API v3.22 software-baseline field names. Import into eMASS is not verified.",
+    basis: "Public MITRE eMASS REST API v3.22 (5 Dec 2024) software baseline fields, DCSA software-list guidance, plus local inventory fields.",
+    limit: "Not an eMASS-generated import template and not directly importable.",
+  },
+  ppsm_preparation_worksheet: {
+    level: "Concept-aligned",
+    summary: "Collects the information the PPSM process asks for. It is not an interchange schema.",
+    basis: "DoDI 8551.01 and public DISA PPSM Registry training.",
+    limit: "Collect and review here, then enter the data in the authorized PPSM workflow. Not a PPSM submission form, registry receipt, or import file.",
+  },
 };
 
 const FEDRAMP_2026_CONTEXT = {
@@ -258,7 +303,6 @@ export function buildSourceMetadata(options) {
       lines.push(`- ${line}`);
     }
   }
-  lines.push("Generated by Control Atlas (reference aid only).");
   return lines.join("\n");
 }
 
@@ -268,603 +312,43 @@ export function buildSourceMetadata(options) {
  * @returns {TemplateDocument}
  */
 function appendSourceMetadata(doc, options) {
-  doc.sections.push({
-    type: "text",
-    heading: "Review and Handoff Checklist",
-    content: [
-      "- Confirm the governing agency, program, contract, and current official artifact before treating this companion as final.",
-      "- Replace every placeholder; reconcile identifiers, dates, owners, scope, controlled values, and evidence locations.",
-      "- Have the accountable owner and an independent reviewer record gaps, decisions, approvals, and the next review date.",
-      "- Validate any downstream import, upload, or submission in the target system; preserve the source and version used for that validation.",
-    ].join("\n"),
-  });
-  const fedrampContext = FEDRAMP_2026_CONTEXT[options.templateType];
-  if (fedrampContext) {
-    doc.sections.push({
-      type: "text",
-      heading: "Current FedRAMP 2026 Context",
-      content: fedrampContext.join("\n"),
-    });
+  // A program's own rules appear only when that program is the selected
+  // context. NIST 800-53 work does not get a FedRAMP section.
+  const fedrampSelected = /^fedramp/i.test(String(options.framework || ""));
+  const interop = INTEROPERABILITY[options.templateType];
+  if (fedrampSelected) {
+    const fedrampContext = FEDRAMP_2026_CONTEXT[options.templateType];
+    if (fedrampContext) {
+      doc.sections.push({
+        type: "text",
+        role: "program",
+        heading: "Current FedRAMP 2026 Context",
+        content: fedrampContext.join("\n"),
+      });
+    }
   }
-  const compatibility = TEMPLATE_COMPATIBILITY[options.templateType];
-  if (compatibility) {
+  if (interop) {
+    const fedramp = fedrampSelected ? interop.fedramp : null;
+    const basis = [interop.basis, fedramp?.basis].filter(Boolean).join(" ");
+    const limit = [interop.limit, fedramp?.limit].filter(Boolean).join(" ");
     doc.sections.push({
       type: "text",
+      role: "interop",
       heading: "Compatibility and Use",
-      content: compatibility.join("\n"),
+      content: [
+        `Interoperability: ${interop.level}. ${interop.summary}`,
+        `Basis: ${basis}`,
+        `Limit: ${limit}`,
+      ].join("\n"),
     });
   }
   doc.sections.push({
     type: "text",
+    role: "source",
     heading: "Source Metadata",
     content: buildSourceMetadata(options),
   });
   return doc;
-}
-
-/**
- * @param {any} options
- * @param {any[]} controls
- * @param {ReturnType<typeof buildControlCrossRefIndex> | null} [crossRef]
- * @returns {TemplateDocument}
- */
-function generateSecurityPlanStarter(options, controls, crossRef) {
-  const ph = placeholder(options);
-  const env = options.environment || "Not selected";
-
-  const baselineHeaders = ["Control ID", "Control Title", "What It Means", "Implementation Statement", "Common Control Provider", "Evidence", "Status"];
-  const baselineRows = controls.map((c) => [
-    c.id,
-    c.title,
-    truncatePlain(c.description),
-    ph("[How is this implemented for this system?]"),
-    ph("[Name of provider if inherited]"),
-    ph("[Artifact name(s)]"),
-    ph("[Planned | Implemented | Inherited | N/A]"),
-  ]);
-
-  // One-time fill guidance, stated once instead of repeated per control row.
-  const guidanceBullets = [];
-  if (options.includeImplementationPrompts !== false) {
-    guidanceBullets.push(`- Implementation Statement: describe how each control is implemented in the ${env} environment — the policies, technical mechanisms, and who maintains them.`);
-  }
-  if (options.includeEvidenceExpectations !== false) {
-    guidanceBullets.push("- Evidence: name the artifact(s) that would show the control is working — reports, configs, records — and how often they are reviewed.");
-  }
-  if (options.includeInheritancePrompts !== false) {
-    guidanceBullets.push("- Inherited controls: mark Status as Inherited, then record the provider and your remaining local responsibility in the Inheritance Summary below.");
-  }
-  if (options.includeReciprocityPrompts !== false) {
-    guidanceBullets.push("- Reciprocity: note in the Implementation Statement whether assessment results can be reused at another agency, plus any gaps or caveats.");
-  }
-
-  // Blank starter rows: practitioners list the handful of inherited services,
-  // not every control in the baseline.
-  const inheritanceHeaders = ["Control ID", "Inheritance Type", "Provider", "Customer Responsibility", "Notes"];
-  const inheritanceRows = Array.from({ length: 10 }, () => [
-    ph("[Control ID]"),
-    ph("[Fully inherited | Hybrid | Not inherited]"),
-    ph("[Provider name]"),
-    ph("[What your team still implements locally]"),
-    ph("[Notes]"),
-  ]);
-
-  // Real cross-referenced STIG/SRG rule IDs only — no placeholder rows.
-  // Opt-in only: STIG/SRG tables add ~50 pages for full baselines.
-  const stigRows = [];
-  if (options.includeStigReferences === true && crossRef) {
-    for (const c of controls) {
-      if (!c.nodeId) continue;
-      const refs = crossRefForControl(crossRef, c.nodeId);
-      if (refs.stigIds.length) stigRows.push([c.id, refs.stigIds.join("; ")]);
-    }
-  }
-
-  /** @type {DocSection[]} */
-  const sections = [
-    {
-      type: "text",
-      heading: "Title Page",
-      content: ph("System name and short title — What system is this plan for? Write a name and one-line description a reviewer can use to understand scope."),
-    },
-    {
-      type: "text",
-      heading: "Document Metadata",
-      content: ph("Version, date, author role, and classification — Who owns this document and when was it last updated? Use your agency's labeling rules."),
-    },
-    {
-      type: "text",
-      heading: "System Overview",
-      content: ph("System purpose and mission support — What does this system do and why does it exist? Avoid jargon; explain who uses it and for what."),
-    },
-    {
-      type: "text",
-      heading: "Authorization Boundary",
-      content: ph("Boundary description — What is inside the authorization boundary? List major components, data flows, and what is explicitly out of scope."),
-    },
-    {
-      type: "text",
-      heading: "System Environment",
-      content: `Environment archetype: ${env}. Describe hosting, deployment model, and shared services that affect control implementation.`,
-    },
-    {
-      type: "text",
-      heading: "Data Types",
-      content: ph("Data handled — What types of data does the system process or store? Note sensitivity levels (e.g., CUI, PII) and retention expectations."),
-    },
-    {
-      type: "text",
-      heading: "User Roles",
-      content: ph("Roles and privileges — Who uses the system (admin, operator, end user)? Describe access levels and separation of duties."),
-    },
-    {
-      type: "text",
-      heading: "Interconnections",
-      content: ph("External connections — What other systems connect to this one? Note direction of data flow and security agreements."),
-    },
-    ...(guidanceBullets.length
-      ? [
-          /** @type {DocSection} */ ({
-            type: "text",
-            heading: "How to Fill the Control Baseline",
-            content: guidanceBullets.join("\n"),
-          }),
-        ]
-      : []),
-    { type: "table", heading: "Control Baseline", headers: baselineHeaders, rows: baselineRows },
-    { type: "table", heading: "Inheritance Summary", headers: inheritanceHeaders, rows: inheritanceRows },
-    {
-      type: "text",
-      heading: "Evidence Expectations",
-      content: "Plan evidence in the dedicated Evidence Expectation Matrix template — it lists every control with its related CCIs and STIG/SRG rules and gives you a column to name the artifact you will collect.",
-    },
-    ...(stigRows.length
-      ? [
-          /** @type {DocSection} */ ({
-            type: "table",
-            heading: "STIG/SRG References",
-            headers: ["Control ID", "STIG/SRG rule IDs"],
-            rows: stigRows,
-          }),
-        ]
-      : []),
-    {
-      type: "text",
-      heading: "Revision History",
-      content: ph("Version | Date | Author role | Summary of changes — Track updates so reviewers know what changed since the last review."),
-    },
-  ];
-
-  return appendSourceMetadata(
-    {
-      title: "System Security Plan (SSP) Starter",
-      description: "Blank planning structure for a system security plan.",
-      sections,
-    },
-    options,
-  );
-}
-
-/**
- * @param {any} options
- * @param {any[]} controls
- * @returns {TemplateDocument}
- */
-function generateImplementationStatementWorksheet(options, controls) {
-  const ph = placeholder(options);
-  const headers = [
-    "Control ID",
-    "Control Title",
-    "What It Means",
-    "Implementation Statement",
-    "Common Control Provider",
-    "Responsible Role",
-    "Status",
-  ];
-
-  const rows = controls.map((c) => [
-    c.id,
-    c.title,
-    truncatePlain(c.description),
-    ph("[Draft statement — describe how this control is implemented]"),
-    ph("[Name of provider if inherited]"),
-    ph("[Role responsible for maintaining this control]"),
-    ph("[Draft | Reviewed | Approved]"),
-  ]);
-
-  /** @type {DocSection[]} */
-  const sections = [
-    {
-      type: "text",
-      heading: "How to Draft a Statement",
-      content: `For each control, describe the technical controls, policies, or mechanisms that implement it. Include who operates them and how often they are reviewed. Typical evidence types you can point to: ${EVIDENCE_TYPE_HINT}.`,
-    },
-    { type: "table", heading: "Implementation Statements", headers, rows },
-  ];
-
-  return appendSourceMetadata(
-    {
-      title: "Control Implementation Statement Worksheet",
-      description: "Worksheet to draft control implementation statements.",
-      sections,
-    },
-    options,
-  );
-}
-
-/**
- * @param {any} options
- * @param {any[]} controls
- * @param {ReturnType<typeof buildControlCrossRefIndex> | null} [crossRef]
- * @returns {TemplateDocument}
- */
-function generateEvidenceExpectationMatrix(options, controls, crossRef) {
-  const ph = placeholder(options);
-  const headers = [
-    "Control ID",
-    "Control Title",
-    "What It Means",
-    "Related CCIs",
-    "Related STIG/SRG",
-    "Evidence to Collect",
-  ];
-
-  const rows = controls.map((c) => {
-    const refs = crossRef && c.nodeId ? crossRefForControl(crossRef, c.nodeId) : null;
-    return [
-      c.id,
-      c.title,
-      truncatePlain(c.description),
-      refs && refs.cciIds.length ? cappedJoin(refs.cciIds, CROSS_REF_CAP) : "—",
-      refs && refs.stigIds.length ? cappedJoin(refs.stigIds, CROSS_REF_CAP) : "—",
-      ph("[Artifact type + name]"),
-    ];
-  });
-
-  /** @type {DocSection[]} */
-  const sections = [
-    {
-      type: "text",
-      heading: "How to Use This Matrix",
-      content: [
-        `- Evidence types to pick from: ${EVIDENCE_TYPE_HINT}.`,
-        "- Name each artifact specifically (file name, report title, or record type) — \"screenshots\" is not an artifact.",
-        "- Assign an owner role (not a person) who maintains each artifact.",
-        "- Set a review cadence — Annual, Quarterly, or Continuous — so evidence stays fresh.",
-        "- Rate your confidence (High | Medium | Low) that the evidence would satisfy an assessor, and revisit Low items first.",
-      ].join("\n"),
-    },
-    { type: "table", heading: "Evidence Expectations", headers, rows },
-  ];
-
-  return appendSourceMetadata(
-    {
-      title: "Evidence Expectation Matrix",
-      description: "Reference matrix for expected evidence types.",
-      sections,
-    },
-    options,
-  );
-}
-
-/**
- * @param {any} options
- * @returns {TemplateDocument}
- */
-function generateSTIGEvidenceChecklist(options) {
-  const ph = placeholder(options);
-  const headers = [
-    "Rule ID",
-    "Severity",
-    "Rule Title",
-    "Evidence",
-    "Validation Method",
-    "Notes",
-  ];
-  const rows = blankRows(10, headers.length, ph, ["[SV-..._rule]", "[CAT I | CAT II | CAT III]", "[Rule short name from benchmark]", "[Artifact name or screenshot ID]", "[Export | Screenshot | Query | Interview]", "[Scope, context, or follow-up]"]);
-
-  /** @type {DocSection[]} */
-  const sections = [
-    {
-      type: "text",
-      heading: "Field Guide",
-      content: [
-        "- **STIG Title / STIG ID** — the benchmark this rule comes from; record it once per checklist, not per row.",
-        "- **Rule ID / Vuln ID** — the identifiers from the STIG (SV-… / V-…); the Rule ID goes in the tracker.",
-        "- **Severity** — CAT I (high), CAT II (medium), or CAT III (low) as assigned by the STIG.",
-        "- **Rule Title** — the rule's short name from the benchmark.",
-        "- **Check / Fix text** — what the check verifies and the required configuration; summarize in Notes if a rule needs context.",
-        "- **CCI Refs / Related Controls** — the CCIs the rule references and the NIST controls they map to.",
-        "- **Evidence** — the artifact that supports the recorded result: scan output, configuration export, or interview record.",
-        "- **Validation Method** — how you validated: automated scan, manual review, or interview.",
-        "- **N/A Justification** — if a rule does not apply, record why in Notes.",
-        "- **Deviation** — if deviating from the STIG, record the approved exception and compensating control in Notes.",
-      ].join("\n"),
-    },
-    { type: "table", heading: "STIG Rule Tracker", headers, rows },
-  ];
-
-  return appendSourceMetadata(
-    {
-      title: "STIG Evidence Checklist",
-      description: "Blank checklist for recording STIG rule results and evidence.",
-      sections,
-    },
-    options,
-  );
-}
-
-/**
- * @param {any} options
- * @param {any[]} controls
- * @returns {TemplateDocument}
- */
-function generateInheritanceWorksheet(options, controls) {
-  const ph = placeholder(options);
-  const headers = [
-    "Control ID",
-    "Control Title",
-    "What It Means",
-    "Inherited?",
-    "Provider",
-    "Customer Responsibility",
-  ];
-
-  const rows = controls.map((c) => [
-    c.id,
-    c.title,
-    truncatePlain(c.description),
-    ph("[Fully inherited | Hybrid | System-specific | Not inherited]"),
-    ph("[Provider name — CSP, agency shared service, etc.]"),
-    ph("[What your program must still implement or verify locally]"),
-  ]);
-
-  /** @type {DocSection[]} */
-  const sections = [
-    {
-      type: "text",
-      heading: "How to Plan Inheritance",
-      content: [
-        "- For each inherited or hybrid control, name the evidence you rely on from the provider — attestation, audit report, FedRAMP package.",
-        "- Check that provider evidence is current; note the review date or any freshness concern.",
-        "- Record whether your local implementation differs from the provider baseline (a local delta means extra work and extra evidence).",
-        "- Cite the source of the inheritance decision — contract, FedRAMP package, or agency agreement.",
-      ].join("\n"),
-    },
-    { type: "table", heading: "Inheritance Plan", headers, rows },
-  ];
-
-  return appendSourceMetadata(
-    {
-      title: "Inheritance Worksheet",
-      description: "Worksheet to plan control inheritance.",
-      sections,
-    },
-    options,
-  );
-}
-
-/**
- * @param {any} options
- * @returns {TemplateDocument}
- */
-function generateReciprocityChecklist(options) {
-  const ph = placeholder(options);
-
-  const headers = ["Item", "Status", "Reciprocity Guidance", "Notes"];
-  const rows = [
-    ["SSP (System Security Plan)", ph("[Not reviewed | In progress | Complete]"), "Verify the SSP matches the receiving agency's boundary and data types.", ph("[Notes]")],
-    ["SAR (Security Assessment Report)", ph("[Not reviewed | In progress | Complete]"), "Confirm independent testing covers controls relevant to the new deployment.", ph("[Notes]")],
-    ["POA&M (Plan of Action and Milestones)", ph("[Not reviewed | In progress | Complete]"), "Review open items, milestones, and whether remediation timelines are acceptable.", ph("[Notes]")],
-    ["Boundary Comparison", ph("[Not reviewed | In progress | Complete]"), "Compare authorization boundaries — do data flows and components align?", ph("[Notes]")],
-    ["Control Delta", ph("[Not reviewed | In progress | Complete]"), "List controls that differ between granting and receiving environments.", ph("[Notes]")],
-    ["Risk Acceptance Review", ph("[Not reviewed | In progress | Complete]"), "Ensure all accepted risks were signed by the original Authorizing Official.", ph("[Notes]")],
-    ["Artifact Freshness", ph("[Not reviewed | In progress | Complete]"), "Confirm artifacts are within your agency's review cadence (often under 1 year).", ph("[Notes]")],
-  ];
-
-  /** @type {DocSection[]} */
-  const sections = [
-    {
-      type: "text",
-      heading: "Granting Authorization Reference",
-      content: ph("Package reference — Record the granting system's authorization ID, date, and AO name (placeholder only)."),
-    },
-    {
-      type: "text",
-      heading: "Receiving Organization",
-      content: ph("Receiving org placeholder — Name the agency or program reusing this package. Do not pre-fill real org data."),
-    },
-    { type: "table", heading: "Body of Evidence Checklist", headers, rows },
-    {
-      type: "text",
-      heading: "AO Decision Prompts",
-      content: ph("Authorizing Official decision — What does the receiving AO need to decide? Note conditions, caveats, or additional testing required."),
-    },
-    {
-      type: "text",
-      heading: "Local Implementation Prompts",
-      content: ph("Local gaps — What must the receiving program implement locally even if reciprocity is granted? List controls, evidence, or monitoring."),
-    },
-    {
-      type: "text",
-      heading: "Caveats",
-      content: ph("Caveats and limitations — Document scope limits, expired artifacts, or conditions on reuse."),
-    },
-  ];
-
-  return appendSourceMetadata(
-    {
-      title: "Reciprocity Checklist",
-      description: "Checklist to review a package for reciprocity.",
-      sections,
-    },
-    options,
-  );
-}
-
-/**
- * @param {any} options
- * @returns {TemplateDocument}
- */
-function generatePOAMStarter(options) {
-  // Field set aligns with the eMASS and FedRAMP POA&M presets so an export can
-  // be mapped into either workflow: severity category (CAT I/II/III), original
-  // detection date, resources required, and a named point of contact sit
-  // alongside the core weakness/remediation fields. The full field guide is a
-  // text section; the tracker table keeps the six columns you fill first.
-  const fieldGuide = [
-    ["POA&M ID", "unique tracking number for this item"],
-    ["Detection Source", "Scan | Assessment | Audit | Incident — how was this found?"],
-    ["Related Control (CCI)", "control ID and/or CCI number"],
-    ["Related STIG/SRG", "STIG/SRG rule or N/A"],
-    ["Weakness Description", "describe the weakness in plain language"],
-    ["Risk Statement", "what could go wrong if not fixed?"],
-    ["Severity", "High | Medium | Low"],
-    ["Severity Category (CAT)", "CAT I = high | CAT II = medium | CAT III = low"],
-    ["Point of Contact (POC)", "name/role accountable for remediation"],
-    ["Resources Required", "funding, staff, or tools needed to remediate"],
-    ["Planned Remediation", "planned fix or compensating control"],
-    ["Milestones with Completion Dates", "milestone description | target date; one per line"],
-    ["Original Detection Date", "date the weakness was first identified"],
-    ["Scheduled Completion Date", "target completion date"],
-    ["Responsible Office/Role", "responsible office or role"],
-    ["Status", "Open | Ongoing | Risk Accepted | Completed"],
-    ["Deviation Reference", "deviation or exception ID if applicable"],
-    ["Risk Acceptance Reference", "risk acceptance memo ID if risk is accepted"],
-    ["Evidence Needed for Closure", "evidence required before closing this item"],
-    ["Notes", "anything a reviewer needs that does not fit above"],
-  ];
-
-  const trackerHeaders = [
-    "POA&M ID",
-    "Weakness",
-    "Related Control/CCI",
-    "Severity",
-    "Scheduled Completion",
-    "Status",
-  ];
-  const ph = placeholder(options);
-  const trackerRows = blankRows(10, trackerHeaders.length, ph, ["[Unique tracking number]", "[Plain-language weakness description]", "[Control ID and/or CCI number]", "[High | Medium | Low]", "[YYYY-MM-DD]", "[Open | Ongoing | Risk Accepted | Completed]"]);
-
-  /** @type {DocSection[]} */
-  const sections = [
-    {
-      type: "text",
-      heading: "POA&M Field Guide",
-      content: fieldGuide.map(([name, hint]) => `- **${name}** — ${hint}`).join("\n"),
-    },
-    { type: "table", heading: "POA&M Tracker", headers: trackerHeaders, rows: trackerRows },
-  ];
-
-  return appendSourceMetadata(
-    {
-      title: "POA&M Starter",
-      description: "Blank Plan of Action and Milestones tracker.",
-      sections,
-    },
-    options,
-  );
-}
-
-/**
- * @param {any} options
- * @param {any[]} controls
- * @returns {TemplateDocument}
- */
-function generateAssessmentPlanningWorksheet(options, controls) {
-  const ph = placeholder(options);
-  const headers = [
-    "Control ID",
-    "Control Title",
-    "What It Means",
-    "Assessment Method",
-    "Evidence to Request",
-    "Notes",
-  ];
-
-  const rows = controls.map((c) => [
-    c.id,
-    c.title,
-    truncatePlain(c.description),
-    ph("[Examine | Interview | Test]"),
-    ph("[Artifacts to request before the assessment]"),
-    ph("[Notes]"),
-  ]);
-
-  /** @type {DocSection[]} */
-  const sections = [
-    {
-      type: "text",
-      heading: "How to Plan an Assessment",
-      content: [
-        "- Pick one or more methods per control: Examine (review artifacts), Interview (talk to the people who run it), Test (exercise the mechanism).",
-        "- Request evidence before the assessment window so gaps surface early.",
-        "- Track assessor, target date, and completion status in your schedule; use Notes for scope, sample size, and tooling.",
-      ].join("\n"),
-    },
-    { type: "table", heading: "Assessment Plan", headers, rows },
-  ];
-
-  return appendSourceMetadata(
-    {
-      title: "Assessment Planning Worksheet",
-      description: "Worksheet to plan control assessments.",
-      sections,
-    },
-    options,
-  );
-}
-
-/**
- * @param {any} options
- * @returns {TemplateDocument}
- */
-function generateConMonCalendar(options) {
-  const ph = placeholder(options);
-  const headers = [
-    "Activity",
-    "Control Refs",
-    "Frequency",
-    "Owner",
-    "Next Review",
-    "Status",
-  ];
-
-  // Canonical continuous-monitoring activities (NIST SP 800-137 aligned) with
-  // typical cadences — a real starter schedule, not a placeholder row. Adjust
-  // frequencies to your agency's ConMon strategy.
-  const starterActivities = [
-    ["Vulnerability scanning", "RA-5", "Monthly"],
-    ["Access review", "AC-2", "Quarterly"],
-    ["Configuration audit", "CM-6", "Quarterly"],
-    ["Audit log review", "AU-6", "Weekly"],
-    ["Contingency plan test", "CP-4", "Annual"],
-    ["Security awareness training", "AT-2", "Annual"],
-    ["POA&M review", "CA-5", "Monthly"],
-    ["Penetration test", "CA-8", "Annual"],
-    ["Incident response exercise", "IR-3", "Annual"],
-    ["Inventory reconciliation", "CM-8", "Quarterly"],
-  ];
-  const rows = starterActivities.map(([activity, refs, frequency]) => [
-    activity,
-    refs,
-    frequency,
-    ph("[Role]"),
-    ph("[Date]"),
-    "",
-  ]);
-
-  /** @type {DocSection[]} */
-  const sections = [{ type: "table", heading: "Monitoring Schedule", headers, rows }];
-
-  return appendSourceMetadata(
-    {
-      title: "Continuous Monitoring Calendar",
-      description: "Calendar template for continuous monitoring activities.",
-      sections,
-    },
-    options,
-  );
 }
 
 function blankRows(count, width, ph, values = []) {
@@ -919,7 +403,11 @@ function generateProfessionalImplementationWorksheet(options, controls) {
   /** @type {DocSection[]} */
   const sections = [
     { type: "text", heading: "Completion Standard", content: ["- Write a testable narrative: who performs the action, what mechanism is used, where it applies, when it runs, and what record it creates.", "- Separate inherited provider behavior from the customer or system team's residual responsibility.", "- Cite evidence by stable identifier and record the evidence review cadence.", "- Fields using camelCase mirror public eMASS API v3.22 control schema names for preparation only."].join("\n") },
-    { type: "table", heading: "Implementation Statements", headers, rows },
+    tableSection("Implementation Statements", headers, rows, {
+      implementationStatus: listOf(TEMPLATE_VOCAB.implementation_statement_worksheet.implementationStatus),
+      controlDesignation: listOf(TEMPLATE_VOCAB.implementation_statement_worksheet.controlDesignation),
+      estimatedCompletionDate: dateField({ help: "Enter a date, for example 2026-09-30. eMASS stores Unix time; convert when you enter it there." }),
+    }),
   ];
   return appendSourceMetadata({ title: "Control Implementation Statement Worksheet", description: "Operational drafting and review worksheet with public eMASS API v3.22-aligned preparation fields.", sections }, options);
 }
@@ -941,7 +429,10 @@ function generateProfessionalEvidenceMatrix(options, controls, crossRef) {
   /** @type {DocSection[]} */
   const sections = [
     { type: "text", heading: "Evidence Quality Standard", content: [`- Use specific, reproducible artifacts. Candidate types: ${EVIDENCE_TYPE_HINT}.`, "- Record owner, cadence, covered period, collection method, and location so another reviewer can retrieve the same evidence.", "- Confidence is a triage signal, not an assessor decision. Mark Low when scope, freshness, integrity, or traceability is uncertain.", "- Use Assessor Notes to record sampling, exceptions, corroboration, and required follow-up."].join("\n") },
-    { type: "table", heading: "Evidence Expectations", headers, rows },
+    tableSection("Evidence Expectations", headers, rows, {
+      Confidence: listOf(TEMPLATE_VOCAB.evidence_expectation_matrix.confidence),
+      "Review Status": listOf(TEMPLATE_VOCAB.evidence_expectation_matrix.reviewStatus),
+    }),
     { type: "table", heading: "Control Cross-Reference Index", headers: ["Control ID", "Control Title", "Related CCIs", "Related STIG/SRG"], rows: referenceRows },
   ];
   return appendSourceMetadata({ title: "Evidence Expectation Matrix", description: "Evidence planning and readiness matrix with ownership, freshness, confidence, and assessor-facing review notes.", sections }, options);
@@ -950,17 +441,23 @@ function generateProfessionalEvidenceMatrix(options, controls, crossRef) {
 function generateProfessionalSTIGWorksheet(options) {
   const ph = placeholder(options);
   const headers = ["Benchmark ID", "Rule ID", "Status", "Comments", "Finding Details", "Severity Override", "Severity Override Reason", "FQDN", "IP Address", "MAC Address", "Host Name", "Technology Area"];
-  const rows = blankRows(20, headers.length, ph, ["[Benchmark ID]", "[SV-..._rule]", "[Not Reviewed | Open | Not a Finding | Not Applicable]", "[Implementation context or reviewer remarks]", "[Observed condition and test result]", "[CAT I | CAT II | CAT III]", "[Authorized justification for override]", "[Fully qualified domain name]", "[IP address]", "[MAC address]", "[Host name]", "[Network | Database | Application | ...]"]);
+  const rows = blankRows(20, headers.length, ph, ["[Benchmark ID]", "[SV-..._rule]", "[Not Reviewed | Open | Not a Finding | Not Applicable]", "[Implementation context or reviewer remarks]", "[Observed condition and test result]", "[Low | Medium | High]", "[Authorized justification for override]", "[Fully qualified domain name]", "[IP address]", "[MAC address]", "[Host name]", "[Choose a Technology Area]"]);
   const evidenceHeaders = ["Rule ID", "Evidence Artifact", "Validation Method", "Evidence Owner", "Evidence Date", "Review Notes"];
   const evidenceRows = blankRows(20, evidenceHeaders.length, ph, ["[SV-..._rule]", "[Artifact name or ID]", "[Export | Screenshot | Query | Interview]", "[Owner role]", "[YYYY-MM-DD]", "[Scope, sufficiency, follow-up]"]);
   /** @type {DocSection[]} */
   const sections = [
     { type: "text", heading: "Import Contract", content: "The first table preserves the exact 12 CSV headers documented by the DISA STIG Viewer 3.x User Guide V1R7. Keep the header names and order unchanged. Save only the first table as CSV for import, then validate it in the target STIG Viewer version." },
     { type: "text", heading: "Field Guide", content: ["- Benchmark ID: benchmark identifier expected by the target checklist.", "- Rule ID: STIG rule identifier, normally the SV-..._rule value.", "- Status: use only values accepted by the target viewer and benchmark workflow.", "- Comments: implementation context or reviewer remarks; Finding Details: observed condition and test result.", "- Severity Override and Reason: populate together only when an authorized override applies.", "- FQDN, IP Address, MAC Address, Host Name, and Technology Area identify the assessed target.", "- Keep evidence references in the second table so the import table remains contract-clean."].join("\n") },
-    { type: "table", heading: "STIG Viewer CSV Import Rows", headers, rows },
-    { type: "table", heading: "Evidence Working Notes", headers: evidenceHeaders, rows: evidenceRows },
+    tableSection("STIG Viewer CSV Import Rows", headers, rows, {
+      Status: listOf(TEMPLATE_VOCAB.stig_evidence_checklist.status),
+      "Severity Override": listOf(TEMPLATE_VOCAB.stig_evidence_checklist.severityOverride),
+      "Technology Area": listOf(TEMPLATE_VOCAB.stig_evidence_checklist.technologyArea),
+    }),
+    tableSection("Evidence Working Notes", evidenceHeaders, evidenceRows, {
+      "Evidence Date": dateField(),
+    }),
   ];
-  return appendSourceMetadata({ title: "STIG Viewer CSV Preparation Worksheet", description: "Officially specified STIG Viewer CSV columns paired with separate evidence working notes.", sections }, options);
+  return appendSourceMetadata({ title: "STIG Viewer CSV Preparation Worksheet", description: "STIG Viewer CSV columns from the V1R7 user guide, paired with separate evidence working notes.", sections }, options);
 }
 
 function generateProfessionalInheritanceWorksheet(options, controls) {
@@ -970,7 +467,11 @@ function generateProfessionalInheritanceWorksheet(options, controls) {
   /** @type {DocSection[]} */
   const sections = [
     { type: "text", heading: "Decision Standard", content: ["- Do not mark a control inherited solely because a cloud or shared service is used.", "- Identify the provider assertion, its version and date, and the exact responsibility retained locally.", "- Record local configuration or operating differences as deltas with separate evidence.", "- Revisit aging, expired, or unknown provider evidence before relying on it in an authorization package."].join("\n") },
-    { type: "table", heading: "Inheritance Decision Log", headers, rows },
+    tableSection("Inheritance Decision Log", headers, rows, {
+      "Inheritance Decision": listOf(TEMPLATE_VOCAB.inheritance_worksheet.decision),
+      "Evidence Freshness Status": listOf(TEMPLATE_VOCAB.inheritance_worksheet.freshness),
+      "Review Date": dateField(),
+    }),
   ];
   return appendSourceMetadata({ title: "Inheritance Worksheet", description: "Decision log for provider claims, local responsibilities, evidence freshness, deltas, and review ownership.", sections }, options);
 }
@@ -984,7 +485,11 @@ function generateProfessionalReciprocityChecklist(options) {
   const sections = [
     { type: "text", heading: "Package Context", content: ph("Granting system and authorization ID | granting AO and decision date | receiving organization | receiving boundary | impact level | data types | intended reuse decision | review lead | target decision date") },
     { type: "text", heading: "Review Standard", content: "Confirm provenance, scope, freshness, control and environment deltas, open risk, and authorization terms. Assign every gap an owner, action, and due date. The receiving Authorizing Official retains the decision." },
-    { type: "table", heading: "Reciprocity Review", headers, rows },
+    tableSection("Reciprocity Review", headers, rows, {
+      Status: listOf(TEMPLATE_VOCAB.reciprocity_checklist.status),
+      "Decision / Disposition": listOf(TEMPLATE_VOCAB.reciprocity_checklist.disposition),
+      "Due Date": dateField(),
+    }),
     { type: "text", heading: "Decision Record", content: ph("Decision | Conditions | Supplemental assessment required | Accepted residual risk | Decision authority | Decision date | Re-review trigger") },
   ];
   return appendSourceMetadata({ title: "Reciprocity Package Review", description: "Structured review of authorization-package provenance, scope, freshness, deltas, risk, and receiving-organization actions.", sections }, options);
@@ -993,11 +498,21 @@ function generateProfessionalReciprocityChecklist(options) {
 function generateProfessionalPOAM(options) {
   const ph = placeholder(options);
   const headers = ["externalUid", "status", "vulnerabilityDescription", "sourceIdentifyingVulnerability", "controlAcronym", "assessmentProcedure", "securityChecks", "severity", "rawSeverity", "relevanceOfThreat", "likelihood", "impact", "impactDescription", "residualRiskLevel", "pocOrganization", "Point of Contact", "resources", "Planned Remediation", "Milestones with Completion Dates", "Original Detection Date", "scheduledCompletionDate", "completionDate", "recommendations", "mitigations", "Evidence Needed for Closure", "Risk Acceptance / Deviation Reference", "comments"];
-  const rows = blankRows(20, headers.length, ph, ["[Stable external tracking ID]", "[Ongoing | Risk Accepted | Completed | Not Applicable | Archived]", "[Plain-language weakness; 2,000 chars max for eMASS alignment]", "[Scan, assessment, audit, incident, or other source]", "[Control acronym]", "[Assessment procedure]", "[STIG/SRG rules or checks]", "[Very Low | Low | Moderate | High | Very High]", "[Scanner severity]", "[Very Low | Low | Moderate | High | Very High]", "[Very Low | Low | Moderate | High | Very High]", "[Very Low | Low | Moderate | High | Very High]", "[Mission/business impact]", "[Very Low | Low | Moderate | High | Very High]", "[Accountable organization]", "[Role or contact]", "[People, funding, tools, dependencies]", "[Corrective action or compensating control]", "[Milestone | owner | target date | status; repeat as needed]", "[YYYY-MM-DD]", "[YYYY-MM-DD; eMASS API uses Unix time]", "[YYYY-MM-DD when completed]", "[Recommended corrective action]", "[Current mitigations]", "[Retest or artifact required to close]", "[Approval memo, exception, or deviation ID]", "[Decision rationale, closure notes, or blockers]"]);
+  const rows = blankRows(20, headers.length, ph, ["[Stable external tracking ID]", "[Ongoing | Risk Accepted | Completed | Not Applicable]", "[Plain-language weakness; 2,000 chars max for eMASS alignment]", "[Scan, assessment, audit, incident, or other source]", "[Control acronym]", "[Assessment procedure]", "[STIG/SRG rules or checks]", "[Very Low | Low | Moderate | High | Very High]", "[Scanner severity]", "[Very Low | Low | Moderate | High | Very High]", "[Very Low | Low | Moderate | High | Very High]", "[Very Low | Low | Moderate | High | Very High]", "[Mission/business impact]", "[Very Low | Low | Moderate | High | Very High]", "[Accountable organization]", "[Role or contact]", "[People, funding, tools, dependencies]", "[Corrective action or compensating control]", "[Milestone | owner | target date | status; repeat as needed]", "[YYYY-MM-DD]", "[YYYY-MM-DD; eMASS API uses Unix time]", "[YYYY-MM-DD when completed]", "[Recommended corrective action]", "[Current mitigations]", "[Retest or artifact required to close]", "[Approval memo, exception, or deviation ID]", "[Decision rationale, closure notes, or blockers]"]);
   /** @type {DocSection[]} */
   const sections = [
     { type: "text", heading: "Operating Rules", content: ["- Assign a stable externalUid and preserve it across updates.", "- Describe the observed weakness separately from risk, remediation, and mitigation.", "- Break remediation into dated milestones with owners; reconcile the final milestone with scheduledCompletionDate.", "- Close only after the required evidence or retest is reviewed. Record approval references for risk acceptance or deviations.", "- camelCase headers mirror public eMASS API v3.22 POA&M fields where available; companion headers add operational detail."].join("\n") },
-    { type: "table", heading: "POA&M Working Register", headers, rows },
+    tableSection("POA&M Working Register", headers, rows, {
+      status: listOf(TEMPLATE_VOCAB.poam_starter.status),
+      severity: listOf(TEMPLATE_VOCAB.poam_starter.riskLevel),
+      relevanceOfThreat: listOf(TEMPLATE_VOCAB.poam_starter.riskLevel),
+      likelihood: listOf(TEMPLATE_VOCAB.poam_starter.riskLevel),
+      impact: listOf(TEMPLATE_VOCAB.poam_starter.riskLevel),
+      residualRiskLevel: listOf(TEMPLATE_VOCAB.poam_starter.riskLevel),
+      "Original Detection Date": dateField(),
+      scheduledCompletionDate: dateField({ help: "Enter a date, for example 2026-09-30. eMASS stores Unix time; convert when you enter it there." }),
+      completionDate: dateField(),
+    }),
   ];
   return appendSourceMetadata({ title: "POA&M Working Register", description: "Operational weakness and remediation register with public eMASS API v3.22-aligned preparation fields.", sections }, options);
 }
@@ -1009,7 +524,13 @@ function generateProfessionalAssessmentPlan(options, controls) {
   /** @type {DocSection[]} */
   const sections = [
     { type: "text", heading: "Planning Standard", content: ["- Define the assessment objective, in-scope components, covered period, exclusions, and sampling before scheduling work.", "- Tie each method to a procedure, tool, or repeatable manual step and identify the requested evidence.", "- Record the assessor role, dates, status, result, evidence location, and finding or POA&M reference.", "- Result / Test Success corresponds conceptually to the public eMASS v3.22 test-results success flag; this worksheet is not an API payload."].join("\n") },
-    { type: "table", heading: "Assessment Plan", headers, rows },
+    tableSection("Assessment Plan", headers, rows, {
+      "Assessment Method": listOf(TEMPLATE_VOCAB.assessment_planning_worksheet.method),
+      Status: listOf(TEMPLATE_VOCAB.assessment_planning_worksheet.status),
+      "Result / Test Success": listOf(TEMPLATE_VOCAB.assessment_planning_worksheet.result),
+      "Target Start": dateField(),
+      "Target Complete": dateField(),
+    }),
   ];
   return appendSourceMetadata({ title: "Assessment Planning Worksheet", description: "Assessment work plan covering scope, methods, evidence, sampling, tooling, ownership, schedule, results, and follow-up.", sections }, options);
 }
@@ -1033,7 +554,11 @@ function generateProfessionalConMonCalendar(options) {
   /** @type {DocSection[]} */
   const sections = [
     { type: "text", heading: "Operating Guidance", content: "Reconcile example frequencies to the approved ConMon strategy. Name the deliverable, collection method, owner, reviewer, repository, due date, completion date, result threshold, and escalation path. A calendar entry is complete only when its evidence and follow-up are recorded." },
-    { type: "table", heading: "Monitoring Delivery Schedule", headers, rows },
+    tableSection("Monitoring Delivery Schedule", headers, rows, {
+      Status: listOf(TEMPLATE_VOCAB.conmon_calendar.status),
+      "Next Due": dateField(),
+      "Completed Date": dateField(),
+    }),
   ];
   return appendSourceMetadata({ title: "Continuous Monitoring Delivery Calendar", description: "Operating calendar connecting monitoring work to deliverables, evidence, review, reporting, and escalation.", sections }, options);
 }
@@ -1041,11 +566,18 @@ function generateProfessionalConMonCalendar(options) {
 function generateHardwareBaseline(options) {
   const ph = placeholder(options);
   const headers = ["assetName", "componentType", "nickname", "assetIpAddress", "publicFacing", "publicFacingFqdn", "publicFacingIpAddress", "publicFacingUrls", "virtualAsset", "manufacturer", "modelNumber", "serialNumber", "osIosFwVersion", "memorySizeType", "location", "approvalStatus", "criticalAsset", "Asset Owner", "Environment / Boundary", "Discovery Source", "Last Verified", "Lifecycle Status", "Notes"];
-  const rows = blankRows(20, headers.length, ph, ["[Required: unique asset name]", "[Server | workstation | network | appliance | mobile | other]", "[Friendly name]", "[Internal IP address]", "[true | false]", "[Required when publicFacing=true]", "[Required when publicFacing=true]", "[Required when publicFacing=true]", "[true | false]", "[Manufacturer or Virtual]", "[Model or Virtual]", "[Serial, cloud resource ID, or Virtual]", "[OS, IOS, or firmware version]", "[Memory size/type]", "[Facility, region, zone, or logical location]", "[Approved | Unapproved | In Progress]", "[true | false]", "[Accountable role]", "[Boundary or environment]", "[CMDB | cloud API | scan | manual]", "[YYYY-MM-DD]", "[Active | Spare | Maintenance | Retiring | Retired]", "[Exceptions, dependencies, reconciliation notes]"]);
+  const rows = blankRows(20, headers.length, ph, ["[Required: unique asset name]", "[Server | workstation | network | appliance | mobile | other]", "[Friendly name]", "[Internal IP address]", "[true | false]", "[Required when publicFacing=true]", "[Required when publicFacing=true]", "[Required when publicFacing=true]", "[true | false]", "[Manufacturer or Virtual]", "[Model or Virtual]", "[Serial, cloud resource ID, or Virtual]", "[OS, IOS, or firmware version]", "[Memory size/type]", "[Facility, region, zone, or logical location]", "[Choose or enter an approval status]", "[true | false]", "[Accountable role]", "[Boundary or environment]", "[CMDB | cloud API | scan | manual]", "[YYYY-MM-DD]", "[Active | Spare | Maintenance | Retiring | Retired]", "[Exceptions, dependencies, reconciliation notes]"]);
   /** @type {DocSection[]} */
   const sections = [
     { type: "text", heading: "Baseline Standard", content: ["- Record one uniquely identifiable asset per row; do not use a shared name for multiple devices.", "- Populate the public-facing detail fields whenever publicFacing is true.", "- Use stable cloud resource IDs where serial numbers do not apply.", "- Reconcile owner, boundary, discovery source, verification date, lifecycle, and approval status before assessment use.", "- camelCase headers mirror public eMASS API v3.22 hardware-baseline fields; title-case headers are Control Atlas operating fields."].join("\n") },
-    { type: "table", heading: "Hardware Baseline", headers, rows },
+    tableSection("Hardware Baseline", headers, rows, {
+      publicFacing: listOf(TRUE_FALSE),
+      virtualAsset: listOf(TRUE_FALSE),
+      criticalAsset: listOf(TRUE_FALSE),
+      approvalStatus: listOf(TEMPLATE_VOCAB.hardware_baseline.approvalStatus, { strict: false }),
+      "Lifecycle Status": listOf(TEMPLATE_VOCAB.hardware_baseline.lifecycleStatus),
+      "Last Verified": dateField(),
+    }),
   ];
   return appendSourceMetadata({ title: "Hardware Baseline", description: "Assessment-ready asset inventory with public eMASS API v3.22-aligned preparation fields and local operating context.", sections }, options);
 }
@@ -1057,7 +589,15 @@ function generateSoftwareBaseline(options) {
   /** @type {DocSection[]} */
   const sections = [
     { type: "text", heading: "Baseline Standard", content: ["- Record vendor, product, and exact version/build; separate materially different versions.", "- Identify installation scope, dependencies, hosting environment, owner, approval basis, and discovery source.", "- Track maintenance, retirement, and end-of-support dates so unsupported software becomes actionable before assessment.", "- camelCase headers mirror public eMASS API v3.22 software-baseline fields; title-case headers are Control Atlas operating fields."].join("\n") },
-    { type: "table", heading: "Software Baseline", headers, rows },
+    tableSection("Software Baseline", headers, rows, {
+      criticalAsset: listOf(TRUE_FALSE),
+      approvalDate: dateField({ help: "Enter a date, for example 2026-09-30. eMASS stores Unix time; convert when you enter it there." }),
+      releaseDate: dateField(),
+      maintenanceDate: dateField(),
+      retirementDate: dateField(),
+      endOfLifeSupportDate: dateField({ help: "Enter only a date you have from the vendor or your own records." }),
+      "Last Verified": dateField(),
+    }),
   ];
   return appendSourceMetadata({ title: "Software Baseline", description: "Assessment-ready software inventory with public eMASS API v3.22-aligned preparation fields and lifecycle context.", sections }, options);
 }
@@ -1065,11 +605,16 @@ function generateSoftwareBaseline(options) {
 function generatePPSMPreparationWorksheet(options) {
   const ph = placeholder(options);
   const headers = ["Record ID", "System / Boundary", "Mission or Business Need", "Service Name", "Protocol", "Port / Range", "Transport", "Source Zone / Address", "Destination Zone / Address", "Direction", "Purpose / Data Flow", "Public / External Exposure", "Encryption / Authentication", "Service Owner", "Technical POC", "Related Devices / Software", "Existing PPSM / Approval Reference", "Requested Action", "Review Status", "Risk / Exception", "Last Verified", "Notes"];
-  const rows = blankRows(20, headers.length, ph, ["[Stable local ID]", "[System or authorization boundary]", "[Why the communication is necessary]", "[Service or application]", "[Protocol name/number]", "[Single port or range]", "[TCP | UDP | SCTP | other]", "[Zone, subnet, FQDN, or address]", "[Zone, subnet, FQDN, or address]", "[Inbound | Outbound | Bidirectional | Internal]", "[Information exchanged and operational purpose]", "[None | DoD external | Internet | Partner]", "[TLS, IPsec, mutual auth, certificates, or N/A]", "[Accountable role]", "[Technical contact or role]", "[Baseline asset IDs]", "[Registry number, receipt, CLSA/BUS, firewall rule, or N/A]", "[Register | Update | Retire | Validate]", "[Draft | Owner Review | Security Review | Ready for Registry | Submitted | Approved | Rework]", "[Risk, deviation, or exception reference]", "[YYYY-MM-DD]", "[Dependencies, restrictions, reviewer comments]"]);
+  const rows = blankRows(20, headers.length, ph, ["[Stable local ID]", "[System or authorization boundary]", "[Why the communication is necessary]", "[Service or application]", "[Protocol name/number]", "[Single port or range]", "[TCP | UDP | SCTP | other]", "[Zone, subnet, FQDN, or address]", "[Zone, subnet, FQDN, or address]", "[Inbound | Outbound | Bidirectional | Internal]", "[Information exchanged and operational purpose]", "[None | DoD external | Internet | Partner]", "[TLS, IPsec, mutual auth, certificates, or N/A]", "[Accountable role]", "[Technical contact or role]", "[Baseline asset IDs]", "[Registry number, receipt, CLSA/BUS, firewall rule, or N/A]", "[Register | Update | Retire | Validate]", "[Draft | Owner Review | Security Review | Ready for Registry | Entered in Registry | Rework]", "[Risk, deviation, or exception reference]", "[YYYY-MM-DD]", "[Dependencies, restrictions, reviewer comments]"]);
   /** @type {DocSection[]} */
   const sections = [
     { type: "text", heading: "Preparation Guidance", content: ["- Start with the mission need and data flow, then identify protocol, port, transport, endpoints, direction, and protections.", "- Use exact boundary, zone, address, device, and software references instead of generic labels.", "- Record existing registry, receipt, firewall, CLSA/BUS, or exception references when available.", "- Have the service owner and security reviewer validate the row before authorized registry entry.", "- This worksheet does not reproduce a restricted registry export and cannot be imported into PPSM."].join("\n") },
-    { type: "table", heading: "PPSM Preparation Register", headers, rows },
+    tableSection("PPSM Preparation Register", headers, rows, {
+      "Public / External Exposure": listOf(TEMPLATE_VOCAB.ppsm_preparation_worksheet.exposure),
+      "Requested Action": listOf(TEMPLATE_VOCAB.ppsm_preparation_worksheet.requestedAction),
+      "Review Status": listOf(TEMPLATE_VOCAB.ppsm_preparation_worksheet.reviewStatus),
+      "Last Verified": dateField(),
+    }),
   ];
   return appendSourceMetadata({ title: "PPSM Preparation Worksheet", description: "Local preparation register for ports, protocols, services, data flows, exposure, protections, ownership, and approval tracking.", sections }, options);
 }
@@ -1489,10 +1034,18 @@ export function buildTemplateDocument(options, dataset) {
         (node) => node.metadata?.catalog_id === options.framework,
       )?.source_id
     : "";
+  // A program's own sources are listed only when that program is selected;
+  // a registry lists them for every template that can serve that program.
+  const programSelected = /^fedramp/i.test(String(options.framework || ""));
   const sourceRefs = [
     frameworkSourceId,
     ...(options.sourceRefs || []),
-  ].filter((sourceId, index, values) => sourceId && values.indexOf(sourceId) === index);
+  ].filter(
+    (sourceId, index, values) =>
+      sourceId &&
+      values.indexOf(sourceId) === index &&
+      (programSelected || !/^fedramp/i.test(String(sourceId))),
+  );
   const normalized = {
     ...options,
     includeSourceFootnotes: true,

@@ -13,9 +13,9 @@
       "source_refs": ["fedramp-2026-rules", "nist-oscal", "nist-800-37-rev2"],
       "official_resource_ids": ["fedramp-schema-certification-package-overview-2026-06-24", "fedramp-schema-security-decision-record-2026-06-24", "fedramp-legacy-ssp", "fedramp-legacy-oscal-automation-archive", "nist-oscal-models-v1-2-2"],
       "compatibility": {
-        "classification": "Control Atlas companion",
-        "claim": "Planning aid aligned to NIST RMF concepts and the current FedRAMP Certification Package Overview and Security Decision Record transition path.",
-        "limitations": "Working draft, not an official SSP or FedRAMP package. The historical Rev. 5 SSP is kept for migration; current work uses its selected 2026 rules, class, path, and schemas."
+        "classification": "Concept-aligned",
+        "claim": "Follows NIST RMF and OSCAL SSP concepts. It is not an SSP schema.",
+        "limitations": "Working draft, not an official SSP, and not directly importable into another system."
       },
       "provenance": { "basis": "NIST SP 800-37 Rev. 2 and NIST OSCAL SSP model", "verified_interchange": false },
       "official_alternative": {
@@ -36,9 +36,9 @@
       "source_refs": ["fedramp-2026-rules", "nist-oscal", "mitre-emass-api-v3-22"],
       "official_resource_ids": ["fedramp-schema-security-decision-record-2026-06-24", "nist-oscal-models-v1-2-2", "mitre-emass-api-openapi-v3-22", "mitre-emass-client"],
       "compatibility": {
-        "classification": "eMASS API v3.22 schema-aligned",
-        "claim": "Uses public v3.22 control field names and enumerations as preparation guidance.",
-        "limitations": "Not an eMASS-generated import template and not directly importable. Instance-specific rules may differ."
+        "classification": "Field-aligned",
+        "claim": "Uses MITRE eMASS API v3.22 control field names and values. Import into eMASS is not verified.",
+        "limitations": "Not an eMASS-generated import template and not directly importable; your eMASS instance may differ."
       },
       "provenance": { "basis": "MITRE emass_client OpenAPI v3.22 Controls schemas", "verified_interchange": false },
       "official_alternative": {
@@ -59,9 +59,9 @@
       "source_refs": ["fedramp-2026-rules", "nist-oscal", "disa-stig-library", "disa-cci-list"],
       "official_resource_ids": ["fedramp-schema-security-decision-record-2026-06-24", "nist-oscal-models-v1-2-2", "disa-stig-viewer-guide-v1r7"],
       "compatibility": {
-        "classification": "Control Atlas companion",
-        "claim": "Evidence planning aid cross-referenced to ingested controls, CCIs, and STIG/SRG rules.",
-        "limitations": "Evidence examples are planning prompts, not assessor acceptance decisions."
+        "classification": "Concept-aligned",
+        "claim": "Follows NIST SP 800-53A assessment concepts and DISA cross-references. It is not an interchange schema.",
+        "limitations": "Evidence expectations need assessor and organization validation."
       },
       "provenance": { "basis": "NIST SP 800-53A Rev. 5 and ingested DISA cross-references", "verified_interchange": false },
       "official_alternative": {
@@ -74,7 +74,7 @@
       "template_id": "tpl-stig-chk",
       "name": "stig_evidence_checklist",
       "display_name": "STIG Viewer CSV Preparation Worksheet",
-      "description": "Officially specified STIG Viewer CSV columns plus a separate evidence working-notes sheet for assessment preparation.",
+      "description": "STIG Viewer CSV columns from the V1R7 user guide plus a separate evidence working-notes sheet for assessment preparation.",
       "artifact_type": "stig_evidence_checklist",
       "supported_formats": ["xlsx"],
       "input_options": ["selected_stigs"],
@@ -82,9 +82,9 @@
       "source_refs": ["disa-stig-library", "disa-cci-list", "disa-stig-viewer-v1r7"],
       "official_resource_ids": ["disa-stig-viewer-csv-contract-v1r7", "disa-stig-viewer-guide-v1r7", "disa-stig-viewer"],
       "compatibility": {
-        "classification": "Officially specified",
-        "claim": "Primary table uses the 12 CSV headers documented by the DISA STIG Viewer 3.x User Guide V1R7.",
-        "limitations": "Control Atlas does not certify STIG Viewer import success; validate in the target STIG Viewer version."
+        "classification": "Field-aligned",
+        "claim": "Uses the 12 CSV headers and values in the DISA STIG Viewer 3.x User Guide V1R7. Import into STIG Viewer is not verified.",
+        "limitations": "Open the CSV in your STIG Viewer version to check it. Control Atlas has not tested an import."
       },
       "provenance": { "basis": "DISA STIG Viewer 3.x User Guide V1R7 CSV import contract", "verified_interchange": false },
       "official_alternative": {
@@ -105,9 +105,9 @@
       "source_refs": ["fedramp-2026-rules", "nist-oscal", "nist-800-37-rev2"],
       "official_resource_ids": ["fedramp-schema-certification-package-overview-2026-06-24", "fedramp-legacy-crm-cis", "nist-oscal-models-v1-2-2"],
       "compatibility": {
-        "classification": "Control Atlas companion",
-        "claim": "Supports responsibility analysis using NIST RMF and OSCAL inheritance concepts.",
-        "limitations": "Does not replace a provider CRM/CIS or authorize inherited-control acceptance."
+        "classification": "Concept-aligned",
+        "claim": "Follows NIST RMF and OSCAL inheritance concepts. It is not an interchange schema.",
+        "limitations": "Does not replace a provider CRM/CIS or approve an inheritance decision."
       },
       "provenance": { "basis": "NIST SP 800-37 Rev. 2 and OSCAL implemented-requirement inheritance concepts", "verified_interchange": false },
       "official_alternative": {
@@ -128,9 +128,9 @@
       "source_refs": ["fedramp-2026-rules", "nist-800-37-rev2"],
       "official_resource_ids": ["fedramp-schema-certification-package-overview-2026-06-24", "nist-oscal-models-v1-2-2", "dcsa-daapm-v2-2"],
       "compatibility": {
-        "classification": "Control Atlas companion",
-        "claim": "Organizes evidence needed for a receiving organization to evaluate authorization-package reuse.",
-        "limitations": "Does not grant reciprocity or substitute for the receiving Authorizing Official's decision."
+        "classification": "Concept-aligned",
+        "claim": "Follows NIST RMF authorization-package reuse concepts. It is not an interchange schema.",
+        "limitations": "Does not grant reciprocity. The receiving Authorizing Official owns the reuse decision."
       },
       "provenance": { "basis": "NIST SP 800-37 Rev. 2 authorization and ongoing-authorization concepts", "verified_interchange": false },
       "official_alternative": {
@@ -151,9 +151,9 @@
       "source_refs": ["fedramp-2026-rules", "nist-800-37-rev2", "nist-oscal", "mitre-emass-api-v3-22"],
       "official_resource_ids": ["fedramp-schema-accepted-vulnerability-info-2026-06-24", "fedramp-schema-vulnerability-detail-report-2026-06-24", "fedramp-legacy-poam", "mitre-emass-api-openapi-v3-22", "mitre-emass-client", "vulnerator"],
       "compatibility": {
-        "classification": "eMASS API v3.22 schema-aligned",
-        "claim": "Includes public eMASS v3.22 POA&M field names and separates general remediation tracking from current FedRAMP provider vulnerability reporting and agency-owned POA&Ms.",
-        "limitations": "Not an eMASS-generated or FedRAMP import template. For FedRAMP, determine whether the action belongs to the provider or agency before creating a POA&M entry."
+        "classification": "Field-aligned",
+        "claim": "Uses MITRE eMASS API v3.22 POA&M field names and values. Import into eMASS is not verified.",
+        "limitations": "Not an eMASS-generated import template and not directly importable."
       },
       "provenance": { "basis": "MITRE emass_client OpenAPI v3.22 POA&M schemas; historical layout lessons from Vulnerator", "verified_interchange": false },
       "official_alternative": {
@@ -174,9 +174,9 @@
       "source_refs": ["fedramp-2026-rules", "nist-oscal", "nist-800-37-rev2", "mitre-emass-api-v3-22"],
       "official_resource_ids": ["fedramp-schema-security-decision-record-2026-06-24", "fedramp-schema-certification-package-overview-2026-06-24", "fedramp-legacy-sap", "nist-oscal-models-v1-2-2", "mitre-emass-api-openapi-v3-22"],
       "compatibility": {
-        "classification": "eMASS API v3.22 schema-aligned",
-        "claim": "Uses eMASS v3.22 test-result concepts alongside NIST SP 800-53A assessment planning.",
-        "limitations": "Not a Security Assessment Plan or eMASS test-result import. Current FedRAMP rules do not require a separate SAP/SAR; route assessment summaries and results to the applicable package and Security Decision Record."
+        "classification": "Concept-aligned",
+        "claim": "Follows NIST SP 800-53A assessment planning and eMASS test-result concepts. It is not an interchange schema.",
+        "limitations": "Neither a complete Security Assessment Plan nor an eMASS test-result import file."
       },
       "provenance": { "basis": "NIST SP 800-53A Rev. 5 and MITRE emass_client v3.22 Test Results schema", "verified_interchange": false },
       "official_alternative": {
@@ -197,9 +197,9 @@
       "source_refs": ["fedramp-2026-rules", "nist-sp-800-137", "nist-800-37-rev2"],
       "official_resource_ids": ["fedramp-schema-ongoing-certification-report-2026-06-24", "fedramp-schema-accepted-vulnerability-info-2026-06-24", "fedramp-schema-vulnerability-detail-report-2026-06-24", "fedramp-legacy-conmon-deliverables"],
       "compatibility": {
-        "classification": "Control Atlas companion",
-        "claim": "Starter operating calendar aligned to NIST monitoring concepts and current FedRAMP OCR and vulnerability-reporting artifacts.",
-        "limitations": "Cadences are planning defaults. Current FedRAMP rule-specific effective dates, certification profile, authorization conditions, and contracts take precedence."
+        "classification": "Concept-aligned",
+        "claim": "Follows NIST continuous-monitoring concepts. It is not an interchange schema.",
+        "limitations": "Seeded cadences are planning defaults unless the row names a source. Confirm them against your program's rules and contracts."
       },
       "provenance": { "basis": "NIST SP 800-137 and NIST SP 800-37 Rev. 2", "verified_interchange": false },
       "official_alternative": {
@@ -220,8 +220,8 @@
       "source_refs": ["fedramp-2026-rules", "dcsa-hardware-list", "mitre-emass-api-v3-22"],
       "official_resource_ids": ["fedramp-schema-certification-package-overview-2026-06-24", "dcsa-hardware-list-2020", "fedramp-legacy-integrated-inventory", "mitre-emass-api-openapi-v3-22", "mitre-emass-client"],
       "compatibility": {
-        "classification": "eMASS API v3.22 schema-aligned",
-        "claim": "Uses public v3.22 hardware-baseline field names with additional local inventory fields.",
+        "classification": "Field-aligned",
+        "claim": "Uses MITRE eMASS API v3.22 hardware-baseline field names and values. Import into eMASS is not verified.",
         "limitations": "Not an eMASS-generated import template and not directly importable."
       },
       "provenance": { "basis": "DCSA hardware list and MITRE emass_client OpenAPI v3.22 hardware schemas", "verified_interchange": false },
@@ -243,8 +243,8 @@
       "source_refs": ["fedramp-2026-rules", "dcsa-software-list", "mitre-emass-api-v3-22"],
       "official_resource_ids": ["fedramp-schema-certification-package-overview-2026-06-24", "dcsa-software-list-2020", "fedramp-legacy-integrated-inventory", "mitre-emass-api-openapi-v3-22", "mitre-emass-client"],
       "compatibility": {
-        "classification": "eMASS API v3.22 schema-aligned",
-        "claim": "Uses public v3.22 software-baseline field names with additional local lifecycle fields.",
+        "classification": "Field-aligned",
+        "claim": "Uses MITRE eMASS API v3.22 software-baseline field names. Import into eMASS is not verified.",
         "limitations": "Not an eMASS-generated import template and not directly importable."
       },
       "provenance": { "basis": "DCSA software list and MITRE emass_client OpenAPI v3.22 software schemas", "verified_interchange": false },
@@ -266,9 +266,9 @@
       "source_refs": ["dod-ppsm-policy", "disa-ppsm-training"],
       "official_resource_ids": ["dodi-8551-01-ppsm-2023", "disa-ppsm-registry-training"],
       "compatibility": {
-        "classification": "Control Atlas companion",
-        "claim": "Prepares publicly documented PPSM information for review and later entry into the authorized registry workflow.",
-        "limitations": "Working worksheet, not an official PPSM form, registry receipt, or import file."
+        "classification": "Concept-aligned",
+        "claim": "Collects the information the PPSM process asks for. It is not an interchange schema.",
+        "limitations": "Collect and review here, then enter the data in the authorized PPSM workflow. Not a PPSM submission form, registry receipt, or import file."
       },
       "provenance": { "basis": "DoDI 8551.01 and public DISA PPSM training", "verified_interchange": false },
       "official_alternative": {

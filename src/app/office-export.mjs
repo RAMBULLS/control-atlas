@@ -13,10 +13,12 @@
  */
 
 import { strToU8, zipSync } from "fflate";
+import { GENERATED_FILE_NOTICE } from "../shared/disclaimer.mjs";
 import {
-  PRODUCT_DISCLAIMER as DISCLAIMER,
-  STARTER_DOCUMENT_REVIEW_NOTICE,
-} from "../shared/disclaimer.mjs";
+  DATE_MAX_SERIAL,
+  DATE_MIN_SERIAL,
+  defineColumns,
+} from "./template-columns.mjs";
 
 const XLSX_MIME =
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -80,69 +82,115 @@ function worksheetCell(value) {
   };
 }
 
+/** Sheet name reserved for the workbook's own long controlled-value lists. */
+const LISTS_SHEET_NAME = "_Lists";
+
+/**
+ * A restrained federal-workbook palette. CellXfs:
+ * 0 reference/body, 1 table header, 2 notes label, 3 notes value,
+ * 4 optional entry, 5 required entry, 6 optional date entry,
+ * 7 required date entry, 8+ header per column group.
+ */
+const GROUP_FILLS = ["1F4E79", "1E6B52", "6B3FA0", "8A4B0F", "9B2C4A", "4A5568"];
+const GROUP_XF_BASE = 8;
+
+function expectedEntry(column, representative) {
+  const parts = [];
+  if (column.help) parts.push(column.help);
+  const rule = column.validation;
+  if (rule?.kind === "list") {
+    parts.push(`${rule.strict === false ? "Suggested values" : "Choose one"}: ${rule.values.join(" | ")}`);
+  } else if (rule?.kind === "date" && !column.help) {
+    parts.push("A date, for example 2026-09-30.");
+  }
+  if (parts.length) return parts.join(" ");
+  return representative || "Enter the value named by this field.";
+}
+
 /** Map the typed document sections to one authoritative sheet per table. */
 export function officeDocumentToSheets(doc) {
   const used = new Set();
   const dataSheets = [];
-  const fieldGuideRows = [["Table", "Field", "Starter value or expected entry"]];
-  for (const section of doc.sections || []) {
-    if (section.type === "table") {
-      const headers = section.headers || [];
-      const rows = section.rows || [];
-      const representative = rows.find((row) =>
-        (row || []).some((cell) => String(cell ?? "").trim()),
-      ) || [];
-      headers.forEach((header, index) => {
-        fieldGuideRows.push([
-          section.heading,
-          header,
-          representative[index] || "Enter the value named by this field.",
-        ]);
-      });
-      const normalizedRows = rows.map((row) =>
-        headers.map((_, index) => worksheetCell(row?.[index])),
-      );
-      dataSheets.push({
-        name: sanitizeSheetName(section.heading, used),
-        kind: "data",
-        headers,
-        rows: [
-          headers,
-          ...normalizedRows.map((row) => row.map((cell) => cell.value)),
-        ],
-        editableRows: [
-          headers.map(() => false),
-          ...normalizedRows.map((row) => row.map((cell) => cell.editable)),
-        ],
-      });
+  const tables = (doc.sections || []).filter((section) => section.type === "table");
+  // Group colors are shared across the workbook so one group keeps one color.
+  const groups = [];
+  for (const section of tables) {
+    for (const column of section.columns || []) {
+      if (column.group && !groups.includes(column.group)) groups.push(column.group);
     }
+  }
+  if (groups.length > GROUP_FILLS.length) {
+    throw new Error(`A workbook may use at most ${GROUP_FILLS.length} column groups.`);
+  }
+  const guideRows = [["Sheet", "Field", "Group", "Required", "What to enter"]];
+  const guideStyles = {};
+  for (const section of tables) {
+    const headers = section.headers || [];
+    const rows = section.rows || [];
+    const columns = section.columns || defineColumns(headers);
+    const representative = rows.find((row) =>
+      (row || []).some((cell) => String(cell ?? "").trim()),
+    ) || [];
+    const sheetName = sanitizeSheetName(section.heading, used);
+    columns.forEach((column, index) => {
+      guideRows.push([
+        sheetName,
+        column.header,
+        column.group,
+        column.required ? "Yes" : "",
+        expectedEntry(column, representative[index]),
+      ]);
+      if (column.group) {
+        guideStyles[guideRows.length - 1] = { 2: GROUP_XF_BASE + groups.indexOf(column.group) };
+      }
+    });
+    const normalizedRows = rows.map((row) =>
+      headers.map((_, index) => worksheetCell(row?.[index])),
+    );
+    dataSheets.push({
+      name: sheetName,
+      kind: "data",
+      headers,
+      columns,
+      groups,
+      rows: [
+        headers,
+        ...normalizedRows.map((row) => row.map((cell) => cell.value)),
+      ],
+      editableRows: [
+        headers.map(() => false),
+        ...normalizedRows.map((row) => row.map((cell) => cell.editable)),
+      ],
+    });
   }
   const fieldGuide = {
     name: sanitizeSheetName("Field Guide", used),
     kind: "guide",
-    headers: fieldGuideRows[0],
-    rows: fieldGuideRows,
+    headers: guideRows[0],
+    rows: guideRows,
+    styleOverrides: guideStyles,
   };
+
+  const anyRequired = dataSheets.some((sheet) => sheet.columns.some((c) => c.required));
   const notesRows = [
-    ["Field", "Value"],
-    ["Title", doc.title],
-    ["Description", doc.description],
-    ["Disclaimer", DISCLAIMER],
-    ["Review status", STARTER_DOCUMENT_REVIEW_NOTICE],
-    [
-      "How to start",
-      "Read the guidance below, then complete the working sheet. Blank pale-blue cells are intended for user input; preserve the supplied identifiers and reference values.",
-    ],
-    [
-      "Workbook structure",
-      "Each working register has one authoritative row set. The Field Guide defines every column without duplicating operational records.",
-    ],
+    ["Read Me", doc.title],
+    ["Purpose", doc.description],
   ];
   for (const section of doc.sections || []) {
-    if (section.type === "text") {
+    if (section.type === "text" && !section.role) {
       notesRows.push([section.heading, section.content]);
     }
   }
+  notesRows.push([
+    "Cell colors",
+    `${anyRequired ? "Amber cells are required. " : ""}Pale blue cells are for your entries. White cells came from the cited sources; leave them as they are.${groups.length ? " Header colors mark column groups; the Field Guide lists each column's group." : ""}`,
+  ]);
+  for (const section of doc.sections || []) {
+    if (section.type !== "text" || !section.role) continue;
+    const label = section.role === "interop" ? "Interoperability" : section.role === "source" ? "Source" : section.heading;
+    notesRows.push([label, section.role === "interop" ? section.content.replace(/^Interoperability: /, "") : section.content]);
+  }
+  notesRows.push(["Notice", GENERATED_FILE_NOTICE]);
   const readMe = {
     name: sanitizeSheetName("Read Me", used),
     kind: "notes",
@@ -155,76 +203,95 @@ export function officeDocumentToSheets(doc) {
 /**
  * Approximate per-column widths (Excel character units) from the widest cell
  * in each column, clamped so ID columns stay readable (~12) and prompt-length
- * text wraps inside a bounded column (~60) instead of stretching the sheet.
+ * text wraps inside a bounded column instead of stretching the sheet.
  */
-function columnWidths(rows) {
+function columnWidths(sheet) {
+  if (sheet.kind === "notes") return [26, 110];
+  if (sheet.kind === "guide") return [24, 30, 20, 10, 90];
   const widths = [];
-  for (const row of rows || []) {
+  for (const row of sheet.rows || []) {
     (row || []).forEach((cell, i) => {
       const len = String(cell ?? "").length;
       if (widths[i] === undefined || len > widths[i]) widths[i] = len;
     });
   }
-  return widths.map((len) => Math.min(52, Math.max(12, len + 2)));
+  return widths.map((len, i) => {
+    const custom = sheet.columns?.[i]?.width;
+    return custom || Math.min(52, Math.max(12, len + 2));
+  });
 }
 
-/**
- * A restrained federal-workbook palette. CellXfs:
- * 0 reference/body, 1 table header, 2 notes label, 3 notes value, 4 user input.
- */
-const XLSX_STYLES_XML =
-  `${XML_DECL}<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">` +
-  '<fonts count="3"><font><sz val="10"/><name val="Aptos"/><family val="2"/></font><font><b/><color rgb="FFFFFFFF"/><sz val="10"/><name val="Aptos Display"/><family val="2"/></font><font><b/><color rgb="FF17365D"/><sz val="10"/><name val="Aptos"/><family val="2"/></font></fonts>' +
-  '<fills count="5"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF17365D"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFE8EEF5"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFF4F8FC"/><bgColor indexed="64"/></patternFill></fill></fills>' +
-  '<borders count="3"><border><left/><right/><top/><bottom/><diagonal/></border><border><left/><right/><top/><bottom style="thin"><color rgb="FFD6DEE8"/></bottom><diagonal/></border><border><left style="thin"><color rgb="FFB8C5D6"/></left><right style="thin"><color rgb="FFB8C5D6"/></right><top style="thin"><color rgb="FFB8C5D6"/></top><bottom style="thin"><color rgb="FFB8C5D6"/></bottom><diagonal/></border></borders>' +
-  '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>' +
-  '<cellXfs count="5">' +
-  '<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf>' +
-  '<xf numFmtId="0" fontId="1" fillId="2" borderId="2" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>' +
-  '<xf numFmtId="0" fontId="2" fillId="3" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf>' +
-  '<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf>' +
-  '<xf numFmtId="0" fontId="0" fillId="4" borderId="1" xfId="0" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf>' +
-  "</cellXfs>" +
-  '<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>' +
-  "</styleSheet>";
+function stylesXml() {
+  const groupFills = GROUP_FILLS.map(
+    (rgb) => `<fill><patternFill patternType="solid"><fgColor rgb="FF${rgb}"/><bgColor indexed="64"/></patternFill></fill>`,
+  ).join("");
+  const groupXfs = GROUP_FILLS.map(
+    (_, index) =>
+      `<xf numFmtId="0" fontId="1" fillId="${6 + index}" borderId="2" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>`,
+  ).join("");
+  const entry = (fill, numFmt) =>
+    `<xf numFmtId="${numFmt}" fontId="0" fillId="${fill}" borderId="1" xfId="0"${numFmt ? ' applyNumberFormat="1"' : ""} applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf>`;
+  return (
+    `${XML_DECL}<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">` +
+    '<numFmts count="1"><numFmt numFmtId="164" formatCode="yyyy\\-mm\\-dd"/></numFmts>' +
+    '<fonts count="3"><font><sz val="10"/><name val="Aptos"/><family val="2"/></font><font><b/><color rgb="FFFFFFFF"/><sz val="10"/><name val="Aptos Display"/><family val="2"/></font><font><b/><color rgb="FF17365D"/><sz val="10"/><name val="Aptos"/><family val="2"/></font></fonts>' +
+    `<fills count="${6 + GROUP_FILLS.length}"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF17365D"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFE8EEF5"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFF4F8FC"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFFF1CC"/><bgColor indexed="64"/></patternFill></fill>${groupFills}</fills>` +
+    '<borders count="3"><border><left/><right/><top/><bottom/><diagonal/></border><border><left/><right/><top/><bottom style="thin"><color rgb="FFD6DEE8"/></bottom><diagonal/></border><border><left style="thin"><color rgb="FFB8C5D6"/></left><right style="thin"><color rgb="FFB8C5D6"/></right><top style="thin"><color rgb="FFB8C5D6"/></top><bottom style="thin"><color rgb="FFB8C5D6"/></bottom><diagonal/></border></borders>' +
+    '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>' +
+    `<cellXfs count="${GROUP_XF_BASE + GROUP_FILLS.length}">` +
+    '<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf>' +
+    '<xf numFmtId="0" fontId="1" fillId="2" borderId="2" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>' +
+    '<xf numFmtId="0" fontId="2" fillId="3" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf>' +
+    '<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf>' +
+    `${entry(4, 0)}${entry(5, 0)}${entry(4, 164)}${entry(5, 164)}` +
+    `${groupXfs}</cellXfs>` +
+    '<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>' +
+    "</styleSheet>"
+  );
+}
 
-const VALIDATION_VALUES = {
-  status: ["Not Started", "Draft", "Planned", "Ready", "In Progress", "Implemented", "Inherited", "Open", "Ongoing", "Blocked", "Complete", "Completed", "Closed", "Risk Accepted", "Not Applicable"],
-  implementationstatus: ["Planned", "Implemented", "Inherited", "Not Applicable", "Manually Inherited"],
-  controldesignation: ["Common", "System-Specific", "Hybrid"],
-  "inheritance decision": ["Fully Inherited", "Hybrid", "System-Specific", "Not Applicable"],
-  "evidence freshness status": ["Current", "Aging", "Expired", "Unknown"],
-  "review status": ["Needed", "Requested", "Received", "Reviewed", "Accepted", "Gap"],
-  "lifecycle status": ["Active", "Spare", "Maintenance", "Retiring", "Retired"],
-  "requested action": ["Register", "Update", "Retire", "Validate"],
-  "public / external exposure": ["None", "DoD external", "Internet", "Partner"],
-  severity: ["Very High", "Critical", "High", "Moderate", "Low", "Very Low"],
-  priority: ["Critical", "High", "Moderate", "Low"],
-  confidence: ["High", "Medium", "Low"],
-  "assessment method": ["Examine", "Interview", "Test", "Combination"],
-  "inheritance type": ["Fully inherited", "Hybrid", "Not inherited"],
-  publicfacing: ["true", "false"],
-  virtualasset: ["true", "false"],
-  criticalasset: ["true", "false"],
-};
+const XLSX_STYLES_XML = stylesXml();
 
-function validationXml(headers, rowCount) {
+const truncateAt = (text, max) => (text.length <= max ? text : `${text.slice(0, max - 1)}…`);
+
+function validationXml(sheet, ctx) {
   const validations = [];
-  for (const [index, header] of (headers || []).entries()) {
-    const values = VALIDATION_VALUES[String(header).trim().toLowerCase()];
-    if (!values) continue;
-    const col = columnLetter(index);
-    const lastRow = Math.max(250, rowCount + 50);
-    validations.push(
-      `<dataValidation type="list" allowBlank="1" showErrorMessage="1" showInputMessage="1" errorTitle="Choose a listed value" error="Use one of the values in the dropdown." promptTitle="Controlled value" prompt="Choose a value from the list." sqref="${col}2:${col}${lastRow}"><formula1>&quot;${values.join(",")}&quot;</formula1></dataValidation>`,
-    );
+  const lastRow = Math.max(250, (sheet.rows || []).length + 50);
+  for (const [index, column] of (sheet.columns || []).entries()) {
+    const rule = column.validation;
+    if (!rule && !column.help) continue;
+    const ref = columnLetter(index);
+    const sqref = `${ref}2:${ref}${lastRow}`;
+    const prompt = column.help
+      ? ` showInputMessage="1" promptTitle="${escapeXml(truncateAt(column.header, 32))}" prompt="${escapeXml(truncateAt(column.help, 255))}"`
+      : "";
+    if (rule?.kind === "list") {
+      const inline = rule.values.join(",");
+      const canInline = inline.length <= 250 && !rule.values.some((value) => /[,"]/.test(value));
+      const formula = canInline ? `&quot;${escapeXml(inline)}&quot;` : escapeXml(ctx.rangeFor(rule.values));
+      const style = rule.strict === false
+        ? ' errorStyle="warning" errorTitle="Not in the suggested list" error="This value is not one of the suggested values. Keep it only if your organization uses it."'
+        : ' errorTitle="Choose a listed value" error="Use one of the values in the dropdown."';
+      validations.push(`<dataValidation type="list" allowBlank="1" showErrorMessage="1"${style}${prompt} sqref="${sqref}"><formula1>${formula}</formula1></dataValidation>`);
+    } else if (rule?.kind === "date") {
+      validations.push(`<dataValidation type="date" operator="between" allowBlank="1" showErrorMessage="1" errorTitle="Enter a date" error="Enter a date such as 2026-09-30."${prompt} sqref="${sqref}"><formula1>${DATE_MIN_SERIAL}</formula1><formula2>${DATE_MAX_SERIAL}</formula2></dataValidation>`);
+    } else {
+      validations.push(`<dataValidation allowBlank="1"${prompt} sqref="${sqref}"/>`);
+    }
   }
   return validations.length
     ? `<dataValidations count="${validations.length}">${validations.join("")}</dataValidations>`
     : "";
 }
 
-function sheetXml(sheet) {
+function entryStyle(column, editable) {
+  if (!editable) return 0;
+  const isDate = column?.validation?.kind === "date";
+  const required = column?.required === true;
+  return 4 + (required ? 1 : 0) + (isDate ? 2 : 0);
+}
+
+function sheetXml(sheet, ctx) {
   const rows = sheet.rows || [];
   let out = `${XML_DECL}<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">`;
   // Excel only honors fitToWidth consistently when fit-to-page is enabled in
@@ -242,30 +309,37 @@ function sheetXml(sheet) {
     pane +
     "</sheetView></sheetViews>";
   out += '<sheetFormatPr defaultRowHeight="18"/>';
-  const widths = columnWidths(rows);
+  const widths = columnWidths(sheet);
   if (widths.length > 0) {
     out += `<cols>${widths
-      .map(
-        (w, i) => `<col min="${i + 1}" max="${i + 1}" width="${w}" customWidth="1"/>`,
-      )
+      .map((w, i) => {
+        const column = sheet.columns?.[i];
+        // Date columns carry their date format down the whole column.
+        const style = column?.validation?.kind === "date" ? ` style="${entryStyle(column, true)}"` : "";
+        return `<col min="${i + 1}" max="${i + 1}" width="${w}" customWidth="1"${style}/>`;
+      })
       .join("")}</cols>`;
   }
   out += "<sheetData>";
   rows.forEach((row, rowIndex) => {
     const height = rowIndex === 0 ? ' ht="34" customHeight="1"' : "";
     out += `<row r="${rowIndex + 1}"${height}>`;
-    // Row 1 is always the header row; style it bold + wrapped (cellXf 1).
-    const style = rowIndex === 0 ? ' s="1"' : "";
     (row || []).forEach((cell, colIndex) => {
       const ref = `${columnLetter(colIndex)}${rowIndex + 1}`;
-      const notesStyle = sheet.kind !== "data" && rowIndex > 0
-        ? ` s="${colIndex === 0 ? 2 : 3}"`
-        : sheet.editableRows?.[rowIndex]?.[colIndex]
-          ? ' s="4"'
-          : style;
-      out += `<c r="${ref}"${notesStyle} t="inlineStr"><is><t xml:space="preserve">${escapeXml(
-        cell,
-      )}</t></is></c>`;
+      const column = sheet.columns?.[colIndex];
+      let style;
+      if (rowIndex === 0) {
+        const group = column?.group ? sheet.groups.indexOf(column.group) : -1;
+        style = group >= 0 ? GROUP_XF_BASE + group : 1;
+      } else if (sheet.kind === "data") {
+        style = entryStyle(column, sheet.editableRows?.[rowIndex]?.[colIndex]);
+      } else {
+        style = sheet.styleOverrides?.[rowIndex]?.[colIndex] ?? (colIndex === 0 ? 2 : 3);
+      }
+      const styleAttr = style ? ` s="${style}"` : "";
+      out += cell === "" || cell == null
+        ? `<c r="${ref}"${styleAttr}/>`
+        : `<c r="${ref}"${styleAttr} t="inlineStr"><is><t xml:space="preserve">${escapeXml(cell)}</t></is></c>`;
     });
     out += "</row>";
   });
@@ -273,7 +347,7 @@ function sheetXml(sheet) {
   if (sheet.kind === "data" && rows.length > 0 && (sheet.headers || []).length > 0) {
     const lastColumn = columnLetter(sheet.headers.length - 1);
     out += `<autoFilter ref="A1:${lastColumn}${Math.max(1, rows.length)}"/>`;
-    out += validationXml(sheet.headers, rows.length);
+    out += validationXml(sheet, ctx);
   }
   out += '<printOptions horizontalCentered="0" verticalCentered="0"/>';
   out += '<pageMargins left="0.35" right="0.35" top="0.5" bottom="0.5" header="0.2" footer="0.2"/>';
@@ -281,6 +355,44 @@ function sheetXml(sheet) {
   out += '<headerFooter><oddFooter>&amp;LControl Atlas reference aid&amp;RPage &amp;P of &amp;N</oddFooter></headerFooter>';
   out += "</worksheet>";
   return out;
+}
+
+/** A hidden sheet that holds controlled-value lists too long to write inline. */
+function listsSheetXml(lists) {
+  const height = Math.max(...lists.map((values) => values.length));
+  let out = `${XML_DECL}<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>`;
+  for (let r = 0; r < height; r += 1) {
+    out += `<row r="${r + 1}">`;
+    lists.forEach((values, c) => {
+      if (values[r] !== undefined) {
+        out += `<c r="${columnLetter(c)}${r + 1}" t="inlineStr"><is><t>${escapeXml(values[r])}</t></is></c>`;
+      }
+    });
+    out += "</row>";
+  }
+  return `${out}</sheetData></worksheet>`;
+}
+
+const CORE_PROPS_CT = "application/vnd.openxmlformats-package.core-properties+xml";
+const APP_PROPS_CT = "application/vnd.openxmlformats-officedocument.extended-properties+xml";
+
+/** Document properties shared by both formats: title, subject, author. */
+function addDocumentProperties(files, doc) {
+  const now = new Date().toISOString().replace(/\.\d+Z$/, "Z");
+  files["docProps/core.xml"] = strToU8(
+    `${XML_DECL}<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>${escapeXml(doc.title)}</dc:title><dc:subject>${escapeXml(doc.description)}</dc:subject><dc:creator>Control Atlas</dc:creator><cp:lastModifiedBy>Control Atlas</cp:lastModifiedBy><dcterms:created xsi:type="dcterms:W3CDTF">${now}</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">${now}</dcterms:modified></cp:coreProperties>`,
+  );
+  files["docProps/app.xml"] = strToU8(
+    `${XML_DECL}<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties"><Application>Control Atlas</Application></Properties>`,
+  );
+  return {
+    overrides:
+      `<Override PartName="/docProps/core.xml" ContentType="${CORE_PROPS_CT}"/>` +
+      `<Override PartName="/docProps/app.xml" ContentType="${APP_PROPS_CT}"/>`,
+    relationships:
+      '<Relationship Id="rIdCore" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/>' +
+      '<Relationship Id="rIdApp" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/>',
+  };
 }
 
 /**
@@ -292,6 +404,15 @@ export function docToXlsx(doc) {
   const sheets = officeDocumentToSheets(doc);
   /** @type {import("fflate").Zippable} */
   const files = {};
+
+  const lists = [];
+  const ctx = {
+    rangeFor(values) {
+      let index = lists.findIndex((known) => JSON.stringify(known) === JSON.stringify(values));
+      if (index < 0) index = lists.push(values) - 1;
+      return `${LISTS_SHEET_NAME}!$${columnLetter(index)}$1:$${columnLetter(index)}$${values.length}`;
+    },
+  };
 
   let overrides = "";
   let workbookSheets = "";
@@ -305,12 +426,23 @@ export function docToXlsx(doc) {
     const formulaSheetName = String(sheet.name).replaceAll("'", "''");
     definedNames += `<definedName name="_xlnm.Print_Titles" localSheetId="${i}">${escapeXml(`'${formulaSheetName}'!$1:$1`)}</definedName>`;
     workbookRels += `<Relationship Id="${rid}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${index}.xml"/>`;
-    files[`xl/worksheets/sheet${index}.xml`] = strToU8(sheetXml(sheet));
+    files[`xl/worksheets/sheet${index}.xml`] = strToU8(sheetXml(sheet, ctx));
   });
 
-  const stylesRid = `rId${sheets.length + 1}`;
+  let nextRel = sheets.length + 1;
+  if (lists.length > 0) {
+    const index = sheets.length + 1;
+    nextRel = index + 1;
+    overrides += `<Override PartName="/xl/worksheets/sheet${index}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`;
+    workbookSheets += `<sheet name="${LISTS_SHEET_NAME}" sheetId="${index}" state="hidden" r:id="rId${index}"/>`;
+    workbookRels += `<Relationship Id="rId${index}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${index}.xml"/>`;
+    files[`xl/worksheets/sheet${index}.xml`] = strToU8(listsSheetXml(lists));
+  }
+
+  const stylesRid = `rId${nextRel}`;
   workbookRels += `<Relationship Id="${stylesRid}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>`;
   files["xl/styles.xml"] = strToU8(XLSX_STYLES_XML);
+  const props = addDocumentProperties(files, doc);
 
   files["[Content_Types].xml"] = strToU8(
     `${XML_DECL}<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">` +
@@ -318,12 +450,12 @@ export function docToXlsx(doc) {
       '<Default Extension="xml" ContentType="application/xml"/>' +
       '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' +
       '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>' +
-      `${overrides}</Types>`,
+      `${props.overrides}${overrides}</Types>`,
   );
   files["_rels/.rels"] = strToU8(
     `${XML_DECL}<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">` +
       '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>' +
-      "</Relationships>",
+      `${props.relationships}</Relationships>`,
   );
   files["xl/workbook.xml"] = strToU8(
     `${XML_DECL}<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">` +
@@ -335,6 +467,7 @@ export function docToXlsx(doc) {
 
   return zipSync(files);
 }
+
 
 // ---------------------------------------------------------------------------
 // DOCX
@@ -583,7 +716,7 @@ export function docToDocx(doc) {
       spacingAfter: 220,
     });
   }
-  body += `<w:tbl><w:tblPr><w:tblW w:w="${DOCX_CONTENT_WIDTH_TWIPS}" w:type="dxa"/><w:tblInd w:w="120" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="6" w:color="D6DEE8"/><w:left w:val="single" w:sz="6" w:color="D6DEE8"/><w:bottom w:val="single" w:sz="6" w:color="D6DEE8"/><w:right w:val="single" w:sz="6" w:color="D6DEE8"/><w:insideH w:val="nil"/><w:insideV w:val="nil"/></w:tblBorders><w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid><w:gridCol w:w="9360"/></w:tblGrid><w:tr><w:trPr><w:tblHeader/><w:cantSplit/></w:trPr><w:tc><w:tcPr><w:tcW w:w="9360" w:type="dxa"/><w:shd w:val="clear" w:fill="F4F6F9"/><w:tcMar><w:top w:w="140" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="140" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar></w:tcPr>${docxParagraph(`Important: ${DISCLAIMER}`, { size: 18, color: "475467", spacingAfter: 120 })}${docxParagraph(STARTER_DOCUMENT_REVIEW_NOTICE, { size: 18, color: "475467", spacingAfter: 0 })}</w:tc></w:tr></w:tbl>`;
+  body += `<w:tbl><w:tblPr><w:tblW w:w="${DOCX_CONTENT_WIDTH_TWIPS}" w:type="dxa"/><w:tblInd w:w="120" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="6" w:color="D6DEE8"/><w:left w:val="single" w:sz="6" w:color="D6DEE8"/><w:bottom w:val="single" w:sz="6" w:color="D6DEE8"/><w:right w:val="single" w:sz="6" w:color="D6DEE8"/><w:insideH w:val="nil"/><w:insideV w:val="nil"/></w:tblBorders><w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid><w:gridCol w:w="9360"/></w:tblGrid><w:tr><w:trPr><w:tblHeader/><w:cantSplit/></w:trPr><w:tc><w:tcPr><w:tcW w:w="9360" w:type="dxa"/><w:shd w:val="clear" w:fill="F4F6F9"/><w:tcMar><w:top w:w="140" w:type="dxa"/><w:left w:w="160" w:type="dxa"/><w:bottom w:w="140" w:type="dxa"/><w:right w:w="160" w:type="dxa"/></w:tcMar></w:tcPr>${docxParagraph(GENERATED_FILE_NOTICE, { size: 18, color: "475467", spacingAfter: 0 })}</w:tc></w:tr></w:tbl>`;
   body += docxPageBreak();
   body += docxParagraph("Contents", {
     style: "Heading1",
@@ -629,6 +762,7 @@ export function docToDocx(doc) {
 
   /** @type {import("fflate").Zippable} */
   const files = {};
+  const props = addDocumentProperties(files, doc);
   files["[Content_Types].xml"] = strToU8(
     `${XML_DECL}<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">` +
       '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' +
@@ -639,12 +773,12 @@ export function docToDocx(doc) {
       '<Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/>' +
       '<Override PartName="/word/header1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/>' +
       '<Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/>' +
-      "</Types>",
+      `${props.overrides}</Types>`,
   );
   files["_rels/.rels"] = strToU8(
     `${XML_DECL}<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">` +
       '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>' +
-      "</Relationships>",
+      `${props.relationships}</Relationships>`,
   );
   files["word/_rels/document.xml.rels"] = strToU8(
     `${XML_DECL}<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">` +

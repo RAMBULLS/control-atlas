@@ -174,7 +174,7 @@ const COMPATIBILITY_LABELS: Record<string, string> = {
 
 function compatibilityTone(value?: string) {
   const normalized = normalizedFamily(value);
-  if (normalized === "official_current" || normalized === "officially_specified") {
+  if (normalized === "official_current" || normalized === "verified_interchange") {
     return "success" as const;
   }
   if (normalized === "official_legacy" || normalized.includes("unverified")) {
@@ -183,7 +183,7 @@ function compatibilityTone(value?: string) {
   if (
     normalized === "official_guidance" ||
     normalized === "schema_aligned" ||
-    normalized.includes("schema_aligned")
+    normalized === "field_aligned"
   ) {
     return "info" as const;
   }
@@ -191,9 +191,6 @@ function compatibilityTone(value?: string) {
 }
 
 function compatibilityLabel(value?: string) {
-  if (value?.toLowerCase() === "control atlas companion") {
-    return "Template";
-  }
   if (value && /[A-Z ]/.test(value)) return value;
   return value
     ? COMPATIBILITY_LABELS[value] || value.replaceAll("_", " ")

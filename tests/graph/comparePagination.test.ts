@@ -3,37 +3,39 @@ import test from "node:test";
 
 import {
   COMPARE_PAGE_SIZE,
+  COMPARE_TARGET_PREVIEW,
   paginateCompareRows,
 } from "../../src/ui/lib/comparePagination";
 import { parseHashLocation, serializeHashLocation } from "../../src/ui/lib/hashRoutes";
 
-test("Compare uses fixed 100-row windows that replace rather than accumulate", () => {
-  const rows = Array.from({ length: 250 }, (_, index) => `row-${index + 1}`);
+test("Compare uses bounded fixed windows that replace rather than accumulate", () => {
+  const rows = Array.from({ length: 60 }, (_, index) => `row-${index + 1}`);
   const first = paginateCompareRows(rows, "");
   const second = paginateCompareRows(rows, "2");
   const last = paginateCompareRows(rows, "3");
 
-  assert.equal(COMPARE_PAGE_SIZE, 100);
-  assert.deepEqual(first.rows, rows.slice(0, 100));
-  assert.deepEqual(second.rows, rows.slice(100, 200));
-  assert.deepEqual(last.rows, rows.slice(200, 250));
+  assert.equal(COMPARE_PAGE_SIZE, 25, "a page is a bounded window of the answer");
+  assert.ok(COMPARE_TARGET_PREVIEW >= 3 && COMPARE_TARGET_PREVIEW <= 8);
+  assert.deepEqual(first.rows, rows.slice(0, 25));
+  assert.deepEqual(second.rows, rows.slice(25, 50));
+  assert.deepEqual(last.rows, rows.slice(50, 60));
   assert.deepEqual(
     [second.start, second.end, second.page, second.pageCount, second.valid],
-    [101, 200, 2, 3, true],
+    [26, 50, 2, 3, true],
   );
 });
 
 test("Compare reports invalid page requests while showing the nearest bounded window", () => {
-  const rows = Array.from({ length: 250 }, (_, index) => index + 1);
+  const rows = Array.from({ length: 60 }, (_, index) => index + 1);
   assert.deepEqual(
     paginateCompareRows(rows, "999"),
     {
-      end: 250,
+      end: 60,
       page: 3,
       pageCount: 3,
       requestedPage: "999",
-      rows: rows.slice(200),
-      start: 201,
+      rows: rows.slice(50),
+      start: 51,
       valid: false,
     },
   );

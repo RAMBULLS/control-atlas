@@ -49,6 +49,9 @@ export function getCompareSteps(modeId: CompareModeId): readonly CompareStep[] {
   return COMPARE_MODE_STEPS[modeId] || [];
 }
 
+// The results step needs an explicit run: choosing the target in the page sets `compareRun`,
+// while a link that only names a source and target waits for the reader to ask, because
+// showing results downloads the full connection graph.
 export function getCompareCurrentStep(
   modeId: CompareModeId,
   state: CompareState,
@@ -70,6 +73,20 @@ export function getCompareCurrentStep(
     default:
       return 1;
   }
+}
+
+export type CompareEmptyKind = "none" | "search" | "filter" | null;
+
+// Why a result list is empty, so the wording never blames a filter for a pair that has no
+// published mappings, and never says the frameworks are unrelated.
+export function compareEmptyKind(input: {
+  pairRows: number;
+  visibleRows: number;
+  searching: boolean;
+}): CompareEmptyKind {
+  if (input.visibleRows > 0) return null;
+  if (input.pairRows === 0) return "none";
+  return input.searching ? "search" : "filter";
 }
 
 export function compareModeForState(state: CompareState) {

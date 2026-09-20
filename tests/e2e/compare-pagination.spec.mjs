@@ -4,6 +4,8 @@ import { join } from "node:path";
 
 import { dismissOnboarding, gotoApp, waitForAppReady } from "./support.mjs";
 
+// Source records per page (COMPARE_PAGE_SIZE in src/ui/lib/comparePagination.ts).
+const PAGE = 25;
 const LARGE_COMPARE =
   "/#/compare/relationships?intent=frameworks&source=nist-800-53&target=disa-cci&compareRun=true";
 
@@ -27,10 +29,10 @@ function expectedMappings() {
   return { mappings, sourceIds: [...sources].sort((a, b) => a.localeCompare(b)) };
 }
 
-test("large Compare results use restorable 100-row pages while totals and exports remain complete", async ({ page }) => {
+test("large Compare results use restorable 25-row pages while totals and exports remain complete", async ({ page }) => {
   const { mappings, sourceIds } = expectedMappings();
-  const totalPages = Math.ceil(sourceIds.length / 100);
-  const lastPageIds = sourceIds.slice((totalPages - 1) * 100);
+  const totalPages = Math.ceil(sourceIds.length / PAGE);
+  const lastPageIds = sourceIds.slice((totalPages - 1) * PAGE);
   const format = (count) => count.toLocaleString("en-US");
   expect(totalPages, "fixture must exercise next and out-of-range pages").toBeGreaterThan(3);
   test.setTimeout(90_000);
@@ -43,20 +45,20 @@ test("large Compare results use restorable 100-row pages while totals and export
     `${format(mappings)} published mappings across ${format(sourceIds.length)} source records`,
   );
   const tableRows = page.locator(".compare-results-table tbody tr");
-  await expect(tableRows).toHaveCount(100);
+  await expect(tableRows).toHaveCount(PAGE);
   const pagination = page.getByRole("navigation", { name: "Mapping result pages" });
-  await expect(pagination).toContainText(`Showing source records 101–200 of ${format(sourceIds.length)}`);
+  await expect(pagination).toContainText(`Showing source records ${PAGE + 1}–${PAGE * 2} of ${format(sourceIds.length)}`);
   await expect(pagination).toContainText(`Page 2 of ${totalPages}`);
   await expect(pagination).toContainText(
     `Counts and exports cover all ${format(mappings)} published mappings matching the current filters and search.`,
   );
 
   const displayedSourceIds = () => tableRows.locator("td:first-child strong");
-  await expect(displayedSourceIds()).toHaveText(sourceIds.slice(100, 200));
+  await expect(displayedSourceIds()).toHaveText(sourceIds.slice(PAGE, PAGE * 2));
   await pagination.getByRole("button", { name: "Next page" }).click();
   await expect(page).toHaveURL(/page=3/);
-  await expect(tableRows).toHaveCount(100);
-  await expect(displayedSourceIds()).toHaveText(sourceIds.slice(200, 300));
+  await expect(tableRows).toHaveCount(PAGE);
+  await expect(displayedSourceIds()).toHaveText(sourceIds.slice(PAGE * 2, PAGE * 3));
 
   await gotoApp(page, `${LARGE_COMPARE}&page=999`);
   await waitForAppReady(page);

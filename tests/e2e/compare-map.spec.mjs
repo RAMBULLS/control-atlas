@@ -122,7 +122,6 @@ test("Frameworks reveals connected targets and a two-column published result", a
   // A publication with no published crosswalk to the source is not offered.
   await expect(targetOptions.getByRole("button", { name: /Responsible AI/ })).toHaveCount(0);
   await targetOptions.getByRole("button", { name: "NIST CSF 2.0", exact: true }).click();
-  await page.getByRole("button", { name: "Show published mappings" }).click();
 
   await expect(page.locator("#compare-results")).toBeVisible({ timeout: 30_000 });
   await expect(page.locator("#compare-results h2")).toContainText(
@@ -137,20 +136,20 @@ test("Frameworks reveals connected targets and a two-column published result", a
   await expect(table.locator("thead th")).toHaveText(["From", "Maps to"]);
   await expect(table.locator("tbody tr").first().locator("td")).toHaveCount(2);
   const allSourceRows = await table.locator("tbody tr").count();
-  expect(allSourceRows).toBe(100);
+  expect(allSourceRows).toBe(25);
   const pagination = page.getByRole("navigation", { name: "Mapping result pages" });
-  await expect(pagination).toContainText("Showing source records 1–100");
+  await expect(pagination).toContainText("Showing source records 1–25");
   const firstPageSourceId = await table.locator("tbody tr").first().locator("td").first().locator("strong").innerText();
   await pagination.getByRole("button", { name: "Next page" }).click();
   await expect(page).toHaveURL(/page=2/);
-  await expect(pagination).toContainText("Showing source records 101–200");
-  await expect(table.locator("tbody tr")).toHaveCount(100);
+  await expect(pagination).toContainText("Showing source records 26–50");
+  await expect(table.locator("tbody tr")).toHaveCount(25);
   expect(
     await table.locator("tbody tr").first().locator("td").first().locator("strong").innerText(),
   ).not.toBe(firstPageSourceId);
   await pagination.getByRole("button", { name: "Previous page" }).click();
   await expect(page).not.toHaveURL(/page=/);
-  await expect(table.locator("tbody tr")).toHaveCount(100);
+  await expect(table.locator("tbody tr")).toHaveCount(25);
   await expect(page.locator("[data-continuous-results] [data-continuous-scroll]")).toBeVisible();
 
   const sourceEvidence = page.locator(".compare-crosswalk-source");
@@ -165,9 +164,8 @@ test("Frameworks reveals connected targets and a two-column published result", a
   await expect(boundary).toHaveCount(1);
   await expect(boundary).toBeVisible();
 
-  const refine = page.getByText("Refine results", { exact: true });
-  await expect(refine).toBeVisible();
-  await refine.click();
+  // Refinement is visible in the toolbar; there is no bottom drawer to open.
+  await expect(page.getByText("Refine results", { exact: true })).toHaveCount(0);
   await expect(page.getByLabel("Connection type")).toBeVisible();
   await expect(page.getByText("Source basis", { exact: true })).toHaveCount(0);
   await expect(page.getByText("Trust level", { exact: true })).toHaveCount(0);
@@ -266,7 +264,6 @@ test("Specific item reveals only targets with a real mapping for the exact item"
     .locator(".compare-option-list")
     .getByRole("button", { name: "SP 800-53 Rev. 5", exact: true })
     .click();
-  await page.getByRole("button", { name: "Show published mappings" }).click();
   await expect(page.locator(".compare-mapping-total")).toContainText(
     "4 published mappings across",
   );

@@ -58,15 +58,15 @@ function headers(templateType, heading) {
 }
 
 const REQUIRED_FIELDS = {
-  implementation_statement_worksheet: ['acronym', 'implementationStatus', 'controlDesignation', 'responsibleEntities', 'implementationNarrative', 'Evidence References', 'slcmFrequency', 'Review Notes'],
+  implementation_statement_worksheet: ['Control ID', 'Family', 'CCI Count', 'STIG/SRG Rule Count', 'implementationStatus', 'controlDesignation', 'responsibleEntities', 'implementationNarrative', 'Evidence References', 'slcmFrequency', 'Review Notes'],
   evidence_expectation_matrix: ['Evidence Owner', 'Collection Method', 'Collection Cadence', 'Evidence Date / Period', 'Repository / Location', 'Confidence', 'Review Status', 'Assessor Notes'],
   inheritance_worksheet: ['Provider Evidence', 'Evidence Version / Date', 'Evidence Freshness Status', 'Local Responsibility', 'Local Delta', 'Validation Method', 'Decision Basis', 'Decision Owner', 'Review Date', 'Notes / Gaps'],
   reciprocity_checklist: ['Artifact / Decision Reference', 'Version / Date', 'Owner', 'Status', 'Freshness / Scope Check', 'Receiving-Environment Delta', 'Risk / Gap', 'Required Action', 'Due Date', 'Decision / Disposition'],
-  poam_starter: ['externalUid', 'status', 'vulnerabilityDescription', 'sourceIdentifyingVulnerability', 'pocOrganization', 'resources', 'Milestones with Completion Dates', 'scheduledCompletionDate', 'Evidence Needed for Closure', 'comments'],
+  poam_starter: ['externalUid', 'status', 'vulnerabilityDescription', 'sourceIdentifyingVulnerability', 'pocOrganization', 'pocFirstName', 'pocEmail', 'resources', 'Planned Remediation', 'scheduledCompletionDate', 'Reviewer Notes', 'Evidence Needed for Closure', 'comments'],
   assessment_planning_worksheet: ['Assessment Objective / Scope', 'Assessment Method', 'Assessor Role', 'Evidence to Request', 'Sampling Approach', 'Tool / Procedure', 'Target Start', 'Target Complete', 'Status', 'Result / Test Success', 'Finding / POA&M Reference'],
   conmon_calendar: ['Deliverable / Evidence', 'Collection Method', 'Frequency', 'Owner', 'Reviewer / Recipient', 'Evidence Location', 'Next Due', 'Completed Date', 'Status', 'Result / Threshold', 'Escalation / Follow-up'],
-  hardware_baseline: ['assetName', 'componentType', 'assetIpAddress', 'publicFacing', 'manufacturer', 'modelNumber', 'serialNumber', 'osIosFwVersion', 'approvalStatus', 'criticalAsset', 'Asset Owner', 'Last Verified', 'Lifecycle Status'],
-  software_baseline: ['softwareVendor', 'softwareName', 'version', 'softwareType', 'softwareDependencies', 'cryptographicHash', 'approvalStatus', 'endOfLifeSupportDate', 'Software Owner', 'Authority / Approved Use', 'Last Verified'],
+  hardware_baseline: ['Asset ID', 'Hostname', 'FQDN', 'System / Authorization Boundary', 'Discovery Source', 'assetName', 'componentType', 'assetIpAddress', 'publicFacing', 'manufacturer', 'modelNumber', 'serialNumber', 'osIosFwVersion', 'approvalStatus', 'criticalAsset', 'Asset Owner', 'Last Verified', 'Lifecycle Status'],
+  software_baseline: ['Software ID', 'purpose', 'Exception / Deviation Reference', 'Discovery Source', 'softwareVendor', 'softwareName', 'version', 'softwareType', 'softwareDependencies', 'cryptographicHash', 'approvalStatus', 'endOfLifeSupportDate', 'Software Owner', 'Authority / Approved Use', 'Last Verified'],
   ppsm_preparation_worksheet: ['System / Boundary', 'Mission or Business Need', 'Service Name', 'Protocol', 'Port / Range', 'Transport', 'Source Zone / Address', 'Destination Zone / Address', 'Direction', 'Public / External Exposure', 'Existing PPSM / Approval Reference', 'Review Status'],
 };
 
@@ -109,14 +109,17 @@ test('all twelve artifacts include compatibility limitations and source metadata
   }
 });
 
-test('evidence operations and dense control cross-references are separated', () => {
+test('evidence matrix puts source context in the main table and full detail on reference sheets', () => {
   const doc = build('evidence_expectation_matrix');
   const evidence = doc.sections.find((section) => section.heading === 'Evidence Expectations');
-  const references = doc.sections.find((section) => section.heading === 'Control Cross-Reference Index');
   assert.ok(evidence, 'evidence operating table must exist');
-  assert.ok(references, 'cross-reference index must exist');
-  assert.doesNotMatch(evidence.headers.join('|'), /CCI|STIG/, 'dense mappings do not belong in the operating view');
-  assert.deepEqual(references.headers, ['Control ID', 'Control Title', 'Related CCIs', 'Related STIG/SRG']);
+  for (const header of ['800-53A Methods', 'Related CCIs', 'STIG/SRG Rule Count', 'Related Rule IDs', 'Evidence Type', 'Review Status']) {
+    assert.ok(evidence.headers.includes(header), `main table needs "${header}"`);
+  }
+  const groups = new Set(evidence.columns.map((column) => column.group));
+  assert.deepEqual([...groups], ['Source-backed context', 'Your working fields']);
+  const sheets = doc.sections.filter((section) => section.type === 'table').map((section) => section.heading);
+  assert.deepEqual(sheets, ['Evidence Expectations', 'Assessment Objects', 'Assessment Objectives', 'Control Cross-References']);
 });
 
 test('the SSP starter stays compact and hands control-by-control work to its dedicated companion', () => {

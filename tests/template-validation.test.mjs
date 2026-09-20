@@ -68,6 +68,7 @@ function readValidations(templateType) {
       const f1 = /<formula1>([\s\S]*?)<\/formula1>/.exec(match[2] || '')?.[1] || '';
       let values = null;
       if (type === 'list' && f1.startsWith('&quot;')) values = f1.slice(6, -6).split(',');
+      if (type === 'list' && f1.startsWith("'")) values = null;
       if (type === 'list' && f1.startsWith('_Lists!')) {
         const column = f1.match(/\$([A-Z]+)\$1/)[1].charCodeAt(0) - 65;
         values = listColumns[column];
@@ -127,6 +128,7 @@ test('no dropdown can carry a value from another artifact: every list value is d
     for (const [sheet, columns] of Object.entries(readValidations(templateType))) {
       for (const [header, rule] of Object.entries(columns)) {
         if (rule.type !== 'list') continue;
+        if (!rule.values) continue; // a list read from another sheet
         for (const value of rule.values) {
           assert.ok(allowed.has(value), `${templateType} / ${sheet} / ${header}: "${value}" is not in this artifact's own vocabulary`);
         }
@@ -183,8 +185,8 @@ test('date columns carry a yyyy-mm-dd format and blank cells stay empty', () => 
   const styles = strFromU8(entries['xl/styles.xml']);
   assert.match(styles, /numFmtId="164" formatCode="yyyy\\-mm\\-dd"/);
   const sheet = strFromU8(entries['xl/worksheets/sheet2.xml']);
-  assert.match(sheet, /<col min="20" max="20" [^>]*style="6"\/>/, 'the detection-date column defaults to the date style');
-  assert.doesNotMatch(sheet, /<c r="T2"[^>]*t="inlineStr"/, 'an empty date cell must not hold an empty string');
+  assert.match(sheet, /<col min="8" max="8" [^>]*style="6"\/>/, 'the detection-date column defaults to the date style');
+  assert.doesNotMatch(sheet, /<c r="H2"[^>]*t="inlineStr"/, 'an empty date cell must not hold an empty string');
 });
 
 test('column definitions fail closed on a header they do not own', () => {

@@ -5,8 +5,8 @@ on:
     branches: [main]
   pull_request:
   schedule:
-    # Weekly full browser and accessibility sweep. Running it daily re-tested
-    # unchanged code six days out of seven and buried real failures in noise.
+    # Weekly deep browser and accessibility sweep. It runs only when main holds a
+    # commit the sweep has not tested (see sweep-gate), so quiet weeks cost nothing.
     - cron: '37 6 * * 0'
     - cron: '17 7 * * 3'
     - cron: '17 9 1 * *'
@@ -511,11 +511,39 @@ jobs:
           REQUIRED_RESULT: ${{ needs.required.result }}
         run: test "$REQUIRED_RESULT" = success
 
+  sweep-gate:
+    name: Is a deep check due
+    # Re-testing a commit that already went through the same job proves nothing.
+    # The weekly deep sweep and the monthly OSCAL check run only for a commit
+    # that has not been through them. Manual dispatch always runs.
+    if: ${{ github.event.schedule == '37 6 * * 0' || github.event.schedule == '17 9 1 * *' }}
+    runs-on: ubuntu-latest
+    outputs:
+      nightly_due: ${{ steps.nightly.outputs.due }}
+      oscal_due: ${{ steps.oscal.outputs.due }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - id: nightly
+        if: ${{ github.event.schedule == '37 6 * * 0' }}
+        env: { GH_TOKEN: '${{ github.token }}', REPO: '${{ github.repository }}', SHA: '${{ github.sha }}', RUN_ID: '${{ github.run_id }}', JOB_NAME: 'Nightly build and contracts' }
+        run: node tools/sweep-due.mjs
+      - id: oscal
+        if: ${{ github.event.schedule == '17 9 1 * *' }}
+        env: { GH_TOKEN: '${{ github.token }}', REPO: '${{ github.repository }}', SHA: '${{ github.sha }}', RUN_ID: '${{ github.run_id }}', JOB_NAME: 'Independent OSCAL validation' }
+        run: node tools/sweep-due.mjs
+
   nightly-build:
     name: Nightly build and contracts
+    needs: sweep-gate
     if: >-
-      ${{ github.event.schedule == '37 6 * * 0' ||
-          (github.event_name == 'workflow_dispatch' && inputs.task == 'nightly') }}
+      ${{ !cancelled() &&
+          ((github.event.schedule == '37 6 * * 0' && needs.sweep-gate.outputs.nightly_due == 'true') ||
+           (github.event_name == 'workflow_dispatch' && inputs.task == 'nightly')) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -616,12 +644,12 @@ jobs:
     # was skipped counts as red, so a sweep that did not run cannot look green.
     if: >-
       ${{ !cancelled() &&
-          (github.event.schedule == '37 6 * * 0' ||
+          ((github.event.schedule == '37 6 * * 0' && needs.sweep-gate.outputs.nightly_due == 'true') ||
            github.event.schedule == '17 7 * * 3' ||
            (github.event_name == 'workflow_dispatch'
             && (inputs.task == 'nightly' ||
                 (inputs.task == 'refresh' && github.ref == 'refs/heads/main')))) }}
-    needs: [nightly-build, nightly-browser, nightly-accessibility, refresh]
+    needs: [sweep-gate, nightly-build, nightly-browser, nightly-accessibility, refresh]
     permissions:
       contents: read
       issues: write
@@ -651,9 +679,9 @@ jobs:
     name: Nightly browser report
     if: >-
       ${{ !cancelled() &&
-          (github.event.schedule == '37 6 * * 0' ||
+          ((github.event.schedule == '37 6 * * 0' && needs.sweep-gate.outputs.nightly_due == 'true') ||
            (github.event_name == 'workflow_dispatch' && inputs.task == 'nightly')) }}
-    needs: [nightly-browser, nightly-accessibility]
+    needs: [sweep-gate, nightly-browser, nightly-accessibility]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -787,9 +815,11 @@ jobs:
 
   oscal:
     name: Independent OSCAL validation
+    needs: sweep-gate
     if: >-
-      ${{ github.event.schedule == '17 9 1 * *' ||
-          (github.event_name == 'workflow_dispatch' && inputs.task == 'oscal') }}
+      ${{ !cancelled() &&
+          ((github.event.schedule == '17 9 1 * *' && needs.sweep-gate.outputs.oscal_due == 'true') ||
+           (github.event_name == 'workflow_dispatch' && inputs.task == 'oscal')) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6

@@ -190,13 +190,22 @@ Do the least work that keeps the trust: stop as soon as the answer is known.
 | Wednesday refresh, quiet for 21 days | Same fetch | Same | Bookkeeping dates only | Same | PR and deploy, so "last checked" stays inside the 45-day window |
 | Pull request | Not applicable | Change map picks affected gates | Affected build | Affected unit, contract and browser subset | No |
 | Merge to `main` | Not applicable | Full required CI, Security | Full site build | Full gates, Lighthouse budgets | Verified deploy, production smoke and Lighthouse |
-| Sunday sweep | Not applicable | Full generated-data contracts | Full site build | All browsers, complete accessibility | No |
-| Monthly OSCAL | Not applicable | Independent OSCAL cross-check | None | OSCAL validation | No |
+| Sunday sweep, only if `main` holds a commit it has not tested | Not applicable | Full generated-data contracts | Full site build | All browsers, complete accessibility | No |
+| Monthly OSCAL, only if `main` holds a commit it has not tested | Not applicable | Independent OSCAL cross-check | None | OSCAL validation | No |
 
 Measured cost (2026-09): refresh data phase about 5 minutes (hydration 97
 seconds and resource enrichment 90 seconds dominate); main CI about 4.5 minutes
 wall; deploy about 4 minutes; the Sunday sweep about 60 runner minutes (build 5
 minutes, six browser shards 6 to 9 minutes each, accessibility 2.3 minutes).
+
+Every scheduled job exists for one reason. Anything that re-tests our own
+unchanged code is gated by `tools/sweep-due.mjs`: the Sunday sweep and the
+monthly OSCAL check run only when the commit on `main` has not already been
+through that same job, in any earlier scheduled or manual run. A failed run
+counts as tested (the same code cannot turn green; a fix is a new commit and is
+due). If the gate cannot decide it runs the check. Manual dispatch always runs.
+The Wednesday refresh and the Monday security scan are never gated: they watch
+publishers and advisories, which change without any commit.
 
 The Sunday sweep is the deliberate deep confidence run. It exists because pull
 request CI runs one browser engine and a subset of specs, so Firefox, WebKit and

@@ -2,9 +2,13 @@ import { join } from 'node:path';
 
 import makeFetchHappen from 'make-fetch-happen';
 
+import { backoffDelayMs, classifyFailure, isTransientStatus, realSleep, retryAfterMs } from './retry-policy.mjs';
 import { assertOfficialSourceUrl } from './source-url-policy.mjs';
 
 const DEFAULT_CACHE_PATH = join(process.cwd(), '.local', 'http-cache-v1');
+// Small on purpose: three requests, waits of 1s and 2s. A publisher that is
+// still failing after that gets a clear failure, not dozens of requests.
+export const DEFAULT_REQUEST_RETRY = Object.freeze({ attempts: 3, baseMs: 1000, maxMs: 8000, retryAfterCapMs: 15000, timeoutMs: 60000 });
 
 export function createStrictConditionalFetch(options = {}) {
   const cachePath = options.cachePath || process.env.CONTROL_ATLAS_HTTP_CACHE || DEFAULT_CACHE_PATH;
@@ -13,6 +17,40 @@ export function createStrictConditionalFetch(options = {}) {
   const maxRedirects = options.maxRedirects ?? 5;
   if (!Number.isInteger(maxRedirects) || maxRedirects < 0 || maxRedirects > 20) {
     throw new Error('strict refresh redirect limit must be an integer from 0 to 20');
+  }
+  const retry = { ...DEFAULT_REQUEST_RETRY, ...options.retry };
+  const sleep = options.sleep || realSleep;
+  if (!Number.isInteger(retry.attempts) || retry.attempts < 1 || retry.attempts > 5) {
+    throw new Error('strict refresh request attempts must be an integer from 1 to 5');
+  }
+
+  // Only timeouts, dropped connections, 429 and 5xx are asked for again. The
+  // final transient response is returned so callers report the real status.
+  async function requestWithRetry(href, requestInit) {
+    for (let attempt = 1; ; attempt += 1) {
+      let response = null;
+      let failure = null;
+      try {
+        response = await fetchImpl(href, requestInit);
+      } catch (error) {
+        failure = error;
+      }
+      // A caller's own deadline has passed; asking again cannot succeed.
+      const transient = !requestInit.signal?.aborted &&
+        (failure ? classifyFailure(failure) === 'transient' : isTransientStatus(response.status));
+      if (!transient || attempt >= retry.attempts) {
+        if (failure) {
+          failure.attempts = attempt;
+          throw failure;
+        }
+        return response;
+      }
+      const waitMs = retryAfterMs(response?.headers?.get?.('retry-after'), retry.retryAfterCapMs)
+        ?? backoffDelayMs(attempt, retry);
+      // Release the connection before waiting.
+      if (response?.arrayBuffer) await response.arrayBuffer().catch(() => {});
+      await sleep(waitMs);
+    }
   }
 
   return async function strictConditionalFetch(url, init = {}) {
@@ -25,7 +63,7 @@ export function createStrictConditionalFetch(options = {}) {
       current.hash = '';
       if (visited.has(current.href)) throw new Error('strict refresh rejected redirect loop');
       visited.add(current.href);
-      const response = await fetchImpl(current.href, {
+      const response = await requestWithRetry(current.href, {
         ...init,
         method,
         headers: Object.fromEntries(headers),
@@ -33,6 +71,7 @@ export function createStrictConditionalFetch(options = {}) {
         cache: 'no-cache',
         cachePath,
         retry: false,
+        timeout: retry.timeoutMs,
       });
       const cacheStatus = response.headers?.get?.('x-local-cache-status') || '';
       if (cacheStatus === 'stale') {

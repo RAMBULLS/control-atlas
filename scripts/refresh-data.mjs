@@ -10,6 +10,8 @@ import { sourceUnitsForTask, localProjectionForTask, loadSourceUnitInventory } f
 import { runSourceTransaction } from './lib/source-transaction.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+// Between whole-source attempts after a transient failure: 15s, then 30s (cap 60s).
+export const DEFAULT_UNIT_BACKOFF = Object.freeze({ baseMs: 15000, maxMs: 60000 });
 
 export function executeRefreshUnit(unit, root, spawn = spawnSync) {
   const args = unit.script === 'fetch-disa-stigs.mjs' && process.platform === 'win32'
@@ -28,7 +30,7 @@ export function executeRefreshUnit(unit, root, spawn = spawnSync) {
 export async function runRefreshPipeline({
   root = ROOT, tasks = INGESTION_TASKS, executor = executeRefreshUnit,
   validateCandidate, recordResult, finalize, describeSources = sourceUnitsForTask,
-  describeProjection = localProjectionForTask,
+  describeProjection = localProjectionForTask, sleep, backoff = DEFAULT_UNIT_BACKOFF,
 } = {}) {
   if (typeof validateCandidate !== 'function' || typeof finalize !== 'function') {
     throw new Error('Refresh requires candidate validation and finalization gates');
@@ -72,6 +74,7 @@ export async function runRefreshPipeline({
         for (const unit of units) {
           const result = await runSourceTransaction({
             root, sourceId: unit.sourceId, paths: unit.paths, attempts: unit.retries || 1,
+            backoff, ...(sleep ? { sleep } : {}),
             operation: async () => {
               await executor(unit, root);
               if (unit.followUp) await executor({ ...unit, ...unit.followUp, followUp: undefined }, root);
@@ -80,7 +83,7 @@ export async function runRefreshPipeline({
           });
           const entry = {
             ...unit, status: result.status, attempts: result.attempts,
-            ...(result.error ? { error: result.error } : {}),
+            ...(result.error ? { error: result.error, failure_class: result.failure_class } : {}),
             successfulPaths: result.status === 'accepted' ? [...unit.paths] : [],
             quarantinedPaths: result.status === 'quarantined' ? [...unit.paths] : [],
           };

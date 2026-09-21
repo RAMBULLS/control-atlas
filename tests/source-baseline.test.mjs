@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { advanceBaseline, evaluateBaseline, observeCatalog } from '../scripts/lib/source-baseline.mjs';
+import { adoptCommittedBaseline, advanceBaseline, evaluateBaseline, observeCatalog } from '../scripts/lib/source-baseline.mjs';
 
 const measure = (count) => observeCatalog(Buffer.from(JSON.stringify({
   records: Array.from({ length: count }, (_, index) => ({ id: `C-${index}` })),
@@ -55,4 +55,31 @@ test('normalized bytes are never labeled as downloaded publisher evidence', () =
   assert.throws(() => observeCatalog(Buffer.from(JSON.stringify({ records: [{ id: 'X' }],
     publisher_inventory: { imported_count: 1, eligible_count: 1, imported_identity_sha256: 'forged' },
   }))), /reconciliation/);
+});
+
+test('a count change outside the band needs identity evidence, and mass removal is never corroborated by count alone', () => {
+  const big = measure(180);
+  assert.equal(evaluateBaseline(original, big, policy).reason, 'uncorroborated_count_change');
+  assert.equal(evaluateBaseline(original, big, policy, { inventory_reconciled: false, removed_pct: 0 }).reason, 'uncorroborated_count_change');
+  const grown = evaluateBaseline(original, big, policy, { inventory_reconciled: true, removed_pct: 0 });
+  assert.deepEqual([grown.accepted, grown.reason, grown.reset_anchor], [true, 'reconciled_change', true]);
+  assert.equal(evaluateBaseline(original, measure(60), policy, { inventory_reconciled: true, removed_pct: 40 }).reason, 'unexplained_removals');
+  assert.equal(evaluateBaseline(original, big, { ...policy, max_removed_pct: 0 }, { inventory_reconciled: true, removed_pct: 0.01 }).reason, 'unexplained_removals');
+  assert.throws(() => evaluateBaseline(original, big, { ...policy, max_removed_pct: 101 }, null), /policy/);
+  assert.equal(advanceBaseline(original, big, policy, '2026-09-16', { inventory_reconciled: true, removed_pct: 0 }).baseline.anchor.record_count, 180);
+});
+
+test('reviewed committed data that diverged from the baseline is adopted only if it is structurally sound', () => {
+  const at = '2026-09-16T00:00:00.000Z';
+  assert.equal(adoptCommittedBaseline(original, observed, policy, at).adopted, false, 'identical bytes need no adoption');
+  const adopted = adoptCommittedBaseline(original, measure(140), policy, at);
+  assert.equal(adopted.adopted, true);
+  assert.equal(adopted.entry.accepted.record_count, 140);
+  assert.equal(adopted.entry.anchor.record_count, 140);
+  assert.equal(adopted.entry.accepted_at, at);
+  assert.equal(adopted.entry.adopted_from, 'committed_data');
+  assert.equal(adopted.entry.history.at(-1).record_count, 100, 'the superseded baseline stays in history');
+  assert.equal(adoptCommittedBaseline(original, measure(49), policy, at).rejected, true, 'below the floor is never adopted');
+  assert.equal(adoptCommittedBaseline(original, measure(140), { ...policy, require_independent_inventory: true }, at).rejected, true);
+  assert.equal(adoptCommittedBaseline(original, measure(140), policy, null).rejected, true, 'no honest timestamp, no adoption');
 });

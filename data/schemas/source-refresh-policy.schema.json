@@ -14,7 +14,8 @@
           "absolute_floor": { "type": "integer", "minimum": 1 },
           "max_delta_pct": { "type": "number", "minimum": 0, "maximum": 100 },
           "max_anchor_delta_pct": { "type": "number", "minimum": 0, "maximum": 100 },
-          "require_independent_inventory": { "type": "boolean" }
+          "require_independent_inventory": { "type": "boolean" },
+          "max_removed_pct": { "type": "number", "minimum": 0, "maximum": 100 }
         }
       }
     }

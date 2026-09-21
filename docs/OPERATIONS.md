@@ -2,7 +2,7 @@
 
 - **Owner:** Nexus and Pixel
 - **Status:** Canonical
-- **Last reviewed:** 2026-09-10
+- **Last reviewed:** 2026-09-21
 - **Supersession:** Update this contract and the corresponding package scripts or workflows in the same approved change.
 
 ## Unattended weekly source refresh
@@ -39,8 +39,8 @@ bytes and original provenance are retained. Separate `refresh_status`,
 `retained_count` reports these submissions. Successful retrieval replaces the
 retained version and clears those fields automatically. Retention does not admit
 the submitter's external host into the official-source fetch allowlist.
-An accepted OLIR source transaction with retained submissions keeps its source
-issue open. Only a subsequent accepted run with no retained submissions closes it.
+How retained submissions affect the source issue is described under Refresh
+decisions and health below.
 
 NIST OLIR registers developer-hosted mappings; an official catalog entry does
 not make its assertions NIST-authored or NIST-endorsed. The
@@ -109,6 +109,86 @@ Configure `REFRESH_APP_CLIENT_ID` and `REFRESH_APP_PRIVATE_KEY` for the
 and pull-request write permissions. The refresh job uses its separate Actions
 token for source requests and issue alerts; it obtains the App token only after
 validation. Required branch protections remain binding.
+
+## Refresh decisions and health
+
+A large count change is not proof of corruption, and a small one is not proof of
+health. A candidate outside the accepted count band is accepted only with
+evidence it did not write about itself:
+
+- the publisher revision proves itself (new version, new downloaded bytes,
+  complete identity reconciliation); or
+- the publisher's own inventory reconciles to the candidate exactly (for DISA,
+  every listed publication ingested, none failed or missing) and no more than
+  the policy's removal ceiling (default 5 percent) of previously accepted
+  identities disappeared.
+
+Anything else is quarantined, and the issue states how many identities were
+added, removed and changed. Mass removal is never accepted on a count match.
+
+Reviewed commits can change data without going through refresh (for example a
+fix that ingests more publications). The committed data is what production
+serves, so refresh adopts it as the reference, still subject to the record floor
+and independent-inventory rules, and records the adoption in
+`data/source-change-log.json`. A stale baseline can no longer fail every later
+refresh.
+
+Every accepted change is written to `data/source-change-log.json` by the run
+that accepted it: catalog, previous and current identity (count, checksum,
+publisher version when the publisher exposes one), added, removed and changed
+counts, lifecycle transitions and accepted time. A field is `null` when it was
+not measured. No publisher version is ever invented. The admission gate
+recomputes the log and rejects a pull request whose log does not match.
+
+Retrieval failures are separated by whether asking again could help. Timeouts,
+dropped connections, HTTP 408, 425, 429 and 5xx are retried: at most three
+requests per URL, waiting 1 and 2 seconds (a `Retry-After` is honored up to 15
+seconds), each with a 60 second timeout. A whole source that failed that way is
+attempted again after 15 seconds, up to its declared attempts. HTTP 404 and 403,
+validation rejections and parse errors are the publisher's current answer and are
+not retried. No mirror is ever contacted. When attempts run out, the source keeps
+its accepted files and is quarantined honestly.
+
+OLIR submissions whose mapping can no longer be downloaded keep their exact
+accepted mapping and are a recorded limitation, not an incident, when NIST
+answered and publishes none (`retention.cause` is `publisher_unavailable`). A
+failure that looks temporary is also quiet, until it repeats for three
+consecutive refreshes; then the source is quarantined and one issue opens. This
+replaces the earlier rule that any retained submission kept the source issue open
+forever. Retention with no recorded cause still keeps it open.
+
+One issue exists per failing sweep. `tools/report-sweep-alert.mjs` names only the
+jobs that failed, updates the issue when the failing set changes, and closes it
+when the sweep next passes. A job the sweep schedules that was skipped counts as
+red, so a sweep that did not run cannot look green. Jobs are never marked
+`continue-on-error`.
+
+## Right-sized automation
+
+Do the least work that keeps the trust: stop as soon as the answer is known.
+
+| Trigger | Check or fetch | Validation | Rebuild scope | Test scope | Deploy |
+|---|---|---|---|---|---|
+| Wednesday refresh, nothing changed | Conditional GET per source (304 when unchanged) | Baseline band, identity and inventory rules | None. `tools/classify-refresh-outcome.mjs` restores the tree | None | No PR, no deploy |
+| Wednesday refresh, source changed | Same fetch | Per-source transaction, evidence and admission gate | Full generated-data build (the graph is one dependency unit) | Repository verification, then independent PR CI and Security | Automerge, then verified deploy |
+| Wednesday refresh, quiet for 21 days | Same fetch | Same | Bookkeeping dates only | Same | PR and deploy, so "last checked" stays inside the 45-day window |
+| Pull request | Not applicable | Change map picks affected gates | Affected build | Affected unit, contract and browser subset | No |
+| Merge to `main` | Not applicable | Full required CI, Security | Full site build | Full gates, Lighthouse budgets | Verified deploy, production smoke and Lighthouse |
+| Sunday sweep | Not applicable | Full generated-data contracts | Full site build | All browsers, complete accessibility | No |
+| Monthly OSCAL | Not applicable | Independent OSCAL cross-check | None | OSCAL validation | No |
+
+Measured cost (2026-09): refresh data phase about 5 minutes (hydration 97
+seconds and resource enrichment 90 seconds dominate); main CI about 4.5 minutes
+wall; deploy about 4 minutes; the Sunday sweep about 60 runner minutes (build 5
+minutes, six browser shards 6 to 9 minutes each, accessibility 2.3 minutes).
+
+The Sunday sweep is the deliberate deep confidence run. It exists because pull
+request CI runs one browser engine and a subset of specs, so Firefox, WebKit and
+the full spec list are only exercised there. It does not re-prove source
+integrity, which the Wednesday refresh and its admission gate already cover, and
+it runs weekly rather than nightly because unchanged code does not need daily
+proof. Refresh cadence is one weekly job because unchanged sources cost a 304,
+not a download; per-source cadence would add scheduling without measured savings.
 
 ## Local gates
 

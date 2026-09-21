@@ -1,6 +1,6 @@
 {
   "schema_version": "4.0",
-  "generated_at": "2026-09-16T00:08:04.560Z",
+  "generated_at": "2026-09-21T15:16:38.147Z",
   "completeness": {
     "total_publications": 101,
     "total_artifacts": 92,
@@ -74,7 +74,7 @@
       "methods": [
         "extracted_from_official_publication"
       ],
-      "last_refresh": "2026-09-10",
+      "last_refresh": "2026-09-21",
       "has_shard": true
     },
     {
@@ -94,7 +94,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-09-10",
+      "last_refresh": "2026-09-21",
       "has_shard": true
     },
     {
@@ -114,14 +114,14 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-08-13",
+      "last_refresh": "2026-09-21",
       "has_shard": true
     },
     {
       "catalog_id": "disa-stig",
       "completeness_status": "reconciled",
-      "expected_records": 26957,
-      "imported_records": 26957,
+      "expected_records": 26988,
+      "imported_records": 26988,
       "excluded_records": 0,
       "missing_records": 0,
       "expected_basis": "Full parse of the official DISA publication catalog (aggregate compilation plus all standalone current publications discovered from dl.dod.cyber.mil). Expected = STIG XCCDF rule records across all ingested current benchmarks.",
@@ -134,7 +134,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-09-16",
+      "last_refresh": "2026-09-21",
       "has_shard": true
     },
     {
@@ -180,8 +180,8 @@
     {
       "catalog_id": "fedramp-2026",
       "completeness_status": "reconciled",
-      "expected_records": 444,
-      "imported_records": 444,
+      "expected_records": 449,
+      "imported_records": 449,
       "excluded_records": 0,
       "missing_records": 0,
       "expected_basis": "Eligible publisher identities from an independently reconciled raw inventory when present. Accepted older snapshots explicitly use tracked reviewed counts; the inventory entry declares which evidence applies.",
@@ -194,7 +194,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-09-10",
+      "last_refresh": "2026-09-21",
       "has_shard": true
     },
     {
@@ -294,7 +294,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-09-10",
+      "last_refresh": "2026-09-21",
       "has_shard": true
     },
     {
@@ -314,7 +314,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-09-10",
+      "last_refresh": "2026-09-21",
       "has_shard": true
     },
     {
@@ -334,7 +334,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-09-10",
+      "last_refresh": "2026-09-21",
       "has_shard": true
     },
     {

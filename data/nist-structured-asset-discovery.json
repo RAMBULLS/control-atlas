@@ -1,12 +1,12 @@
 {
   "schema_version": "1.0",
   "source_inventory": "data/nist-pages-discovery.json",
-  "source_inventory_sha256": "sha256:fcd05363d5e66af37decdb813d5c7b88befda93a2aaf5123696393dc7bfc9d8f",
+  "source_inventory_sha256": "sha256:bd3800baf2ff5c3a2563a68e0618789e01227bd8d357ca77aaa904bcac48cefc",
   "reconciliation": {
-    "projects_discovered": 262,
-    "project_landing_pages_attempted": 262,
-    "pages_attempted": 344,
-    "pages_fetched": 338,
+    "projects_discovered": 264,
+    "project_landing_pages_attempted": 264,
+    "pages_attempted": 346,
+    "pages_fetched": 340,
     "pages_failed": 5,
     "structured_assets_discovered": 28,
     "spreadsheets_discovered": 8,
@@ -1739,6 +1739,14 @@
       "structured_assets": 0
     },
     {
+      "requested_url": "https://pages.nist.gov/nasctn-sea-visualization/",
+      "url": "https://pages.nist.gov/nasctn-sea-visualization/",
+      "project": "nasctn-sea-visualization",
+      "depth": 0,
+      "status": "fetched",
+      "structured_assets": 0
+    },
+    {
       "requested_url": "https://pages.nist.gov/nccoe-devsecops/",
       "url": "https://pages.nist.gov/nccoe-devsecops/",
       "project": "nccoe-devsecops",
@@ -2255,6 +2263,14 @@
       "requested_url": "https://pages.nist.gov/reflectometry-calculators/",
       "url": "https://pages.nist.gov/reflectometry-calculators/",
       "project": "reflectometry-calculators",
+      "depth": 0,
+      "status": "fetched",
+      "structured_assets": 0
+    },
+    {
+      "requested_url": "https://pages.nist.gov/refprop/",
+      "url": "https://pages.nist.gov/refprop/",
+      "project": "refprop",
       "depth": 0,
       "status": "fetched",
       "structured_assets": 0

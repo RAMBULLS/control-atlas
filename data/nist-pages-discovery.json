@@ -2,15 +2,15 @@
   "schema_version": "1.0",
   "source": {
     "url": "https://pages.nist.gov/pages-root/",
-    "retrieved_at": "2026-09-10T16:08:21.808Z",
-    "byte_length": 32947,
-    "sha256": "sha256:fcd05363d5e66af37decdb813d5c7b88befda93a2aaf5123696393dc7bfc9d8f"
+    "retrieved_at": "2026-09-21T15:11:57.442Z",
+    "byte_length": 33179,
+    "sha256": "sha256:bd3800baf2ff5c3a2563a68e0618789e01227bd8d357ca77aaa904bcac48cefc"
   },
   "reconciliation": {
-    "discovered_projects": 262,
+    "discovered_projects": 264,
     "candidate_projects": 39,
-    "excluded_projects": 223,
-    "classified_projects": 262
+    "excluded_projects": 225,
+    "classified_projects": 264
   },
   "entries": [
     {
@@ -647,7 +647,7 @@
     {
       "repo_name": "cmomy",
       "url": "https://pages.nist.gov/cmomy/",
-      "description": "cmomy — cmomy 1.1.1 documentation",
+      "description": "cmomy — cmomy 1.2.0 documentation",
       "disposition": "excluded",
       "topics": [],
       "reason": "no-cybersecurity-or-governance-title-signal"
@@ -1353,6 +1353,14 @@
       "reason": "no-cybersecurity-or-governance-title-signal"
     },
     {
+      "repo_name": "nasctn-sea-visualization",
+      "url": "https://pages.nist.gov/nasctn-sea-visualization/",
+      "description": "",
+      "disposition": "excluded",
+      "topics": [],
+      "reason": "no-cybersecurity-or-governance-title-signal"
+    },
+    {
       "repo_name": "nccoe-devsecops",
       "url": "https://pages.nist.gov/nccoe-devsecops/",
       "description": "Secure Software Development, Security, and Operations (DevSecOps) Practices — Secure Software Development, Security, and Operations (DevSecOps) Practices  documentation",
@@ -1819,6 +1827,14 @@
       "repo_name": "reflectometry-calculators",
       "url": "https://pages.nist.gov/reflectometry-calculators/",
       "description": "Reflectometry Calculators",
+      "disposition": "excluded",
+      "topics": [],
+      "reason": "no-cybersecurity-or-governance-title-signal"
+    },
+    {
+      "repo_name": "refprop",
+      "url": "https://pages.nist.gov/refprop/",
+      "description": "Welcome to Refprop’s documentation! — Refprop 11.0.0-a.1 documentation",
       "disposition": "excluded",
       "topics": [],
       "reason": "no-cybersecurity-or-governance-title-signal"

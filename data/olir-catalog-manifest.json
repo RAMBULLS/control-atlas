@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-10T19:39:55.091Z",
+  "generated_at": "2026-09-21T15:12:54.460Z",
   "source": "https://csrc.nist.gov/projects/olir/informative-reference-catalog",
   "api_endpoint": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog",
   "total_entries": 102,
@@ -8,7 +8,7 @@
   "ingested_count": 41,
   "quarantined_count": 61,
   "unresolved_count": 10,
-  "retained_count": 0,
+  "retained_count": 2,
   "processed_items": [
     {
       "id": 232,
@@ -365,7 +365,7 @@
           "status": 200,
           "final_url": "https://drive.google.com/drive/folders/1uqUpwlj7NeP-TDSPR2sHaVXHOQlabCCG?usp=sharing",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 316060
+          "byte_length": 314846
         },
         {
           "kind": "artifact download",
@@ -468,8 +468,8 @@
       "artifact": {
         "map_file": "maps/olir/215.json",
         "artifact_url": "https://aamcyber.com/sdos/reference/csf-2-0/",
-        "checksum": "sha256:6dad940bb014350e450b5b29fe428ebffdb2deb363934b79c99c329b5d3825ad",
-        "byte_length": 119573,
+        "checksum": "sha256:d02a3128a187740c6d2fbcb08cbc1bb77a294e752b73c712c6f8a6c9e4b04871",
+        "byte_length": 120006,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
         "relationship_count": 183,
@@ -497,7 +497,7 @@
           "status": 200,
           "final_url": "https://aamcyber.com/sdos/reference/csf-2-0/",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 119573
+          "byte_length": 120006
         }
       ]
     },
@@ -526,8 +526,8 @@
       "artifact": {
         "map_file": "maps/olir/217.json",
         "artifact_url": "https://aamcyber.com/sdos/reference/sp-800-53/",
-        "checksum": "sha256:e43a40fd0d0f94e62c9053687954cd95cf8ee600b84ffe67c63e3a9b0549c1be",
-        "byte_length": 124589,
+        "checksum": "sha256:899e8bc35e8522643d545dbc363c9632a525bed7a558556f3879c962fa9eb2c1",
+        "byte_length": 125022,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
         "relationship_count": 27,
@@ -555,7 +555,7 @@
           "status": 200,
           "final_url": "https://aamcyber.com/sdos/reference/sp-800-53/",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 124589
+          "byte_length": 125022
         }
       ]
     },
@@ -683,7 +683,7 @@
           "status": 200,
           "final_url": "https://cyberoon.com/research/ai-soc-v10-to-nist-csf-20-informative-reference-mapping",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 2093635
+          "byte_length": 2093385
         },
         {
           "kind": "artifact download",
@@ -691,7 +691,7 @@
           "status": 200,
           "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 286981
+          "byte_length": 287676
         },
         {
           "kind": "artifact download",
@@ -699,7 +699,7 @@
           "status": 200,
           "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/releases/tag/v1.0.0",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 205604
+          "byte_length": 206927
         },
         {
           "kind": "artifact download",
@@ -707,7 +707,7 @@
           "status": 200,
           "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/blob/main/docs/AI_SOC_Controls_Catalog_v1_0.pdf",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 247383
+          "byte_length": 248087
         },
         {
           "kind": "GitHub Contents API",
@@ -753,8 +753,8 @@
       "artifact": {
         "map_file": "maps/olir/220.json",
         "artifact_url": "https://aamcyber.com/sdos/reference/v1/",
-        "checksum": "sha256:df092b5573f536287b55d1c85414c2d6c813ba77ab444cdaf73d64fd81e4d353",
-        "byte_length": 132269,
+        "checksum": "sha256:4b5d47ee4b7b95ed557697847983e9a28199e5b0e7ecba2456309107a7b3b8d6",
+        "byte_length": 132574,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
         "relationship_count": 44,
@@ -782,7 +782,7 @@
           "status": 200,
           "final_url": "https://aamcyber.com/sdos/reference/v1/",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 132269
+          "byte_length": 132574
         }
       ]
     },
@@ -913,7 +913,7 @@
           "kind": "artifact download",
           "url": "https://docs.google.com/spreadsheets/d/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP/export?format=xlsx",
           "status": 200,
-          "final_url": "https://doc-0c-98-sheets.googleusercontent.com/export/54bogvaave6cua4cdnls17ksc4/jq2qm0h1nbcf0ov8nh3reote78/1789069190000/100790643046296837536/*/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP?format=xlsx",
+          "final_url": "https://doc-0c-98-sheets.googleusercontent.com/export/f3kk9gtum31ktuqh54kn7i1e14/3p9ktldua3493vue7qaqtiikh4/1790003575000/100790643046296837536/*/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP?format=xlsx",
           "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "byte_length": 21218
         }
@@ -944,7 +944,7 @@
       "artifact": {
         "map_file": "maps/olir/222.json",
         "artifact_url": "https://bxaios.com/nist-alignment/",
-        "checksum": "sha256:9f6dd52f34a5ac651cc647f1f5e95c756e3541b52c364c26698ae57f9684469a",
+        "checksum": "sha256:2f25e85a401a86a0e075717f254652d27ee2ed7ae31df738b4c31df2252f7d0c",
         "byte_length": 143534,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
@@ -1003,7 +1003,7 @@
       "artifact": {
         "map_file": "maps/olir/203.json",
         "artifact_url": "https://bxaios.com/nist-alignment/",
-        "checksum": "sha256:9f6dd52f34a5ac651cc647f1f5e95c756e3541b52c364c26698ae57f9684469a",
+        "checksum": "sha256:2f25e85a401a86a0e075717f254652d27ee2ed7ae31df738b4c31df2252f7d0c",
         "byte_length": 143534,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
@@ -1170,7 +1170,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": "Concept Crosswalk",
       "ingested": true,
-      "availability": "structured_artifact",
+      "availability": "retrieval_failed",
       "map_file": "maps/olir/194.json",
       "artifact_id": null,
       "artifact": {
@@ -1207,7 +1207,33 @@
           "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "byte_length": 16571
         }
-      ]
+      ],
+      "refresh_status": "retained_last_good",
+      "refresh_error": "no public relationship mapping could be downloaded from the registered NIST submission locations",
+      "latest_retrieval_attempts": [
+        {
+          "kind": "NIST catalog detail endpoint",
+          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/194",
+          "status": 200,
+          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/194",
+          "json_file_url": null,
+          "publisher_sha256": null,
+          "submission_url": "https://p-sscrm.github.io/assets/data/P-SSCRM_to_SSDF_CROSSWALK_20260219.xlsx",
+          "reference_url": "https://p-sscrm.github.io/",
+          "mapping_summary": "<p>Crosswalk between P-SSCRM v2.0 and SSDF v1.1</p>",
+          "mapping_comment": "<p>N/A</p>"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://p-sscrm.github.io/assets/data/P-SSCRM_to_SSDF_CROSSWALK_20260219.xlsx",
+          "error": "OLIR source URL policy rejected destination outside registered submission"
+        }
+      ],
+      "retention": {
+        "cause": "publisher_unavailable",
+        "first_retained_at": "2026-09-21T15:12:54.460Z",
+        "consecutive_refreshes": 1
+      }
     },
     {
       "id": 189,
@@ -1263,7 +1289,7 @@
           "status": 200,
           "final_url": "https://zenodo.org/records/18498447",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 95045
+          "byte_length": 95106
         },
         {
           "kind": "artifact download",
@@ -1431,7 +1457,7 @@
           "status": 200,
           "final_url": "https://www.cisecurity.org/insights/white-papers/cis-controls-v8-1-mapping-to-nist-csf-2-0",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 115804
+          "byte_length": 115977
         }
       ]
     },
@@ -1660,8 +1686,8 @@
       "artifact": {
         "map_file": "maps/olir/176.json",
         "artifact_url": "https://www.gov.uk/government/publications/cyber-governance-mapping/mapping-cyber-governance-code-to-nist-cyber-security-framework",
-        "checksum": "sha256:1d46936ed146b43ab4080eaee9a675c52cc5a7eb9c3e1487be650844cc61289c",
-        "byte_length": 88237,
+        "checksum": "sha256:9dd455fee9becb7c71588a18df1c8551839b2268aa07437949f05901562bcffd",
+        "byte_length": 88297,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
         "relationship_count": 60,
@@ -1689,7 +1715,7 @@
           "status": 200,
           "final_url": "https://www.gov.uk/government/publications/cyber-governance-mapping/mapping-cyber-governance-code-to-nist-cyber-security-framework",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 88237
+          "byte_length": 88297
         }
       ]
     },
@@ -1888,7 +1914,7 @@
           "status": 200,
           "final_url": "https://cyberriskinstitute.org/the-profile/",
           "content_type": "text/html; charset=UTF-8",
-          "byte_length": 83131
+          "byte_length": 83308
         }
       ]
     },
@@ -1911,7 +1937,7 @@
       "authority_tier_label": "Community candidate Final",
       "mapping_model": "Concept Crosswalk",
       "ingested": true,
-      "availability": "structured_artifact",
+      "availability": "retrieval_failed",
       "map_file": "maps/olir/154.json",
       "artifact_id": null,
       "artifact": {
@@ -1956,7 +1982,38 @@
           "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "byte_length": 30417
         }
-      ]
+      ],
+      "refresh_status": "retained_last_good",
+      "refresh_error": "no public relationship mapping could be downloaded from the registered NIST submission locations",
+      "latest_retrieval_attempts": [
+        {
+          "kind": "NIST catalog detail endpoint",
+          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/154",
+          "status": 200,
+          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/154",
+          "json_file_url": null,
+          "publisher_sha256": null,
+          "submission_url": "https://www.razil.io/post/nist-csf-2-0-to-iso-27001-2022-annexure-a-mapping",
+          "reference_url": "https://www.iso.org/obp/ui/#iso:std:iso-iec:27001:ed-3:v1:en",
+          "mapping_summary": "<p>This OLIR establishes an initial mapping between ISO/IEC 27001:2022 and the NIST Cybersecurity Framework (CSF) version 2.0. It provides a foundation for aligning the international information security standard with the CSF&rsquo;s functions, categories, and subcategories. The mapping is intended to evolve over time, supporting organisations that use both frameworks to improve their cybersecurity posture. It also encourages collaboration and discussion within the security community on how best to integrate and apply both standards in practice.</p>",
+          "mapping_comment": "<p>The intent of this OLIR is to initiate the formalization of the relationships between ISO/IEC 27001:2022 and the NIST Cybersecurity Framework (CSF) version 2.0. This marks a foundational step in aligning the updated international information security standard with the latest version of the CSF. The objective is to establish a baseline mapping that reflects both frameworks&rsquo; complementary strengths, while recognising that refinements and community input will be necessary over time. This OLIR aims to act as a collaborative resource for cybersecurity and risk management professionals to explore, debate, and better understand how ISO/IEC 27001:2022 and CSF v2.0 can be used together to strengthen organizational security programs.</p>"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://www.razil.io/post/nist-csf-2-0-to-iso-27001-2022-annexure-a-mapping",
+          "error": "request to https://www.razil.io/post/nist-csf-2-0-to-iso-27001-2022-annexure-a-mapping failed, reason: Client network socket disconnected before secure TLS connection was established"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://www.razil.io/post/nist-csf-2-0-to-iso-27001-2022-annexure-a-mapping",
+          "error": "request to https://www.razil.io/post/nist-csf-2-0-to-iso-27001-2022-annexure-a-mapping failed, reason: Client network socket disconnected before secure TLS connection was established"
+        }
+      ],
+      "retention": {
+        "cause": "publisher_unavailable",
+        "first_retained_at": "2026-09-21T15:12:54.460Z",
+        "consecutive_refreshes": 1
+      }
     },
     {
       "id": 152,
@@ -2703,7 +2760,7 @@
           "status": 200,
           "final_url": "https://cyberriskinstitute.org/The-Profile/",
           "content_type": "text/html; charset=UTF-8",
-          "byte_length": 83131
+          "byte_length": 83308
         }
       ]
     },
@@ -2750,7 +2807,7 @@
           "status": 200,
           "final_url": "https://www.cisecurity.org/controls",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 276458
+          "byte_length": 279003
         }
       ]
     },
@@ -3275,7 +3332,7 @@
           "status": 200,
           "final_url": "https://securecontrolsframework.com/free-content/scf-download",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 50240,
+          "byte_length": 54613,
           "availability": "artifact_replaced_by_html"
         }
       ]

@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-16T00:07:04.454Z",
-  "hydrated": 87,
+  "generated_at": "2026-09-21T15:14:35.261Z",
+  "hydrated": 1,
   "removed_orphans": [],
   "results": [
     {
@@ -11,7 +11,7 @@
       "sha256": "sha256:dc1639caa5501d720e280cf1cbd8fbe009884a0c9b3e6e9ed9d0c25166c3d8f4",
       "byte_length": 53835637,
       "record_count": 858,
-      "retrieved_at": "2026-09-10"
+      "retrieved_at": "2026-09-21"
     },
     {
       "id": "artifact-mitre-attack-ics",
@@ -21,7 +21,7 @@
       "sha256": "sha256:08b83d2cea6b6d6752468ef0e62e2ab2a53c9443ef72c439ecccb07ab9e89da9",
       "byte_length": 4057891,
       "record_count": 118,
-      "retrieved_at": "2026-09-10"
+      "retrieved_at": "2026-09-21"
     },
     {
       "id": "artifact-mitre-d3fend-ontology",
@@ -31,7 +31,7 @@
       "sha256": "sha256:e1546d432c6aa64d45b62dd9e9484b0774ae84de7ff3605ff9dd4e20278957bf",
       "byte_length": 4833645,
       "record_count": 271,
-      "retrieved_at": "2026-09-10"
+      "retrieved_at": "2026-09-21"
     },
     {
       "id": "artifact-mitre-d3fend-mappings",
@@ -71,7 +71,7 @@
       "sha256": "sha256:64915d88e72353c95f321ea4a9014516ac9441972cbd7f3d1abef7d1514c8fc8",
       "byte_length": 564946,
       "record_count": 5,
-      "retrieved_at": "2026-09-16"
+      "retrieved_at": "2026-09-10"
     },
     {
       "id": "artifact-disa-cci-list",
@@ -422,10 +422,10 @@
       "status": "OK",
       "http": 200,
       "url": "https://www.ai.mil/Initiatives/About/Resources/Pathway-to-AI-Readiness/Responsible-AI/",
-      "sha256": "sha256:1e841cca806dbd99208286b629625bd400a65447906c3e2f6a5cfd5ff3348585",
+      "sha256": "sha256:a36411ca30ed47e2bcc100a73e3a24ad8db7ce519a68ce6c726c125144aa4c58",
       "byte_length": 105052,
       "record_count": null,
-      "retrieved_at": "2026-09-16"
+      "retrieved_at": "2026-09-21"
     },
     {
       "id": "artifact-isoo-cui-regulation",
@@ -462,10 +462,10 @@
       "status": "OK",
       "http": 200,
       "url": "https://csrc.nist.gov/extensions/nudp/services/json/csf/download?olirids=all",
-      "sha256": "sha256:927ea3cebebdfbfde715af8089a7a5c437b66da8d373cd900cdb7e38011197d4",
-      "byte_length": 144518,
+      "sha256": "sha256:ff8af05814c20cf7056defe2df897f076889d104dfc3f3099865edd7ceee05e7",
+      "byte_length": 144520,
       "record_count": null,
-      "retrieved_at": "2026-09-16"
+      "retrieved_at": "2026-09-21"
     },
     {
       "id": "artifact-nist-fips-199",
@@ -505,7 +505,7 @@
       "sha256": "sha256:df371dc0ebb163e1a0434b141bc2f16b56c97b2062622d6811191fbe4f093c01",
       "byte_length": 368971055,
       "record_count": 0,
-      "retrieved_at": "2026-09-16",
+      "retrieved_at": "2026-09-21",
       "attestation": "fresh DISA compilation range download and parse"
     },
     {
@@ -513,10 +513,10 @@
       "status": "OK",
       "http": "local",
       "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip",
-      "sha256": "sha256:07eb2ccd6a2182e20a97d6ac9349186c0a33afe40fac934ed74c5fe85b52f7ec",
-      "byte_length": 81980193,
-      "record_count": 26957,
-      "retrieved_at": "2026-09-16"
+      "sha256": "sha256:c4f31a95e2ad5a5ae89ce0a6f66358f7b6c5894fe155da1fa99ca5c5ab03a3fe",
+      "byte_length": 82090660,
+      "record_count": 26988,
+      "retrieved_at": "2026-09-21"
     },
     {
       "id": "artifact-disa-srg-library",
@@ -533,20 +533,20 @@
       "status": "OK",
       "http": "local",
       "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip",
-      "sha256": "sha256:406171ce17b9d1f6c9656801a9beef1a9e116a0374571e442afbc4bcada42da6",
-      "byte_length": 19006785,
+      "sha256": "sha256:189997cdcc3264029ef07637d1852d83c32903e6e4b0625b557536d321de9f66",
+      "byte_length": 19085013,
       "record_count": null,
-      "retrieved_at": "2026-08-08"
+      "retrieved_at": "2026-09-21"
     },
     {
       "id": "artifact-nist-800-53b-baselines",
       "status": "OK",
       "http": "local",
       "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/v1.5.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json",
-      "sha256": "sha256:27996d531ef5003f43700ee18cf788453d43c711286e8fa8d8816c2993f89116",
+      "sha256": "sha256:518da934775c8074b45e60891a38ab901c9b2b4ee9f681939fd541de6314378c",
       "byte_length": 1865,
       "record_count": null,
-      "retrieved_at": "2026-09-10"
+      "retrieved_at": "2026-09-21"
     },
     {
       "id": "artifact-control-atlas-structure",

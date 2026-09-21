@@ -77,7 +77,7 @@
     "test:operator-ecosystem": "node --test ./tests/commons-operator-ecosystem.test.mjs",
     "test:tokens": "node --test ./tests/orbital-token-drift.test.mjs",
     "test:copy-contract": "node --test ./tests/copy-contract.test.mjs",
-    "test:record-presentation": "tsx --test ./tests/graph/recordPresentation.test.ts ./tests/graph/taxonomyContext.test.ts ./tests/graph/recordActionPolicy.test.ts && node --test ./tests/record-acceptance.test.mjs",
+    "test:record-presentation": "tsx --test ./tests/graph/recordPresentation.test.ts ./tests/graph/taxonomyContext.test.ts ./tests/graph/recordActionPolicy.test.ts && node --test ./tests/record-acceptance.test.mjs ./tests/record-control-context.test.mjs",
     "test:record-fidelity:e2e": "playwright test --config playwright.e2e.config.mjs tests/e2e/record-source-fidelity.spec.mjs",
     "test:authority": "node --test ./tests/authority-spine.test.mjs",
     "test:atlas": "node --test ./tests/atlas-neighborhood.test.mjs",

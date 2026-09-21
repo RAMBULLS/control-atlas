@@ -9,6 +9,7 @@
 
 import { displayNameFor } from "../../app/display-names.mjs";
 import { nistFamilyCode } from "../../shared/nist-families.mjs";
+import { controlContextLabel } from "../../shared/record-control-context.mjs";
 import { sourceNativeIdentityCategory } from "../../shared/record-identity.mjs";
 import { routeIdentityFor } from "./routeIdentity";
 
@@ -213,6 +214,23 @@ export function recordIdentityPresentationFor(input: {
   const displayId = publisherItemId || stableId;
   const nativePrimary = recordIdentityFor({ ...input, itemId: displayId });
   const publishedName = officialRecordName(displayId, input.title);
+
+  // FedRAMP publishes control context under its own id (CTL-AC-06-01). Lead with
+  // the control practitioners know and keep the publisher's exact title beneath.
+  const contextLabel = input.objectType === "control_context" ? controlContextLabel(stableId) : null;
+  if (contextLabel) {
+    const primary = [input.publisher.trim(), contextLabel, "parameters and guidance"].filter(Boolean).join(" ");
+    const official = input.title.trim();
+    return {
+      primary,
+      secondary: official && official !== primary ? official : "",
+      context: "",
+      accessibleName: primary,
+      browserTitle: [primary, official].filter(Boolean).join(" — "),
+      stableId,
+      stableIdIsGenerated: false,
+    };
+  }
 
   if (!stableIdIsGenerated) {
     return {

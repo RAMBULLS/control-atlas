@@ -1,5 +1,6 @@
 import { createContext, Fragment, useCallback, useContext, useState, type ReactNode } from "react";
 import { RECORD_FACT_LABELS } from "../../shared/record-fact-labels.mjs";
+import { parseControlContext } from "../../shared/record-control-context.mjs";
 import { isValidSourceTextPresentation } from "../../shared/source-text-presentation.mjs";
 import { Button } from "./lsm";
 import { copyText, formatRelationshipLabel } from "../lib/pagePrimitives";
@@ -228,7 +229,33 @@ function StructuredPublisherSections(props: { value: any[] }) {
   );
 }
 
+function ControlContextContent(props: { value: string; presentation?: any }) {
+  const entries = parseControlContext(props.value);
+  // Text with no parameter notation keeps the publisher's own text blocks.
+  if (!entries.some((entry) => entry.kind === "parameter")) return <SourceTextBlocks presentation={props.presentation} value={props.value} />;
+  const groups: Array<typeof entries> = [];
+  for (const entry of entries) {
+    const last = groups[groups.length - 1];
+    if (last && last[0].kind === entry.kind && entry.kind === "parameter") last.push(entry);
+    else groups.push([entry]);
+  }
+  return (
+    <>
+      {groups.map((group, index) => group[0].kind === "parameter" ? (
+        <ul className="source-structured-list" key={index}>
+          {group.map((entry) => entry.kind === "parameter" ? (
+            <li key={entry.id}><strong>{entry.label}</strong> — {entry.value} <code aria-label={`Publisher identifier ${entry.id}`}>{entry.id}</code></li>
+          ) : null)}
+        </ul>
+      ) : group.map((entry, position) => entry.kind === "guidance" ? <p key={`${index}:${position}`}>{entry.text}</p> : null))}
+    </>
+  );
+}
+
 export function SourceSectionContent(props: { kind: string; value: any; presentation?: any }) {
+  if (props.kind === "control_parameters") {
+    return <ControlContextContent presentation={props.presentation} value={String(props.value || "")} />;
+  }
   if (props.kind === "structured") {
     return <StructuredPublisherSections value={props.value} />;
   }

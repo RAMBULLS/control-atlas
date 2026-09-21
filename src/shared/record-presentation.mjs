@@ -235,7 +235,7 @@ const BASE_CONTRACTS = {
       },
     },
   ),
-  control_context: atomic([section("description", "Published Control Context")], ["description"]),
+  control_context: atomic([section("description", "Parameters and guidance", "control_parameters")], ["description"]),
   control_enhancement: atomic(
     [
       section("description", "Control Statement"),

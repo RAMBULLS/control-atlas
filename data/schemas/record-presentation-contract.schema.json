@@ -61,7 +61,7 @@
         "properties": {
           "field": { "type": "string", "minLength": 1 },
           "heading": { "type": "string", "minLength": 1 },
-          "kind": { "enum": ["text", "list", "references", "structured", "publisher_mappings", "mapping_targets", "objectives", "methods", "countermeasures"] },
+          "kind": { "enum": ["text", "list", "references", "structured", "publisher_mappings", "mapping_targets", "objectives", "methods", "countermeasures", "control_parameters"] },
           "disposition": { "$ref": "#/$defs/disposition" }
         }
       }

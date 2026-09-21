@@ -11,6 +11,7 @@ import {
 } from "../../shared/record-presentation.mjs";
 import { isComparisonCapableEdge } from "../../shared/compare-capability.mjs";
 import { recordActionPolicy, recordShowsChildInventory } from "../../shared/record-acceptance.mjs";
+import { controlContextLabel, controlContextTargetId } from "../../shared/record-control-context.mjs";
 import authoritySpine from "../../../data/curated/authority-spine.json";
 import { AcronymText } from "../components/AccessibleTerm";
 import { AppLink } from "../components/AppLink";
@@ -144,6 +145,10 @@ export function ObjectDetailPage(props: {
     .filter((edge: any) => edge.relationship_class === "structural" && edge.source_node_id === node.id)
     .sort((left: any, right: any) => (left.publisher_order ?? Number.MAX_SAFE_INTEGER) - (right.publisher_order ?? Number.MAX_SAFE_INTEGER))
     .map((edge: any) => bundle.runtime.getNode(edge.target_node_id)).filter(Boolean);
+  // FedRAMP control context is published for one SP 800-53 control. That control
+  // is not loaded with this record (no graph edge joins them), so the link is
+  // built from the id; a corpus test proves every target exists.
+  const contextTargetId = presentation.record_type === "control_context" ? controlContextTargetId(itemId) : null;
   const selectionSections = presentation.selections.map((entry: { relationship_type: string; heading: string; note: string }) => {
     const seen = new Set<string>();
     const items = edges
@@ -189,6 +194,7 @@ export function ObjectDetailPage(props: {
   if (source && !missingSourceFields.length) {
     for (const section of publishedSections) sectionNavItems.push({ id: `section-${section.field}`, label: section.heading });
   }
+  if (contextTargetId) sectionNavItems.push({ id: "section-underlying-control", label: "Underlying control" });
   for (const entry of selectionSections) sectionNavItems.push({ id: `section-selection-${entry.relationship_type}`, label: entry.heading });
   if (showChildInventory) sectionNavItems.push({ id: "section-children", label: childHeading });
   if (visibleConnectionGroups.length) sectionNavItems.push({ id: "section-related-records", label: "Related records" });
@@ -268,6 +274,10 @@ export function ObjectDetailPage(props: {
           </section> : <RecordPublishedText claimOrigin={claimOrigin} metadata={sourceMetadata} sections={presentation.sections} />}
           {!missingSourceFields.length && !hasPublishedSectionContent ? <section className="record-source-absence" data-record-section="publisher-absence">
             <h2>Publisher description</h2><p>The publisher did not publish a separate description for this {sentenceCaseKind(kind)}.</p>
+          </section> : null}
+          {contextTargetId ? <section className="record-child-inventory record-underlying-control" data-record-section="underlying-control" id="section-underlying-control">
+            <div className="section-header"><div><h2>Underlying control</h2><p>FedRAMP publishes these parameters and guidance for this control.</p></div></div>
+            <ul><li><AppLink onNavigate={onNavigate} patch={{ node: contextTargetId }} view="library-detail">{`NIST ${controlContextLabel(itemId)}`}</AppLink></li></ul>
           </section> : null}
           {presentation.metadata_facts.length && !isTechnicalRule ? <RecordNativeFacts fields={presentation.metadata_facts} metadata={sourceMetadata} title="Published facts" /> : null}
           {structuralTrace.length > 1 ? <section className="record-hierarchy" data-record-section="publisher-hierarchy">

@@ -124,35 +124,6 @@ test("Phase 4 Search teaches its real keyboard shortcut in context", async ({ pa
   await expect(dialog).toBeHidden();
 });
 
-test("Phase 4 STIG worksheet needs a chosen STIG, then lists that STIG's rules", async ({ page }) => {
-  await page.goto("/#/build/documents/stig_evidence_checklist?format=xlsx");
-  await waitForAppReady(page);
-  await dismissOnboarding(page);
-
-  const download = page.locator("#document-download-action");
-  await expect(download).toBeDisabled();
-  await expect(page.locator("#document-download-reason")).toContainText("Choose STIG");
-  // The step bar names the three things the page really does.
-  const steps = page.getByRole("navigation", { name: "Step progress" });
-  await expect(steps).toContainText("Choose");
-  await expect(steps).toContainText("Set up");
-  await expect(steps).toContainText("Review & download");
-
-  await page.getByLabel("Find a STIG").fill("Windows 10 Security");
-  const picker = page.getByRole("combobox", { name: "STIG", exact: true });
-  const choices = picker.locator("option:not([value=''])");
-  expect(await choices.count()).toBeGreaterThan(0);
-  expect(await choices.count()).toBeLessThan(10);
-  await picker.selectOption({ index: 1 });
-
-  await expect(download).toBeEnabled();
-  const preview = page.locator(".template-document-preview");
-  await expect(preview).toContainText("STIG Viewer CSV Import Rows");
-  await expect(page).toHaveURL(/stig=BENCHMARK-/);
-  const context = page.getByRole("complementary", { name: "Current document" });
-  await expect(context).toContainText("Windows 10");
-});
-
 const READY_HARDWARE = "/#/build/documents/hardware_baseline?environment=Generic&format=xlsx";
 
 test("Phase 4 a template download fires once per click, even on a fast double click", async ({ page }) => {
@@ -219,9 +190,11 @@ test("Phase 4 Templates start from the job to be done and say what each file is 
   const nav = page.getByRole("navigation", { name: "Template sections" });
   await expect(nav.getByRole("link")).toHaveText(["By task", "All working files"]);
   await expect(nav.getByRole("link", { name: "Resources" })).toHaveCount(0);
-  for (const heading of ["Build hardware and software baselines", "Draft control implementation", "Prepare PPSM information"]) {
+  for (const heading of ["Build hardware and software baselines", "Draft control implementation"]) {
     await expect(page.getByRole("heading", { name: heading, level: 3 })).toBeVisible();
   }
+  await expect(page.getByText("STIG Viewer CSV Preparation Worksheet", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("PPSM Preparation Worksheet", { exact: true })).toHaveCount(0);
   await expect(page.getByText("Not a replacement for:").first()).toBeVisible();
   await expect(page.locator("body")).toContainText("Your CMDB or eMASS.");
 });

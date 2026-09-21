@@ -22,6 +22,10 @@
         "label": "FedRAMP Consolidated Rules for 2026",
         "url": "https://www.fedramp.gov/2026/"
       },
+      "usage": {
+        "use_for": "Organize a security plan draft: system context, boundary, information types, roles, and the control scope you selected.",
+        "not_for": "The official SSP or package for your program. Move the final content there."
+      },
       "disclaimer_required": true
     },
     {
@@ -44,6 +48,10 @@
       "official_alternative": {
         "label": "NIST OSCAL SSP implementation model",
         "url": "https://pages.nist.gov/OSCAL/learn/concepts/layer/implementation/ssp/"
+      },
+      "usage": {
+        "use_for": "Draft and review control implementation statements for the baseline you pick.",
+        "not_for": "eMASS or your system of record. Enter approved statements there."
       },
       "disclaimer_required": true
     },
@@ -68,6 +76,10 @@
         "label": "NIST SP 800-53A Rev. 5 assessment procedures",
         "url": "https://csrc.nist.gov/pubs/sp/800/53/a/r5/final"
       },
+      "usage": {
+        "use_for": "Plan what evidence you will collect for each control, who owns it, and how current it is.",
+        "not_for": "An assessor's decision about what evidence is enough."
+      },
       "disclaimer_required": true
     },
     {
@@ -90,6 +102,10 @@
       "official_alternative": {
         "label": "DISA STIG Viewer and SRG/STIG tools",
         "url": "https://public.cyber.mil/stigs/srg-stig-tools/"
+      },
+      "usage": {
+        "use_for": "Prepare results for one STIG, then save a CSV for STIG Viewer.",
+        "not_for": "STIG Viewer itself, or automated scanning and SCAP tools."
       },
       "disclaimer_required": true
     },
@@ -114,6 +130,10 @@
         "label": "FedRAMP Consolidated Rules and current provider documentation",
         "url": "https://www.fedramp.gov/2026/"
       },
+      "usage": {
+        "use_for": "Record who provides each control, the evidence you rely on, and what you still do locally.",
+        "not_for": "A provider's own responsibility matrix, or an authorization decision."
+      },
       "disclaimer_required": true
     },
     {
@@ -136,6 +156,10 @@
       "official_alternative": {
         "label": "NIST SP 800-37 Rev. 2",
         "url": "https://csrc.nist.gov/pubs/sp/800/37/r2/final"
+      },
+      "usage": {
+        "use_for": "Review another organization's authorization package before you reuse it.",
+        "not_for": "A reciprocity decision. The receiving Authorizing Official makes it."
       },
       "disclaimer_required": true
     },
@@ -160,6 +184,10 @@
         "label": "FedRAMP agency POA&M guidance",
         "url": "https://www.fedramp.gov/2026/agencies/use/ongoing/poams/"
       },
+      "usage": {
+        "use_for": "Track weaknesses, remediation and milestones through to closure.",
+        "not_for": "eMASS or your official POA&M system. Enter approved items there."
+      },
       "disclaimer_required": true
     },
     {
@@ -182,6 +210,10 @@
       "official_alternative": {
         "label": "NIST SP 800-53A Rev. 5 assessment procedures",
         "url": "https://csrc.nist.gov/pubs/sp/800/53/a/r5/final"
+      },
+      "usage": {
+        "use_for": "Plan each control's assessment using NIST SP 800-53A methods and objects.",
+        "not_for": "A Security Assessment Plan, or assessor-approved procedures."
       },
       "disclaimer_required": true
     },
@@ -206,6 +238,10 @@
         "label": "NIST SP 800-137",
         "url": "https://csrc.nist.gov/pubs/sp/800/137/final"
       },
+      "usage": {
+        "use_for": "Schedule monitoring work, owners and evidence.",
+        "not_for": "Your program's monitoring strategy or reporting requirements."
+      },
       "disclaimer_required": true
     },
     {
@@ -228,6 +264,10 @@
       "official_alternative": {
         "label": "DCSA Hardware List",
         "url": "https://www.dcsa.mil/Portals/91/Documents/CTP/tools/Hardware_List_%28February2020%29.pdf"
+      },
+      "usage": {
+        "use_for": "Collect and reconcile hardware assets before an assessment or an eMASS entry.",
+        "not_for": "Your CMDB or eMASS."
       },
       "disclaimer_required": true
     },
@@ -252,6 +292,10 @@
         "label": "DCSA Software List",
         "url": "https://www.dcsa.mil/Portals/91/Documents/CTP/tools/Software_List_%28February2020%29.pdf"
       },
+      "usage": {
+        "use_for": "Collect and reconcile software before an assessment or an eMASS entry.",
+        "not_for": "Your CMDB or eMASS."
+      },
       "disclaimer_required": true
     },
     {
@@ -274,6 +318,10 @@
       "official_alternative": {
         "label": "DoD PPSM Registry training",
         "url": "https://dl.dod.cyber.mil/wp-content/uploads/trn/cx-player/player/index.html?v=ppsm-registry"
+      },
+      "usage": {
+        "use_for": "Collect and review ports, protocols and services information before you enter it.",
+        "not_for": "The PPSM Registry or its submission workflow."
       },
       "disclaimer_required": true
     }

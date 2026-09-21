@@ -13,6 +13,7 @@ const REQUIRED_FIELDS = [
   'compatibility',
   'provenance',
   'disclaimer_required',
+  'usage',
 ];
 
 const ARTIFACT_TYPES = new Set([
@@ -99,6 +100,17 @@ export function validateTemplateRegistry(registry) {
       errors.push(`template ${template.template_id} official_resource_ids must be a non-empty array`);
     }
     if (typeof template.disclaimer_required !== 'boolean') errors.push(`template ${template.template_id} disclaimer_required must be boolean`);
+
+    const usage = template.usage;
+    if (!usage || typeof usage !== 'object') {
+      errors.push(`template ${template.template_id} missing usage { use_for, not_for }`);
+    } else {
+      for (const key of ['use_for', 'not_for']) {
+        if (typeof usage[key] !== 'string' || usage[key].trim().length < 10) {
+          errors.push(`template ${template.template_id} usage.${key} must be a plain-language sentence`);
+        }
+      }
+    }
 
     const compatibility = template.compatibility;
     if (!compatibility || typeof compatibility !== 'object') {

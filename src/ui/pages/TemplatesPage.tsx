@@ -79,6 +79,8 @@ type TemplateRecord = {
     claim?: string;
     limitations?: string;
   };
+  usage?: { use_for: string; not_for: string };
+  provenance?: { basis?: string; verified_interchange?: boolean };
 };
 
 type OfficialArtifact = {
@@ -400,6 +402,12 @@ function templateDetails(template: TemplateRecord) {
     : `${formats.length} editable download formats`;
   return (
     <>
+      {template.usage ? (
+        <>
+          <span><strong>Use it to:</strong> {template.usage.use_for}</span>
+          <span><strong>Not a replacement for:</strong> {template.usage.not_for}</span>
+        </>
+      ) : null}
       <span><strong>Setup:</strong> {inputCount ? `${inputCount} required input${inputCount === 1 ? "" : "s"}` : "no required inputs"}</span>
       <span><strong>Output:</strong> {output}</span>
     </>
@@ -579,8 +587,20 @@ export function TemplatesPage(props: {
         ...(selectedTemplate.official_resource_ids || []),
       ]
     : [];
+  // A template that lets the reader pick a program shows that program's own
+  // resources only when it is picked. Without a program choice (hardware and
+  // software baselines) every listed resource stays visible.
+  const programChoiceOffered = Boolean(selectedTemplate?.input_options?.includes("framework"));
+  const fedrampSelected = /^fedramp/i.test(state.framework || "");
   const selectedTemplateArtifacts = selectedTemplate
     ? officialArtifacts.filter((artifact) => {
+        if (
+          programChoiceOffered &&
+          !fedrampSelected &&
+          /^fedramp/i.test(artifact.artifact_id)
+        ) {
+          return false;
+        }
         if (selectedTemplateArtifactIds.includes(artifact.artifact_id)) {
           return true;
         }
@@ -669,10 +689,6 @@ export function TemplatesPage(props: {
   const selectedStigLabel =
     allStigOptions.find((option) => option.value === state.stig)?.label || "";
 
-  const primarySourceRef = selectedTemplate?.source_refs?.[0];
-  const catalogSource = primarySourceRef
-    ? datasetSources.find((source) => source.id === primarySourceRef)
-    : null;
 
   // The on-screen preview and downloaded files use this exact structured
   // document, so a practitioner can review real headings, prompts, and rows
@@ -768,14 +784,26 @@ export function TemplatesPage(props: {
   const controlSourceLabel = activeFramework
     ? catalogOptions.find((option) => option.value === activeFramework)?.label || activeFramework
     : "Select a catalog or program";
-  const templateBasisLabel = catalogSource
-    ? `${catalogSource.display_name || catalogSource.name}${catalogSource.version ? ` · ${catalogSource.version}` : ""}`
-    : selectedTemplateArtifacts.length
-      ? selectedTemplateArtifacts
-          .map((artifact) => artifact.publisher || artifact.title)
-          .filter(Boolean)
-          .join(", ")
-      : "No separate template basis recorded";
+  // What the reader chose, in one line: for example
+  // "SP 800-53 Rev. 5 · Moderate baseline".
+  const selectedContextLabel =
+    [
+      activeFramework ? controlSourceLabel : "",
+      state.baseline
+        ? state.baseline === "ALL"
+          ? "All controls"
+          : `${BASELINE_LABELS[state.baseline] || state.baseline} baseline`
+        : "",
+      state.controlFamily,
+      selectedStigLabel,
+      state.environment,
+    ]
+      .filter(Boolean)
+      .join(" · ") || "Nothing selected yet";
+  // What the file itself is built on. It comes from the template's own
+  // provenance, never from the first entry of a source list, so an SP 800-53
+  // file is not described as a FedRAMP template.
+  const artifactBasisLabel = selectedTemplate?.provenance?.basis || "";
 
   // Build the control to CCI to STIG index while the reader is still choosing
   // options, so the preview does not wait for it. It is built once per loaded
@@ -897,9 +925,9 @@ export function TemplatesPage(props: {
         <StepIndicator
           currentStep={documentFlowStep}
           steps={[
-            { id: "document", label: "Document" },
-            { id: "inputs", label: "Inputs" },
-            { id: "preview", label: "Preview" },
+            { id: "choose", label: "Choose" },
+            { id: "set-up", label: "Set up" },
+            { id: "review", label: "Review & download" },
           ]}
         />
       ) : null}
@@ -1064,7 +1092,7 @@ export function TemplatesPage(props: {
               <CatalogFilterBar
                 category={categoryFilter}
                 categoryOptions={Object.keys(TEMPLATE_CATEGORIES)}
-                countLabel={`${filteredTemplates.length} document${filteredTemplates.length === 1 ? "" : "s"}${selectedWorkflow ? " connected to this task" : ""} in ${groupedTemplates.size} categor${groupedTemplates.size === 1 ? "y" : "ies"}`}
+                countLabel={`${filteredTemplates.length} working file${filteredTemplates.length === 1 ? "" : "s"}${selectedWorkflow ? " connected to this task" : ""} in ${groupedTemplates.size} group${groupedTemplates.size === 1 ? "" : "s"}`}
                 onCategoryChange={(category) =>
                   onNavigate("templates", { ...state, category })
                 }
@@ -1130,8 +1158,8 @@ export function TemplatesPage(props: {
         <section className="stack header-offset-target" ref={generationRef} tabIndex={-1}>
           <section className="compare-flow-grid">
             <section aria-labelledby="document-inputs-heading" className="compare-flow-task panel">
-              <span className="label">02 / Inputs</span>
-              <h2 id="document-inputs-heading">Configure inputs</h2>
+              <span className="label">02 / Set up</span>
+              <h2 id="document-inputs-heading">Set up your file</h2>
               <p>{selectedTemplate.description}</p>
               <div className="compare-step-fields template-essential-options">
               {inputOptions.includes("framework") ? (
@@ -1257,35 +1285,17 @@ export function TemplatesPage(props: {
                   <dd>{selectedTemplate.display_name}</dd>
                 </div>
                 <div>
-                  <dt>Control source</dt>
-                  <dd>{controlSourceLabel}</dd>
+                  <dt>Selected context</dt>
+                  <dd>{selectedContextLabel}</dd>
                 </div>
                 <div>
-                  <dt>Template basis</dt>
-                  <dd>{templateBasisLabel}</dd>
+                  <dt>Artifact basis</dt>
+                  <dd>{artifactBasisLabel || "Not recorded"}</dd>
                 </div>
                 <div>
                   <dt>Format</dt>
                   <dd>{FORMAT_LABELS[activeFormat] || activeFormat}</dd>
                 </div>
-                {selectedStigLabel ? (
-                  <div>
-                    <dt>STIG</dt>
-                    <dd>{selectedStigLabel}</dd>
-                  </div>
-                ) : null}
-                {state.baseline ? (
-                  <div>
-                    <dt>Baseline</dt>
-                    <dd>{BASELINE_LABELS[state.baseline] || state.baseline}</dd>
-                  </div>
-                ) : null}
-                {state.environment ? (
-                  <div>
-                    <dt>Environment</dt>
-                    <dd>{state.environment}</dd>
-                  </div>
-                ) : null}
               </dl>
               <details className="template-supporting-details">
                 <summary>What this template is for</summary>
@@ -1354,8 +1364,8 @@ export function TemplatesPage(props: {
           <section aria-labelledby="document-preview-section-heading" className="stack">
             <div className="section-header">
               <div>
-                <p className="eyebrow">03 / Review</p>
-                <h2 id="document-preview-section-heading">Preview</h2>
+                <p className="eyebrow">03 / Review & download</p>
+                <h2 id="document-preview-section-heading">Review and download</h2>
               </div>
             </div>
             {documentPreview?.doc && generationState?.previewAvailable ? (

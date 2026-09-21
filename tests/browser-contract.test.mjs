@@ -360,7 +360,7 @@ test('shared shell exposes visible search access and valid intent-card markup', 
   assert.equal(SITE_COPY.routes.documents.title, "Templates");
   assert.equal(
     SITE_COPY.routes.documents.purpose,
-    "Create starter cybersecurity documents from published sources.",
+    "Working files for RMF and DoD cybersecurity tasks. Pick the job, set up the file, download it.",
   );
   // Templates lands on the document browser, so the page no longer carries a
   // button whose only job was to reach the page the visitor is already on.
@@ -594,9 +594,9 @@ test('template options use collapsed progressive disclosure and associated hints
   const templatesPage = readFileSync('src/ui/pages/TemplatesPage.tsx', 'utf8');
   assert.doesNotMatch(templatesPage, /defaultValue="options"/);
   assert.match(templatesPage, /CURRENT DOCUMENT \/ \$\{selectedTemplate\.display_name\}/);
-  assert.match(templatesPage, /Configure inputs/);
+  assert.match(templatesPage, /Set up your file/);
   assert.match(templatesPage, /Selected context/);
-  assert.match(templatesPage, />Preview<\/h2>/);
+  assert.match(templatesPage, />Review and download<\/h2>/);
   assert.match(templatesPage, /Download \$\{selectedTemplate\.display_name\}/);
   assert.match(templatesPage, /documentSelectionMountedRef/);
   assert.doesNotMatch(templatesPage, /<Panel[^>]*>/);

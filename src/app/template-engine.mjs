@@ -20,6 +20,7 @@
  * @property {string} title
  * @property {string} description
  * @property {DocSection[]} sections
+ * @property {{ facts: string[][] }} [cover] Facts shown under the title of a Word document.
  */
 
 import {
@@ -359,6 +360,113 @@ function appendSourceMetadata(doc, options) {
     content: buildSourceMetadata(options),
   });
   return doc;
+}
+
+function generateProfessionalSecurityPlan(options, controls) {
+  const ph = placeholder(options);
+  const env = options.environment || "Not selected";
+  const controlsByFamily = new Map();
+  for (const control of controls) {
+    const family = control.family || String(control.id).split("-")[0] || "Unclassified";
+    const group = controlsByFamily.get(family) || [];
+    group.push(control);
+    controlsByFamily.set(family, group);
+  }
+  const familyRows = [...controlsByFamily.entries()].map(([family, familyControls]) => {
+    const visibleIds = familyControls.slice(0, 8).map((control) => control.id);
+    const remaining = familyControls.length - visibleIds.length;
+    return [
+      family,
+      String(familyControls.length),
+      `${visibleIds.join(", ")}${remaining > 0 ? `, plus ${remaining} more` : ""}`,
+      "Use the Implementation Statement Worksheet for control-by-control narratives, evidence, ownership, and status.",
+    ];
+  });
+  const inheritanceHeaders = ["Control ID", "Inheritance Type", "Provider", "Provider Evidence", "Evidence Date", "Decision Basis"];
+  const inheritanceRows = blankRows(10, inheritanceHeaders.length, ph, ["[Control ID]", "[Fully inherited | Hybrid]", "[Provider]", "[CRM/CIS, package, attestation]", "[YYYY-MM-DD]", "[Agreement or review basis]"]);
+  const infoHeaders = ["Information Type", "Confidentiality Impact", "Integrity Impact", "Availability Impact", "Basis for the Impact Value"];
+  const infoRows = blankRows(6, infoHeaders.length, ph, ["[Information type]", "[Low | Moderate | High]", "[Low | Moderate | High]", "[Low | Moderate | High]", "[Categorization guidance or decision you relied on]"]);
+  const facts = [
+    ["Control source", resolveFrameworkName(options.framework, options.sources)],
+    ["Selected control baseline", options.baseline ? baselineLabel(options.baseline) : "None selected (base controls only)"],
+    ...(options.controlFamily ? [["Control family", String(options.controlFamily)]] : []),
+    ["Environment", env],
+  ];
+  /** @type {DocSection[]} */
+  const sections = [
+    { type: "text", heading: "Document Purpose", content: "Use this companion to organize an SSP draft, expose missing decisions, and prepare content for the official system- or program-specific SSP." },
+    { type: "text", heading: "Document Control", content: ph("System name | System identifier | Boundary name | Version | Prepared date | Prepared by role | Document owner | Approver role | Classification / handling | Next review date") },
+    { type: "text", heading: "System and Authorization Context", content: ph("Mission/business purpose | Users | Operating organization | System owner | Information owner | Authorization type | Overlays") },
+    { type: "text", heading: "System Categorization", content: "Categorization is your decision. The control baseline selected above chooses which controls this file covers. It does not state your system's impact level, and Control Atlas does not infer one from it. Record your FIPS 199 categorization and how you reached it." },
+    { type: "text", heading: "Overall Categorization", content: ph("Overall system categorization (your determination) | Confidentiality impact | Integrity impact | Availability impact | Basis for the categorization | Approved by | Approval date") },
+    { type: "table", heading: "Information Types", headers: infoHeaders, rows: infoRows },
+    { type: "text", heading: "Authorization Boundary", content: ph("Describe in-scope components, facilities, networks, cloud services, endpoints, external services, trust boundaries, and explicit exclusions. Reference current architecture and data-flow diagrams.") },
+    { type: "text", heading: "Information and Data", content: ph("CUI categories | PII/PHI | classification | data owners | retention and disposal") },
+    { type: "text", heading: "Roles, Access, and Interconnections", content: ph("Roles and privileges | authentication | access approvals and reviews | separation of duties | connected systems | ports/protocols/services | data flows | agreements") },
+    { type: "text", heading: "Selected Control Scope", content: `${scopeSentence(options, controls)} This starter keeps the plan narrative compact and summarizes the selection by family. Use the separate Implementation Statement Worksheet for the complete control-by-control register; do not treat this index as implementation evidence.` },
+    { type: "table", heading: "Control Family Index", headers: ["Control Family", "Selected Records", "Compact ID Index", "Detailed Work Location"], rows: familyRows },
+    { type: "text", heading: "Control Narrative Handoff", content: [`- Draft each selected control in the Implementation Statement Worksheet: role, mechanism, location, trigger or cadence, and result.`, `- Cite stable evidence names or identifiers. Useful evidence includes: ${EVIDENCE_TYPE_HINT}.`, "- Separate inherited provider behavior from residual local responsibility.", "- Record Not Applicable decisions with a reviewable rationale and approval basis.", "- Reconcile planned work and known gaps with the POA&M register, then bring approved summaries into the official SSP or package."].join("\n") },
+    { type: "table", heading: "Inheritance Summary", headers: inheritanceHeaders, rows: inheritanceRows },
+    { type: "text", heading: "Revision and Approval History", content: ph("Version | Date | Author role | Reviewer role | Approval status | Summary of changes | Next review") },
+  ];
+  const doc = appendSourceMetadata({ title: "System Security Plan (SSP) Starter", description: "Compact narrative companion for organizing system context, categorization, selected control scope, inheritance, and ownership before completing an official SSP.", sections }, options);
+  doc.cover = { facts };
+  return doc;
+}
+
+function generateProfessionalReciprocityChecklist(options) {
+  const ph = placeholder(options);
+  const V = TEMPLATE_VOCAB.reciprocity_checklist;
+  const headers = ["Review Item", "Artifact / Decision Reference", "Version / Date", "Owner", "Status", "Freshness / Scope Check", "Receiving-Environment Delta", "Risk / Gap", "Required Action", "Due Date", "Recommended Disposition", "Notes"];
+  const items = ["Authorization decision and terms", "System Security Plan", "Security Assessment Plan", "Security Assessment Report", "POA&M and risk acceptances", "Authorization boundary and architecture", "Control baseline and overlays", "Control implementation and inheritance", "Evidence package and test results", "Continuous monitoring results", "Interconnections and data flows", "Privacy and information-type analysis"];
+  const rows = items.map((item) => [item, ph("[Stable package reference]"), ph("[Version / YYYY-MM-DD]"), ph("[Owner role]"), ph("[Not Started | In Review | Sufficient | Gap | Not Applicable]"), ph("[Current? same scope? same impact?]"), ph("[What differs locally]"), ph("[Risk or missing information]"), ph("[Action needed before the reuse decision]"), ph("[YYYY-MM-DD]"), ph("[Accept | Accept with Conditions | Supplement | Reassess | Reject]"), ph("[Rationale and follow-up]")]);
+  const contextHeaders = ["Granting System", "Authorization ID", "Granting Authorizing Official", "Granting Decision Date", "Receiving Organization", "Receiving Boundary", "Data Types", "Intended Reuse", "Review Lead", "Target Decision Date"];
+  const contextRow = contextHeaders.map((header) => ph(`[${header}]`));
+  const decisionHeaders = ["Decision", "Conditions", "Supplemental Assessment Required", "Accepted Residual Risk", "Decision Authority", "Decision Date", "Re-review Trigger"];
+  const decisionRow = decisionHeaders.map((header) => ph(header === "Decision" ? "[Accept | Accept with Conditions | Supplement | Reassess | Reject]" : `[${header}]`));
+  const pkg = (extra = {}) => ({ group: "Package", ...extra });
+  const review = (extra = {}) => ({ group: "Review", ...extra });
+  const action = (extra = {}) => ({ group: "Action and disposition", ...extra });
+  /** @type {DocSection[]} */
+  const sections = [
+    { type: "text", heading: "Who decides", content: "The receiving Authorizing Official decides whether to reuse a package. Reciprocity is never automatic. This file helps you gather and review what that decision needs. Recommended Disposition is the reviewer's recommendation, not the decision." },
+    tableSection("Package Context", contextHeaders, [contextRow], {
+      "Granting System": pkg({ width: 26 }),
+      "Authorization ID": pkg({ width: 22 }),
+      "Granting Authorizing Official": pkg({ width: 26 }),
+      "Granting Decision Date": pkg({ ...dateField() }),
+      "Receiving Organization": pkg({ width: 26 }),
+      "Receiving Boundary": pkg({ width: 26 }),
+      "Data Types": pkg({ width: 26 }),
+      "Intended Reuse": pkg({ width: 30 }),
+      "Review Lead": pkg({ width: 20 }),
+      "Target Decision Date": pkg({ ...dateField() }),
+    }, { freezeColumns: 0 }),
+    tableSection("Reciprocity Review", headers, rows, {
+      "Review Item": pkg({ width: 34 }),
+      "Artifact / Decision Reference": pkg({ width: 28 }),
+      "Version / Date": pkg({ width: 18, help: "A version and a date, for example v3, 2026-03-31." }),
+      Owner: pkg({ width: 18 }),
+      Status: review({ required: true, ...listOf(V.status) }),
+      "Freshness / Scope Check": review({ width: 30 }),
+      "Receiving-Environment Delta": review({ width: 30 }),
+      "Risk / Gap": review({ width: 30 }),
+      "Required Action": action({ width: 30 }),
+      "Due Date": action({ ...dateField() }),
+      "Recommended Disposition": action({ ...listOf(V.disposition), width: 22, help: "Your recommendation. The receiving Authorizing Official makes the decision." }),
+      Notes: action({ width: 30 }),
+    }),
+    tableSection("Decision Record", decisionHeaders, [decisionRow], {
+      Decision: { group: "Decision (receiving AO)", ...listOf(V.disposition), width: 22, help: "Recorded by the receiving Authorizing Official's office." },
+      Conditions: { group: "Decision (receiving AO)", width: 30 },
+      "Supplemental Assessment Required": { group: "Decision (receiving AO)", width: 26 },
+      "Accepted Residual Risk": { group: "Decision (receiving AO)", width: 26 },
+      "Decision Authority": { group: "Decision (receiving AO)", width: 24 },
+      "Decision Date": { group: "Decision (receiving AO)", ...dateField() },
+      "Re-review Trigger": { group: "Decision (receiving AO)", width: 26 },
+    }, { freezeColumns: 0 }),
+  ];
+  return appendSourceMetadata({ title: "Reciprocity Package Review", description: "Structured review of authorization-package provenance, scope, freshness, deltas, risk and actions. The receiving organization owns the reuse decision.", sections }, options);
 }
 
 function blankRows(count, width, ph, values = []) {
@@ -1279,64 +1387,6 @@ function generatePPSMPreparationWorksheet(options) {
     tableSection("PPSM Preparation Register", headers, rows, spec, { freezeColumns: 3 }),
   ];
   return appendSourceMetadata({ title: "PPSM Preparation Worksheet", description: "Collect and review ports, protocols and services information before entering it in the authorized PPSM workflow.", sections }, options);
-}
-
-function generateProfessionalSecurityPlan(options, controls) {
-  const ph = placeholder(options);
-  const env = options.environment || "Not selected";
-  const controlsByFamily = new Map();
-  for (const control of controls) {
-    const family = control.family || String(control.id).split("-")[0] || "Unclassified";
-    const group = controlsByFamily.get(family) || [];
-    group.push(control);
-    controlsByFamily.set(family, group);
-  }
-  const familyRows = [...controlsByFamily.entries()].map(([family, familyControls]) => {
-    const visibleIds = familyControls.slice(0, 8).map((control) => control.id);
-    const remaining = familyControls.length - visibleIds.length;
-    return [
-      family,
-      String(familyControls.length),
-      `${visibleIds.join(", ")}${remaining > 0 ? `, plus ${remaining} more` : ""}`,
-      "Use the Implementation Statement Worksheet for control-by-control narratives, evidence, ownership, and status.",
-    ];
-  });
-  const inheritanceHeaders = ["Control ID", "Inheritance Type", "Provider", "Provider Evidence", "Evidence Date", "Decision Basis"];
-  const inheritanceRows = blankRows(10, inheritanceHeaders.length, ph, ["[Control ID]", "[Fully inherited | Hybrid]", "[Provider]", "[CRM/CIS, package, attestation]", "[YYYY-MM-DD]", "[Agreement or review basis]"]);
-  /** @type {DocSection[]} */
-  const sections = [
-    { type: "text", heading: "Document Purpose", content: "Use this companion to organize an SSP draft, expose missing decisions, and prepare content for the official system- or program-specific SSP." },
-    { type: "text", heading: "Document Control", content: ph("System name | System identifier | Boundary name | Version | Prepared date | Prepared by role | Document owner | Approver role | Classification / handling | Next review date") },
-    { type: "text", heading: "System and Authorization Context", content: ph(`Environment: ${env} | Mission/business purpose | Users | Operating organization | System owner | Information owner | Authorization type | Impact level | Overlays`) },
-    { type: "text", heading: "Authorization Boundary", content: ph("Describe in-scope components, facilities, networks, cloud services, endpoints, external services, trust boundaries, and explicit exclusions. Reference current architecture and data-flow diagrams.") },
-    { type: "text", heading: "Information and Data", content: ph("Information types | C-I-A impact values | CUI categories | PII/PHI | classification | data owners | retention and disposal") },
-    { type: "text", heading: "Roles, Access, and Interconnections", content: ph("Roles and privileges | authentication | access approvals and reviews | separation of duties | connected systems | ports/protocols/services | data flows | agreements") },
-    { type: "text", heading: "Selected Control Scope", content: `${controls.length} published control record${controls.length === 1 ? "" : "s"} are in the selected scope. This starter keeps the plan narrative compact and summarizes that selection by family. Use the separate Implementation Statement Worksheet for the complete control-by-control working register; do not treat this index as implementation evidence.` },
-    { type: "table", heading: "Control Family Index", headers: ["Control Family", "Selected Records", "Compact ID Index", "Detailed Work Location"], rows: familyRows },
-    { type: "text", heading: "Control Narrative Handoff", content: [`- Draft each selected control in the Implementation Statement Worksheet: role, mechanism, location, trigger or cadence, and result.`, `- Cite stable evidence names or identifiers. Useful evidence includes: ${EVIDENCE_TYPE_HINT}.`, "- Separate inherited provider behavior from residual local responsibility.", "- Record Not Applicable decisions with a reviewable rationale and approval basis.", "- Reconcile planned work and known gaps with the POA&M register, then bring approved summaries into the official SSP or package."].join("\n") },
-    { type: "table", heading: "Inheritance Summary", headers: inheritanceHeaders, rows: inheritanceRows },
-    { type: "text", heading: "Revision and Approval History", content: ph("Version | Date | Author role | Reviewer role | Approval status | Summary of changes | Next review") },
-  ];
-  return appendSourceMetadata({ title: "System Security Plan (SSP) Starter", description: "Compact narrative companion for organizing system context, selected control scope, inheritance, and ownership before completing an official SSP.", sections }, options);
-}
-
-function generateProfessionalReciprocityChecklist(options) {
-  const ph = placeholder(options);
-  const headers = ["Review Item", "Artifact / Decision Reference", "Version / Date", "Owner", "Status", "Freshness / Scope Check", "Receiving-Environment Delta", "Risk / Gap", "Required Action", "Due Date", "Decision / Disposition", "Notes"];
-  const items = ["Authorization decision and terms", "System Security Plan", "Security Assessment Plan", "Security Assessment Report", "POA&M and risk acceptances", "Authorization boundary and architecture", "Control baseline and overlays", "Control implementation and inheritance", "Evidence package and test results", "Continuous monitoring results", "Interconnections and data flows", "Privacy and information-type analysis"];
-  const rows = items.map((item) => [item, ph("[Stable package reference]"), ph("[Version / YYYY-MM-DD]"), ph("[Owner role]"), ph("[Not Started | In Review | Sufficient | Gap | Not Applicable]"), ph("[Current? same scope? same impact?]"), ph("[What differs locally]"), ph("[Risk or missing information]"), ph("[Action needed before reuse decision]"), ph("[YYYY-MM-DD]"), ph("[Accept | Accept with Conditions | Supplement | Reassess | Reject]"), ph("[Decision rationale and follow-up]")]);
-  /** @type {DocSection[]} */
-  const sections = [
-    { type: "text", heading: "Package Context", content: ph("Granting system and authorization ID | granting AO and decision date | receiving organization | receiving boundary | impact level | data types | intended reuse decision | review lead | target decision date") },
-    { type: "text", heading: "Review Standard", content: "Confirm provenance, scope, freshness, control and environment deltas, open risk, and authorization terms. Assign every gap an owner, action, and due date. The receiving Authorizing Official retains the decision." },
-    tableSection("Reciprocity Review", headers, rows, {
-      Status: listOf(TEMPLATE_VOCAB.reciprocity_checklist.status),
-      "Decision / Disposition": listOf(TEMPLATE_VOCAB.reciprocity_checklist.disposition),
-      "Due Date": dateField(),
-    }),
-    { type: "text", heading: "Decision Record", content: ph("Decision | Conditions | Supplemental assessment required | Accepted residual risk | Decision authority | Decision date | Re-review trigger") },
-  ];
-  return appendSourceMetadata({ title: "Reciprocity Package Review", description: "Structured review of authorization-package provenance, scope, freshness, deltas, risk, and receiving-organization actions.", sections }, options);
 }
 
 function escapeCsv(val) {

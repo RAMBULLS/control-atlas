@@ -308,7 +308,7 @@ test('ssp markdown renders one compact family index with a control-work handoff'
     /\| Control Family \| Selected Records \| Compact ID Index \| Detailed Work Location \|/,
     'the SSP core must summarize selected records by family',
   );
-  assert.match(result.content, /2 published control records are in the selected scope/);
+  assert.match(result.content, /no baseline selected. 2 controls /);
   assert.match(result.content, /AC-1, AC-2/);
   assert.match(result.content, /## Control Narrative Handoff/, 'the companion handoff must render as its own section');
   assert.match(result.content, /Implementation Statement Worksheet/);

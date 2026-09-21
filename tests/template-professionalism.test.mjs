@@ -52,7 +52,9 @@ function build(templateType, framework = 'nist-800-53') {
   ).doc;
 }
 
-function headers(templateType, heading) {
+const MAIN_TABLE = { reciprocity_checklist: 'Reciprocity Review' };
+
+function headers(templateType, heading = MAIN_TABLE[templateType]) {
   const table = build(templateType).sections.find(
     (section) => section.type === 'table' && (!heading || section.heading === heading),
   );
@@ -64,7 +66,7 @@ const REQUIRED_FIELDS = {
   implementation_statement_worksheet: ['Control ID', 'Family', 'CCI Count', 'STIG/SRG Rule Count', 'implementationStatus', 'controlDesignation', 'responsibleEntities', 'implementationNarrative', 'Evidence References', 'slcmFrequency', 'Review Notes'],
   evidence_expectation_matrix: ['Evidence Owner', 'Collection Method', 'Collection Cadence', 'Evidence Date / Period', 'Repository / Location', 'Confidence', 'Review Status', 'Assessor Notes'],
   inheritance_worksheet: ['Provider Evidence', 'Evidence Version / Date', 'Evidence Freshness Status', 'Local Responsibility', 'Local Delta', 'Validation Method', 'Decision Basis', 'Decision Owner', 'Review Date', 'Notes / Gaps'],
-  reciprocity_checklist: ['Artifact / Decision Reference', 'Version / Date', 'Owner', 'Status', 'Freshness / Scope Check', 'Receiving-Environment Delta', 'Risk / Gap', 'Required Action', 'Due Date', 'Decision / Disposition'],
+  reciprocity_checklist: ['Artifact / Decision Reference', 'Version / Date', 'Owner', 'Status', 'Freshness / Scope Check', 'Receiving-Environment Delta', 'Risk / Gap', 'Required Action', 'Due Date', 'Recommended Disposition'],
   poam_starter: ['externalUid', 'status', 'vulnerabilityDescription', 'sourceIdentifyingVulnerability', 'pocOrganization', 'pocFirstName', 'pocEmail', 'resources', 'Planned Remediation', 'scheduledCompletionDate', 'Reviewer Notes', 'Evidence Needed for Closure', 'comments'],
   assessment_planning_worksheet: ['Assessment Scope', '800-53A Methods', 'Assessment Objects (NIST SP 800-53A)', 'Assessment Method', 'Assessor Role', 'Evidence to Request', 'Sampling Approach', 'Tool / Procedure', 'Target Start', 'Target Complete', 'Status', 'Result / Test Success', 'Finding / POA&M Reference'],
   conmon_calendar: ['Deliverable / Evidence', 'Collection Method', 'Cadence Basis', 'Source / Program Cadence', 'Planning Default (suggestion)', 'Organization-Selected Cadence', 'Owner', 'Reviewer / Recipient', 'Evidence Location', 'Next Due', 'Completed Date', 'Status', 'Result / Threshold', 'Escalation / Follow-up'],
@@ -131,7 +133,7 @@ test('the SSP starter stays compact and hands control-by-control work to its ded
   const scope = doc.sections.find((section) => section.heading === 'Selected Control Scope');
   assert.ok(familyIndex, 'SSP starter needs a compact control-family index');
   assert.ok(scope, 'SSP starter needs an exact selected-scope summary');
-  assert.match(scope.content, /1 published control record/);
+  assert.match(scope.content, /Control scope: .*no baseline selected. 1 control /);
   assert.match(scope.content, /Implementation Statement Worksheet/);
   assert.deepEqual(familyIndex.headers, ['Control Family', 'Selected Records', 'Compact ID Index', 'Detailed Work Location']);
   assert.equal(familyIndex.rows.length, 1);

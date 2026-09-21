@@ -153,8 +153,8 @@ export const INTEROPERABILITY = {
   ppsm_preparation_worksheet: {
     level: "Concept-aligned",
     summary: "Collects information for the PPSM process. It is not the registry's form and not an interchange schema.",
-    basis: "DoDI 8551.01 and the DISN Connection Process Guide section 2.7.3. The PPSM Registry's own entry fields are not public.",
-    limit: "Collect and review here, then enter the data in the authorized PPSM workflow. Not a PPSM submission form, registry receipt, or import file.",
+    basis: "The registry-information columns rest on the DISN Connection Process Guide section 2.7.3 (DoD Cyber Exchange), the only source read for this worksheet: registration in the NIPRNet or SIPRNet PPSM Registry, the PPSM Tracking Identifier, enterprise and core service providers, and the NIPRNet DMZ Whitelist. The Local working context columns are Control Atlas's own and are not registry fields.",
+    limit: "The Category Assurance List and VA / CLSA columns are named in public PPSM descriptions but were not confirmed from the policy text, and the registry's own entry fields are not public. DoDI 8551.01 and the DISA PPSM Registry training are linked as official PPSM policy and training; they were not used to check individual columns. Collect and review here, then enter the data in the authorized PPSM workflow. Not a PPSM submission form, registry receipt, or import file.",
   },
 };
 
@@ -1268,7 +1268,7 @@ function generatePPSMPreparationWorksheet(options) {
   /** @type {DocSection[]} */
   const sections = [
     { type: "text", heading: "Workflow", content: "Collect here, then review, then enter the data in the authorized PPSM workflow. This worksheet does not replace the PPSM Registry or your Component's PPSM Technical Advisory Group (TAG) representative." },
-    { type: "text", heading: "How to use", content: ["- Blue-green and orange columns are what public DoD guidance says the registration covers: the ports, protocols and services, the tracking identifier, the vulnerability assessment or CLSA, and the Category Assurance List.", "- The Local working context columns are information a reviewer usually needs. They are not PPSM Registry fields. The registry's own entry fields are not public, so check each one in the registry.", "- Use exact boundary, zone, address and device references. Have the service owner and a security reviewer check each row before anyone enters it.", "- This is not a PPSM submission form, a registry receipt or an import file."].join("\n") },
+    { type: "text", heading: "How to use", content: ["- Registry information columns follow the DISN Connection Process Guide section 2.7.3: the registry version, the tracking identifier, and the ports, protocols and services.", "- Assessment and category columns (Category Assurance List, VA / CLSA, enterprise provider, DMZ Whitelist) are named in public PPSM guidance. Confirm each in the registry; the policy text was not available to check them.", "- The Local working context columns are information a reviewer usually needs. They are not PPSM Registry fields. The registry's own entry fields are not public, so check each one in the registry.", "- Use exact boundary, zone, address and device references. Have the service owner and a security reviewer check each row before anyone enters it.", "- This is not a PPSM submission form, a registry receipt or an import file."].join("\n") },
     tableSection("PPSM Preparation Register", headers, rows, spec, { freezeColumns: 3 }),
   ];
   return appendSourceMetadata({ title: "PPSM Preparation Worksheet", description: "Collect and review ports, protocols and services information before entering it in the authorized PPSM workflow.", sections }, options);

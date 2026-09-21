@@ -172,7 +172,7 @@ test('assessment planning labels publisher content and keeps full text on refere
   assert.deepEqual(table(doc, 'Assessment Objectives').rows, [['AC-2', 'AC-02b.', 'account managers are assigned;']]);
   assert.deepEqual(table(doc, 'Assessment Objectives').headers, ['Control ID', 'Objective', 'Assessment objective text (NIST SP 800-53A)']);
   const plan = table(doc, 'Assessment Plan');
-  const source = plan.columns.filter((column) => column.group === 'Source-backed context').map((column) => column.header);
+  const source = plan.columns.filter((column) => column.group === 'From cited sources').map((column) => column.header);
   assert.ok(source.includes('Assessment Objects (NIST SP 800-53A)') && source.includes('800-53A Methods'));
   assert.ok(!source.includes('Assessment Method'), 'the chosen method is the assessor\'s, not source content');
   assert.match(text(doc, 'How to use'), /does not rewrite them and does not invent procedures/);
@@ -251,4 +251,19 @@ test('the PPSM worksheet states its workflow and separates registry information 
   assert.match(text(doc, 'How to use'), /not PPSM Registry fields/);
   const registryFields = section.columns.filter((column) => column.group === 'Registry information').map((column) => column.header);
   assert.deepEqual(registryFields, ['Network', 'PPSM Tracking Identifier', 'Service Name', 'Protocol', 'Transport', 'Port / Range']);
+});
+
+test('PPSM provenance names the source actually read and does not imply field-level checks against policy or training', () => {
+  const template = registry.templates.find((item) => item.name === 'ppsm_preparation_worksheet');
+  assert.match(template.provenance.basis, /DISN Connection Process Guide section 2\.7\.3/);
+  assert.match(template.provenance.basis, /Not checked field by field against DoDI 8551\.01 or the DISA PPSM Registry training/);
+  assert.equal(template.provenance.basis_url, 'https://dl.dod.cyber.mil/wp-content/uploads/connect/CPG/ConnProcGuide.html');
+  assert.doesNotMatch(template.provenance.basis, /^DoDI 8551\.01/);
+  // The policy and training stay linked as official context.
+  assert.deepEqual(template.official_resource_ids, ['dodi-8551-01-ppsm-2023', 'disa-ppsm-registry-training']);
+  const notes = readMe(build('ppsm_preparation_worksheet'));
+  assert.match(notes, /only source read for this worksheet/);
+  assert.match(notes, /were not used to check individual columns/);
+  assert.match(notes, /not registry fields/);
+  assert.match(text(build('ppsm_preparation_worksheet'), 'How to use'), /policy text was not available to check them/);
 });

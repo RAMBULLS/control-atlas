@@ -209,16 +209,17 @@ test('xlsx working registers set bounded widths, freeze row and key column, and 
   // Frozen top row.
   assert.match(
     sheet1,
-    /<pane xSplit="1" ySplit="1" topLeftCell="B2" activePane="bottomRight" state="frozen"\/>/,
-    'header row and identity column must be frozen',
+    /<pane xSplit="2" ySplit="1" topLeftCell="C2" activePane="bottomRight" state="frozen"\/>/,
+    'header row and the ID and status columns must be frozen',
   );
 
   // Header cells reference the bold + wrapped cellXf (s="1").
-  assert.match(sheet1, /<c r="A1" s="1" t="inlineStr">/, 'header cells must use the header style');
-  assert.match(sheet1, /<c r="A2" s="4"\/>/, 'blank user-entry cells must be empty cells with the input style');
-  assert.doesNotMatch(sheet1, /\[Stable external tracking ID\]/, 'instructional placeholders must not masquerade as entered records');
-  const fieldGuide = strFromU8(entries['xl/worksheets/sheet3.xml']);
-  assert.match(fieldGuide, /\[Stable external tracking ID\]/, 'placeholder guidance must remain available once in the field guide');
+  assert.match(sheet1, /<c r="A1" s="[0-9]+" t="inlineStr">/, 'header cells must use a header style');
+  assert.match(sheet1, /<c r="A2" s="5"\/>/, 'blank required cells are empty cells with the required-entry style');
+  assert.doesNotMatch(sheet1, /\[Scanner severity\]/, 'instructional placeholders must not masquerade as entered records');
+  const fieldGuide = strFromU8(entries['xl/worksheets/sheet4.xml']);
+  assert.match(fieldGuide, /\[Scanner severity\]/, "placeholder guidance must remain available once in the field guide");
+  assert.match(fieldGuide, /Your stable tracking ID/, "a column help text replaces its placeholder in the field guide");
 
   // Styles part wired through content types and workbook rels.
   const styles = strFromU8(entries['xl/styles.xml']);
@@ -246,17 +247,17 @@ test('wide XLSX registers stay on one source-of-truth sheet', () => {
   const sheetNames = [...workbook.matchAll(/<sheet name="([^"]+)"/g)].map((match) => match[1]);
   assert.deepEqual(
     sheetNames,
-    ['Read Me', 'POA&amp;M Working Register', 'Field Guide'],
-    'POA&M must not duplicate records across synchronized slice sheets',
+    ['Read Me', 'POA&amp;M Working Register', 'Milestones', 'Field Guide'],
+    'POA&M keeps one register plus one milestones sheet, with no duplicated slices',
   );
   const register = strFromU8(entries['xl/worksheets/sheet2.xml']);
   const firstRow = register.match(/<row r="1".*?<\/row>/)?.[0] || '';
   assert.equal(
     [...firstRow.matchAll(/<c r="([A-Z]+)1"/g)].length,
-    27,
-    'all 27 POA&M fields must remain in the canonical working register',
+    30,
+    'all 30 POA&M fields must remain in the canonical working register',
   );
-  assert.match(register, /<c r="AA1" s="1"/, 'the final POA&M field must remain present');
+  assert.match(register, /<c r="AD1" s="\d+"/, 'the final POA&M field must remain present');
 });
 
 test('docx tables declare a fixed-width grid and a repeating header row', () => {

@@ -1,5 +1,5 @@
 /**
- * @typedef {{ kind: "list", values: string[], strict: boolean } | { kind: "date" }} ColumnValidation
+ * @typedef {{ kind: "list", values: string[], strict: boolean } | { kind: "date" } | { kind: "range", sheet: string, header: string }} ColumnValidation
  * @typedef {Object} ColumnDefinition
  * @property {string} header
  * @property {string} group
@@ -31,6 +31,8 @@ export const DATE_MAX_SERIAL = serial(2099, 12, 31);
  * where its values come from. Values that are Control Atlas working states
  * (not a publisher vocabulary) are marked "working".
  */
+const DISCOVERY_SOURCES = Object.freeze(["CMDB", "Cloud API", "Vulnerability scan", "Network discovery", "Manual", "Other"]); // working
+
 export const TEMPLATE_VOCAB = Object.freeze({
   stig_evidence_checklist: Object.freeze({
     // DISA STIG Viewer 3.x User Guide V1R7 (13 Feb 2026), section 5.6.3.2, Table 5-1.
@@ -49,11 +51,18 @@ export const TEMPLATE_VOCAB = Object.freeze({
     // MITRE eMASS REST API v3.22 (5 Dec 2024), Controls endpoint fields.
     implementationStatus: Object.freeze(["Planned", "Implemented", "Inherited", "Not Applicable", "Manually Inherited"]),
     controlDesignation: Object.freeze(["Common", "System-Specific", "Hybrid"]),
+    commonControlProvider: Object.freeze(["DoD", "Component", "Enclave"]),
+    slcmFrequency: Object.freeze([
+      "Constantly", "Daily", "Weekly", "Monthly", "Quarterly", "Semi-Annually",
+      "Annually", "Every Two Years", "Every Three Years", "Undetermined",
+    ]),
+    slcmMethod: Object.freeze(["Automated", "Semi-Automated", "Manual", "Undetermined"]),
   }),
   poam_starter: Object.freeze({
     // MITRE eMASS REST API v3.22, POA&M endpoint fields.
     status: Object.freeze(["Ongoing", "Risk Accepted", "Completed", "Not Applicable"]),
     riskLevel: Object.freeze(["Very Low", "Low", "Moderate", "High", "Very High"]),
+    milestoneStatus: Object.freeze(["Planned", "In Progress", "Complete", "Blocked"]), // working
   }),
   hardware_baseline: Object.freeze({
     // MITRE eMASS REST API v3.22, hardware baseline approvalStatus. eMASS
@@ -63,14 +72,30 @@ export const TEMPLATE_VOCAB = Object.freeze({
       "Approved - NSA Crypto", "Approved - NSA CSfC", "In Progress", "Unapproved",
     ]),
     lifecycleStatus: Object.freeze(["Active", "Spare", "Maintenance", "Retiring", "Retired"]), // working
+    discoverySource: DISCOVERY_SOURCES,
+  }),
+  software_baseline: Object.freeze({
+    discoverySource: DISCOVERY_SOURCES,
+    // MITRE eMASS REST API v3.22, software baseline. Both lists accept custom values in eMASS.
+    softwareType: Object.freeze([
+      "COTS Application", "GOTS Application", "Office Automation",
+      "Security Application", "Server Application", "Web Application",
+    ]),
+    approvalStatus: Object.freeze([
+      "Approved - DISA UC APL", "Approved - FIPS 140-2", "Approved - NIAP CCVES",
+      "Approved - NSA Crypto", "Approved - NSA CSfC", "In Progress", "Unapproved",
+    ]),
   }),
   evidence_expectation_matrix: Object.freeze({
     confidence: Object.freeze(["High", "Medium", "Low"]), // working
     reviewStatus: Object.freeze(["Needed", "Requested", "Received", "Reviewed", "Accepted", "Gap"]), // working
+    collectionMethod: Object.freeze(["Export", "Query", "Screenshot", "Interview", "Observation"]), // working
+    cadence: Object.freeze(["Continuous", "Monthly", "Quarterly", "Annual", "Event-driven"]), // working
   }),
   inheritance_worksheet: Object.freeze({
     decision: Object.freeze(["Fully Inherited", "Hybrid", "System-Specific", "Not Applicable"]), // working
     freshness: Object.freeze(["Current", "Aging", "Expired", "Unknown"]), // working
+    validationMethod: Object.freeze(["Document review", "Test", "Interview", "Attestation"]), // working
   }),
   reciprocity_checklist: Object.freeze({
     status: Object.freeze(["Not Started", "In Review", "Sufficient", "Gap", "Not Applicable"]), // working
@@ -91,6 +116,18 @@ export const TEMPLATE_VOCAB = Object.freeze({
     requestedAction: Object.freeze(["Register", "Update", "Retire", "Validate"]), // working
   }),
 });
+
+/**
+ * Pick a value from a column of another table in the same workbook, for
+ * example a milestone's POA&M ID. Warns rather than blocks so a row can be
+ * entered before its parent row exists.
+ * @param {string} sheet Heading of the table that owns the values.
+ * @param {string} header Header of the column that owns the values.
+ * @returns {ColumnSpecEntry}
+ */
+export function valuesFrom(sheet, header) {
+  return { validation: { kind: "range", sheet, header } };
+}
 
 export const TRUE_FALSE = Object.freeze(["true", "false"]);
 
@@ -146,8 +183,16 @@ export function defineColumns(headers, spec = {}) {
  * @param {string[]} headers
  * @param {any[][]} rows
  * @param {Record<string, ColumnSpecEntry>} [spec]
- * @returns {{ type: "table", heading: string, headers: string[], rows: any[][], columns: ColumnDefinition[] }}
+ * @param {{ freezeColumns?: number }} [options] Columns kept in view while scrolling right.
+ * @returns {{ type: "table", heading: string, headers: string[], rows: any[][], columns: ColumnDefinition[], freezeColumns: number }}
  */
-export function tableSection(heading, headers, rows, spec) {
-  return { type: /** @type {"table"} */ ("table"), heading, headers, rows, columns: defineColumns(headers, spec) };
+export function tableSection(heading, headers, rows, spec, options = {}) {
+  return {
+    type: /** @type {"table"} */ ("table"),
+    heading,
+    headers,
+    rows,
+    columns: defineColumns(headers, spec),
+    freezeColumns: options.freezeColumns ?? 1,
+  };
 }

@@ -74,6 +74,7 @@ function sanitizeSheetName(name, used) {
 }
 
 function worksheetCell(value) {
+  if (typeof value === "number" && Number.isFinite(value)) return { value, editable: false };
   const text = String(value ?? "");
   const placeholder = /^\[[\s\S]*\]$/.test(text.trim());
   return {
@@ -149,7 +150,9 @@ export function officeDocumentToSheets(doc) {
     );
     dataSheets.push({
       name: sheetName,
+      heading: section.heading,
       kind: "data",
+      freezeColumns: section.freezeColumns ?? 1,
       headers,
       columns,
       groups,
@@ -217,7 +220,10 @@ function columnWidths(sheet) {
   }
   return widths.map((len, i) => {
     const custom = sheet.columns?.[i]?.width;
-    return custom || Math.min(52, Math.max(12, len + 2));
+    // A one-word header (camelCase field names) cannot wrap, so it sets a floor.
+    const header = String(sheet.headers?.[i] ?? "");
+    const floor = /s/.test(header) ? 0 : header.length + 4;
+    return Math.max(floor, custom || Math.min(52, Math.max(12, len + 2)));
   });
 }
 
@@ -273,6 +279,13 @@ function validationXml(sheet, ctx) {
         ? ' errorStyle="warning" errorTitle="Not in the suggested list" error="This value is not one of the suggested values. Keep it only if your organization uses it."'
         : ' errorTitle="Choose a listed value" error="Use one of the values in the dropdown."';
       validations.push(`<dataValidation type="list" allowBlank="1" showErrorMessage="1"${style}${prompt} sqref="${sqref}"><formula1>${formula}</formula1></dataValidation>`);
+    } else if (rule?.kind === "range") {
+      const owner = (ctx.sheets || []).find((candidate) => candidate.heading === rule.sheet);
+      const from = owner ? owner.headers.indexOf(rule.header) : -1;
+      if (from < 0) throw new Error(`Column "${column.header}" lists values from "${rule.sheet}" / "${rule.header}", which does not exist.`);
+      const letter = columnLetter(from);
+      const formula = escapeXml(`'${owner.name.replaceAll("'", "''")}'!$${letter}$2:$${letter}$${Math.max(250, owner.rows.length + 50)}`);
+      validations.push(`<dataValidation type="list" allowBlank="1" showErrorMessage="1" errorStyle="warning" errorTitle="Not in the list yet" error="This ID is not on the ${escapeXml(owner.name)} sheet yet. Add it there, or keep this entry if it is correct."${prompt} sqref="${sqref}"><formula1>${formula}</formula1></dataValidation>`);
     } else if (rule?.kind === "date") {
       validations.push(`<dataValidation type="date" operator="between" allowBlank="1" showErrorMessage="1" errorTitle="Enter a date" error="Enter a date such as 2026-09-30."${prompt} sqref="${sqref}"><formula1>${DATE_MIN_SERIAL}</formula1><formula2>${DATE_MAX_SERIAL}</formula2></dataValidation>`);
     } else {
@@ -300,8 +313,9 @@ function sheetXml(sheet, ctx) {
   out += '<sheetPr><pageSetUpPr fitToPage="1"/></sheetPr>';
   // Wide working registers keep both the header and identity column visible.
   // Guidance sheets only need their header row frozen.
-  const pane = sheet.kind === "data"
-    ? '<pane xSplit="1" ySplit="1" topLeftCell="B2" activePane="bottomRight" state="frozen"/>'
+  const frozen = sheet.kind === "data" ? sheet.freezeColumns ?? 1 : 0;
+  const pane = frozen > 0
+    ? `<pane xSplit="${frozen}" ySplit="1" topLeftCell="${columnLetter(frozen)}2" activePane="bottomRight" state="frozen"/>`
     : '<pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/>';
   out +=
     '<sheetViews><sheetView workbookViewId="0">' +
@@ -337,6 +351,10 @@ function sheetXml(sheet, ctx) {
         style = sheet.styleOverrides?.[rowIndex]?.[colIndex] ?? (colIndex === 0 ? 2 : 3);
       }
       const styleAttr = style ? ` s="${style}"` : "";
+      if (typeof cell === "number") {
+        out += `<c r="${ref}"${styleAttr}><v>${cell}</v></c>`;
+        return;
+      }
       out += cell === "" || cell == null
         ? `<c r="${ref}"${styleAttr}/>`
         : `<c r="${ref}"${styleAttr} t="inlineStr"><is><t xml:space="preserve">${escapeXml(cell)}</t></is></c>`;
@@ -407,6 +425,7 @@ export function docToXlsx(doc) {
 
   const lists = [];
   const ctx = {
+    sheets,
     rangeFor(values) {
       let index = lists.findIndex((known) => JSON.stringify(known) === JSON.stringify(values));
       if (index < 0) index = lists.push(values) - 1;

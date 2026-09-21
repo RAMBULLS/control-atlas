@@ -85,9 +85,18 @@ test("the record rail and Atlas trace use the same full authority hop sequence",
 });
 
 test("CCI-000366 ranks 24 highlights plus one Compare summary chip without mutating tree identity", () => {
-  const overlay = rankAtlasMappingOverlay(neighborhood("disa-cci:CCI-000366"));
+  const record = neighborhood("disa-cci:CCI-000366");
+  const overlay = rankAtlasMappingOverlay(record);
+  // The publisher adds STIG rules under this CCI with every refresh, so the
+  // expected overflow is counted from the record's own edges, not pinned.
+  const knownNodes = new Set(record.nodes.map((node) => node.id));
+  const counterparts = new Set(record.edges
+    .filter((edge) => edge.relationship_class === "correlation" && edge.publication_status === "published")
+    .map((edge) => (edge.source_node_id === record.center_node.id ? edge.target_node_id : edge.source_node_id))
+    .filter((id) => knownNodes.has(id)));
+  assert.ok(counterparts.size > 1_000, "CCI-000366 is one of the most heavily mapped controls");
   assert.equal(overlay.highlights.length, 24);
-  assert.equal(overlay.overflowCount, 5_500);
+  assert.equal(overlay.overflowCount, counterparts.size - 24);
   assert.equal(overlay.summaryChip?.destination, "compare");
   const nodes = [{ id: "atlas:TRUNK" }];
   const edges = [{ id: "tree:trunk-area" }];

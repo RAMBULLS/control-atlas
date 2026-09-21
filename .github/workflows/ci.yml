@@ -609,86 +609,43 @@ jobs:
 
   sweep-alert:
     name: Scheduled job alert
-    # One notification when the sweep turns red, one when it recovers, silence
-    # in between. A solo maintainer cannot triage a nightly digest, and a
-    # permanently red job is indistinguishable from a newly broken one.
+    # One issue per sweep: opened when it turns red, brought up to date only if a
+    # different set of jobs is failing, closed when it recovers. A solo maintainer
+    # cannot triage a nightly digest, and a permanently red job is
+    # indistinguishable from a newly broken one. A job the sweep schedules that
+    # was skipped counts as red, so a sweep that did not run cannot look green.
     if: >-
       ${{ !cancelled() &&
           (github.event.schedule == '37 6 * * 0' ||
            github.event.schedule == '17 7 * * 3' ||
            (github.event_name == 'workflow_dispatch'
-            && (inputs.task == 'nightly' || inputs.task == 'refresh'))) }}
+            && (inputs.task == 'nightly' ||
+                (inputs.task == 'refresh' && github.ref == 'refs/heads/main')))) }}
     needs: [nightly-build, nightly-browser, nightly-accessibility, refresh]
     permissions:
       contents: read
       issues: write
     runs-on: ubuntu-latest
     steps:
-      - name: Open or resolve the sweep alert
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Open, update or resolve the sweep alert
+        # Which jobs must have succeeded is decided by the sweep, not by this
+        # step: a job the sweep schedules that was skipped counts as red.
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          BUILD_RESULT: ${{ needs.nightly-build.result }}
-          BROWSER_RESULT: ${{ needs.nightly-browser.result }}
-          ACCESSIBILITY_RESULT: ${{ needs.nightly-accessibility.result }}
-          REFRESH_RESULT: ${{ needs.refresh.result }}
-          ALERT_LABEL: ${{ (inputs.task == 'refresh' || github.event.schedule == '17 7 * * 3') && 'sweep-red-refresh' || 'sweep-red-nightly' }}
-        run: |
-          set -euo pipefail
-          failed=0
-          for result in "$BUILD_RESULT" "$BROWSER_RESULT" "$ACCESSIBILITY_RESULT" "$REFRESH_RESULT"; do
-            if [ "$result" != "success" ] && [ "$result" != "skipped" ]; then failed=1; fi
-          done
-          issues_enabled="$(gh api "repos/$REPO" --jq '.has_issues')"
-
-          if [ "$issues_enabled" != "true" ]; then
-            {
-              echo "### Scheduled sweep notification"
-              echo
-              echo "Repository Issues are disabled, so this workflow cannot open or resolve the persistent sweep alert."
-              echo
-              echo "Build: $BUILD_RESULT"
-              echo "Browser: $BROWSER_RESULT"
-              echo "Accessibility: $ACCESSIBILITY_RESULT"
-              echo "Data refresh: $REFRESH_RESULT"
-              echo
-              echo "Run: $RUN_URL"
-            } >> "$GITHUB_STEP_SUMMARY"
-            if [ "$failed" -eq 1 ]; then
-              echo "::warning::Scheduled sweep failed, but repository Issues are disabled. See the job summary and failed upstream job."
-            else
-              echo "Sweep green. Repository Issues are disabled, so no persistent alert state was changed."
-            fi
-            echo "::error::Persistent scheduled alerts require repository Issues."
-            exit 1
-          fi
-
-          open_issue="$(gh issue list --repo "$REPO" --label "$ALERT_LABEL" --state open             --limit 1 --json number --jq '.[0].number // empty')"
-
-          if [ "$failed" -eq 1 ] && [ -z "$open_issue" ]; then
-            gh label create "$ALERT_LABEL" --repo "$REPO" --color B60205               --description "Scheduled Control Atlas job is failing" --force >/dev/null
-            gh issue create --repo "$REPO" --label "$ALERT_LABEL"               --title "Scheduled Control Atlas job is failing: $ALERT_LABEL"               --body "A scheduled job failed. Jobs that did not run for this schedule show as skipped.
-
-          Build: $BUILD_RESULT
-          Browser: $BROWSER_RESULT
-          Accessibility: $ACCESSIBILITY_RESULT
-          Data refresh: $REFRESH_RESULT
-
-          Run: $RUN_URL
-
-          This issue closes automatically when the sweep next passes. It will
-          not be reopened or duplicated while it stays red."
-            echo "Sweep turned red; alert issue opened."
-          elif [ "$failed" -eq 1 ]; then
-            echo "Sweep still red and issue #$open_issue is already open. No new alert."
-          elif [ -n "$open_issue" ]; then
-            gh issue comment "$open_issue" --repo "$REPO"               --body "The scheduled jobs passed again. Run: $RUN_URL"
-            gh issue close "$open_issue" --repo "$REPO" --reason completed
-            echo "Sweep recovered; alert issue #$open_issue closed."
-          else
-            echo "Sweep green and no alert open. Nothing to do."
-          fi
+          SWEEP_KIND: ${{ (inputs.task == 'refresh' || github.event.schedule == '17 7 * * 3') && 'refresh' || 'nightly' }}
+          RESULT_BUILD: ${{ needs.nightly-build.result }}
+          RESULT_BROWSER: ${{ needs.nightly-browser.result }}
+          RESULT_ACCESSIBILITY: ${{ needs.nightly-accessibility.result }}
+          RESULT_REFRESH: ${{ needs.refresh.result }}
+        run: node tools/report-sweep-alert.mjs
 
   nightly-report:
     name: Nightly browser report
@@ -775,21 +732,35 @@ jobs:
         run: node tools/report-refresh-alerts.mjs
         env:
           GH_TOKEN: ${{ github.token }}
+      - name: Stop early when no source changed materially
+        # Dates and run timings are not changes. If nothing else moved and the
+        # freshness dates are still recent, the tree is restored and the rest of
+        # this job (browser install, full verification, pull request) is skipped.
+        id: outcome
+        run: node tools/classify-refresh-outcome.mjs
       - run: npm run resources:health
+        if: ${{ steps.outcome.outputs.publish == 'true' }}
       - run: npx playwright install --with-deps chromium
+        if: ${{ steps.outcome.outputs.publish == 'true' }}
       - name: Verify refreshed repository
+        if: ${{ steps.outcome.outputs.publish == 'true' }}
         env:
           PLAYWRIGHT_WORKERS: '2'
         run: npm run precommit:incremental
       - run: npm run sbom:generate
+        if: ${{ steps.outcome.outputs.publish == 'true' }}
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: ${{ steps.outcome.outputs.publish == 'true' }}
         with:
           name: source-refresh-sbom-cdx-json
           path: artifacts/sbom.cdx.json
       - name: Restore tracked SBOM before source admission
         run: git restore --worktree -- artifacts/sbom.cdx.json
+        if: ${{ steps.outcome.outputs.publish == 'true' }}
       - run: node scripts/report-refresh-diff.mjs refresh-pr-body.md
+        if: ${{ steps.outcome.outputs.publish == 'true' }}
       - name: Create repository-scoped publisher token after validation
+        if: ${{ steps.outcome.outputs.publish == 'true' }}
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         id: refresh-app
         with:
@@ -800,6 +771,7 @@ jobs:
           permission-contents: write
           permission-pull-requests: write
       - uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        if: ${{ steps.outcome.outputs.publish == 'true' }}
         with:
           token: ${{ steps.refresh-app.outputs.token }}
           add-paths: |

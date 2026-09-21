@@ -78,9 +78,9 @@ test('framework catalogs execute as independent only units followed by one local
     },
   });
   assert.equal(units.length, 8);
-  const expectedCalls = units.flatMap((unit) => unit.sourceId === 'nist-csf-2' ? [unit.args, unit.args] : [unit.args]);
-  assert.deepEqual(seen.slice(0, 9), expectedCalls);
-  assert.deepEqual(seen[9], localProjectionForTask(framework).args);
+  // "CSF unavailable" is a deterministic answer, so it is not asked for twice.
+  assert.deepEqual(seen.slice(0, 8), units.map((unit) => unit.args));
+  assert.deepEqual(seen[8], localProjectionForTask(framework).args);
   assert.deepEqual(units.at(-1).args, ['--public', 'fedramp-baselines']);
   assert.equal(result.results[0].status, 'partial');
 });

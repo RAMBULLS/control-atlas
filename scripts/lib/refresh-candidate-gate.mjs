@@ -1,15 +1,21 @@
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { isDeepStrictEqual } from 'node:util';
 import Ajv from 'ajv';
-import { CATALOG_REFRESH_PROFILES, INDEPENDENT_REFRESH_CATALOGS, catalogPath } from './catalog-refresh-profiles.mjs';
+import {
+  CATALOG_REFRESH_PROFILES, INDEPENDENT_REFRESH_CATALOGS, PUBLISHER_RECONCILIATION, catalogPath, publisherReconciled,
+} from './catalog-refresh-profiles.mjs';
 import { readNativeInventory } from '../build-catalog-source-inventory.mjs';
-import { advanceBaseline, evaluateBaseline, observeCatalog } from './source-baseline.mjs';
+import {
+  adoptCommittedBaseline, advanceBaseline, evaluateBaseline, isCountBandRejection, observeCatalog,
+} from './source-baseline.mjs';
+import { buildChangeEntry, diffCatalogRecords, mergeChangeLog } from './source-change-evidence.mjs';
 import { writeJsonAtomically } from './write-json-atomically.mjs';
 
 export const BASELINE_PATH = 'data/source-baselines.json';
 export const POLICY_PATH = 'data/source-refresh-policy.json';
+export const CHANGE_LOG_PATH = 'data/source-change-log.json';
 const immutableFields = ['owner', 'authority_class', 'provenance_class', 'mandate_basis',
   'identity_kind', 'entity_kind', 'profile_id', 'origin', 'graph_eligible'];
 
@@ -33,7 +39,15 @@ export function assertRegistryTrustUnchanged(previous, current) {
 }
 
 export function createCandidateGate(root, options = {}) {
-  const committed = options.readCommitted || ((path) => execFileSync('git', ['show', `HEAD:${path}`], { cwd: root, maxBuffer: 128 * 1024 * 1024 }));
+  const committed = options.readCommitted || ((path) => execFileSync('git', ['show', `HEAD:${path}`], { cwd: root, maxBuffer: 128 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'] }));
+  // The date of the commit that carries the reviewed data. It is the same on a
+  // shallow CI checkout and a full clone, so refresh and admission always agree.
+  const commitTimestamp = options.commitTimestamp || (() => {
+    try { return execFileSync('git', ['show', '-s', '--format=%cI', 'HEAD'], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim() || null; } catch { return null; }
+  });
+  const readCommittedOptional = (path) => {
+    try { const value = committed(path); return value ? Buffer.from(value) : null; } catch { return null; }
+  };
   const originalPolicyBytes = committed(POLICY_PATH);
   const originalBaselineBytes = committed(BASELINE_PATH);
   const policy = JSON.parse(originalPolicyBytes);
@@ -50,9 +64,62 @@ export function createCandidateGate(root, options = {}) {
   if (!isDeepStrictEqual(Object.keys(previous.catalogs).sort(), [...ids].sort()) ||
       !isDeepStrictEqual(Object.keys(policy.catalogs).sort(), [...ids].sort())) throw new Error('Incomplete catalog baseline ownership');
   const measure = (id) => observeCatalog(readFileSync(join(root, catalogPath(id))));
+
+  // Reviewed commits can change data without going through refresh. Judge the
+  // candidate against what production serves, and record that this happened.
+  const adoptions = new Map();
+  for (const id of ids) {
+    const bytes = readCommittedOptional(catalogPath(id));
+    if (!bytes) continue;
+    let observed;
+    try { observed = observeCatalog(bytes); } catch { continue; }
+    const result = adoptCommittedBaseline(previous.catalogs[id], observed, policy.catalogs[id], commitTimestamp());
+    if (!result.adopted) continue;
+    adoptions.set(id, {
+      from: { ...previous.catalogs[id].accepted, accepted_at: previous.catalogs[id].accepted_at },
+      to: observed, at: result.entry.accepted_at,
+    });
+    previous.catalogs[id] = result.entry;
+  }
+
+  // Identity evidence is only trusted when the committed file is exactly the
+  // accepted snapshot it is being compared against.
+  const committedRecords = (id) => {
+    const bytes = readCommittedOptional(catalogPath(id));
+    if (!bytes) return null;
+    try {
+      return observeCatalog(bytes).normalized_sha256 === previous.catalogs[id].accepted.normalized_sha256
+        ? JSON.parse(bytes).records : null;
+    } catch { return null; }
+  };
+  const diffFor = (id) => {
+    const before = committedRecords(id);
+    return before ? diffCatalogRecords(before, JSON.parse(readFileSync(join(root, catalogPath(id)))).records) : null;
+  };
+  const inventoryReconciled = (id, candidate) => {
+    if (candidate.independent_inventory) return true;
+    const rule = PUBLISHER_RECONCILIATION[id];
+    if (!rule) return false;
+    try { return publisherReconciled(rule, JSON.parse(readFileSync(join(root, rule.file), 'utf8'))); } catch { return false; }
+  };
+  const assess = (id, candidate) => {
+    const entry = previous.catalogs[id];
+    let decision = evaluateBaseline(entry, candidate, policy.catalogs[id]);
+    let evidence = null;
+    if (!decision.accepted && isCountBandRejection(decision.reason)) {
+      const diff = diffFor(id);
+      evidence = { diff, inventory_reconciled: Boolean(diff) && inventoryReconciled(id, candidate), removed_pct: diff?.removed_pct ?? 100 };
+      decision = evaluateBaseline(entry, candidate, policy.catalogs[id], evidence);
+    }
+    return { decision, evidence };
+  };
   const check = (id, candidate) => {
-    const decision = evaluateBaseline(previous.catalogs[id], candidate, policy.catalogs[id]);
-    if (!decision.accepted) throw new Error(`${id}: ${decision.reason}`);
+    const { decision, evidence } = assess(id, candidate);
+    if (!decision.accepted) {
+      const diff = evidence?.diff;
+      const detail = diff ? ` (${diff.added_count} added, ${diff.removed_count} removed, ${diff.changed_count} changed of ${diff.previous_count})` : '';
+      throw new Error(`${id}: ${decision.reason}${detail}`);
+    }
     const native = (options.readNativeInventory || readNativeInventory)(root, id);
     if (native && candidate.record_count !== native.expected_count - native.excluded_count) {
       throw new Error(`${id}: native source inventory does not match imported records`);
@@ -61,32 +128,57 @@ export function createCandidateGate(root, options = {}) {
         candidate.record_count !== previous.catalogs[id].anchor.record_count) {
       throw new Error(`${id}: changed reviewed inventory requires publisher completeness evidence`);
     }
-    return decision;
+    return { decision, evidence };
   };
   const untouched = () => {
     if (!readFileSync(join(root, POLICY_PATH)).equals(originalPolicyBytes) ||
         !readFileSync(join(root, BASELINE_PATH)).equals(originalBaselineBytes)) throw new Error('Refresh mutated its acceptance policy or prior baseline');
   };
+  const changeEntries = (acceptedAtFor, candidates) => {
+    const entries = [...adoptions].map(([catalogId, { from, to, at }]) => buildChangeEntry({
+      catalogId, previous: from, candidate: to, reason: 'adopted_committed_state', acceptedAt: at,
+    }));
+    for (const [id, candidate] of candidates) {
+      const { decision } = assess(id, candidate);
+      entries.push(buildChangeEntry({
+        catalogId: id, candidate, diff: diffFor(id), reason: decision.reason, acceptedAt: acceptedAtFor(id),
+        previous: { ...previous.catalogs[id].accepted, accepted_at: previous.catalogs[id].accepted_at },
+      }));
+    }
+    return entries;
+  };
+  const committedChangeLog = () => {
+    const bytes = readCommittedOptional(CHANGE_LOG_PATH);
+    return bytes ? JSON.parse(bytes) : null;
+  };
   return {
+    adoptions,
     verifyPublished() {
       if (!readFileSync(join(root, POLICY_PATH)).equals(originalPolicyBytes)) throw new Error('Refresh changed its admission policy');
       assertRegistryTrustUnchanged(originalRegistry, JSON.parse(readFileSync(join(root, 'data/source-registry.json'))));
       const current = JSON.parse(readFileSync(join(root, BASELINE_PATH)));
       const expectedDocument = structuredClone(previous);
       if (!isDeepStrictEqual(Object.keys(current.catalogs).sort(), [...ids].sort())) throw new Error('Refresh changed baseline ownership');
+      const changed = new Map();
       for (const id of ids) {
         const candidate = measure(id);
         if (candidate.normalized_sha256 === previous.catalogs[id].accepted.normalized_sha256) {
           if (!isDeepStrictEqual(current.catalogs[id], previous.catalogs[id])) throw new Error(`Unchanged source advanced baseline: ${id}`);
           continue;
         }
-        check(id, candidate);
+        const { evidence } = check(id, candidate);
         const proposed = current.catalogs[id];
-        const expected = advanceBaseline(previous.catalogs[id], candidate, policy.catalogs[id], proposed.accepted_at).baseline;
+        const expected = advanceBaseline(previous.catalogs[id], candidate, policy.catalogs[id], proposed.accepted_at, evidence).baseline;
         if (!isDeepStrictEqual(proposed, expected)) throw new Error(`Unverified baseline advancement: ${id}`);
         expectedDocument.catalogs[id] = expected;
+        changed.set(id, candidate);
       }
       if (!isDeepStrictEqual(current, expectedDocument)) throw new Error('Refresh changed baseline provenance');
+      const entries = changeEntries((id) => current.catalogs[id].accepted_at, changed);
+      const logPath = join(root, CHANGE_LOG_PATH);
+      const currentLog = existsSync(logPath) ? JSON.parse(readFileSync(logPath, 'utf8')) : null;
+      const expectedLog = entries.length ? mergeChangeLog(committedChangeLog(), entries) : committedChangeLog();
+      if (!isDeepStrictEqual(currentLog, expectedLog)) throw new Error('Refresh change log does not match accepted changes');
       return true;
     },
     recordResult(result) {
@@ -125,6 +217,7 @@ export function createCandidateGate(root, options = {}) {
       assertRegistryTrustUnchanged(originalRegistry, JSON.parse(readFileSync(join(root, 'data/source-registry.json'))));
       const proposed = structuredClone(previous);
       const now = new Date().toISOString();
+      const changed = new Map();
       for (const id of ids) {
         const candidate = measure(id);
         // Retained last-good files do not need a new publisher proof and must
@@ -135,10 +228,13 @@ export function createCandidateGate(root, options = {}) {
             acceptedCatalogHashes.get(id) !== candidate.normalized_sha256) {
           throw new Error(`Quarantined source output changed after rollback: ${id}`);
         }
-        check(id, candidate);
-        proposed.catalogs[id] = advanceBaseline(previous.catalogs[id], candidate, policy.catalogs[id], now).baseline;
+        const { evidence } = check(id, candidate);
+        proposed.catalogs[id] = advanceBaseline(previous.catalogs[id], candidate, policy.catalogs[id], now, evidence).baseline;
+        changed.set(id, candidate);
       }
       writeJsonAtomically(join(root, BASELINE_PATH), proposed);
+      const entries = changeEntries((id) => proposed.catalogs[id].accepted_at, changed);
+      if (entries.length) writeJsonAtomically(join(root, CHANGE_LOG_PATH), mergeChangeLog(committedChangeLog(), entries));
       return proposed;
     },
   };

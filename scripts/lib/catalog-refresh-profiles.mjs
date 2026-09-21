@@ -23,3 +23,29 @@ export const catalogPath = (id) => {
   if (!Object.hasOwn(CATALOG_REFRESH_PROFILES, id)) throw new Error(`Unknown refresh catalog: ${id}`);
   return `data/${CATALOG_REFRESH_PROFILES[id]}.json`;
 };
+
+// Publisher-side reconciliation a fetcher must satisfy for a large change to be
+// corroborated without a versioned publisher document. Paths are read from a
+// manifest the fetch wrote; every `zero` field must be 0 and the parts must
+// add up to the publisher's expected total.
+const DISA_RECONCILIATION = Object.freeze({
+  file: 'data/disa-artifact-manifest.json',
+  zero: ['publications.failed_publications', 'publications.missing_publications', 'reconciliation.failed_files'],
+  sum: {
+    total: 'publications.expected_canonical_publications',
+    parts: ['publications.represented_in_compilation', 'publications.standalone_ingested'],
+  },
+});
+export const PUBLISHER_RECONCILIATION = Object.freeze({
+  'disa-stig': DISA_RECONCILIATION,
+  'disa-srg': DISA_RECONCILIATION,
+});
+
+export function publisherReconciled(rule, manifest) {
+  if (!rule) return false;
+  const field = (path) => path.split('.').reduce((value, key) => value?.[key], manifest);
+  if (!rule.zero.every((path) => field(path) === 0)) return false;
+  const total = field(rule.sum.total);
+  return Number.isSafeInteger(total) && total > 0 &&
+    rule.sum.parts.reduce((sum, path) => sum + (Number.isSafeInteger(field(path)) ? field(path) : NaN), 0) === total;
+}

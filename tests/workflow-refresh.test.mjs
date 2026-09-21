@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import test from 'node:test';
+import { parse } from 'yaml';
 
 const workflow = readFileSync('.github/workflows/ci.yml', 'utf8');
 const refreshScript = readFileSync('scripts/refresh-data.mjs', 'utf8');
@@ -51,6 +52,33 @@ test('source refresh opens one App PR after the full gate and requires independe
   assert.match(workflow, /data\/\*\*/);
   assert.match(workflow, /maps\/\*\*/);
   assert.doesNotMatch(workflow, /git push|\[skip ci\]|auto-merge/i);
+});
+
+test('refresh stops before the expensive steps when nothing changed materially', () => {
+  const steps = parse(workflow).jobs.refresh.steps;
+  const text = (step) => JSON.stringify(step);
+  const decide = steps.findIndex((step) => step.id === 'outcome');
+  assert.ok(decide > steps.findIndex((step) => /Refresh validated build-time data/.test(step.name || '')));
+  assert.equal(steps[decide].run, 'node tools/classify-refresh-outcome.mjs');
+  for (const marker of ['playwright install', 'precommit:incremental', 'sbom:generate', 'create-pull-request', 'report-refresh-diff', 'create-github-app-token']) {
+    const index = steps.findIndex((step) => text(step).includes(marker));
+    assert.ok(index > decide, `${marker} runs after the decision`);
+    assert.equal(steps[index].if, "${{ steps.outcome.outputs.publish == 'true' }}", marker);
+  }
+  // The refresh itself and its alerting must never be skipped by the shortcut.
+  for (const marker of ['npm run refresh:data', 'report-refresh-alerts']) {
+    const step = steps.find((entry) => text(entry).includes(marker));
+    assert.ok(!String(step.if || '').includes('outcome'), marker);
+  }
+});
+
+test('scheduled sweep alerts come from one tested tool, not inline shell', () => {
+  const job = parse(workflow).jobs['sweep-alert'];
+  assert.ok(job.steps.some((step) => step.run === 'node tools/report-sweep-alert.mjs'));
+  assert.ok(!job.steps.some((step) => /gh issue (create|close)/.test(step.run || '')));
+  const env = job.steps.find((step) => step.run === 'node tools/report-sweep-alert.mjs').env;
+  assert.match(env.SWEEP_KIND, /inputs\.task == 'refresh'.*'refresh' \|\| 'nightly'/);
+  for (const key of ['RESULT_BUILD', 'RESULT_BROWSER', 'RESULT_ACCESSIBILITY', 'RESULT_REFRESH']) assert.ok(env[key], key);
 });
 
 test('obsolete Tenable refresh cannot run outside the current registry pipeline', () => {

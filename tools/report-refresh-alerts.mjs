@@ -43,17 +43,21 @@ export function planAlertChanges(results, issues = [], runUrl = null) {
   }
   const plans = [];
   for (const [sourceId, result] of sources) {
-    if (!['accepted', 'quarantined'].includes(result.status)) continue;
+    if (!['accepted', 'accepted_partial', 'quarantined'].includes(result.status)) continue;
     const matching = issues.filter((issue) => !issue.pull_request &&
       MARKER.exec(issue.body || '')?.[1] === sourceId && Number.isSafeInteger(issue.number) && issue.number > 0)
       .sort((left, right) => left.number - right.number);
     const marker = `<!-- control-atlas-refresh:${sourceId} -->`;
     const link = run ? `\n\n[Refresh run](${run})` : '';
-    if (result.status === 'accepted') {
+    if (result.status !== 'quarantined') {
+      // A partial acceptance keeps last-good data for what could not be refreshed and
+      // records why. It is a limitation tracked in the manifest, not an open incident.
+      const count = result.status === 'accepted_partial' && Array.isArray(result.limitations) ? result.limitations.length : 0;
+      const limits = count ? ` with ${count} recorded limitation${count === 1 ? '' : 's'} (previous data retained)` : '';
       for (const issue of matching.filter((entry) => entry.state === 'open')) {
         plans.push({ type: 'update', sourceId, number: issue.number, payload: {
           state: 'closed', state_reason: 'completed',
-          body: `${marker}\nSource refresh recovered: the source candidate was accepted.${link}`,
+          body: `${marker}\nSource refresh recovered: the source candidate was accepted${limits}.${link}`,
         } });
       }
       continue;
@@ -110,12 +114,35 @@ export function reportRefreshAlerts(options = {}) {
   return plans;
 }
 
+// A failure that looks temporary but survives this many consecutive refreshes is
+// no longer temporary, and the owner should hear about it.
+export const OLIR_TRANSIENT_ESCALATION = 3;
+
+/**
+ * Submissions NIST no longer serves keep their last accepted mapping. That is a
+ * recorded limitation, not an outage. Only failures that look temporary but keep
+ * repeating, or retention with no recorded cause, stay quarantined.
+ */
 export function applyOlirRetentionHealth(results, manifest) {
   if (!Array.isArray(manifest.processed_items)) throw new Error('Missing OLIR retention evidence');
   const retained = manifest.processed_items.filter((item) => item.refresh_status === 'retained_last_good');
-  return results.map((result) => result.sourceId === 'fetch-olir-catalog' && result.status === 'accepted' && retained.length
-    ? { ...result, status: 'quarantined', error: `OLIR retained previously accepted submissions: ${retained.map((item) => `${item.id}: ${item.refresh_error}`).join('; ')}` }
-    : result);
+  if (!retained.length) return results;
+  const unresolved = retained.filter((item) => !item.retention ||
+    (item.retention.cause === 'transient' && item.retention.consecutive_refreshes >= OLIR_TRANSIENT_ESCALATION));
+  return results.map((result) => {
+    if (result.sourceId !== 'fetch-olir-catalog' || result.status !== 'accepted') return result;
+    if (unresolved.length) {
+      const detail = unresolved.map((item) => `${item.id}: ${item.refresh_error}`).join('; ');
+      return { ...result, status: 'quarantined', error: `OLIR retained previously accepted submissions: ${detail}` };
+    }
+    return {
+      ...result, status: 'accepted_partial',
+      limitations: retained.map((item) => ({
+        id: item.id, cause: item.retention.cause, since: item.retention.first_retained_at,
+        consecutive_refreshes: item.retention.consecutive_refreshes, reason: item.refresh_error,
+      })),
+    };
+  });
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {

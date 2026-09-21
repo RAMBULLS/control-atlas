@@ -22,7 +22,16 @@
       "source_ids": ["nist-pages-root"],
       "catalog_ids": [],
       "cadence": "weekly",
-      "conditional_policy": "strict"
+      "conditional_policy": "strict",
+      "required_artifacts": ["all registered source artifacts"],
+      "optional_artifacts": [],
+      "partial_policy": "all_or_nothing",
+      "check_tier": "conditional_get",
+      "identity_key": "discovered page URL",
+      "version_fields": [],
+      "lifecycle_fields": [],
+      "expected_change": "Changes when NIST adds or renames project pages.",
+      "downstream": ["nist-pages discovery"]
     },
     {
       "task_id": "discover-nist-structured-assets",
@@ -30,7 +39,16 @@
       "source_ids": ["nist-pages-project-pages"],
       "catalog_ids": [],
       "cadence": "weekly",
-      "conditional_policy": "strict"
+      "conditional_policy": "strict",
+      "required_artifacts": ["all registered source artifacts"],
+      "optional_artifacts": [],
+      "partial_policy": "all_or_nothing",
+      "check_tier": "conditional_get",
+      "identity_key": "discovered asset URL",
+      "version_fields": [],
+      "lifecycle_fields": [],
+      "expected_change": "Follows NIST project page changes.",
+      "downstream": ["structured asset triage"]
     },
     {
       "task_id": "observe-disa-sources",
@@ -38,15 +56,54 @@
       "source_ids": ["cyber-mil-stig-compilations", "cyber-mil-stig-downloads", "cyber-mil-stig-gpo", "nuwcdivnpt-stig-manager"],
       "catalog_ids": ["disa-stig", "disa-srg"],
       "cadence": "weekly",
-      "conditional_policy": "strict"
+      "conditional_policy": "strict",
+      "required_artifacts": ["all registered source artifacts"],
+      "optional_artifacts": [],
+      "partial_policy": "all_or_nothing",
+      "check_tier": "conditional_get",
+      "identity_key": "publication identity",
+      "version_fields": [],
+      "lifecycle_fields": [],
+      "expected_change": "Changes when DISA posts new or revised STIG packages.",
+      "downstream": ["disa-stig", "disa-srg"]
     },
     {
       "task_id": "fetch-framework-catalogs",
       "script": "fetch-framework-catalogs.mjs",
       "source_ids": ["nist-oscal-catalogs", "nist-csf-reference-tool-export", "reviewed-publication-projections"],
-      "catalog_ids": ["nist-800-53", "csf-2", "nist-800-171", "nist-800-171-rev2", "nist-800-172", "nist-ai-rmf", "nist-ssdf", "fedramp-2026", "cmmc-2", "cui-policy", "dod-rai", "fips-199", "fips-200", "nist-800-37", "nist-800-53b", "dod-zt", "nist-zt", "microsoft-zt-maturity", "nist-iot-cybersecurity", "nist-mobile-threats"],
+      "catalog_ids": [
+        "nist-800-53",
+        "csf-2",
+        "nist-800-171",
+        "nist-800-171-rev2",
+        "nist-800-172",
+        "nist-ai-rmf",
+        "nist-ssdf",
+        "fedramp-2026",
+        "cmmc-2",
+        "cui-policy",
+        "dod-rai",
+        "fips-199",
+        "fips-200",
+        "nist-800-37",
+        "nist-800-53b",
+        "dod-zt",
+        "nist-zt",
+        "microsoft-zt-maturity",
+        "nist-iot-cybersecurity",
+        "nist-mobile-threats"
+      ],
       "cadence": "weekly",
-      "conditional_policy": "strict"
+      "conditional_policy": "strict",
+      "required_artifacts": ["all registered source artifacts"],
+      "optional_artifacts": [],
+      "partial_policy": "all_or_nothing",
+      "check_tier": "conditional_get",
+      "identity_key": "records[].id",
+      "version_fields": ["source_version", "publisher_inventory.publisher_version"],
+      "lifecycle_fields": ["status"],
+      "expected_change": "OSCAL catalogs change on NIST revisions; each catalog is its own transaction.",
+      "downstream": ["framework data", "graph", "search index"]
     },
     {
       "task_id": "fetch-fedramp-rules",
@@ -54,7 +111,16 @@
       "source_ids": ["fedramp-consolidated-rules", "fedramp-consolidated-rules-schema", "fedramp-legacy-index"],
       "catalog_ids": ["fedramp-2026", "fedramp-rev5"],
       "cadence": "weekly",
-      "conditional_policy": "strict"
+      "conditional_policy": "strict",
+      "required_artifacts": ["all registered source artifacts"],
+      "optional_artifacts": [],
+      "partial_policy": "all_or_nothing",
+      "check_tier": "conditional_get",
+      "identity_key": "records[].id",
+      "version_fields": ["source_version", "publisher_inventory.publisher_version"],
+      "lifecycle_fields": ["status"],
+      "expected_change": "FedRAMP publishes dated consolidated-rules releases.",
+      "downstream": ["fedramp-2026", "fedramp transition index"]
     },
     {
       "task_id": "fetch-nara-cui",
@@ -62,7 +128,16 @@
       "source_ids": ["nara-cui-category-list", "nara-cui-category-details", "nara-cui-change-log"],
       "catalog_ids": ["cui-policy"],
       "cadence": "weekly",
-      "conditional_policy": "strict"
+      "conditional_policy": "strict",
+      "required_artifacts": ["all registered source artifacts"],
+      "optional_artifacts": [],
+      "partial_policy": "all_or_nothing",
+      "check_tier": "per_item_conditional_get",
+      "identity_key": "records[].id",
+      "version_fields": [],
+      "lifecycle_fields": [],
+      "expected_change": "Changes when NARA revises the CUI registry.",
+      "downstream": ["cui-policy"]
     },
     {
       "task_id": "fetch-olir-catalog",
@@ -70,7 +145,17 @@
       "source_ids": ["nist-olir-catalog", "nist-olir-submission-artifacts"],
       "catalog_ids": ["nist-800-53", "nist-800-171", "csf-2"],
       "cadence": "weekly",
-      "conditional_policy": "strict"
+      "conditional_policy": "strict",
+      "required_artifacts": ["NIST OLIR catalog index"],
+      "optional_artifacts": ["per-submission relationship mapping file"],
+      "partial_policy": "retain_optional_last_good",
+      "partial_rule": "A previously accepted submission whose mapping can no longer be downloaded keeps its checksum-verified last accepted mapping. If NIST answered and publishes none, that is a recorded limitation. A failure that looks temporary and repeats for 3 consecutive refreshes is quarantined.",
+      "check_tier": "per_item_conditional_get",
+      "identity_key": "informativeReferenceFrameworkVersionId",
+      "version_fields": [],
+      "lifecycle_fields": ["status"],
+      "expected_change": "Changes as submissions are posted, finalized or withdrawn.",
+      "downstream": ["olir maps", "relationship graph"]
     },
     {
       "task_id": "fetch-olir-mappings",
@@ -78,7 +163,16 @@
       "source_ids": ["nist-800-171-oscal-mappings", "nist-olir-csf2-to-sp800-53", "nist-olir-csf2-to-sp800-171"],
       "catalog_ids": ["nist-800-53", "nist-800-171", "csf-2"],
       "cadence": "weekly",
-      "conditional_policy": "strict"
+      "conditional_policy": "strict",
+      "required_artifacts": ["all registered source artifacts"],
+      "optional_artifacts": [],
+      "partial_policy": "all_or_nothing",
+      "check_tier": "conditional_get",
+      "identity_key": "relationship (source element, target element)",
+      "version_fields": [],
+      "lifecycle_fields": [],
+      "expected_change": "Follows NIST OLIR mapping revisions.",
+      "downstream": ["maps/800-53-to-csf", "maps/800-53-to-800-171", "maps/800-171-to-csf"]
     },
     {
       "task_id": "fetch-ccis",
@@ -86,7 +180,16 @@
       "source_ids": ["disa-cci-list", "disa-cci-nist-references"],
       "catalog_ids": ["disa-cci", "nist-800-53"],
       "cadence": "weekly",
-      "conditional_policy": "strict"
+      "conditional_policy": "strict",
+      "required_artifacts": ["all registered source artifacts"],
+      "optional_artifacts": [],
+      "partial_policy": "all_or_nothing",
+      "check_tier": "conditional_get",
+      "identity_key": "records[].id",
+      "version_fields": ["source_version", "publisher_inventory.publisher_version"],
+      "lifecycle_fields": ["status"],
+      "expected_change": "Changes when DISA revises the CCI list.",
+      "downstream": ["disa-cci", "maps/cci-to-800-53"]
     },
     {
       "task_id": "fetch-disa-library",
@@ -95,7 +198,16 @@
       "catalog_ids": ["disa-stig", "disa-srg"],
       "cadence": "weekly",
       "conditional_policy": "range_download_exception",
-      "exception_reason": "The publisher archive is verified and streamed with byte ranges plus a curl fallback; substituting an HTTP object cache would break range and total-length validation."
+      "exception_reason": "The publisher archive is verified and streamed with byte ranges plus a curl fallback; substituting an HTTP object cache would break range and total-length validation.",
+      "required_artifacts": ["DISA STIG/SRG compilation archive", "every standalone STIG package the publisher lists"],
+      "optional_artifacts": [],
+      "partial_policy": "all_or_nothing",
+      "check_tier": "range_probe",
+      "identity_key": "records[].id",
+      "version_fields": ["source_version"],
+      "lifecycle_fields": [],
+      "expected_change": "Changes with each compilation release and standalone package. A large increase in rules is normal when new publications appear, so the count alone is never treated as corruption.",
+      "downstream": ["disa-stig", "disa-srg", "maps/stig-srg-to-cci", "STIG viewer records"]
     },
     {
       "task_id": "fetch-mitre",
@@ -103,31 +215,84 @@
       "source_ids": ["mitre-attack-enterprise", "mitre-attack-ics", "mitre-d3fend-ontology", "mitre-d3fend-mappings"],
       "catalog_ids": ["mitre-attack", "mitre-attack-ics", "mitre-d3fend"],
       "cadence": "weekly",
-      "conditional_policy": "strict"
+      "conditional_policy": "strict",
+      "required_artifacts": ["all registered source artifacts"],
+      "optional_artifacts": [],
+      "partial_policy": "all_or_nothing",
+      "check_tier": "conditional_get",
+      "identity_key": "records[].id",
+      "version_fields": ["source_version", "publisher_inventory.publisher_version"],
+      "lifecycle_fields": ["status"],
+      "expected_change": "Changes with ATT&CK and D3FEND releases.",
+      "downstream": ["mitre-attack", "mitre-attack-ics", "mitre-d3fend", "attack-to-d3fend maps"]
     },
     {
       "task_id": "fetch-zero-trust-workbooks",
       "script": "fetch-zero-trust-workbooks.mjs",
-      "source_ids": ["nist-sp-1800-35-csf2-mappings", "nist-sp-1800-35-critical-software-mappings", "nist-sp-1800-35-csf11-mappings", "nist-sp-1800-35-sp80053-mappings", "microsoft-zero-trust-maturity-questionnaire-v1-1"],
+      "source_ids": [
+        "nist-sp-1800-35-csf2-mappings",
+        "nist-sp-1800-35-critical-software-mappings",
+        "nist-sp-1800-35-csf11-mappings",
+        "nist-sp-1800-35-sp80053-mappings",
+        "microsoft-zero-trust-maturity-questionnaire-v1-1"
+      ],
       "catalog_ids": ["nist-zt", "microsoft-zt-maturity", "nist-800-53", "csf-2"],
       "cadence": "weekly",
-      "conditional_policy": "strict"
+      "conditional_policy": "strict",
+      "required_artifacts": ["all registered source artifacts"],
+      "optional_artifacts": [],
+      "partial_policy": "all_or_nothing",
+      "check_tier": "conditional_get",
+      "identity_key": "records[].id",
+      "version_fields": [],
+      "lifecycle_fields": [],
+      "expected_change": "Changes with NIST SP 1800-35 revisions.",
+      "downstream": ["nist-zt", "microsoft-zt-maturity"]
     },
     {
       "task_id": "fetch-nist-zero-trust",
       "script": "fetch-nist-zero-trust-pages.mjs",
-      "source_ids": ["nist-sp-800-207-fragments", "nist-sp-800-207a-fragments", "nist-sp-1800-35", "nist-sp-1800-35-build-pages", "nist-zero-trust-github-branch"],
+      "source_ids": [
+        "nist-sp-800-207-fragments",
+        "nist-sp-800-207a-fragments",
+        "nist-sp-1800-35",
+        "nist-sp-1800-35-build-pages",
+        "nist-zero-trust-github-branch"
+      ],
       "catalog_ids": ["nist-zt"],
       "cadence": "weekly",
-      "conditional_policy": "strict"
+      "conditional_policy": "strict",
+      "required_artifacts": ["all registered source artifacts"],
+      "optional_artifacts": [],
+      "partial_policy": "all_or_nothing",
+      "check_tier": "conditional_get",
+      "identity_key": "records[].id",
+      "version_fields": [],
+      "lifecycle_fields": [],
+      "expected_change": "Changes with NIST zero trust publication revisions.",
+      "downstream": ["nist-zt"]
     },
     {
       "task_id": "fetch-nist-structured-catalogs",
       "script": "fetch-nist-structured-catalogs.mjs",
-      "source_ids": ["nist-iot-requirements-80053-mapping-draft", "nist-iot-requirements-csf11-mapping-draft", "nist-mobile-threat-catalogue", "nist-mobile-threat-catalogue-cve-list"],
+      "source_ids": [
+        "nist-iot-requirements-80053-mapping-draft",
+        "nist-iot-requirements-csf11-mapping-draft",
+        "nist-mobile-threat-catalogue",
+        "nist-mobile-threat-catalogue-cve-list"
+      ],
       "catalog_ids": ["nist-iot-cybersecurity", "nist-mobile-threats", "nist-800-53", "csf-2"],
       "cadence": "weekly",
-      "conditional_policy": "strict"
+      "conditional_policy": "strict",
+      "required_artifacts": ["all registered source artifacts"],
+      "optional_artifacts": [],
+      "partial_policy": "all_or_nothing",
+      "check_tier": "conditional_get",
+      "identity_key": "records[].id",
+      "version_fields": [],
+      "lifecycle_fields": [],
+      "expected_change": "IoT and mobile drafts change with NIST drafts.",
+      "downstream": ["nist-iot-cybersecurity", "nist-mobile-threats"]
     },
     {
       "task_id": "hydrate-artifacts",
@@ -135,7 +300,16 @@
       "source_ids": ["official-artifact-registry-downloads"],
       "catalog_ids": [],
       "cadence": "weekly",
-      "conditional_policy": "strict"
+      "conditional_policy": "strict",
+      "required_artifacts": ["all registered source artifacts"],
+      "optional_artifacts": [],
+      "partial_policy": "all_or_nothing",
+      "check_tier": "per_item_conditional_get",
+      "identity_key": "hydration resolution id",
+      "version_fields": [],
+      "lifecycle_fields": [],
+      "expected_change": "Artifact checksums and versions change when a publisher reissues a file.",
+      "downstream": ["source registry", "artifact hydration manifest"]
     },
     {
       "task_id": "enrich-commons-resources",
@@ -143,7 +317,16 @@
       "source_ids": ["commons-resource-canonical-pages", "github-resource-evidence"],
       "catalog_ids": [],
       "cadence": "weekly",
-      "conditional_policy": "strict"
+      "conditional_policy": "strict",
+      "required_artifacts": ["all registered source artifacts"],
+      "optional_artifacts": [],
+      "partial_policy": "all_or_nothing",
+      "check_tier": "per_item_conditional_get",
+      "identity_key": "resource id",
+      "version_fields": [],
+      "lifecycle_fields": [],
+      "expected_change": "Resource pages and repositories change independently.",
+      "downstream": ["commons resource dataset", "search index"]
     }
   ],
   "other_remote_adapters": [
@@ -160,5 +343,37 @@
       "conditional_policy": "live_probe_exception",
       "exception_reason": "HEAD and fallback GET requests measure current endpoint health and must not be satisfied from an HTTP object cache."
     }
-  ]
+  ],
+  "behavior": {
+    "check_tiers": {
+      "conditional_get": "Conditional GET (ETag / Last-Modified). An unchanged publisher answers 304 and no bytes are downloaded.",
+      "range_probe": "Ranged download with byte-length and total checks; the publisher does not offer validators for its large archive.",
+      "per_item_conditional_get": "One conditional GET per registered item; each unchanged item is a 304."
+    },
+    "transient_failure": {
+      "scope": "timeout, dropped connection, DNS failure, HTTP 408/425/429/500/502/503/504",
+      "request_retry": {
+        "attempts": 3,
+        "base_ms": 1000,
+        "max_ms": 8000,
+        "retry_after_cap_ms": 15000,
+        "timeout_ms": 60000
+      },
+      "source_retry": {
+        "retry_only": "transient",
+        "base_ms": 15000,
+        "max_ms": 60000,
+        "attempts": "ingestion task retries"
+      },
+      "never_retried": "HTTP 404/403, validation rejections, parse errors and policy violations",
+      "mirrors": "forbidden; only registered official hosts are contacted (data/source-url-policy.json)",
+      "on_exhaustion": "restore the last accepted files, record the source as quarantined, update one health issue"
+    },
+    "last_known_good": "Each source runs in a transaction over its declared output paths. Any failure before acceptance restores the prior bytes. Only refresh:data finalization advances the accepted baseline, and only after every gate has passed.",
+    "quarantine": "A rejected candidate quarantines only its own source. Other sources continue and publish.",
+    "large_change_policy": "A count change outside the band is accepted only with identity and inventory evidence: the publisher revision proves itself, or the publisher inventory reconciles exactly and few prior identities were removed. Otherwise it is quarantined with the added, removed and changed counts.",
+    "change_evidence": "data/source-change-log.json records previous and current accepted identity, counts, lifecycle transitions and accepted time for every accepted change.",
+    "outcome": "tools/classify-refresh-outcome.mjs stops the run before build, browser install, verification, pull request and deploy when only dates and run timings moved.",
+    "freshness_heartbeat_days": 21
+  }
 }

@@ -77,7 +77,8 @@ test('retry starts clean and validation runs before acceptance', async (t) => {
     assert.equal(get('data/catalog.json').toString(), 'good');
     put('data/catalog.json', attempt === 1 ? 'invalid' : 'accepted');
   }, validate: () => {
-    if (get('data/catalog.json').toString() !== 'accepted') throw new Error('invalid content');
+    // A truncated delivery is the kind of invalid content a second retrieval can fix.
+    if (get('data/catalog.json').toString() !== 'accepted') throw Object.assign(new Error('truncated download'), { transient: true });
   } });
   assert.equal(result.status, 'accepted');
   assert.equal(result.attempts, 2);

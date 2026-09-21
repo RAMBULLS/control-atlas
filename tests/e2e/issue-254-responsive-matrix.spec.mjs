@@ -27,7 +27,8 @@ async function checkTagTargets(page) {
   for (const tag of await tags.all()) {
     const box = await tag.boundingBox();
     expect(box).not.toBeNull();
-    expect(box.height).toBeGreaterThanOrEqual(44);
+    // Firefox reports a 44px control as 43.99997 after subpixel layout; 43.5 matches the phase-5 touch-target check.
+    expect(box.height).toBeGreaterThanOrEqual(43.5);
     expect(box.x).toBeGreaterThanOrEqual(0);
     expect(box.x + box.width).toBeLessThanOrEqual(page.viewportSize().width + 1);
     await expect(tag.locator("svg")).toHaveCount(1);

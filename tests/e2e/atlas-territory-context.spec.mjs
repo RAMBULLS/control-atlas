@@ -105,7 +105,9 @@ test("choices within one dimension widen, and choosing another kind of choice na
   expect(narrowed).toBeLessThanOrEqual(windows);
 });
 
-test("share this view: copies the scene only after the clipboard accepts it, and a fresh page restores it", async ({ page, context }) => {
+test("share this view: copies the scene only after the clipboard accepts it, and a fresh page restores it", async ({ page, context, browserName }) => {
+  // Only Chromium exposes clipboard-read to automation. Copy failure is still covered in every browser below.
+  test.skip(browserName !== "chromium", "clipboard-read permission exists only in Chromium");
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   const manifest = await (await page.request.get("/data/generated/atlas-territory-manifest.json")).json();
   await open(page, `/#/atlas?atlasLimb=atlas:LIMB-IMPLEMENTATION&atlasFramework=disa-stig&atlasContext=${encodeURIComponent(CONTEXT.join(","))}&atlasPins=${encodeURIComponent('["disa-stig","cmmc-2"]')}`);

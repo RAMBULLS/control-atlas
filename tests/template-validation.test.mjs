@@ -223,7 +223,7 @@ test('workbooks and documents carry title and author properties', () => {
   ]) {
     const entries = unzipSync(bytes);
     const core = strFromU8(entries['docProps/core.xml']);
-    assert.match(core, new RegExp(`<dc:title>${title.replace(/[()]/g, '\\$&')}</dc:title>`));
+    assert.ok(core.includes(`<dc:title>${title}</dc:title>`), 'document title property');
     assert.match(core, /<dc:creator>Control Atlas<\/dc:creator>/);
     assert.match(strFromU8(entries['[Content_Types].xml']), /core-properties\+xml/);
     assert.match(strFromU8(entries['_rels/.rels']), /metadata\/core-properties/);

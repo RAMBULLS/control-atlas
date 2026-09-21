@@ -1083,7 +1083,7 @@ export function TemplatesPage(props: {
                         meta={templateMeta(template, onNavigate)}
                         details={templateDetails(template)}
                         onNavigate={onNavigate}
-                        patch={{ buildSection: "documents", task: "", templateType: template.name, framework: state.framework || "", format: template.supported_formats?.[0] || "docx", environment: state.environment || "", baseline: "", controlFamily: "", stig: "" }}
+                        patch={{ buildSection: "documents", task: "", templateType: template.name, framework: state.framework || "", format: template.supported_formats?.[0] || "docx", environment: state.environment || "", baseline: "", controlFamily: "" }}
                         title={template.display_name}
                         view="templates"
                       />
@@ -1105,7 +1105,7 @@ export function TemplatesPage(props: {
                       meta={templateMeta(template, onNavigate)}
                       details={templateDetails(template)}
                       onNavigate={onNavigate}
-                      patch={{ buildSection: "documents", task: "", templateType: template.name, framework: state.framework || "", format: template.supported_formats?.[0] || "docx", environment: state.environment || "", baseline: "", controlFamily: "", stig: "" }}
+                      patch={{ buildSection: "documents", task: "", templateType: template.name, framework: state.framework || "", format: template.supported_formats?.[0] || "docx", environment: state.environment || "", baseline: "", controlFamily: "" }}
                       title={template.display_name}
                       view="templates"
                     />

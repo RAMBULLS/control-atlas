@@ -139,7 +139,7 @@ test('implementation worksheet prefills identity and source counts but never the
   const practitioner = ['implementationStatus', 'controlDesignation', 'responsibleEntities', 'implementationNarrative', 'commonControlProvider', 'naJustification', 'Evidence References'];
   for (const header of practitioner) {
     assert.match(ac2[at(header)], /^\[.*\]$/, `${header} must stay a placeholder for the practitioner`);
-    assert.equal(columns[at(header)].group === 'Source-backed context', false);
+    assert.equal(columns[at(header)].group === 'From cited sources', false);
   }
 });
 
@@ -203,7 +203,7 @@ test('evidence matrix labels source-backed and practitioner columns as separate 
   const doc = build('evidence_expectation_matrix', { baseline: 'MODERATE' });
   const { headers, columns } = table(doc, 'Evidence Expectations');
   const group = (header) => columns[headers.indexOf(header)].group;
-  for (const header of ['Control ID', '800-53A Methods', 'Related CCIs', 'Related Rule IDs']) assert.equal(group(header), 'Source-backed context');
+  for (const header of ['Control ID', '800-53A Methods', 'Related CCIs', 'Related Rule IDs']) assert.equal(group(header), 'From cited sources');
   for (const header of ['Evidence Type', 'Artifact Name / ID', 'Evidence Owner', 'Review Status', 'Confidence', 'Assessor Notes']) assert.equal(group(header), 'Your working fields');
   const readMe = officeDocumentToSheets(doc)[0].rows.map((row) => row.join(' ')).join('\n');
   assert.match(readMe, /not evidence requirements|do not show what an assessor will accept/i);

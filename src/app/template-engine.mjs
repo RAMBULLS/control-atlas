@@ -413,7 +413,7 @@ function assessmentContext(index, controlNodeId) {
 }
 
 const WORKING_FIELDS = "Your working fields";
-const SOURCE_CONTEXT = "Source-backed context";
+const SOURCE_CONTEXT = "From cited sources";
 
 function generateProfessionalImplementationWorksheet(options, controls, crossRef) {
   const ph = placeholder(options);

@@ -111,7 +111,12 @@ export function ObjectDetailPage(props: {
     : claimOrigin === "publisher_derived" ? "Publisher-derived projection" : "Publisher source";
   const lifecycleStatus = String(node.lifecycle_status || "active");
   const edges = bundle.runtime.getEdgesForNode(node.id, { publication_status: "published" });
-  const connectionGroups = buildRecordConnectionGroups(node.id, document.catalog_id, edges, bundle.runtime.getNode, (catalogId) => {
+  const presentation = recordPresentationContract(document.catalog_id, node.node_type || document.object_type);
+  // What a baseline selects or a program level requires is the record's own
+  // content, so it gets its own section and is not repeated as a related link.
+  const selectionTypes = new Set(presentation.selections.map((entry: { relationship_type: string }) => entry.relationship_type));
+  const relatedEdges = edges.filter((edge: any) => !(edge.source_node_id === node.id && selectionTypes.has(edge.relationship_type)));
+  const connectionGroups = buildRecordConnectionGroups(node.id, document.catalog_id, relatedEdges, bundle.runtime.getNode, (catalogId) => {
     const relatedCatalog = catalogs.find((entry: any) => entry.id === catalogId);
     return catalogDisplayNameFor(catalogId, relatedCatalog?.name || "");
   });
@@ -132,7 +137,6 @@ export function ObjectDetailPage(props: {
     ? extendDisplayedAuthorityTrace(buildAtlasTreeModel(bundle.atlasSpine, authoritySpine), trace as AtlasTraceHop[])
     : trace;
   const sourceMetadata = { ...node.metadata, description: document.description || node.metadata?.description || "" };
-  const presentation = recordPresentationContract(document.catalog_id, node.node_type || document.object_type);
   const missingSourceFields = missingRequiredRecordFields(presentation, sourceMetadata);
   const publishedSections = publishedSectionsWithContent(presentation.sections, sourceMetadata);
   const hasPublishedSectionContent = publishedSections.length > 0;
@@ -140,6 +144,16 @@ export function ObjectDetailPage(props: {
     .filter((edge: any) => edge.relationship_class === "structural" && edge.source_node_id === node.id)
     .sort((left: any, right: any) => (left.publisher_order ?? Number.MAX_SAFE_INTEGER) - (right.publisher_order ?? Number.MAX_SAFE_INTEGER))
     .map((edge: any) => bundle.runtime.getNode(edge.target_node_id)).filter(Boolean);
+  const selectionSections = presentation.selections.map((entry: { relationship_type: string; heading: string; note: string }) => {
+    const seen = new Set<string>();
+    const items = edges
+      .filter((edge: any) => edge.source_node_id === node.id && edge.relationship_type === entry.relationship_type)
+      .map((edge: any) => bundle.runtime.getNode(edge.target_node_id))
+      .filter((target: any) => target && !seen.has(target.id) && seen.add(target.id))
+      .sort((left: any, right: any) => String(left.metadata?.item_id || left.id)
+        .localeCompare(String(right.metadata?.item_id || right.id), undefined, { numeric: true }));
+    return { ...entry, items };
+  }).filter((entry: { items: unknown[] }) => entry.items.length > 0);
   const showChildInventory = recordShowsChildInventory({
     pageRole: presentation.page_role, structuralChildCount: structuralChildren.length,
   });
@@ -175,6 +189,7 @@ export function ObjectDetailPage(props: {
   if (source && !missingSourceFields.length) {
     for (const section of publishedSections) sectionNavItems.push({ id: `section-${section.field}`, label: section.heading });
   }
+  for (const entry of selectionSections) sectionNavItems.push({ id: `section-selection-${entry.relationship_type}`, label: entry.heading });
   if (showChildInventory) sectionNavItems.push({ id: "section-children", label: childHeading });
   if (visibleConnectionGroups.length) sectionNavItems.push({ id: "section-related-records", label: "Related records" });
 
@@ -188,7 +203,8 @@ export function ObjectDetailPage(props: {
     catalogId: document.catalog_id, pageRole: presentation.page_role, hasItemId: Boolean(itemId),
     comparableEdgeCount: edges.filter(isComparisonCapableEdge).length,
     structuralChildCount: structuralChildren.length,
-    connectionCount: connectionGroups.reduce((total, group) => total + group.items.length, 0),
+    connectionCount: connectionGroups.reduce((total, group) => total + group.items.length, 0)
+      + selectionSections.reduce((total: number, entry: { items: unknown[] }) => total + entry.items.length, 0),
   });
   const canonicalRecordUrl = () => `${window.location.origin}${window.location.pathname}${serializeHashUrl(
     normalizeViewState("library-detail", { view: "library-detail", node: document.id }),
@@ -257,6 +273,15 @@ export function ObjectDetailPage(props: {
           {structuralTrace.length > 1 ? <section className="record-hierarchy" data-record-section="publisher-hierarchy">
             <h2>Publisher hierarchy</h2><ol>{structuralTrace.map((entry) => <li key={entry.id}>{entry.label}</li>)}</ol>
           </section> : null}
+          {selectionSections.map((entry: { relationship_type: string; heading: string; note: string; items: any[] }) => <section className="record-child-inventory record-selection" data-record-section="selection" data-selection-type={entry.relationship_type} id={`section-selection-${entry.relationship_type}`} key={entry.relationship_type}>
+            <div className="section-header"><div><h2>{entry.heading}</h2><p>{entry.note}</p></div>
+              <Badge tone="info">{entry.items.length}</Badge>
+            </div>
+            <ul>{entry.items.slice(0, 25).map((target: any) => <li key={target.id}>
+              <AppLink onNavigate={onNavigate} patch={{ node: target.id }} view="library-detail">{recordDisplayTitle(target)}</AppLink>
+            </li>)}</ul>
+            {entry.items.length > 25 ? <AppLink onNavigate={onNavigate} patch={{ node: node.id }} view="atlas-map">{`+${entry.items.length - 25} more — Explore in Atlas`}</AppLink> : null}
+          </section>)}
           {showChildInventory ? <section className="record-child-inventory" data-record-section="child-inventory" id="section-children">
             <div className="section-header"><div><h2>{childHeading}</h2><p>Objects published directly beneath this record.</p></div>
               <Badge tone="info">{structuralChildren.length}</Badge>

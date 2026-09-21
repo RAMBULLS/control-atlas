@@ -138,6 +138,35 @@ test("the accumulator picks representatives and counts empty containers from rea
   assert.ok(untouched.issues.includes("NO_REPRESENTATIVE_RECORD"));
 });
 
+test("a declared selection that no record in the pair uses fails the gate", () => {
+  const baseline = (id) => ({
+    id, node_type: "baseline", source_id: "src", lifecycle_status: "active",
+    metadata: { catalog_id: "nist-800-53b", item_id: id.split(":")[1], title: id, description: "d".repeat(20) },
+  });
+  const rowFor = (edges) => {
+    const accumulator = createRecordMatrixAccumulator();
+    accumulator.addNode(baseline("nist-800-53b:HIGH"));
+    accumulator.addNode({ id: "nist-800-53:AC-1", node_type: "control", source_id: "src", metadata: { catalog_id: "nist-800-53", item_id: "AC-1" } });
+    for (const edge of edges) accumulator.addEdge({ publication_status: "published", relationship_class: "applicability", ...edge });
+    return accumulator.finish().rows.find((entry) => entry.pair === "nist-800-53b:baseline");
+  };
+  const unused = rowFor([]);
+  assert.ok(unused.issues.includes("SELECTION_SPEC_UNUSED"));
+  assert.equal(unused.acceptance, "BLOCKED");
+  const used = rowFor([{ source_node_id: "nist-800-53b:HIGH", target_node_id: "nist-800-53:AC-1", relationship_type: "selects" }]);
+  assert.equal(used.selection_records, 1);
+  assert.ok(!used.issues.includes("SELECTION_SPEC_UNUSED"));
+});
+
+test("selection specs name a heading and note in source-native words", () => {
+  for (const pair of registeredRecordPairs()) {
+    for (const entry of pair.contract.selections) {
+      assert.ok(entry.relationship_type && entry.heading && entry.note, pair.key);
+      assert.ok(!/_/.test(entry.heading), `${pair.key} heading must be plain language`);
+    }
+  }
+});
+
 test("the corpus matrix covers every registered pair with a real record and no undeclared types", () => {
   const { rows, unsupported, summary } = loadRecordAcceptanceMatrix();
   assert.equal(summary.pairs, registeredRecordPairs().length);

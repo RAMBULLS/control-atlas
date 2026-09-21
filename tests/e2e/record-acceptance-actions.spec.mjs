@@ -79,3 +79,36 @@ test("a control with real mappings still offers Compare and a template handoff",
   await template.click();
   await expect(page).toHaveURL(/framework=nist-800-53/);
 });
+
+test("baselines, impact levels and program levels lead with what the publisher selected or requires", async ({ page }) => {
+  const cases = [
+    ["/#/record/nist-800-53b/HIGH", "Selected controls"],
+    ["/#/record/fedramp-rev5/HIGH", "Selected controls"],
+    ["/#/record/fips-199/FIPS-199-HIGH", "Selected baseline"],
+    ["/#/record/cmmc-2/LEVEL-2", "Requirements"],
+  ];
+  for (const [route, heading] of cases) {
+    await openRecord(page, route);
+    const section = page.locator('[data-record-section="selection"]');
+    await expect(section, route).toHaveCount(1);
+    await expect(section.getByRole("heading", { name: heading, level: 2 }), route).toBeVisible();
+    expect(await section.locator("li a").count(), route).toBeGreaterThan(0);
+    // The same edges are not repeated as generic related links.
+    await expect(page.locator('[data-record-section="related-records"] [data-record-connection-id]').filter({ hasText: /Selects/i }), route).toHaveCount(0);
+  }
+});
+
+test("a selection section is never empty, and a level with nothing published shows none", async ({ page }) => {
+  await openRecord(page, "/#/record/cmmc-2/LEVEL-1");
+  const sections = page.locator('[data-record-section="selection"]');
+  for (let index = 0; index < await sections.count(); index += 1) {
+    expect(await sections.nth(index).locator("li a").count()).toBeGreaterThan(0);
+  }
+});
+
+test("a long selection is capped with a way to see the rest in Atlas", async ({ page }) => {
+  await openRecord(page, "/#/record/nist-800-53b/HIGH");
+  const section = page.locator('[data-record-section="selection"]');
+  expect(await section.locator("li a").count()).toBeLessThanOrEqual(25);
+  await expect(section.getByRole("link", { name: /more — Explore in Atlas/ })).toBeVisible();
+});

@@ -109,6 +109,7 @@ const contract = ({
   facts = [],
   fields = {},
   hierarchy = ["parent_id", "family"],
+  selections = [],
 }) => {
   const sectionFields = Object.fromEntries(
     sections.map((entry) => [
@@ -125,6 +126,7 @@ const contract = ({
     hierarchy_fields: Object.freeze(hierarchy),
     sections: Object.freeze(sections),
     metadata_facts: Object.freeze(facts),
+    selections: Object.freeze(selections.map((entry) => Object.freeze({ ...entry }))),
     required_fields: Object.freeze(required),
     optional_fields: Object.freeze(optional),
     field_dispositions: Object.freeze({ ...commonFields, ...sectionFields, ...fields }),
@@ -198,7 +200,13 @@ const BASE_CONTRACTS = {
       parent_technique_id: { disposition: "rendered_secondary", origin: "publisher" },
     },
   }),
-  baseline: container([section("description", "Baseline")], ["description"]),
+  baseline: container([section("description", "Baseline")], ["description"], [], {
+    selections: [{
+      relationship_type: "selects",
+      heading: "Selected controls",
+      note: "The controls this baseline selects, as the publisher published them.",
+    }],
+  }),
   benchmark: container([section("description", "Benchmark Summary")], [], ["description"], {
     facts: ["benchmark_version", "benchmark_status_date", "child_count", "severity_distribution"],
     fields: {
@@ -255,7 +263,13 @@ const BASE_CONTRACTS = {
   family: container([section("description", "Family Summary")], [], ["description"]),
   function: container([section("description", "Function Summary")], [], ["description"]),
   group: container([section("description", "Group Summary")], [], ["description"]),
-  impact_category: container([section("description", "Impact Category")], ["description"]),
+  impact_category: container([section("description", "Impact Category")], ["description"], [], {
+    selections: [{
+      relationship_type: "selects",
+      heading: "Selected baseline",
+      note: "The baseline this impact level selects, as the publisher published it.",
+    }],
+  }),
   iot_capability: container([section("description", "Capability")], [], ["description"]),
   iot_capability_domain: container([section("description", "Capability Domain")], [], ["description"]),
   iot_capability_element: atomic(
@@ -296,7 +310,13 @@ const BASE_CONTRACTS = {
   mobile_threat_category: container([section("description", "Threat Category")], ["description"]),
   policy: atomic([section("description", "Policy Statement")], ["description"]),
   policy_directive: authorityPublication("Authority Summary"),
-  program: container([section("description", "Program Level")], ["description"]),
+  program: container([section("description", "Program Level")], ["description"], [], {
+    selections: [{
+      relationship_type: "requires",
+      heading: "Requirements",
+      note: "The requirements this level requires, as the publisher published them.",
+    }],
+  }),
   regulation: authorityPublication("Authority Summary"),
   requirement: atomic(
     [

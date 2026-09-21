@@ -8,7 +8,6 @@ import readXlsxFile from 'read-excel-file/node';
 import { buildTemplateDocument } from '../src/app/template-engine.mjs';
 import { docToDocx, docToXlsx, officeDocumentToSheets, renderOfficeDocument } from '../src/app/office-export.mjs';
 import { GENERATED_FILE_NOTICE } from '../src/shared/disclaimer.mjs';
-import { STIG_ID, addStigFixture } from './helpers/stig-fixture.mjs';
 
 const dataset = {
   nodes: [
@@ -27,13 +26,11 @@ const dataset = {
   ],
   sources: [{ id: 'nist-oscal', display_name: 'SP 800-53 Rev. 5', version: '2026-06-09' }],
 };
-addStigFixture(dataset);
 
 function buildDoc(templateType) {
   const { doc } = buildTemplateDocument(
     {
       templateType,
-      stig: STIG_ID,
       framework: 'nist-800-53',
       environment: 'Cloud SaaS',
       sourceRefs: ['nist-oscal'],
@@ -52,7 +49,6 @@ function isZip(bytes) {
 const spreadsheetTemplateTypes = [
   'implementation_statement_worksheet',
   'evidence_expectation_matrix',
-  'stig_evidence_checklist',
   'inheritance_worksheet',
   'reciprocity_checklist',
   'poam_starter',
@@ -60,7 +56,6 @@ const spreadsheetTemplateTypes = [
   'conmon_calendar',
   'hardware_baseline',
   'software_baseline',
-  'ppsm_preparation_worksheet',
 ];
 
 test('every spreadsheet template has one authoritative sheet per logical table and blank working cells', () => {

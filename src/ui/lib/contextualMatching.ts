@@ -180,8 +180,8 @@ const GUIDE_BY_KIND: Partial<Record<RecordContextKind, string>> = {
 
 const DOCUMENT_BY_KIND: Partial<Record<RecordContextKind, string>> = {
   control: "implementation_statement_worksheet",
-  cci: "stig_evidence_checklist",
-  stig: "stig_evidence_checklist",
+  cci: "evidence_expectation_matrix",
+  stig: "evidence_expectation_matrix",
   assessment: "assessment_planning_worksheet",
   supply_chain: "software_baseline",
 };

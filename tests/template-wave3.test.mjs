@@ -157,11 +157,9 @@ test('every task links only to templates that exist, and every template is reach
   for (const id of ids) assert.ok(linked.has(id), `${id} is not reachable from any task`);
 });
 
-test('the baselines and PPSM tasks offer their own worksheets', () => {
+test('the baselines task offers its own worksheets', () => {
   const companions = (workflowId) => workflowList.find((workflow) => workflow.workflow_id === workflowId).companion_template_ids;
   assert.deepEqual(companions('establish-system-baselines'), ['tpl-hw-baseline', 'tpl-sw-baseline']);
-  assert.deepEqual(companions('prepare-ppsm-information'), ['tpl-ppsm-prep']);
-  assert.deepEqual(companions('run-stig-assessment'), ['tpl-stig-chk']);
   assert.deepEqual(companions('prepare-reciprocity-review'), ['tpl-reciprocity']);
 });
 
@@ -173,15 +171,13 @@ test('every template says what it is for and what it does not replace', () => {
   }
   const not = (name) => registry.templates.find((template) => template.name === name).usage.not_for;
   assert.match(not('poam_starter'), /eMASS/);
-  assert.match(not('stig_evidence_checklist'), /STIG Viewer/);
-  assert.match(not('ppsm_preparation_worksheet'), /PPSM Registry/);
   assert.match(not('reciprocity_checklist'), /Authorizing Official/);
 });
 
-test('the job groups on the Templates page cover all twelve files exactly once', async () => {
+test('the job groups on the Templates page cover all ten files exactly once', async () => {
   const { TEMPLATE_CATEGORIES } = await import('../src/ui/lib/catalogGroups.mjs');
   const all = Object.values(TEMPLATE_CATEGORIES).flat();
-  assert.equal(all.length, 12);
+  assert.equal(all.length, 10);
   assert.deepEqual([...new Set(all)].sort(), registry.templates.map((template) => template.name).sort());
   for (const heading of Object.keys(TEMPLATE_CATEGORIES)) {
     assert.doesNotMatch(heading, /^(Plan|Implement|Assess|Remediate|Monitor)$/, 'groups name the job, not an RMF stage');

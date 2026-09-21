@@ -20,7 +20,6 @@ const ARTIFACT_TYPES = new Set([
   'security_plan_starter',
   'implementation_statement_worksheet',
   'evidence_expectation_matrix',
-  'stig_evidence_checklist',
   'inheritance_worksheet',
   'reciprocity_checklist',
   'poam_starter',
@@ -28,7 +27,6 @@ const ARTIFACT_TYPES = new Set([
   'conmon_calendar',
   'hardware_baseline',
   'software_baseline',
-  'ppsm_preparation_worksheet',
 ]);
 
 // The only interoperability labels a template may show publicly.
@@ -39,7 +37,7 @@ const COMPATIBILITY_CLASSES = new Set([
 ]);
 
 const FORMATS = new Set(['xlsx', 'docx']);
-const INPUT_OPTIONS = new Set(['framework', 'baseline', 'control_family', 'selected_controls', 'selected_stig', 'environment_archetype']);
+const INPUT_OPTIONS = new Set(['framework', 'baseline', 'control_family', 'selected_controls', 'environment_archetype']);
 
 export function validateTemplateRegistry(registry) {
   const errors = [];

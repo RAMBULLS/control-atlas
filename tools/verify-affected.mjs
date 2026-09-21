@@ -20,6 +20,15 @@ const AUTOMATION_TESTS = new Set([
   'tests/wait-for-checks.test.mjs',
 ]);
 
+const RECORD_ACCEPTANCE_PATHS = new Set([
+  'src/shared/record-acceptance.mjs',
+  'src/shared/record-fact-labels.mjs',
+  'src/shared/record-presentation.mjs',
+  'tests/graph/recordActionPolicy.test.ts',
+  'tests/record-acceptance.test.mjs',
+  'tools/record-acceptance-matrix.mjs',
+]);
+
 const SOURCE_REFRESH_PATHS = new Set([
   'data/source-refresh-contract.json',
   'scripts/discover-nist-pages.mjs',
@@ -214,7 +223,10 @@ export function createVerificationPlan(paths, changeMap) {
     path === 'scripts/lib/url-classification.mjs' ||
     path === 'tests/commons-operator-ecosystem.test.mjs');
   const phase4DataChanged = paths.some((path) => path === 'data/template-registry.json');
-  const mappedData = stigObservationChanged || incrementalDataChanged || sourceRefreshChanged || operatorEcosystemChanged || phase4DataChanged;
+  // The record acceptance gate (issue #279): registry, labels, dispositions and
+  // the generator. Deterministic contract tests need no publisher requests.
+  const recordAcceptanceChanged = paths.some((path) => RECORD_ACCEPTANCE_PATHS.has(path));
+  const mappedData = stigObservationChanged || incrementalDataChanged || sourceRefreshChanged || operatorEcosystemChanged || phase4DataChanged || recordAcceptanceChanged;
   const mappedRuntime = changeMap.dependenciesChanged || sourceTrustChanged || compareWorkbenchChanged || boundedWorkbenchesChanged || phase4SurfacesChanged || publicShellChanged || mappedData || eolPolicyChanged || e2ePaths.length > 0;
 
   if (changeMap.evidenceOnly) {
@@ -421,6 +433,12 @@ export function createVerificationPlan(paths, changeMap) {
         '--grep',
         'focused Atlas opens straight|Atlas search waits|WS3 Library communicates|WS3 Resources shares'],
       expectedTests: 4, workers: 2, budgetSeconds: 45,
+    });
+  }
+  if (recordAcceptanceChanged) {
+    addStep(steps, {
+      id: 'record-acceptance-contracts', command: ['npm', 'run', 'test:record-presentation'],
+      expectedTests: 24, workers: 2, budgetSeconds: 30,
     });
   }
   if (phase4SurfacesChanged) {

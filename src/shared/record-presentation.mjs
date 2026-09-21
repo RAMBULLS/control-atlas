@@ -459,7 +459,7 @@ BASE_CONTRACTS.srg_requirement = disaContract;
 BASE_CONTRACTS.stig_rule = disaContract;
 Object.freeze(BASE_CONTRACTS);
 
-const CATALOG_RECORD_TYPES = Object.freeze({
+export const CATALOG_RECORD_TYPES = Object.freeze({
   "atlas-authority-spine": ["policy_directive", "regulation", "statute"],
   "atlas-organizing-spine": ["limb", "trunk"],
   "cmmc-2": ["catalog", "program"],
@@ -491,6 +491,24 @@ const CATALOG_RECORD_TYPES = Object.freeze({
   "nist-ssdf": ["catalog", "group", "requirement"],
   "nist-zt": ["catalog", "zt_build", "zt_cloud_native_requirement", "zt_collaborator", "zt_logical_component", "zt_mapping_contributor", "zt_mapping_document", "zt_product_component", "zt_publication", "zt_reference_component", "zt_tenet"],
 });
+
+// Record types that never appear as ordinary Library search documents: they are
+// structure, navigation or source objects. Shared by the data build and the
+// record acceptance matrix so "is it searchable" has one answer.
+export const NON_RECORD_NODE_TYPES = Object.freeze(new Set([
+  "benchmark",
+  "catalog",
+  "category",
+  "family",
+  "function",
+  "group",
+  "limb",
+  "policy_directive",
+  "regulation",
+  "statute",
+  "tactic",
+  "trunk",
+]));
 
 const PRESENTATION_SCOPE_BY_TYPE = Object.freeze({
   limb: "atlas-organizing-spine",

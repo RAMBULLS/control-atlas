@@ -10,7 +10,9 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { SITE_COPY } from "../../shared/site-copy.mjs";
 
 import {
+  CROSS_REF_TEMPLATES,
   buildTemplateDocument,
+  getControlCrossRefIndex,
   templateFilename,
 } from "../../app/template-engine.mjs";
 import {
@@ -774,6 +776,18 @@ export function TemplatesPage(props: {
           .filter(Boolean)
           .join(", ")
       : "No separate template basis recorded";
+
+  // Build the control to CCI to STIG index while the reader is still choosing
+  // options, so the preview does not wait for it. It is built once per loaded
+  // dataset and reused for every later option change.
+  useEffect(() => {
+    const dataset = bundle.runtime.dataset;
+    if (!dataset || !selectedTemplate || !CROSS_REF_TEMPLATES.includes(selectedTemplate.name)) {
+      return undefined;
+    }
+    const timer = window.setTimeout(() => getControlCrossRefIndex(dataset), 100);
+    return () => window.clearTimeout(timer);
+  }, [bundle.runtime.dataset, selectedTemplate?.name]);
 
   useEffect(() => {
     if (!documentSelectionMountedRef.current) {

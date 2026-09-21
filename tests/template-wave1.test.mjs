@@ -4,7 +4,7 @@ import test from 'node:test';
 import { strFromU8, unzipSync } from 'fflate';
 
 import { docToXlsx, officeDocumentToSheets } from '../src/app/office-export.mjs';
-import { buildTemplateDocument } from '../src/app/template-engine.mjs';
+import { buildTemplateDocument, getControlCrossRefIndex } from '../src/app/template-engine.mjs';
 
 const registry = JSON.parse(readFileSync('data/template-registry.json', 'utf8'));
 
@@ -274,4 +274,16 @@ test('workbooks use at most six column groups and every header color has a group
     }
     assert.ok(groups.size >= 1 && groups.size <= 6, `${name} uses ${groups.size} groups`);
   }
+});
+
+test('the control to CCI to STIG index is built once per loaded dataset and rebuilt only if the dataset grows', () => {
+  const first = getControlCrossRefIndex(dataset);
+  assert.equal(getControlCrossRefIndex(dataset), first, 'same dataset, same index');
+  const before = build('implementation_statement_worksheet', { baseline: 'MODERATE' });
+  const after = build('implementation_statement_worksheet', { baseline: 'MODERATE' });
+  assert.deepEqual(after.sections.find((s) => s.type === 'table').rows, before.sections.find((s) => s.type === 'table').rows, 'reuse does not change the output');
+  assert.equal(getControlCrossRefIndex({ nodes: [...dataset.nodes], edges: [...dataset.edges] }) === first, false, 'a different dataset gets its own index');
+  dataset.nodes.push({ id: 'nist-800-53:ZZ-1', node_type: 'control', metadata: { catalog_id: 'nist-800-53', item_id: 'ZZ-1', title: 'ZZ-1 title', control_family: 'Access Control' } });
+  assert.notEqual(getControlCrossRefIndex(dataset), first, 'a dataset that grew is re-indexed');
+  dataset.nodes.pop();
 });

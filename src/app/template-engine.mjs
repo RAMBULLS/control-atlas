@@ -30,6 +30,13 @@ import { CROSS_REF_CAP } from '../shared/dense-data.mjs';
 import { stringify as stringifyYaml } from 'yaml';
 import { dateField, listOf, tableSection, TEMPLATE_VOCAB, TRUE_FALSE, valuesFrom } from './template-columns.mjs';
 
+/**
+ * One collator for every natural-order sort. String.localeCompare with options
+ * builds a collator on each call; sorting the ~36,000 STIG rule references for a
+ * Moderate baseline that way cost most of a second in the browser.
+ */
+const NATURAL_ORDER = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
+
 /** Most IDs listed in one reference-sheet cell. Larger sets are counted, not listed. */
 const REFERENCE_SHEET_CAP = 25;
 
@@ -1262,7 +1269,7 @@ function resolveControlsViaBaselineEdges(dataset, catalogId) {
   memberControls.sort((a, b) => {
     const aId = a.metadata?.item_id || a.id;
     const bId = b.metadata?.item_id || b.id;
-    return aId.localeCompare(bId, undefined, { numeric: true, sensitivity: "base" });
+    return NATURAL_ORDER.compare(aId, bId);
   });
 
   return memberControls;
@@ -1278,7 +1285,7 @@ function resolveControlsViaBaselineEdges(dataset, catalogId) {
  * leaving placeholder cells.
  *
  * @param {{ nodes?: any[], edges?: any[] }} dataset
- * @returns {{ controlToCci: Map<string, Set<string>>, cciToStig: Map<string, Set<string>>, byId: Map<string, any>, assessmentByControl: Map<string, any> }}
+ * @returns {{ controlToCci: Map<string, Set<string>>, cciToStig: Map<string, Set<string>>, byId: Map<string, any>, assessmentByControl: Map<string, any>, resolved: Map<string, any> }}
  */
 function buildControlCrossRefIndex(dataset) {
   const nodes = dataset?.nodes || [];
@@ -1337,8 +1344,34 @@ function buildControlCrossRefIndex(dataset) {
     }
   }
 
-  return { controlToCci, cciToStig, byId, assessmentByControl };
+  return { controlToCci, cciToStig, byId, assessmentByControl, resolved: new Map() };
 }
+
+/** @type {WeakMap<object, { nodes: number, edges: number, index: ReturnType<typeof buildControlCrossRefIndex> }>} */
+const CROSS_REF_CACHE = new WeakMap();
+
+/**
+ * The control to CCI to STIG index for a loaded dataset. The dataset is
+ * immutable once loaded, so it is built once and reused for every option
+ * change. The counts guard against a dataset that grows after the first build.
+ *
+ * @param {{ nodes?: any[], edges?: any[] }} dataset
+ */
+export function getControlCrossRefIndex(dataset) {
+  const nodes = dataset?.nodes?.length || 0;
+  const edges = dataset?.edges?.length || 0;
+  const cached = dataset && typeof dataset === "object" ? CROSS_REF_CACHE.get(dataset) : undefined;
+  if (cached && cached.nodes === nodes && cached.edges === edges) return cached.index;
+  const index = buildControlCrossRefIndex(dataset);
+  if (dataset && typeof dataset === "object") CROSS_REF_CACHE.set(dataset, { nodes, edges, index });
+  return index;
+}
+
+/** Templates that read the cross-reference index. */
+export const CROSS_REF_TEMPLATES = Object.freeze([
+  "evidence_expectation_matrix",
+  "implementation_statement_worksheet",
+]);
 
 /**
  * Resolve the real CCI numbers and STIG/SRG rule IDs cross-referenced by a
@@ -1349,25 +1382,28 @@ function buildControlCrossRefIndex(dataset) {
  * @returns {{ cciIds: string[], stigIds: string[], ruleIds: string[], ruleCount: number }}
  */
 function crossRefForControl(index, controlNodeId) {
+  const known = index.resolved.get(controlNodeId);
+  if (known) return known;
   const idOf = (nodeId) => index.byId.get(nodeId)?.metadata?.item_id || nodeId;
   const cciNodeIds = [...(index.controlToCci.get(controlNodeId) || [])];
   const stigNodeIds = new Set();
   for (const cci of cciNodeIds) {
     for (const stig of index.cciToStig.get(cci) || []) stigNodeIds.add(stig);
   }
-  const sortIds = (arr) =>
-    arr.sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" }));
+  const sortIds = (arr) => arr.sort(NATURAL_ORDER.compare);
   const ruleIds = new Set();
   for (const nodeId of stigNodeIds) {
     const ruleId = index.byId.get(nodeId)?.metadata?.rule_id;
     if (ruleId) ruleIds.add(String(ruleId));
   }
-  return {
+  const resolved = {
     cciIds: sortIds(cciNodeIds.map(idOf)),
     stigIds: sortIds([...stigNodeIds].map(idOf)),
     ruleIds: sortIds([...ruleIds]),
     ruleCount: stigNodeIds.size,
   };
+  index.resolved.set(controlNodeId, resolved);
+  return resolved;
 }
 
 /**
@@ -1569,11 +1605,8 @@ export function buildTemplateDocument(options, dataset) {
 
   // Cross-reference data belongs in the dedicated evidence matrix, not the
   // compact SSP narrative starter. Build it only for that working matrix.
-  const needsCrossRef = [
-    "evidence_expectation_matrix",
-    "implementation_statement_worksheet",
-  ].includes(normalized.templateType);
-  const crossRef = needsCrossRef ? buildControlCrossRefIndex(dataset) : null;
+  const needsCrossRef = CROSS_REF_TEMPLATES.includes(normalized.templateType);
+  const crossRef = needsCrossRef ? getControlCrossRefIndex(dataset) : null;
 
   let doc;
   switch (normalized.templateType) {

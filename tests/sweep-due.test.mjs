@@ -37,3 +37,12 @@ test('the workflow gates only the checks that re-test our own code, and never th
   // Manual dispatch always runs.
   assert.match(String(jobs['nightly-build'].if), /workflow_dispatch/);
 });
+
+test('jobs downstream of the gated build run whenever it succeeds, so a skipped ancestor cannot silently skip them', () => {
+  const jobs = parse(readFileSync('.github/workflows/ci.yml', 'utf8')).jobs;
+  for (const name of ['nightly-browser', 'nightly-accessibility']) {
+    assert.equal(jobs[name].needs, 'nightly-build', name);
+    assert.match(String(jobs[name].if), /!cancelled()/, name);
+    assert.match(String(jobs[name].if), /needs.nightly-build.result == 'success'/, name);
+  }
+});

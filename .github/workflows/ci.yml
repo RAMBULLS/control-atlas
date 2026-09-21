@@ -570,6 +570,9 @@ jobs:
   nightly-browser:
     name: Nightly ${{ matrix.browser }} shard ${{ matrix.shard }}/2
     needs: nightly-build
+    # Explicit: a skipped sweep-gate upstream of nightly-build would otherwise skip this job
+    # silently, and a browser suite that did not run must never look like a pass.
+    if: ${{ !cancelled() && needs.nightly-build.result == 'success' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -608,6 +611,9 @@ jobs:
   nightly-accessibility:
     name: Nightly complete accessibility
     needs: nightly-build
+    # Explicit: a skipped sweep-gate upstream of nightly-build would otherwise skip this job
+    # silently, and a browser suite that did not run must never look like a pass.
+    if: ${{ !cancelled() && needs.nightly-build.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6

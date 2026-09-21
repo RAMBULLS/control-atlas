@@ -51,6 +51,8 @@ async function enterFrameworkFromLandscape(page, group, name) {
 
 for (const viewport of VIEWPORTS) {
   test(`NIST reaches a focused control from the territory sheet at ${viewport.width}px`, async ({ page }) => {
+    // The record search index is tens of megabytes decoded; a shared CI runner can take well over the default 45s.
+    test.setTimeout(150_000);
     await page.setViewportSize(viewport);
     await page.goto("/#/atlas");
     await waitForAppReady(page);
@@ -73,7 +75,7 @@ for (const viewport of VIEWPORTS) {
     await page.locator("#atlas-search").fill("nist-800-53:AC-1");
     // Record search loads on first focus. Enter before it is ready does nothing by design
     // ("Record search is still loading"), so wait for the match a reader would see.
-    await expect(page.getByRole("listbox").getByRole("option").filter({ hasText: "AC-1" }).first()).toBeVisible();
+    await expect(page.getByRole("listbox").getByRole("option").filter({ hasText: "AC-1" }).first()).toBeVisible({ timeout: 90_000 });
     await page.locator("#atlas-search").press("Enter");
     await expect(page).toHaveURL(/\/#\/atlas\/nist-800-53:AC-1/);
     await expect(page.getByRole("heading", { name: "Atlas", level: 1 })).toBeVisible();

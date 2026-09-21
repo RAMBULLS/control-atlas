@@ -65,6 +65,9 @@ test("compact primary facets open by keyboard and Escape returns focus", async (
 test("governed tags keep stable URL, OR/AND, alias, count, and unavailable-value behavior", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await open(page, "/#/library");
+  // Result totals move with every publisher refresh. These checks assert how filters
+  // combine (OR within a dimension widens, AND across dimensions narrows, history
+  // restores), never the size of the corpus. The bare Library shows no total.
 
   const facets = page.locator(".workspace-facet-rail");
   const assetDisclosure = facets.locator('[data-taxonomy-dimension="asset_class"]');
@@ -77,26 +80,29 @@ test("governed tags keep stable URL, OR/AND, alias, count, and unavailable-value
   await assetFacet.getByRole("checkbox", { name: /Server/ }).click();
   await expect(page).toHaveURL(/tag=asset\.server/);
   const serverCount = await resultTotal(page);
-  expect(serverCount).toBe(5083);
+  expect(serverCount).toBeGreaterThan(0);
   await expect(page.getByRole("button", { name: "Remove Server filter" })).toBeVisible();
 
   await assetFacet.getByRole("checkbox", { name: /Workstation/ }).click();
   await expect(page).toHaveURL(/tag=asset\.server.*tag=asset\.workstation/);
-  await expect.poll(() => resultTotal(page)).toBe(6309);
+  await expect.poll(() => resultTotal(page)).toBeGreaterThan(serverCount);
+  const orTotal = await resultTotal(page);
 
   const vendorDisclosure = facets.locator('[data-taxonomy-dimension="vendor_brand"]');
   await vendorDisclosure.locator("summary").click();
   const vendorFacet = vendorDisclosure.getByRole("group", { name: "Vendor" });
   await vendorFacet.getByRole("checkbox", { name: /Microsoft/ }).click();
   await expect(page).toHaveURL(/tag=asset\.server.*tag=asset\.workstation.*tag=vendor\.microsoft/);
-  await expect.poll(() => resultTotal(page)).toBe(2221);
+  await expect.poll(() => resultTotal(page)).toBeLessThan(orTotal);
+  const andTotal = await resultTotal(page);
+  expect(andTotal).toBeGreaterThan(0);
 
   await page.goBack();
   await expect(page).toHaveURL(/tag=asset\.server.*tag=asset\.workstation/);
-  await expect.poll(() => resultTotal(page)).toBe(6309);
+  await expect.poll(() => resultTotal(page)).toBe(orTotal);
   await page.goForward();
   await expect(page).toHaveURL(/tag=asset\.server.*tag=asset\.workstation.*tag=vendor\.microsoft/);
-  await expect.poll(() => resultTotal(page)).toBe(2221);
+  await expect.poll(() => resultTotal(page)).toBe(andTotal);
 
   await open(page, "/#/library?tag=asset.iot");
   const contextualVendorDisclosure = page.locator('.workspace-facet-rail [data-taxonomy-dimension="vendor_brand"]');
@@ -179,9 +185,9 @@ test("result taxonomy tags remain bounded and independently usable at every brea
         viewportWidth: globalThis.innerWidth,
       };
     });
-    expect(await row.getByRole("link", { name: "Filter by Server" }).isVisible()).toBe(true);
-    expect(await row.getByRole("link", { name: "Filter by STIG" }).isVisible()).toBe(true);
-    expect(await row.getByRole("link", { name: "Filter by Microsoft" }).isVisible()).toBe(true);
+    await expect(row.getByRole("link", { name: "Filter by Server" })).toBeVisible();
+    await expect(row.getByRole("link", { name: "Filter by STIG" })).toBeVisible();
+    await expect(row.getByRole("link", { name: "Filter by Microsoft" })).toBeVisible();
     expect(metrics.documentWidth).toBeLessThanOrEqual(metrics.viewportWidth);
     expect(metrics.lineCount).toBeLessThanOrEqual(2);
     expect(metrics.tagsInsideRow).toBe(true);
@@ -206,15 +212,17 @@ test("Advanced keeps secondary dimensions without duplicating promoted taxonomy"
 
 test("clear-all preserves text search and zero-result recovery remains available", async ({ page }) => {
   await open(page, "/#/library?q=account&tag=domain.access-control");
-  await expect.poll(() => resultTotal(page)).toBe(137);
+  await expect.poll(() => resultTotal(page)).toBeGreaterThan(0);
+  const filteredTotal = await resultTotal(page);
   await page.getByRole("button", { name: "Remove Access Control filter" }).click();
   await expect(page).toHaveURL(/#\/library\?q=account$/);
-  await expect.poll(() => resultTotal(page)).toBe(3710);
+  await expect.poll(() => resultTotal(page)).toBeGreaterThan(filteredTotal);
+  const searchTotal = await resultTotal(page);
 
   await open(page, "/#/library?q=account&tag=domain.access-control");
   await page.locator(".active-filter-row .clear-filter-link").click();
   await expect(page).toHaveURL(/#\/library\?q=account$/);
-  await expect.poll(() => resultTotal(page)).toBe(3710);
+  await expect.poll(() => resultTotal(page)).toBe(searchTotal);
 
   await open(page, "/#/library?tag=asset.iot&tag=product.microsoft-windows");
   await expect(page.locator(".workspace-result-count")).toHaveText("0 results");

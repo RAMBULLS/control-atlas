@@ -158,6 +158,21 @@ consecutive refreshes; then the source is quarantined and one issue opens. This
 replaces the earlier rule that any retained submission kept the source issue open
 forever. Retention with no recorded cause still keeps it open.
 
+Three alert states exist on purpose and must not be merged into one health state:
+
+- **Source alert** (`control-atlas-refresh:<source>` issues, for example OLIR or DISA):
+  closes when that one source is accepted, or safely retained under its partial
+  policy with the limitation recorded.
+- **Aggregate refresh alert** (`sweep-red-refresh`): closes only when the whole
+  refresh job, including repository verification, succeeds. A source can recover
+  while this alert stays open.
+- **Nightly product alert** (`sweep-red-nightly`): closes only when the Sunday
+  sweep's build, browser and accessibility jobs pass.
+
+Tests must not pin numbers that a publisher changes. A valid refresh once broke
+two tests that hard-coded the CCI-000366 mapping count; read or derive such
+counts from the record under test.
+
 One issue exists per failing sweep. `tools/report-sweep-alert.mjs` names only the
 jobs that failed, updates the issue when the failing set changes, and closes it
 when the sweep next passes. A job the sweep schedules that was skipped counts as

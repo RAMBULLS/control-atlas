@@ -90,9 +90,14 @@ test("focused trace matches the record rail and local connections never replace 
   expect(atlasTrace).toBe(recordTrace);
 
   await expect(page.locator(".react-flow")).toHaveCount(0);
-  await focused.getByRole("button", { name: /^Implementation 5523/ }).click();
+  // The publisher adds rules under this CCI on refresh, so the count is read, not pinned.
+  const implementation = focused.getByRole("button", { name: /^Implementation [\d,]+/ });
+  const label = await implementation.evaluate((node) => node.getAttribute("aria-label") || node.textContent || "");
+  const count = label.match(/Implementation\s*([\d,]+)/)?.[1];
+  expect(count, `count read from "${label}"`).toBeTruthy();
+  await implementation.click();
   expect(await focused.locator("[data-displayed-trace]").getAttribute("data-displayed-trace")).toBe(recordTrace);
-  await expect(focused.getByRole("button", { name: /View all 5523 in List/ })).toBeVisible();
+  await expect(focused.getByRole("button", { name: new RegExp(`View all ${count} in List`) })).toBeVisible();
   expect(monolithic).toEqual([]);
 });
 

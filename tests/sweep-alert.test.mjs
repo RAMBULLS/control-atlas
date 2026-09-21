@@ -112,3 +112,15 @@ test('disabled Issues fail loudly and malformed inputs are rejected before any w
   applySweepAlert([], { repository: 'RAMBULLS/control-atlas', execFileImpl: untouched.execFileImpl, label: 'x' });
   assert.equal(untouched.calls.length, 0);
 });
+
+test('source, aggregate refresh and nightly alerts are separate states and must stay separate', () => {
+  // Do not merge these into one global health state.
+  const labels = ['nightly', 'refresh'].map((kind) => assessSweep(kind, green).label);
+  assert.deepEqual(labels, ['sweep-red-nightly', 'sweep-red-refresh']);
+  // A green nightly never closes the refresh alert and a green refresh never closes the nightly one.
+  const refreshIssue = issue({ title: 'Scheduled Control Atlas job is failing: sweep-red-refresh' });
+  assert.equal(planSweepAlert({ kind: 'nightly', results: green, issues: [], runUrl: run(1) }).length, 0);
+  assert.equal(planSweepAlert({ kind: 'refresh', results: { ...green, refresh: 'success' }, issues: [refreshIssue], runUrl: run(1) })[0].type, 'comment-close');
+  // Aggregate refresh is red whenever the refresh job fails, even if every source was individually accepted.
+  assert.equal(assessSweep('refresh', { ...green, refresh: 'failure' }).red, true);
+});

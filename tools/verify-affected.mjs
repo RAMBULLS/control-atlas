@@ -29,6 +29,16 @@ const RECORD_ACCEPTANCE_PATHS = new Set([
   'tools/record-acceptance-matrix.mjs',
 ]);
 
+// Files that change what a record page renders. Their behavior is proven in a
+// browser, not only by contract tests.
+const RECORD_PAGE_PATHS = new Set([
+  'src/ui/pages/ObjectDetailPage.tsx',
+  'src/ui/components/RecordPublishedText.tsx',
+  'src/ui/lib/recordTitle.ts',
+  'src/shared/record-acceptance.mjs',
+  'tests/e2e/record-acceptance-actions.spec.mjs',
+]);
+
 const SOURCE_REFRESH_PATHS = new Set([
   'data/source-refresh-contract.json',
   'scripts/discover-nist-pages.mjs',
@@ -439,6 +449,13 @@ export function createVerificationPlan(paths, changeMap) {
     addStep(steps, {
       id: 'record-acceptance-contracts', command: ['npm', 'run', 'test:record-presentation'],
       expectedTests: 24, workers: 2, budgetSeconds: 30,
+    });
+  }
+  if (paths.some((path) => RECORD_PAGE_PATHS.has(path))) {
+    addStep(steps, {
+      id: 'record-page-browser',
+      command: ['npm', 'run', 'test:e2e:run', '--', 'tests/e2e/record-acceptance-actions.spec.mjs'],
+      expectedTests: 6, workers: 2, budgetSeconds: 30,
     });
   }
   if (phase4SurfacesChanged) {

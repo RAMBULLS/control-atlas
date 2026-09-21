@@ -16,7 +16,7 @@ import {
   dedupeDisaRecords,
 } from './lib/disa-publication-reconciliation.mjs';
 import { writeJsonAtomically } from './lib/write-json-atomically.mjs';
-import { strictConditionalFetch } from './lib/strict-conditional-fetch.mjs';
+import { createStrictConditionalFetch } from './lib/strict-conditional-fetch.mjs';
 import { assertOfficialSourceUrl } from './lib/source-url-policy.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -236,6 +236,9 @@ async function fetchAndParseStandalonePackages(standaloneNeeded, fetchImpl, opti
 
 const RANGE_BYTES = process.platform === 'win32' ? 2 * 1024 * 1024 : 8 * 1024 * 1024;
 const RANGE_RETRIES = 6;
+// Ranged downloads already retry per range with their own waits. One request per
+// attempt here keeps a persistent outage from multiplying into dozens of requests.
+const strictConditionalFetch = createStrictConditionalFetch({ retry: { attempts: 1 } });
 const execFileAsync = promisify(execFile);
 
 function wait(milliseconds) {

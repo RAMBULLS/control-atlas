@@ -146,7 +146,8 @@ requests per URL, waiting 1 and 2 seconds (a `Retry-After` is honored up to 15
 seconds), each with a 60 second timeout. A whole source that failed that way is
 attempted again after 15 seconds, up to its declared attempts. HTTP 404 and 403,
 validation rejections and parse errors are the publisher's current answer and are
-not retried. No mirror is ever contacted. When attempts run out, the source keeps
+not retried. The DISA archive keeps its own per-range retry, so the transport
+makes one request per attempt there. No mirror is ever contacted. When attempts run out, the source keeps
 its accepted files and is quarantined honestly.
 
 OLIR submissions whose mapping can no longer be downloaded keep their exact

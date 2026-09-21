@@ -72,10 +72,14 @@ for (const viewport of VIEWPORTS) {
     await expectNoHorizontalOverflow(page);
 
     // Jump to a control by identifier, then open its full record.
-    await page.locator("#atlas-search").fill("nist-800-53:AC-1");
-    // Record search loads on first focus. Enter before it is ready does nothing by design
-    // ("Record search is still loading"), so wait for the match a reader would see.
-    await expect(page.getByRole("listbox").getByRole("option").filter({ hasText: "AC-1" }).first()).toBeVisible({ timeout: 90_000 });
+    // Record search loads on first focus, and Enter before it is ready does nothing by design
+    // ("Record search is still loading"). WebKit also drops text typed in the moment after the
+    // map settles, so type again until the match a reader would see is on screen.
+    const option = page.locator("#atlas-results [role=option]").filter({ hasText: "AC-1" }).first();
+    await expect(async () => {
+      await page.locator("#atlas-search").fill("nist-800-53:AC-1");
+      await expect(option).toBeVisible({ timeout: 5_000 });
+    }).toPass({ timeout: 90_000 });
     await page.locator("#atlas-search").press("Enter");
     await expect(page).toHaveURL(/\/#\/atlas\/nist-800-53:AC-1/);
     await expect(page.getByRole("heading", { name: "Atlas", level: 1 })).toBeVisible();

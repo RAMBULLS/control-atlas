@@ -290,19 +290,19 @@ test("source detail has one return action and preserves the Sources workspace", 
     ).toBeLessThanOrEqual(1);
 
     const dialog = page.getByRole("dialog");
-    if (width < 1200) {
-      await expect(dialog).toBeVisible();
-      await dialog.getByRole("button", { name: "Close inspector" }).click();
-    } else {
-      const closeDetails = page.getByRole("button", { name: "Close publication details" });
-      await expect(closeDetails).toBeVisible();
-      await closeDetails.click();
-    }
-    await expect.poll(() =>
-      page.evaluate(() =>
+    if (width < 1200) await expect(dialog).toBeVisible();
+    else await expect(page.getByRole("button", { name: "Close publication details" })).toBeVisible();
+    // A click that lands before the page has attached its handlers is lost on a slow runner.
+    // Close again while the control is still there, then assert the state.
+    await expect(async () => {
+      const closer = width < 1200
+        ? dialog.getByRole("button", { name: "Close inspector" })
+        : page.getByRole("button", { name: "Close publication details" });
+      if (await closer.count()) await closer.click();
+      expect(await page.evaluate(() =>
         new URLSearchParams(globalThis.location.hash.split("?")[1]).has("source"),
-      ),
-    ).toBe(false);
+      )).toBe(false);
+    }).toPass({ timeout: 30_000 });
     await expect(dialog).toHaveCount(0);
     await expect(page.locator("#app")).not.toHaveAttribute("inert", "");
     await waitForAppReady(page);

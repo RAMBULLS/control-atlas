@@ -71,6 +71,9 @@ for (const viewport of VIEWPORTS) {
 
     // Jump to a control by identifier, then open its full record.
     await page.locator("#atlas-search").fill("nist-800-53:AC-1");
+    // Record search loads on first focus. Enter before it is ready does nothing by design
+    // ("Record search is still loading"), so wait for the match a reader would see.
+    await expect(page.getByRole("listbox").getByRole("option").filter({ hasText: "AC-1" }).first()).toBeVisible();
     await page.locator("#atlas-search").press("Enter");
     await expect(page).toHaveURL(/\/#\/atlas\/nist-800-53:AC-1/);
     await expect(page.getByRole("heading", { name: "Atlas", level: 1 })).toBeVisible();

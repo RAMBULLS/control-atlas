@@ -215,8 +215,9 @@
 .ca-record-rail__body > a:hover { color: var(--ca-secondary); }
 .ca-record-rail .record-rail-nav-list :is(a, button):focus-visible { outline: 2px solid var(--ca-focus); outline-offset: 2px; }
 .ca-record-rail--actions { border-color: var(--ca-action-primary); }
-.ca-record-rail--actions .ca-record-rail__icon,
-.ca-record-rail--actions .ca-record-rail__heading h2 { color: var(--ca-action-primary); }
+.ca-record-rail--actions .ca-record-rail__icon { color: var(--ca-action-primary); }
+/* Heading text is 17px regular. The orange accent is 2.8:1 on the dark rail, so it stays on the border and icon. */
+.ca-record-rail--actions .ca-record-rail__heading h2 { color: var(--ca-text); }
 
 /* Keep the STIG overview about the finding, not the publication. */
 .ca-record-page #section-overview .record-source-facts,

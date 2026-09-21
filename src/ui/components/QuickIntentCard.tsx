@@ -115,7 +115,7 @@ export function CatalogFilterBar(props: {
         role="group"
       >
         <button
-          className={`inline-flex items-center min-h-[26px] px-[12px] py-[4px] border rounded font-mono text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
+          className={`inline-flex items-center min-h-[44px] sm:min-h-[26px] px-[12px] py-[4px] border rounded font-mono text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
             props.category === ""
               ? "border-[var(--ca-info)] text-[var(--ca-text)] bg-[color-mix(in_srgb,var(--ca-info)_20%,transparent)]"
               : "border-[var(--ca-border-strong)] text-[var(--ca-text)] bg-[var(--ca-surface)] hover:bg-[var(--ca-surface-raised)]"
@@ -127,7 +127,7 @@ export function CatalogFilterBar(props: {
         {props.categoryOptions.map((option) => (
           <button
             key={option}
-            className={`inline-flex items-center min-h-[26px] px-[12px] py-[4px] border rounded font-mono text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
+            className={`inline-flex items-center min-h-[44px] sm:min-h-[26px] px-[12px] py-[4px] border rounded font-mono text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
               props.category === option
                 ? "border-[var(--ca-info)] text-[var(--ca-text)] bg-[color-mix(in_srgb,var(--ca-info)_20%,transparent)]"
                 : "border-[var(--ca-border-strong)] text-[var(--ca-text)] bg-[var(--ca-surface)] hover:bg-[var(--ca-surface-raised)]"

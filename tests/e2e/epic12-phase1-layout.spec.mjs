@@ -151,7 +151,10 @@ for (const viewport of VIEWPORTS) {
         expect(layout.firstHeadingY).toBeLessThan(viewport.width === 375 ? 480 : 400);
         if (route !== "/#/") {
           expect(pageHeaderHeight, `${route} primary pagehead`).not.toBeNull();
-          expect(pageHeaderHeight).toBeLessThanOrEqual(viewport.width === 375 ? 300 : 220);
+          // Record pages carry the accepted title, identity and status block, and long titles wrap
+          // at tablet width, so they get a taller budget than a plain page header.
+          const tabletBudget = route.startsWith("/#/record/") ? 260 : 220;
+          expect(pageHeaderHeight).toBeLessThanOrEqual(viewport.width === 375 ? 300 : tabletBudget);
         }
         expect(
           layout.overflows,

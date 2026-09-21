@@ -120,7 +120,7 @@ test('evidence matrix puts source context in the main table and full detail on r
     assert.ok(evidence.headers.includes(header), `main table needs "${header}"`);
   }
   const groups = new Set(evidence.columns.map((column) => column.group));
-  assert.deepEqual([...groups], ['Source-backed context', 'Your working fields']);
+  assert.deepEqual([...groups], ['From cited sources', 'Your working fields']);
   const sheets = doc.sections.filter((section) => section.type === 'table').map((section) => section.heading);
   assert.deepEqual(sheets, ['Evidence Expectations', 'Assessment Objects', 'Assessment Objectives', 'Control Cross-References']);
 });

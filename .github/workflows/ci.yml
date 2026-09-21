@@ -599,7 +599,9 @@ jobs:
           PLAYWRIGHT_BLOB_OUTPUT_NAME: report-${{ matrix.browser }}-${{ matrix.shard }}.zip
           PLAYWRIGHT_FULLY_PARALLEL: '1'
           PLAYWRIGHT_WORKERS: '2'
-        run: npm run test:e2e:run -- --shard=${{ matrix.shard }}/2 --retries=0 --reporter=blob,github
+        # One retry. WebKit on a shared runner fails a different interaction spec each run (each passes when
+        # rerun), so a spec must fail twice to fail the sweep. Flaky specs are still listed in the report.
+        run: npm run test:e2e:run -- --shard=${{ matrix.shard }}/2 --retries=1 --reporter=blob,github
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         if: ${{ !cancelled() }}
         with:

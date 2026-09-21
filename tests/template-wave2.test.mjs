@@ -7,10 +7,8 @@ import { docToXlsx, officeDocumentToSheets } from '../src/app/office-export.mjs'
 import {
   CONMON_BASIS_LABELS,
   FEDRAMP_CONMON_RULES,
-  STIG_VIEWER_CSV_HEADERS,
   buildTemplateDocument,
 } from '../src/app/template-engine.mjs';
-import { STIG_ID, addStigFixture } from './helpers/stig-fixture.mjs';
 
 const registry = JSON.parse(readFileSync('data/template-registry.json', 'utf8'));
 
@@ -20,12 +18,13 @@ const control = (id, type = 'control') => ({
   lifecycle_status: 'active',
   metadata: { catalog_id: 'nist-800-53', item_id: id, title: `${id} title`, control_family: 'Access Control' },
 });
+const rule = (n) => ({ id: `disa-stig:V-${n}`, node_type: 'stig_rule', metadata: { item_id: `V-${n}`, rule_id: `SV-${n}r1_rule` } });
 const cci = (n) => ({ id: `disa-cci:CCI-${n}`, node_type: 'cci', metadata: { item_id: `CCI-${n}` } });
 const link = (type, source, target) => ({ id: `${type}:${source}:${target}`, relationship_type: type, source_node_id: source, target_node_id: target });
 
 const dataset = {
   nodes: [
-    control('AC-1'), control('AC-2'), cci('000015'), cci('000016'),
+    control('AC-1'), control('AC-2'), cci('000015'), cci('000016'), rule(101), rule(102),
     {
       id: 'nist-800-53a:AC-2',
       node_type: 'assessment_procedure',
@@ -49,14 +48,12 @@ const dataset = {
   ],
   sources: [],
 };
-addStigFixture(dataset);
 
 function build(templateType, extra = {}) {
   const template = registry.templates.find((item) => item.name === templateType);
   return buildTemplateDocument(
     {
       templateType,
-      stig: STIG_ID,
       framework: template.input_options.includes('framework') ? 'nist-800-53' : '',
       environment: 'Cloud SaaS',
       sourceRefs: template.source_refs,
@@ -69,80 +66,6 @@ function build(templateType, extra = {}) {
 const table = (doc, heading) => doc.sections.find((section) => section.type === 'table' && (!heading || section.heading === heading));
 const text = (doc, heading) => doc.sections.find((section) => section.heading === heading)?.content || '';
 const readMe = (doc) => officeDocumentToSheets(doc)[0].rows.map((row) => row.join(' ')).join('\n');
-
-// ---------- STIG Viewer CSV worksheet ----------
-
-test('the STIG worksheet fails closed without a STIG, or with one that is not published', () => {
-  assert.throws(() => build('stig_evidence_checklist', { stig: '' }), /Choose a STIG/);
-  assert.throws(() => build('stig_evidence_checklist', { stig: 'BENCHMARK-NOT-REAL' }), /not a published STIG/);
-});
-
-test('the STIG worksheet lists exactly the rules of the chosen STIG, ordered by STIG ID', () => {
-  const doc = build('stig_evidence_checklist');
-  const rows = table(doc, 'STIG Viewer CSV Import Rows').rows;
-  assert.deepEqual(rows.map((row) => row[1]), ['SV-101r1_rule', 'SV-102r1_rule', 'SV-103r2_rule']);
-  assert.ok(rows.every((row) => row[0] === 'Example_STIG'), 'Benchmark ID is the STIG\'s published benchmark ID');
-  assert.match(text(doc, 'Selected STIG'), /Example Security Technical Implementation Guide, V1R2 \(2026-01-15\)/);
-  assert.match(text(doc, 'Selected STIG'), /3 rules: 1 high, 1 medium, 1 low/);
-});
-
-test('the STIG import table has exactly the 12 documented headers in the documented order', () => {
-  const section = table(build('stig_evidence_checklist'), 'STIG Viewer CSV Import Rows');
-  assert.deepEqual(section.headers, [...STIG_VIEWER_CSV_HEADERS]);
-  assert.deepEqual(STIG_VIEWER_CSV_HEADERS, ['Benchmark ID', 'Rule ID', 'Status', 'Comments', 'Finding Details', 'Severity Override', 'Severity Override Reason', 'FQDN', 'IP Address', 'MAC Address', 'Host Name', 'Technology Area']);
-  for (const contaminant of ['Evidence Artifact', 'Validation Method', 'Evidence Owner', 'Rule Title', 'Severity']) {
-    assert.ok(!section.headers.includes(contaminant), `${contaminant} must stay out of the import table`);
-  }
-});
-
-test('the STIG worksheet never fills in a result', () => {
-  const section = table(build('stig_evidence_checklist'), 'STIG Viewer CSV Import Rows');
-  const at = (header) => section.headers.indexOf(header);
-  for (const row of section.rows) {
-    for (const header of ['Status', 'Comments', 'Finding Details', 'Severity Override', 'Severity Override Reason']) {
-      assert.equal(row[at(header)], '', `${header} must be blank for the practitioner`);
-    }
-  }
-});
-
-test('the STIG target is entered once and flows into every row of the import table', () => {
-  const doc = build('stig_evidence_checklist');
-  const target = table(doc, 'Target');
-  assert.deepEqual(target.headers, ['FQDN', 'IP Address', 'MAC Address', 'Host Name', 'Technology Area']);
-  assert.equal(target.rows.length, 1);
-  const section = table(doc, 'STIG Viewer CSV Import Rows');
-  for (const row of section.rows) {
-    const formulas = row.slice(7).map((cell) => cell.formula);
-    assert.deepEqual(formulas, ['A', 'B', 'C', 'D', 'E'].map((c) => `IF(Target!$${c}$2="","",Target!$${c}$2)`));
-  }
-  assert.equal(target.columns.find((column) => column.header === 'Technology Area').validation.values.length, 21);
-  const entries = unzipSync(docToXlsx(doc));
-  assert.match(strFromU8(entries['xl/workbook.xml']), /<calcPr [^>]*fullCalcOnLoad="1"/, 'formulas must calculate when the file opens');
-  const names = [...strFromU8(entries['xl/workbook.xml']).matchAll(/<sheet name="([^"]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(names.slice(0, 3), ['Read Me', 'Target', 'STIG Viewer CSV Import Rows']);
-});
-
-test('the STIG worksheet keeps evidence notes and rule reference on their own sheets', () => {
-  const doc = build('stig_evidence_checklist');
-  assert.deepEqual(table(doc, 'Evidence Working Notes').rows.map((row) => row[0]), ['SV-101r1_rule', 'SV-102r1_rule', 'SV-103r2_rule']);
-  const reference = table(doc, 'STIG Rule Reference');
-  assert.deepEqual(reference.headers, ['Rule ID', 'Vuln ID', 'STIG ID', 'Severity', 'Rule Title', 'CCIs', 'Related NIST 800-53 Controls']);
-  const first = reference.rows[0];
-  assert.deepEqual(first.slice(0, 4), ['SV-101r1_rule', 'V-101', 'EX-0001', 'High (CAT I)']);
-  assert.equal(first[5], 'CCI-000015');
-  assert.equal(first[6], 'AC-2');
-});
-
-test('the STIG worksheet claims field alignment only and says an import was not tested', () => {
-  const template = registry.templates.find((item) => item.name === 'stig_evidence_checklist');
-  assert.equal(template.compatibility.classification, 'Field-aligned');
-  assert.equal(template.provenance.verified_interchange, false);
-  const notes = readMe(build('stig_evidence_checklist'));
-  assert.match(notes, /Field-aligned/);
-  assert.match(notes, /has not tested an import/i);
-  assert.match(notes, /updates a checklist that already exists/i);
-  assert.doesNotMatch(notes + JSON.stringify(template), /officially specified|compatible with STIG Viewer/i);
-});
 
 // ---------- Assessment planning ----------
 
@@ -228,42 +151,4 @@ test('every FedRAMP cadence we cite still exists in the FedRAMP rules data with 
     assert.match(found.statement.toLowerCase(), new RegExp(rule.timeframe.replace(/ /g, '\\s+')), `${rule.ruleId} must still state "${rule.timeframe}"`);
     assert.equal(found.force, 'MUST', `${rule.ruleId} must still be a MUST`);
   }
-});
-
-// ---------- PPSM ----------
-
-test('the PPSM worksheet has its own working states and never uses registry states', () => {
-  const { columns } = table(build('ppsm_preparation_worksheet'));
-  const list = (header) => columns.find((column) => column.header === header).validation.values;
-  assert.deepEqual(list('Review Status'), ['Collecting', 'In review', 'Ready to enter', 'Entered in registry', 'Needs rework']);
-  assert.deepEqual(list('Network'), ['NIPRNet', 'SIPRNet']);
-  for (const value of [...list('Review Status'), ...list('Requested Action')]) assert.doesNotMatch(value, /^(Submitted|Approved)$/);
-});
-
-test('the PPSM worksheet states its workflow and separates registry information from local context', () => {
-  const doc = build('ppsm_preparation_worksheet');
-  assert.match(text(doc, 'Workflow'), /Collect here, then review, then enter the data in the authorized PPSM workflow/);
-  const section = table(doc);
-  const groups = [...new Set(section.columns.map((column) => column.group))];
-  assert.deepEqual(groups, ['Registry information', 'Assessment and category', 'Local working context', 'Review']);
-  const notes = readMe(doc);
-  assert.match(notes, /not a PPSM submission form/i);
-  assert.match(text(doc, 'How to use'), /not PPSM Registry fields/);
-  const registryFields = section.columns.filter((column) => column.group === 'Registry information').map((column) => column.header);
-  assert.deepEqual(registryFields, ['Network', 'PPSM Tracking Identifier', 'Service Name', 'Protocol', 'Transport', 'Port / Range']);
-});
-
-test('PPSM provenance names the source actually read and does not imply field-level checks against policy or training', () => {
-  const template = registry.templates.find((item) => item.name === 'ppsm_preparation_worksheet');
-  assert.match(template.provenance.basis, /DISN Connection Process Guide section 2\.7\.3/);
-  assert.match(template.provenance.basis, /Not checked field by field against DoDI 8551\.01 or the DISA PPSM Registry training/);
-  assert.equal(template.provenance.basis_url, 'https://dl.dod.cyber.mil/wp-content/uploads/connect/CPG/ConnProcGuide.html');
-  assert.doesNotMatch(template.provenance.basis, /^DoDI 8551\.01/);
-  // The policy and training stay linked as official context.
-  assert.deepEqual(template.official_resource_ids, ['dodi-8551-01-ppsm-2023', 'disa-ppsm-registry-training']);
-  const notes = readMe(build('ppsm_preparation_worksheet'));
-  assert.match(notes, /only source read for this worksheet/);
-  assert.match(notes, /were not used to check individual columns/);
-  assert.match(notes, /not registry fields/);
-  assert.match(text(build('ppsm_preparation_worksheet'), 'How to use'), /policy text was not available to check them/);
 });

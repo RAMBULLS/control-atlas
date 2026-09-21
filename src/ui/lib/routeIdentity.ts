@@ -140,7 +140,7 @@ const OBSOLETE_COMPARE_PARAMS = [
   "compareView", "provenance", "confidence",
 ] as const;
 const LEARN_PARAMS = new Set(["pattern"]);
-const BUILD_PARAMS = new Set(["templateType", "framework", "format", "environment", "baseline", "controlFamily", "stig", "category", "q"]);
+const BUILD_PARAMS = new Set(["templateType", "framework", "format", "environment", "baseline", "controlFamily", "category", "q"]);
 const SOURCE_PARAMS = new Set(["layer", "q", "source", "publisher", "provenance", "eligibility", "lifecycle", "access"]);
 const SOURCE_LAYERS = new Set(["publication", "connection", "ingestion", "organization"]);
 const RESOURCE_PARAMS = new Set(["q", "resourceType", "collection", "owner", "sort", "showAll", "viewMode"]);

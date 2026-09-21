@@ -12,9 +12,9 @@ import {
   TRUE_FALSE,
   defineColumns,
   listOf,
+  tableSection,
 } from '../src/app/template-columns.mjs';
 import { GENERATED_FILE_NOTICE, PRODUCT_DISCLAIMER, STARTER_DOCUMENT_REVIEW_NOTICE } from '../src/shared/disclaimer.mjs';
-import { STIG_ID, addStigFixture } from './helpers/stig-fixture.mjs';
 
 const registry = JSON.parse(readFileSync('data/template-registry.json', 'utf8'));
 const control = (catalog) => ({
@@ -24,14 +24,12 @@ const control = (catalog) => ({
   metadata: { catalog_id: catalog, item_id: 'AC-2', title: 'Account Management', control_family: 'Access Control' },
 });
 const dataset = { nodes: [control('nist-800-53'), control('fedramp-rev5')], edges: [], sources: [] };
-addStigFixture(dataset);
 
 function build(templateType, framework = 'nist-800-53') {
   const template = registry.templates.find((item) => item.name === templateType);
   return buildTemplateDocument(
     {
       templateType,
-      stig: STIG_ID,
       framework: template.input_options.includes('framework') ? framework : '',
       environment: 'Cloud SaaS',
       sourceRefs: template.source_refs,
@@ -94,19 +92,13 @@ const flat = (templateType) => {
   return merged;
 };
 
-test('STIG worksheet dropdowns use only the values in the STIG Viewer V1R7 guide', () => {
-  const v = flat('stig_evidence_checklist');
-  assert.deepEqual(v.Status.values, ['Not Reviewed', 'Open', 'Not a Finding', 'Not Applicable']);
-  assert.deepEqual(v['Severity Override'].values, ['Low', 'Medium', 'High']);
-  assert.equal(v['Technology Area'].values.length, 21);
-  assert.ok(v['Technology Area'].values.includes('Domain Name System (DNS)'));
-  assert.ok(!v.Status.values.includes('Draft'), 'no generic status values may reach the STIG sheet');
-});
-
 test('a long controlled list is stored on a hidden sheet, not inline past the 255-character limit', () => {
-  const v = flat('stig_evidence_checklist');
-  assert.match(v['Technology Area'].f1, /^_Lists!\$[A-Z]+\$1:\$[A-Z]+\$21$/);
-  assert.ok(v.Status.f1.startsWith('&quot;'), 'short lists stay inline');
+  const long = Array.from({ length: 30 }, (_, i) => `Option number ${i + 1} with a long name`);
+  const doc = { title: 'Long list', description: 'A table with a list too long to write inline.', sections: [tableSection('Sheet', ['Name', 'Kind'], [['a', '']], { Kind: listOf(long), Name: {} })] };
+  const entries = unzipSync(docToXlsx(doc));
+  const workbook = strFromU8(entries['xl/workbook.xml']);
+  assert.match(workbook, /<sheet name="_Lists"[^>]*state="hidden"/, 'the list sheet is hidden');
+  assert.match(strFromU8(entries['xl/worksheets/sheet2.xml']), /<formula1>_Lists!\$A\$1:\$A\$30<\/formula1>/);
   for (const templateType of xlsxTypes) {
     for (const [header, rule] of Object.entries(flat(templateType))) {
       if (rule.type === 'list' && rule.f1.startsWith('&quot;')) {
@@ -116,10 +108,9 @@ test('a long controlled list is stored on a hidden sheet, not inline past the 25
   }
 });
 
-test('reciprocity, PPSM, POA&M and hardware status lists are each their own worksheet vocabulary', () => {
+test('reciprocity, POA&M and hardware status lists are each their own worksheet vocabulary', () => {
   assert.deepEqual(flat('reciprocity_checklist').Status.values, ['Not Started', 'In Review', 'Sufficient', 'Gap', 'Not Applicable']);
   assert.deepEqual(flat('reciprocity_checklist')['Recommended Disposition'].values, ['Accept', 'Accept with Conditions', 'Supplement', 'Reassess', 'Reject']);
-  assert.deepEqual(flat('ppsm_preparation_worksheet')['Review Status'].values, ['Collecting', 'In review', 'Ready to enter', 'Entered in registry', 'Needs rework']);
   assert.deepEqual(flat('poam_starter').status.values, ['Ongoing', 'Risk Accepted', 'Completed', 'Not Applicable']);
   assert.deepEqual(flat('poam_starter').likelihood.values, ['Very Low', 'Low', 'Moderate', 'High', 'Very High']);
   assert.deepEqual(flat('implementation_statement_worksheet').implementationStatus.values, ['Planned', 'Implemented', 'Inherited', 'Not Applicable', 'Manually Inherited']);
@@ -167,7 +158,6 @@ test('real date fields validate as dates; period and range fields do not', () =>
     conmon_calendar: ['Next Due', 'Completed Date'],
     reciprocity_checklist: ['Due Date', 'Granting Decision Date', 'Target Decision Date', 'Decision Date'],
     assessment_planning_worksheet: ['Target Start', 'Target Complete'],
-    ppsm_preparation_worksheet: ['Last Verified'],
     implementation_statement_worksheet: ['estimatedCompletionDate'],
   };
   for (const [templateType, headers] of Object.entries(dateFields)) {
@@ -252,7 +242,6 @@ test('interoperability uses only the three public labels and matches the registr
     const publicCopy = JSON.stringify([template.description, template.compatibility, INTEROPERABILITY[template.artifact_type]]);
     assert.doesNotMatch(publicCopy, /officially specified|\bcompatible\b|schema-aligned/i, `${template.name}: overstated interoperability wording`);
   }
-  assert.equal(INTEROPERABILITY.stig_evidence_checklist.level, 'Field-aligned');
 });
 
 test('a Field-aligned artifact names the destination and says import is not verified', () => {
@@ -263,9 +252,9 @@ test('a Field-aligned artifact names the destination and says import is not veri
 });
 
 test('the Field Guide lists group, required flag and allowed values per column', () => {
-  const entries = unzipSync(docToXlsx(build('stig_evidence_checklist')));
+  const entries = unzipSync(docToXlsx(build('poam_starter')));
   const names = [...strFromU8(entries['xl/workbook.xml']).matchAll(/<sheet name="([^"]+)"/g)].map((m) => m[1]);
   const guide = strFromU8(entries[`xl/worksheets/sheet${names.indexOf('Field Guide') + 1}.xml`]);
-  assert.match(guide, /Choose one: Not Reviewed \| Open \| Not a Finding \| Not Applicable/);
-  assert.match(guide, /Choose one: Low \| Medium \| High/);
+  assert.match(guide, /Choose one: Ongoing \| Risk Accepted \| Completed \| Not Applicable/);
+  assert.match(guide, /Choose one: Very Low \| Low \| Moderate \| High \| Very High/);
 });

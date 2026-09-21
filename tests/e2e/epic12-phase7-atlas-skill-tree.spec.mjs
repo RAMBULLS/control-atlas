@@ -92,7 +92,9 @@ test("focused trace matches the record rail and local connections never replace 
   await expect(page.locator(".react-flow")).toHaveCount(0);
   // The publisher adds rules under this CCI on refresh, so the count is read, not pinned.
   const implementation = focused.getByRole("button", { name: /^Implementation [\d,]+/ });
-  const count = (await implementation.textContent()).match(/^Implementation ([\d,]+)/)[1];
+  const label = await implementation.evaluate((node) => node.getAttribute("aria-label") || node.textContent || "");
+  const count = label.match(/Implementation\s*([\d,]+)/)?.[1];
+  expect(count, `count read from "${label}"`).toBeTruthy();
   await implementation.click();
   expect(await focused.locator("[data-displayed-trace]").getAttribute("data-displayed-trace")).toBe(recordTrace);
   await expect(focused.getByRole("button", { name: new RegExp(`View all ${count} in List`) })).toBeVisible();

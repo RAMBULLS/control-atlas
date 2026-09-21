@@ -22,10 +22,12 @@ const AUTOMATION_TESTS = new Set([
 
 const RECORD_ACCEPTANCE_PATHS = new Set([
   'src/shared/record-acceptance.mjs',
+  'src/shared/record-control-context.mjs',
   'src/shared/record-fact-labels.mjs',
   'src/shared/record-presentation.mjs',
   'tests/graph/recordActionPolicy.test.ts',
   'tests/record-acceptance.test.mjs',
+  'tests/record-control-context.test.mjs',
   'tools/record-acceptance-matrix.mjs',
 ]);
 
@@ -36,6 +38,7 @@ const RECORD_PAGE_PATHS = new Set([
   'src/ui/components/RecordPublishedText.tsx',
   'src/ui/lib/recordTitle.ts',
   'src/shared/record-acceptance.mjs',
+  'src/shared/record-control-context.mjs',
   'tests/e2e/record-acceptance-actions.spec.mjs',
 ]);
 

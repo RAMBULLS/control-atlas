@@ -37,6 +37,20 @@
     "required_fields": { "$ref": "#/$defs/stringArray" },
     "optional_fields": { "$ref": "#/$defs/stringArray" },
     "prohibited_synthetic_presentation": { "$ref": "#/$defs/stringArray" },
+    "selections": {
+      "description": "Published relationships this record type leads with: what a baseline selects, what a program level requires. Rendered as a list of the records the publisher selected, not as generic related records.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["relationship_type", "heading", "note"],
+        "properties": {
+          "relationship_type": { "type": "string", "minLength": 1 },
+          "heading": { "type": "string", "minLength": 1 },
+          "note": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
     "sections": {
       "type": "array",
       "minItems": 1,
@@ -47,7 +61,7 @@
         "properties": {
           "field": { "type": "string", "minLength": 1 },
           "heading": { "type": "string", "minLength": 1 },
-          "kind": { "enum": ["text", "list", "references", "structured", "publisher_mappings", "mapping_targets", "objectives", "methods", "countermeasures"] },
+          "kind": { "enum": ["text", "list", "references", "structured", "publisher_mappings", "mapping_targets", "objectives", "methods", "countermeasures", "control_parameters"] },
           "disposition": { "$ref": "#/$defs/disposition" }
         }
       }

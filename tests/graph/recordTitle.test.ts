@@ -139,6 +139,17 @@ test("baseline headings keep the level word the scaffold key repeats", () => {
   assert.equal(heading("fedramp-rev5", "LI-SAAS", "LI-SaaS Baseline"), "LI-SaaS Baseline");
 });
 
+test("FedRAMP control context leads with the control and keeps the publisher title beneath", () => {
+  const identity = recordIdentityPresentationFor({
+    publisher: "FedRAMP", catalogId: "fedramp-2026", publicationName: "FedRAMP Consolidated Rules for 2026",
+    family: "Control parameters and guidance: AC", itemId: "CTL-AC-06-01", title: "AC-06-01 control context", objectType: "control_context",
+  });
+  assert.equal(identity.primary, "FedRAMP AC-6.1 parameters and guidance");
+  assert.equal(identity.secondary, "AC-06-01 control context");
+  assert.equal(identity.stableIdIsGenerated, false);
+  assert.equal(identity.browserTitle, "FedRAMP AC-6.1 parameters and guidance — AC-06-01 control context");
+});
+
 test("no scaffold-keyed record in the corpus loses words from its heading", () => {
   const lost: string[] = [];
   for (const node of readGeneratedCollection(".", "nodes").nodes as any[]) {

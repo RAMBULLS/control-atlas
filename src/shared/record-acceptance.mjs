@@ -233,6 +233,7 @@ export function createRecordMatrixAccumulator() {
       edges: 0,
       comparable: 0,
       children: 0,
+      selected: 0,
     });
     pairOfNode.set(node.id, key);
   };
@@ -247,6 +248,8 @@ export function createRecordMatrixAccumulator() {
       if (source) source.children += 1;
       return;
     }
+    const sourcePair = pairs.get(pairOfNode.get(edge.source_node_id));
+    if (source && sourcePair.contract.selections.some((entry) => entry.relationship_type === edge.relationship_type)) source.selected += 1;
     for (const side of [source, target]) {
       if (!side) continue;
       side.edges += 1;
@@ -277,7 +280,8 @@ export function createRecordMatrixAccumulator() {
       if (!representative) issues.push("NO_REPRESENTATIVE_RECORD");
       if (unlabeled.length) issues.push(`UNLABELED_FACTS:${unlabeled.join(",")}`);
       if (emptyContainers > 0) issues.push(`EMPTY_CONTAINERS:${emptyContainers}/${containerNodes.length}`);
-      const hardFailure = issues.some((issue) => /^(NO_DISPOSITION|NO_REPRESENTATIVE_RECORD|UNLABELED_FACTS)/.test(issue));
+      if (pair.contract.selections.length && !nodes.some((n) => n.selected > 0)) issues.push("SELECTION_SPEC_UNUSED");
+      const hardFailure = issues.some((issue) => /^(NO_DISPOSITION|NO_REPRESENTATIVE_RECORD|UNLABELED_FACTS|SELECTION_SPEC_UNUSED)/.test(issue));
       const acceptance = !disposition ? "UNREVIEWED"
         : hardFailure ? "BLOCKED"
         : disposition.status === REVIEW_STATUS.ACCEPTED ? "ACCEPTED" : "PROVISIONAL";
@@ -303,6 +307,7 @@ export function createRecordMatrixAccumulator() {
         structural_children: representative?.children ?? 0,
         empty_container_records: emptyContainers,
         related_connections: representative?.edges ?? 0,
+        selection_records: nodes.reduce((total, n) => total + n.selected, 0),
         actions: representative ? recordActionPolicy({
           catalogId: pair.catalogId,
           pageRole: pair.contract.page_role,

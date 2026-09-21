@@ -79,3 +79,60 @@ test("a control with real mappings still offers Compare and a template handoff",
   await template.click();
   await expect(page).toHaveURL(/framework=nist-800-53/);
 });
+
+test("baselines, impact levels and program levels lead with what the publisher selected or requires", async ({ page }) => {
+  const cases = [
+    ["/#/record/nist-800-53b/HIGH", "Selected controls"],
+    ["/#/record/fedramp-rev5/HIGH", "Selected controls"],
+    ["/#/record/fips-199/FIPS-199-HIGH", "Selected baseline"],
+    ["/#/record/cmmc-2/LEVEL-2", "Requirements"],
+  ];
+  for (const [route, heading] of cases) {
+    await openRecord(page, route);
+    const section = page.locator('[data-record-section="selection"]');
+    await expect(section, route).toHaveCount(1);
+    await expect(section.getByRole("heading", { name: heading, level: 2 }), route).toBeVisible();
+    expect(await section.locator("li a").count(), route).toBeGreaterThan(0);
+    // The same edges are not repeated as generic related links.
+    await expect(page.locator('[data-record-section="related-records"] [data-record-connection-id]').filter({ hasText: /Selects/i }), route).toHaveCount(0);
+  }
+});
+
+test("a selection section is never empty, and a level with nothing published shows none", async ({ page }) => {
+  await openRecord(page, "/#/record/cmmc-2/LEVEL-1");
+  const sections = page.locator('[data-record-section="selection"]');
+  for (let index = 0; index < await sections.count(); index += 1) {
+    expect(await sections.nth(index).locator("li a").count()).toBeGreaterThan(0);
+  }
+});
+
+test("a long selection is capped with a way to see the rest in Atlas", async ({ page }) => {
+  await openRecord(page, "/#/record/nist-800-53b/HIGH");
+  const section = page.locator('[data-record-section="selection"]');
+  expect(await section.locator("li a").count()).toBeLessThanOrEqual(25);
+  await expect(section.getByRole("link", { name: /more — Explore in Atlas/ })).toBeVisible();
+});
+
+test("FedRAMP control context leads with the control, reads parameters plainly and links the control", async ({ page }) => {
+  await openRecord(page, "/#/record/fedramp-2026/CTL-AC-06-01");
+  await expect(page.getByRole("heading", { name: "FedRAMP AC-6.1 parameters and guidance", level: 1 })).toBeVisible();
+  await expect(page.locator(".record-official-name")).toHaveText("AC-06-01 control context");
+  const published = page.locator('[data-source-field="description"]');
+  await expect(published.getByRole("heading", { name: "Parameters and guidance", level: 2 })).toBeVisible();
+  await expect(published.locator("li strong").first()).toHaveText(/^AC-6\.1 parameter \d$/);
+  // The publisher's identifier stays available, but is not the lead.
+  await expect(published.locator("li code").first()).toContainText("_odp");
+  const underlying = page.locator('[data-record-section="underlying-control"]');
+  await expect(underlying.getByRole("heading", { name: "Underlying control", level: 2 })).toBeVisible();
+  await underlying.getByRole("link").click();
+  await expect(page.getByRole("heading", { name: "NIST AC-6.1", level: 1 })).toBeVisible();
+});
+
+test("guidance-only control context keeps every paragraph and still links the control", async ({ page }) => {
+  await openRecord(page, "/#/record/fedramp-2026/CTL-AC-20");
+  await expect(page.getByRole("heading", { name: "FedRAMP AC-20 parameters and guidance", level: 1 })).toBeVisible();
+  const published = page.locator('[data-source-field="description"]');
+  await expect(published).toContainText("The interrelated controls of AC-20, CA-3, and SA-9 should be differentiated as follows");
+  await expect(published).toContainText("SA-9 describes the responsibilities of external system owners");
+  await expect(page.locator('[data-record-section="underlying-control"]')).toBeVisible();
+});

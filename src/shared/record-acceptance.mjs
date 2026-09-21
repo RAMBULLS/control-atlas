@@ -38,7 +38,7 @@ const remove = (reason, review = {}) => ({ disposition: RECORD_DISPOSITIONS.REMO
 
 /**
  * Per record type. Every entry starts provisional (decided from the repository
- * audit on issue #279) and moves to accepted only after its browser review is
+ * audit on issue 279) and moves to accepted only after its browser review is
  * recorded. Tier 1 types can change a product decision; Tier 2 need a pair
  * fixture and a spot check; Tier 3 are covered by the generated assertions.
  */

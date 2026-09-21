@@ -193,6 +193,8 @@ test("no visible relationships produces no empty zero-count panel while preservi
     await open(page, route);
     await expect(page.locator('[data-template="E"]')).toBeVisible();
     await expect(page.locator('[data-record-section="related-records"]')).toHaveCount(0);
-    await expect(page.getByRole("link", { name: "See connections", exact: true })).toBeVisible();
+    // Issue #279: the header "See connections" button is promoted only when
+    // there is something to explore. Atlas stays reachable from the sidebar.
+    await expect(page.locator(".record-template-sidebar").getByRole("link", { name: "View in Atlas", exact: true })).toBeVisible();
   }
 });

@@ -205,6 +205,8 @@ test("on a phone the context results come right after the current context", asyn
 test("context menu and results have no serious accessibility violations", async ({ page }) => {
   await open(page, contextUrl("&atlasLimb=atlas:LIMB-IMPLEMENTATION&atlasFramework=disa-stig"));
   await openContext(page);
+  // Axe reads computed colors, so it must not sample a transition halfway (WebKit reported 1.81:1 mid-fade).
+  await page.waitForFunction(() => globalThis.document.getAnimations().every((animation) => !(animation instanceof globalThis.CSSTransition)));
   const results = await new AxeBuilder({ page }).include(".atl").analyze();
   expect(results.violations.filter((v) => ["serious", "critical"].includes(v.impact))).toEqual([]);
 });

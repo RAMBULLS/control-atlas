@@ -1180,17 +1180,6 @@ export function TemplatesPage(props: {
                 />
               ) : null}
               <SelectField
-                    emptyLabel={`Select a STIG (${stigOptions.length} shown)`}
-                    hint="One STIG per file. The file lists that STIG's real rules under the 12 STIG Viewer CSV columns."
-                    label="STIG"
-                    onChange={(value) => onNavigate("templates", { stig: value })}
-                    options={stigOptions}
-                    required
-                    value={state.stig || ""}
-                  />
-                </>
-              ) : null}
-              <SelectField
                 hint={FORMAT_HELP[activeFormat] || "File type for the downloaded template."}
                 label="Format"
                 onChange={(value) => onNavigate("templates", { format: value })}

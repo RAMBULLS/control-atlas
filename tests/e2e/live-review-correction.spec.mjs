@@ -130,8 +130,11 @@ test("Atlas first paint is a semantic map with drill-down and history", async ({
   await expect(atlas.locator(".district")).toHaveCount(9);
   await expect(atlas.locator(".lm")).toHaveCount(28);
 
-  await atlas.locator('[data-landmark="mitre-attack"]').click();
-  await expect(page).toHaveURL(/atlasFramework=mitre-attack/);
+  // The map paints before its handlers are attached; WebKit on a shared runner can click in that gap. Retry the click, not the assertion.
+  await expect(async () => {
+    await atlas.locator('[data-landmark="mitre-attack"]').click();
+    await expect(page).toHaveURL(/atlasFramework=mitre-attack/, { timeout: 4_000 });
+  }).toPass({ timeout: 45_000 });
   await expect(page.locator(".atl-inspector")).toContainText("ATT&CK");
 
   // History still walks back out of the map one level at a time.

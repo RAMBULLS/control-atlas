@@ -7,7 +7,7 @@ import { strFromU8, unzipSync } from 'fflate';
 import readXlsxFile from 'read-excel-file/node';
 import { buildTemplateDocument } from '../src/app/template-engine.mjs';
 import { docToDocx, docToXlsx, officeDocumentToSheets, renderOfficeDocument } from '../src/app/office-export.mjs';
-import { PRODUCT_DISCLAIMER } from '../src/shared/disclaimer.mjs';
+import { GENERATED_FILE_NOTICE } from '../src/shared/disclaimer.mjs';
 
 const dataset = {
   nodes: [
@@ -119,8 +119,8 @@ test('xlsx export is a valid zip with instructions, one authoritative register, 
     .map((n) => strFromU8(entries[n]))
     .join('\n');
   assert.ok(
-    allSheets.includes(PRODUCT_DISCLAIMER),
-    'shared disclaimer must be present in the workbook',
+    allSheets.includes(GENERATED_FILE_NOTICE),
+    'the one short notice must be present in the workbook',
   );
   assert.match(allSheets, /inlineStr/, 'cells should be written as inline strings');
 });
@@ -150,8 +150,8 @@ test('docx export is a valid zip with a document body, a table, and the disclaim
   assert.match(document, /<w:tbl>/, 'SSP docx must contain a table');
   assert.match(document, /Account Management|AC-2/, 'control content must be present');
   assert.ok(
-    document.includes(PRODUCT_DISCLAIMER),
-    'shared disclaimer must be present',
+    document.includes(GENERATED_FILE_NOTICE),
+    'the one short notice must be present',
   );
   assert.match(document, /<w:sectPr>/, 'body must end with section properties');
 });
@@ -215,7 +215,7 @@ test('xlsx working registers set bounded widths, freeze row and key column, and 
 
   // Header cells reference the bold + wrapped cellXf (s="1").
   assert.match(sheet1, /<c r="A1" s="1" t="inlineStr">/, 'header cells must use the header style');
-  assert.match(sheet1, /<c r="A2" s="4" t="inlineStr">/, 'blank user-entry cells must use the input style');
+  assert.match(sheet1, /<c r="A2" s="4"\/>/, 'blank user-entry cells must be empty cells with the input style');
   assert.doesNotMatch(sheet1, /\[Stable external tracking ID\]/, 'instructional placeholders must not masquerade as entered records');
   const fieldGuide = strFromU8(entries['xl/worksheets/sheet3.xml']);
   assert.match(fieldGuide, /\[Stable external tracking ID\]/, 'placeholder guidance must remain available once in the field guide');
@@ -229,7 +229,7 @@ test('xlsx working registers set bounded widths, freeze row and key column, and 
   assert.match(sheet1, /<showGridLines val="0"\/>/, 'explicit workbook styling should replace default gridlines');
   assert.match(sheet1, /<autoFilter ref=/, 'tracker sheets must expose header filters');
   assert.match(sheet1, /<dataValidations count=/, 'controlled tracker fields must expose dropdown validation');
-  assert.match(sheet1, /Controlled value/, 'POA&M controlled fields must explain their dropdown');
+  assert.match(sheet1, /Use one of the values in the dropdown/, 'POA&M controlled fields must explain a rejected value');
   assert.match(styles, /17365D/, 'header style must use the restrained navy palette');
   assert.match(sheet1, /<pageSetUpPr fitToPage="1"\/>/, 'print scaling must explicitly enable fit-to-page');
   assert.match(sheet1, /<pageSetup paperSize="1" orientation="landscape" fitToWidth="1" fitToHeight="0"\/>/, 'worksheets must print one landscape Letter page wide');

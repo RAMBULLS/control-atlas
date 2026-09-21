@@ -606,7 +606,9 @@ test('template options use collapsed progressive disclosure and associated hints
   // "Markdown, CSV, or JSON" string.
   assert.match(templatesPage, /FORMAT_HELP\[activeFormat\]/);
   assert.doesNotMatch(templatesPage, /Markdown, CSV, or JSON/);
-  assert.match(templatesPage, /return "Template"/);
+  // Interoperability wording is one of three labels, never "Control Atlas companion".
+  assert.doesNotMatch(templatesPage, /control atlas companion/i);
+  assert.match(templatesPage, /field_aligned/);
   assert.doesNotMatch(templatesPage, /Search companions by name or purpose/);
 });
 

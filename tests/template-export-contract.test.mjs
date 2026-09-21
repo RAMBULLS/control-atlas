@@ -280,7 +280,7 @@ test('POA&M markdown preserves the schema-aligned field set without a wide table
     assert.ok(result.content.includes(field), `POA&M field must survive — missing "${field}"`);
   }
   assert.match(result.content, /## Operating Rules/, 'operating guidance must precede the register');
-  assert.match(result.content, /Classification: eMASS API v3\.22 schema-aligned preparation aid/);
+  assert.match(result.content, /Interoperability: Field-aligned\. Uses MITRE eMASS API v3\.22 POA&M field names and values\. Import into eMASS is not verified\./);
   const starterRows = (result.content.match(/\[Stable external tracking ID\]/g) || []).length;
   assert.equal(starterRows, 20, 'register must carry exactly 20 starter rows');
   assert.ok(maxMarkdownTableColumns(result.content) <= 6, 'POA&M starter must not emit a wide pipe table');

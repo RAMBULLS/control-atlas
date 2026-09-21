@@ -19,18 +19,29 @@ const dataset = {
         control_family: 'Access Control',
       },
     },
+    {
+      id: 'fedramp-rev5:AC-2',
+      node_type: 'control',
+      lifecycle_status: 'active',
+      metadata: {
+        catalog_id: 'fedramp-rev5',
+        item_id: 'AC-2',
+        title: 'Account Management',
+        control_family: 'Access Control',
+      },
+    },
   ],
   edges: [],
   sources: [],
 };
 
-function build(templateType) {
+function build(templateType, framework = 'nist-800-53') {
   return buildTemplateDocument(
     {
       templateType,
       framework: ['hardware_baseline', 'software_baseline', 'ppsm_preparation_worksheet', 'stig_evidence_checklist', 'poam_starter', 'reciprocity_checklist'].includes(templateType)
         ? ''
-        : 'nist-800-53',
+        : framework,
       environment: 'Cloud SaaS',
       sourceRefs: registry.templates.find((item) => item.name === templateType)?.source_refs || [],
     },
@@ -92,8 +103,7 @@ test('all twelve artifacts include compatibility limitations and source metadata
     const sections = new Map(doc.sections.map((section) => [section.heading, section]));
     assert.ok(sections.has('Compatibility and Use'), `${template.name} missing compatibility section`);
     assert.ok(sections.has('Source Metadata'), `${template.name} missing source metadata`);
-    assert.ok(sections.has('Review and Handoff Checklist'), `${template.name} missing final quality-control steps`);
-    assert.match(sections.get('Compatibility and Use').content, /Classification:/);
+    assert.match(sections.get('Compatibility and Use').content, /Interoperability: (Field-aligned|Concept-aligned|Verified interchange)\./);
     assert.match(sections.get('Compatibility and Use').content, /Limit:/);
     assert.doesNotMatch(template.description, /eMASS[- ]importable|FedRAMP[- ]approved|guarantees compliance/i);
   }
@@ -124,8 +134,8 @@ test('the SSP starter stays compact and hands control-by-control work to its ded
   assert.equal(doc.sections.some((section) => section.heading === 'STIG/SRG References'), false);
 });
 
-test('FedRAMP-related companions state the current 2026 transition boundary', () => {
-  const affected = [
+test('FedRAMP context appears only when a FedRAMP program is the selected context', () => {
+  const withFramework = [
     'security_plan_starter',
     'implementation_statement_worksheet',
     'evidence_expectation_matrix',
@@ -134,29 +144,28 @@ test('FedRAMP-related companions state the current 2026 transition boundary', ()
     'poam_starter',
     'assessment_planning_worksheet',
     'conmon_calendar',
-    'hardware_baseline',
-    'software_baseline',
   ];
-  for (const templateType of affected) {
-    const section = build(templateType).sections.find(
-      (candidate) => candidate.heading === 'Current FedRAMP 2026 Context',
-    );
-    assert.ok(section, `${templateType} needs current FedRAMP context`);
+  const fedrampSection = (doc) => doc.sections.find((section) => section.heading === 'Current FedRAMP 2026 Context');
+  for (const templateType of withFramework) {
+    // poam and reciprocity take no framework in the shared helper, so build directly.
+    const fedramp = buildTemplateDocument(
+      { templateType, framework: 'fedramp-rev5', environment: 'Cloud SaaS', sourceRefs: [] },
+      dataset,
+    ).doc;
+    assert.ok(fedrampSection(fedramp), `${templateType} needs FedRAMP context when FedRAMP is selected`);
+    const nist = buildTemplateDocument(
+      { templateType, framework: 'nist-800-53', environment: 'Cloud SaaS', sourceRefs: [] },
+      dataset,
+    ).doc;
+    assert.equal(fedrampSection(nist), undefined, `${templateType} must not carry FedRAMP text for NIST 800-53`);
   }
-  assert.match(
-    build('security_plan_starter').sections.find((section) => section.heading === 'Current FedRAMP 2026 Context').content,
-    /Certification Package Overview replaces the historical Rev5 SSP/i,
-  );
-  assert.match(
-    build('assessment_planning_worksheet').sections.find((section) => section.heading === 'Current FedRAMP 2026 Context').content,
-    /does not require a separate SAP or SAR for either 20x or Rev5/i,
-  );
-  assert.match(
-    build('poam_starter').sections.find((section) => section.heading === 'Current FedRAMP 2026 Context').content,
-    /not automatically an agency POA&M/i,
-  );
-  assert.match(
-    build('hardware_baseline').sections.find((section) => section.heading === 'Current FedRAMP 2026 Context').content,
-    /machine-readable information-resource data.*code used to generate it/i,
-  );
+  for (const templateType of ['hardware_baseline', 'software_baseline', 'ppsm_preparation_worksheet', 'stig_evidence_checklist']) {
+    assert.equal(fedrampSection(build(templateType)), undefined, `${templateType} has no program context to select`);
+  }
+  const content = (templateType) => fedrampSection(
+    buildTemplateDocument({ templateType, framework: 'fedramp-rev5', environment: 'Cloud SaaS', sourceRefs: [] }, dataset).doc,
+  ).content;
+  assert.match(content('security_plan_starter'), /Certification Package Overview replaces the historical Rev5 SSP/i);
+  assert.match(content('assessment_planning_worksheet'), /does not require a separate SAP or SAR for either 20x or Rev5/i);
+  assert.match(content('poam_starter'), /not automatically an agency POA&M/i);
 });

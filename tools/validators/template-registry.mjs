@@ -30,15 +30,11 @@ const ARTIFACT_TYPES = new Set([
   'ppsm_preparation_worksheet',
 ]);
 
+// The only interoperability labels a template may show publicly.
 const COMPATIBILITY_CLASSES = new Set([
-  'Officially specified',
-  'Verified by Control Atlas round trip',
-  'eMASS API v3.22 schema-aligned',
-  'Schema-aligned',
-  'Community implementation reference',
-  'Historical compatibility',
-  'Control Atlas companion',
-  'Unverified',
+  'Verified interchange',
+  'Field-aligned',
+  'Concept-aligned',
 ]);
 
 const FORMATS = new Set(['xlsx', 'docx']);
@@ -110,6 +106,9 @@ export function validateTemplateRegistry(registry) {
     } else {
       if (!COMPATIBILITY_CLASSES.has(compatibility.classification)) {
         errors.push(`template ${template.template_id} has unsupported compatibility classification: ${compatibility.classification}`);
+      }
+      if ((compatibility.classification === 'Verified interchange') !== (template.provenance?.verified_interchange === true)) {
+        errors.push(`template ${template.template_id} may be "Verified interchange" only when provenance.verified_interchange is true, and the reverse`);
       }
       if (typeof compatibility.claim !== 'string' || compatibility.claim.trim() === '') {
         errors.push(`template ${template.template_id} compatibility.claim must be non-empty`);

@@ -1,5 +1,5 @@
 import { createContext, Fragment, useCallback, useContext, useState, type ReactNode } from "react";
-
+import { RECORD_FACT_LABELS } from "../../shared/record-fact-labels.mjs";
 import { isValidSourceTextPresentation } from "../../shared/source-text-presentation.mjs";
 import { Button } from "./lsm";
 import { copyText, formatRelationshipLabel } from "../lib/pagePrimitives";
@@ -14,30 +14,6 @@ import { copyText, formatRelationshipLabel } from "../lib/pagePrimitives";
  * the same presentation contract through the same components, so a record says
  * the same thing wherever you meet it.
  */
-const RECORD_FACT_LABELS: Record<string, string> = {
-  activity_type: "Activity type",
-  architecture_component: "Architecture component",
-  benchmark_status_date: "Published status date",
-  benchmark_title: "Benchmark",
-  benchmark_version: "Version / release",
-  child_count: "Contained records",
-  collaborator: "Collaborator",
-  component_class: "Component class",
-  duration: "Duration",
-  is_subtechnique: "Sub-technique",
-  mapping_count: "Published mappings",
-  operational_technology: "Operational technology",
-  pillar: "Pillar",
-  product: "Product",
-  responsibility: "Responsibility",
-  rule_id: "Rule ID",
-  severity: "Severity",
-  severity_distribution: "Severity distribution",
-  stig_id: "STIG ID",
-  tactic_memberships: "Tactics",
-  tactic_title: "Tactic",
-  vuln_id: "Finding / Vuln ID",
-};
 
 export type PublisherCitationEntry = { title: string; url: string };
 

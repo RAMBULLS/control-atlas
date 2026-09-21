@@ -9,6 +9,8 @@ import {
   recordPresentationContract,
   relationshipTreatmentFor,
 } from "../../shared/record-presentation.mjs";
+import { isComparisonCapableEdge } from "../../shared/compare-capability.mjs";
+import { recordActionPolicy, recordShowsChildInventory } from "../../shared/record-acceptance.mjs";
 import authoritySpine from "../../../data/curated/authority-spine.json";
 import { AcronymText } from "../components/AccessibleTerm";
 import { AppLink } from "../components/AppLink";
@@ -138,8 +140,9 @@ export function ObjectDetailPage(props: {
     .filter((edge: any) => edge.relationship_class === "structural" && edge.source_node_id === node.id)
     .sort((left: any, right: any) => (left.publisher_order ?? Number.MAX_SAFE_INTEGER) - (right.publisher_order ?? Number.MAX_SAFE_INTEGER))
     .map((edge: any) => bundle.runtime.getNode(edge.target_node_id)).filter(Boolean);
-  const showChildInventory = presentation.page_role === PAGE_ROLES.CONTAINER
-    || (presentation.page_role === PAGE_ROLES.PUBLICATION_DOCUMENT && structuralChildren.length > 0);
+  const showChildInventory = recordShowsChildInventory({
+    pageRole: presentation.page_role, structuralChildCount: structuralChildren.length,
+  });
   const childHeading = presentation.page_role === PAGE_ROLES.PUBLICATION_DOCUMENT ? "Contents" : "Contained records";
   const structuralTrace = displayedTrace.filter((entry) => entry.origin === "structural");
   const governedConnectionGroups = relatedConnectionGroups.map((group) => {
@@ -181,7 +184,12 @@ export function ObjectDetailPage(props: {
     .replace(/Security Technical Implementation Guide/g, "STIG");
   const benchmarkParent = [...displayPath].reverse().find((entry) => entry.node_type === "benchmark" && bundle.runtime.getNode(entry.id));
   const publicationScope = { catalog: document.catalog_id, ...(benchmarkTitle && family ? { family } : {}) };
-  const canCompare = Boolean(itemId) && [PAGE_ROLES.ATOMIC_RECORD, PAGE_ROLES.ASSESSMENT_QUESTION, PAGE_ROLES.IMPLEMENTATION_ARTIFACT].includes(presentation.page_role);
+  const actions = recordActionPolicy({
+    catalogId: document.catalog_id, pageRole: presentation.page_role, hasItemId: Boolean(itemId),
+    comparableEdgeCount: edges.filter(isComparisonCapableEdge).length,
+    structuralChildCount: structuralChildren.length,
+    connectionCount: connectionGroups.reduce((total, group) => total + group.items.length, 0),
+  });
   const canonicalRecordUrl = () => `${window.location.origin}${window.location.pathname}${serializeHashUrl(
     normalizeViewState("library-detail", { view: "library-detail", node: document.id }),
   )}`;
@@ -205,7 +213,7 @@ export function ObjectDetailPage(props: {
             {officialSource.url ? <ButtonLink className="normal-case font-medium tracking-normal" href={officialSource.url} rel="noopener noreferrer" target="_blank" variant="primary">
               {claimOrigin === "atlas_editorial" ? "View Atlas source" : officialSourceActionLabel(officialSource)}
             </ButtonLink> : null}
-            <AppLink className="normal-case font-medium tracking-normal" onNavigate={onNavigate} patch={{ node: node.id }} variant="secondary" view="atlas-map">See connections</AppLink>
+            {actions.atlas.header ? <AppLink className="normal-case font-medium tracking-normal" onNavigate={onNavigate} patch={{ node: node.id }} variant="secondary" view="atlas-map">See connections</AppLink> : null}
             <details className="record-actions-menu" onKeyDown={(event) => {
               if (event.key !== "Escape" || !event.currentTarget.open) return;
               event.preventDefault(); event.currentTarget.open = false;
@@ -213,8 +221,8 @@ export function ObjectDetailPage(props: {
             }}>
               <summary>More actions</summary>
               <div className="record-actions-popover">
-                <AppLink onNavigate={onNavigate} patch={{ crosswalk: "relationships", intent: "item-mapping", items: document.item_id, source: document.catalog_id }} variant="secondary" view="matrix">Compare frameworks</AppLink>
-                <AppLink onNavigate={onNavigate} patch={{ framework: document.catalog_id }} variant="secondary" view="templates">Choose a template</AppLink>
+                {actions.compare ? <AppLink onNavigate={onNavigate} patch={{ crosswalk: "relationships", intent: "item-mapping", items: document.item_id, source: document.catalog_id }} variant="secondary" view="matrix">Compare frameworks</AppLink> : null}
+                {actions.templateFramework ? <AppLink onNavigate={onNavigate} patch={{ framework: actions.templateFramework }} variant="secondary" view="templates">Choose a template</AppLink> : null}
                 <Button onClick={() => { void copyText(canonicalRecordUrl()); }} type="button" variant="secondary">Copy link</Button>
               </div>
             </details>
@@ -229,7 +237,7 @@ export function ObjectDetailPage(props: {
               <p>CCI records deliberately publish a concise requirement, not an implementation procedure. Read the official requirement below, then use its evidence-backed related records to find the applicable STIG, SRG, or control material.</p>
               <div className="card-actions">
                 <AppLink onNavigate={onNavigate} patch={{ node: node.id }} variant="secondary" view="atlas-map">Explore connections</AppLink>
-                <AppLink onNavigate={onNavigate} patch={{ crosswalk: "relationships", intent: "item-mapping", items: document.item_id, source: document.catalog_id }} variant="secondary" view="matrix">Compare this CCI</AppLink>
+                {actions.compare ? <AppLink onNavigate={onNavigate} patch={{ crosswalk: "relationships", intent: "item-mapping", items: document.item_id, source: document.catalog_id }} variant="secondary" view="matrix">Compare this CCI</AppLink> : null}
               </div>
             </section>
           ) : null}
@@ -251,11 +259,11 @@ export function ObjectDetailPage(props: {
           </section> : null}
           {showChildInventory ? <section className="record-child-inventory" data-record-section="child-inventory" id="section-children">
             <div className="section-header"><div><h2>{childHeading}</h2><p>Objects published directly beneath this record.</p></div>
-              <Badge tone="info">{structuralChildren.length || sourceMetadata.child_count || 0}</Badge>
+              <Badge tone="info">{structuralChildren.length}</Badge>
             </div>
-            {structuralChildren.length ? <ul>{structuralChildren.slice(0, 25).map((child: any) => <li key={child.id}>
+            <ul>{structuralChildren.slice(0, 25).map((child: any) => <li key={child.id}>
               <AppLink onNavigate={onNavigate} patch={{ node: child.id }} view="library-detail">{recordDisplayTitle(child)}</AppLink>
-            </li>)}</ul> : <p>No directly contained records are loaded for this publication object.</p>}
+            </li>)}</ul>
             {structuralChildren.length > 25 ? <AppLink onNavigate={onNavigate} patch={{ node: node.id }} view="atlas-map">Browse all contents in Atlas</AppLink> : null}
           </section> : null}
           {visibleConnectionGroups.length > 0 ? (
@@ -359,7 +367,7 @@ export function ObjectDetailPage(props: {
           <RecordRailSection accent icon={<IconBolt size={20} />} id="do-more" key={`${node.id}:actions`} title="Do more">
             <ul className="record-rail-nav-list">
               <li><AppLink onNavigate={onNavigate} patch={{ node: node.id }} view="atlas-map">View in Atlas</AppLink></li>
-              {canCompare ? <li><AppLink onNavigate={onNavigate} patch={{ crosswalk: "relationships", intent: "item-mapping", items: document.item_id, source: document.catalog_id }} view="matrix">Compare this record</AppLink></li> : null}
+              {actions.compare ? <li><AppLink onNavigate={onNavigate} patch={{ crosswalk: "relationships", intent: "item-mapping", items: document.item_id, source: document.catalog_id }} view="matrix">Compare this record</AppLink></li> : null}
               <li><button onClick={async () => {
                 try {
                   await navigator.clipboard.writeText(canonicalRecordUrl());

@@ -15,6 +15,7 @@ import {
   recordDisplayTitle,
   recordPublisherName,
   routeDocumentTitle,
+  usesScaffoldStableId,
 } from "../../src/ui/lib/recordTitle";
 
 test("source detail document titles use the specific source name", () => {
@@ -126,6 +127,31 @@ test("record identities use publisher, source-native category, and official iden
   assert.equal(recordIdentityFor({ publisher: "MITRE", catalogId: "mitre-d3fend", family: "Harden", itemId: "D3-AA" }), "MITRE Harden D3-AA");
   assert.equal(recordIdentityFor({ publisher: "DISA", catalogId: "disa-cci", family: "Policy and Technical", itemId: "CCI-000001" }), "DISA Policy and Technical CCI-000001");
   assert.equal(recordIdentityFor({ publisher: "DISA", catalogId: "disa-stig", family: "IBM Hardware Management Console Security Technical Implementation Guide", itemId: "V-256876", metadata: { identity_category: "HMC" } }), "DISA HMC V-256876");
+});
+
+test("baseline headings keep the level word the scaffold key repeats", () => {
+  const heading = (catalogId: string, itemId: string, title: string) => recordIdentityPresentationFor({
+    publisher: "NIST", catalogId, publicationName: "Baselines", family: "Baselines", itemId, title, objectType: "baseline",
+  }).primary;
+  assert.equal(heading("nist-800-53b", "HIGH", "High Impact Baseline"), "High Impact Baseline");
+  assert.equal(heading("nist-800-53b", "PRIVACY", "Privacy Baseline"), "Privacy Baseline");
+  assert.equal(heading("fedramp-rev5", "LOW", "Low Baseline"), "Low Baseline");
+  assert.equal(heading("fedramp-rev5", "LI-SAAS", "LI-SaaS Baseline"), "LI-SaaS Baseline");
+});
+
+test("no scaffold-keyed record in the corpus loses words from its heading", () => {
+  const lost: string[] = [];
+  for (const node of readGeneratedCollection(".", "nodes").nodes as any[]) {
+    const metadata = node.metadata || {};
+    const itemId = String(metadata.item_id || "").trim();
+    const title = String(metadata.title || "").trim();
+    if (!title || metadata.publisher_item_id || !usesScaffoldStableId(node.node_type, itemId)) continue;
+    const primary = recordIdentityPresentationFor({
+      publisher: "P", catalogId: metadata.catalog_id, family: "", itemId, title, objectType: node.node_type, metadata,
+    }).primary;
+    if (primary !== title) lost.push(`${node.id}: "${title}" -> "${primary}"`);
+  }
+  assert.deepEqual(lost.slice(0, 5), []);
 });
 
 test("generated stable IDs yield publisher-authored primary identity and human context", () => {

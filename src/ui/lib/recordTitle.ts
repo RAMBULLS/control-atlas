@@ -226,9 +226,13 @@ export function recordIdentityPresentationFor(input: {
     };
   }
 
+  // A scaffold key is not a publisher designation, so it is never stripped from
+  // the publisher's title. Baselines are keyed HIGH / LOW / MODERATE and titled
+  // "High Impact Baseline"; stripping the key left every baseline as
+  // "Impact Baseline".
   const primary = publisherItemId
     ? formatRecordTitle(publisherItemId, input.title)
-    : publishedName || input.title.trim() || stableId;
+    : input.title.trim() || stableId;
   const recordType = displayNameFor("object_type", input.objectType);
   const publication = input.publicationName?.trim() || input.catalogId;
   const context = [recordType, publication].filter(Boolean).join(" · ");

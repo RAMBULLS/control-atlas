@@ -250,15 +250,13 @@ Control Atlas connects the work a practitioner needs to do with the authoritativ
 1. Security Plan Starter
 2. Control Implementation Statement Worksheet
 3. Evidence Expectation Matrix
-4. STIG Evidence Checklist
-5. Inheritance Worksheet
-6. Reciprocity Checklist
-7. POA&M Starter
-8. Assessment Planning Worksheet
-9. Continuous Monitoring Calendar
-10. Hardware Baseline
-11. Software Baseline
-12. PPSM Preparation Worksheet
+4. Inheritance Worksheet
+5. Reciprocity Checklist
+6. POA&M Starter
+7. Assessment Planning Worksheet
+8. Continuous Monitoring Calendar
+9. Hardware Baseline
+10. Software Baseline
 
 **Output formats:** Word and Excel as supported by each artifact. Every starter document is visible in an in-browser preview before download.
 
@@ -454,9 +452,9 @@ control_atlas_template:
   template_id: string
   name: string
   display_name: string
-  artifact_type: security_plan_starter | implementation_statement_worksheet | evidence_expectation_matrix | stig_evidence_checklist | inheritance_worksheet | reciprocity_checklist | poam_starter | assessment_planning_worksheet | conmon_calendar | hardware_baseline | software_baseline | ppsm_preparation_worksheet
+  artifact_type: security_plan_starter | implementation_statement_worksheet | evidence_expectation_matrix | inheritance_worksheet | reciprocity_checklist | poam_starter | assessment_planning_worksheet | conmon_calendar | hardware_baseline | software_baseline
   supported_formats: [xlsx | docx]
-  input_options: [framework | baseline | control_family | selected_controls | selected_stigs | environment_archetype]
+  input_options: [framework | baseline | control_family | selected_controls | environment_archetype]
   source_refs: [source_id]
   official_resource_ids: [official_artifact_id]
   compatibility:
@@ -775,13 +773,11 @@ Complete before any new feature work.
 **Story 4.4 — POA&M Starter**
 **Story 4.5 — Inheritance Worksheet**
 **Story 4.6 — Reciprocity Checklist**
-**Story 4.7 — STIG Evidence Checklist**
-**Story 4.8 — Assessment Planning Worksheet**
-**Story 4.9 — Continuous Monitoring Calendar**
-**Story 4.10 — Hardware Baseline**
-**Story 4.11 — Software Baseline**
-**Story 4.12 — PPSM Preparation Worksheet**
-**Story 4.13 — Official artifact, workflow, and tool catalogs**
+**Story 4.7 — Assessment Planning Worksheet**
+**Story 4.8 — Continuous Monitoring Calendar**
+**Story 4.9 — Hardware Baseline**
+**Story 4.10 — Software Baseline**
+**Story 4.11 — Official artifact, workflow, and tool catalogs**
 - Official resources precede Control Atlas companions
 - Every compatibility claim carries an evidence level and limitation
 - Workflows connect tasks to inputs, outputs, validation, and next actions

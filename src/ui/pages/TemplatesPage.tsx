@@ -501,7 +501,6 @@ export function TemplatesPage(props: {
   const categoryFilter = state.category;
   const queryFilter = state.query;
   const [generating, setGenerating] = useState(false);
-  const [stigQuery, setStigQuery] = useState("");
   const [generationStatus, setGenerationStatus] = useState("");
   const [generationTone, setGenerationTone] = useState<"trust" | "warning">(
     "trust",
@@ -661,35 +660,6 @@ export function TemplatesPage(props: {
       .map((family) => ({ value: family, label: family }));
   }, [datasetNodes, activeFramework]);
 
-  // One STIG per file. Only published STIG benchmarks are offered; SRGs are
-  // requirement guides, not the checklists STIG Viewer imports into.
-  const allStigOptions = useMemo(() => {
-    const seen = new Map<string, string>();
-    for (const node of datasetNodes) {
-      if (node.node_type !== "benchmark") continue;
-      if (node.metadata?.catalog_id !== "disa-stig") continue;
-      const id = String(node.metadata?.item_id || "");
-      if (!id || seen.has(id)) continue;
-      const title = String(node.metadata?.title || node.label || id);
-      const version = node.metadata?.benchmark_version;
-      seen.set(id, version ? `${title} · ${version}` : title);
-    }
-    return [...seen.entries()]
-      .sort((a, b) => a[1].localeCompare(b[1]))
-      .map(([value, label]) => ({ value, label }));
-  }, [datasetNodes]);
-  const stigOptions = useMemo(() => {
-    const wanted = stigQuery.trim().toLowerCase();
-    if (!wanted) return allStigOptions;
-    return allStigOptions.filter(
-      (option) =>
-        option.label.toLowerCase().includes(wanted) || option.value === state.stig,
-    );
-  }, [allStigOptions, state.stig, stigQuery]);
-  const selectedStigLabel =
-    allStigOptions.find((option) => option.value === state.stig)?.label || "";
-
-
   // The on-screen preview and downloaded files use this exact structured
   // document, so a practitioner can review real headings, prompts, and rows
   // before starting a download.
@@ -701,7 +671,6 @@ export function TemplatesPage(props: {
         framework: state.framework || "",
         baseline: state.baseline || "",
         controlFamily: state.controlFamily || "",
-        selectedStig: state.stig || "",
         environment: state.environment || "",
         format: activeFormat,
       },
@@ -709,18 +678,15 @@ export function TemplatesPage(props: {
         framework: BUILD_SOURCE_CONTEXTS.map((context) => context.id),
         baseline: ["ALL", ...baselineOptions.map((option) => option.value)],
         control_family: familyOptions.map((option) => option.value),
-        selected_stig: allStigOptions.map((option) => option.value),
       },
     });
   }, [
     activeFormat,
-    allStigOptions,
     baselineOptions,
     familyOptions,
     selectedTemplate,
     state.baseline,
     state.controlFamily,
-    state.stig,
     state.environment,
     state.framework,
   ]);
@@ -795,7 +761,6 @@ export function TemplatesPage(props: {
           : `${BASELINE_LABELS[state.baseline] || state.baseline} baseline`
         : "",
       state.controlFamily,
-      selectedStigLabel,
       state.environment,
     ]
       .filter(Boolean)
@@ -1118,7 +1083,7 @@ export function TemplatesPage(props: {
                         meta={templateMeta(template, onNavigate)}
                         details={templateDetails(template)}
                         onNavigate={onNavigate}
-                        patch={{ buildSection: "documents", task: "", templateType: template.name, framework: state.framework || "", format: template.supported_formats?.[0] || "docx", environment: state.environment || "", baseline: "", controlFamily: "", stig: "" }}
+                        patch={{ buildSection: "documents", task: "", templateType: template.name, framework: state.framework || "", format: template.supported_formats?.[0] || "docx", environment: state.environment || "", baseline: "", controlFamily: "" }}
                         title={template.display_name}
                         view="templates"
                       />
@@ -1140,7 +1105,7 @@ export function TemplatesPage(props: {
                       meta={templateMeta(template, onNavigate)}
                       details={templateDetails(template)}
                       onNavigate={onNavigate}
-                      patch={{ buildSection: "documents", task: "", templateType: template.name, framework: state.framework || "", format: template.supported_formats?.[0] || "docx", environment: state.environment || "", baseline: "", controlFamily: "", stig: "" }}
+                      patch={{ buildSection: "documents", task: "", templateType: template.name, framework: state.framework || "", format: template.supported_formats?.[0] || "docx", environment: state.environment || "", baseline: "", controlFamily: "" }}
                       title={template.display_name}
                       view="templates"
                     />
@@ -1213,28 +1178,6 @@ export function TemplatesPage(props: {
                   ]}
                   value={state.environment || ""}
                 />
-              ) : null}
-              {inputOptions.includes("selected_stig") ? (
-                <>
-                  <Field label="Find a STIG">
-                    <input
-                      autoComplete="off"
-                      onChange={(event) => setStigQuery(event.target.value)}
-                      placeholder="Type a product, such as Windows 10"
-                      type="search"
-                      value={stigQuery}
-                    />
-                  </Field>
-                  <SelectField
-                    emptyLabel={`Select a STIG (${stigOptions.length} shown)`}
-                    hint="One STIG per file. The file lists that STIG's real rules under the 12 STIG Viewer CSV columns."
-                    label="STIG"
-                    onChange={(value) => onNavigate("templates", { stig: value })}
-                    options={stigOptions}
-                    required
-                    value={state.stig || ""}
-                  />
-                </>
               ) : null}
               <SelectField
                 hint={FORMAT_HELP[activeFormat] || "File type for the downloaded template."}

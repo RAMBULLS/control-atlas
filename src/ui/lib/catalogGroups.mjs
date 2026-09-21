@@ -16,10 +16,8 @@ export const TEMPLATE_CATEGORIES = {
     "evidence_expectation_matrix",
     "assessment_planning_worksheet",
   ],
-  "Prepare a STIG assessment": ["stig_evidence_checklist"],
   "Track POA&M remediation": ["poam_starter"],
   "Plan continuous monitoring": ["conmon_calendar"],
-  "Prepare PPSM information": ["ppsm_preparation_worksheet"],
   "Draft and reuse authorization packages": [
     "security_plan_starter",
     "reciprocity_checklist",

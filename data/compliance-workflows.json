@@ -138,7 +138,7 @@
       "outcomes": ["Applicable STIG selected", "Target identity preserved", "Manual and automated checks reconciled", "Checklist validated"],
       "artifact_ids": ["disa-stig-viewer-guide-v1r7", "disa-stig-viewer-csv-contract-v1r7", "disa-stig-viewer-cklb-emass-guidance-v1r7"],
       "tool_ids": ["disa-stig-viewer", "disa-evaluate-stig", "stig-manager-client-modules", "mitre-saf-cli", "openscap", "microsoft-powerstig", "complianceascode-content"],
-      "companion_template_ids": ["tpl-stig-chk"],
+      "companion_template_ids": [],
       "steps": [
         {
           "order": 1,
@@ -252,7 +252,7 @@
       "outcomes": ["Required PPS identified", "Mission need documented", "Boundary controls mapped", "Official registry handoff prepared"],
       "artifact_ids": ["dodi-8551-01-ppsm-2023", "disa-ppsm-registry-training"],
       "tool_ids": [],
-      "companion_template_ids": ["tpl-ppsm-prep"],
+      "companion_template_ids": [],
       "steps": [
         {
           "order": 1,

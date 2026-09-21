@@ -56,11 +56,8 @@ const SOURCE_FALLBACK = {
   "nist-800-37-rev2": { display_name: "NIST SP 800-37 Rev. 2", version: "2026-06-09" },
   "nist-sp-800-137": { display_name: "NIST SP 800-137", version: "2026-06-09" },
   "mitre-emass-api-v3-22": { display_name: "MITRE eMASS Client OpenAPI", version: "3.22" },
-  "disa-stig-viewer-v1r7": { display_name: "DISA STIG Viewer 3.x User Guide", version: "V1R7" },
   "dcsa-hardware-list": { display_name: "DCSA Hardware List", version: "February 2020" },
   "dcsa-software-list": { display_name: "DCSA Software List", version: "February 2020" },
-  "dod-ppsm-policy": { display_name: "DoDI 8551.01 PPSM", version: "public policy" },
-  "disa-ppsm-training": { display_name: "DISA PPSM Registry Training", version: "public training" },
 };
 
 /**
@@ -93,12 +90,6 @@ export const INTEROPERABILITY = {
     summary: "Follows NIST SP 800-53A assessment concepts and DISA cross-references. It is not an interchange schema.",
     basis: "NIST SP 800-53A Rev. 5 and ingested DISA CCI and STIG/SRG cross-references.",
     limit: "Evidence expectations need assessor and organization validation.",
-  },
-  stig_evidence_checklist: {
-    level: "Field-aligned",
-    summary: "Uses the 12 CSV headers and values in the DISA STIG Viewer 3.x User Guide V1R7. Import into STIG Viewer is not verified.",
-    basis: "DISA STIG Viewer 3.x User Guide V1R7 (13 Feb 2026), section 5.6.3. Rule and benchmark identifiers are as DISA published them.",
-    limit: "The import updates a checklist that already exists in STIG Viewer. Open the CSV in your STIG Viewer version to check it. Control Atlas has not tested an import.",
   },
   inheritance_worksheet: {
     level: "Concept-aligned",
@@ -157,12 +148,6 @@ export const INTEROPERABILITY = {
     summary: "Uses MITRE eMASS API v3.22 software-baseline field names. Import into eMASS is not verified.",
     basis: "Public MITRE eMASS REST API v3.22 (5 Dec 2024) software baseline fields, DCSA software-list guidance, plus local inventory fields.",
     limit: "Not an eMASS-generated import template and not directly importable.",
-  },
-  ppsm_preparation_worksheet: {
-    level: "Concept-aligned",
-    summary: "Collects information for the PPSM process. It is not the registry's form and not an interchange schema.",
-    basis: "The registry-information columns rest on the DISN Connection Process Guide section 2.7.3 (DoD Cyber Exchange), the only source read for this worksheet: registration in the NIPRNet or SIPRNet PPSM Registry, the PPSM Tracking Identifier, enterprise and core service providers, and the NIPRNet DMZ Whitelist. The Local working context columns are Control Atlas's own and are not registry fields.",
-    limit: "The Category Assurance List and VA / CLSA columns are named in public PPSM descriptions but were not confirmed from the policy text, and the registry's own entry fields are not public. DoDI 8551.01 and the DISA PPSM Registry training are linked as official PPSM policy and training; they were not used to check individual columns. Collect and review here, then enter the data in the authorized PPSM workflow. Not a PPSM submission form, registry receipt, or import file.",
   },
 };
 
@@ -1158,246 +1143,6 @@ function generateProfessionalConMonCalendar(options) {
   return appendSourceMetadata({ title: "Continuous Monitoring Delivery Calendar", description: "Monitoring schedule that separates cadences a source states from planning suggestions and from the cadence your organization selects.", sections }, options);
 }
 
-const SEVERITY_LABELS = { high: "High (CAT I)", medium: "Medium (CAT II)", low: "Low (CAT III)" };
-
-function ruleSort(a, b) {
-  const key = (rule) => String(rule.metadata?.stig_id || rule.metadata?.vuln_id || rule.metadata?.item_id || "");
-  return key(a).localeCompare(key(b), undefined, { numeric: true, sensitivity: "base" }) ||
-    String(a.metadata?.rule_id || "").localeCompare(String(b.metadata?.rule_id || ""), undefined, { numeric: true });
-}
-
-/**
- * The published STIG benchmark and its rules. Fails closed: a worksheet built
- * around a STIG is meaningless without one.
- */
-function resolveStigBenchmark(dataset, stig) {
-  const wanted = String(stig || "").trim();
-  if (!wanted) {
-    throw new Error("Choose a STIG to prepare this worksheet. No document was generated.");
-  }
-  const nodes = dataset?.nodes || [];
-  const benchmark = nodes.find(
-    (node) =>
-      node.node_type === "benchmark" &&
-      node.metadata?.catalog_id === "disa-stig" &&
-      (node.metadata?.item_id === wanted || node.id === wanted),
-  );
-  if (!benchmark) {
-    throw new Error(`"${wanted}" is not a published STIG. No document was generated.`);
-  }
-  const byId = new Map(nodes.map((node) => [node.id, node]));
-  const rules = [];
-  for (const edge of dataset?.edges || []) {
-    if (edge.relationship_type !== "contains" || edge.source_node_id !== benchmark.id) continue;
-    const child = byId.get(edge.target_node_id);
-    if (child?.node_type === "stig_rule") rules.push(child);
-  }
-  if (rules.length === 0) {
-    throw new Error(`"${benchmark.metadata?.title || wanted}" has no published rules. No document was generated.`);
-  }
-  rules.sort(ruleSort);
-  return { benchmark, rules };
-}
-
-/** The 12 headers the STIG Viewer 3.x User Guide V1R7 requires, in the guide's order. */
-export const STIG_VIEWER_CSV_HEADERS = Object.freeze(["Benchmark ID", "Rule ID", "Status", "Comments", "Finding Details", "Severity Override", "Severity Override Reason", "FQDN", "IP Address", "MAC Address", "Host Name", "Technology Area"]);
-
-function generateProfessionalSTIGWorksheet(options, stigContext, crossRef) {
-  const ph = placeholder(options);
-  const V = TEMPLATE_VOCAB.stig_evidence_checklist;
-  const { benchmark, rules } = stigContext;
-  const meta = benchmark.metadata || {};
-  const benchmarkId = String(meta.publisher_item_id || rules[0]?.metadata?.benchmark_id || "");
-  const targetHeaders = ["FQDN", "IP Address", "MAC Address", "Host Name", "Technology Area"];
-  const targetRow = targetHeaders.map((header) => ph(`[${header === "Technology Area" ? "Choose a Technology Area" : header}]`));
-  const targetCell = (index) => ({ formula: `IF(Target!$${String.fromCharCode(65 + index)}$2="","",Target!$${String.fromCharCode(65 + index)}$2)` });
-  const importRows = rules.map((rule) => [
-    benchmarkId,
-    String(rule.metadata?.rule_id || ""),
-    "",
-    "",
-    "",
-    "",
-    "",
-    ...targetHeaders.map((_, index) => targetCell(index)),
-  ]);
-  const cciFor = (rule) => (crossRef ? [...(crossRef.ruleToCci.get(rule.id) || [])].map((id) => crossRef.byId.get(id)?.metadata?.item_id || id) : []);
-  const natural = (a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
-  const referenceHeaders = ["Rule ID", "Vuln ID", "STIG ID", "Severity", "Rule Title", "CCIs", "Related NIST 800-53 Controls"];
-  const referenceRows = rules.map((rule) => {
-    const ccis = cciFor(rule).sort(natural);
-    const controlIds = new Set();
-    for (const cci of crossRef?.ruleToCci.get(rule.id) || []) {
-      for (const control of crossRef.cciToControl.get(cci) || []) controlIds.add(crossRef.byId.get(control)?.metadata?.item_id || control);
-    }
-    return [
-      String(rule.metadata?.rule_id || ""),
-      String(rule.metadata?.vuln_id || rule.metadata?.item_id || ""),
-      String(rule.metadata?.stig_id || DASH),
-      SEVERITY_LABELS[String(rule.metadata?.severity || "").toLowerCase()] || DASH,
-      String(rule.metadata?.title || rule.label || ""),
-      ccis.length ? ccis.join("; ") : DASH,
-      controlIds.size ? [...controlIds].sort(natural).join("; ") : DASH,
-    ];
-  });
-  const noteHeaders = ["Rule ID", "Evidence Artifact", "Validation Method", "Evidence Owner", "Evidence Date", "Review Notes"];
-  const noteRows = rules.map((rule) => [String(rule.metadata?.rule_id || ""), ph("[Artifact name or ID]"), ph("[Export | Screenshot | Query | Interview]"), ph("[Owner role]"), ph("[YYYY-MM-DD]"), ph("[Scope, sufficiency, follow-up]")]);
-  const severityCounts = { high: 0, medium: 0, low: 0 };
-  for (const rule of rules) {
-    const key = String(rule.metadata?.severity || "").toLowerCase();
-    if (key in severityCounts) severityCounts[key] += 1;
-  }
-  const scope = `STIG: ${meta.title || benchmark.label}, ${meta.benchmark_version || "version not recorded"}${meta.benchmark_status_date ? ` (${meta.benchmark_status_date})` : ""}. Benchmark ID: ${benchmarkId}. ${rules.length} rules: ${severityCounts.high} high, ${severityCounts.medium} medium, ${severityCounts.low} low. Rule IDs, titles and severities are as DISA published them.`;
-  const target = (extra = {}) => ({ group: "Target (one per file)", width: 26, ...extra });
-  const importGroup = (extra = {}) => ({ group: "Viewer CSV columns", ...extra });
-  const importSpec = {
-    "Benchmark ID": importGroup({ width: 28, help: "Filled in from the STIG you chose. STIG Viewer checks it against the checklist." }),
-    "Rule ID": importGroup({ width: 24, help: "Filled in from the STIG you chose. Do not edit." }),
-    Status: importGroup({ ...listOf(V.status), help: "Leave blank for Not Reviewed. STIG Viewer rejects other values." }),
-    Comments: importGroup({ width: 34 }),
-    "Finding Details": importGroup({ width: 38 }),
-    "Severity Override": importGroup({ ...listOf(V.severityOverride), help: "Only with an authorized override. STIG Viewer needs a reason when this is set." }),
-    "Severity Override Reason": importGroup({ width: 34 }),
-    FQDN: importGroup({ width: 24, help: "Comes from the Target sheet. Fill it in there, once." }),
-    "IP Address": importGroup({ width: 18, help: "Comes from the Target sheet." }),
-    "MAC Address": importGroup({ width: 18, help: "Comes from the Target sheet." }),
-    "Host Name": importGroup({ width: 20, help: "Comes from the Target sheet." }),
-    "Technology Area": importGroup({ width: 24, help: "Comes from the Target sheet." }),
-  };
-  const reference = (extra = {}) => ({ group: "Rule reference (DISA)", ...extra });
-  const referenceSpec = {
-    "Rule ID": reference({ width: 24 }),
-    "Vuln ID": reference({ width: 12 }),
-    "STIG ID": reference({ width: 16 }),
-    Severity: reference({ width: 16 }),
-    "Rule Title": reference({ width: 70 }),
-    CCIs: reference({ width: 36 }),
-    "Related NIST 800-53 Controls": reference({ width: 36 }),
-  };
-  const noteSpec = {
-    "Rule ID": { group: "Rule reference (DISA)", width: 24 },
-    "Evidence Artifact": { group: "Your evidence notes", width: 30 },
-    "Validation Method": { group: "Your evidence notes", ...listOf(V.validationMethod, { strict: false }) },
-    "Evidence Owner": { group: "Your evidence notes", width: 20 },
-    "Evidence Date": { group: "Your evidence notes", ...dateField() },
-    "Review Notes": { group: "Your evidence notes", width: 34 },
-  };
-  /** @type {DocSection[]} */
-  const sections = [
-    { type: "text", heading: "Selected STIG", content: scope },
-    { type: "text", heading: "How to use", content: [
-      "- Enter the target once on the Target sheet. STIG Viewer needs the same target values in every row of one CSV, so this file covers one target. For another target, make another copy.",
-      "- On the import sheet, fill in Status, Comments and Finding Details for the rules you assessed. Leave Status blank for Not Reviewed. Control Atlas does not fill in any result.",
-      "- Set Severity Override only for an authorized override, with a reason, and only to Low, Medium or High.",
-      "- To make the CSV: open the import sheet, then File > Save As > CSV. Excel saves only that sheet, with the 12 headers and the target values filled down. Keep evidence notes on their own sheet; they never go in the CSV.",
-      "- In STIG Viewer, open the checklist for this STIG and use Import > Import STIG Viewer CSV. The import updates a checklist that already exists and matches on Rule ID. Control Atlas has not tested an import.",
-    ].join("\n") },
-    tableSection("Target", targetHeaders, [targetRow], {
-      FQDN: target({ help: "Fully qualified domain name of the assessed target." }),
-      "IP Address": target(),
-      "MAC Address": target(),
-      "Host Name": target(),
-      "Technology Area": target({ ...listOf(V.technologyArea), width: 30, help: "One of the 21 values STIG Viewer accepts." }),
-    }, { freezeColumns: 0 }),
-    tableSection("STIG Viewer CSV Import Rows", [...STIG_VIEWER_CSV_HEADERS], importRows, importSpec, { freezeColumns: 2 }),
-    tableSection("Evidence Working Notes", noteHeaders, noteRows, noteSpec),
-    tableSection("STIG Rule Reference", referenceHeaders, referenceRows, referenceSpec),
-  ];
-  return appendSourceMetadata({ title: "STIG Viewer CSV Preparation Worksheet", description: `Working file for one STIG: ${meta.title || benchmark.label}. Its rules are listed with the 12 STIG Viewer CSV columns, plus separate evidence notes.`, sections }, options);
-}
-
-function generatePPSMPreparationWorksheet(options) {
-  const ph = placeholder(options);
-  const V = TEMPLATE_VOCAB.ppsm_preparation_worksheet;
-  const headers = [
-    "Network", "PPSM Tracking Identifier", "Service Name", "Protocol", "Transport", "Port / Range",
-    "Category Assurance List Category", "VA / CLSA Reference", "Enterprise or Core Service Provider", "DMZ Whitelist Needed",
-    "Record ID", "System / Boundary", "Mission or Business Need", "Source Zone / Address", "Destination Zone / Address", "Direction", "Purpose / Data Flow", "Public / External Exposure", "Encryption / Authentication", "Service Owner", "Technical POC", "Related Devices / Software", "Requested Action",
-    "Review Status", "Reviewer", "Last Verified", "Risk / Exception", "Notes",
-  ];
-  const hint = {
-    Network: "[NIPRNet | SIPRNet]",
-    "PPSM Tracking Identifier": "[The tracking ID, once the registry gives one]",
-    "Service Name": "[Service or application]",
-    Protocol: "[Protocol name or number]",
-    Transport: "[TCP | UDP | other]",
-    "Port / Range": "[Single port or range]",
-    "Category Assurance List Category": "[The category the Category Assurance List gives]",
-    "VA / CLSA Reference": "[Vulnerability assessment or CLSA reference]",
-    "Enterprise or Core Service Provider": "[Provider, if this is an enterprise or core service]",
-    "DMZ Whitelist Needed": "[Yes | No | Not sure]",
-    "Record ID": "[Your stable local ID]",
-    "System / Boundary": "[System or authorization boundary]",
-    "Mission or Business Need": "[Why the communication is necessary]",
-    "Source Zone / Address": "[Zone, subnet, FQDN, or address]",
-    "Destination Zone / Address": "[Zone, subnet, FQDN, or address]",
-    Direction: "[Inbound | Outbound | Bidirectional | Internal]",
-    "Purpose / Data Flow": "[Information exchanged and operational purpose]",
-    "Public / External Exposure": "[None | DoD external | Internet | Partner]",
-    "Encryption / Authentication": "[TLS, IPsec, mutual auth, certificates, or N/A]",
-    "Service Owner": "[Accountable role]",
-    "Technical POC": "[Technical contact or role]",
-    "Related Devices / Software": "[Hardware and software baseline IDs]",
-    "Requested Action": "[Register | Update | Retire | Validate]",
-    "Review Status": "[Collecting | In review | Ready to enter | Entered in registry | Needs rework]",
-    Reviewer: "[Reviewer role]",
-    "Last Verified": "[YYYY-MM-DD]",
-    "Risk / Exception": "[Risk, deviation, or exception reference]",
-    Notes: "[Dependencies, restrictions, reviewer comments]",
-  };
-  const rows = Array.from({ length: 20 }, () => headers.map((header) => ph(hint[header] || "")));
-  const reg = (extra = {}) => ({ group: "Registry information", ...extra });
-  const cat = (extra = {}) => ({ group: "Assessment and category", ...extra });
-  const local = (extra = {}) => ({ group: "Local working context", ...extra });
-  const review = (extra = {}) => ({ group: "Review", ...extra });
-  const spec = {
-    Network: reg({ ...listOf(V.network, { strict: false }), width: 14, help: "The DISN guide names the NIPRNet and SIPRNet versions of the PPSM Registry." }),
-    "PPSM Tracking Identifier": reg({ width: 22, help: "A DISN connection request needs a valid PPSM Tracking Identifier. Record it here after you enter the data in the registry." }),
-    "Service Name": reg({ required: true, width: 24 }),
-    Protocol: reg({ required: true, width: 16 }),
-    Transport: reg({ ...listOf(V.transport, { strict: false }), width: 12 }),
-    "Port / Range": reg({ required: true, width: 14 }),
-    "Category Assurance List Category": cat({ width: 26, help: "Use the category the Category Assurance List gives for this service. Control Atlas does not assign it." }),
-    "VA / CLSA Reference": cat({ width: 24, help: "A service needs a vulnerability assessment or a Component Local Services Assessment." }),
-    "Enterprise or Core Service Provider": cat({ width: 26, help: "For an enterprise or core service, the provider registers it, not the receiving organization." }),
-    "DMZ Whitelist Needed": cat({ ...listOf(V.yesNo), width: 14, help: "A system that must cross both the NIPRNet and the Internet may need a NIPRNet DMZ Whitelist entry." }),
-    "Record ID": local({ required: true, width: 16 }),
-    "System / Boundary": local({ width: 24 }),
-    "Mission or Business Need": local({ width: 34 }),
-    "Source Zone / Address": local({ width: 24 }),
-    "Destination Zone / Address": local({ width: 24 }),
-    Direction: local({ ...listOf(V.direction), width: 14 }),
-    "Purpose / Data Flow": local({ width: 34 }),
-    "Public / External Exposure": local({ ...listOf(V.exposure), width: 18 }),
-    "Encryption / Authentication": local({ width: 28 }),
-    "Service Owner": local({ width: 18 }),
-    "Technical POC": local({ width: 20 }),
-    "Related Devices / Software": local({ width: 26 }),
-    "Requested Action": local({ ...listOf(V.requestedAction) }),
-    "Review Status": review({ required: true, ...listOf(V.reviewStatus), width: 20 }),
-    Reviewer: review({ width: 18 }),
-    "Last Verified": review({ ...dateField() }),
-    "Risk / Exception": review({ width: 26 }),
-    Notes: review({ width: 32 }),
-  };
-  /** @type {DocSection[]} */
-  const sections = [
-    { type: "text", heading: "Workflow", content: "Collect here, then review, then enter the data in the authorized PPSM workflow. This worksheet does not replace the PPSM Registry or your Component's PPSM Technical Advisory Group (TAG) representative." },
-    { type: "text", heading: "How to use", content: ["- Registry information columns follow the DISN Connection Process Guide section 2.7.3: the registry version, the tracking identifier, and the ports, protocols and services.", "- Assessment and category columns (Category Assurance List, VA / CLSA, enterprise provider, DMZ Whitelist) are named in public PPSM guidance. Confirm each in the registry; the policy text was not available to check them.", "- The Local working context columns are information a reviewer usually needs. They are not PPSM Registry fields. The registry's own entry fields are not public, so check each one in the registry.", "- Use exact boundary, zone, address and device references. Have the service owner and a security reviewer check each row before anyone enters it.", "- This is not a PPSM submission form, a registry receipt or an import file."].join("\n") },
-    tableSection("PPSM Preparation Register", headers, rows, spec, { freezeColumns: 3 }),
-  ];
-  return appendSourceMetadata({ title: "PPSM Preparation Worksheet", description: "Collect and review ports, protocols and services information before entering it in the authorized PPSM workflow.", sections }, options);
-}
-
-function escapeCsv(val) {
-  if (val == null) return '""';
-  const str = String(val);
-  if (str.includes(",") || str.includes('"') || str.includes("\n")) {
-    return `"${str.replaceAll('"', '""')}"`;
-  }
-  return str;
-}
-
 // Markdown layout limits: pipe tables wider than ~6 columns are unreadable in
 // any renderer, so wide sections are restructured (constant guidance columns
 // become prose, varying columns are split across narrow keyed tables).
@@ -1743,7 +1488,6 @@ export const CROSS_REF_TEMPLATES = Object.freeze([
   "evidence_expectation_matrix",
   "implementation_statement_worksheet",
   "assessment_planning_worksheet",
-  "stig_evidence_checklist",
 ]);
 
 /**
@@ -1992,9 +1736,6 @@ export function buildTemplateDocument(options, dataset) {
     case "evidence_expectation_matrix":
       doc = generateProfessionalEvidenceMatrix(normalized, controls, crossRef);
       break;
-    case "stig_evidence_checklist":
-      doc = generateProfessionalSTIGWorksheet(normalized, resolveStigBenchmark(dataset, normalized.stig), crossRef);
-      break;
     case "inheritance_worksheet":
       doc = generateProfessionalInheritanceWorksheet(normalized, controls);
       break;
@@ -2015,9 +1756,6 @@ export function buildTemplateDocument(options, dataset) {
       break;
     case "software_baseline":
       doc = generateSoftwareBaseline(normalized);
-      break;
-    case "ppsm_preparation_worksheet":
-      doc = generatePPSMPreparationWorksheet(normalized);
       break;
     default:
       doc = generateProfessionalSecurityPlan(normalized, controls);

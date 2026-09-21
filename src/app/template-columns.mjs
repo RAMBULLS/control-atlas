@@ -34,20 +34,6 @@ export const DATE_MAX_SERIAL = serial(2099, 12, 31);
 const DISCOVERY_SOURCES = Object.freeze(["CMDB", "Cloud API", "Vulnerability scan", "Network discovery", "Manual", "Other"]); // working
 
 export const TEMPLATE_VOCAB = Object.freeze({
-  stig_evidence_checklist: Object.freeze({
-    // DISA STIG Viewer 3.x User Guide V1R7 (13 Feb 2026), section 5.6.3.2, Table 5-1.
-    status: Object.freeze(["Not Reviewed", "Open", "Not a Finding", "Not Applicable"]),
-    severityOverride: Object.freeze(["Low", "Medium", "High"]),
-    validationMethod: Object.freeze(["Export", "Screenshot", "Query", "Interview"]), // working
-    technologyArea: Object.freeze([
-      "None", "Application Review", "Boundary Security", "CDS Admin Review",
-      "CDS Technical Review", "Database Review", "Domain Name System (DNS)",
-      "Exchange Server", "Host Based System Security (HBSS)", "Internal Network",
-      "Mobility", "Releasable Networks (REL)", "Traditional Security", "Unix OS",
-      "VVOIP Review", "Web Review", "Windows OS", "Other Review", "Workstation",
-      "Member Server", "Domain Controller",
-    ]),
-  }),
   implementation_statement_worksheet: Object.freeze({
     // MITRE eMASS REST API v3.22 (5 Dec 2024), Controls endpoint fields.
     implementationStatus: Object.freeze(["Planned", "Implemented", "Inherited", "Not Applicable", "Manually Inherited"]),
@@ -110,17 +96,6 @@ export const TEMPLATE_VOCAB = Object.freeze({
   conmon_calendar: Object.freeze({
     status: Object.freeze(["Planned", "In Progress", "Complete", "Late", "Blocked"]), // working
     cadence: Object.freeze(["Continuous", "Daily", "Weekly", "Monthly", "Quarterly", "Semi-annual", "Annual", "Every 3 years", "Event-driven"]), // working
-  }),
-  ppsm_preparation_worksheet: Object.freeze({
-    // Working states for this worksheet only. They are NOT PPSM Registry states.
-    reviewStatus: Object.freeze(["Collecting", "In review", "Ready to enter", "Entered in registry", "Needs rework"]),
-    // DISN Connection Process Guide section 2.7.3 names both registry versions.
-    network: Object.freeze(["NIPRNet", "SIPRNet"]),
-    transport: Object.freeze(["TCP", "UDP", "Other"]), // working
-    yesNo: Object.freeze(["Yes", "No", "Not sure"]), // working
-    direction: Object.freeze(["Inbound", "Outbound", "Bidirectional", "Internal"]), // working
-    exposure: Object.freeze(["None", "DoD external", "Internet", "Partner"]), // working
-    requestedAction: Object.freeze(["Register", "Update", "Retire", "Validate"]), // working
   }),
 });
 

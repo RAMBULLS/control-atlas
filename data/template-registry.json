@@ -83,33 +83,6 @@
       "disclaimer_required": true
     },
     {
-      "template_id": "tpl-stig-chk",
-      "name": "stig_evidence_checklist",
-      "display_name": "STIG Viewer CSV Preparation Worksheet",
-      "description": "Working file for one STIG you choose: its real rules listed under the 12 STIG Viewer CSV columns, with target details entered once and evidence notes kept separate.",
-      "artifact_type": "stig_evidence_checklist",
-      "supported_formats": ["xlsx"],
-      "input_options": ["selected_stig"],
-      "required_input_options": ["selected_stig"],
-      "source_refs": ["disa-stig-library", "disa-cci-list", "disa-stig-viewer-v1r7"],
-      "official_resource_ids": ["disa-stig-viewer-csv-contract-v1r7", "disa-stig-viewer-guide-v1r7", "disa-stig-viewer"],
-      "compatibility": {
-        "classification": "Field-aligned",
-        "claim": "Uses the 12 CSV headers and values in the DISA STIG Viewer 3.x User Guide V1R7. Import into STIG Viewer is not verified.",
-        "limitations": "The import updates a checklist that already exists in STIG Viewer. Open the CSV in your STIG Viewer version to check it. Control Atlas has not tested an import."
-      },
-      "provenance": { "basis": "DISA STIG Viewer 3.x User Guide V1R7 CSV import contract", "verified_interchange": false },
-      "official_alternative": {
-        "label": "DISA STIG Viewer and SRG/STIG tools",
-        "url": "https://public.cyber.mil/stigs/srg-stig-tools/"
-      },
-      "usage": {
-        "use_for": "Prepare results for one STIG, then save a CSV for STIG Viewer.",
-        "not_for": "STIG Viewer itself, or automated scanning and SCAP tools."
-      },
-      "disclaimer_required": true
-    },
-    {
       "template_id": "tpl-inherit-wksh",
       "name": "inheritance_worksheet",
       "display_name": "Inheritance Worksheet",
@@ -297,33 +270,7 @@
         "not_for": "Your CMDB or eMASS."
       },
       "disclaimer_required": true
-    },
-    {
-      "template_id": "tpl-ppsm-prep",
-      "name": "ppsm_preparation_worksheet",
-      "display_name": "PPSM Preparation Worksheet",
-      "description": "Collect and review ports, protocols and services information, then enter it in the authorized PPSM workflow. Not a PPSM submission form.",
-      "artifact_type": "ppsm_preparation_worksheet",
-      "supported_formats": ["xlsx"],
-      "input_options": ["environment_archetype"],
-      "required_input_options": [],
-      "source_refs": ["dod-ppsm-policy", "disa-ppsm-training"],
-      "official_resource_ids": ["dodi-8551-01-ppsm-2023", "disa-ppsm-registry-training"],
-      "compatibility": {
-        "classification": "Concept-aligned",
-        "claim": "Collects information for the PPSM process. It is not the registry's form and not an interchange schema.",
-        "limitations": "Collect and review here, then enter the data in the authorized PPSM workflow. Not a PPSM submission form, registry receipt, or import file."
-      },
-      "provenance": { "basis": "DISN Connection Process Guide section 2.7.3 for the registry-information columns. Local working-context columns are Control Atlas's own. Not checked field by field against DoDI 8551.01 or the DISA PPSM Registry training, which are linked as official context.", "basis_url": "https://dl.dod.cyber.mil/wp-content/uploads/connect/CPG/ConnProcGuide.html", "verified_interchange": false },
-      "official_alternative": {
-        "label": "DoD PPSM Registry training",
-        "url": "https://dl.dod.cyber.mil/wp-content/uploads/trn/cx-player/player/index.html?v=ppsm-registry"
-      },
-      "usage": {
-        "use_for": "Collect and review ports, protocols and services information before you enter it.",
-        "not_for": "The PPSM Registry or its submission workflow."
-      },
-      "disclaimer_required": true
     }
+
   ]
 }

@@ -3,7 +3,6 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 import { buildTemplateDocument } from '../src/app/template-engine.mjs';
-import { STIG_ID, addStigFixture } from './helpers/stig-fixture.mjs';
 
 const registry = JSON.parse(readFileSync('data/template-registry.json', 'utf8'));
 const dataset = {
@@ -35,14 +34,12 @@ const dataset = {
   edges: [],
   sources: [],
 };
-addStigFixture(dataset);
 
 function build(templateType, framework = 'nist-800-53') {
   return buildTemplateDocument(
     {
       templateType,
-      stig: STIG_ID,
-      framework: ['hardware_baseline', 'software_baseline', 'ppsm_preparation_worksheet', 'stig_evidence_checklist', 'poam_starter', 'reciprocity_checklist'].includes(templateType)
+      framework: ['hardware_baseline', 'software_baseline', 'poam_starter', 'reciprocity_checklist'].includes(templateType)
         ? ''
         : framework,
       environment: 'Cloud SaaS',
@@ -72,7 +69,6 @@ const REQUIRED_FIELDS = {
   conmon_calendar: ['Deliverable / Evidence', 'Collection Method', 'Cadence Basis', 'Source / Program Cadence', 'Planning Default (suggestion)', 'Organization-Selected Cadence', 'Owner', 'Reviewer / Recipient', 'Evidence Location', 'Next Due', 'Completed Date', 'Status', 'Result / Threshold', 'Escalation / Follow-up'],
   hardware_baseline: ['Asset ID', 'Hostname', 'FQDN', 'System / Authorization Boundary', 'Discovery Source', 'assetName', 'componentType', 'assetIpAddress', 'publicFacing', 'manufacturer', 'modelNumber', 'serialNumber', 'osIosFwVersion', 'approvalStatus', 'criticalAsset', 'Asset Owner', 'Last Verified', 'Lifecycle Status'],
   software_baseline: ['Software ID', 'purpose', 'Exception / Deviation Reference', 'Discovery Source', 'softwareVendor', 'softwareName', 'version', 'softwareType', 'softwareDependencies', 'cryptographicHash', 'approvalStatus', 'endOfLifeSupportDate', 'Software Owner', 'Authority / Approved Use', 'Last Verified'],
-  ppsm_preparation_worksheet: ['Network', 'PPSM Tracking Identifier', 'System / Boundary', 'Mission or Business Need', 'Service Name', 'Protocol', 'Port / Range', 'Transport', 'Category Assurance List Category', 'VA / CLSA Reference', 'Source Zone / Address', 'Destination Zone / Address', 'Direction', 'Public / External Exposure', 'Review Status'],
 };
 
 test('professionalized artifacts retain the operational fields needed to do the job', () => {
@@ -84,25 +80,8 @@ test('professionalized artifacts retain the operational fields needed to do the 
   }
 });
 
-test('STIG preparation table exactly matches the official STIG Viewer 12-column CSV contract', () => {
-  assert.deepEqual(headers('stig_evidence_checklist', 'STIG Viewer CSV Import Rows'), [
-    'Benchmark ID',
-    'Rule ID',
-    'Status',
-    'Comments',
-    'Finding Details',
-    'Severity Override',
-    'Severity Override Reason',
-    'FQDN',
-    'IP Address',
-    'MAC Address',
-    'Host Name',
-    'Technology Area',
-  ]);
-});
-
-test('all twelve artifacts include compatibility limitations and source metadata', () => {
-  assert.equal(registry.templates.length, 12);
+test('all ten artifacts include compatibility limitations and source metadata', () => {
+  assert.equal(registry.templates.length, 10);
   for (const template of registry.templates) {
     const doc = build(template.name);
     const sections = new Map(doc.sections.map((section) => [section.heading, section]));
@@ -167,7 +146,7 @@ test('FedRAMP context appears only when a FedRAMP program is the selected contex
     ).doc;
     assert.equal(fedrampSection(nist), undefined, `${templateType} must not carry FedRAMP text for NIST 800-53`);
   }
-  for (const templateType of ['hardware_baseline', 'software_baseline', 'ppsm_preparation_worksheet', 'stig_evidence_checklist']) {
+  for (const templateType of ['hardware_baseline', 'software_baseline']) {
     assert.equal(fedrampSection(build(templateType)), undefined, `${templateType} has no program context to select`);
   }
   const content = (templateType) => fedrampSection(

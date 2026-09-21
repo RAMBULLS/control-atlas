@@ -140,6 +140,7 @@ export type ViewState =
       objectType: string;
       sourceClass: string;
       controlFamily: string;
+      stig: string;
       severity: string;
       connectedOnly: string;
       sort: string;
@@ -206,6 +207,7 @@ export type ViewState =
       environment: string;
       baseline: string;
       controlFamily: string;
+      stig: string;
       category: string;
       query: string;
     }
@@ -270,6 +272,7 @@ function searchState(): ViewState {
     objectType: "",
     sourceClass: "",
     controlFamily: "",
+    stig: "",
     severity: "",
     connectedOnly: "",
     sort: "relevance",
@@ -506,6 +509,7 @@ export function parseViewState(search: string): ViewState {
       environment: params.get("environment") || "",
       baseline: params.get("baseline") || "",
       controlFamily: params.get("controlFamily") || "",
+      stig: params.get("stig") || "",
       category: params.get("category") || "",
       query: params.get("q") || "",
     };
@@ -584,6 +588,7 @@ export function parseViewState(search: string): ViewState {
     objectType: "",
     sourceClass: "",
     controlFamily: "",
+    stig: "",
     severity: "",
     connectedOnly: params.get("connectedOnly") === "true" ? "true" : "",
     sort: ["relevance", "identifier", "title", "publication"].includes(params.get("sort") || "")
@@ -690,6 +695,7 @@ export function normalizeViewState(
       environment: incoming.environment || "",
       baseline: incoming.baseline || "",
       controlFamily: incoming.controlFamily || "",
+      stig: incoming.stig || "",
       category: incoming.category || "",
       query: incoming.query || "",
     };
@@ -779,6 +785,7 @@ export function normalizeViewState(
     objectType: "",
     sourceClass: "",
     controlFamily: "",
+    stig: "",
     severity: "",
     collection: "",
     tags: Array.isArray(incoming.tags) ? [...new Set(incoming.tags.filter(Boolean))].sort() : [],
@@ -916,6 +923,7 @@ export function serializeViewState(state: ViewState): string {
     setIfValue(params, "environment", state.environment);
     setIfValue(params, "baseline", state.baseline);
     setIfValue(params, "controlFamily", state.controlFamily);
+    setIfValue(params, "stig", state.stig);
     setIfValue(params, "category", state.category);
     setIfValue(params, "q", state.query);
   } else if (state.view === "sources") {

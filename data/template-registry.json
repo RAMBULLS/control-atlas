@@ -74,17 +74,17 @@
       "template_id": "tpl-stig-chk",
       "name": "stig_evidence_checklist",
       "display_name": "STIG Viewer CSV Preparation Worksheet",
-      "description": "STIG Viewer CSV columns from the V1R7 user guide plus a separate evidence working-notes sheet for assessment preparation.",
+      "description": "Working file for one STIG you choose: its real rules listed under the 12 STIG Viewer CSV columns, with target details entered once and evidence notes kept separate.",
       "artifact_type": "stig_evidence_checklist",
       "supported_formats": ["xlsx"],
-      "input_options": ["selected_stigs"],
-      "required_input_options": [],
+      "input_options": ["selected_stig"],
+      "required_input_options": ["selected_stig"],
       "source_refs": ["disa-stig-library", "disa-cci-list", "disa-stig-viewer-v1r7"],
       "official_resource_ids": ["disa-stig-viewer-csv-contract-v1r7", "disa-stig-viewer-guide-v1r7", "disa-stig-viewer"],
       "compatibility": {
         "classification": "Field-aligned",
         "claim": "Uses the 12 CSV headers and values in the DISA STIG Viewer 3.x User Guide V1R7. Import into STIG Viewer is not verified.",
-        "limitations": "Open the CSV in your STIG Viewer version to check it. Control Atlas has not tested an import."
+        "limitations": "The import updates a checklist that already exists in STIG Viewer. Open the CSV in your STIG Viewer version to check it. Control Atlas has not tested an import."
       },
       "provenance": { "basis": "DISA STIG Viewer 3.x User Guide V1R7 CSV import contract", "verified_interchange": false },
       "official_alternative": {
@@ -166,7 +166,7 @@
       "template_id": "tpl-assess-plan",
       "name": "assessment_planning_worksheet",
       "display_name": "Assessment Planning Worksheet",
-      "description": "Control assessment schedule covering scope, assessor, methods, evidence, tooling, sampling, dates, results, and follow-up.",
+      "description": "Assessment plan for the baseline you pick. NIST SP 800-53A methods, objects and objectives sit beside your scope, sampling, schedule and results.",
       "artifact_type": "assessment_planning_worksheet",
       "supported_formats": ["xlsx"],
       "input_options": ["framework", "baseline"],
@@ -189,7 +189,7 @@
       "template_id": "tpl-conmon",
       "name": "conmon_calendar",
       "display_name": "Continuous Monitoring Delivery Calendar",
-      "description": "Monitoring schedule that connects activities to deliverables, evidence locations, owners, completion, reporting, and escalation.",
+      "description": "Monitoring schedule that separates cadences a source states from planning suggestions and from the cadence your organization selects.",
       "artifact_type": "conmon_calendar",
       "supported_formats": ["xlsx"],
       "input_options": ["framework"],
@@ -258,7 +258,7 @@
       "template_id": "tpl-ppsm-prep",
       "name": "ppsm_preparation_worksheet",
       "display_name": "PPSM Preparation Worksheet",
-      "description": "Local collection worksheet for ports, protocols, services, boundaries, mission need, exposure, and approval tracking before PPSM submission.",
+      "description": "Collect and review ports, protocols and services information, then enter it in the authorized PPSM workflow. Not a PPSM submission form.",
       "artifact_type": "ppsm_preparation_worksheet",
       "supported_formats": ["xlsx"],
       "input_options": ["environment_archetype"],
@@ -267,10 +267,10 @@
       "official_resource_ids": ["dodi-8551-01-ppsm-2023", "disa-ppsm-registry-training"],
       "compatibility": {
         "classification": "Concept-aligned",
-        "claim": "Collects the information the PPSM process asks for. It is not an interchange schema.",
+        "claim": "Collects information for the PPSM process. It is not the registry's form and not an interchange schema.",
         "limitations": "Collect and review here, then enter the data in the authorized PPSM workflow. Not a PPSM submission form, registry receipt, or import file."
       },
-      "provenance": { "basis": "DoDI 8551.01 and public DISA PPSM training", "verified_interchange": false },
+      "provenance": { "basis": "DISN Connection Process Guide section 2.7.3 for the registry-information columns. Local working-context columns are Control Atlas's own. Not checked field by field against DoDI 8551.01 or the DISA PPSM Registry training, which are linked as official context.", "basis_url": "https://dl.dod.cyber.mil/wp-content/uploads/connect/CPG/ConnProcGuide.html", "verified_interchange": false },
       "official_alternative": {
         "label": "DoD PPSM Registry training",
         "url": "https://dl.dod.cyber.mil/wp-content/uploads/trn/cx-player/player/index.html?v=ppsm-registry"

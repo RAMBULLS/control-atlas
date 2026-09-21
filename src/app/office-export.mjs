@@ -75,6 +75,7 @@ function sanitizeSheetName(name, used) {
 
 function worksheetCell(value) {
   if (typeof value === "number" && Number.isFinite(value)) return { value, editable: false };
+  if (value && typeof value === "object" && typeof value.formula === "string") return { value, editable: false };
   const text = String(value ?? "");
   const placeholder = /^\[[\s\S]*\]$/.test(text.trim());
   return {
@@ -105,7 +106,7 @@ function expectedEntry(column, representative) {
     parts.push("A date, for example 2026-09-30.");
   }
   if (parts.length) return parts.join(" ");
-  return representative || "Enter the value named by this field.";
+  return (typeof representative === "string" && representative) || "Enter the value named by this field.";
 }
 
 /** Map the typed document sections to one authoritative sheet per table. */
@@ -351,6 +352,10 @@ function sheetXml(sheet, ctx) {
         style = sheet.styleOverrides?.[rowIndex]?.[colIndex] ?? (colIndex === 0 ? 2 : 3);
       }
       const styleAttr = style ? ` s="${style}"` : "";
+      if (cell && typeof cell === "object" && cell.formula) {
+        out += `<c r="${ref}"${styleAttr} t="str"><f>${escapeXml(cell.formula)}</f><v></v></c>`;
+        return;
+      }
       if (typeof cell === "number") {
         out += `<c r="${ref}"${styleAttr}><v>${cell}</v></c>`;
         return;
@@ -423,6 +428,7 @@ export function docToXlsx(doc) {
   /** @type {import("fflate").Zippable} */
   const files = {};
 
+  const hasFormulas = sheets.some((sheet) => (sheet.rows || []).some((row) => (row || []).some((cell) => cell && typeof cell === "object" && cell.formula)));
   const lists = [];
   const ctx = {
     sheets,
@@ -478,7 +484,7 @@ export function docToXlsx(doc) {
   );
   files["xl/workbook.xml"] = strToU8(
     `${XML_DECL}<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">` +
-      `<bookViews><workbookView activeTab="0"/></bookViews><sheets>${workbookSheets}</sheets><definedNames>${definedNames}</definedNames></workbook>`,
+      `<bookViews><workbookView activeTab="0"/></bookViews><sheets>${workbookSheets}</sheets><definedNames>${definedNames}</definedNames>${hasFormulas ? '<calcPr calcId="191029" fullCalcOnLoad="1"/>' : ""}</workbook>`,
   );
   files["xl/_rels/workbook.xml.rels"] = strToU8(
     `${XML_DECL}<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${workbookRels}</Relationships>`,

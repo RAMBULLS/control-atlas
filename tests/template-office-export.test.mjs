@@ -8,6 +8,7 @@ import readXlsxFile from 'read-excel-file/node';
 import { buildTemplateDocument } from '../src/app/template-engine.mjs';
 import { docToDocx, docToXlsx, officeDocumentToSheets, renderOfficeDocument } from '../src/app/office-export.mjs';
 import { GENERATED_FILE_NOTICE } from '../src/shared/disclaimer.mjs';
+import { STIG_ID, addStigFixture } from './helpers/stig-fixture.mjs';
 
 const dataset = {
   nodes: [
@@ -26,11 +27,13 @@ const dataset = {
   ],
   sources: [{ id: 'nist-oscal', display_name: 'SP 800-53 Rev. 5', version: '2026-06-09' }],
 };
+addStigFixture(dataset);
 
 function buildDoc(templateType) {
   const { doc } = buildTemplateDocument(
     {
       templateType,
+      stig: STIG_ID,
       framework: 'nist-800-53',
       environment: 'Cloud SaaS',
       sourceRefs: ['nist-oscal'],
@@ -85,7 +88,7 @@ test('every spreadsheet template has one authoritative sheet per logical table a
         assert.equal(row.length, sheet.headers.length, `${templateType}/${sheet.name}: row width`);
         for (const cell of row) {
           assert.doesNotMatch(
-            String(cell),
+            String(cell?.formula ?? cell),
             /^\[[\s\S]*\]$/,
             `${templateType}/${sheet.name}: placeholders belong in the field guide, not working rows`,
           );

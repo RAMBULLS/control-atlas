@@ -5,6 +5,7 @@ import { strFromU8, unzipSync } from 'fflate';
 
 import { docToXlsx, officeDocumentToSheets } from '../src/app/office-export.mjs';
 import { buildTemplateDocument, getControlCrossRefIndex } from '../src/app/template-engine.mjs';
+import { STIG_ID, addStigFixture } from './helpers/stig-fixture.mjs';
 
 const registry = JSON.parse(readFileSync('data/template-registry.json', 'utf8'));
 
@@ -70,12 +71,14 @@ const dataset = {
   ],
   sources: [{ id: 'nist-800-53', display_name: 'SP 800-53 Rev. 5', version: 'Revision 5' }],
 };
+addStigFixture(dataset);
 
 function build(templateType, extra = {}) {
   const template = registry.templates.find((item) => item.name === templateType);
   return buildTemplateDocument(
     {
       templateType,
+      stig: STIG_ID,
       framework: template.input_options.includes('framework') ? 'nist-800-53' : '',
       environment: 'Cloud SaaS',
       sourceRefs: template.source_refs,

@@ -96,8 +96,8 @@ export const INTEROPERABILITY = {
   stig_evidence_checklist: {
     level: "Field-aligned",
     summary: "Uses the 12 CSV headers and values in the DISA STIG Viewer 3.x User Guide V1R7. Import into STIG Viewer is not verified.",
-    basis: "DISA STIG Viewer 3.x User Guide V1R7 (13 Feb 2026), section 5.6.3.",
-    limit: "Open the CSV in your STIG Viewer version to check it. Control Atlas has not tested an import.",
+    basis: "DISA STIG Viewer 3.x User Guide V1R7 (13 Feb 2026), section 5.6.3. Rule and benchmark identifiers are as DISA published them.",
+    limit: "The import updates a checklist that already exists in STIG Viewer. Open the CSV in your STIG Viewer version to check it. Control Atlas has not tested an import.",
   },
   inheritance_worksheet: {
     level: "Concept-aligned",
@@ -159,9 +159,9 @@ export const INTEROPERABILITY = {
   },
   ppsm_preparation_worksheet: {
     level: "Concept-aligned",
-    summary: "Collects the information the PPSM process asks for. It is not an interchange schema.",
-    basis: "DoDI 8551.01 and public DISA PPSM Registry training.",
-    limit: "Collect and review here, then enter the data in the authorized PPSM workflow. Not a PPSM submission form, registry receipt, or import file.",
+    summary: "Collects information for the PPSM process. It is not the registry's form and not an interchange schema.",
+    basis: "The registry-information columns rest on the DISN Connection Process Guide section 2.7.3 (DoD Cyber Exchange), the only source read for this worksheet: registration in the NIPRNet or SIPRNet PPSM Registry, the PPSM Tracking Identifier, enterprise and core service providers, and the NIPRNet DMZ Whitelist. The Local working context columns are Control Atlas's own and are not registry fields.",
+    limit: "The Category Assurance List and VA / CLSA columns are named in public PPSM descriptions but were not confirmed from the policy text, and the registry's own entry fields are not public. DoDI 8551.01 and the DISA PPSM Registry training are linked as official PPSM policy and training; they were not used to check individual columns. Collect and review here, then enter the data in the authorized PPSM workflow. Not a PPSM submission form, registry receipt, or import file.",
   },
 };
 
@@ -491,10 +491,7 @@ function generateProfessionalEvidenceMatrix(options, controls, crossRef) {
   const rows = controls.map((c) => {
     const refs = crossRef && c.nodeId ? crossRefForControl(crossRef, c.nodeId) : null;
     const assessment = crossRef && c.nodeId ? assessmentContext(crossRef, c.nodeId) : null;
-    if (assessment) {
-      for (const [method, objects] of assessment.objectsByMethod) objectRows.push([c.id, method, objects.join("; ")]);
-      for (const objective of assessment.objectives) objectiveRows.push([c.id, objective.label || DASH, objective.prose || DASH]);
-    }
+    if (assessment) addAssessmentReference(c.id, assessment, objectRows, objectiveRows);
     if (refs) {
       referenceRows.push([
         c.id,
@@ -883,6 +880,407 @@ function generateSoftwareBaseline(options) {
   return appendSourceMetadata({ title: "Software Baseline", description: "Software inventory for collecting, reconciling and reviewing software, with eMASS API v3.22 field names and values.", sections }, options);
 }
 
+function addAssessmentReference(controlId, assessment, objectRows, objectiveRows) {
+  for (const [method, objects] of assessment.objectsByMethod) objectRows.push([controlId, method, objects.join("; ")]);
+  for (const objective of assessment.objectives) objectiveRows.push([controlId, objective.label || DASH, objective.prose || DASH]);
+}
+
+/** "Examine: a; b | Interview: c" cut at a word boundary. */
+function objectsSummary(assessment, max) {
+  const parts = [...assessment.objectsByMethod].map(([method, objects]) => `${method}: ${objects.join("; ")}`);
+  return parts.length ? truncatePlain(parts.join(" | "), max) : DASH;
+}
+
+function generateProfessionalAssessmentPlan(options, controls, crossRef) {
+  const ph = placeholder(options);
+  const V = TEMPLATE_VOCAB.assessment_planning_worksheet;
+  const headers = ["Control ID", "Control Title", "Family", "Type", "Procedure Reference", "800-53A Methods", "800-53A Objectives", "Assessment Objects (NIST SP 800-53A)", "Related CCIs", "STIG/SRG Rule Count", "Assessment Scope", "Assessment Method", "Assessor Role", "Evidence to Request", "Sampling Approach", "Tool / Procedure", "Target Start", "Target Complete", "Status", "Result / Test Success", "Finding / POA&M Reference", "Evidence Location", "Review Notes"];
+  const objectRows = [];
+  const objectiveRows = [];
+  const rows = controls.map((c) => {
+    const refs = crossRef && c.nodeId ? crossRefForControl(crossRef, c.nodeId) : null;
+    const assessment = crossRef && c.nodeId ? assessmentContext(crossRef, c.nodeId) : null;
+    if (assessment) addAssessmentReference(c.id, assessment, objectRows, objectiveRows);
+    return [
+      c.id,
+      c.title,
+      c.family || DASH,
+      c.nodeId ? (c.isEnhancement ? "Enhancement" : "Control") : DASH,
+      assessment ? `NIST SP 800-53A ${c.id}` : DASH,
+      assessment && assessment.methods.length ? assessment.methods.join("; ") : DASH,
+      assessment ? assessment.objectives.length : 0,
+      assessment ? objectsSummary(assessment, 260) : DASH,
+      refs && refs.cciIds.length ? cappedJoin(refs.cciIds, CROSS_REF_CAP) : DASH,
+      refs ? refs.ruleCount : 0,
+      ph("[Requirement, components, location, population, exclusions]"),
+      ph("[Examine | Interview | Test | Combination]"),
+      ph("[Lead and supporting assessor roles]"),
+      ph("[Specific artifacts and covered period]"),
+      ph("[Population, sample size, selection basis]"),
+      ph("[Procedure ID, scanner, script, or manual method]"),
+      ph("[YYYY-MM-DD]"),
+      ph("[YYYY-MM-DD]"),
+      ph("[Planned | Ready | In Progress | Blocked | Complete]"),
+      ph("[Pass | Fail | Inconclusive | Not Tested]"),
+      ph("[Finding ID, externalUid, or N/A]"),
+      ph("[Repository, ticket, or approved link]"),
+      ph("[Constraints, deviations, retest, follow-up]"),
+    ];
+  });
+  const source = (extra = {}) => ({ group: SOURCE_CONTEXT, ...extra });
+  const plan = (extra = {}) => ({ group: "Plan", ...extra });
+  const result = (extra = {}) => ({ group: "Result and follow-up", ...extra });
+  const spec = {
+    "Control ID": source(),
+    "Control Title": source({ width: 32 }),
+    Family: source({ width: 22 }),
+    Type: source({ width: 13 }),
+    "Procedure Reference": source({ width: 22, help: "The NIST SP 800-53A assessment procedure for this control." }),
+    "800-53A Methods": source({ width: 22, help: "Assessment methods NIST SP 800-53A lists. Your chosen method goes in Assessment Method." }),
+    "800-53A Objectives": source({ width: 11, help: "Number of assessment objectives. The full text is on the Assessment Objectives sheet." }),
+    "Assessment Objects (NIST SP 800-53A)": source({ width: 48, help: "Publisher text. What 800-53A says an assessor examines, interviews or tests. The full list is on the Assessment Objects sheet." }),
+    "Related CCIs": source({ width: 28 }),
+    "STIG/SRG Rule Count": source({ width: 12, help: "Number of STIG and SRG rules that reference this control's CCIs." }),
+    "Assessment Scope": plan({ required: true, width: 34 }),
+    "Assessment Method": plan({ required: true, ...listOf(V.method), help: "Your choice. 800-53A lists the methods it defines for this control in the column to the left." }),
+    "Assessor Role": plan({ width: 22 }),
+    "Evidence to Request": plan({ width: 34 }),
+    "Sampling Approach": plan({ width: 28 }),
+    "Tool / Procedure": plan({ width: 28 }),
+    "Target Start": plan({ ...dateField() }),
+    "Target Complete": plan({ ...dateField() }),
+    Status: result({ required: true, ...listOf(V.status) }),
+    "Result / Test Success": result({ ...listOf(V.result), help: "Corresponds to the eMASS test-results success flag in concept only. This worksheet is not an eMASS import." }),
+    "Finding / POA&M Reference": result({ width: 24 }),
+    "Evidence Location": result({ width: 26 }),
+    "Review Notes": result({ width: 34 }),
+  };
+  const refSpec = (headers2, widths) => Object.fromEntries(headers2.map((h, i) => [h, { group: SOURCE_CONTEXT, width: widths[i] }]));
+  const objectHeaders = ["Control ID", "Method", "Assessment objects (NIST SP 800-53A)"];
+  const objectiveHeaders = ["Control ID", "Objective", "Assessment objective text (NIST SP 800-53A)"];
+  /** @type {DocSection[]} */
+  const sections = [
+    { type: "text", heading: "Scope", content: scopeSentence(options, controls) },
+    { type: "text", heading: "How to use", content: ["- White columns are publisher content from NIST SP 800-53A and DISA data, shown as published. Control Atlas does not rewrite them and does not invent procedures.", "- Amber and blue columns are your plan: scope, method, assessor, sampling, schedule, result and follow-up.", "- The full objective text and object lists are on their own sheets, linked by control ID.", "- Some controls have no 800-53A record here. They show a dash, not invented content."].join("\n") },
+    tableSection("Assessment Plan", headers, rows, spec),
+    tableSection("Assessment Objects", objectHeaders, objectRows, refSpec(objectHeaders, [14, 14, 110])),
+    tableSection("Assessment Objectives", objectiveHeaders, objectiveRows, refSpec(objectiveHeaders, [14, 16, 110])),
+  ];
+  return appendSourceMetadata({ title: "Assessment Planning Worksheet", description: "Assessment plan with NIST SP 800-53A methods, objects and objectives beside your scope, sampling, schedule and results.", sections }, options);
+}
+
+/**
+ * FedRAMP cadences that a cited rule states outright. They apply only when a
+ * FedRAMP program is selected. tests/template-wave2.test.mjs re-reads
+ * data/fedramp-2026-rules.json to prove each rule ID and timeframe still exist.
+ */
+export const FEDRAMP_CONMON_RULES = Object.freeze([
+  { ruleId: "CCM-OCR-AVL", activity: "Ongoing Certification Report", cadence: "Every 3 months", deliverable: "Ongoing Certification Report to all necessary parties", timeframe: "every 3 months" },
+  { ruleId: "VER-TFR-MHR", activity: "Vulnerability detection and response report", cadence: "At least monthly", deliverable: "Vulnerability detection and response activity report", timeframe: "at least monthly" },
+  { ruleId: "VDR-TFR-NMV", activity: "Verify non-machine-based information resources", cadence: "At least once every 3 months", deliverable: "Verification and validation record", timeframe: "at least once every 3 months" },
+  { ruleId: "IVV-CSF-MCA", activity: "Independent assessment of applicable Rev5 controls", cadence: "Every 3 years", deliverable: "Independent assessment covering all applicable Rev5 controls over the period", timeframe: "every 3 years" },
+]);
+
+/**
+ * How each seeded cadence is classified. `source_required` is reserved for a
+ * cadence a primary source states for the selected context. No generic
+ * NIST or DoD row qualifies today: SP 800-53 leaves these frequencies to the
+ * organization. They are planning defaults and are shown as such.
+ */
+export const CONMON_BASIS_LABELS = Object.freeze({
+  source_required: "Source requirement",
+  program_specific: "Program-specific requirement",
+  planning_default: "Planning default",
+});
+
+function generateProfessionalConMonCalendar(options) {
+  const ph = placeholder(options);
+  const V = TEMPLATE_VOCAB.conmon_calendar;
+  const fedrampSelected = /^fedramp/i.test(String(options.framework || ""));
+  const headers = ["Activity", "Control References", "Cadence Basis", "Source / Program Cadence", "Cadence Source", "Planning Default (suggestion)", "Organization-Selected Cadence", "Deliverable / Evidence", "Collection Method", "Owner", "Reviewer / Recipient", "Evidence Location", "Next Due", "Completed Date", "Status", "Result / Threshold", "Escalation / Follow-up", "Notes"];
+  const generic = [
+    ["Vulnerability scanning", "RA-5", "Authenticated scan results and remediation intake", "Approved scanner", "Monthly"],
+    ["Account and privilege review", "AC-2; AC-6", "Review record and access removals", "Identity report plus owner attestation", "Quarterly"],
+    ["Configuration compliance review", "CM-6", "STIG or configuration results and exceptions", "Automated scan plus manual validation", "Quarterly"],
+    ["Audit log review", "AU-6", "Review record, alerts, and escalations", "SIEM query and analyst review", "Weekly"],
+    ["Asset inventory reconciliation", "CM-8", "Hardware and software delta and disposition", "Inventory export and source reconciliation", "Quarterly"],
+    ["POA&M review", "CA-5", "Updated milestones, overdue actions, and decisions", "Register review", "Monthly"],
+    ["Contingency plan exercise", "CP-4", "Exercise results and corrective actions", "Tabletop or functional exercise", "Annual"],
+    ["Incident response exercise", "IR-3", "Exercise record and lessons learned", "Tabletop or functional exercise", "Annual"],
+    ["Security training review", "AT-2", "Completion and delinquency report", "Learning-system report", "Annual"],
+    ["Control assessment and penetration test", "CA-2; CA-8", "Assessment results and findings", "Independent assessment", "Annual"],
+  ];
+  const tail = () => [ph("[Role]"), ph("[Reviewer or reporting recipient]"), ph("[Repository or approved link]"), ph("[YYYY-MM-DD]"), ph("[YYYY-MM-DD]"), ph("[Planned | In Progress | Complete | Late | Blocked]"), ph("[Result and threshold breach]"), ph("[Ticket, POA&M, incident, or risk decision]"), ph("[Scope, dependencies, exceptions]")];
+  const rows = [];
+  if (fedrampSelected) {
+    for (const rule of FEDRAMP_CONMON_RULES) {
+      rows.push([rule.activity, DASH, CONMON_BASIS_LABELS.program_specific, rule.cadence, `FedRAMP ${rule.ruleId}`, DASH, ph("[Your cadence, at least as often as the rule]"), rule.deliverable, ph("[How the deliverable is produced]"), ...tail()]);
+    }
+  }
+  for (const [activity, refs, deliverable, method, frequency] of generic) {
+    rows.push([activity, refs, CONMON_BASIS_LABELS.planning_default, DASH, DASH, frequency, ph("[Your cadence]"), deliverable, method, ...tail()]);
+  }
+  const src = (extra = {}) => ({ group: "Expected cadence (from a source)", ...extra });
+  const mine = (extra = {}) => ({ group: "Your schedule", ...extra });
+  const spec = {
+    Activity: { group: "Activity", width: 34 },
+    "Control References": { group: "Activity", width: 16 },
+    "Cadence Basis": src({ width: 24, help: "Program-specific requirement: a cited rule states it. Planning default: only our suggestion; no source requires it." }),
+    "Source / Program Cadence": src({ width: 22, help: "Only filled in when a cited rule states the cadence." }),
+    "Cadence Source": src({ width: 20 }),
+    "Planning Default (suggestion)": src({ width: 20, help: "A starting suggestion. NIST SP 800-53 leaves these frequencies to the organization." }),
+    "Organization-Selected Cadence": mine({ required: true, ...listOf(V.cadence, { strict: false }), width: 22, help: "Your cadence. It must be at least as often as any program cadence." }),
+    "Deliverable / Evidence": { group: "Activity", width: 36 },
+    "Collection Method": { group: "Activity", width: 28 },
+    Owner: mine({ required: true, width: 18 }),
+    "Reviewer / Recipient": mine({ width: 22 }),
+    "Evidence Location": mine({ width: 24 }),
+    "Next Due": mine({ ...dateField() }),
+    "Completed Date": mine({ ...dateField() }),
+    Status: mine({ ...listOf(V.status) }),
+    "Result / Threshold": mine({ width: 26 }),
+    "Escalation / Follow-up": mine({ width: 26 }),
+    Notes: mine({ width: 28 }),
+  };
+  /** @type {DocSection[]} */
+  const sections = [
+    { type: "text", heading: "How to read the cadences", content: ["- Cadence Basis says where a cadence comes from. Program-specific means a cited rule states it. Planning default means it is only our suggestion.", "- No NIST or DoD source used here requires the planning defaults. SP 800-53 leaves those frequencies to the organization. Confirm them against your program, contract and authorization terms.", "- Choose your own cadence in Organization-Selected Cadence. If a program rule applies, yours must be at least as often as the rule.", fedrampSelected ? "- FedRAMP rows are from the FedRAMP Consolidated Rules for 2026. Check each rule's effective date and your certification class." : "- No program is selected, so no program cadence rows are included."].join("\n") },
+    tableSection("Monitoring Delivery Schedule", headers, rows, spec, { freezeColumns: 1 }),
+  ];
+  return appendSourceMetadata({ title: "Continuous Monitoring Delivery Calendar", description: "Monitoring schedule that separates cadences a source states from planning suggestions and from the cadence your organization selects.", sections }, options);
+}
+
+const SEVERITY_LABELS = { high: "High (CAT I)", medium: "Medium (CAT II)", low: "Low (CAT III)" };
+
+function ruleSort(a, b) {
+  const key = (rule) => String(rule.metadata?.stig_id || rule.metadata?.vuln_id || rule.metadata?.item_id || "");
+  return key(a).localeCompare(key(b), undefined, { numeric: true, sensitivity: "base" }) ||
+    String(a.metadata?.rule_id || "").localeCompare(String(b.metadata?.rule_id || ""), undefined, { numeric: true });
+}
+
+/**
+ * The published STIG benchmark and its rules. Fails closed: a worksheet built
+ * around a STIG is meaningless without one.
+ */
+function resolveStigBenchmark(dataset, stig) {
+  const wanted = String(stig || "").trim();
+  if (!wanted) {
+    throw new Error("Choose a STIG to prepare this worksheet. No document was generated.");
+  }
+  const nodes = dataset?.nodes || [];
+  const benchmark = nodes.find(
+    (node) =>
+      node.node_type === "benchmark" &&
+      node.metadata?.catalog_id === "disa-stig" &&
+      (node.metadata?.item_id === wanted || node.id === wanted),
+  );
+  if (!benchmark) {
+    throw new Error(`"${wanted}" is not a published STIG. No document was generated.`);
+  }
+  const byId = new Map(nodes.map((node) => [node.id, node]));
+  const rules = [];
+  for (const edge of dataset?.edges || []) {
+    if (edge.relationship_type !== "contains" || edge.source_node_id !== benchmark.id) continue;
+    const child = byId.get(edge.target_node_id);
+    if (child?.node_type === "stig_rule") rules.push(child);
+  }
+  if (rules.length === 0) {
+    throw new Error(`"${benchmark.metadata?.title || wanted}" has no published rules. No document was generated.`);
+  }
+  rules.sort(ruleSort);
+  return { benchmark, rules };
+}
+
+/** The 12 headers the STIG Viewer 3.x User Guide V1R7 requires, in the guide's order. */
+export const STIG_VIEWER_CSV_HEADERS = Object.freeze(["Benchmark ID", "Rule ID", "Status", "Comments", "Finding Details", "Severity Override", "Severity Override Reason", "FQDN", "IP Address", "MAC Address", "Host Name", "Technology Area"]);
+
+function generateProfessionalSTIGWorksheet(options, stigContext, crossRef) {
+  const ph = placeholder(options);
+  const V = TEMPLATE_VOCAB.stig_evidence_checklist;
+  const { benchmark, rules } = stigContext;
+  const meta = benchmark.metadata || {};
+  const benchmarkId = String(meta.publisher_item_id || rules[0]?.metadata?.benchmark_id || "");
+  const targetHeaders = ["FQDN", "IP Address", "MAC Address", "Host Name", "Technology Area"];
+  const targetRow = targetHeaders.map((header) => ph(`[${header === "Technology Area" ? "Choose a Technology Area" : header}]`));
+  const targetCell = (index) => ({ formula: `IF(Target!$${String.fromCharCode(65 + index)}$2="","",Target!$${String.fromCharCode(65 + index)}$2)` });
+  const importRows = rules.map((rule) => [
+    benchmarkId,
+    String(rule.metadata?.rule_id || ""),
+    "",
+    "",
+    "",
+    "",
+    "",
+    ...targetHeaders.map((_, index) => targetCell(index)),
+  ]);
+  const cciFor = (rule) => (crossRef ? [...(crossRef.ruleToCci.get(rule.id) || [])].map((id) => crossRef.byId.get(id)?.metadata?.item_id || id) : []);
+  const natural = (a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
+  const referenceHeaders = ["Rule ID", "Vuln ID", "STIG ID", "Severity", "Rule Title", "CCIs", "Related NIST 800-53 Controls"];
+  const referenceRows = rules.map((rule) => {
+    const ccis = cciFor(rule).sort(natural);
+    const controlIds = new Set();
+    for (const cci of crossRef?.ruleToCci.get(rule.id) || []) {
+      for (const control of crossRef.cciToControl.get(cci) || []) controlIds.add(crossRef.byId.get(control)?.metadata?.item_id || control);
+    }
+    return [
+      String(rule.metadata?.rule_id || ""),
+      String(rule.metadata?.vuln_id || rule.metadata?.item_id || ""),
+      String(rule.metadata?.stig_id || DASH),
+      SEVERITY_LABELS[String(rule.metadata?.severity || "").toLowerCase()] || DASH,
+      String(rule.metadata?.title || rule.label || ""),
+      ccis.length ? ccis.join("; ") : DASH,
+      controlIds.size ? [...controlIds].sort(natural).join("; ") : DASH,
+    ];
+  });
+  const noteHeaders = ["Rule ID", "Evidence Artifact", "Validation Method", "Evidence Owner", "Evidence Date", "Review Notes"];
+  const noteRows = rules.map((rule) => [String(rule.metadata?.rule_id || ""), ph("[Artifact name or ID]"), ph("[Export | Screenshot | Query | Interview]"), ph("[Owner role]"), ph("[YYYY-MM-DD]"), ph("[Scope, sufficiency, follow-up]")]);
+  const severityCounts = { high: 0, medium: 0, low: 0 };
+  for (const rule of rules) {
+    const key = String(rule.metadata?.severity || "").toLowerCase();
+    if (key in severityCounts) severityCounts[key] += 1;
+  }
+  const scope = `STIG: ${meta.title || benchmark.label}, ${meta.benchmark_version || "version not recorded"}${meta.benchmark_status_date ? ` (${meta.benchmark_status_date})` : ""}. Benchmark ID: ${benchmarkId}. ${rules.length} rules: ${severityCounts.high} high, ${severityCounts.medium} medium, ${severityCounts.low} low. Rule IDs, titles and severities are as DISA published them.`;
+  const target = (extra = {}) => ({ group: "Target (one per file)", width: 26, ...extra });
+  const importGroup = (extra = {}) => ({ group: "Viewer CSV columns", ...extra });
+  const importSpec = {
+    "Benchmark ID": importGroup({ width: 28, help: "Filled in from the STIG you chose. STIG Viewer checks it against the checklist." }),
+    "Rule ID": importGroup({ width: 24, help: "Filled in from the STIG you chose. Do not edit." }),
+    Status: importGroup({ ...listOf(V.status), help: "Leave blank for Not Reviewed. STIG Viewer rejects other values." }),
+    Comments: importGroup({ width: 34 }),
+    "Finding Details": importGroup({ width: 38 }),
+    "Severity Override": importGroup({ ...listOf(V.severityOverride), help: "Only with an authorized override. STIG Viewer needs a reason when this is set." }),
+    "Severity Override Reason": importGroup({ width: 34 }),
+    FQDN: importGroup({ width: 24, help: "Comes from the Target sheet. Fill it in there, once." }),
+    "IP Address": importGroup({ width: 18, help: "Comes from the Target sheet." }),
+    "MAC Address": importGroup({ width: 18, help: "Comes from the Target sheet." }),
+    "Host Name": importGroup({ width: 20, help: "Comes from the Target sheet." }),
+    "Technology Area": importGroup({ width: 24, help: "Comes from the Target sheet." }),
+  };
+  const reference = (extra = {}) => ({ group: "Rule reference (DISA)", ...extra });
+  const referenceSpec = {
+    "Rule ID": reference({ width: 24 }),
+    "Vuln ID": reference({ width: 12 }),
+    "STIG ID": reference({ width: 16 }),
+    Severity: reference({ width: 16 }),
+    "Rule Title": reference({ width: 70 }),
+    CCIs: reference({ width: 36 }),
+    "Related NIST 800-53 Controls": reference({ width: 36 }),
+  };
+  const noteSpec = {
+    "Rule ID": { group: "Rule reference (DISA)", width: 24 },
+    "Evidence Artifact": { group: "Your evidence notes", width: 30 },
+    "Validation Method": { group: "Your evidence notes", ...listOf(V.validationMethod, { strict: false }) },
+    "Evidence Owner": { group: "Your evidence notes", width: 20 },
+    "Evidence Date": { group: "Your evidence notes", ...dateField() },
+    "Review Notes": { group: "Your evidence notes", width: 34 },
+  };
+  /** @type {DocSection[]} */
+  const sections = [
+    { type: "text", heading: "Selected STIG", content: scope },
+    { type: "text", heading: "How to use", content: [
+      "- Enter the target once on the Target sheet. STIG Viewer needs the same target values in every row of one CSV, so this file covers one target. For another target, make another copy.",
+      "- On the import sheet, fill in Status, Comments and Finding Details for the rules you assessed. Leave Status blank for Not Reviewed. Control Atlas does not fill in any result.",
+      "- Set Severity Override only for an authorized override, with a reason, and only to Low, Medium or High.",
+      "- To make the CSV: open the import sheet, then File > Save As > CSV. Excel saves only that sheet, with the 12 headers and the target values filled down. Keep evidence notes on their own sheet; they never go in the CSV.",
+      "- In STIG Viewer, open the checklist for this STIG and use Import > Import STIG Viewer CSV. The import updates a checklist that already exists and matches on Rule ID. Control Atlas has not tested an import.",
+    ].join("\n") },
+    tableSection("Target", targetHeaders, [targetRow], {
+      FQDN: target({ help: "Fully qualified domain name of the assessed target." }),
+      "IP Address": target(),
+      "MAC Address": target(),
+      "Host Name": target(),
+      "Technology Area": target({ ...listOf(V.technologyArea), width: 30, help: "One of the 21 values STIG Viewer accepts." }),
+    }, { freezeColumns: 0 }),
+    tableSection("STIG Viewer CSV Import Rows", [...STIG_VIEWER_CSV_HEADERS], importRows, importSpec, { freezeColumns: 2 }),
+    tableSection("Evidence Working Notes", noteHeaders, noteRows, noteSpec),
+    tableSection("STIG Rule Reference", referenceHeaders, referenceRows, referenceSpec),
+  ];
+  return appendSourceMetadata({ title: "STIG Viewer CSV Preparation Worksheet", description: `Working file for one STIG: ${meta.title || benchmark.label}. Its rules are listed with the 12 STIG Viewer CSV columns, plus separate evidence notes.`, sections }, options);
+}
+
+function generatePPSMPreparationWorksheet(options) {
+  const ph = placeholder(options);
+  const V = TEMPLATE_VOCAB.ppsm_preparation_worksheet;
+  const headers = [
+    "Network", "PPSM Tracking Identifier", "Service Name", "Protocol", "Transport", "Port / Range",
+    "Category Assurance List Category", "VA / CLSA Reference", "Enterprise or Core Service Provider", "DMZ Whitelist Needed",
+    "Record ID", "System / Boundary", "Mission or Business Need", "Source Zone / Address", "Destination Zone / Address", "Direction", "Purpose / Data Flow", "Public / External Exposure", "Encryption / Authentication", "Service Owner", "Technical POC", "Related Devices / Software", "Requested Action",
+    "Review Status", "Reviewer", "Last Verified", "Risk / Exception", "Notes",
+  ];
+  const hint = {
+    Network: "[NIPRNet | SIPRNet]",
+    "PPSM Tracking Identifier": "[The tracking ID, once the registry gives one]",
+    "Service Name": "[Service or application]",
+    Protocol: "[Protocol name or number]",
+    Transport: "[TCP | UDP | other]",
+    "Port / Range": "[Single port or range]",
+    "Category Assurance List Category": "[The category the Category Assurance List gives]",
+    "VA / CLSA Reference": "[Vulnerability assessment or CLSA reference]",
+    "Enterprise or Core Service Provider": "[Provider, if this is an enterprise or core service]",
+    "DMZ Whitelist Needed": "[Yes | No | Not sure]",
+    "Record ID": "[Your stable local ID]",
+    "System / Boundary": "[System or authorization boundary]",
+    "Mission or Business Need": "[Why the communication is necessary]",
+    "Source Zone / Address": "[Zone, subnet, FQDN, or address]",
+    "Destination Zone / Address": "[Zone, subnet, FQDN, or address]",
+    Direction: "[Inbound | Outbound | Bidirectional | Internal]",
+    "Purpose / Data Flow": "[Information exchanged and operational purpose]",
+    "Public / External Exposure": "[None | DoD external | Internet | Partner]",
+    "Encryption / Authentication": "[TLS, IPsec, mutual auth, certificates, or N/A]",
+    "Service Owner": "[Accountable role]",
+    "Technical POC": "[Technical contact or role]",
+    "Related Devices / Software": "[Hardware and software baseline IDs]",
+    "Requested Action": "[Register | Update | Retire | Validate]",
+    "Review Status": "[Collecting | In review | Ready to enter | Entered in registry | Needs rework]",
+    Reviewer: "[Reviewer role]",
+    "Last Verified": "[YYYY-MM-DD]",
+    "Risk / Exception": "[Risk, deviation, or exception reference]",
+    Notes: "[Dependencies, restrictions, reviewer comments]",
+  };
+  const rows = Array.from({ length: 20 }, () => headers.map((header) => ph(hint[header] || "")));
+  const reg = (extra = {}) => ({ group: "Registry information", ...extra });
+  const cat = (extra = {}) => ({ group: "Assessment and category", ...extra });
+  const local = (extra = {}) => ({ group: "Local working context", ...extra });
+  const review = (extra = {}) => ({ group: "Review", ...extra });
+  const spec = {
+    Network: reg({ ...listOf(V.network, { strict: false }), width: 14, help: "The DISN guide names the NIPRNet and SIPRNet versions of the PPSM Registry." }),
+    "PPSM Tracking Identifier": reg({ width: 22, help: "A DISN connection request needs a valid PPSM Tracking Identifier. Record it here after you enter the data in the registry." }),
+    "Service Name": reg({ required: true, width: 24 }),
+    Protocol: reg({ required: true, width: 16 }),
+    Transport: reg({ ...listOf(V.transport, { strict: false }), width: 12 }),
+    "Port / Range": reg({ required: true, width: 14 }),
+    "Category Assurance List Category": cat({ width: 26, help: "Use the category the Category Assurance List gives for this service. Control Atlas does not assign it." }),
+    "VA / CLSA Reference": cat({ width: 24, help: "A service needs a vulnerability assessment or a Component Local Services Assessment." }),
+    "Enterprise or Core Service Provider": cat({ width: 26, help: "For an enterprise or core service, the provider registers it, not the receiving organization." }),
+    "DMZ Whitelist Needed": cat({ ...listOf(V.yesNo), width: 14, help: "A system that must cross both the NIPRNet and the Internet may need a NIPRNet DMZ Whitelist entry." }),
+    "Record ID": local({ required: true, width: 16 }),
+    "System / Boundary": local({ width: 24 }),
+    "Mission or Business Need": local({ width: 34 }),
+    "Source Zone / Address": local({ width: 24 }),
+    "Destination Zone / Address": local({ width: 24 }),
+    Direction: local({ ...listOf(V.direction), width: 14 }),
+    "Purpose / Data Flow": local({ width: 34 }),
+    "Public / External Exposure": local({ ...listOf(V.exposure), width: 18 }),
+    "Encryption / Authentication": local({ width: 28 }),
+    "Service Owner": local({ width: 18 }),
+    "Technical POC": local({ width: 20 }),
+    "Related Devices / Software": local({ width: 26 }),
+    "Requested Action": local({ ...listOf(V.requestedAction) }),
+    "Review Status": review({ required: true, ...listOf(V.reviewStatus), width: 20 }),
+    Reviewer: review({ width: 18 }),
+    "Last Verified": review({ ...dateField() }),
+    "Risk / Exception": review({ width: 26 }),
+    Notes: review({ width: 32 }),
+  };
+  /** @type {DocSection[]} */
+  const sections = [
+    { type: "text", heading: "Workflow", content: "Collect here, then review, then enter the data in the authorized PPSM workflow. This worksheet does not replace the PPSM Registry or your Component's PPSM Technical Advisory Group (TAG) representative." },
+    { type: "text", heading: "How to use", content: ["- Registry information columns follow the DISN Connection Process Guide section 2.7.3: the registry version, the tracking identifier, and the ports, protocols and services.", "- Assessment and category columns (Category Assurance List, VA / CLSA, enterprise provider, DMZ Whitelist) are named in public PPSM guidance. Confirm each in the registry; the policy text was not available to check them.", "- The Local working context columns are information a reviewer usually needs. They are not PPSM Registry fields. The registry's own entry fields are not public, so check each one in the registry.", "- Use exact boundary, zone, address and device references. Have the service owner and a security reviewer check each row before anyone enters it.", "- This is not a PPSM submission form, a registry receipt or an import file."].join("\n") },
+    tableSection("PPSM Preparation Register", headers, rows, spec, { freezeColumns: 3 }),
+  ];
+  return appendSourceMetadata({ title: "PPSM Preparation Worksheet", description: "Collect and review ports, protocols and services information before entering it in the authorized PPSM workflow.", sections }, options);
+}
+
 function generateProfessionalSecurityPlan(options, controls) {
   const ph = placeholder(options);
   const env = options.environment || "Not selected";
@@ -922,28 +1320,6 @@ function generateProfessionalSecurityPlan(options, controls) {
   return appendSourceMetadata({ title: "System Security Plan (SSP) Starter", description: "Compact narrative companion for organizing system context, selected control scope, inheritance, and ownership before completing an official SSP.", sections }, options);
 }
 
-function generateProfessionalSTIGWorksheet(options) {
-  const ph = placeholder(options);
-  const headers = ["Benchmark ID", "Rule ID", "Status", "Comments", "Finding Details", "Severity Override", "Severity Override Reason", "FQDN", "IP Address", "MAC Address", "Host Name", "Technology Area"];
-  const rows = blankRows(20, headers.length, ph, ["[Benchmark ID]", "[SV-..._rule]", "[Not Reviewed | Open | Not a Finding | Not Applicable]", "[Implementation context or reviewer remarks]", "[Observed condition and test result]", "[Low | Medium | High]", "[Authorized justification for override]", "[Fully qualified domain name]", "[IP address]", "[MAC address]", "[Host name]", "[Choose a Technology Area]"]);
-  const evidenceHeaders = ["Rule ID", "Evidence Artifact", "Validation Method", "Evidence Owner", "Evidence Date", "Review Notes"];
-  const evidenceRows = blankRows(20, evidenceHeaders.length, ph, ["[SV-..._rule]", "[Artifact name or ID]", "[Export | Screenshot | Query | Interview]", "[Owner role]", "[YYYY-MM-DD]", "[Scope, sufficiency, follow-up]"]);
-  /** @type {DocSection[]} */
-  const sections = [
-    { type: "text", heading: "Import Contract", content: "The first table preserves the exact 12 CSV headers documented by the DISA STIG Viewer 3.x User Guide V1R7. Keep the header names and order unchanged. Save only the first table as CSV for import, then validate it in the target STIG Viewer version." },
-    { type: "text", heading: "Field Guide", content: ["- Benchmark ID: benchmark identifier expected by the target checklist.", "- Rule ID: STIG rule identifier, normally the SV-..._rule value.", "- Status: use only values accepted by the target viewer and benchmark workflow.", "- Comments: implementation context or reviewer remarks; Finding Details: observed condition and test result.", "- Severity Override and Reason: populate together only when an authorized override applies.", "- FQDN, IP Address, MAC Address, Host Name, and Technology Area identify the assessed target.", "- Keep evidence references in the second table so the import table remains contract-clean."].join("\n") },
-    tableSection("STIG Viewer CSV Import Rows", headers, rows, {
-      Status: listOf(TEMPLATE_VOCAB.stig_evidence_checklist.status),
-      "Severity Override": listOf(TEMPLATE_VOCAB.stig_evidence_checklist.severityOverride),
-      "Technology Area": listOf(TEMPLATE_VOCAB.stig_evidence_checklist.technologyArea),
-    }),
-    tableSection("Evidence Working Notes", evidenceHeaders, evidenceRows, {
-      "Evidence Date": dateField(),
-    }),
-  ];
-  return appendSourceMetadata({ title: "STIG Viewer CSV Preparation Worksheet", description: "STIG Viewer CSV columns from the V1R7 user guide, paired with separate evidence working notes.", sections }, options);
-}
-
 function generateProfessionalReciprocityChecklist(options) {
   const ph = placeholder(options);
   const headers = ["Review Item", "Artifact / Decision Reference", "Version / Date", "Owner", "Status", "Freshness / Scope Check", "Receiving-Environment Delta", "Risk / Gap", "Required Action", "Due Date", "Decision / Disposition", "Notes"];
@@ -961,69 +1337,6 @@ function generateProfessionalReciprocityChecklist(options) {
     { type: "text", heading: "Decision Record", content: ph("Decision | Conditions | Supplemental assessment required | Accepted residual risk | Decision authority | Decision date | Re-review trigger") },
   ];
   return appendSourceMetadata({ title: "Reciprocity Package Review", description: "Structured review of authorization-package provenance, scope, freshness, deltas, risk, and receiving-organization actions.", sections }, options);
-}
-
-function generateProfessionalAssessmentPlan(options, controls) {
-  const ph = placeholder(options);
-  const headers = ["Control ID", "Control Title", "Assessment Objective / Scope", "Assessment Method", "Assessor Role", "Evidence to Request", "Sampling Approach", "Tool / Procedure", "Target Start", "Target Complete", "Status", "Result / Test Success", "Finding / POA&M Reference", "Evidence Location", "Review Notes"];
-  const rows = controls.map((c) => [c.id, c.title, ph("[Requirement, component, location, population, exclusions]"), ph("[Examine | Interview | Test | combination]"), ph("[Lead and supporting assessor roles]"), ph("[Specific artifacts and covered period]"), ph("[Population, sample size, selection basis]"), ph("[Procedure ID, scanner, script, or manual method]"), ph("[YYYY-MM-DD]"), ph("[YYYY-MM-DD]"), ph("[Planned | Ready | In Progress | Blocked | Complete]"), ph("[Pass | Fail | Inconclusive | Not Tested]"), ph("[Finding ID, externalUid, or N/A]"), ph("[Repository, ticket, or approved link]"), ph("[Constraints, deviations, retest, follow-up]")]);
-  /** @type {DocSection[]} */
-  const sections = [
-    { type: "text", heading: "Planning Standard", content: ["- Define the assessment objective, in-scope components, covered period, exclusions, and sampling before scheduling work.", "- Tie each method to a procedure, tool, or repeatable manual step and identify the requested evidence.", "- Record the assessor role, dates, status, result, evidence location, and finding or POA&M reference.", "- Result / Test Success corresponds conceptually to the public eMASS v3.22 test-results success flag; this worksheet is not an API payload."].join("\n") },
-    tableSection("Assessment Plan", headers, rows, {
-      "Assessment Method": listOf(TEMPLATE_VOCAB.assessment_planning_worksheet.method),
-      Status: listOf(TEMPLATE_VOCAB.assessment_planning_worksheet.status),
-      "Result / Test Success": listOf(TEMPLATE_VOCAB.assessment_planning_worksheet.result),
-      "Target Start": dateField(),
-      "Target Complete": dateField(),
-    }),
-  ];
-  return appendSourceMetadata({ title: "Assessment Planning Worksheet", description: "Assessment work plan covering scope, methods, evidence, sampling, tooling, ownership, schedule, results, and follow-up.", sections }, options);
-}
-
-function generateProfessionalConMonCalendar(options) {
-  const ph = placeholder(options);
-  const headers = ["Activity", "Control References", "Deliverable / Evidence", "Collection Method", "Frequency", "Owner", "Reviewer / Recipient", "Evidence Location", "Next Due", "Completed Date", "Status", "Result / Threshold", "Escalation / Follow-up", "Notes"];
-  const activities = [
-    ["Vulnerability scanning", "RA-5", "Authenticated scan results and remediation intake", "Approved scanner", "Monthly"],
-    ["Account and privilege review", "AC-2; AC-6", "Review record and access removals", "Identity report plus owner attestation", "Quarterly"],
-    ["Configuration compliance review", "CM-6", "STIG/configuration results and exceptions", "Automated scan plus manual validation", "Quarterly"],
-    ["Audit log review", "AU-6", "Review record, alerts, and escalations", "SIEM query and analyst review", "Weekly"],
-    ["Asset inventory reconciliation", "CM-8", "Hardware/software delta and disposition", "Inventory export and source reconciliation", "Quarterly"],
-    ["POA&M review", "CA-5", "Updated milestones, overdue actions, and decisions", "Register review", "Monthly"],
-    ["Contingency plan exercise", "CP-4", "Exercise results and corrective actions", "Tabletop or functional exercise", "Annual"],
-    ["Incident response exercise", "IR-3", "Exercise record and lessons learned", "Tabletop or functional exercise", "Annual"],
-    ["Security training review", "AT-2", "Completion and delinquency report", "Learning-system report", "Annual"],
-    ["Control assessment / penetration test", "CA-2; CA-8", "Assessment results and findings", "Independent assessment", "Annual"],
-  ];
-  const rows = activities.map(([activity, refs, deliverable, method, frequency]) => [activity, refs, deliverable, method, frequency, ph("[Owner role]"), ph("[Reviewer or reporting recipient]"), ph("[Repository or approved link]"), ph("[YYYY-MM-DD]"), ph("[YYYY-MM-DD]"), ph("[Planned | In Progress | Complete | Late | Blocked]"), ph("[Result and threshold breach]"), ph("[Ticket, POA&M, incident, or risk decision]"), ph("[Scope, dependencies, exceptions]")]);
-  /** @type {DocSection[]} */
-  const sections = [
-    { type: "text", heading: "Operating Guidance", content: "Reconcile example frequencies to the approved ConMon strategy. Name the deliverable, collection method, owner, reviewer, repository, due date, completion date, result threshold, and escalation path. A calendar entry is complete only when its evidence and follow-up are recorded." },
-    tableSection("Monitoring Delivery Schedule", headers, rows, {
-      Status: listOf(TEMPLATE_VOCAB.conmon_calendar.status),
-      "Next Due": dateField(),
-      "Completed Date": dateField(),
-    }),
-  ];
-  return appendSourceMetadata({ title: "Continuous Monitoring Delivery Calendar", description: "Operating calendar connecting monitoring work to deliverables, evidence, review, reporting, and escalation.", sections }, options);
-}
-
-function generatePPSMPreparationWorksheet(options) {
-  const ph = placeholder(options);
-  const headers = ["Record ID", "System / Boundary", "Mission or Business Need", "Service Name", "Protocol", "Port / Range", "Transport", "Source Zone / Address", "Destination Zone / Address", "Direction", "Purpose / Data Flow", "Public / External Exposure", "Encryption / Authentication", "Service Owner", "Technical POC", "Related Devices / Software", "Existing PPSM / Approval Reference", "Requested Action", "Review Status", "Risk / Exception", "Last Verified", "Notes"];
-  const rows = blankRows(20, headers.length, ph, ["[Stable local ID]", "[System or authorization boundary]", "[Why the communication is necessary]", "[Service or application]", "[Protocol name/number]", "[Single port or range]", "[TCP | UDP | SCTP | other]", "[Zone, subnet, FQDN, or address]", "[Zone, subnet, FQDN, or address]", "[Inbound | Outbound | Bidirectional | Internal]", "[Information exchanged and operational purpose]", "[None | DoD external | Internet | Partner]", "[TLS, IPsec, mutual auth, certificates, or N/A]", "[Accountable role]", "[Technical contact or role]", "[Baseline asset IDs]", "[Registry number, receipt, CLSA/BUS, firewall rule, or N/A]", "[Register | Update | Retire | Validate]", "[Draft | Owner Review | Security Review | Ready for Registry | Entered in Registry | Rework]", "[Risk, deviation, or exception reference]", "[YYYY-MM-DD]", "[Dependencies, restrictions, reviewer comments]"]);
-  /** @type {DocSection[]} */
-  const sections = [
-    { type: "text", heading: "Preparation Guidance", content: ["- Start with the mission need and data flow, then identify protocol, port, transport, endpoints, direction, and protections.", "- Use exact boundary, zone, address, device, and software references instead of generic labels.", "- Record existing registry, receipt, firewall, CLSA/BUS, or exception references when available.", "- Have the service owner and security reviewer validate the row before authorized registry entry.", "- This worksheet does not reproduce a restricted registry export and cannot be imported into PPSM."].join("\n") },
-    tableSection("PPSM Preparation Register", headers, rows, {
-      "Public / External Exposure": listOf(TEMPLATE_VOCAB.ppsm_preparation_worksheet.exposure),
-      "Requested Action": listOf(TEMPLATE_VOCAB.ppsm_preparation_worksheet.requestedAction),
-      "Review Status": listOf(TEMPLATE_VOCAB.ppsm_preparation_worksheet.reviewStatus),
-      "Last Verified": dateField(),
-    }),
-  ];
-  return appendSourceMetadata({ title: "PPSM Preparation Worksheet", description: "Local preparation register for ports, protocols, services, data flows, exposure, protections, ownership, and approval tracking.", sections }, options);
 }
 
 function escapeCsv(val) {
@@ -1285,7 +1598,7 @@ function resolveControlsViaBaselineEdges(dataset, catalogId) {
  * leaving placeholder cells.
  *
  * @param {{ nodes?: any[], edges?: any[] }} dataset
- * @returns {{ controlToCci: Map<string, Set<string>>, cciToStig: Map<string, Set<string>>, byId: Map<string, any>, assessmentByControl: Map<string, any>, resolved: Map<string, any> }}
+ * @returns {{ controlToCci: Map<string, Set<string>>, cciToStig: Map<string, Set<string>>, ruleToCci: Map<string, Set<string>>, cciToControl: Map<string, Set<string>>, byId: Map<string, any>, assessmentByControl: Map<string, any>, resolved: Map<string, any> }}
  */
 function buildControlCrossRefIndex(dataset) {
   const nodes = dataset?.nodes || [];
@@ -1299,6 +1612,10 @@ function buildControlCrossRefIndex(dataset) {
   const controlToCci = new Map();
   /** @type {Map<string, Set<string>>} */
   const cciToStig = new Map();
+  /** @type {Map<string, Set<string>>} */
+  const ruleToCci = new Map();
+  /** @type {Map<string, Set<string>>} */
+  const cciToControl = new Map();
 
   for (const edge of edges) {
     if (edge.relationship_type === "maps_to") {
@@ -1315,6 +1632,8 @@ function buildControlCrossRefIndex(dataset) {
       if (cci && ctrl) {
         if (!controlToCci.has(ctrl)) controlToCci.set(ctrl, new Set());
         controlToCci.get(ctrl).add(cci);
+        if (!cciToControl.has(cci)) cciToControl.set(cci, new Set());
+        cciToControl.get(cci).add(ctrl);
       }
     } else if (edge.relationship_type === "references") {
       const { source_node_id: s, target_node_id: t } = edge;
@@ -1330,6 +1649,8 @@ function buildControlCrossRefIndex(dataset) {
       if (cci && stig) {
         if (!cciToStig.has(cci)) cciToStig.set(cci, new Set());
         cciToStig.get(cci).add(stig);
+        if (!ruleToCci.has(stig)) ruleToCci.set(stig, new Set());
+        ruleToCci.get(stig).add(cci);
       }
     }
   }
@@ -1344,7 +1665,7 @@ function buildControlCrossRefIndex(dataset) {
     }
   }
 
-  return { controlToCci, cciToStig, byId, assessmentByControl, resolved: new Map() };
+  return { controlToCci, cciToStig, ruleToCci, cciToControl, byId, assessmentByControl, resolved: new Map() };
 }
 
 /** @type {WeakMap<object, { nodes: number, edges: number, index: ReturnType<typeof buildControlCrossRefIndex> }>} */
@@ -1371,6 +1692,8 @@ export function getControlCrossRefIndex(dataset) {
 export const CROSS_REF_TEMPLATES = Object.freeze([
   "evidence_expectation_matrix",
   "implementation_statement_worksheet",
+  "assessment_planning_worksheet",
+  "stig_evidence_checklist",
 ]);
 
 /**
@@ -1620,7 +1943,7 @@ export function buildTemplateDocument(options, dataset) {
       doc = generateProfessionalEvidenceMatrix(normalized, controls, crossRef);
       break;
     case "stig_evidence_checklist":
-      doc = generateProfessionalSTIGWorksheet(normalized);
+      doc = generateProfessionalSTIGWorksheet(normalized, resolveStigBenchmark(dataset, normalized.stig), crossRef);
       break;
     case "inheritance_worksheet":
       doc = generateProfessionalInheritanceWorksheet(normalized, controls);
@@ -1632,7 +1955,7 @@ export function buildTemplateDocument(options, dataset) {
       doc = generateProfessionalPOAM(normalized);
       break;
     case "assessment_planning_worksheet":
-      doc = generateProfessionalAssessmentPlan(normalized, controls);
+      doc = generateProfessionalAssessmentPlan(normalized, controls, crossRef);
       break;
     case "conmon_calendar":
       doc = generateProfessionalConMonCalendar(normalized);

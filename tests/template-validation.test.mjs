@@ -14,6 +14,7 @@ import {
   listOf,
 } from '../src/app/template-columns.mjs';
 import { GENERATED_FILE_NOTICE, PRODUCT_DISCLAIMER, STARTER_DOCUMENT_REVIEW_NOTICE } from '../src/shared/disclaimer.mjs';
+import { STIG_ID, addStigFixture } from './helpers/stig-fixture.mjs';
 
 const registry = JSON.parse(readFileSync('data/template-registry.json', 'utf8'));
 const control = (catalog) => ({
@@ -23,12 +24,14 @@ const control = (catalog) => ({
   metadata: { catalog_id: catalog, item_id: 'AC-2', title: 'Account Management', control_family: 'Access Control' },
 });
 const dataset = { nodes: [control('nist-800-53'), control('fedramp-rev5')], edges: [], sources: [] };
+addStigFixture(dataset);
 
 function build(templateType, framework = 'nist-800-53') {
   const template = registry.templates.find((item) => item.name === templateType);
   return buildTemplateDocument(
     {
       templateType,
+      stig: STIG_ID,
       framework: template.input_options.includes('framework') ? framework : '',
       environment: 'Cloud SaaS',
       sourceRefs: template.source_refs,
@@ -80,7 +83,16 @@ function readValidations(templateType) {
   return result;
 }
 
-const flat = (templateType) => Object.assign({}, ...Object.values(readValidations(templateType)));
+// One entry per header across sheets; a rule that lists values wins over a prompt-only entry.
+const flat = (templateType) => {
+  const merged = {};
+  for (const sheet of Object.values(readValidations(templateType))) {
+    for (const [header, rule] of Object.entries(sheet)) {
+      if (!merged[header] || (rule.values && !merged[header].values)) merged[header] = rule;
+    }
+  }
+  return merged;
+};
 
 test('STIG worksheet dropdowns use only the values in the STIG Viewer V1R7 guide', () => {
   const v = flat('stig_evidence_checklist');
@@ -107,7 +119,7 @@ test('a long controlled list is stored on a hidden sheet, not inline past the 25
 test('reciprocity, PPSM, POA&M and hardware status lists are each their own worksheet vocabulary', () => {
   assert.deepEqual(flat('reciprocity_checklist').Status.values, ['Not Started', 'In Review', 'Sufficient', 'Gap', 'Not Applicable']);
   assert.deepEqual(flat('reciprocity_checklist')['Decision / Disposition'].values, ['Accept', 'Accept with Conditions', 'Supplement', 'Reassess', 'Reject']);
-  assert.deepEqual(flat('ppsm_preparation_worksheet')['Review Status'].values, ['Draft', 'Owner Review', 'Security Review', 'Ready for Registry', 'Entered in Registry', 'Rework']);
+  assert.deepEqual(flat('ppsm_preparation_worksheet')['Review Status'].values, ['Collecting', 'In review', 'Ready to enter', 'Entered in registry', 'Needs rework']);
   assert.deepEqual(flat('poam_starter').status.values, ['Ongoing', 'Risk Accepted', 'Completed', 'Not Applicable']);
   assert.deepEqual(flat('poam_starter').likelihood.values, ['Very Low', 'Low', 'Moderate', 'High', 'Very High']);
   assert.deepEqual(flat('implementation_statement_worksheet').implementationStatus.values, ['Planned', 'Implemented', 'Inherited', 'Not Applicable', 'Manually Inherited']);

@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 import { buildTemplateDocument } from '../src/app/template-engine.mjs';
+import { STIG_ID, addStigFixture } from './helpers/stig-fixture.mjs';
 
 const registry = JSON.parse(readFileSync('data/template-registry.json', 'utf8'));
 const dataset = {
@@ -34,11 +35,13 @@ const dataset = {
   edges: [],
   sources: [],
 };
+addStigFixture(dataset);
 
 function build(templateType, framework = 'nist-800-53') {
   return buildTemplateDocument(
     {
       templateType,
+      stig: STIG_ID,
       framework: ['hardware_baseline', 'software_baseline', 'ppsm_preparation_worksheet', 'stig_evidence_checklist', 'poam_starter', 'reciprocity_checklist'].includes(templateType)
         ? ''
         : framework,
@@ -63,11 +66,11 @@ const REQUIRED_FIELDS = {
   inheritance_worksheet: ['Provider Evidence', 'Evidence Version / Date', 'Evidence Freshness Status', 'Local Responsibility', 'Local Delta', 'Validation Method', 'Decision Basis', 'Decision Owner', 'Review Date', 'Notes / Gaps'],
   reciprocity_checklist: ['Artifact / Decision Reference', 'Version / Date', 'Owner', 'Status', 'Freshness / Scope Check', 'Receiving-Environment Delta', 'Risk / Gap', 'Required Action', 'Due Date', 'Decision / Disposition'],
   poam_starter: ['externalUid', 'status', 'vulnerabilityDescription', 'sourceIdentifyingVulnerability', 'pocOrganization', 'pocFirstName', 'pocEmail', 'resources', 'Planned Remediation', 'scheduledCompletionDate', 'Reviewer Notes', 'Evidence Needed for Closure', 'comments'],
-  assessment_planning_worksheet: ['Assessment Objective / Scope', 'Assessment Method', 'Assessor Role', 'Evidence to Request', 'Sampling Approach', 'Tool / Procedure', 'Target Start', 'Target Complete', 'Status', 'Result / Test Success', 'Finding / POA&M Reference'],
-  conmon_calendar: ['Deliverable / Evidence', 'Collection Method', 'Frequency', 'Owner', 'Reviewer / Recipient', 'Evidence Location', 'Next Due', 'Completed Date', 'Status', 'Result / Threshold', 'Escalation / Follow-up'],
+  assessment_planning_worksheet: ['Assessment Scope', '800-53A Methods', 'Assessment Objects (NIST SP 800-53A)', 'Assessment Method', 'Assessor Role', 'Evidence to Request', 'Sampling Approach', 'Tool / Procedure', 'Target Start', 'Target Complete', 'Status', 'Result / Test Success', 'Finding / POA&M Reference'],
+  conmon_calendar: ['Deliverable / Evidence', 'Collection Method', 'Cadence Basis', 'Source / Program Cadence', 'Planning Default (suggestion)', 'Organization-Selected Cadence', 'Owner', 'Reviewer / Recipient', 'Evidence Location', 'Next Due', 'Completed Date', 'Status', 'Result / Threshold', 'Escalation / Follow-up'],
   hardware_baseline: ['Asset ID', 'Hostname', 'FQDN', 'System / Authorization Boundary', 'Discovery Source', 'assetName', 'componentType', 'assetIpAddress', 'publicFacing', 'manufacturer', 'modelNumber', 'serialNumber', 'osIosFwVersion', 'approvalStatus', 'criticalAsset', 'Asset Owner', 'Last Verified', 'Lifecycle Status'],
   software_baseline: ['Software ID', 'purpose', 'Exception / Deviation Reference', 'Discovery Source', 'softwareVendor', 'softwareName', 'version', 'softwareType', 'softwareDependencies', 'cryptographicHash', 'approvalStatus', 'endOfLifeSupportDate', 'Software Owner', 'Authority / Approved Use', 'Last Verified'],
-  ppsm_preparation_worksheet: ['System / Boundary', 'Mission or Business Need', 'Service Name', 'Protocol', 'Port / Range', 'Transport', 'Source Zone / Address', 'Destination Zone / Address', 'Direction', 'Public / External Exposure', 'Existing PPSM / Approval Reference', 'Review Status'],
+  ppsm_preparation_worksheet: ['Network', 'PPSM Tracking Identifier', 'System / Boundary', 'Mission or Business Need', 'Service Name', 'Protocol', 'Port / Range', 'Transport', 'Category Assurance List Category', 'VA / CLSA Reference', 'Source Zone / Address', 'Destination Zone / Address', 'Direction', 'Public / External Exposure', 'Review Status'],
 };
 
 test('professionalized artifacts retain the operational fields needed to do the job', () => {

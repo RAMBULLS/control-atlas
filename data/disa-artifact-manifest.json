@@ -4,30 +4,30 @@
   "compilation_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip",
   "artifact_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip",
   "byte_length": 368971055,
-  "retrieval_timestamp": "2026-09-16T00:06:18.920Z",
+  "retrieval_timestamp": "2026-09-21T15:13:36.446Z",
   "checksum": "sha256:df371dc0ebb163e1a0434b141bc2f16b56c97b2062622d6811191fbe4f093c01",
   "publications": {
-    "total_discovered_archives": 1009,
-    "expected_canonical_publications": 292,
+    "total_discovered_archives": 1010,
+    "expected_canonical_publications": 293,
     "represented_in_compilation": 175,
-    "standalone_ingested": 117,
+    "standalone_ingested": 118,
     "excluded_archives": 717,
     "failed_publications": 0,
     "missing_publications": 0
   },
   "reconciliation": {
-    "discovered_urls": 1009,
+    "discovered_urls": 1010,
     "compilation_entries": 2616,
-    "ingested_files": 496,
+    "ingested_files": 497,
     "excluded_files": 84,
     "failed_files": 0,
     "ignored_files": 2153,
-    "stig_records_parsed": 26957,
+    "stig_records_parsed": 26988,
     "srg_records_parsed": 2550,
-    "cci_relationships": 41406,
+    "cci_relationships": 41576,
     "compilation_stig_records": 17021,
     "compilation_srg_records": 2516,
-    "standalone_stig_records": 11000,
+    "standalone_stig_records": 11031,
     "standalone_srg_records": 34,
     "standalone_packages": [
       {
@@ -803,6 +803,15 @@
         "stigRecords": 110,
         "srgRecords": 0,
         "checksum": "sha256:4088023d34ba6aedee1ad7eb77b9625c5a89ce2eb5bfd8c0b13cb78a6434401d"
+      },
+      {
+        "filename": "U_RGS_Harvester_Government_Y26M08_STIG.zip",
+        "family": "RGS_Harvester_Government",
+        "kind": "stig",
+        "versionStr": "Y26M08",
+        "stigRecords": 31,
+        "srgRecords": 0,
+        "checksum": "sha256:d72b976b5389e20ee4def45b2457abcc774488832f0968cd993c86371c11969d"
       },
       {
         "filename": "U_RH_OpenShift_Container_Platform_4-12_V2R2_STIG.zip",

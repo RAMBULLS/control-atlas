@@ -404299,6 +404299,1706 @@
     },
     {
       "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000018",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-000018.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000130",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-000130.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000131",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-000131.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000132",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-000132.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000133",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-000133.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000134",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-000134.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000135",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-000135.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000169",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-000169.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000171",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-000171.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000172",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-000172.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001403",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-001403.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001404",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-001404.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001405",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-001405.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001464",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-001464.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001487",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-001487.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001889",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-001889.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001890",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-001890.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002130",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-002130.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002234",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-002234.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002884",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-002884.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285660",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003938",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285660",
+      "why": "The official DISA STIG content references CCI-003938.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285661",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000044",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285661",
+      "why": "The official DISA STIG content references CCI-000044.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285661",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285661",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285661",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002238",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285661",
+      "why": "The official DISA STIG content references CCI-002238.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285661",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004061",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285661",
+      "why": "The official DISA STIG content references CCI-004061.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285662",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000054",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285662",
+      "why": "The official DISA STIG content references CCI-000054.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285663",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000057",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285663",
+      "why": "The official DISA STIG content references CCI-000057.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285664",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000015",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285664",
+      "why": "The official DISA STIG content references CCI-000015.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285664",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000139",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285664",
+      "why": "The official DISA STIG content references CCI-000139.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285664",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000159",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285664",
+      "why": "The official DISA STIG content references CCI-000159.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285665",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000162",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285665",
+      "why": "The official DISA STIG content references CCI-000162.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285665",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000163",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285665",
+      "why": "The official DISA STIG content references CCI-000163.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285665",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000164",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285665",
+      "why": "The official DISA STIG content references CCI-000164.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285666",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004064",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285666",
+      "why": "The official DISA STIG content references CCI-004064.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285666",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004066",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285666",
+      "why": "The official DISA STIG content references CCI-004066.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285667",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004066",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285667",
+      "why": "The official DISA STIG content references CCI-004066.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285668",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000197",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285668",
+      "why": "The official DISA STIG content references CCI-000197.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285668",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285668",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285668",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004062",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285668",
+      "why": "The official DISA STIG content references CCI-004062.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285668",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004066",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285668",
+      "why": "The official DISA STIG content references CCI-004066.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285669",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000213",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285669",
+      "why": "The official DISA STIG content references CCI-000213.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285670",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001084",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285670",
+      "why": "The official DISA STIG content references CCI-001084.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285671",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001090",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285671",
+      "why": "The official DISA STIG content references CCI-001090.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285672",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001133",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285672",
+      "why": "The official DISA STIG content references CCI-001133.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285672",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002361",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285672",
+      "why": "The official DISA STIG content references CCI-002361.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285673",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000048",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285673",
+      "why": "The official DISA STIG content references CCI-000048.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285673",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000050",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285673",
+      "why": "The official DISA STIG content references CCI-000050.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285673",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001384",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285673",
+      "why": "The official DISA STIG content references CCI-001384.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285673",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001385",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285673",
+      "why": "The official DISA STIG content references CCI-001385.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285673",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001386",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285673",
+      "why": "The official DISA STIG content references CCI-001386.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285673",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001387",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285673",
+      "why": "The official DISA STIG content references CCI-001387.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285673",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001388",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285673",
+      "why": "The official DISA STIG content references CCI-001388.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285674",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000068",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285674",
+      "why": "The official DISA STIG content references CCI-000068.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285674",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000803",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285674",
+      "why": "The official DISA STIG content references CCI-000803.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285674",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001444",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285674",
+      "why": "The official DISA STIG content references CCI-001444.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285674",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001453",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285674",
+      "why": "The official DISA STIG content references CCI-001453.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285674",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001941",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285674",
+      "why": "The official DISA STIG content references CCI-001941.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285674",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002418",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285674",
+      "why": "The official DISA STIG content references CCI-002418.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285674",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002421",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285674",
+      "why": "The official DISA STIG content references CCI-002421.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285674",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002450",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285674",
+      "why": "The official DISA STIG content references CCI-002450.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285674",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002475",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285674",
+      "why": "The official DISA STIG content references CCI-002475.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285674",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002476",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285674",
+      "why": "The official DISA STIG content references CCI-002476.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285674",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002890",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285674",
+      "why": "The official DISA STIG content references CCI-002890.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285674",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003123",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285674",
+      "why": "The official DISA STIG content references CCI-003123.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000015",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-000015.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000764",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-000764.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000804",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-000804.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000877",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-000877.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001082",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-001082.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001443",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-001443.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001493",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-001493.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001494",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-001494.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001495",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-001495.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001499",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-001499.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001682",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-001682.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001813",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-001813.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001953",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-001953.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001954",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-001954.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002165",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-002165.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002169",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-002169.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002233",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-002233.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002235",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-002235.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002322",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-002322.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003627",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-003627.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003628",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-003628.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003650",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-003650.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003980",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-003980.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004045",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-004045.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004063",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-004063.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004065",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-004065.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285675",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004083",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285675",
+      "why": "The official DISA STIG content references CCI-004083.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285676",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003992",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285676",
+      "why": "The official DISA STIG content references CCI-003992.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285677",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002038",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285677",
+      "why": "The official DISA STIG content references CCI-002038.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285678",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001958",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285678",
+      "why": "The official DISA STIG content references CCI-001958.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285679",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002824",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285679",
+      "why": "The official DISA STIG content references CCI-002824.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285680",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002824",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285680",
+      "why": "The official DISA STIG content references CCI-002824.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285681",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285681",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285682",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003959",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_GPOS_V1R1_Manual_STIG/U_RGS_Harvester_Government_GPOS_STIG_V1R1_Manual-xccdf.XML#V-285682",
+      "why": "The official DISA STIG content references CCI-003959.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285757",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000154",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285757",
+      "why": "The official DISA STIG content references CCI-000154.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285757",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001496",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285757",
+      "why": "The official DISA STIG content references CCI-001496.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285757",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001849",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285757",
+      "why": "The official DISA STIG content references CCI-001849.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285757",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001851",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285757",
+      "why": "The official DISA STIG content references CCI-001851.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285757",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001876",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285757",
+      "why": "The official DISA STIG content references CCI-001876.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285757",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002754",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285757",
+      "why": "The official DISA STIG content references CCI-002754.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285757",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003821",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285757",
+      "why": "The official DISA STIG content references CCI-003821.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285757",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003938",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285757",
+      "why": "The official DISA STIG content references CCI-003938.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285758",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000159",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285758",
+      "why": "The official DISA STIG content references CCI-000159.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285758",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004922",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285758",
+      "why": "The official DISA STIG content references CCI-004922.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285759",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000382",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285759",
+      "why": "The official DISA STIG content references CCI-000382.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285759",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001762",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285759",
+      "why": "The official DISA STIG content references CCI-001762.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285760",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001133",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285760",
+      "why": "The official DISA STIG content references CCI-001133.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285760",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004068",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285760",
+      "why": "The official DISA STIG content references CCI-004068.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285760",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004192",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285760",
+      "why": "The official DISA STIG content references CCI-004192.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285761",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001094",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285761",
+      "why": "The official DISA STIG content references CCI-001094.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285761",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001095",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285761",
+      "why": "The official DISA STIG content references CCI-001095.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285762",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000015",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285762",
+      "why": "The official DISA STIG content references CCI-000015.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285762",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001855",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285762",
+      "why": "The official DISA STIG content references CCI-001855.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285762",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001858",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285762",
+      "why": "The official DISA STIG content references CCI-001858.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285762",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002702",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285762",
+      "why": "The official DISA STIG content references CCI-002702.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285762",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003831",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285762",
+      "why": "The official DISA STIG content references CCI-003831.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000015",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-000015.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000016",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-000016.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000017",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-000017.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000044",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-000044.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000162",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-000162.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000163",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-000163.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000164",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-000164.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000171",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-000171.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000187",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-000187.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000213",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-000213.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000764",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-000764.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000765",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-000765.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000766",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-000766.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000877",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-000877.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001082",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-001082.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001084",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-001084.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001090",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-001090.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001368",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-001368.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001414",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-001414.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001493",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-001493.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001494",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-001494.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001495",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-001495.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001499",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-001499.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001813",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-001813.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001953",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-001953.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002007",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-002007.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002009",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-002009.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002038",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-002038.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002145",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-002145.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002235",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-002235.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002238",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-002238.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003627",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-003627.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003628",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-003628.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003980",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-003980.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004045",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-004045.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004046",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-004046.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004047",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-004047.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004058",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-004058.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004059",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-004059.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004060",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-004060.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004061",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-004061.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004063",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-004063.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004064",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-004064.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004065",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-004065.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004066",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-004066.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285763",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004909",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285763",
+      "why": "The official DISA STIG content references CCI-004909.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285764",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002605",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285764",
+      "why": "The official DISA STIG content references CCI-002605.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285764",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003376",
+      "relationship_type": "references",
+      "source_locator": "U_RGS_Harvester_Government_CTR_V1R1_Manual_STIG/U_RGS_Harvester_Government_CTR_STIG_V1R1_Manual-xccdf.XML#V-285764",
+      "why": "The official DISA STIG content references CCI-003376.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
       "source_id": "V-285856",
       "target_catalog": "disa-cci",
       "target_id": "CCI-000366",

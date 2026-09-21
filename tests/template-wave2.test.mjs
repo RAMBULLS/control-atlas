@@ -252,3 +252,18 @@ test('the PPSM worksheet states its workflow and separates registry information 
   const registryFields = section.columns.filter((column) => column.group === 'Registry information').map((column) => column.header);
   assert.deepEqual(registryFields, ['Network', 'PPSM Tracking Identifier', 'Service Name', 'Protocol', 'Transport', 'Port / Range']);
 });
+
+test('PPSM provenance names the source actually read and does not imply field-level checks against policy or training', () => {
+  const template = registry.templates.find((item) => item.name === 'ppsm_preparation_worksheet');
+  assert.match(template.provenance.basis, /DISN Connection Process Guide section 2\.7\.3/);
+  assert.match(template.provenance.basis, /Not checked field by field against DoDI 8551\.01 or the DISA PPSM Registry training/);
+  assert.equal(template.provenance.basis_url, 'https://dl.dod.cyber.mil/wp-content/uploads/connect/CPG/ConnProcGuide.html');
+  assert.doesNotMatch(template.provenance.basis, /^DoDI 8551\.01/);
+  // The policy and training stay linked as official context.
+  assert.deepEqual(template.official_resource_ids, ['dodi-8551-01-ppsm-2023', 'disa-ppsm-registry-training']);
+  const notes = readMe(build('ppsm_preparation_worksheet'));
+  assert.match(notes, /only source read for this worksheet/);
+  assert.match(notes, /were not used to check individual columns/);
+  assert.match(notes, /not registry fields/);
+  assert.match(text(build('ppsm_preparation_worksheet'), 'How to use'), /policy text was not available to check them/);
+});

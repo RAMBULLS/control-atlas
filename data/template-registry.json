@@ -314,7 +314,7 @@
         "claim": "Collects information for the PPSM process. It is not the registry's form and not an interchange schema.",
         "limitations": "Collect and review here, then enter the data in the authorized PPSM workflow. Not a PPSM submission form, registry receipt, or import file."
       },
-      "provenance": { "basis": "DoDI 8551.01 and public DISA PPSM training", "verified_interchange": false },
+      "provenance": { "basis": "DISN Connection Process Guide section 2.7.3 for the registry-information columns. Local working-context columns are Control Atlas's own. Not checked field by field against DoDI 8551.01 or the DISA PPSM Registry training, which are linked as official context.", "basis_url": "https://dl.dod.cyber.mil/wp-content/uploads/connect/CPG/ConnProcGuide.html", "verified_interchange": false },
       "official_alternative": {
         "label": "DoD PPSM Registry training",
         "url": "https://dl.dod.cyber.mil/wp-content/uploads/trn/cx-player/player/index.html?v=ppsm-registry"

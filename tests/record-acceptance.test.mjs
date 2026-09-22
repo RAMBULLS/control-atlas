@@ -6,6 +6,7 @@ import { readGeneratedCollection } from "../scripts/lib/generated-graph-artifact
 import { loadRecordAcceptanceMatrix } from "../tools/record-acceptance-matrix.mjs";
 import { RECORD_FACT_LABELS } from "../src/shared/record-fact-labels.mjs";
 import {
+  CONTENT_SHAPES,
   createRecordMatrixAccumulator,
   dispositionFor,
   isRetiredRecordPair,
@@ -17,6 +18,7 @@ import {
   recordShowsChildInventory,
   registeredRecordPairs,
   REVIEW_STATUS,
+  shapeDispositionIssue,
   TEMPLATE_HANDOFF_FRAMEWORKS,
   unlabeledPublishedFacts,
 } from "../src/shared/record-acceptance.mjs";
@@ -52,6 +54,75 @@ test("dispositions name only real record types and use the allowed outcomes", ()
   for (const pair of registeredRecordPairs()) {
     assert.ok(acceptedStatuses.has(dispositionFor(pair.catalogId, pair.recordType).status));
   }
+});
+
+test("every record type declares a content shape", () => {
+  const validShapes = new Set(Object.values(CONTENT_SHAPES));
+  for (const [type, entry] of Object.entries(RECORD_TYPE_DISPOSITIONS)) {
+    assert.ok(entry.shape, `${type} has no content shape`);
+    assert.ok(validShapes.has(entry.shape), `${type} has an invalid content shape`);
+  }
+});
+
+test("a fragment can never stand alone, and a reference is always SOURCE-ONLY", () => {
+  // This is the permanent guard against another control_context: a type that
+  // only means something attached to a parent must FOLD or REMOVE, and a
+  // governing document served through Sources must never be an ordinary KEEP.
+  const abundant = { maxChars: 5000, maxChildren: 5, maxEdges: 5, maxSelected: 5 };
+  assert.match(
+    shapeDispositionIssue(CONTENT_SHAPES.FRAGMENT, RECORD_DISPOSITIONS.KEEP, abundant),
+    /SHAPE_DISPOSITION_MISMATCH/,
+  );
+  assert.match(
+    shapeDispositionIssue(CONTENT_SHAPES.FRAGMENT, RECORD_DISPOSITIONS.REWORK, abundant),
+    /SHAPE_DISPOSITION_MISMATCH/,
+  );
+  assert.equal(shapeDispositionIssue(CONTENT_SHAPES.FRAGMENT, RECORD_DISPOSITIONS.FOLD_INTO_PARENT, abundant), null);
+  assert.equal(shapeDispositionIssue(CONTENT_SHAPES.FRAGMENT, RECORD_DISPOSITIONS.REMOVE_FROM_PUBLIC_DISCOVERY, abundant), null);
+  assert.match(
+    shapeDispositionIssue(CONTENT_SHAPES.REFERENCE, RECORD_DISPOSITIONS.KEEP, abundant),
+    /SHAPE_DISPOSITION_MISMATCH/,
+  );
+  assert.equal(shapeDispositionIssue(CONTENT_SHAPES.REFERENCE, RECORD_DISPOSITIONS.SOURCE_ONLY, abundant), null);
+});
+
+test("a standalone type needs real text, children or connections on at least one axis", () => {
+  const nothing = { maxChars: 0, maxChildren: 0, maxEdges: 0, maxSelected: 0 };
+  for (const shape of [CONTENT_SHAPES.CONTENT, CONTENT_SHAPES.HIERARCHY, CONTENT_SHAPES.SELECTION]) {
+    assert.match(shapeDispositionIssue(shape, RECORD_DISPOSITIONS.KEEP, nothing), /NO_SUBSTANCE/, shape);
+    // Any single axis is enough - a type does not have to be exclusively
+    // narrative or exclusively a hierarchy (dod-zt:zt_pillar is real prose;
+    // microsoft-zt-maturity:zt_pillar is a pure container - same type name).
+    assert.equal(shapeDispositionIssue(shape, RECORD_DISPOSITIONS.KEEP, { ...nothing, maxChars: 40 }), null, `${shape} chars`);
+    assert.equal(shapeDispositionIssue(shape, RECORD_DISPOSITIONS.KEEP, { ...nothing, maxChildren: 1 }), null, `${shape} children`);
+    assert.equal(shapeDispositionIssue(shape, RECORD_DISPOSITIONS.KEEP, { ...nothing, maxEdges: 1 }), null, `${shape} edges`);
+    assert.equal(shapeDispositionIssue(shape, RECORD_DISPOSITIONS.KEEP, { ...nothing, maxSelected: 1 }), null, `${shape} selections`);
+  }
+  // A record just under the character floor with nothing else is still thin.
+  assert.match(shapeDispositionIssue(CONTENT_SHAPES.CONTENT, RECORD_DISPOSITIONS.KEEP, { ...nothing, maxChars: 39 }), /NO_SUBSTANCE/);
+});
+
+test("control_context is a fragment: FOLD, not a standalone page", () => {
+  const entry = dispositionFor("fedramp-2026", "control_context");
+  assert.equal(entry.shape, CONTENT_SHAPES.FRAGMENT);
+  assert.equal(entry.disposition, RECORD_DISPOSITIONS.FOLD_INTO_PARENT);
+  assert.equal(isRetiredRecordPair("fedramp-2026", "control_context"), true);
+});
+
+test("the generated matrix reports content_shape and max_content_chars for every pair", () => {
+  const accumulator = createRecordMatrixAccumulator();
+  accumulator.addNode({
+    id: "nist-zt:MAPPING-CONTRIBUTOR-TEST", node_type: "zt_mapping_contributor", source_id: "src", lifecycle_status: "active",
+    metadata: { catalog_id: "nist-zt", item_id: "MAPPING-CONTRIBUTOR-TEST", title: "Test Contributor", publisher_field: "d".repeat(500) },
+  });
+  const { rows } = accumulator.finish();
+  const row = rows.find((entry) => entry.pair === "nist-zt:zt_mapping_contributor");
+  assert.equal(row.content_shape, CONTENT_SHAPES.FRAGMENT);
+  assert.ok(row.max_content_chars >= 500);
+  // Correctly dispositioned (FOLD, not standalone), so the shape/disposition
+  // pairing is sound even though this record happens to carry real text.
+  assert.deepEqual(row.issues, []);
+  assert.equal(row.acceptance, "PROVISIONAL");
 });
 
 test("every published fact has a practitioner-facing label", () => {
@@ -214,7 +285,7 @@ test("every retired node in the corpus has a destination that exists, and is out
   for (const node of nodes) {
     const catalogId = node.metadata?.catalog_id || "";
     const type = node.node_type;
-    let target = null;
+    let target;
     try {
       target = recordRetirement({ catalogId: PRESENTATION_SCOPE[type] || catalogId, recordType: type, id: node.id, sourceId: node.source_id || "", title: node.metadata?.title || "" });
     } catch { continue; }

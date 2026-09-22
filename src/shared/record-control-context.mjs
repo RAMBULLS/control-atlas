@@ -8,6 +8,9 @@
  * parameter notation stays as guidance, in order.
  */
 
+/** The edge type joining a control_context record to the control it annotates. */
+export const CONTROL_CONTEXT_RELATIONSHIP_TYPE = "describes";
+
 const CONTEXT_ID = /^CTL-([A-Z]{2})-(\d+)(?:-(\d+))?$/;
 const PARAMETER_LINE = /^([a-z]{2})-(\d+)(?:\.(\d+))?_odp(?:\.(\d+))?:\s*([\s\S]+)$/;
 

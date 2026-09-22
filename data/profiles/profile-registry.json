@@ -594,6 +594,13 @@
       "parent_profile_id": "assertion.base"
     },
     {
+      "profile_id": "assertion.describes",
+      "entity_kind": "assertion",
+      "native_type": "describes",
+      "status": "active",
+      "parent_profile_id": "assertion.base"
+    },
+    {
       "profile_id": "assertion.extends",
       "entity_kind": "assertion",
       "native_type": "extends",

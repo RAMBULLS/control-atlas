@@ -1,4 +1,5 @@
 import { isComparisonCapableEdge } from "./compare-capability.mjs";
+import { controlContextTargetId } from "./record-control-context.mjs";
 import { RECORD_FACT_LABELS } from "./record-fact-labels.mjs";
 import {
   CATALOG_RECORD_TYPES,
@@ -37,63 +38,100 @@ const sourceOnly = (reason, review = {}) => ({ disposition: RECORD_DISPOSITIONS.
 const remove = (reason, review = {}) => ({ disposition: RECORD_DISPOSITIONS.REMOVE_FROM_PUBLIC_DISCOVERY, reason, ...review });
 
 /**
+ * What kind of thing a record type actually is, independent of catalog. This
+ * is the standing answer to "does this deserve a standalone page," derived
+ * once from a corpus audit (issue 279) rather than re-judged per type by eye:
+ *
+ *  - content:    carries its own real text as a complete, addressable unit.
+ *                Short is fine (a FIPS 200 requirement is one sentence,
+ *                a definition is a dictionary entry) as long as it is
+ *                COMPLETE on its own — nothing important is only readable by
+ *                going somewhere else.
+ *  - hierarchy:  a container whose value IS its children (a family, a
+ *                function, a tactic). It correctly carries little or no text
+ *                of its own; the child list is the content.
+ *  - selection:  a decision/applicability object rendered via the governed
+ *                `selections` field (a baseline selects controls, a level
+ *                requires practices).
+ *  - reference:  a real, complete governing document, better served through
+ *                Sources/Policy material than as an ordinary Library record.
+ *  - fragment:   only means something attached to a SPECIFIC other record —
+ *                a clause, an annotation, a duplicate of a page that already
+ *                exists elsewhere. A fragment is never a standalone
+ *                destination: it folds into its parent, or is removed.
+ *
+ * A test enforces the pairing (fragment -> FOLD/REMOVE, reference ->
+ * SOURCE-ONLY, the other three -> KEEP/REWORK) and, for non-hierarchy
+ * standalone types, that the corpus actually shows real content or real
+ * connections on a representative record — so a type that quietly becomes a
+ * fragment (like control_context did) fails the gate instead of shipping.
+ */
+export const CONTENT_SHAPES = Object.freeze({
+  CONTENT: "content",
+  HIERARCHY: "hierarchy",
+  SELECTION: "selection",
+  REFERENCE: "reference",
+  FRAGMENT: "fragment",
+});
+
+/**
  * Per record type. Every entry starts provisional (decided from the repository
  * audit on issue 279) and moves to accepted only after its browser review is
  * recorded. Tier 1 types can change a product decision; Tier 2 need a pair
  * fixture and a spot check; Tier 3 are covered by the generated assertions.
  */
 export const RECORD_TYPE_DISPOSITIONS = Object.freeze({
-  assessment_procedure: keep("Native procedure, objectives and methods; a clear practitioner job."),
-  attack_technique: keep("Publisher-native threat record with tactics and citations.", { tier: 2 }),
-  baseline: rework("Baseline membership is applicability, not structural containment.", { tier: 1 }),
-  benchmark: keep("Real STIG/SRG publication container with version, date and findings.", { tier: 1 }),
-  catalog: fold("The dedicated publication page already does this job; the raw catalog record duplicates it."),
-  category: keep("Publisher hierarchy and browse hub.", { tier: 2 }),
-  control: keep("Core practitioner record."),
-  control_context: rework("Machine-style parameter notation must read as FedRAMP control context.", { tier: 1 }),
-  control_enhancement: keep("Core practitioner record with parent control context."),
-  definition: keep("Official FedRAMP term and definition."),
-  defend_countermeasure: keep("Useful D3FEND defensive object.", { tier: 2 }),
-  family: keep("Publisher browse hub; needs a fixture per catalog.", { tier: 2 }),
-  function: keep("CSF publisher hierarchy.", { tier: 2 }),
-  group: keep("Publisher-native grouping; SSDF, AI RMF and DoD RAI accepted separately.", { tier: 2 }),
-  impact_category: rework("FIPS 199 levels matter for baseline selection, not for child containment.", { tier: 1 }),
-  iot_capability_domain: keep("Native hierarchical browse object.", { tier: 2 }),
-  iot_capability: keep("Native hierarchical browse object.", { tier: 2 }),
-  iot_subcapability: keep("Native hierarchical browse object.", { tier: 2 }),
-  iot_capability_element: keep("Substantive source content with publisher mappings.", { tier: 2 }),
-  iot_capability_subelement: keep("Substantive source content with publisher mappings.", { tier: 2 }),
-  key_security_indicator: keep("Substantive FedRAMP statement."),
-  limb: remove("Control Atlas editorial geography, not a publisher record.", { tier: 1 }),
-  mobile_threat: keep("Specialized record: origin, examples, CVEs, countermeasures.", { tier: 2 }),
-  mobile_threat_category: keep("Useful browse container.", { tier: 2 }),
-  policy: keep("NARA CUI publisher content is a real practitioner reference.", { tier: 1 }),
-  policy_directive: sourceOnly("Governing material better served by Policy and directives / Sources.", { tier: 1 }),
-  program: rework("CMMC levels need dependency and assessment context, not a generic container.", { tier: 1 }),
-  regulation: sourceOnly("Governing source, not an ordinary Library record.", { tier: 1 }),
-  requirement: keep("Core source record; accepted per catalog pair.", { tier: 1 }),
-  rmf_step: keep("Practitioner navigation object and Atlas journey anchor."),
-  rule: keep("FedRAMP 2026 rules are first-class requirements."),
-  srg_requirement: keep("Core DISA record: Discussion, Check, Fix, native IDs."),
-  statute: sourceOnly("Governing source, not an ordinary Library record.", { tier: 1 }),
-  stig_rule: keep("Core DISA record; native-ID composition is appropriate."),
-  tactic: keep("ATT&CK and D3FEND browse hierarchy.", { tier: 2 }),
-  trunk: remove("Pure Control Atlas editorial root.", { tier: 1 }),
-  zt_activity: keep("Rich DoD Zero Trust object: outcomes, end state, sequence."),
-  zt_assessment_question: keep("Real Microsoft assessment question with answer options.", { tier: 2 }),
-  zt_build: keep("NIST implementation artifact with architecture and instructions."),
-  zt_capability: keep("DoD Zero Trust browse and implementation grouping."),
-  zt_cloud_native_requirement: keep("Substantive NIST requirement."),
-  zt_collaborator: fold("Official collaborator roster entry with no unique implementation content.", { tier: 1 }),
-  zt_document: keep("Actual DoD publication with structured sections."),
-  zt_logical_component: keep("NIST architecture component."),
-  zt_mapping_contributor: fold("Mapping-workbook column value that duplicates an official collaborator.", { tier: 1 }),
-  zt_mapping_document: sourceOnly("Workbook identity and counts; mapping evidence, not an ordinary record.", { tier: 1 }),
-  zt_pillar: keep("DoD and Microsoft structural vocabulary; accepted per publisher.", { tier: 2 }),
-  zt_product_component: keep("Vendor product implementation mapping with real targets.", { tier: 1 }),
-  zt_publication: keep("NIST Zero Trust umbrella holds several real publications."),
-  zt_reference_component: keep("Reference architecture function with mapping targets.", { tier: 1 }),
-  zt_tenet: keep("Substantive publisher tenet."),
+  assessment_procedure: keep("Native procedure, objectives and methods; a clear practitioner job.", { shape: CONTENT_SHAPES.CONTENT }),
+  attack_technique: keep("Publisher-native threat record with tactics and citations.", { tier: 2, shape: CONTENT_SHAPES.CONTENT }),
+  baseline: rework("Baseline membership is applicability, not structural containment.", { tier: 1, shape: CONTENT_SHAPES.SELECTION }),
+  benchmark: keep("Real STIG/SRG publication container with version, date and findings.", { tier: 1, shape: CONTENT_SHAPES.HIERARCHY }),
+  catalog: fold("The dedicated publication page already does this job; the raw catalog record duplicates it.", { shape: CONTENT_SHAPES.FRAGMENT }),
+  category: keep("Publisher hierarchy and browse hub.", { tier: 2, shape: CONTENT_SHAPES.HIERARCHY }),
+  control: keep("Core practitioner record.", { shape: CONTENT_SHAPES.CONTENT }),
+  control_context: fold("A clause of one SP 800-53 control's parameters, published under FedRAMP's own id. The richest of all 77 records in the corpus is under 700 characters with no related records or children: a fragment, not a document. It belongs on the control it annotates.", { tier: 1, shape: CONTENT_SHAPES.FRAGMENT }),
+  control_enhancement: keep("Core practitioner record with parent control context.", { shape: CONTENT_SHAPES.CONTENT }),
+  definition: keep("Official FedRAMP term and definition.", { shape: CONTENT_SHAPES.CONTENT }),
+  defend_countermeasure: keep("Useful D3FEND defensive object.", { tier: 2, shape: CONTENT_SHAPES.CONTENT }),
+  family: keep("Publisher browse hub; needs a fixture per catalog.", { tier: 2, shape: CONTENT_SHAPES.HIERARCHY }),
+  function: keep("CSF publisher hierarchy.", { tier: 2, shape: CONTENT_SHAPES.HIERARCHY }),
+  group: keep("Publisher-native grouping; SSDF, AI RMF and DoD RAI accepted separately.", { tier: 2, shape: CONTENT_SHAPES.HIERARCHY }),
+  impact_category: rework("FIPS 199 levels matter for baseline selection, not for child containment.", { tier: 1, shape: CONTENT_SHAPES.SELECTION }),
+  iot_capability_domain: keep("Native hierarchical browse object.", { tier: 2, shape: CONTENT_SHAPES.HIERARCHY }),
+  iot_capability: keep("Native hierarchical browse object.", { tier: 2, shape: CONTENT_SHAPES.HIERARCHY }),
+  iot_subcapability: keep("Native hierarchical browse object.", { tier: 2, shape: CONTENT_SHAPES.HIERARCHY }),
+  iot_capability_element: keep("Substantive source content with publisher mappings.", { tier: 2, shape: CONTENT_SHAPES.CONTENT }),
+  iot_capability_subelement: keep("Substantive source content with publisher mappings.", { tier: 2, shape: CONTENT_SHAPES.CONTENT }),
+  key_security_indicator: keep("Substantive FedRAMP statement.", { shape: CONTENT_SHAPES.CONTENT }),
+  limb: remove("Control Atlas editorial geography, not a publisher record.", { tier: 1, shape: CONTENT_SHAPES.FRAGMENT }),
+  mobile_threat: keep("Specialized record: origin, examples, CVEs, countermeasures.", { tier: 2, shape: CONTENT_SHAPES.CONTENT }),
+  mobile_threat_category: keep("Useful browse container.", { tier: 2, shape: CONTENT_SHAPES.HIERARCHY }),
+  policy: keep("NARA CUI publisher content is a real practitioner reference.", { tier: 1, shape: CONTENT_SHAPES.CONTENT }),
+  policy_directive: sourceOnly("Governing material better served by Policy and directives / Sources.", { tier: 1, shape: CONTENT_SHAPES.REFERENCE }),
+  program: rework("CMMC levels need dependency and assessment context, not a generic container.", { tier: 1, shape: CONTENT_SHAPES.SELECTION }),
+  regulation: sourceOnly("Governing source, not an ordinary Library record.", { tier: 1, shape: CONTENT_SHAPES.REFERENCE }),
+  requirement: keep("Core source record; accepted per catalog pair. Some catalogs publish one-sentence requirements (FIPS 200) and others publish paragraphs (CSF 2.0) - both are complete on their own.", { tier: 1, shape: CONTENT_SHAPES.CONTENT }),
+  rmf_step: keep("Practitioner navigation object and Atlas journey anchor; each step's one-sentence description is complete, not a fragment of something longer.", { shape: CONTENT_SHAPES.CONTENT }),
+  rule: keep("FedRAMP 2026 rules are first-class requirements.", { shape: CONTENT_SHAPES.CONTENT }),
+  srg_requirement: keep("Core DISA record: Discussion, Check, Fix, native IDs.", { shape: CONTENT_SHAPES.CONTENT }),
+  statute: sourceOnly("Governing source, not an ordinary Library record.", { tier: 1, shape: CONTENT_SHAPES.REFERENCE }),
+  stig_rule: keep("Core DISA record; native-ID composition is appropriate.", { shape: CONTENT_SHAPES.CONTENT }),
+  tactic: keep("ATT&CK and D3FEND browse hierarchy.", { tier: 2, shape: CONTENT_SHAPES.HIERARCHY }),
+  trunk: remove("Pure Control Atlas editorial root.", { tier: 1, shape: CONTENT_SHAPES.FRAGMENT }),
+  zt_activity: keep("Rich DoD Zero Trust object: outcomes, end state, sequence.", { shape: CONTENT_SHAPES.CONTENT }),
+  zt_assessment_question: keep("Real Microsoft assessment question with answer options.", { tier: 2, shape: CONTENT_SHAPES.CONTENT }),
+  zt_build: keep("NIST implementation artifact with architecture and instructions.", { shape: CONTENT_SHAPES.CONTENT }),
+  zt_capability: keep("DoD Zero Trust browse and implementation grouping.", { shape: CONTENT_SHAPES.CONTENT }),
+  zt_cloud_native_requirement: keep("Substantive NIST requirement.", { shape: CONTENT_SHAPES.CONTENT }),
+  zt_collaborator: fold("Official collaborator roster entry with no unique implementation content.", { tier: 1, shape: CONTENT_SHAPES.FRAGMENT }),
+  zt_document: keep("Actual DoD publication with structured sections.", { shape: CONTENT_SHAPES.CONTENT }),
+  zt_logical_component: keep("NIST architecture component.", { shape: CONTENT_SHAPES.CONTENT }),
+  zt_mapping_contributor: fold("Mapping-workbook column value that duplicates an official collaborator.", { tier: 1, shape: CONTENT_SHAPES.FRAGMENT }),
+  zt_mapping_document: sourceOnly("Workbook identity and counts; mapping evidence, not an ordinary record.", { tier: 1, shape: CONTENT_SHAPES.REFERENCE }),
+  zt_pillar: keep("DoD and Microsoft structural vocabulary; accepted per publisher.", { tier: 2, shape: CONTENT_SHAPES.CONTENT }),
+  zt_product_component: keep("Vendor product implementation mapping with real targets.", { tier: 1, shape: CONTENT_SHAPES.CONTENT }),
+  zt_publication: keep("NIST Zero Trust umbrella holds several real publications.", { shape: CONTENT_SHAPES.CONTENT }),
+  zt_reference_component: keep("Reference architecture function with mapping targets.", { tier: 1, shape: CONTENT_SHAPES.CONTENT }),
+  zt_tenet: keep("Substantive publisher tenet.", { shape: CONTENT_SHAPES.CONTENT }),
 });
 
 /** Catalog-specific decisions that differ from the type default. */
@@ -133,6 +171,11 @@ const RETIREMENT_DESTINATIONS = Object.freeze({
   zt_mapping_document: toSources,
   zt_collaborator: { view: "search", label: "Library search", patch: ({ title }) => ({ query: title }) },
   zt_mapping_contributor: { view: "search", label: "Library search", patch: ({ title }) => ({ query: title }) },
+  control_context: {
+    view: "library-detail",
+    label: "the underlying control",
+    patch: ({ id }) => ({ node: controlContextTargetId(id.slice(id.indexOf(":") + 1)) }),
+  },
 });
 
 export function isRetiredRecordPair(catalogId, recordType) {
@@ -236,6 +279,49 @@ function hasValue(value) {
   return String(value).trim().length > 0;
 }
 
+/**
+ * Total published-text length across a record's sections and facts. A
+ * "populated" field can be one word or a paragraph; this is what tells a
+ * short-but-complete statement (a FIPS 200 requirement) apart from a fragment
+ * whose every field is barely populated at all (a stray annotation).
+ */
+function textLength(value) {
+  if (value == null) return 0;
+  if (Array.isArray(value)) return value.reduce((total, entry) => total + textLength(entry), 0);
+  if (typeof value === "object") return Object.values(value).reduce((total, entry) => total + textLength(entry), 0);
+  return String(value).length;
+}
+
+const SUBSTANCE_CHAR_FLOOR = 40;
+
+/**
+ * The permanent guard against another control_context: a fragment must never
+ * carry KEEP/REWORK, a reference must always be SOURCE-ONLY, and a type
+ * claiming to stand on its own content or connections must show some in the
+ * corpus. Returns the issue string, or null when the pairing is sound.
+ */
+export function shapeDispositionIssue(shape, disposition, { maxChars, maxChildren, maxEdges, maxSelected }) {
+  if (!shape || !disposition) return null;
+  const standalone = disposition === RECORD_DISPOSITIONS.KEEP || disposition === RECORD_DISPOSITIONS.REWORK;
+  if (shape === CONTENT_SHAPES.FRAGMENT && standalone) {
+    return "SHAPE_DISPOSITION_MISMATCH:fragment types must FOLD or REMOVE, not stand alone";
+  }
+  if (shape === CONTENT_SHAPES.REFERENCE && disposition !== RECORD_DISPOSITIONS.SOURCE_ONLY) {
+    return "SHAPE_DISPOSITION_MISMATCH:reference types must be SOURCE-ONLY";
+  }
+  // The shape a type is LABELED does not have to be exclusive: dod-zt:zt_pillar
+  // is real prose and microsoft-zt-maturity:zt_pillar is a pure container of
+  // questions, both under the type name "zt_pillar". What must be true for any
+  // standalone (KEEP/REWORK) type is that SOME record gives a practitioner
+  // something real on at least one axis - its own text, a real child to
+  // browse, or a real connection - not that every catalog uses the same one.
+  if (standalone && shape !== CONTENT_SHAPES.FRAGMENT && shape !== CONTENT_SHAPES.REFERENCE) {
+    const hasSubstance = maxChars >= SUBSTANCE_CHAR_FLOOR || maxChildren > 0 || maxEdges > 0 || maxSelected > 0;
+    if (!hasSubstance) return "NO_SUBSTANCE:no record in this type shows real text, children or connections";
+  }
+  return null;
+}
+
 /** Every pair the registry declares, resolved through the real contract lookup. */
 export function registeredRecordPairs() {
   return SUPPORTED_RECORD_CONTRACT_KEYS.map((key) => {
@@ -281,6 +367,8 @@ export function createRecordMatrixAccumulator() {
     const metadata = { ...node.metadata, description: node.metadata?.description || "" };
     const populatedSections = contract.sections.filter((entry) => hasValue(metadata[entry.field])).length;
     const populatedFacts = contract.metadata_facts.filter((field) => hasValue(metadata[field])).length;
+    const chars = contract.sections.reduce((total, entry) => total + textLength(metadata[entry.field]), 0)
+      + contract.metadata_facts.reduce((total, field) => total + textLength(metadata[field]), 0);
     pair.count += 1;
     pair.sources.set(node.source_id || "", (pair.sources.get(node.source_id || "") || 0) + 1);
     pair.nodes.set(node.id, {
@@ -288,6 +376,7 @@ export function createRecordMatrixAccumulator() {
       density: populatedSections + populatedFacts,
       populatedSections,
       populatedFacts,
+      chars,
       lifecycle: String(node.lifecycle_status || "active"),
       itemId: node.metadata?.item_id || "",
       edges: 0,
@@ -335,13 +424,22 @@ export function createRecordMatrixAccumulator() {
       const unlabeled = unlabeledPublishedFacts(pair.contract);
       const containerNodes = pair.contract.page_role === PAGE_ROLES.CONTAINER ? nodes : [];
       const emptyContainers = containerNodes.filter((n) => n.children === 0).length;
+      const maxChars = nodes.reduce((max, n) => Math.max(max, n.chars), 0);
+      const maxChildren = nodes.reduce((max, n) => Math.max(max, n.children), 0);
+      const maxEdges = nodes.reduce((max, n) => Math.max(max, n.edges), 0);
+      const maxSelected = nodes.reduce((max, n) => Math.max(max, n.selected), 0);
+      const shapeIssue = shapeDispositionIssue(disposition?.shape, disposition?.disposition, {
+        maxChars, maxChildren, maxEdges, maxSelected,
+      });
       const issues = [];
       if (!disposition) issues.push("NO_DISPOSITION");
+      else if (!disposition.shape) issues.push("NO_CONTENT_SHAPE");
       if (!representative) issues.push("NO_REPRESENTATIVE_RECORD");
       if (unlabeled.length) issues.push(`UNLABELED_FACTS:${unlabeled.join(",")}`);
       if (emptyContainers > 0) issues.push(`EMPTY_CONTAINERS:${emptyContainers}/${containerNodes.length}`);
       if (pair.contract.selections.length && !nodes.some((n) => n.selected > 0)) issues.push("SELECTION_SPEC_UNUSED");
-      const hardFailure = issues.some((issue) => /^(NO_DISPOSITION|NO_REPRESENTATIVE_RECORD|UNLABELED_FACTS|SELECTION_SPEC_UNUSED)/.test(issue));
+      if (shapeIssue) issues.push(shapeIssue);
+      const hardFailure = issues.some((issue) => /^(NO_DISPOSITION|NO_CONTENT_SHAPE|NO_REPRESENTATIVE_RECORD|UNLABELED_FACTS|SELECTION_SPEC_UNUSED|SHAPE_DISPOSITION_MISMATCH|NO_SUBSTANCE)/.test(issue));
       const acceptance = !disposition ? "UNREVIEWED"
         : hardFailure ? "BLOCKED"
         : disposition.status === REVIEW_STATUS.ACCEPTED ? "ACCEPTED" : "PROVISIONAL";
@@ -379,6 +477,8 @@ export function createRecordMatrixAccumulator() {
         }) : null,
         disposition: disposition?.disposition || null,
         disposition_reason: disposition?.reason || "",
+        content_shape: disposition?.shape || null,
+        max_content_chars: maxChars,
         review_tier: disposition?.tier ?? null,
         review_status: disposition?.status || null,
         acceptance,

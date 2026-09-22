@@ -4,6 +4,7 @@ import test from "node:test";
 import { readGeneratedCollection } from "../scripts/lib/generated-graph-artifacts.mjs";
 import {
   controlContextLabel,
+  CONTROL_CONTEXT_RELATIONSHIP_TYPE,
   controlContextTargetId,
   parseControlContext,
 } from "../src/shared/record-control-context.mjs";
@@ -59,6 +60,30 @@ test("every FedRAMP control context in the corpus parses without loss and points
       const shown = entry.kind === "parameter" ? entry.value : entry.text;
       if (!chunks[index].includes(shown)) problems.push(`${itemId}: entry ${index} lost text`);
     }
+  }
+  assert.deepEqual(problems.slice(0, 5), []);
+});
+
+test("every FedRAMP control context has a real published edge to the control it annotates", () => {
+  // Control context folds onto its control's own page (issue 279). A control
+  // page only ever has its own neighborhood loaded, not the full corpus, so
+  // an id computed at render time is not enough - the context must be
+  // reachable through a real edge, the same way every other membership
+  // relationship in this graph is.
+  const nodes = readGeneratedCollection(".", "nodes").nodes;
+  const edges = readGeneratedCollection(".", "edges").edges;
+  const contexts = nodes.filter((node) => node.node_type === "control_context");
+  const describesEdges = new Map(
+    edges
+      .filter((edge) => edge.relationship_type === CONTROL_CONTEXT_RELATIONSHIP_TYPE && edge.publication_status === "published")
+      .map((edge) => [edge.source_node_id, edge.target_node_id]),
+  );
+  assert.equal(describesEdges.size, contexts.length, "one describes edge per control context record");
+  const problems = [];
+  for (const node of contexts) {
+    const expectedTarget = controlContextTargetId(node.metadata.item_id);
+    const actualTarget = describesEdges.get(node.id);
+    if (actualTarget !== expectedTarget) problems.push(`${node.id}: edge points at ${actualTarget}, expected ${expectedTarget}`);
   }
   assert.deepEqual(problems.slice(0, 5), []);
 });

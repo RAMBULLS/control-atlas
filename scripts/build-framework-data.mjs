@@ -3154,6 +3154,7 @@ export function buildAtlasSpine(graph, authoritySpine, treeSpine) {
     node.node_type !== "trunk" &&
     node.node_type !== "limb" &&
     !ATLAS_SUMMARY_NODE_TYPES.has(node.node_type) &&
+    !RETIRED_RECORD_TYPES.has(node.node_type) &&
     !node.id.startsWith("authority:");
   const descendantRecordCount = (rootId) => {
     let count = 0;

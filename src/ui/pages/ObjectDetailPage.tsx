@@ -36,7 +36,7 @@ import { extractGovernedRecordTaxonomy, buildExploreRelatedPivots } from "../lib
 import type { RuntimeBundle } from "../lib/runtimeLoader";
 import { runtimeRecordIdentityFor } from "../lib/runtimeRecordIdentity";
 import { normalizeViewState, type ViewState } from "../lib/viewState";
-import { sourceFreshnessPresentation, sourceLifecycleDisplayName, sourcePublicationTitle } from "../lib/sourcePresentation";
+import { formatSourceDate, sourceFreshnessPresentation, sourceLifecycleDisplayName, sourcePublicationTitle } from "../lib/sourcePresentation";
 
 function sentenceCaseKind(kind: string): string {
   return /[A-Z]/.test(kind.slice(1)) ? kind : kind.toLocaleLowerCase();
@@ -221,6 +221,12 @@ export function ObjectDetailPage(props: {
 
   const benchmarkTitle = String(node.metadata?.benchmark_title || "");
   const deferPublicationFacts = isTechnicalRule && Boolean(benchmarkTitle);
+  // Every generic-catalog record carries a `benchmark_status_date` stamped at
+  // fetch time, but it is only a genuine publisher status date for the record
+  // types whose contract actually declares it (real STIG/SRG benchmarks and
+  // findings). Showing it elsewhere presented an ingestion timestamp as a
+  // publisher-declared date on records the publisher never dated.
+  const showsBenchmarkFacts = presentation.metadata_facts.includes("benchmark_status_date");
   const publicationLabel = String(node.metadata?.benchmark_short_title || benchmarkTitle || sourcePublicationName)
     .replace(/Security Technical Implementation Guide/g, "STIG");
   const benchmarkParent = [...displayPath].reverse().find((entry) => entry.node_type === "benchmark" && bundle.runtime.getNode(entry.id));
@@ -235,6 +241,21 @@ export function ObjectDetailPage(props: {
   const canonicalRecordUrl = () => `${window.location.origin}${window.location.pathname}${serializeHashUrl(
     normalizeViewState("library-detail", { view: "library-detail", node: document.id }),
   )}`;
+  // Some catalogs (NIST SP 800-171 Rev. 2) publish a requirement with no short
+  // title of its own — the "title" field is just the item number repeated. A
+  // bare list of "3.1.1, 3.1.2, ..." tells a practitioner nothing, so a
+  // selection list adds a snippet of the record's own description when it has
+  // no distinct title. This never touches the identity shown on that record's
+  // own page — only how it reads as a link in this list.
+  const selectionItemLabel = (target: any) => {
+    const title = recordDisplayTitle(target);
+    const itemId = String(target?.metadata?.item_id || "");
+    if (title !== itemId) return title;
+    const description = String(target?.metadata?.description || "").trim();
+    if (!description) return title;
+    const snippet = description.length > 100 ? `${description.slice(0, 97).trimEnd()}…` : description;
+    return `${title} — ${snippet}`;
+  };
 
   return (
     <section className="detail-page record-template ca-record-page" data-page-role={presentation.page_role} data-template="E">
@@ -308,7 +329,7 @@ export function ObjectDetailPage(props: {
               <Badge tone="info">{entry.items.length}</Badge>
             </div>
             <ul>{entry.items.slice(0, 25).map((target: any) => <li key={target.id}>
-              <AppLink onNavigate={onNavigate} patch={{ node: target.id }} view="library-detail">{recordDisplayTitle(target)}</AppLink>
+              <AppLink onNavigate={onNavigate} patch={{ node: target.id }} view="library-detail">{selectionItemLabel(target)}</AppLink>
             </li>)}</ul>
             {entry.items.length > 25 ? <AppLink onNavigate={onNavigate} patch={{ node: node.id }} view="atlas-map">{`+${entry.items.length - 25} more — Explore in Atlas`}</AppLink> : null}
           </section>)}
@@ -387,8 +408,8 @@ export function ObjectDetailPage(props: {
               <div><dt>Record type</dt><dd>{kind}</dd></div>
               {publisherName ? <div><dt>Publisher</dt><dd>{publisherName}</dd></div> : null}
               {benchmarkTitle ? <div><dt>Benchmark</dt><dd>{benchmarkTitle}</dd></div> : null}
-              {node.metadata?.benchmark_version ? <div><dt>Version</dt><dd>{node.metadata.benchmark_version}</dd></div> : null}
-              {!deferPublicationFacts && node.metadata?.benchmark_status_date ? <div><dt>Benchmark date</dt><dd>{node.metadata.benchmark_status_date}</dd></div> : null}
+              {showsBenchmarkFacts && node.metadata?.benchmark_version ? <div><dt>Version</dt><dd>{node.metadata.benchmark_version}</dd></div> : null}
+              {showsBenchmarkFacts && !deferPublicationFacts && node.metadata?.benchmark_status_date ? <div><dt>Benchmark date</dt><dd>{formatSourceDate(node.metadata.benchmark_status_date)}</dd></div> : null}
               {!deferPublicationFacts ? <div><dt>Publication</dt><dd>{sourcePublicationName}{source?.version ? ` · ${source.version}` : ""}</dd></div> : null}
               <div><dt>Status</dt><dd>{sourceLifecycleDisplayName(source?.lifecycle_status)}</dd></div>
               <div><dt>{sourceFreshness.label}</dt><dd>{sourceFreshness.dateTime ? <time dateTime={sourceFreshness.dateTime}>{sourceFreshness.value}</time> : sourceFreshness.value}</dd></div>
@@ -397,7 +418,7 @@ export function ObjectDetailPage(props: {
               <details className="ca-tag-explanations ca-record-source-details" key={`${node.id}:source-details`} data-record-source-details>
                 <summary>View source details</summary>
                 <dl className="record-source-detail-facts">
-                  {node.metadata?.benchmark_status_date ? <div><dt>Benchmark date</dt><dd>{node.metadata.benchmark_status_date}</dd></div> : null}
+                  {node.metadata?.benchmark_status_date ? <div><dt>Benchmark date</dt><dd>{formatSourceDate(node.metadata.benchmark_status_date)}</dd></div> : null}
                   <div><dt>Publication</dt><dd>{sourcePublicationName}{source?.version ? ` · ${source.version}` : ""}</dd></div>
                 </dl>
                 {source?.id ? <AppLink className="ca-record-source-details__link" onNavigate={onNavigate} patch={{ source: source.id }} view="sources">Open source record</AppLink> : null}

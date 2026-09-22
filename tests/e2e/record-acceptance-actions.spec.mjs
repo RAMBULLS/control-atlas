@@ -218,3 +218,46 @@ test("a publication's Browse all list and families leave out retired helper reco
   await expect(page.locator("main")).not.toContainText("Mapping Workbooks");
   await expect(page.getByRole("link", { name: /Technology collaborator|Mapping workbook contributor/ })).toHaveCount(0);
 });
+
+// Tier 2 polish (issue #279): identity, translation and fact-leak fixes found
+// during the pair-specific review, verified on the built site.
+
+test("a requirement with no genuine publisher code reads by its title, not a generated slug", async ({ page }) => {
+  await openRecord(page, "/#/record/dod-rai/PRINCIPLE-ETHICS");
+  await expect(page.getByRole("heading", { name: "DoW AI Ethical Principles", level: 1 })).toBeVisible();
+  await expect(page.locator("h1")).not.toContainText("PRINCIPLE-ETHICS");
+  await expect(page.locator("h1")).not.toContainText("Chief Digital and Artificial Intelligence Office");
+});
+
+test("Microsoft Zero Trust assessment categories show in English, never French", async ({ page }) => {
+  await openRecord(page, "/#/record/microsoft-zt-maturity/MSZT-3-1");
+  const facts = page.locator(".record-native-facts");
+  await expect(facts.getByRole("heading", { name: "Published facts" })).toBeVisible();
+  await expect(facts).toContainText("SSO and conditional access");
+  await expect(page.locator("main")).not.toContainText("SSO et accès conditionnel");
+});
+
+test("a baseline sidebar does not show a Version or Benchmark date it never earned", async ({ page }) => {
+  await openRecord(page, "/#/record/fedramp-rev5/HIGH");
+  const about = page.locator("aside.record-template-sidebar");
+  await expect(about).not.toContainText("Benchmark date");
+  await expect(about).not.toContainText("Version");
+  // The facts a baseline DOES earn stay.
+  await expect(about).toContainText("Publication");
+  await expect(about).toContainText("Status");
+});
+
+test("a real STIG benchmark still shows its publisher status date, formatted as a date", async ({ page }) => {
+  await openRecord(page, "/#/record/disa-stig/BENCHMARK-A10-NETWORKS-ADC-ALG-STIG");
+  const facts = page.locator(".record-native-facts");
+  await expect(facts).toContainText("Published status date");
+  await expect(facts).toContainText("Jun 4, 2024");
+  await expect(facts).not.toContainText("2024-06-04");
+});
+
+test("a selection list item with no distinct title shows a snippet of its own text", async ({ page }) => {
+  await openRecord(page, "/#/record/cmmc-2/LEVEL-2");
+  const firstLink = page.locator('[data-record-section="selection"] li a').first();
+  await expect(firstLink).toContainText("3.1.1");
+  await expect(firstLink).toContainText("Limit system access");
+});

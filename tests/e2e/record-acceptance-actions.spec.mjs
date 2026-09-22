@@ -1,6 +1,16 @@
+import { AxeBuilder } from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 import { attachPageDiagnostics, dismissOnboarding, waitForAppReady } from "./support.mjs";
+
+async function assertNoBlockingViolations(page, contextLabel) {
+  const results = await new AxeBuilder({ page })
+    .include("#workspace")
+    .withTags(["wcag2a", "wcag2aa"])
+    .analyze();
+  const blocking = results.violations.filter((violation) => ["serious", "critical"].includes(violation.impact || ""));
+  expect(blocking, `Accessibility violations on ${contextLabel}: ${blocking.map((entry) => `${entry.id} (${entry.impact})`).join(", ")}`).toEqual([]);
+}
 
 // Issue #279: a record page offers an action only when it can do something
 // useful, and never renders an empty child inventory. Routes below are stable
@@ -217,4 +227,96 @@ test("a publication's Browse all list and families leave out retired helper reco
   await expect(page.locator("main")).not.toContainText("Mapping Workbook Contributors");
   await expect(page.locator("main")).not.toContainText("Mapping Workbooks");
   await expect(page.getByRole("link", { name: /Technology collaborator|Mapping workbook contributor/ })).toHaveCount(0);
+});
+
+// Tier 2 polish (issue #279): identity, translation and fact-leak fixes found
+// during the pair-specific review, verified on the built site.
+
+test("a requirement with no genuine publisher code reads by its title, not a generated slug", async ({ page }) => {
+  await openRecord(page, "/#/record/dod-rai/PRINCIPLE-ETHICS");
+  await expect(page.getByRole("heading", { name: "DoW AI Ethical Principles", level: 1 })).toBeVisible();
+  await expect(page.locator("h1")).not.toContainText("PRINCIPLE-ETHICS");
+  await expect(page.locator("h1")).not.toContainText("Chief Digital and Artificial Intelligence Office");
+});
+
+test("Microsoft Zero Trust assessment categories show in English, never French", async ({ page }) => {
+  await openRecord(page, "/#/record/microsoft-zt-maturity/MSZT-3-1");
+  const facts = page.locator(".record-native-facts");
+  await expect(facts.getByRole("heading", { name: "Published facts" })).toBeVisible();
+  await expect(facts).toContainText("SSO and conditional access");
+  await expect(page.locator("main")).not.toContainText("SSO et accès conditionnel");
+});
+
+test("a baseline sidebar does not show a Version or Benchmark date it never earned", async ({ page }) => {
+  await openRecord(page, "/#/record/fedramp-rev5/HIGH");
+  const about = page.locator("aside.record-template-sidebar");
+  await expect(about).not.toContainText("Benchmark date");
+  await expect(about).not.toContainText("Version");
+  // The facts a baseline DOES earn stay.
+  await expect(about).toContainText("Publication");
+  await expect(about).toContainText("Status");
+});
+
+test("a real STIG benchmark still shows its publisher status date, formatted as a date", async ({ page }) => {
+  await openRecord(page, "/#/record/disa-stig/BENCHMARK-A10-NETWORKS-ADC-ALG-STIG");
+  const facts = page.locator(".record-native-facts");
+  await expect(facts).toContainText("Published status date");
+  await expect(facts).toContainText("Jun 4, 2024");
+  await expect(facts).not.toContainText("2024-06-04");
+});
+
+test("a selection list item with no distinct title shows a snippet of its own text", async ({ page }) => {
+  await openRecord(page, "/#/record/cmmc-2/LEVEL-2");
+  const firstLink = page.locator('[data-record-section="selection"] li a').first();
+  await expect(firstLink).toContainText("3.1.1");
+  await expect(firstLink).toContainText("Limit system access");
+});
+
+// Issue #279: keyboard and axe coverage for the new record-page surfaces
+// (selection sections, the control-context underlying-control link, the
+// retirement redirect notice) — the existing accessibility.spec.mjs checks
+// one generic record route but predates all of these.
+
+test("selection-section and control-context record pages have no serious/critical axe violations", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const route of [
+    "/#/record/nist-800-53b/HIGH",
+    "/#/record/cmmc-2/LEVEL-2",
+    "/#/record/fedramp-2026/CTL-AC-06-01",
+    "/#/record/microsoft-zt-maturity/MSZT-3-1",
+  ]) {
+    await openRecord(page, route);
+    await assertNoBlockingViolations(page, route);
+  }
+});
+
+test("a retired record's redirect destination has no serious/critical axe violations", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  attachPageDiagnostics(page);
+  await page.goto("/#/record/atlas/TRUNK");
+  await waitForAppReady(page, { allowPartial: true });
+  await dismissOnboarding(page);
+  await expect(page).toHaveURL(/#\/atlas\/atlas:TRUNK/);
+  await assertNoBlockingViolations(page, "atlas trunk redirect target");
+});
+
+test("the selection section and the header actions menu are fully keyboard-operable", async ({ page }) => {
+  await openRecord(page, "/#/record/nist-800-53b/HIGH");
+
+  // Tab from the top of the page reaches the header actions menu, and Enter
+  // opens it without a mouse.
+  const menuSummary = page.locator(".record-actions-menu > summary");
+  await menuSummary.focus();
+  await expect(menuSummary).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".record-actions-popover")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.locator(".record-actions-popover")).toBeHidden();
+
+  // The selection list's links are real, individually focusable anchors.
+  const firstSelectionLink = page.locator('[data-record-section="selection"] li a').first();
+  await firstSelectionLink.focus();
+  await expect(firstSelectionLink).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/#\/record\/nist-800-53\//);
 });

@@ -1,7 +1,9 @@
 import { createContext, Fragment, useCallback, useContext, useState, type ReactNode } from "react";
 import { RECORD_FACT_LABELS } from "../../shared/record-fact-labels.mjs";
+import { translateMicrosoftZtCategory } from "../../shared/microsoft-zt-category-labels.mjs";
 import { parseControlContext } from "../../shared/record-control-context.mjs";
 import { isValidSourceTextPresentation } from "../../shared/source-text-presentation.mjs";
+import { formatSourceDate } from "../lib/sourcePresentation";
 import { Button } from "./lsm";
 import { copyText, formatRelationshipLabel } from "../lib/pagePrimitives";
 
@@ -377,9 +379,16 @@ export function RecordNativeFacts(props: { fields: string[]; metadata: Record<st
     const value = props.metadata[field];
     const absenceReason = props.metadata.field_absence_reasons?.[field];
     if ((value == null || value === "" || (Array.isArray(value) && value.length === 0)) && !absenceReason) return [];
+    // Microsoft's own workbook writes this tag in French for one pillar and
+    // English for another (no header, no formal taxonomy); translate rather
+    // than mix languages on an English-labeled page.
     const displayValue = absenceReason
       ? `Not published — ${absenceReason}`
-      : formatFactValue(value);
+      : field === "category" && props.metadata.catalog_id === "microsoft-zt-maturity"
+        ? translateMicrosoftZtCategory(value)
+        : field === "benchmark_status_date"
+          ? formatSourceDate(value)
+          : formatFactValue(value);
     if (!displayValue) return [];
     return [{ field, displayValue }];
   });

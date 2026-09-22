@@ -25,10 +25,13 @@ const RECORD_ACCEPTANCE_PATHS = new Set([
   'src/shared/record-control-context.mjs',
   'src/shared/record-fact-labels.mjs',
   'src/shared/record-presentation.mjs',
+  'src/shared/microsoft-zt-category-labels.mjs',
+  'src/ui/lib/sourcePresentation.ts',
   'scripts/build-framework-data.mjs',
   'tests/graph/recordActionPolicy.test.ts',
   'tests/record-acceptance.test.mjs',
   'tests/record-control-context.test.mjs',
+  'tests/microsoft-zt-category-labels.test.mjs',
   'tools/record-acceptance-matrix.mjs',
 ]);
 
@@ -41,6 +44,8 @@ const RECORD_PAGE_PATHS = new Set([
   'src/ui/App.tsx',
   'src/shared/record-acceptance.mjs',
   'src/shared/record-control-context.mjs',
+  'src/shared/microsoft-zt-category-labels.mjs',
+  'src/ui/lib/sourcePresentation.ts',
   'tests/e2e/record-acceptance-actions.spec.mjs',
 ]);
 

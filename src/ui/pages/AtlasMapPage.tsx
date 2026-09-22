@@ -18,6 +18,7 @@ import {
 } from "@tabler/icons-react";
 
 import { displayNameFor } from "../../app/display-names.mjs";
+import { retiresIntoAtlas } from "../../shared/record-acceptance.mjs";
 import {
   recordPresentationContract,
   SUPPORTED_RECORD_TYPES,
@@ -1699,16 +1700,18 @@ function FocusedAtlas(props: {
           />
         ) : null}
         <div className="atlas-focused-exits">
-          <AppLink
-            onNavigate={onNavigate}
-            patch={{ node: record.center_node.id }}
-            variant="primary"
-            view="library-detail"
-          >
-            {centerPublishedSections.length
-              ? "Read the full record"
-              : "Open the full record"}
-          </AppLink>
+          {retiresIntoAtlas(String(record.center_node.node_type || "")) ? null : (
+            <AppLink
+              onNavigate={onNavigate}
+              patch={{ node: record.center_node.id }}
+              variant="primary"
+              view="library-detail"
+            >
+              {centerPublishedSections.length
+                ? "Read the full record"
+                : "Open the full record"}
+            </AppLink>
+          )}
           {centerOfficialSource.url ? (
             <ButtonLink
               href={centerOfficialSource.url}

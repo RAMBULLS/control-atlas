@@ -2,14 +2,18 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
+import { readGeneratedCollection } from "../scripts/lib/generated-graph-artifacts.mjs";
 import { loadRecordAcceptanceMatrix } from "../tools/record-acceptance-matrix.mjs";
 import { RECORD_FACT_LABELS } from "../src/shared/record-fact-labels.mjs";
 import {
   createRecordMatrixAccumulator,
   dispositionFor,
+  isRetiredRecordPair,
   RECORD_DISPOSITIONS,
   RECORD_TYPE_DISPOSITIONS,
   recordActionPolicy,
+  recordRetirement,
+  RETIRED_RECORD_TYPES,
   recordShowsChildInventory,
   registeredRecordPairs,
   REVIEW_STATUS,
@@ -22,6 +26,8 @@ import {
   PAGE_ROLES,
   SUPPORTED_RECORD_TYPES,
 } from "../src/shared/record-presentation.mjs";
+
+const PRESENTATION_SCOPE = { limb: "atlas-organizing-spine", trunk: "atlas-organizing-spine", policy_directive: "atlas-authority-spine", regulation: "atlas-authority-spine", statute: "atlas-authority-spine" };
 
 // The pair list is derived from the registry. Nothing below hard-codes how many
 // pairs, catalogs or types exist, so a new publication cannot silently bypass
@@ -177,4 +183,53 @@ test("the corpus matrix covers every registered pair with a real record and no u
     assert.ok(row.representative_id, `${row.pair} has no representative record`);
     assert.ok(row.publisher, `${row.pair} has no resolvable publisher`);
   }
+});
+
+test("retirement follows the recorded dispositions and every retired pair has a destination", () => {
+  for (const pair of registeredRecordPairs()) {
+    const entry = dispositionFor(pair.catalogId, pair.recordType);
+    const retired = entry.disposition !== RECORD_DISPOSITIONS.KEEP && entry.disposition !== RECORD_DISPOSITIONS.REWORK;
+    assert.equal(isRetiredRecordPair(pair.catalogId, pair.recordType), retired, pair.key);
+    const target = recordRetirement({ catalogId: pair.catalogId, recordType: pair.recordType, id: `${pair.catalogId}:X`, sourceId: "s", title: "T" });
+    assert.equal(Boolean(target), retired, `${pair.key}: ${retired ? "a retired pair needs a destination" : "a public pair must not redirect"}`);
+    assert.equal(RETIRED_RECORD_TYPES.has(pair.recordType) && !retired, false, `${pair.key} is public but its type is retired elsewhere`);
+  }
+  assert.ok(RETIRED_RECORD_TYPES.size > 0);
+});
+
+test("retired destinations point at the right place", () => {
+  const args = { id: "cmmc-2:CATALOG", catalogId: "cmmc-2", sourceId: "dod-cmmc-rule", title: "Appgate" };
+  assert.deepEqual({ ...recordRetirement({ ...args, recordType: "catalog" }) }, { view: "catalog-detail", label: "the publication page", patch: { catalog: "cmmc-2" } });
+  assert.equal(recordRetirement({ ...args, catalogId: "atlas-organizing-spine", recordType: "trunk" }).view, "atlas-map");
+  assert.deepEqual({ ...recordRetirement({ ...args, catalogId: "atlas-authority-spine", recordType: "statute" }).patch }, { source: "dod-cmmc-rule" });
+  assert.deepEqual({ ...recordRetirement({ ...args, catalogId: "nist-zt", recordType: "zt_collaborator" }).patch }, { query: "Appgate" });
+  assert.equal(recordRetirement({ ...args, catalogId: "nist-800-53", recordType: "control" }), null);
+});
+
+test("every retired node in the corpus has a destination that exists, and is out of Library search", () => {
+  const nodes = readGeneratedCollection(".", "nodes").nodes;
+  const sourceIds = new Set(readGeneratedCollection(".", "sources").sources.map((source) => source.id));
+  const problems = [];
+  let retiredNodes = 0;
+  for (const node of nodes) {
+    const catalogId = node.metadata?.catalog_id || "";
+    const type = node.node_type;
+    let target = null;
+    try {
+      target = recordRetirement({ catalogId: PRESENTATION_SCOPE[type] || catalogId, recordType: type, id: node.id, sourceId: node.source_id || "", title: node.metadata?.title || "" });
+    } catch { continue; }
+    if (!target) continue;
+    retiredNodes += 1;
+    if (target.view === "sources" && !sourceIds.has(target.patch.source)) problems.push(`${node.id}: source ${target.patch.source} missing`);
+    if (target.view === "search" && !String(target.patch.query || "").trim()) problems.push(`${node.id}: no title to search`);
+    if (target.view === "catalog-detail" && !target.patch.catalog) problems.push(`${node.id}: no catalog`);
+  }
+  assert.ok(retiredNodes > 0);
+  assert.deepEqual(problems.slice(0, 5), []);
+
+  const documents = JSON.parse(readFileSync("data/generated/library-search.json", "utf8")).library_search.documents;
+  const leaked = documents.filter((document) => RETIRED_RECORD_TYPES.has(document.object_type)).map((document) => document.id);
+  assert.deepEqual(leaked.slice(0, 5), [], "retired record types must not appear in Library search");
+  const nodeTypes = new Set(nodes.map((node) => node.node_type));
+  for (const type of RETIRED_RECORD_TYPES) assert.ok(nodeTypes.has(type), `${type} nodes must stay in the graph`);
 });

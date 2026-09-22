@@ -9,8 +9,7 @@ const REPRESENTATIVES = [
   { role: "atomic_record", route: "/#/record/nist-800-53/AC-2" },
   { role: "atomic_record", route: "/#/record/disa-cci/CCI-000366" },
   { role: "container", route: "/#/record/nist-800-53/FAMILY-AC" },
-  { role: "publication_document", route: "/#/record/csf-2/CATALOG" },
-  { role: "entity_contributor", route: "/#/record/nist-zt/COLLABORATOR-APPGATE-835EC7F121" },
+  { role: "publication_document", route: "/#/record/dod-zt/DOC-OVERLAYS" },
   { role: "assessment_question", route: "/#/record/nist-800-53a/AC-1" },
   { role: "implementation_artifact", route: "/#/record/nist-zt/SP180035-E1B1" },
 ];
@@ -189,7 +188,7 @@ test("clipboard denial never shows a false copied confirmation", async ({ page }
 });
 
 test("no visible relationships produces no empty zero-count panel while preserving Atlas navigation", async ({ page }) => {
-  for (const route of ["/#/record/dod-zt/DOC-OVERLAYS", "/#/record/csf-2/CATALOG"]) {
+  for (const route of ["/#/record/dod-zt/DOC-OVERLAYS", "/#/record/cmmc-2/LEVEL-1"]) {
     await open(page, route);
     await expect(page.locator('[data-template="E"]')).toBeVisible();
     await expect(page.locator('[data-record-section="related-records"]')).toHaveCount(0);

@@ -25,6 +25,7 @@ const RECORD_ACCEPTANCE_PATHS = new Set([
   'src/shared/record-control-context.mjs',
   'src/shared/record-fact-labels.mjs',
   'src/shared/record-presentation.mjs',
+  'scripts/build-framework-data.mjs',
   'tests/graph/recordActionPolicy.test.ts',
   'tests/record-acceptance.test.mjs',
   'tests/record-control-context.test.mjs',
@@ -37,6 +38,7 @@ const RECORD_PAGE_PATHS = new Set([
   'src/ui/pages/ObjectDetailPage.tsx',
   'src/ui/components/RecordPublishedText.tsx',
   'src/ui/lib/recordTitle.ts',
+  'src/ui/App.tsx',
   'src/shared/record-acceptance.mjs',
   'src/shared/record-control-context.mjs',
   'tests/e2e/record-acceptance-actions.spec.mjs',
@@ -452,6 +454,13 @@ export function createVerificationPlan(paths, changeMap) {
     addStep(steps, {
       id: 'record-acceptance-contracts', command: ['npm', 'run', 'test:record-presentation'],
       expectedTests: 24, workers: 2, budgetSeconds: 30,
+    });
+  }
+  if (paths.includes('scripts/build-framework-data.mjs')) {
+    addStep(steps, {
+      id: 'search-document-contracts',
+      command: ['node', '--test', 'tests/framework-data.test.mjs', 'tests/library-search-index.test.mjs'],
+      expectedTests: 20, workers: 2, budgetSeconds: 60,
     });
   }
   if (paths.some((path) => RECORD_PAGE_PATHS.has(path))) {

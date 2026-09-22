@@ -67,8 +67,7 @@ const records = [
   ['control', '#/record/nist-800-53/AC-2'],
   ['cci', '#/record/disa-cci/CCI-000366'],
   ['container', '#/record/nist-800-53/FAMILY-AC'],
-  ['publication', '#/record/csf-2/CATALOG'],
-  ['entity', '#/record/nist-zt/COLLABORATOR-APPGATE-835EC7F121'],
+  ['publication', '#/record/dod-zt/DOC-OVERLAYS'],
   ['assessment', '#/record/nist-800-53a/AC-1'],
   ['implementation', '#/record/nist-zt/SP180035-E1B1'],
 ];

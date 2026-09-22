@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { displayNameFor } from "../../app/display-names.mjs";
+import { retiresIntoAtlas } from "../../shared/record-acceptance.mjs";
 import { parseResearchPins } from "../lib/atlasResearchState";
 import { buildTerritoryModel, searchPublications, type TerritoryModel } from "../lib/atlasTerritoryModel";
 import type { TerritoryIndex } from "../lib/atlasTerritoryIndex";
@@ -342,7 +343,7 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
         onRecord={goRecord} pathIndex={pathIndex} research={research} selectedHop={selectedHop >= 0 ? selectedHop : null} to={target.to} />
     ) : focusRecord ? (
       <RecordCard areaLabel={focusInfo && isPublication(focusInfo.catalogId) ? model.areaOf(focusInfo.catalogId).label : ""} canTrace={!!focusInfo && research.status !== "error"} degree={research.degree.get(focusRecord) ?? null}
-        openRecord={<AppLink onNavigate={onNavigate} patch={{ node: focusRecord }} view="library-detail">Open the full record</AppLink>}
+        openRecord={retiresIntoAtlas(String(bundle.runtime.getNode(focusRecord)?.node_type || "")) ? null : <AppLink onNavigate={onNavigate} patch={{ node: focusRecord }} view="library-detail">Open the full record</AppLink>}
         notice={research.failed ? <ResearchNotice research={research} what="Connection data" /> : null}
         fullList={<AppLink onNavigate={onNavigate} patch={{ node: focusRecord, relationshipView: "list" }} view="atlas-map">Full connection list</AppLink>}
         label={focusInfo?.label || recordLabel(research.records, focusRecord)} loading={!focusInfo && !recordMissing} missing={recordMissing} onTrace={() => go({ node: focusRecord, pins, publisher, mode: "upstream", from: focusRecord })}

@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import test, { before } from "node:test";
 import { gzipSync } from "node:zlib";
+import { RETIRED_RECORD_TYPES } from "../src/shared/record-acceptance.mjs";
 import { parseCciXml } from "../tools/importers/cci-adapter.mjs";
 import {
   parseOlirCsv,
@@ -548,14 +549,16 @@ test("epic 2 graph build emits a complete bounded library search artifact", () =
     "tactic",
     "trunk",
   ]);
-  const publicRecordCount = nodes.filter((node) => !structuralTypes.has(node.node_type)).length;
+  // Retired record types (issue 279) stay in the graph but are not search records.
+  const isSearchable = (type) => !structuralTypes.has(type) && !RETIRED_RECORD_TYPES.has(type);
+  const publicRecordCount = nodes.filter((node) => isSearchable(node.node_type)).length;
 
   assert.equal(artifact.schema_version, "1.0");
   assert.equal(artifact.library_search.document_count, publicRecordCount);
   assert.ok(Array.isArray(artifact.library_search.documents));
   assert.ok(
     artifact.library_search.documents.every(
-      (document) => !structuralTypes.has(document.object_type),
+      (document) => isSearchable(document.object_type),
     ),
     "Library search must contain publisher records, not synthetic grouping nodes",
   );

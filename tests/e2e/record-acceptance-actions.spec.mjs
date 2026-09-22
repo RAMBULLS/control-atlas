@@ -47,10 +47,10 @@ test("a structural hub still lists what the publisher published beneath it", asy
   expect(await inventory.locator("li a").count()).toBeGreaterThan(0);
 });
 
-test("helper records do not offer Compare or Templates", async ({ page }) => {
+test("records with no mapping to compare do not offer Compare or Templates", async ({ page }) => {
   for (const route of [
-    "/#/record/atlas/TRUNK",
-    "/#/record/nist-zt/COLLABORATOR-APPGATE-835EC7F121",
+    "/#/record/dod-zt/DOC-OVERLAYS",
+    "/#/record/cmmc-2/LEVEL-1",
   ]) {
     await openRecord(page, route);
     const menu = await openActionsMenu(page);
@@ -135,4 +135,86 @@ test("guidance-only control context keeps every paragraph and still links the co
   await expect(published).toContainText("The interrelated controls of AC-20, CA-3, and SA-9 should be differentiated as follows");
   await expect(published).toContainText("SA-9 describes the responsibilities of external system owners");
   await expect(page.locator('[data-record-section="underlying-control"]')).toBeVisible();
+});
+
+// Issue #279 retirements: the graph keeps these records, but they are no longer
+// public record pages. Old URLs must land somewhere useful, never on a 404.
+/** @type {Array<[string, string, RegExp]>} */
+const RETIRED_ROUTES = [
+  ["catalog root", "/#/record/cmmc-2/CATALOG", /#\/library\/publication\/cmmc-2/],
+  ["Atlas trunk", "/#/record/atlas/TRUNK", /#\/atlas\/atlas:TRUNK/],
+  ["Atlas limb", "/#/record/atlas/LIMB-ARCHITECTURE", /#\/atlas\/atlas:LIMB-ARCHITECTURE/],
+  ["regulation", "/#/record/authority/32-CFR-170", /#\/sources\?source=authority-32-cfr-170/],
+  ["statute", "/#/record/authority/USC-40-11331", /#\/sources\?source=authority-usc-40-11331/],
+  ["policy directive", "/#/record/authority/OMB-CIRCULAR-A-130", /#\/sources\?source=authority-omb-circular-a-130/],
+  ["mapping workbook", "/#/record/nist-zt/MAPPING-DOCUMENT-NIST-SP-1800-35-CRITICAL-SOFTWARE-MAPPINGS-F3ED12702F", /#\/sources\?source=nist-sp-1800-35-critical-software-mappings/],
+];
+
+test("retired record URLs redirect to a real destination, never a not-found page", async ({ page }) => {
+  for (const [name, route, destination] of RETIRED_ROUTES) {
+    attachPageDiagnostics(page);
+    await page.goto(route);
+    await waitForAppReady(page, { allowPartial: true });
+    await dismissOnboarding(page);
+    await expect(page, name).toHaveURL(destination);
+    await expect(page.getByRole("heading", { name: "Record not found" }), name).toHaveCount(0);
+    await expect(page.locator('[data-record-retired="true"]'), name).toHaveCount(0);
+    await expect(page.locator("main"), name).toBeVisible();
+  }
+});
+
+test("a redirect replaces history, so Back does not return to the retired URL", async ({ page }) => {
+  attachPageDiagnostics(page);
+  await page.goto("/#/library");
+  await waitForAppReady(page, { allowPartial: true });
+  await dismissOnboarding(page);
+  const before = page.url();
+  await page.evaluate(() => { globalThis.location.hash = "#/record/cmmc-2/CATALOG"; });
+  await expect(page).toHaveURL(/#\/library\/publication\/cmmc-2/);
+  await page.goBack();
+  await expect(page).toHaveURL(before);
+});
+
+test("retired helper entities are out of Library search, and public product pages do not redirect", async ({ page }) => {
+  attachPageDiagnostics(page);
+  await page.goto("/#/library?q=Appgate");
+  await waitForAppReady(page, { allowPartial: true });
+  await dismissOnboarding(page);
+  await expect(page.getByRole("link", { name: /Appgate Headless Client/ }).first()).toBeVisible();
+  const hrefs = await page.locator("main a[href*='/record/']").evaluateAll((links) => links.map((link) => link.getAttribute("href") || ""));
+  expect(hrefs.length).toBeGreaterThan(0);
+  expect(hrefs.filter((href) => /COLLABORATOR-|MAPPING-CONTRIBUTOR-|MAPPING-DOCUMENT-/.test(href))).toEqual([]);
+
+  const product = "/#/record/nist-zt/PRODUCT-COMPONENT-APPGATE-APPGATE-HEADLESS-CLIENT-RESOURCE-PROTECTION-CL-E65DEBF0E8";
+  await page.goto(product);
+  await waitForAppReady(page, { allowPartial: true });
+  await expect(page).toHaveURL(/PRODUCT-COMPONENT-APPGATE/);
+  await expect(page.locator('[data-template="E"]')).toBeVisible();
+});
+
+test("Atlas does not offer a full-record link for records that retire into Atlas", async ({ page }) => {
+  attachPageDiagnostics(page);
+  await page.goto("/#/record/atlas/TRUNK");
+  await waitForAppReady(page, { allowPartial: true });
+  await dismissOnboarding(page);
+  await expect(page).toHaveURL(/#\/atlas\/atlas:TRUNK/);
+  await expect(page.getByRole("heading", { name: "TRUNK" }).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: /(Open|Read) the full record/ })).toHaveCount(0);
+
+  // Positive control: a public record still offers it.
+  await page.goto("/#/atlas/nist-800-53:AC-2");
+  await waitForAppReady(page, { allowPartial: true });
+  await expect(page.getByRole("link", { name: /(Open|Read) the full record/ }).first()).toBeVisible();
+});
+
+test("a publication's Browse all list and families leave out retired helper records", async ({ page }) => {
+  attachPageDiagnostics(page);
+  await page.goto("/#/library/publication/nist-zt?browseAll=true");
+  await waitForAppReady(page, { allowPartial: true });
+  await dismissOnboarding(page);
+  await expect(page.getByRole("link", { name: /Product component/ }).first()).toBeVisible();
+  await expect(page.locator("main")).not.toContainText("Technology Collaborators");
+  await expect(page.locator("main")).not.toContainText("Mapping Workbook Contributors");
+  await expect(page.locator("main")).not.toContainText("Mapping Workbooks");
+  await expect(page.getByRole("link", { name: /Technology collaborator|Mapping workbook contributor/ })).toHaveCount(0);
 });

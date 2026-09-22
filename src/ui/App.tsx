@@ -615,6 +615,7 @@ export function App() {
     nextView: ViewState["view"],
     patch: Partial<ViewState> = {},
     reset = false,
+    replace = false,
   ) {
     closeOverlays();
     const current = latestNavStateRef.current;
@@ -634,7 +635,7 @@ export function App() {
     }
     if (changesWorkspace) pushNavigationRef.current = true;
     latestNavStateRef.current = nextState;
-    routerNavigate(nextLocation);
+    routerNavigate(nextLocation, replace ? { replace: true } : undefined);
     if (changesWorkspace) scrollToTop();
   }
 

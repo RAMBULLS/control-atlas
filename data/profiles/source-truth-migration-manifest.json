@@ -559,6 +559,12 @@
       "status": "active"
     },
     {
+      "old_label": "describes",
+      "predicate": "describes",
+      "profile_id": "assertion.describes",
+      "status": "active"
+    },
+    {
       "old_label": "extends",
       "predicate": "extends",
       "profile_id": "assertion.extends",

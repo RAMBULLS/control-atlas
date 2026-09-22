@@ -41,33 +41,33 @@ test('detail titles resolve official entity names instead of IDs', async ({ page
 
 test('generated record routes keep stable history while browser titles distinguish record type', async ({ page }) => {
   test.setTimeout(120_000);
-  const collaboratorRoute = '/#/record/nist-zt/COLLABORATOR-APPGATE-835EC7F121';
-  const mappingRoute = '/#/record/nist-zt/MAPPING-CONTRIBUTOR-APPGATE-835EC7F121';
+  const productRoute = '/#/record/nist-zt/PRODUCT-COMPONENT-APPGATE-APPGATE-HEADLESS-CLIENT-RESOURCE-PROTECTION-CL-E65DEBF0E8';
+  const iotRoute = '/#/record/nist-iot-cybersecurity/DOMAIN-NON-TECHNICAL-MANUFACTURER-CAPABILITIES-1925D28A4B';
 
   for (const width of [320, 375, 390, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: width < 768 ? 844 : 1024 });
-    await gotoApp(page, collaboratorRoute);
+    await gotoApp(page, productRoute);
     await waitForAppReady(page);
     await dismissOnboarding(page);
     await expect(page).toHaveTitle(
-      'Appgate — Technology collaborator · NIST Zero Trust — Control Atlas',
+      'Appgate Headless Client — Resource Protection – Cloud Workload Protection — Product component · NIST Zero Trust — Control Atlas',
     );
-    await expect(page).toHaveURL(/COLLABORATOR-APPGATE-835EC7F121$/);
+    await expect(page).toHaveURL(/PRODUCT-COMPONENT-APPGATE-APPGATE-HEADLESS-CLIENT-RESOURCE-PROTECTION-CL-E65DEBF0E8$/);
 
-    await gotoApp(page, mappingRoute);
+    await gotoApp(page, iotRoute);
     await waitForAppReady(page);
     await expect(page).toHaveTitle(
-      'Appgate — Mapping workbook contributor · NIST Zero Trust — Control Atlas',
+      'Non-Technical Manufacturer Capabilities — IoT capability domain · NIST IoT Device Cybersecurity — Control Atlas',
     );
   }
 
   await page.goBack();
-  await expect(page).toHaveURL(/COLLABORATOR-APPGATE-835EC7F121$/);
+  await expect(page).toHaveURL(/PRODUCT-COMPONENT-APPGATE-APPGATE-HEADLESS-CLIENT-RESOURCE-PROTECTION-CL-E65DEBF0E8$/);
   await expect(page).toHaveTitle(
-    'Appgate — Technology collaborator · NIST Zero Trust — Control Atlas',
+    'Appgate Headless Client — Resource Protection – Cloud Workload Protection — Product component · NIST Zero Trust — Control Atlas',
   );
   await page.goForward();
-  await expect(page).toHaveURL(/MAPPING-CONTRIBUTOR-APPGATE-835EC7F121$/);
+  await expect(page).toHaveURL(/DOMAIN-NON-TECHNICAL-MANUFACTURER-CAPABILITIES-1925D28A4B$/);
 });
 
 test('legacy public aliases canonicalize while retired structural aliases remain not found', async ({ page }) => {

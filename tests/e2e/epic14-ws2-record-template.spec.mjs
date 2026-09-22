@@ -40,18 +40,6 @@ test("generated record identities stay human-first at every governed width", asy
   test.setTimeout(180_000);
   const generatedRecords = [
     {
-      route: "/#/record/nist-zt/COLLABORATOR-APPGATE-835EC7F121",
-      primary: "Appgate",
-      context: "Technology collaborator · NIST Zero Trust",
-      stableId: "COLLABORATOR-APPGATE-835EC7F121",
-    },
-    {
-      route: "/#/record/nist-zt/MAPPING-CONTRIBUTOR-APPGATE-835EC7F121",
-      primary: "Appgate",
-      context: "Mapping workbook contributor · NIST Zero Trust",
-      stableId: "MAPPING-CONTRIBUTOR-APPGATE-835EC7F121",
-    },
-    {
       route: "/#/record/nist-zt/PRODUCT-COMPONENT-APPGATE-APPGATE-HEADLESS-CLIENT-RESOURCE-PROTECTION-CL-E65DEBF0E8",
       primary: "Appgate Headless Client — Resource Protection – Cloud Workload Protection",
       context: "Product component · NIST Zero Trust",

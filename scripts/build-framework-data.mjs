@@ -49,6 +49,7 @@ import { validateAuthoritySpine } from "../src/app/authority-spine.mjs";
 import { referencedNistFamilies } from "../src/shared/nist-families.mjs";
 import { sourceNativeIdentityCategory } from "../src/shared/record-identity.mjs";
 import { isComparisonCapableEdge } from "../src/shared/compare-capability.mjs";
+import { RETIRED_RECORD_TYPES } from "../src/shared/record-acceptance.mjs";
 import {
   missingRequiredRecordFields,
   recordPresentationContract,
@@ -2859,7 +2860,9 @@ function buildLibraryDocuments(graph) {
       publishedConnectionCatalogs.set(nodeId, catalogs);
     }
   }
-  return graph.nodes.filter((node) => !NON_RECORD_NODE_TYPES.has(node.node_type)).map((node) => {
+  // Retired record types keep their nodes, edges and evidence in the graph; they
+  // are only left out of the Library search documents (issue 279).
+  return graph.nodes.filter((node) => !NON_RECORD_NODE_TYPES.has(node.node_type) && !RETIRED_RECORD_TYPES.has(node.node_type)).map((node) => {
     const source = sourceById.get(node.source_id);
     const itemId = node.metadata?.item_id || node.id;
     const title = node.metadata?.title || node.label;

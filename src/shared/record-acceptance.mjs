@@ -110,6 +110,66 @@ export function dispositionFor(catalogId, recordType) {
 }
 
 /**
+ * Retirement: a pair whose disposition is FOLD, SOURCE-ONLY or REMOVE keeps its
+ * graph node, edges, evidence and provenance, but is not a public record page.
+ * Its old URL redirects to the destination that does the job, and it is left
+ * out of Library search. The destination is per record type; a test requires
+ * one for every retired pair and none for a pair that stays public.
+ */
+const RETIRED_DISPOSITIONS = new Set([
+  RECORD_DISPOSITIONS.FOLD_INTO_PARENT,
+  RECORD_DISPOSITIONS.SOURCE_ONLY,
+  RECORD_DISPOSITIONS.REMOVE_FROM_PUBLIC_DISCOVERY,
+]);
+
+const toSources = { view: "sources", label: "the source record", patch: ({ sourceId }) => ({ source: sourceId }) };
+const RETIREMENT_DESTINATIONS = Object.freeze({
+  catalog: { view: "catalog-detail", label: "the publication page", patch: ({ catalogId }) => ({ catalog: catalogId }) },
+  limb: { view: "atlas-map", label: "Atlas", patch: ({ id }) => ({ node: id }) },
+  trunk: { view: "atlas-map", label: "Atlas", patch: ({ id }) => ({ node: id }) },
+  policy_directive: toSources,
+  regulation: toSources,
+  statute: toSources,
+  zt_mapping_document: toSources,
+  zt_collaborator: { view: "search", label: "Library search", patch: ({ title }) => ({ query: title }) },
+  zt_mapping_contributor: { view: "search", label: "Library search", patch: ({ title }) => ({ query: title }) },
+});
+
+export function isRetiredRecordPair(catalogId, recordType) {
+  const entry = dispositionFor(catalogId, recordType);
+  return Boolean(entry && RETIRED_DISPOSITIONS.has(entry.disposition));
+}
+
+/** Record types with no public page in any registered catalog. */
+export const RETIRED_RECORD_TYPES = Object.freeze(new Set(
+  [...new Set(SUPPORTED_RECORD_CONTRACT_KEYS.map((key) => key.split(":")[1]))]
+    .filter((type) => SUPPORTED_RECORD_CONTRACT_KEYS
+      .filter((key) => key.endsWith(`:${type}`))
+      .every((key) => isRetiredRecordPair(...key.split(":")))),
+));
+
+/** True for record types whose retired page is Atlas itself, so Atlas must not link back to it. */
+export function retiresIntoAtlas(recordType) {
+  return RETIRED_RECORD_TYPES.has(recordType) && RETIREMENT_DESTINATIONS[recordType]?.view === "atlas-map";
+}
+
+export function retirementDestinationFor(recordType) {
+  return RETIREMENT_DESTINATIONS[recordType] || null;
+}
+
+/** Where an old record URL goes, or null when the pair stays a public page. */
+export function recordRetirement({ catalogId, recordType, id, sourceId = "", title = "" }) {
+  if (!isRetiredRecordPair(catalogId, recordType)) return null;
+  const destination = RETIREMENT_DESTINATIONS[recordType];
+  if (!destination) return null;
+  return Object.freeze({
+    view: destination.view,
+    label: destination.label,
+    patch: Object.freeze(destination.patch({ catalogId, id, sourceId, title })),
+  });
+}
+
+/**
  * The Templates page only offers catalogs that have a build context, so a
  * template handoff from any other catalog lands on a page with nothing
  * selected. Keep this in step with BUILD_SOURCE_CONTEXTS (a test enforces it).
@@ -260,7 +320,7 @@ export function createRecordMatrixAccumulator() {
   /**
    * @param {{ sourceLabel?: (sourceId: string) => string, searchIncluded?: (recordType: string) => boolean }} [options]
    */
-  const finish = ({ sourceLabel = () => "", searchIncluded = (type) => !NON_RECORD_NODE_TYPES.has(type) } = {}) => {
+  const finish = ({ sourceLabel = () => "", searchIncluded = (type) => !NON_RECORD_NODE_TYPES.has(type) && !RETIRED_RECORD_TYPES.has(type) } = {}) => {
     const rows = [...pairs.values()].map((pair) => {
       const nodes = [...pair.nodes.values()].sort((a, b) => a.id.localeCompare(b.id));
       const pick = (predicate, rank) => nodes.filter(predicate).sort((a, b) => rank(b) - rank(a) || a.id.localeCompare(b.id))[0] || null;
@@ -299,7 +359,8 @@ export function createRecordMatrixAccumulator() {
         unconnected_id: unconnected?.id || null,
         publisher: sourceLabel(topSource),
         library_search_included: searchIncluded(pair.recordType),
-        standalone_route: true,
+        standalone_route: !isRetiredRecordPair(pair.catalogId, pair.recordType),
+        redirects_to: retirementDestinationFor(pair.recordType)?.view || null,
         sections_declared: pair.contract.sections.map((entry) => entry.heading),
         sections_populated: representative?.populatedSections ?? 0,
         facts_declared: [...pair.contract.metadata_facts],

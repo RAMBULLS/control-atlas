@@ -45,30 +45,23 @@ for (const [label, width, height] of viewports) {
   });
 }
 
-test('NIST SP 1800-35 keeps official technology collaborators distinct from mapping workbook labels', async ({ page }) => {
-  attachPageDiagnostics(page);
-  await page.goto('/#/record/nist-zt/COLLABORATOR-APPGATE-835EC7F121');
-  await waitForAppReady(page);
-  await dismissOnboarding(page);
-
-  await expect(page.getByRole('heading', { name: 'Appgate', level: 1 })).toBeVisible();
-  await expect(page.locator('.record-official-name')).toHaveCount(0);
-  await expect(page.locator('.record-identity-context')).toHaveText(
-    'Technology collaborator · NIST Zero Trust',
-  );
-  await expect(page.getByText('Control Atlas stable ID', { exact: true })).toHaveCount(0);
-  await expect(page.locator('[data-source-field="publisher_context"]'))
-    .toContainText('The Technology Collaborators who participated in this project');
-  await expect(page.getByText('Mapping Workbook Contributors', { exact: true })).toHaveCount(0);
-
-  await page.goto('/#/record/nist-zt/MAPPING-CONTRIBUTOR-APPGATE-835EC7F121');
-  await waitForAppReady(page);
-  await expect(page.getByRole('heading', { name: 'Appgate', level: 1 })).toBeVisible();
-  await expect(page.locator('.record-official-name')).toHaveCount(0);
-  await expect(page.locator('.record-identity-context')).toHaveText(
-    'Mapping workbook contributor · NIST Zero Trust',
-  );
-  await expect(page.locator('[data-source-field="publisher_field"]')).toContainText('Collaborator');
-  await expect(page.locator('[data-source-field="publisher_context"]')).toHaveCount(0);
-  await expect(page.locator('[data-record-source-error]')).toHaveCount(0);
+test('NIST SP 1800-35 collaborator and mapping-contributor pages fold into vendor search', async ({ page }) => {
+  // Both are helper entities: the official collaborator roster entry carries the
+  // same boilerplate for every vendor and the mapping-workbook label only parents
+  // product components. The graph keeps both; the public destination is the
+  // vendor's product components.
+  for (const route of [
+    '/#/record/nist-zt/COLLABORATOR-APPGATE-835EC7F121',
+    '/#/record/nist-zt/MAPPING-CONTRIBUTOR-APPGATE-835EC7F121',
+  ]) {
+    attachPageDiagnostics(page);
+    await page.goto(route);
+    await waitForAppReady(page, { allowPartial: true });
+    await dismissOnboarding(page);
+    await expect(page, route).toHaveURL(/#\/library\?q=Appgate/);
+    await expect(page.locator('[data-record-source-error]')).toHaveCount(0);
+    await expect(page.getByRole('link', { name: /Appgate Headless Client/ }).first(), route).toBeVisible();
+    await expect(page.locator('main'), route).not.toContainText('Technology collaborator');
+    await expect(page.locator('main'), route).not.toContainText('Mapping workbook contributor');
+  }
 });

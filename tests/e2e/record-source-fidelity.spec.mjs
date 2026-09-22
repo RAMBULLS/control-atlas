@@ -14,12 +14,11 @@ const roleRecords = [
   ["atomic_record", "/#/record/csf-2/PR.AA-01"],
   ["container", "/#/record/csf-2/CATEGORY-PR.AA"],
   ["publication_document", "/#/record/dod-zt/DOC-OVERLAYS"],
-  ["entity_contributor", "/#/record/nist-zt/COLLABORATOR-APPGATE-835EC7F121"],
   ["assessment_question", "/#/record/microsoft-zt-maturity/MSZT-1-1"],
   ["implementation_artifact", "/#/record/nist-zt/SP180035-E1B1"],
 ];
 
-test("all six semantic roles use the governed universal record shell", async ({ page }) => {
+test("every public semantic role uses the governed universal record shell", async ({ page }) => {
   for (const [role, route] of roleRecords) {
     await openRecord(page, route);
     await expect(page.locator(`.record-template[data-page-role="${role}"]`)).toBeVisible();
@@ -150,19 +149,15 @@ test("short record headers do not absorb the height of the desktop rail", async 
   }
 });
 
-test("publication records expose their actual contents in publisher order", async ({ page }) => {
-  await openRecord(page, "/#/record/csf-2/CATALOG");
-  await expect(page.locator('[data-page-role="publication_document"]')).toBeVisible();
-  const inventory = page.locator('[data-record-section="child-inventory"]');
-  await expect(inventory.getByRole("heading", { name: "Contents", exact: true })).toBeVisible();
-  const children = inventory.locator("li a");
-  await expect(children).toHaveCount(6);
-  const hrefs = await children.evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  expect(hrefs.map((href) => href.split("/").at(-1))).toEqual([
-    "FUNCTION-GV", "FUNCTION-ID", "FUNCTION-PR", "FUNCTION-DE", "FUNCTION-RS", "FUNCTION-RC",
-  ]);
-  await children.first().click();
-  await expect(page).toHaveURL(/#\/record\/csf-2\/FUNCTION-GV$/);
+test("a publication's raw catalog record redirects to its publication page", async ({ page }) => {
+  attachPageDiagnostics(page);
+  await page.goto("/#/record/csf-2/CATALOG");
+  await waitForAppReady(page, { allowPartial: true });
+  await dismissOnboarding(page);
+  await expect(page).toHaveURL(/#\/library\/publication\/csf-2/);
+  await expect(page.locator('[data-page-role="publication_document"]')).toHaveCount(0);
+  // The publisher's first function is still a public container page.
+  await openRecord(page, "/#/record/csf-2/FUNCTION-GV");
   await expect(page.locator('[data-page-role="container"]')).toBeVisible();
 });
 
@@ -222,7 +217,4 @@ test("compact finding identity generalizes to SRGs without changing other record
   await expect(page.locator('[data-source-field="description"]')).not.toBeEmpty();
   await openRecord(page, "/#/record/nist-800-53/AC-2");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("NIST AC-2");
-  await openRecord(page, "/#/record/nist-zt/COLLABORATOR-APPGATE-835EC7F121");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Appgate");
-  await expect(page.locator(".record-identity-context")).toHaveText("Technology collaborator · NIST Zero Trust");
 });

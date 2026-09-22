@@ -10,7 +10,7 @@ import {
   relationshipTreatmentFor,
 } from "../../shared/record-presentation.mjs";
 import { isComparisonCapableEdge } from "../../shared/compare-capability.mjs";
-import { recordActionPolicy, recordShowsChildInventory } from "../../shared/record-acceptance.mjs";
+import { recordActionPolicy, recordRetirement, recordShowsChildInventory } from "../../shared/record-acceptance.mjs";
 import { controlContextLabel, controlContextTargetId } from "../../shared/record-control-context.mjs";
 import authoritySpine from "../../../data/curated/authority-spine.json";
 import { AcronymText } from "../components/AccessibleTerm";
@@ -71,7 +71,7 @@ function RecordNotFound(props: {
 export function ObjectDetailPage(props: {
   bundle: RuntimeBundle;
   state: Extract<ViewState, { view: "library-detail" }>;
-  onNavigate: (view: ViewState["view"], patch?: Partial<ViewState>) => void;
+  onNavigate: (view: ViewState["view"], patch?: Partial<ViewState>, reset?: boolean, replace?: boolean) => void;
   onOpenGlossary: (termId?: string) => void;
   onOpenNode: (nodeId: string) => void;
 }) {
@@ -86,7 +86,27 @@ export function ObjectDetailPage(props: {
     return () => { if (shareTimer.current) clearTimeout(shareTimer.current); };
   }, [state.node]);
 
+  // A retired record keeps its data but not its page: send the old URL to the
+  // destination that does the job, replacing history so Back is not trapped.
+  const retirement = node && document ? recordRetirement({
+    catalogId: document.catalog_id, recordType: String(node.node_type || document.object_type || ""),
+    id: node.id, sourceId: String(document.source_id || node.source_id || ""),
+    title: String(node.metadata?.title || document.title || ""),
+  }) : null;
+  const retirementKey = retirement ? `${retirement.view}:${JSON.stringify(retirement.patch)}` : "";
+  useEffect(() => {
+    if (retirement) onNavigate(retirement.view as ViewState["view"], retirement.patch as Partial<ViewState>, true, true);
+  }, [retirementKey]);
+
   if (!node || !document) return <RecordNotFound attemptedId={state.node} onNavigate={onNavigate} />;
+  if (retirement) {
+    return (
+      <section className="notice" data-record-retired="true" role="status">
+        <p>This page has moved. Opening {retirement.label}…</p>
+        <AppLink onNavigate={onNavigate} patch={retirement.patch as Partial<ViewState>} variant="secondary" view={retirement.view as ViewState["view"]}>Open {retirement.label}</AppLink>
+      </section>
+    );
+  }
 
   const source = bundle.runtime.getSource(document.source_id || node.source_id);
   const catalogs = bundle.catalogSummaries?.length ? bundle.catalogSummaries : bundle.runtime.getCatalogs();

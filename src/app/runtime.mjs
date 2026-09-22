@@ -2,6 +2,7 @@ import {
   isComparisonCapableEdge,
   mappingSourceIdsForEdge,
 } from "../shared/compare-capability.mjs";
+import { RETIRED_RECORD_TYPES } from "../shared/record-acceptance.mjs";
 
 function normalize(value) {
   return String(value || "")
@@ -602,8 +603,10 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
       const tierLabels = tierType
         ? CATALOG_TIER_LABEL_OVERRIDES[id] || TIER_TYPE_LABELS[tierType]
         : null;
+      // Retired record types stay in the graph but are not public records, so the
+      // count a reader sees matches what they can browse (issue 279).
       const leafRecordCount = catalogNodes.filter(
-        (node) => !NON_LEAF_NODE_TYPES.has(node.node_type),
+        (node) => !NON_LEAF_NODE_TYPES.has(node.node_type) && !RETIRED_RECORD_TYPES.has(node.node_type),
       ).length;
       const tierCount = tierType
         ? catalogNodes.filter((node) => node.node_type === tierType).length

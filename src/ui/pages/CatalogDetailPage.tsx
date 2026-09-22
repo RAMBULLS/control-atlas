@@ -4,6 +4,7 @@ import {
   IconSearch,
 } from "@tabler/icons-react";
 import { useLayoutEffect, useMemo, useState } from "react";
+import { RETIRED_RECORD_TYPES } from "../../shared/record-acceptance.mjs";
 
 import { Button, ButtonLink } from "../components/lsm/Button";
 import { AppLink } from "../components/AppLink";
@@ -106,7 +107,7 @@ export function CatalogDetailPage(props: {
   const tierLabelHeading = `${tierLabel.charAt(0).toUpperCase()}${tierLabel.slice(1)}`;
   const records = bundle.runtime
     .getNodes({ catalog_id: catalog.id })
-    .filter((record: any) => !NON_LEAF_NODE_TYPES.has(record.node_type));
+    .filter((record: any) => !NON_LEAF_NODE_TYPES.has(record.node_type) && !RETIRED_RECORD_TYPES.has(record.node_type));
   const publishedGroups = bundle.catalogPublishedGroups || [];
   const families = [
     ...new Set(

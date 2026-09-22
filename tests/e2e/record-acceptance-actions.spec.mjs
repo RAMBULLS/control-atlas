@@ -206,3 +206,15 @@ test("Atlas does not offer a full-record link for records that retire into Atlas
   await waitForAppReady(page, { allowPartial: true });
   await expect(page.getByRole("link", { name: /(Open|Read) the full record/ }).first()).toBeVisible();
 });
+
+test("a publication's Browse all list and families leave out retired helper records", async ({ page }) => {
+  attachPageDiagnostics(page);
+  await page.goto("/#/library/publication/nist-zt?browseAll=true");
+  await waitForAppReady(page, { allowPartial: true });
+  await dismissOnboarding(page);
+  await expect(page.getByRole("link", { name: /Product component/ }).first()).toBeVisible();
+  await expect(page.locator("main")).not.toContainText("Technology Collaborators");
+  await expect(page.locator("main")).not.toContainText("Mapping Workbook Contributors");
+  await expect(page.locator("main")).not.toContainText("Mapping Workbooks");
+  await expect(page.getByRole("link", { name: /Technology collaborator|Mapping workbook contributor/ })).toHaveCount(0);
+});

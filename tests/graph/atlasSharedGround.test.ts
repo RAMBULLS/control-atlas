@@ -125,7 +125,10 @@ test("derived overlaps are kept out of the published edge set", () => {
   // the other is what the records happen to say.
   const ids = new Set(artifact.frameworks.edges.map((edge) => edge.id));
   for (const edge of shared) assert.ok(!ids.has(edge.id));
-  assert.equal(artifact.frameworks.edges.length, 27);
+  // Issue 279: FedRAMP control context now carries a real published edge to
+  // the SP 800-53 control it annotates, which is a genuinely new
+  // fedramp-2026 <-> nist-800-53 framework pairing (there was none before).
+  assert.equal(artifact.frameworks.edges.length, 28);
 });
 
 test("coincidental single-record overlaps are not reported", () => {

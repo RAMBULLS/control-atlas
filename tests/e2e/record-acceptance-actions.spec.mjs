@@ -123,28 +123,31 @@ test("a long selection is capped with a way to see the rest in Atlas", async ({ 
   await expect(section.getByRole("link", { name: /more — Explore in Atlas/ })).toBeVisible();
 });
 
-test("FedRAMP control context leads with the control, reads parameters plainly and links the control", async ({ page }) => {
-  await openRecord(page, "/#/record/fedramp-2026/CTL-AC-06-01");
-  await expect(page.getByRole("heading", { name: "FedRAMP AC-6.1 parameters and guidance", level: 1 })).toBeVisible();
-  await expect(page.locator(".record-official-name")).toHaveText("AC-06-01 control context");
-  const published = page.locator('[data-source-field="description"]');
-  await expect(published.getByRole("heading", { name: "Parameters and guidance", level: 2 })).toBeVisible();
-  await expect(published.locator("li strong").first()).toHaveText(/^AC-6\.1 parameter \d$/);
-  // The publisher's identifier stays available, but is not the lead.
-  await expect(published.locator("li code").first()).toContainText("_odp");
-  const underlying = page.locator('[data-record-section="underlying-control"]');
-  await expect(underlying.getByRole("heading", { name: "Underlying control", level: 2 })).toBeVisible();
-  await underlying.getByRole("link").click();
+test("FedRAMP control context redirects to its control and reads parameters plainly there", async ({ page }) => {
+  attachPageDiagnostics(page);
+  await page.goto("/#/record/fedramp-2026/CTL-AC-06-01");
+  await waitForAppReady(page, { allowPartial: true });
+  await dismissOnboarding(page);
+  await expect(page).toHaveURL(/#\/record\/nist-800-53\/AC-6\.1/);
   await expect(page.getByRole("heading", { name: "NIST AC-6.1", level: 1 })).toBeVisible();
+  const context = page.locator('[data-record-section="fedramp-context"]');
+  await expect(context.getByRole("heading", { name: "FedRAMP 2026 parameters and guidance", level: 2 })).toBeVisible();
+  await expect(context.locator("li strong").first()).toHaveText(/^AC-6\.1 parameter \d$/);
+  // The publisher's identifier stays available, but is not the lead.
+  await expect(context.locator("li code").first()).toContainText("_odp");
+  // It is not repeated as a generic related record.
+  await expect(page.locator('[data-record-section="related-records"]')).not.toContainText("CTL-AC-06-01");
 });
 
-test("guidance-only control context keeps every paragraph and still links the control", async ({ page }) => {
-  await openRecord(page, "/#/record/fedramp-2026/CTL-AC-20");
-  await expect(page.getByRole("heading", { name: "FedRAMP AC-20 parameters and guidance", level: 1 })).toBeVisible();
-  const published = page.locator('[data-source-field="description"]');
-  await expect(published).toContainText("The interrelated controls of AC-20, CA-3, and SA-9 should be differentiated as follows");
-  await expect(published).toContainText("SA-9 describes the responsibilities of external system owners");
-  await expect(page.locator('[data-record-section="underlying-control"]')).toBeVisible();
+test("guidance-only control context keeps every paragraph once folded onto its control", async ({ page }) => {
+  attachPageDiagnostics(page);
+  await page.goto("/#/record/fedramp-2026/CTL-AC-20");
+  await waitForAppReady(page, { allowPartial: true });
+  await dismissOnboarding(page);
+  await expect(page).toHaveURL(/#\/record\/nist-800-53\/AC-20/);
+  const context = page.locator('[data-record-section="fedramp-context"]');
+  await expect(context).toContainText("The interrelated controls of AC-20, CA-3, and SA-9 should be differentiated as follows");
+  await expect(context).toContainText("SA-9 describes the responsibilities of external system owners");
 });
 
 // Issue #279 retirements: the graph keeps these records, but they are no longer
@@ -158,6 +161,7 @@ const RETIRED_ROUTES = [
   ["statute", "/#/record/authority/USC-40-11331", /#\/sources\?source=authority-usc-40-11331/],
   ["policy directive", "/#/record/authority/OMB-CIRCULAR-A-130", /#\/sources\?source=authority-omb-circular-a-130/],
   ["mapping workbook", "/#/record/nist-zt/MAPPING-DOCUMENT-NIST-SP-1800-35-CRITICAL-SOFTWARE-MAPPINGS-F3ED12702F", /#\/sources\?source=nist-sp-1800-35-critical-software-mappings/],
+  ["control context", "/#/record/fedramp-2026/CTL-AC-06-01", /#\/record\/nist-800-53\/AC-6\.1/],
 ];
 
 test("retired record URLs redirect to a real destination, never a not-found page", async ({ page }) => {

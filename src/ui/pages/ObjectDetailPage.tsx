@@ -11,13 +11,13 @@ import {
 } from "../../shared/record-presentation.mjs";
 import { isComparisonCapableEdge } from "../../shared/compare-capability.mjs";
 import { recordActionPolicy, recordRetirement, recordShowsChildInventory } from "../../shared/record-acceptance.mjs";
-import { controlContextLabel, controlContextTargetId } from "../../shared/record-control-context.mjs";
+import { CONTROL_CONTEXT_RELATIONSHIP_TYPE } from "../../shared/record-control-context.mjs";
 import authoritySpine from "../../../data/curated/authority-spine.json";
 import { AcronymText } from "../components/AccessibleTerm";
 import { AppLink } from "../components/AppLink";
 import { CanonicalBreadcrumb } from "../components/CanonicalBreadcrumb";
 import { Button, ButtonLink } from "../components/lsm";
-import { publishedSectionsWithContent, RecordNativeFacts, RecordPublishedText } from "../components/RecordPublishedText";
+import { publishedSectionsWithContent, RecordNativeFacts, RecordPublishedText, SourceSectionContent } from "../components/RecordPublishedText";
 import { RecordJumpButton, RecordRailSection, RecordSectionNavigation } from "../components/RecordDetailSupport";
 import { TagExplanations, TaxonomyContext } from "../components/TaxonomyContext";
 import { catalogDisplayNameFor, catalogProfileFor } from "../lib/catalogProfiles";
@@ -135,8 +135,13 @@ export function ObjectDetailPage(props: {
   const presentation = recordPresentationContract(document.catalog_id, node.node_type || document.object_type);
   // What a baseline selects or a program level requires is the record's own
   // content, so it gets its own section and is not repeated as a related link.
+  // The same is true for FedRAMP control context, in the other direction: it
+  // has already been folded onto this page, so it never appears as a plain
+  // related link (which would just bounce back here once its own page redirects).
   const selectionTypes = new Set(presentation.selections.map((entry: { relationship_type: string }) => entry.relationship_type));
-  const relatedEdges = edges.filter((edge: any) => !(edge.source_node_id === node.id && selectionTypes.has(edge.relationship_type)));
+  const relatedEdges = edges.filter((edge: any) =>
+    !(edge.source_node_id === node.id && selectionTypes.has(edge.relationship_type))
+    && edge.relationship_type !== CONTROL_CONTEXT_RELATIONSHIP_TYPE);
   const connectionGroups = buildRecordConnectionGroups(node.id, document.catalog_id, relatedEdges, bundle.runtime.getNode, (catalogId) => {
     const relatedCatalog = catalogs.find((entry: any) => entry.id === catalogId);
     return catalogDisplayNameFor(catalogId, relatedCatalog?.name || "");
@@ -165,10 +170,17 @@ export function ObjectDetailPage(props: {
     .filter((edge: any) => edge.relationship_class === "structural" && edge.source_node_id === node.id)
     .sort((left: any, right: any) => (left.publisher_order ?? Number.MAX_SAFE_INTEGER) - (right.publisher_order ?? Number.MAX_SAFE_INTEGER))
     .map((edge: any) => bundle.runtime.getNode(edge.target_node_id)).filter(Boolean);
-  // FedRAMP control context is published for one SP 800-53 control. That control
-  // is not loaded with this record (no graph edge joins them), so the link is
-  // built from the id; a corpus test proves every target exists.
-  const contextTargetId = presentation.record_type === "control_context" ? controlContextTargetId(itemId) : null;
+  // FedRAMP control context (issue 279) folds into the SP 800-53 control it
+  // annotates, rather than existing as its own page. A real published edge
+  // (built alongside every other membership relationship) joins the two, so
+  // this control's own neighborhood always loads the context record with it -
+  // a raw id-based corpus scan would not, since a record page only has its
+  // immediate neighborhood loaded, not the full graph.
+  const fedrampContextRecords = edges
+    .filter((edge: any) => edge.target_node_id === node.id && edge.relationship_type === CONTROL_CONTEXT_RELATIONSHIP_TYPE)
+    .map((edge: any) => bundle.runtime.getNode(edge.source_node_id))
+    .filter(Boolean)
+    .sort((left: any, right: any) => String(left.metadata?.item_id || "").localeCompare(String(right.metadata?.item_id || ""), undefined, { numeric: true }));
   const selectionSections = presentation.selections.map((entry: { relationship_type: string; heading: string; note: string }) => {
     const seen = new Set<string>();
     const items = edges
@@ -214,7 +226,9 @@ export function ObjectDetailPage(props: {
   if (source && !missingSourceFields.length) {
     for (const section of publishedSections) sectionNavItems.push({ id: `section-${section.field}`, label: section.heading });
   }
-  if (contextTargetId) sectionNavItems.push({ id: "section-underlying-control", label: "Underlying control" });
+  for (const contextRecord of fedrampContextRecords) {
+    sectionNavItems.push({ id: `section-fedramp-context-${contextRecord.metadata.item_id}`, label: "FedRAMP 2026 parameters and guidance" });
+  }
   for (const entry of selectionSections) sectionNavItems.push({ id: `section-selection-${entry.relationship_type}`, label: entry.heading });
   if (showChildInventory) sectionNavItems.push({ id: "section-children", label: childHeading });
   if (visibleConnectionGroups.length) sectionNavItems.push({ id: "section-related-records", label: "Related records" });
@@ -316,10 +330,13 @@ export function ObjectDetailPage(props: {
           {!missingSourceFields.length && !hasPublishedSectionContent ? <section className="record-source-absence" data-record-section="publisher-absence">
             <h2>Publisher description</h2><p>The publisher did not publish a separate description for this {sentenceCaseKind(kind)}.</p>
           </section> : null}
-          {contextTargetId ? <section className="record-child-inventory record-underlying-control" data-record-section="underlying-control" id="section-underlying-control">
-            <div className="section-header"><div><h2>Underlying control</h2><p>FedRAMP publishes these parameters and guidance for this control.</p></div></div>
-            <ul><li><AppLink onNavigate={onNavigate} patch={{ node: contextTargetId }} view="library-detail">{`NIST ${controlContextLabel(itemId)}`}</AppLink></li></ul>
-          </section> : null}
+          {fedrampContextRecords.map((contextRecord: any) => (
+            <section className="record-fedramp-context" data-record-section="fedramp-context" id={`section-fedramp-context-${contextRecord.metadata.item_id}`} key={contextRecord.id}>
+              <h2>FedRAMP 2026 parameters and guidance</h2>
+              <p>FedRAMP publishes these parameters and guidance for this control.</p>
+              <SourceSectionContent kind="control_parameters" presentation={contextRecord.metadata?.source_text_presentation?.description} value={contextRecord.metadata?.description || ""} />
+            </section>
+          ))}
           {presentation.metadata_facts.length && !isTechnicalRule ? <RecordNativeFacts fields={presentation.metadata_facts} metadata={sourceMetadata} title="Published facts" /> : null}
           {structuralTrace.length > 1 ? <section className="record-hierarchy" data-record-section="publisher-hierarchy">
             <h2>Publisher hierarchy</h2><ol>{structuralTrace.map((entry) => <li key={entry.id}>{entry.label}</li>)}</ol>

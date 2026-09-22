@@ -50,6 +50,7 @@ import { referencedNistFamilies } from "../src/shared/nist-families.mjs";
 import { sourceNativeIdentityCategory } from "../src/shared/record-identity.mjs";
 import { isComparisonCapableEdge } from "../src/shared/compare-capability.mjs";
 import { RETIRED_RECORD_TYPES } from "../src/shared/record-acceptance.mjs";
+import { controlContextLabel, CONTROL_CONTEXT_RELATIONSHIP_TYPE } from "../src/shared/record-control-context.mjs";
 import {
   missingRequiredRecordFields,
   recordPresentationContract,
@@ -1879,6 +1880,37 @@ function addBaselineMembershipEdges(state, registry, nodeIds) {
   }
 }
 
+/**
+ * FedRAMP control context (issue 279) folds into the SP 800-53 control it
+ * annotates rather than staying a standalone page, so the control's own page
+ * needs a real edge to find it - a raw id lookup alone only works when the
+ * corpus is fully loaded, which a record page's own neighborhood is not.
+ */
+function addControlContextEdges(state, registry, nodeIds) {
+  const path = join(ROOT, "data", "fedramp-2026-catalog.json");
+  if (!existsSync(path)) return;
+  const document = readJson(path);
+  for (const record of document.records || []) {
+    if (record.type !== "control_context") continue;
+    const targetLabel = controlContextLabel(record.id);
+    if (!targetLabel) continue;
+    const sourceNodeId = nodeId("fedramp-2026", record.id);
+    const targetNodeId = nodeId("nist-800-53", targetLabel);
+    const subjectId = relationshipId("fedramp-2026-control-context", sourceNodeId, targetNodeId, CONTROL_CONTEXT_RELATIONSHIP_TYPE);
+    addPublishedEdge(state, registry, nodeIds, {
+      subjectId,
+      sourceId: record.source?.key || "fedramp-2026-rules",
+      sourceNodeId,
+      targetNodeId,
+      relationshipType: CONTROL_CONTEXT_RELATIONSHIP_TYPE,
+      relationshipClass: RELATIONSHIP_CLASSES.correlation,
+      locator: record.source?.locator || `fedramp-2026#${record.id}`,
+      retrievedAt: record.source?.snapshot_date,
+      rationale: `FedRAMP publishes ${record.id} as parameters and guidance for ${targetLabel}.`,
+    });
+  }
+}
+
 function addFedrampMembershipEdges(state, registry, nodeIds) {
   const path = join(ROOT, "data", "fedramp-baselines.json");
   if (!existsSync(path)) return;
@@ -2322,6 +2354,7 @@ function buildEdges(registry, nodes) {
   addAttackSubtechniqueMembershipEdges(state, registry, nodeIds);
   addBaselineMembershipEdges(state, registry, nodeIds);
   addFedrampMembershipEdges(state, registry, nodeIds);
+  addControlContextEdges(state, registry, nodeIds);
   addAssessmentEdges(state, registry, nodeIds);
   addAssessmentHierarchyEdges(state, registry, nodeIds, nodes);
   addCmmcProgramEdges(state, registry, nodeIds, nodes);

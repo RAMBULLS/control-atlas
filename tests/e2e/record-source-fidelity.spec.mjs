@@ -200,7 +200,8 @@ test("finding cleanup trims repetition without removing tags, source facts, or t
     await page.keyboard.press("Enter");
     await expect(details).toHaveAttribute("open", "");
     await expect(details.locator("dt")).toHaveText(["Benchmark date", "Publication"]);
-    await expect(details.locator("dd").first()).toHaveText(/\d{4}-\d{2}-\d{2}/);
+    // Issue #279: benchmark_status_date renders as a plain date, not raw ISO.
+    await expect(details.locator("dd").first()).toHaveText(/^[A-Z][a-z]{2} \d{1,2}, \d{4}$/);
     await expect(details.locator("dd").last()).toContainText("DISA Public STIG Library");
     await expect(details.getByRole("link", { name: "Open source record" })).toHaveAttribute("href", /sources\?source=/);
     expect(await page.evaluate(() => globalThis.document.documentElement.scrollWidth - globalThis.document.documentElement.clientWidth)).toBeLessThanOrEqual(1);

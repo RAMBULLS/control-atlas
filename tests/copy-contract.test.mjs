@@ -109,7 +109,9 @@ test("record page is contract-driven and contains no generic source or advice fa
 
 test("generation excludes structural scaffolding from public records", () => {
   const generator = read("scripts/build-framework-data.mjs");
-  assert.match(generator, /filter\(\(node\) => !NON_RECORD_NODE_TYPES\.has\(node\.node_type\)\)/);
+  // Structural types are never public records. Retired record types (issue 279)
+  // are excluded from search documents by the same filter.
+  assert.match(generator, /filter\(\(node\) => !NON_RECORD_NODE_TYPES\.has\(node\.node_type\) && !RETIRED_RECORD_TYPES\.has\(node\.node_type\)\)/);
 });
 
 test("Home has one centralized React and first-paint copy source", () => {

@@ -1,6 +1,16 @@
+import { AxeBuilder } from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 import { attachPageDiagnostics, dismissOnboarding, waitForAppReady } from "./support.mjs";
+
+async function assertNoBlockingViolations(page, contextLabel) {
+  const results = await new AxeBuilder({ page })
+    .include("#workspace")
+    .withTags(["wcag2a", "wcag2aa"])
+    .analyze();
+  const blocking = results.violations.filter((violation) => ["serious", "critical"].includes(violation.impact || ""));
+  expect(blocking, `Accessibility violations on ${contextLabel}: ${blocking.map((entry) => `${entry.id} (${entry.impact})`).join(", ")}`).toEqual([]);
+}
 
 // Issue #279: a record page offers an action only when it can do something
 // useful, and never renders an empty child inventory. Routes below are stable
@@ -260,4 +270,53 @@ test("a selection list item with no distinct title shows a snippet of its own te
   const firstLink = page.locator('[data-record-section="selection"] li a').first();
   await expect(firstLink).toContainText("3.1.1");
   await expect(firstLink).toContainText("Limit system access");
+});
+
+// Issue #279: keyboard and axe coverage for the new record-page surfaces
+// (selection sections, the control-context underlying-control link, the
+// retirement redirect notice) — the existing accessibility.spec.mjs checks
+// one generic record route but predates all of these.
+
+test("selection-section and control-context record pages have no serious/critical axe violations", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const route of [
+    "/#/record/nist-800-53b/HIGH",
+    "/#/record/cmmc-2/LEVEL-2",
+    "/#/record/fedramp-2026/CTL-AC-06-01",
+    "/#/record/microsoft-zt-maturity/MSZT-3-1",
+  ]) {
+    await openRecord(page, route);
+    await assertNoBlockingViolations(page, route);
+  }
+});
+
+test("a retired record's redirect destination has no serious/critical axe violations", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  attachPageDiagnostics(page);
+  await page.goto("/#/record/atlas/TRUNK");
+  await waitForAppReady(page, { allowPartial: true });
+  await dismissOnboarding(page);
+  await expect(page).toHaveURL(/#\/atlas\/atlas:TRUNK/);
+  await assertNoBlockingViolations(page, "atlas trunk redirect target");
+});
+
+test("the selection section and the header actions menu are fully keyboard-operable", async ({ page }) => {
+  await openRecord(page, "/#/record/nist-800-53b/HIGH");
+
+  // Tab from the top of the page reaches the header actions menu, and Enter
+  // opens it without a mouse.
+  const menuSummary = page.locator(".record-actions-menu > summary");
+  await menuSummary.focus();
+  await expect(menuSummary).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".record-actions-popover")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.locator(".record-actions-popover")).toBeHidden();
+
+  // The selection list's links are real, individually focusable anchors.
+  const firstSelectionLink = page.locator('[data-record-section="selection"] li a').first();
+  await firstSelectionLink.focus();
+  await expect(firstSelectionLink).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/#\/record\/nist-800-53\//);
 });

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "source_inventory": "data/nist-pages-discovery.json",
-  "source_inventory_sha256": "sha256:bd3800baf2ff5c3a2563a68e0618789e01227bd8d357ca77aaa904bcac48cefc",
+  "source_inventory_sha256": "sha256:266513baf459a3098695b7d454eca4fb11b4aa9d6eae16c8537f7f24608ca9f6",
   "reconciliation": {
     "projects_discovered": 264,
     "project_landing_pages_attempted": 264,

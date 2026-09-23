@@ -416,34 +416,6 @@ a {
 .atlas-tree-node--root > strong { color: var(--ca-text); font-size: 0.9rem; }
 .atlas-tree-node--root > small { color: var(--lsm-teal-text); }
 
-.atlas-tree-node__roots {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.35rem;
-  margin-bottom: 0.45rem;
-}
-
-.atlas-tree-node__roots span {
-  position: relative;
-  padding-top: 0.85rem;
-  color: var(--ca-text-muted);
-  font: 700 0.55rem/1 var(--ca-font-mono);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.atlas-tree-node__roots span::before {
-  position: absolute;
-  top: 0;
-  left: calc(50% - 4px);
-  width: 8px;
-  height: 8px;
-  border: 2px solid var(--ca-primary);
-  border-radius: 999px;
-  box-shadow: 0 0 9px color-mix(in srgb, var(--ca-primary) 66%, transparent);
-  content: "";
-}
-
 .atlas-tree-node--trunk {
   border-color: var(--ca-primary);
   background: color-mix(in srgb, var(--ca-surface-deep) 75%, transparent);
@@ -471,16 +443,6 @@ a {
 }
 .atlas-tree-node--publication { border-color: color-mix(in srgb, var(--ca-primary) 58%, var(--ca-border)); }
 .atlas-tree-node--unit { border-color: color-mix(in srgb, var(--ca-accent) 50%, var(--ca-border)); }
-
-.atlas-tree-node__junction {
-  display: block;
-  width: 10px;
-  height: 10px;
-  border: 2px solid var(--ca-primary);
-  border-radius: 999px;
-  background: var(--ca-surface-deep);
-  box-shadow: 0 0 12px color-mix(in srgb, var(--ca-primary) 72%, transparent);
-}
 
 .atlas-tree-node__handle { width: 1px; height: 1px; border: 0; background: transparent; }
 
@@ -607,15 +569,6 @@ a {
   margin-block: var(--ca-space-4);
 }
 
-.atlas-tree__intro {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: var(--ca-space-6);
-}
-
-.atlas-tree__intro h2 { margin-block: 0 var(--ca-space-2); }
-.atlas-tree__intro p:last-child { max-width: 72ch; margin: 0; color: var(--ca-text-muted); }
 .atlas-tree__totals { display: flex; flex-wrap: wrap; gap: var(--ca-space-2); margin: 0; }
 .atlas-tree__totals div {
   min-width: 8.5rem;
@@ -630,7 +583,6 @@ a {
 .atlas-tree__totals dd { color: var(--ca-primary); font: 700 1rem/1.4 var(--ca-font-mono); }
 
 .atlas-tree__mandate-key,
-.atlas-tree__toolbar,
 .atlas-tree__legend {
   display: flex;
   flex-wrap: wrap;
@@ -644,14 +596,9 @@ a {
   color: var(--ca-text-muted);
   font: 600 0.65rem/1.35 var(--ca-font-mono);
 }
-.atlas-tree__toolbar button,
-.atlas-tree__technology-picker button,
-.atlas-tree__technology-picker input,
-.atlas-tree__technology-picker select,
 .atlas-tree__overlay button {
   min-height: var(--ca-touch-target);
 }
-.atlas-tree__toolbar button,
 .atlas-tree__overlay button {
   padding-inline: var(--ca-space-3);
   border: 1px solid var(--ca-border-strong);
@@ -748,10 +695,6 @@ a {
   font-size: var(--ca-text-sm);
 }
 
-.atlas-tree__inspector-hint {
-  color: var(--ca-text-muted);
-  line-height: 1.4;
-}
 .atlas-tree__stage .react-flow__controls {
   overflow: hidden;
   border: 1px solid var(--ca-border-strong);
@@ -817,7 +760,6 @@ a {
 .atlas-tree-compact__node--trunk,
 .atlas-tree-compact__node--area { border-color: color-mix(in srgb, var(--ca-primary) 65%, var(--ca-border)); }
 
-.atlas-tree__technology-picker,
 .atlas-tree__trace,
 .atlas-tree__overlay {
   display: grid;
@@ -827,13 +769,8 @@ a {
   border-radius: var(--ca-radius-md);
   background: var(--ca-surface-raised);
 }
-.atlas-tree__technology-picker h3,
 .atlas-tree__trace h3,
-.atlas-tree__overlay h3,
-.atlas-tree__technology-picker p { margin: 0; }
-.atlas-tree__technology-picker label { display: grid; gap: var(--ca-space-1); }
-.atlas-tree__technology-picker input,
-.atlas-tree__technology-picker select { width: 100%; }
+.atlas-tree__overlay h3 { margin: 0; }
 .atlas-tree__trace ol,
 .atlas-tree__overlay ul { display: grid; gap: var(--ca-space-2); margin: 0; padding-left: 1.5rem; }
 .atlas-tree__trace-hop { padding: var(--ca-space-2); border-left: 3px solid var(--ca-accent); }
@@ -849,7 +786,6 @@ a {
 .atlas-tree__legend i.is-mapping { border-color: var(--ca-warning); border-top-style: dotted; }
 
 @media (max-width: 1023px) {
-  .atlas-tree__intro { align-items: start; flex-direction: column; }
   .atlas-tree__totals { width: 100%; }
   .atlas-tree__totals div { flex: 1; min-width: 7rem; }
   .atlas-tree__workbench { grid-template-columns: 1fr; }
@@ -4573,27 +4509,6 @@ a:focus-visible {
   margin-bottom: 0;
 }
 
-.atlas-connection-count {
-  flex: none;
-  display: grid;
-  min-width: 9rem;
-  padding: var(--ca-space-3) var(--ca-space-4);
-  border: 1px solid var(--ca-border);
-  border-radius: var(--radius-md);
-  background: var(--ca-surface);
-  text-align: right;
-}
-
-.atlas-connection-count strong {
-  color: var(--ca-secondary);
-  font-size: var(--font-size-xl);
-}
-
-.atlas-connection-count span {
-  color: var(--ca-text-muted);
-  font-size: var(--font-size-sm);
-}
-
 .atlas-view-tabs,
 .source-view-toggle {
   display: flex;
@@ -4716,8 +4631,7 @@ a:focus-visible {
   font-size: var(--font-size-sm);
 }
 
-.atlas-connection-filters > summary,
-.atlas-display-options > summary {
+.atlas-connection-filters > summary {
   cursor: pointer;
   width: fit-content;
   min-height: 44px;
@@ -4848,7 +4762,6 @@ a:focus-visible {
 .atlas-path-stage-panel > header,
 .atlas-source-stage-panel > header,
 .atlas-path-group > header,
-.atlas-map-branch > header,
 .atlas-source-list > section > header {
   display: flex;
   justify-content: space-between;
@@ -4992,117 +4905,6 @@ a:focus-visible {
   opacity: 0.55;
 }
 
-.atlas-map-center,
-.atlas-map-group-card,
-.atlas-map-item-card {
-  width: min(100%, 22rem);
-  min-width: 0;
-  min-height: 96px;
-  padding: var(--ca-space-3) var(--ca-space-4);
-  border: 1px solid var(--ca-border);
-  border-radius: var(--radius-md);
-  color: var(--ca-text);
-  background: var(--ca-surface);
-}
-
-.atlas-map-center {
-  z-index: 1;
-  display: grid;
-  gap: var(--ca-space-1);
-  border-color: var(--ca-secondary);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ca-secondary) 12%, transparent);
-  text-align: center;
-}
-
-.atlas-map-center strong {
-  font-size: var(--font-size-lg);
-}
-
-.atlas-map-card-kicker {
-  color: var(--ca-secondary-hover);
-  font-size: var(--font-size-xs);
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.atlas-map-region,
-.atlas-map-branch {
-  z-index: 1;
-  display: grid;
-  gap: var(--ca-space-3);
-  width: 100%;
-  min-width: 0;
-}
-
-.atlas-map-region h3 {
-  width: fit-content;
-  margin: 0 auto;
-  padding: var(--ca-space-1) var(--ca-space-3);
-  border-radius: 999px;
-  color: var(--ca-text-muted);
-  background: var(--ca-surface-raised);
-  font-size: var(--font-size-xs);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.atlas-map-region-grid,
-.atlas-map-branch-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
-  justify-items: center;
-  gap: var(--ca-space-3);
-  width: 100%;
-}
-
-.atlas-map-group-card,
-.atlas-map-item-card {
-  display: grid;
-  align-content: center;
-  gap: var(--ca-space-1);
-  text-align: left;
-}
-
-.atlas-map-group-card span,
-.atlas-map-item-card span,
-.atlas-map-group-card small,
-.atlas-map-item-card small {
-  color: var(--ca-text-muted);
-}
-
-.atlas-map-group-card:hover,
-.atlas-map-group-card:focus-visible,
-.atlas-map-item-card:hover,
-.atlas-map-item-card:focus-visible {
-  border-color: var(--ca-secondary);
-  background: color-mix(in srgb, var(--ca-secondary) 7%, var(--ca-surface));
-}
-
-.atlas-map-region--lateral .atlas-map-region-grid {
-  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
-}
-
-.atlas-map-branch > header h3,
-.atlas-map-branch > header p {
-  margin: 0;
-}
-
-.atlas-map-branch > header p {
-  color: var(--ca-text-muted);
-}
-
-.atlas-map-connector {
-  width: 2px;
-  height: var(--ca-space-8);
-  background: var(--ca-secondary);
-}
-
-.atlas-map-overflow {
-  z-index: 1;
-  background: var(--ca-surface-raised);
-}
-
 .relationship-source-refs {
   margin-top: var(--ca-space-2);
   font-size: var(--font-size-xs);
@@ -5137,15 +4939,9 @@ a:focus-visible {
   .atlas-path-stage-panel > header,
   .atlas-source-stage-panel > header,
   .atlas-path-group > header,
-  .atlas-map-branch > header,
   .atlas-source-list > section > header {
     align-items: stretch;
     flex-direction: column;
-  }
-
-  .atlas-connection-count {
-    width: 100%;
-    text-align: left;
   }
 
   .atlas-map-command {
@@ -5198,17 +4994,6 @@ a:focus-visible {
     bottom: 6rem;
   }
 
-  .atlas-map-region-grid,
-  .atlas-map-branch-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .atlas-map-center,
-  .atlas-map-group-card,
-  .atlas-map-item-card {
-    width: 100%;
-    min-height: 88px;
-  }
 
   .atlas-record-inspector {
     grid-template-columns: minmax(0, 1fr);
@@ -5955,80 +5740,6 @@ a:focus-visible {
   }
 }
 
-.atlas-map-page {
-  display: grid;
-  gap: var(--ca-space-4);
-}
-
-/* Canvas-app shell (CATL-48/80): the Atlas breaks out of the centered 1240px
-   document container and fills the viewport, so the graph is the primary
-   surface. Header/search/toggle sit in a slim top row; the graph takes all the
-   height that remains; coverage + selected-node detail float as overlays. */
-.atlas-map-page {
-  display: flex;
-  flex-direction: column;
-  width: 100vw;
-  max-width: 100%;
-  box-sizing: border-box;
-  margin-left: calc(50% - 50vw);
-  padding: 0 var(--ca-space-4);
-  gap: var(--ca-space-2);
-  /* Fill from just under the top nav to the viewport bottom. */
-  min-height: calc(100dvh - 7rem);
-}
-
-/* The graph area takes all remaining height; the coverage drawer sits under it. */
-.atlas-map-layout {
-  flex: 1 1 auto;
-  display: grid;
-  gap: var(--ca-space-3);
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: minmax(0, 1fr) auto;
-  align-items: stretch;
-  min-height: 0;
-}
-
-.atlas-map-main {
-  min-width: 0;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-/* The graph fills its cell (not a fixed clamp) so it grows with the viewport.
-   Each link in the chain must be a flex column for height: 100% to propagate. */
-.atlas-map-page .relationship-map-panel {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-height: 0;
-  gap: var(--ca-space-2);
-}
-.atlas-map-page .atlas-map-main > *,
-.atlas-map-page .relationship-map-body,
-.atlas-map-page .ca-canvas-container {
-  flex: 1 1 auto;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-}
-.atlas-map-page .relationship-graph-canvas-wrap,
-.atlas-map-page .relationship-graph-stage,
-.atlas-map-page .relationship-graph-canvas {
-  flex: 1 1 auto;
-  height: 100%;
-  min-height: 22rem;
-}
-
-/* Reclaim the document top padding so the graph starts high on the page. */
-.atlas-map-page {
-  margin-top: calc(-1 * var(--ca-space-8));
-}
-/* On a focused map the search collapses to a single slim input row (its
-   placeholder carries the hint); the overview keeps its caption for wayfinding. */
-.atlas-map-page--focused .atlas-map-command .field > span {
-  display: none;
-}
 .atlas-map-command {
   align-items: center;
   gap: var(--ca-space-2);
@@ -6040,16 +5751,10 @@ a:focus-visible {
 .atlas-map-command input {
   padding-block: var(--ca-space-2);
 }
-.atlas-map-page .relationship-view-tabs {
-  margin: 0;
-}
 
 /* Leverage inspector (CATL / Phase D2): floats over the canvas top-right and
    answers "if I implement this, what else do I satisfy?" without obscuring the
    graph. Collapsible; stacks inline on narrow viewports. */
-.atlas-map-main {
-  position: relative;
-}
 .atlas-leverage {
   position: absolute;
   top: var(--ca-space-3);
@@ -6179,211 +5884,6 @@ button.atlas-leverage-row:hover {
     position: static;
     width: auto;
     margin-bottom: var(--ca-space-3);
-  }
-}
-
-/* Slim, single-row Atlas chrome so the graph starts high (top edge < 25vh). */
-.atlas-map-page > .page-header {
-  margin-bottom: 0;
-}
-.atlas-map-page > .page-header .eyebrow {
-  display: none;
-}
-.atlas-map-page > .page-header h1 {
-  font-size: var(--font-size-lg);
-}
-/* On a focused control/record map the graph carries the meaning, so the
-   summary is dropped to keep the graph's top edge high. The overview and drill
-   views keep their one-line orientation copy. */
-.atlas-map-page--focused > .page-header .page-summary {
-  display: none;
-}
-/* The explorer's intro paragraph is redundant with the header on the canvas
-   shell; the graph itself carries the meaning. */
-.atlas-map-page .relationship-map-intro {
-  display: none;
-}
-
-/* Coverage matrix as a collapsible bottom drawer (CATL-52) â€” never competes
-   with the graph for width. */
-.atlas-coverage-drawer {
-  border: 1px solid var(--ca-border);
-  border-radius: var(--radius-md);
-  background: var(--ca-surface);
-  overflow: hidden;
-}
-.atlas-coverage-drawer > summary {
-  cursor: pointer;
-  list-style: none;
-  padding: var(--ca-space-3) var(--ca-space-4);
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  color: var(--ca-text);
-  display: flex;
-  align-items: center;
-  gap: var(--ca-space-2);
-}
-.atlas-coverage-drawer > summary::-webkit-details-marker {
-  display: none;
-}
-.atlas-coverage-drawer > summary::before {
-  content: "\25B8";
-  color: var(--ca-text-muted);
-  transition: transform 0.15s ease;
-}
-.atlas-coverage-drawer[open] > summary::before {
-  transform: rotate(90deg);
-}
-.atlas-coverage-drawer .atlas-matrix {
-  border: none;
-  border-top: 1px solid var(--ca-border);
-  border-radius: 0;
-  max-height: clamp(18rem, 40vh, 32rem);
-}
-
-/* Compact Atlas chrome so the graph sits high on the page (top edge < 25vh). */
-.atlas-map-page > .page-header {
-  margin-bottom: 0;
-}
-.atlas-map-page > .page-header .page-summary {
-  font-size: var(--font-size-sm);
-  margin-top: var(--ca-space-1);
-}
-
-/* Source-visibility filters collapse into a compact disclosure (CATL-54) so
-   they no longer push the graph down the page. */
-.atlas-display-options > summary {
-  cursor: pointer;
-  list-style: none;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ca-space-2);
-  padding: var(--ca-space-2) var(--ca-space-3);
-  border: 1px solid var(--ca-border);
-  border-radius: var(--radius-md);
-  background: var(--ca-surface);
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  color: var(--ca-text);
-  width: fit-content;
-}
-.atlas-display-options > summary::-webkit-details-marker {
-  display: none;
-}
-.atlas-display-options > summary::before {
-  content: "\2699";
-  color: var(--ca-text-muted);
-}
-.atlas-display-options[open] > summary {
-  margin-bottom: var(--ca-space-2);
-}
-
-/* Atlas coverage matrix */
-.atlas-matrix {
-  min-width: 0;
-  border: 1px solid var(--ca-border);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  max-height: clamp(24rem, 60vh, 44rem);
-  display: flex;
-  flex-direction: column;
-}
-.atlas-matrix-scroll {
-  overflow: auto;
-  flex: 1;
-  min-width: 0;
-  max-width: 100%;
-  box-shadow:
-    inset 10px 0 8px -10px color-mix(in srgb, var(--ca-shadow-color) 45%, transparent),
-    inset -10px 0 8px -10px color-mix(in srgb, var(--ca-shadow-color) 45%, transparent);
-}
-.atlas-matrix table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--font-size-sm);
-}
-.atlas-matrix thead th {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background: var(--ca-surface);
-  padding: var(--ca-space-2) var(--ca-space-3);
-  text-align: left;
-  border-bottom: 1px solid var(--ca-border);
-  font-size: var(--font-size-xs);
-  font-weight: 600;
-  color: var(--ca-text-muted);
-  white-space: nowrap;
-}
-.atlas-matrix tbody tr {
-  cursor: pointer;
-}
-.atlas-matrix tbody tr:hover td,
-.atlas-matrix tbody tr:hover th {
-  background: var(--ca-surface-raised);
-}
-.atlas-matrix tbody tr[aria-selected="true"] td,
-.atlas-matrix tbody tr[aria-selected="true"] th {
-  background: color-mix(in srgb, var(--ca-primary) 14%, transparent);
-}
-.atlas-matrix td,
-.atlas-matrix tbody th {
-  padding: var(--ca-space-2) var(--ca-space-3);
-  border-bottom: 1px solid var(--ca-border);
-  color: var(--ca-text);
-  text-align: left;
-  font-weight: 400;
-}
-.atlas-matrix td.coverage-cell {
-  text-align: center;
-}
-.atlas-matrix-row-head {
-  white-space: nowrap;
-}
-.atlas-matrix tbody tr:focus-visible {
-  outline: 2px solid var(--ca-primary);
-  outline-offset: -2px;
-}
-.atlas-coverage-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  display: inline-block;
-  vertical-align: middle;
-}
-.atlas-coverage-dot--official {
-  background: var(--ca-success);
-}
-.atlas-coverage-dot--inferred {
-  background: var(--ca-warning);
-}
-.atlas-coverage-dot--none {
-  background: var(--ca-border);
-}
-.atlas-matrix-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--ca-space-3);
-  margin: 0;
-  padding: var(--ca-space-2) var(--ca-space-3);
-  border-top: 1px solid var(--ca-border);
-  font-size: var(--font-size-xs);
-  color: var(--ca-text-muted);
-}
-.atlas-matrix-legend > span {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ca-space-1);
-}
-
-@media (max-width: 900px) {
-  .atlas-map-layout {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  /* The map column must grow with its content (intro, tabs, canvas,
-     shortcuts); a fixed height makes it overflow into the matrix below. */
-  .atlas-matrix {
-    max-height: 40vh;
   }
 }
 
@@ -6559,13 +6059,6 @@ button.atlas-leverage-row:hover {
   background: color-mix(in srgb, var(--ca-surface-deep) 52%, transparent);
 }
 
-.atlas-map-search-form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--ca-space-3);
-  align-items: end;
-}
-
 .relationship-map-controls {
   display: flex;
   flex-wrap: wrap;
@@ -6589,12 +6082,6 @@ button.atlas-leverage-row:hover {
   border-right: 0.35rem solid transparent;
   border-bottom: 0.65rem solid color-mix(in srgb, var(--ca-paper-subtle) 85%, transparent);
   border-radius: 0;
-}
-
-@media (max-width: 960px) {
-  .atlas-map-layout {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 
 @media (max-width: 700px) {
@@ -12050,7 +11537,6 @@ input[type="checkbox"] {
   color: var(--ca-text-muted);
 }
 
-.atlas-tree__technology-picker,
 .atlas-tree__overlay {
   padding: var(--ca-space-3) 0 0;
   border: 0;

@@ -267,8 +267,7 @@ export function AtlasMapPage(props: AtlasMapPageProps) {
     state.relationshipView
       || state.atlasAxis === "framework"
       || state.atlasAxis === "process"
-      || state.sourceView === "rmf"
-      || state.sourceView === "rmf-lifecycle",
+      || state.sourceView === "rmf",
   );
   const atlasProjection = useMemo(() => {
     const artifact = bundle.atlasNetwork;
@@ -2091,7 +2090,6 @@ function AtlasGuidedPath(props: {
   const axis =
     state.atlasAxis ||
     (state.sourceView === "rmf" ||
-    state.sourceView === "rmf-lifecycle" ||
     state.relationshipView === "rmf"
       ? "process"
       : "");

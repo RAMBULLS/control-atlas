@@ -19,7 +19,7 @@ export function atlasSurfaceFor(state: Partial<AtlasViewState>): AtlasSurface {
     (state.atlasAxis && state.atlasAxis !== "landscape")
     || state.atlasFamily || state.atlasBenchmark || state.atlasBaseline || state.atlasRmfStep
     || state.atlasLensFamily || state.atlasParent || state.atlasStage || state.atlasPivotTrail
-    || state.sourceView === "purpose" || state.sourceView === "rmf" || state.sourceView === "rmf-lifecycle"
+    || state.sourceView === "purpose" || state.sourceView === "rmf"
     || state.relationshipView || state.relationshipType || state.relationshipGroup
     || state.provenance || state.confidence || state.nodeType || state.includeCandidates || state.relationshipSearch;
   return legacyScope ? "classic" : "territory";

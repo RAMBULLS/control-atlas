@@ -112,7 +112,11 @@ for (const width of [320, 375, 390]) {
     expect(m.overflow).toBeLessThanOrEqual(1);
     expect(m.headingToFirstRow, "first mapping close to the heading (baseline 2,180)").toBeLessThan(900);
     expect(m.pageHeight, "page height (baseline 77,433)").toBeLessThan(20_000);
-    expect(m.maxRowHeight, "no giant row (baseline 3,856)").toBeLessThan(1100);
+    // #281: every target now shows with no reveal click, so the busiest record
+    // (25 titled CSF targets) is ~1,270-1,470px on a phone. The old 1,100px bound
+    // held only because 20 of them hid behind "Show N more". Records past the
+    // inline limit use a bounded window, so rows still cannot run away.
+    expect(m.maxRowHeight, "no giant row (baseline 3,856)").toBeLessThan(1700);
     const labels = await page.evaluate(() => getComputedStyle(document.querySelector(".compare-results-table td"), "::before").display);
     expect(labels, "no repeated From / Maps to label in every row").toBe("none");
     const spill = await page.evaluate(() => {
@@ -125,16 +129,44 @@ for (const width of [320, 375, 390]) {
   });
 }
 
-test("a record with many targets shows the first few and keeps the rest one click away", async ({ page }) => {
+// #281 "respect the click": a chosen comparison shows every target of every
+// record with no reveal click. The busiest SP 800-53 -> CSF record has 25.
+test("every record shows all of its targets with no reveal click", async ({ page }) => {
   test.setTimeout(120_000);
   await open(page, PAIR);
-  const row = page.locator(ROWS).filter({ has: page.locator(".target-more") }).first();
-  const evidence = await row.locator(".mapping-row-details > summary").innerText();
-  const total = Number(evidence.match(/for (\d+) mapping/)[1]);
-  expect(total).toBeGreaterThan(5);
-  await expect(row.locator(".target-mapping-item:visible")).toHaveCount(5);
-  await row.locator(".target-more > summary").click();
-  await expect(row.locator(".target-mapping-item:visible")).toHaveCount(total);
+  await expect(page.getByText(/^Show \d[\d,]* more/)).toHaveCount(0);
+  const rows = page.locator(ROWS);
+  const counts = await rows.evaluateAll((trs) => trs.map((tr) => ({
+    shown: tr.querySelectorAll(".target-mapping-item").length,
+    total: Number(tr.querySelector(".mapping-row-details > summary").textContent.match(/for ([\d,]+) mapping/)[1].replace(/,/g, "")),
+  })));
+  expect(counts.some((row) => row.total > 5), "the page includes a one-to-many record").toBe(true);
+  for (const row of counts) expect(row.shown).toBe(row.total);
+});
+
+// One DISA CCI maps to thousands of STIG rules. Such a record keeps every
+// target on screen in a bounded window that states the true total and mounts
+// only what is in view, so the page never renders thousands of entries.
+test("an extreme one-to-many record shows its true total in a bounded window, no click", async ({ page }) => {
+  test.setTimeout(180_000);
+  await open(page, "/#/compare/relationships?intent=frameworks&source=disa-cci&target=disa-stig&compareRun=true");
+  await expect(page.getByText(/^Show \d[\d,]* more/)).toHaveCount(0);
+  const windowed = page.locator(".target-window").first();
+  await expect(windowed).toBeVisible();
+  const caption = await windowed.locator(".target-window-caption").innerText();
+  const total = Number(caption.match(/All ([\d,]+) targets/)[1].replace(/,/g, ""));
+  expect(total).toBeGreaterThan(25);
+  const scroller = windowed.getByRole("region");
+  const mounted = await windowed.locator(".target-mapping-item").count();
+  expect(mounted, "only entries in view are mounted").toBeLessThan(40);
+  expect(mounted).toBeGreaterThan(0);
+  await expect(windowed.locator(".target-mapping-item").first()).toHaveAttribute("aria-setsize", String(total));
+  // Keyboard reaches the window and scrolls it to the last entry.
+  await scroller.focus();
+  await page.keyboard.press("End");
+  await expect(windowed.locator(`.target-mapping-item[aria-posinset="${total}"]`)).toBeVisible();
+  const pageNodes = await page.locator(".compare-results-table").evaluate((table) => table.getElementsByTagName("*").length);
+  expect(pageNodes, "a page stays in the low thousands of nodes").toBeLessThan(8000);
 });
 
 test("export says what it covers and delivers every matching mapping, not the page", async ({ page }) => {
@@ -191,7 +223,7 @@ test("an empty search is truthful and recoverable, and back returns to the resul
   await page.getByRole("button", { name: "Clear search" }).click();
   await expect(page.locator(ROWS).first()).toBeVisible();
 
-  await page.getByRole("button", { name: "Change target" }).click();
+  await page.getByRole("button", { name: "Compare with another" }).click();
   await expect(page.locator("#compare-results")).toHaveCount(0);
   await expect(page).not.toHaveURL(/target=/);
   await page.goBack();

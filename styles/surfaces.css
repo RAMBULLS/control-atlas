@@ -1657,15 +1657,6 @@ li {
   margin-top: var(--ca-space-1);
 }
 
-.format-help-list {
-  margin: var(--ca-space-3) 0 0;
-  padding-left: var(--ca-space-4);
-  display: grid;
-  gap: var(--ca-space-2);
-  color: var(--ca-text-muted);
-  font-size: var(--font-size-sm);
-}
-
 .summary-grid {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
@@ -3191,19 +3182,6 @@ button.atlas-path-crumb-authority:focus-visible {
   font-weight: 800;
 }
 
-.compare-stepper {
-  margin-bottom: var(--ca-space-6);
-}
-
-.compare-stepper-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--ca-space-3);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
 .compare-step {
   display: inline-flex;
   align-items: center;
@@ -3223,16 +3201,6 @@ button.atlas-path-crumb-authority:focus-visible {
 
 .compare-step.complete {
   color: var(--ca-text);
-}
-
-.compare-step-number {
-  display: inline-grid;
-  place-items: center;
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--ca-accent) 25%, transparent);
-  font-weight: 800;
 }
 
 .compare-workbench-header {
@@ -3601,29 +3569,6 @@ button.atlas-path-crumb-authority:focus-visible {
   margin-top: var(--ca-space-4);
 }
 
-/* Two lists of near-identical rows read as one long list without this. */
-.start-here-panel > section + section,
-.start-here-panel > .card-actions {
-  margin-top: var(--ca-space-8);
-}
-
-.start-here-panel > section > h2 {
-  margin-bottom: var(--ca-space-2);
-}
-
-.start-here-question {
-  display: grid;
-  gap: var(--ca-space-4);
-  max-width: 60rem;
-}
-
-/* Guided flow: one row of answer chips per question. */
-.start-here-choices {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--ca-space-2);
-}
-
 .start-here-choice {
   min-height: 44px;
   padding-inline: var(--ca-space-4);
@@ -3665,64 +3610,13 @@ button.atlas-path-crumb-authority:focus-visible {
   color: var(--ca-text-muted);
 }
 
-.start-here-plan-role {
-  color: var(--ca-text-muted);
-  font: 600 var(--ca-text-xs) / 1.4 var(--ca-font-mono);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-/* Each step is a control plus its explainer. Stacked, the explainer stranded
-   ~640px of empty width beside an 800px card on a 1440px shell. Side by side
-   from 1080px up, the guidance sits next to the choice it explains and the
-   step gets materially shorter. The control column stays near its readable
-   measure instead of stretching. */
-.start-here-step-body {
-  display: grid;
-  gap: var(--ca-space-4);
-}
-
-@media (min-width: 1080px) {
-  .start-here-step-body {
-    grid-template-columns: minmax(0, 24rem) minmax(0, 1fr);
-    align-items: start;
-  }
-}
-
-.start-here-answer {
-  display: grid;
-  grid-template-columns: minmax(8rem, auto) 1fr auto;
-  align-items: center;
-  gap: var(--ca-space-3);
-  padding: var(--ca-space-3) var(--ca-space-4);
-  border: 1px solid var(--ca-border);
-  border-radius: var(--radius-md);
-  background: color-mix(in srgb, var(--ca-surface-deep) 40%, transparent);
-}
-
-.start-here-answer > span {
-  color: var(--ca-text-muted);
-  font-size: var(--ca-text-sm);
-}
-
-@media (max-width: 720px) {
-  .start-here-answer {
-    grid-template-columns: 1fr auto;
-  }
-
-  .start-here-answer > span {
-    grid-column: 1 / -1;
-  }
-}
-
 /* Canonical Library pages: framework context first, then a flat record list.
    Matches the shell's own content ceiling (--ca-content-max, styles/tokens.css)
    instead of stranding 320px of it — the two-column rows here (title+summary
    vs. a count) read wider, not cramped, so there's no reading-width reason to
    cap narrower than the rest of the app. */
 .catalog-index,
-.catalog-detail-page,
-.start-here-result-page {
+.catalog-detail-page {
   max-width: var(--ca-content-max);
   margin-inline: auto;
 }
@@ -3777,8 +3671,7 @@ button.atlas-path-crumb-authority:focus-visible {
 }
 
 .catalog-index-list,
-.catalog-record-list,
-.start-here-resource-list {
+.catalog-record-list {
   display: grid;
   margin: 0;
   padding: 0;
@@ -3828,12 +3721,6 @@ button.atlas-path-crumb-authority:focus-visible {
   color: var(--ca-text-muted);
 }
 
-.start-here-row-badges {
-  display: flex;
-  align-items: center;
-  gap: var(--ca-space-2);
-}
-
 /* Publisher · lifecycle sits under the synopsis as metadata, not as part of
    the sentence. Omitted entirely when neither value is recorded. */
 .resources-show-more {
@@ -3850,8 +3737,7 @@ button.atlas-path-crumb-authority:focus-visible {
   opacity: 0.85;
 }
 
-.catalog-detail-hero,
-.start-here-result-hero {
+.catalog-detail-hero {
   position: relative;
   display: grid;
   gap: var(--ca-space-4);
@@ -3869,8 +3755,7 @@ button.atlas-path-crumb-authority:focus-visible {
   content: "";
 }
 
-.catalog-detail-hero h1,
-.start-here-result-hero h1 {
+.catalog-detail-hero h1 {
   margin: 0;
 }
 
@@ -3898,8 +3783,7 @@ button.atlas-path-crumb-authority:focus-visible {
   gap: var(--ca-space-3);
 }
 
-.catalog-synopsis,
-.start-here-result-summary {
+.catalog-synopsis {
   max-width: 70ch;
   margin: 0;
   font-size: var(--ca-text-lg);
@@ -3912,8 +3796,7 @@ button.atlas-path-crumb-authority:focus-visible {
   color: var(--ca-text-muted);
 }
 
-.catalog-facts,
-.start-here-based-on {
+.catalog-facts {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -3922,8 +3805,7 @@ button.atlas-path-crumb-authority:focus-visible {
   font-size: var(--ca-text-sm);
 }
 
-.catalog-facts strong,
-.start-here-based-on strong {
+.catalog-facts strong {
   color: var(--ca-text);
 }
 
@@ -4022,16 +3904,14 @@ button.atlas-path-crumb-authority:focus-visible {
   }
 }
 
-.catalog-record-row,
-.start-here-resource-row {
+.catalog-record-row {
   display: grid;
   gap: var(--ca-space-2);
   padding: var(--ca-space-4) 0;
   border-bottom: 1px solid var(--ca-border-subtle);
 }
 
-.catalog-record-row p,
-.start-here-resource-row p {
+.catalog-record-row p {
   max-width: 75ch;
   margin: 0;
   color: var(--ca-text-muted);
@@ -4052,28 +3932,6 @@ button.atlas-path-crumb-authority:focus-visible {
 
 .catalog-record-row small {
   color: var(--ca-text-subtle);
-}
-
-.start-here-primary {
-  display: grid;
-  gap: var(--ca-space-3);
-  margin-block: var(--ca-space-8);
-  padding: var(--ca-space-6);
-  border-left: 3px solid var(--ca-secondary);
-  background: color-mix(in srgb, var(--ca-secondary) 6%, transparent);
-}
-
-.start-here-primary h2,
-.start-here-primary p {
-  margin: 0;
-}
-
-.start-here-primary .primary {
-  width: fit-content;
-}
-
-.start-here-alternatives > summary {
-  padding-block: var(--ca-space-3);
 }
 
 @media (max-width: 720px) {
@@ -7698,6 +7556,24 @@ button.atlas-leverage-row:hover {
   grid-template-columns: 1fr;
 }
 
+/* In the narrow rail the badge beside the title squeezed the publisher name to
+   one word per line. The title keeps a readable measure and the badge moves
+   under it when both do not fit; long release tokens wrap instead of pushing
+   the page 1px wider at 320px. */
+.template-sources-panel .nexus-card-heading {
+  flex-wrap: wrap;
+}
+
+.template-sources-panel .nexus-card-heading > div {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.template-sources-panel .support-meta {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .compare-scope-list {
   display: grid;
   gap: 0;
@@ -8928,109 +8804,6 @@ button.atlas-leverage-row:hover {
   font-weight: 600;
 }
 
-.start-here-steps {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--ca-space-2);
-  margin-bottom: var(--ca-space-8);
-}
-
-.start-here-step {
-  display: flex;
-  align-items: center;
-  gap: var(--ca-space-2);
-  color: var(--ca-text-subtle);
-  font-size: var(--ca-text-sm);
-}
-
-.start-here-step-num {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  border: 1px solid var(--ca-border);
-  border-radius: 50%;
-  background: var(--ca-surface-raised);
-  font-size: var(--ca-text-xs);
-  font-weight: 700;
-}
-
-.start-here-step.active {
-  color: var(--ca-text);
-}
-
-.start-here-step.active .start-here-step-num {
-  border-color: var(--ca-primary);
-  color: white;
-  background: var(--ca-primary);
-}
-
-.start-here-step.done .start-here-step-num {
-  border-color: var(--ca-success);
-  color: white;
-  background: var(--ca-success);
-}
-
-.start-here-step-connector {
-  flex: 1;
-  min-width: 1.5rem;
-  height: 1px;
-  background: var(--ca-border);
-}
-
-.start-here-recap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--ca-space-2);
-  margin: 0 0 var(--ca-space-3);
-}
-
-.start-here-recap-item {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: var(--ca-space-2) var(--ca-space-3);
-  border: 1px solid var(--ca-border);
-  border-radius: var(--ca-radius-sm);
-  background: var(--ca-surface-raised);
-}
-
-.start-here-recap-item dt {
-  font-size: var(--ca-text-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--ca-text-subtle);
-}
-
-.start-here-recap-item dd {
-  margin: 0;
-  font-weight: 600;
-  color: var(--ca-text);
-}
-
-.start-here-path {
-  margin: 0 0 var(--ca-space-2);
-  font-weight: 700;
-  color: var(--ca-text);
-}
-
-.start-here-assumptions {
-  margin: var(--ca-space-3) 0 0;
-  padding-left: var(--ca-space-4);
-  color: var(--ca-text-muted);
-  font-size: var(--ca-text-sm);
-}
-
-.start-here-assumptions li + li {
-  margin-top: var(--ca-space-2);
-}
-
-.start-here-disclaimer {
-  margin: 0;
-}
-
 .object-card-meta {
   display: flex;
   align-items: center;
@@ -9251,8 +9024,6 @@ button.atlas-leverage-row:hover {
 }
 
 .landing-more-paths > summary,
-.start-here-alternatives > summary,
-.template-supporting-details > summary,
 .drawer-all-help > summary,
 .mapping-row-details > summary {
   min-height: 44px;
@@ -9268,11 +9039,112 @@ button.atlas-leverage-row:hover {
   padding-top: var(--ca-space-3);
 }
 
-.start-here-alternative-content,
 .disclosure-content,
 .disclosure-actions,
 .template-essential-options {
   margin-top: var(--ca-space-4);
+}
+
+/* Templates document flow. Setup and Review & download share one column, so
+   the next step always starts right after the setup task; the context rail is
+   its own column and can be any height. The rail is not sticky: with several
+   published sources it runs to thousands of pixels, taller than any viewport.
+   Below 1024px the rail follows the whole flow instead of interrupting it. */
+.template-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 2.35fr) minmax(20rem, 0.8fr);
+  gap: var(--ca-space-6);
+  align-items: start;
+}
+
+.template-flow-main {
+  display: grid;
+  gap: var(--ca-space-8);
+  min-width: 0;
+}
+
+.template-flow .template-setup {
+  min-height: 0;
+}
+
+.template-flow-rail.panel {
+  position: static;
+}
+
+@media (max-width: 1023px) {
+  .template-flow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.template-purpose {
+  display: grid;
+  gap: var(--ca-space-3);
+  padding-bottom: var(--ca-space-5);
+  border-bottom: 1px solid var(--ca-border-subtle);
+}
+
+.template-purpose h3 {
+  margin: 0;
+  color: var(--ca-text-muted);
+  font: 700 var(--ca-text-xs) / 1.3 var(--ca-font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.template-purpose p,
+.template-purpose-usage {
+  margin: 0;
+}
+
+.template-purpose-usage {
+  display: grid;
+  gap: var(--ca-space-2);
+}
+
+.template-purpose-usage > div {
+  display: grid;
+  grid-template-columns: minmax(0, 11rem) minmax(0, 1fr);
+  gap: var(--ca-space-3);
+}
+
+.template-purpose-usage dt {
+  color: var(--ca-text-muted);
+  font-weight: 650;
+}
+
+.template-purpose-usage dd {
+  margin: 0;
+}
+
+.template-purpose-limits {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--ca-space-2) var(--ca-space-3);
+  color: var(--ca-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.template-purpose-limits-text {
+  flex: 1 1 16rem;
+  min-width: 0;
+}
+
+.template-format-fixed {
+  display: grid;
+  gap: var(--ca-space-1);
+}
+
+.template-format-fixed .field-label {
+  display: block;
+}
+
+@media (max-width: 599px) {
+  .template-purpose-usage > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--ca-space-1);
+  }
 }
 
 .pagination {
@@ -9528,54 +9400,6 @@ input[type="checkbox"] {
   font-size: var(--ca-text-sm);
 }
 
-/* Start Here correction pass: one decision per step, generous hit areas, and
-   an explicit destination. These final rules intentionally supersede the
-   legacy all-questions-at-once treatment above. */
-.start-here-panel {
-  display: grid;
-  gap: clamp(var(--ca-space-6), 4vw, var(--ca-space-8));
-}
-
-.start-here-progress {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--ca-space-2);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.start-here-progress li {
-  display: flex;
-  align-items: center;
-  gap: var(--ca-space-2);
-  min-width: 0;
-  padding: var(--ca-space-2) var(--ca-space-3);
-  border-top: 2px solid var(--ca-border);
-  color: var(--ca-text-muted);
-  font: 650 0.72rem/1.3 var(--ca-font-mono);
-}
-
-.start-here-progress li span {
-  display: grid;
-  place-items: center;
-  width: 1.7rem;
-  height: 1.7rem;
-  border: 1px solid currentColor;
-  border-radius: 999px;
-}
-
-.start-here-progress li.is-active {
-  border-color: var(--ca-primary);
-  color: var(--ca-text);
-}
-
-.start-here-progress li[aria-current="step"] span {
-  border-color: var(--ca-primary);
-  background: var(--ca-primary);
-  color: var(--ca-bg);
-}
-
 .start-here-summary {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -9609,21 +9433,6 @@ input[type="checkbox"] {
   align-self: center;
   color: var(--lsm-teal-text);
   font-size: 0.72rem;
-}
-
-.start-here-step {
-  display: grid;
-  gap: var(--ca-space-4);
-  margin: 0 !important;
-  padding: clamp(var(--ca-space-4), 3vw, var(--ca-space-6));
-  border: 1px solid var(--ca-border);
-  border-radius: var(--ca-radius-md);
-  background: color-mix(in srgb, var(--ca-surface-raised) 82%, transparent);
-}
-
-.start-here-step h2,
-.start-here-step p {
-  margin: 0;
 }
 
 .start-here-choice-grid {
@@ -9662,24 +9471,11 @@ input[type="checkbox"] {
   box-shadow: 0 0 0 1px var(--ca-primary);
 }
 
-.start-here-primary-destination {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: var(--ca-space-6);
-  padding: var(--ca-space-6);
-  border: 1px solid color-mix(in srgb, var(--ca-primary) 58%, var(--ca-border));
-  border-radius: var(--ca-radius-md);
-  background: linear-gradient(135deg, color-mix(in srgb, var(--ca-primary) 12%, var(--ca-surface-deep)), var(--ca-surface-deep));
-}
-
-.start-here-primary-destination > span,
 .start-here-publication > span {
   display: grid;
   gap: var(--ca-space-1);
 }
 
-.start-here-primary-destination small,
 .start-here-publication small {
   color: var(--lsm-teal-text);
   font: 700 0.62rem/1.2 var(--ca-font-mono);
@@ -9687,7 +9483,6 @@ input[type="checkbox"] {
   text-transform: uppercase;
 }
 
-.start-here-primary-destination span span,
 .start-here-publication span span {
   color: var(--ca-text-muted);
   font-size: 0.78rem;
@@ -9700,18 +9495,26 @@ input[type="checkbox"] {
   gap: var(--ca-space-3);
 }
 
+.start-here-primary-action {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 599px) {
+  .start-here-primary-action > * {
+    flex: 1 1 100%;
+  }
+}
+
 .start-here-search-link {
   padding-top: var(--ca-space-2);
   border-top: 1px solid var(--ca-border);
 }
 
 @media (max-width: 680px) {
-  .start-here-progress li { align-items: start; flex-direction: column; padding-inline: var(--ca-space-2); }
   .start-here-summary,
   .start-here-choice-grid,
-  .start-here-followups,
-  .start-here-primary-destination { grid-template-columns: minmax(0, 1fr); }
-  .start-here-primary-destination > button { width: 100%; }
+  .start-here-followups { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 520px) {
@@ -13816,11 +13619,86 @@ button.atlas-area__cell[data-floored="true"]:hover,
   text-transform: none;
 }
 
-.target-more > summary {
-  padding-block: 10px;
-  color: var(--ca-secondary);
-  cursor: pointer;
-  font-weight: 650;
+/* A source record with more targets than render inline keeps every one on
+   screen in a bounded window. Only the entries in view are mounted, positioned
+   by the virtualizer inside a list as tall as the whole set. */
+.target-window {
+  --target-window-row: 5rem;
+
+  position: relative;
+  display: grid;
+  gap: var(--ca-space-2);
+}
+
+.target-window-caption {
+  margin: 0;
+  color: var(--ca-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* No overscroll containment: at either end of the window the wheel carries on
+   scrolling the page instead of trapping the reader inside the list. */
+.target-window-scroll {
+  max-height: min(26rem, 60vh);
+  overflow-y: auto;
+  border: 1px solid var(--ca-border-subtle);
+  padding-inline: var(--ca-space-3);
+}
+
+/* Inline targets flow into columns where the "Maps to" cell is wide, so a
+   record with every target shown stays a few lines tall on desktop. */
+@media (min-width: 768px) {
+  .compare-results-table .target-mapping-list:not(.target-window-list) {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+    column-gap: var(--ca-space-5);
+  }
+}
+
+.target-window-scroll:focus-visible {
+  outline: 2px solid var(--ca-primary);
+  outline-offset: 2px;
+}
+
+.target-window-list {
+  position: relative;
+}
+
+/* Fixed entry height: the virtualizer positions entries from a known size
+   rather than measuring each one. TargetWindow reads the same value from the
+   hidden sizer, so this variable is the only place the height is set. */
+.target-window-list > .target-mapping-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--target-window-row);
+  overflow: hidden;
+}
+
+.target-window-sizer {
+  position: absolute;
+  width: 0;
+  height: var(--target-window-row);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.target-window-list .target-item-title {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+/* On a phone the relationship chip wraps under the 44px-tall ID link, so an
+   entry needs a taller fixed height to keep its two title lines. */
+@media (max-width: 479px) {
+  .target-window {
+    --target-window-row: 7.5rem;
+  }
 }
 
 @media (max-width: 400px) {
@@ -13831,7 +13709,6 @@ button.atlas-area__cell[data-floored="true"]:hover,
 
 /* Disclosure labels inside the template sidebar. The teal secondary colour is
    4.0:1 on this panel; the body text colour clears 4.5:1 at every width. */
-.compare-flow-support .template-supporting-details > summary,
 .template-sources-panel .nexus-details summary {
   color: var(--ca-text);
   text-decoration: underline;

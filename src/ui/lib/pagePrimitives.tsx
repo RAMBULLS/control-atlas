@@ -1,6 +1,6 @@
 import * as Accordion from "@radix-ui/react-accordion";
-import { IconArrowRight, IconX } from "@tabler/icons-react";
-import React, { useId, type ElementType, type ReactNode } from "react";
+import { IconArrowRight, IconCheck, IconX } from "@tabler/icons-react";
+import React, { useId, type CSSProperties, type ElementType, type ReactNode } from "react";
 
 import { displayNameFor } from "../../app/display-names.mjs";
 import {
@@ -697,45 +697,75 @@ export function EmptyState(props: {
 }
 
 /**
- * Standardized Staged Flow StepIndicator (T5.8).
+ * One step of a staged flow. `outcome: true` marks the step that is the result
+ * rather than another thing to answer: Start here promises "answer two
+ * questions", so its third step must not read as a third question.
+ */
+export type FlowStep = {
+  id: string;
+  label: string;
+  description?: string;
+  outcome?: boolean;
+};
+
+/**
+ * The panel eyebrow for a step ("02 / Set up", or the bare label for an
+ * outcome), taken from the same definitions the indicator draws so the two can
+ * never disagree.
+ */
+export function stepEyebrow(steps: readonly FlowStep[], stepId: string): string {
+  const index = steps.findIndex((step) => step.id === stepId);
+  if (index < 0) return "";
+  const step = steps[index];
+  return step.outcome ? step.label : `${String(index + 1).padStart(2, "0")} / ${step.label}`;
+}
+
+/**
+ * The staged-flow progress indicator shared by Compare, Start here and
+ * Templates. Steps are status, not controls: returning to an earlier step is
+ * each flow's own Back/Change action, so nothing here is clickable. State is
+ * carried by marker shape (check, ring, hollow), label weight and hidden text,
+ * never by color alone, and the progress line is drawn from the real position.
  */
 export function StepIndicator(props: {
-  /**
-   * `outcome: true` marks a step that is the result rather than another thing
-   * to answer. Start here promises "answer two questions" and then showed a
-   * three-dot stepper, so the third dot read as a third question at exactly
-   * the moment the promise was being kept.
-   */
-  steps: Array<{ id: string; label: string; description?: string; outcome?: boolean }>;
+  steps: readonly FlowStep[];
+  /** 1-based index of the current step. */
   currentStep: number;
-  onSelectStep?: (stepIndex: number) => void;
+  label?: string;
 }) {
+  const count = props.steps.length;
+  const current = Math.min(Math.max(props.currentStep, 1), count);
+  const progress = count > 1 ? (current - 1) / (count - 1) : 1;
   return (
-    <nav aria-label="Step progress" className="staged-flow-steps">
-      <ol className="step-list progress-trajectory">
+    <nav aria-label={props.label || "Step progress"} className="staged-flow-steps">
+      <ol
+        className="step-list"
+        style={{ "--step-count": count, "--step-progress": progress } as CSSProperties}
+      >
         {props.steps.map((step, idx) => {
           const stepNum = idx + 1;
-          const isActive = stepNum === props.currentStep;
-          const isComplete = stepNum < props.currentStep;
+          const status = stepNum < current ? "done" : stepNum === current ? "current" : "future";
           return (
             <li
-              aria-current={isActive ? "step" : undefined}
-              className={`step-item step ${step.outcome ? "step-outcome " : ""}${isActive ? "step-active active" : isComplete ? "step-complete done" : "step-pending"}`}
+              aria-current={status === "current" ? "step" : undefined}
+              className={`step-item is-${status}${step.outcome ? " is-outcome" : ""}`}
               key={step.id}
             >
-              <strong className="step-label">
+              <span aria-hidden="true" className="step-marker">
+                {status === "done" ? <IconCheck size={12} stroke={3} /> : null}
+              </span>
+              <span className="step-text">
                 {step.outcome ? null : (
-                  <>
-                    <span aria-hidden="true" className="step-number">
-                      {String(stepNum).padStart(2, "0")} /
-                    </span>{" "}
-                  </>
+                  <span aria-hidden="true" className="step-number">
+                    {String(stepNum).padStart(2, "0")}
+                  </span>
                 )}
-                {step.label}
-              </strong>
-              {step.description ? (
-                <small className="visually-hidden">{step.description}</small>
-              ) : null}
+                <span className="step-label">{step.label}</span>
+                {status === "done" ? <span className="visually-hidden"> (done)</span> : null}
+                {step.description ? (
+                  <span className="visually-hidden">: {step.description}</span>
+                ) : null}
+              </span>
             </li>
           );
         })}

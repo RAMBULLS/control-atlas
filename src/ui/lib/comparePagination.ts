@@ -40,7 +40,17 @@ export function paginateCompareRows<T>(
   };
 }
 
-// Targets listed inline per source record. The rest sit behind an inline "Show N more targets"
-// disclosure in the same row, so one busy record cannot dominate the page. Nothing is dropped:
-// counts, evidence and exports still cover every target.
-export const COMPARE_TARGET_PREVIEW = 5;
+// Targets a source record renders inline, all at once. A record with more renders every
+// target in a bounded, virtualized window instead, so nothing sits behind a reveal click and
+// no page mounts thousands of entries.
+//
+// Measured for issue 281 across all 50 offered crosswalk directions (25 source records per page).
+// Render cost did not decide it: next-page-to-paint stayed ~110-330ms at limits of 60 and
+// 100 (fixed page-change work dominates), versus up to 537ms when every target sat in the DOM
+// behind "Show N more" (8,928 entries / 62,774 table nodes on one DISA CCI -> STIG page).
+// Row height did: at 60, titled targets made single rows 3,600px tall on desktop and 6,100px
+// on a phone. 25 still renders 99.06% of all source records fully inline (60: 99.57%) and
+// covers the busiest SP 800-53 -> CSF record, while rows beyond it get the bounded window.
+// At 25 the heaviest page mounts 346 entries / 2,700 table nodes and next-page-to-paint is
+// 281ms worst case across the seven measured crosswalks.
+export const COMPARE_INLINE_TARGET_LIMIT = 25;

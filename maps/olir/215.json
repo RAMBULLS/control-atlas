@@ -2,8 +2,8 @@
   "schema_version": "1.0",
   "olir_id": 215,
   "source_artifact": "https://aamcyber.com/sdos/reference/csf-2-0/",
-  "sha256": "sha256:d02a3128a187740c6d2fbcb08cbc1bb77a294e752b73c712c6f8a6c9e4b04871",
-  "byte_length": 120006,
+  "sha256": "sha256:1978caf386a3f2130c72c8dcab9e7b7a19df145a9520eddb04435b00619f83ff",
+  "byte_length": 120048,
   "parser": "olir-html",
   "extraction_scope": "published_html_relationships",
   "relationships": [

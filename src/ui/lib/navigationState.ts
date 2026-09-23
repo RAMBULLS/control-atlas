@@ -30,7 +30,6 @@ export function requiresFullGraph(state: ViewState) {
         state.atlasBaseline ||
           state.atlasRmfStep ||
           state.sourceView === "rmf" ||
-          state.sourceView === "rmf-lifecycle" ||
           state.relationshipView === "rmf",
       )) ||
     (state.view === "matrix" &&

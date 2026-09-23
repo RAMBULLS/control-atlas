@@ -1,16 +1,32 @@
 // Regression coverage for issue #280 (product pruning). These assertions
 // protect the USER JOB, not today's implementation: a legacy scoped Atlas
 // link must still land somewhere real with its meaningful state intact, and
-// Territory's "Full connection list" handoff must still produce the complete
-// connection list for a record. Neither test names AtlasMapPage or asserts
-// that any particular surface renders it — #282 can replace the
+// Territory's "Full connection list" handoff must still reach the
+// connection-list job for a record. Neither test names AtlasMapPage or
+// asserts that any particular surface renders it — #282 can replace the
 // implementation freely as long as these outcomes still hold.
+//
+// Row count is asserted only as "more than a few" (>3), never an exact
+// count: RelationshipGraphTable currently paginates at 50 with a "Show 50
+// more" control, and whether that limit survives is #286's call, not this
+// test's.
 import { expect, test } from "@playwright/test";
 import { attachPageDiagnostics, dismissOnboarding, gotoApp, waitForAppReady } from "./support.mjs";
 
 test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
 });
+
+/**
+ * The connection-list surface itself, however it's implemented: today a
+ * `<table aria-label="Relationship table">`, tolerant of a future
+ * implementation that renders the same job as a named list instead.
+ */
+function connectionResultsOf(page) {
+  return page
+    .getByRole("table", { name: "Relationship table" })
+    .or(page.getByRole("list", { name: /connections/i }));
+}
 
 test("a legacy scoped Atlas link lands on a working page with its scope intact", async ({ page }) => {
   await gotoApp(page, "/#/atlas?atlasAxis=framework&atlasFramework=mitre-attack");
@@ -35,14 +51,14 @@ test("a shared full-relationship-list link for a record still opens with its con
 
   await expect(page.getByRole("heading", { name: "Page not found" })).toHaveCount(0);
   await expect(page).toHaveURL(/relationshipView=list/);
-  // The job is "show the complete connection list for this record": a table
-  // or list of counterpart records, not a single summary count.
-  const rows = page.getByRole("row").or(page.getByRole("listitem"));
-  await expect(rows.first()).toBeVisible({ timeout: 20000 });
-  expect(await rows.count()).toBeGreaterThan(3);
+  // The connection-list job: real counterpart entries, not a single summary count.
+  const connectionResults = connectionResultsOf(page);
+  await expect(connectionResults).toBeVisible({ timeout: 20000 });
+  const entries = connectionResults.getByRole("row").or(connectionResults.getByRole("listitem"));
+  expect(await entries.count()).toBeGreaterThan(3);
 });
 
-test("Territory's Full connection list handoff reaches the complete list, and back/reload both hold", async ({ page }) => {
+test("Territory's Full connection list handoff reaches the full-connection-list destination, and back/reload both hold", async ({ page }) => {
   await gotoApp(page, "/#/atlas/nist-800-53:AC-2");
   await waitForAppReady(page);
   await dismissOnboarding(page);
@@ -55,15 +71,20 @@ test("Territory's Full connection list handoff reaches the complete list, and ba
   await expect(page).toHaveURL(/relationshipView=list/);
   await expect(page).toHaveURL(/AC-2/);
   await expect(page.getByRole("heading", { name: "Page not found" })).toHaveCount(0);
-  const rows = page.getByRole("row").or(page.getByRole("listitem"));
-  await expect(rows.first()).toBeVisible({ timeout: 20000 });
+  let connectionResults = connectionResultsOf(page);
+  await expect(connectionResults).toBeVisible({ timeout: 20000 });
+  let entries = connectionResults.getByRole("row").or(connectionResults.getByRole("listitem"));
+  expect(await entries.count()).toBeGreaterThan(3);
 
   // A reload of this exact URL (a saved/shared link) must reproduce it.
   const listUrl = page.url();
   await page.reload();
   await waitForAppReady(page);
   await expect(page).toHaveURL(listUrl);
-  await expect(rows.first()).toBeVisible({ timeout: 20000 });
+  connectionResults = connectionResultsOf(page);
+  await expect(connectionResults).toBeVisible({ timeout: 20000 });
+  entries = connectionResults.getByRole("row").or(connectionResults.getByRole("listitem"));
+  expect(await entries.count()).toBeGreaterThan(3);
 
   // Back returns to Territory's own record focus, not an error page.
   await page.goBack();

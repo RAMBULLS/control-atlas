@@ -343,14 +343,15 @@ function useInlineTargetLimit() {
  * position to assistive technology.
  */
 function RowTargets({
+  inlineLimit,
   onOpenNode,
   row,
 }: {
+  inlineLimit: number;
   onOpenNode: (nodeId: string) => void;
   row: any;
 }) {
   const targets: any[] = row.targets;
-  const inlineLimit = useInlineTargetLimit();
   if (targets.length <= inlineLimit) {
     return (
       <ul className="target-mapping-list">
@@ -446,6 +447,7 @@ export function ComparePage(props: {
 }) {
   const { bundle, state, onNavigate, onOpenNode } = props;
   const [resultQuery, setResultQuery] = useState("");
+  const inlineTargetLimit = useInlineTargetLimit();
   const catalogs = bundle.runtime.getCatalogs();
   const mode: CompareModeId =
     state.intent === "item-mapping" ? "item-mapping" : "frameworks";
@@ -1074,7 +1076,11 @@ export function ComparePage(props: {
                               ) : null}
                             </td>
                             <td data-label="Maps to">
-                              <RowTargets onOpenNode={onOpenNode} row={row} />
+                              <RowTargets
+                                inlineLimit={inlineTargetLimit}
+                                onOpenNode={onOpenNode}
+                                row={row}
+                              />
                               <LazyEvidenceDetails targets={row.targets} />
                             </td>
                           </tr>

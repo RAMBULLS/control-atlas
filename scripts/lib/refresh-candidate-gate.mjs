@@ -4,13 +4,13 @@ import { join } from 'node:path';
 import { isDeepStrictEqual } from 'node:util';
 import Ajv from 'ajv';
 import {
-  CATALOG_REFRESH_PROFILES, INDEPENDENT_REFRESH_CATALOGS, PUBLISHER_RECONCILIATION, catalogPath, publisherReconciled,
+  CATALOG_REFRESH_PROFILES, INDEPENDENT_REFRESH_CATALOGS, PUBLISHER_RECONCILIATION, REFRESHED_RELATIONSHIP_SETS, catalogPath, publisherReconciled,
 } from './catalog-refresh-profiles.mjs';
 import { readNativeInventory } from '../build-catalog-source-inventory.mjs';
 import {
   adoptCommittedBaseline, advanceBaseline, evaluateBaseline, isCountBandRejection, observeCatalog,
 } from './source-baseline.mjs';
-import { buildChangeEntry, diffCatalogRecords, mergeChangeLog } from './source-change-evidence.mjs';
+import { buildChangeEntry, buildRelationshipChangeEntry, diffCatalogRecords, mergeChangeLog } from './source-change-evidence.mjs';
 import { writeJsonAtomically } from './write-json-atomically.mjs';
 
 export const BASELINE_PATH = 'data/source-baselines.json';
@@ -147,6 +147,19 @@ export function createCandidateGate(root, options = {}) {
     }
     return entries;
   };
+  // Relationship sets: compared with the committed (served) set. A quarantined unit is
+  // rolled back to that set, and its output is never recorded as an accepted change.
+  const relationshipEntries = (acceptedAtFor, results = []) => REFRESHED_RELATIONSHIP_SETS.flatMap((setPath) => {
+    if (results.some((result) => result.status === 'quarantined' && result.paths.some((path) => setPath === path || setPath.startsWith(`${path}/`)))) return [];
+    const file = join(root, setPath);
+    if (!existsSync(file)) return [];
+    const bytes = readCommittedOptional(setPath);
+    let previousDocument;
+    let currentDocument;
+    try { previousDocument = bytes ? JSON.parse(bytes) : null; currentDocument = JSON.parse(readFileSync(file, 'utf8')); } catch { return []; }
+    const entry = buildRelationshipChangeEntry({ setPath, previousDocument, currentDocument, acceptedAt: acceptedAtFor(setPath) });
+    return entry ? [entry] : [];
+  });
   const committedChangeLog = () => {
     const bytes = readCommittedOptional(CHANGE_LOG_PATH);
     return bytes ? JSON.parse(bytes) : null;
@@ -174,9 +187,12 @@ export function createCandidateGate(root, options = {}) {
         changed.set(id, candidate);
       }
       if (!isDeepStrictEqual(current, expectedDocument)) throw new Error('Refresh changed baseline provenance');
-      const entries = changeEntries((id) => current.catalogs[id].accepted_at, changed);
       const logPath = join(root, CHANGE_LOG_PATH);
       const currentLog = existsSync(logPath) ? JSON.parse(readFileSync(logPath, 'utf8')) : null;
+      const entries = [
+        ...changeEntries((id) => current.catalogs[id].accepted_at, changed),
+        ...relationshipEntries((setPath) => currentLog?.relationship_sets?.[setPath]?.at(-1)?.accepted_at ?? null),
+      ];
       const expectedLog = entries.length ? mergeChangeLog(committedChangeLog(), entries) : committedChangeLog();
       if (!isDeepStrictEqual(currentLog, expectedLog)) throw new Error('Refresh change log does not match accepted changes');
       return true;
@@ -233,7 +249,7 @@ export function createCandidateGate(root, options = {}) {
         changed.set(id, candidate);
       }
       writeJsonAtomically(join(root, BASELINE_PATH), proposed);
-      const entries = changeEntries((id) => proposed.catalogs[id].accepted_at, changed);
+      const entries = [...changeEntries((id) => proposed.catalogs[id].accepted_at, changed), ...relationshipEntries(() => now, results)];
       if (entries.length) writeJsonAtomically(join(root, CHANGE_LOG_PATH), mergeChangeLog(committedChangeLog(), entries));
       return proposed;
     },

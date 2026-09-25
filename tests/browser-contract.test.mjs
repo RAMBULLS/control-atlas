@@ -376,7 +376,6 @@ test('landing page states what the product is before asking for action', () => {
   const homeContent = readFileSync('src/shared/home-content.mjs', 'utf8');
   const viteConfig = readFileSync('vite.config.ts', 'utf8');
   assert.match(homePage, /HOME_CONTENT\.definition/);
-  assert.match(homePage, /HOME_CONTENT\.breadth/);
   assert.match(homePage, /ATLAS_SCOPE_METRICS/);
   assert.match(homeContent, /SITE_COPY\.home/);
   assert.equal(HOME_CONTENT.headline, 'Make federal cybersecurity make sense.');
@@ -393,15 +392,40 @@ test('landing page states what the product is before asking for action', () => {
     /<aside class="signal-cover__meta"><p aria-hidden="true" class="signal-cover__brand-signature">[\s\S]*?signal-cover__meta-title/,
   );
   assert.match(viteConfig, /\.replace\('<!-- CONTROL_ATLAS_HOME -->'/);
-  assert.equal(HOME_DESTINATIONS.length, 4);
+  assert.equal(HOME_DESTINATIONS.length, 3);
   assert.deepEqual(HOME_DESTINATIONS.map(({ label }) => label), [
-    'Start guided setup', 'Browse the Atlas', 'Search the Library', 'Browse Resources',
+    'Start guided setup', 'Search the Library', 'Browse Resources',
   ]);
   assert.doesNotMatch(homePage, /home-ecosystem-authorities/);
   assert.match(homePage, /HOME_LIBRARY_DISCOVERY\.map/);
   assert.match(homePage, /home-library-kpis/);
   assert.match(homePage, /Start with what you came to find\./);
   assert.doesNotMatch(homePage, /data-record-count|tag-count-scale|More records, bigger tag/);
+});
+
+test('Home leads with Atlas from the governed journeys and renders Pulse identically in both renderers', () => {
+  const homePage = readFileSync('src/ui/pages/HomePage.tsx', 'utf8');
+  const viteConfig = readFileSync('vite.config.ts', 'utf8');
+  // One journey list: vite derives the surface from atlasJourneys.ts; Home keeps none of its own.
+  assert.match(viteConfig, /import \{ JOURNEYS \} from '\.\/src\/ui\/lib\/atlasJourneys\.ts'/);
+  assert.match(viteConfig, /journeys: JOURNEYS\.map/);
+  assert.match(homePage, /HOME_SURFACE\.journeys\.map/);
+  assert.doesNotMatch(homePage, /atlasJourneys|RMF & ATO|STIGs & SRGs/, 'no second journey list and no journey data in the Home bundle');
+  // Atlas first, one primary action; no Atlas card among equals.
+  assert.ok(homePage.indexOf('home-atlas') < homePage.indexOf('<HomePulse'));
+  assert.ok(homePage.indexOf('<HomePulse') < homePage.indexOf('home-secondary-grid'));
+  assert.ok(viteConfig.indexOf('data-home-flagship="atlas"') < viteConfig.indexOf('class="home-pulse"'));
+  // Pulse comes from the generated artifact at build time; Home never fetches it.
+  assert.match(viteConfig, /data\/generated\/pulse\.json/);
+  assert.match(viteConfig, /pulseHomeSlice\(pulseArtifact\)/);
+  assert.doesNotMatch(homePage, /fetch\(|pulse\.json/);
+  // Both renderers carry the same semantics: typed items, a machine-readable date, one action, empty and quiet states.
+  for (const [name, source] of [['HomePage.tsx', homePage], ['vite.config.ts', viteConfig]]) {
+    for (const pattern of [/home-pulse__list/, /data-pulse-type/, /<time dateTime=|<time datetime=/, /home-pulse__action/, /home-pulse__empty/, /home-pulse__quiet/, /aria-labelledby="home-pulse-heading"|aria-labelledby=\{?"home-pulse-heading"/, /home-sr/]) {
+      assert.match(source, pattern, `${name} ${pattern}`);
+    }
+  }
+  assert.match(readFileSync('tools/build-static-site.mjs', 'utf8'), /scripts\/build-pulse-artifact\.mjs/);
 });
 
 test('About and footer expose one quiet, safe project-support link each', () => {

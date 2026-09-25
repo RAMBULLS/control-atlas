@@ -3,12 +3,13 @@ import {
   IconBooks,
   IconRocket,
   IconSearch,
-  IconTopologyStar3,
   IconUsersGroup,
 } from "@tabler/icons-react";
 
 import { HOME_CONTENT, HOME_DESTINATIONS } from "../../shared/home-content.mjs";
+import { SITE_COPY } from "../../shared/site-copy.mjs";
 import { ATLAS_SCOPE_METRICS } from "../../shared/atlas-presentation";
+import { HOME_SURFACE } from "../../shared/home-surface";
 import { AppLink } from "../components/AppLink";
 import { HOME_LIBRARY_DISCOVERY } from "../lib/homeTagConstellation";
 import type { ViewState } from "../lib/viewState";
@@ -20,10 +21,63 @@ type HomePageProps = {
 
 const DESTINATION_ICONS = {
   "start-here": IconRocket,
-  atlas: IconTopologyStar3,
   library: IconBooks,
   resources: IconUsersGroup,
 } as const;
+
+const ATLAS = SITE_COPY.home.atlas;
+const PULSE = SITE_COPY.home.pulse;
+
+/** "What changed": the bounded Pulse slice computed at build time. Markup matches renderStaticHome in vite.config.ts. */
+function HomePulse({ onNavigate }: Pick<HomePageProps, "onNavigate">) {
+  const pulse = HOME_SURFACE.pulse;
+  return (
+    <section
+      aria-labelledby="home-pulse-heading"
+      className="home-pulse"
+      data-dataset-id={pulse.datasetId}
+      data-pulse-quiet={String(pulse.quiet)}
+    >
+      <div className="home-pulse__heading">
+        <h2 id="home-pulse-heading">{PULSE.heading}</h2>
+        <p>{PULSE.intro}</p>
+      </div>
+      {pulse.events.length === 0 ? (
+        <p className="home-pulse__empty">{PULSE.empty}</p>
+      ) : pulse.quiet ? (
+        <p className="home-pulse__quiet">
+          {PULSE.quietLead} {pulse.latestLabel}. {PULSE.checkedLead} {pulse.checkedLabel}.
+        </p>
+      ) : null}
+      {pulse.events.length ? (
+        <ol className="home-pulse__list">
+          {pulse.events.map((event) => (
+            <li className="home-pulse__event" data-pulse-type={event.type} key={event.id}>
+              <article aria-labelledby={`pulse-${event.id}`}>
+                <p className="home-pulse__meta">
+                  <span className="home-pulse__type">{event.typeLabel}</span>
+                  <time dateTime={event.date}>{event.dateLabel}</time>
+                </p>
+                <h3 className="home-pulse__title" id={`pulse-${event.id}`}>{event.title}</h3>
+                <p className="home-pulse__summary">{event.summary}</p>
+                <AppLink
+                  className="home-pulse__action"
+                  onNavigate={onNavigate}
+                  patch={event.destination.patch as Partial<ViewState>}
+                  view={event.destination.view as ViewState["view"]}
+                >
+                  {event.destination.label}
+                  <span className="home-sr"> for {event.title}</span>{" "}
+                  <IconArrowRight aria-hidden="true" size={16} stroke={2} />
+                </AppLink>
+              </article>
+            </li>
+          ))}
+        </ol>
+      ) : null}
+    </section>
+  );
+}
 
 export function HomePage({ onNavigate, onOpenSearch }: HomePageProps) {
   return (
@@ -33,13 +87,38 @@ export function HomePage({ onNavigate, onOpenSearch }: HomePageProps) {
       data-template="B"
       data-visual-identity="universal-front-door"
     >
-      <div className="home-hero">
+      <div className="home-hero home-atlas" data-home-flagship="atlas">
         <div className="home-hero-lead">
           <header className="home-entry-header">
-            <h1 id="home-title">{HOME_CONTENT.headline}</h1>
+            <p className="eyebrow home-atlas__eyebrow">{ATLAS.eyebrow}</p>
+            <h1 id="home-title">{ATLAS.headline}</h1>
             <p className="home-product-identity">{HOME_CONTENT.definition}</p>
-            <p className="home-breadth">{HOME_CONTENT.breadth}</p>
+            <p className="home-breadth">{ATLAS.lead}</p>
           </header>
+
+          <p className="home-atlas__actions">
+            <AppLink className="home-atlas__open" onNavigate={onNavigate} view="atlas-map">
+              {ATLAS.action} <IconArrowRight aria-hidden="true" size={18} stroke={2} />
+            </AppLink>
+          </p>
+
+          <nav aria-labelledby="home-journeys-heading" className="home-journeys">
+            <h2 className="home-journeys__heading" id="home-journeys-heading">{ATLAS.journeysHeading}</h2>
+            <ul className="home-journeys__list">
+              {HOME_SURFACE.journeys.map((journey) => (
+                <li key={journey.id}>
+                  <AppLink
+                    className="home-journey"
+                    onNavigate={onNavigate}
+                    patch={{ atlasJourney: journey.id } as Partial<ViewState>}
+                    view="atlas-map"
+                  >
+                    {journey.label}
+                  </AppLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
           <button
             aria-label="Search Control Atlas"
@@ -61,9 +140,10 @@ export function HomePage({ onNavigate, onOpenSearch }: HomePageProps) {
               {ATLAS_SCOPE_METRICS.compact.publications} source publications
             </p>
           ) : null}
-
         </div>
       </div>
+
+      <HomePulse onNavigate={onNavigate} />
 
       <nav aria-label="Choose a Control Atlas destination" className="home-secondary-grid">
         {HOME_DESTINATIONS.map((destination) => {
@@ -120,7 +200,6 @@ export function HomePage({ onNavigate, onOpenSearch }: HomePageProps) {
           ))}
         </ul>
       </nav>
-
     </section>
   );
 }

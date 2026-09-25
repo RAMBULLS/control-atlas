@@ -19,14 +19,14 @@ test("critical path: Template B landing hero and four entry cards are visible", 
 
   await expect(
     page.getByRole("heading", {
-      name: "Make federal cybersecurity make sense.",
+      name: "Explore federal cybersecurity",
     }),
   ).toBeVisible();
 
   await expect(page.getByRole("searchbox", { name: "Search Control Atlas" })).toBeVisible();
   await expect(page.locator(".home-search").getByRole("button", { name: "Search" })).toBeVisible();
   await expect(page.locator('[data-template="B"]')).toBeVisible();
-  await expect(page.locator(".home-secondary-action")).toHaveCount(4);
+  await expect(page.locator(".home-secondary-action")).toHaveCount(3);
   // Five practitioner questions, ordered the way the work runs. The sixth
   // card was a record-volume statistic, not a place to start.
   await expect(page.locator(".home-library-kpis .home-library-kpi")).toHaveCount(5);

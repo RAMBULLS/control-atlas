@@ -61,11 +61,18 @@ test("site copy keeps every approved anchor exact", () => {
     SITE_COPY.home.destinations.map(({ label, description }) => [label, description]),
     [
       ["Start guided setup", "Answer two questions to find where to begin."],
-      ["Browse the Atlas", "Start with a topic."],
       ["Search the Library", "Find a specific record."],
       ["Browse Resources", "Find tools, training, and guidance."],
     ],
   );
+});
+
+test("Home leads with Atlas and keeps Pulse wording plain", () => {
+  assert.equal(SITE_COPY.home.atlas.headline, "Explore federal cybersecurity");
+  assert.equal(SITE_COPY.home.atlas.action, "Open Atlas");
+  assert.equal(SITE_COPY.home.atlas.journeysHeading, "Start with what you're working on");
+  assert.equal(SITE_COPY.home.pulse.heading, "What changed");
+  assert.ok(!SITE_COPY.home.destinations.some(({ view }) => view === "atlas-map"), "Atlas is the hero, not one card among equals");
 });
 
 test("third-party federal-use provenance is described without changing its publisher", () => {

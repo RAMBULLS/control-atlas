@@ -13,6 +13,20 @@ export const CATALOG_REFRESH_PROFILES = Object.freeze({
   'nist-mobile-threats': 'nist-mobile-threats', 'nist-ssdf': 'ssdf', 'nist-zt': 'nist-zt',
 });
 
+// Published relationship sets a refresh can rewrite, with the direction they are
+// published in (source catalog -> target catalog). Their accepted changes are
+// recorded in the change log beside catalog changes.
+export const RELATIONSHIP_SET_ENDPOINTS = Object.freeze({
+  'maps/800-53-to-csf.json': Object.freeze(['nist-800-53', 'csf-2']),
+  'maps/800-53-to-800-171.json': Object.freeze(['nist-800-171', 'nist-800-53']),
+  'maps/800-171-to-csf.json': Object.freeze(['nist-800-171', 'csf-2']),
+  'maps/cci-to-800-53.json': Object.freeze(['disa-cci', 'nist-800-53']),
+  'maps/stig-srg-to-cci.json': Object.freeze(['disa-stig', 'disa-cci']),
+  'maps/attack-to-d3fend.json': Object.freeze(['mitre-attack', 'mitre-d3fend']),
+  'maps/d3fend-to-800-53.json': Object.freeze(['mitre-d3fend', 'nist-800-53']),
+});
+export const REFRESHED_RELATIONSHIP_SETS = Object.freeze(Object.keys(RELATIONSHIP_SET_ENDPOINTS));
+
 export const INDEPENDENT_REFRESH_CATALOGS = new Set([
   'disa-cci',
   'csf-2', 'fedramp-2026', 'mitre-attack', 'mitre-attack-ics', 'mitre-d3fend',

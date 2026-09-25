@@ -217,7 +217,7 @@ test("Template B leads with guided setup and retires the legacy work-map card", 
   await gotoApp(page, "/#/");
   await waitForAppReady(page, { allowPartial: true });
   const homeTaxonomy = await page.locator(".home-secondary-action strong").allTextContents();
-  expect(homeTaxonomy).toEqual(["Start guided setup", "Browse the Atlas", "Search the Library", "Browse Resources"]);
+  expect(homeTaxonomy).toEqual(["Start guided setup", "Search the Library", "Browse Resources"]);
   await expect(page.locator(".home-work-map span")).toHaveCount(0);
   await expect(page.getByText("Start with your work", { exact: true })).toHaveCount(0);
 });

@@ -140,6 +140,69 @@ counts, lifecycle transitions and accepted time. A field is `null` when it was
 not measured. No publisher version is ever invented. The admission gate
 recomputes the log and rejects a pull request whose log does not match.
 
+`changed_count` counts records whose own content changed. Provenance stamps that
+a refresh copies onto every record (`source.snapshot_date`, `source.version`,
+`source.checksum`) are not content: a record that differs only there is counted in
+`stamp_only_count`, and entries measured this way carry
+`diff_basis: content_excluding_provenance_stamps`. Entries written before this
+rule have no `diff_basis`; their `changed_count` includes re-stamped records and
+is not shown to readers.
+
+Published relationship sets that refresh rewrites (`RELATIONSHIP_SET_ENDPOINTS` in
+`scripts/lib/catalog-refresh-profiles.mjs`) are recorded under `relationship_sets`
+in the same log, keyed by file. A set's identity is its directed relationships
+(source, relationship type, target); a re-fetch that only moves dates or checksums
+records nothing. Each entry keeps the previous and current identity and version,
+added and removed counts, and direction-preserving samples. A quarantined unit is
+rolled back and never recorded.
+
+## Pulse
+
+Pulse is an output of accepted lifecycle data and Git history, not a crawler:
+accepted refresh or merged release, then governed diff, then Pulse artifact, then
+site build. `build:site` runs `scripts/build-pulse-artifact.mjs`, which writes
+`data/generated/pulse.json` (published at the same path).
+
+Source events come only from `data/source-change-log.json`, the accepted baseline
+chain in `data/source-baselines.json`, the served relationship sets and
+`data/source-registry.json`. A source event is shown only when its decision is an
+accepted one and its snapshot is in the accepted baseline chain. Quarantined
+sources are listed with `shown_as_event: false`.
+
+Product events come only from the Git history of the commit being built
+(`scripts/lib/product-history.mjs`):
+
+- A feature exists only as a pull request that GitHub merged onto the
+  first-parent history of the build commit: a commit on that history, committed by
+  `noreply@github.com`, whose subject ends with `(#<number>)`. Its merge SHA and
+  UTC timestamp are that commit's. A pull request that is not merged there,
+  including one still in review, produces no event.
+- A release exists only as a tag whose commit is reachable from the build commit.
+  Its timestamp is the tag date (or the tagged commit's date for a lightweight
+  tag).
+- Without full history (a shallow checkout) no product event is shown, and the
+  artifact says why. The CI build job fetches commits and tags only
+  (`--filter=tree:0 --unshallow --tags`) before building.
+
+`data/pulse-presentation.json` is presentation metadata, not a release feed: for a
+pull request number or a tag it holds a title, a summary and a destination. It
+cannot hold a date, commit, issue or any other shipping fact; validation rejects
+them. An entry whose pull request or tag is not in the build history is listed as
+withheld with its reason.
+
+The artifact records the sha256 of every input file, the dataset identity and
+the build head, lists every event with its evidence (change-log pointer, or the
+merge commit and subject, or the tag, tag object and commit), and lists every
+accepted log entry or presentation entry it did not show with the reason
+(`no_verified_content_change`, `not_in_accepted_baseline_chain`,
+`decision_not_accepted`, `does_not_match_served_set`,
+`pull_request_not_merged_on_build_history`, `tag_not_found`,
+`tag_not_reachable_from_build_history`, `git_history_unavailable`). Events are
+ordered by their UTC timestamp. The same inputs give the same bytes, and an event
+id is derived from its identity (catalog and both snapshot hashes, relationship
+set and both identities, pull request number, or tag), so it is stable across
+rebuilds and duplicates collapse. No news source, forum or feed is read.
+
 Retrieval failures are separated by whether asking again could help. Timeouts,
 dropped connections, HTTP 408, 425, 429 and 5xx are retried: at most three
 requests per URL, waiting 1 and 2 seconds (a `Retry-After` is honored up to 15

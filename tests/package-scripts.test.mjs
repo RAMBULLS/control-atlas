@@ -36,6 +36,12 @@ test('PR CI creates one change map from a shallow checkout and targeted base fet
   assert.doesNotMatch(ci, /fetch-depth: 0/);
 });
 
+test('the site build reads Pulse shipping facts from full commit history, not an authored file', () => {
+  const build = ci.slice(ci.indexOf('name: Build immutable site artifact'), ci.indexOf('name: Build once'));
+  assert.match(build, /git fetch --no-recurse-submodules --filter=tree:0 --unshallow --tags origin "\$GITHUB_SHA"/);
+  assert.ok(!existsSync('data/product-release-log.json'), 'no hand-authored release feed');
+});
+
 test('PR CI is an independent gate DAG around one immutable artifact', () => {
   for (const job of [
     'Automation contracts',

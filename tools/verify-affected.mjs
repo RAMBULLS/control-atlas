@@ -107,7 +107,7 @@ export function createVerificationPlan(paths, changeMap) {
     'data/source-baselines.json', 'data/source-refresh-policy.json',
     'data/schemas/source-baselines.schema.json', 'data/schemas/source-refresh-policy.schema.json',
     'tools/automerge-source-refresh.mjs', 'tools/report-refresh-alerts.mjs', 'tools/verify-refresh-admission.mjs',
-    'scripts/lib/retry-policy.mjs', 'scripts/lib/source-change-evidence.mjs',
+    'scripts/lib/retry-policy.mjs', 'scripts/lib/source-change-evidence.mjs', 'scripts/lib/pulse.mjs', 'scripts/lib/product-history.mjs',
     'tools/classify-refresh-outcome.mjs', 'tools/report-sweep-alert.mjs', 'tools/sweep-due.mjs',
     'tests/helpers/publisher-volume.mjs',
     ...['automerge-source-refresh', 'catalog-source-inventory', 'catalog-baseline-fetch', 'cci-inventory',
@@ -115,17 +115,19 @@ export function createVerificationPlan(paths, changeMap) {
       'refresh-candidate-gate', 'refresh-isolation', 'source-baseline', 'source-freshness-ownership',
       'source-partial-failure', 'source-transaction', 'source-unit-selection', 'source-url-policy',
       'mitre-release-admission', 'source-health-harness', 'retry-policy', 'sweep-alert', 'refresh-outcome',
-      'source-change-evidence', 'sweep-due'].map((name) => `tests/${name}.test.mjs`),
+      'source-change-evidence', 'pulse', 'sweep-due'].map((name) => `tests/${name}.test.mjs`),
   ]);
   if (paths.length && paths.every((path) => refreshSafetyPaths.has(path))) {
     const suites = new Set();
     const byModule = {
       'publisher-inventory': ['publisher-inventory', 'publisher-inventory-integration'],
       'cci-inventory': ['cci-inventory'],
-      'catalog-refresh-profiles': ['refresh-candidate-gate', 'catalog-source-inventory'],
+      'catalog-refresh-profiles': ['refresh-candidate-gate', 'catalog-source-inventory', 'pulse'],
       'refresh-candidate-gate': ['refresh-candidate-gate', 'source-health-harness'],
       'retry-policy': ['retry-policy', 'source-transaction', 'source-health-harness'],
-      'source-change-evidence': ['source-change-evidence', 'refresh-candidate-gate', 'source-health-harness'],
+      'source-change-evidence': ['source-change-evidence', 'refresh-candidate-gate', 'source-health-harness', 'pulse'],
+      pulse: ['pulse', 'source-health-harness'],
+      'product-history': ['pulse'],
       'classify-refresh-outcome': ['refresh-outcome'],
       'report-sweep-alert': ['sweep-alert'],
       'sweep-due': ['sweep-due'],

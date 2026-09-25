@@ -1,4 +1,5 @@
 import { normalizeResearchState } from "./atlasResearchState";
+import { normalizeJourneyId } from "./atlasJourneyIds";
 import { normalizeContextIds } from "./atlasTerritoryContext";
 
 export type AppView =
@@ -24,8 +25,6 @@ export type CompareCrosswalk =
   | "stig-chain"
   | "baseline-compare"
   | "threat-chain";
-
-export type RelationshipViewMode = "path" | "map" | "list" | "purpose" | "rmf";
 
 export type CompareViewMode = "map" | "list";
 
@@ -76,60 +75,23 @@ export type ViewState =
       atlasDirection?: string;
       atlasHops?: string;
       node: string;
-      atlasParent: string;
-      atlasAxis: string;
       atlasLimb: string;
       atlasFramework: string;
-      atlasBenchmark: string;
-      atlasBaseline: string;
-      atlasFamily: string;
-      atlasRmfStep: string;
       /**
-       * Where the reader crossed from one framework into another, oldest
-       * first. Structural ancestry is already recoverable from the scope
-       * parameters; a pivot is not, because the framework left behind is not
-       * an ancestor of the one arrived at. Encoded as
-       * `ecosystem|publication|node` triples joined by `~`.
+       * Practitioner journey ("start with what you're working on"): an id from atlasJourneys.ts or
+       * "". A journey is Control Atlas navigation, never a publisher relationship.
        */
-      atlasPivotTrail: string;
-      /**
-       * How the unscoped Atlas groups itself: "" by what each document is,
-       * "publishers" by who issues it, "job" by what you are trying to get
-       * done. Three questions about the same 28 publications, none of which
-       * claims one framework outranks another.
-       *
-       * The landing used to draw all 28 at once as a dependency hierarchy,
-       * which put SP 800-53 at the top of everything — five unlike documents
-       * placed as peers because nothing else here happens to build on them.
-       * Grouping first shows five or six things and says something true on
-       * every screen; the dependency picture moves one level down, inside a
-       * group, where it is honest.
-       *
-       * The publisher lens is also the only place the authority groups appear,
-       * since statutes and directives carry no crosswalks.
-       */
-      atlasLanding: string;
-      /** The group opened within the current lens, if any. */
-      atlasLensFamily: string;
+      atlasJourney: string;
       /** Territory map layer: "" or "publisher:<publisher name>". */
       atlasLayer: string;
       /** Territory context: comma-separated governed tag ids (program, product, asset). */
       atlasContext: string;
       /** The accepted dataset a shared view was made from; kept so a later comparison is possible. */
       atlasDataset: string;
+      /** "list" opens the focused record's full connection list. */
       relationshipView: string;
+      /** Relationship type filter for the full connection list. */
       relationshipType: string;
-      provenance: string;
-      confidence: string;
-      nodeType: string;
-      includeCandidates: string;
-      relationshipSearch: string;
-      atlasStage: string;
-      relationshipGroup: string;
-      sourceView: string;
-      showSupportingReferences: string;
-      showDraftOrLegacy: string;
-      showRegistryOnly: string;
     }
   | {
       view: "search";
@@ -285,33 +247,14 @@ function atlasMapState(): Extract<ViewState, { view: "atlas-map" }> {
     view: "atlas-map",
     ...normalizeResearchState({}),
     node: "",
-    atlasParent: "",
-    atlasAxis: "",
     atlasLimb: "",
     atlasFramework: "",
-    atlasBenchmark: "",
-    atlasBaseline: "",
-    atlasFamily: "",
-    atlasRmfStep: "",
-    atlasPivotTrail: "",
-    atlasLanding: "",
-    atlasLensFamily: "",
+    atlasJourney: "",
     atlasLayer: "",
     atlasContext: "",
     atlasDataset: "",
     relationshipView: "",
     relationshipType: "",
-    provenance: "",
-    confidence: "",
-    nodeType: "",
-    includeCandidates: "",
-    relationshipSearch: "",
-    atlasStage: "",
-    relationshipGroup: "",
-    sourceView: "default",
-    showSupportingReferences: "",
-    showDraftOrLegacy: "",
-    showRegistryOnly: "",
   };
 }
 
@@ -345,26 +288,6 @@ function normalizeCompareView(value: string): CompareViewMode | "" {
   return "";
 }
 
-/**
- * "" is the kind lens. It is the default rather than a named value so that
- * links written before the other two lenses existed still open on a survey,
- * and so the common case leaves no parameter in the URL at all.
- */
-function normalizeAtlasLanding(value: string): string {
-  if (value === "publishers") return "publishers";
-  if (value === "job") return "job";
-  return "";
-}
-
-function normalizeRelationshipView(value: string): RelationshipViewMode | "" {
-  if (value === "path") return "path";
-  if (value === "list" || value === "table") return "list";
-  if (value === "map") return "map";
-  if (value === "purpose") return "purpose";
-  if (value === "rmf") return "rmf";
-  return "";
-}
-
 function canonicalViewParam(view: string): AppView {
   if (view === "explore") return "search";
   if (view === "playbooks") return "patterns";
@@ -391,45 +314,15 @@ export function parseViewState(search: string): ViewState {
       view,
       ...normalizeResearchState(Object.fromEntries(params)),
       node: params.get("node") || "",
-      atlasParent: params.get("atlasParent") || "",
-      atlasAxis: params.get("atlasAxis") || "",
       atlasLimb: params.get("atlasLimb") || "",
       atlasFramework: params.get("atlasFramework") || "",
-      atlasBenchmark: params.get("atlasBenchmark") || "",
-      atlasBaseline: params.get("atlasBaseline") || "",
-      atlasFamily: params.get("atlasFamily") || "",
-      atlasRmfStep: params.get("atlasRmfStep") || "",
-      atlasPivotTrail: params.get("atlasPivotTrail") || "",
-      // Which of the three lenses the landing is grouped by. "" is the kind
-      // lens and stays the default, so every URL written before the other two
-      // existed still opens on a survey rather than on nothing.
-      atlasLanding: normalizeAtlasLanding(params.get("atlasLanding") || ""),
-      atlasLensFamily: params.get("atlasLensFamily") || "",
+      atlasJourney: normalizeJourneyId(params.get("atlasJourney")),
       atlasLayer: normalizeAtlasLayer(params.get("atlasLayer") || ""),
       atlasContext: normalizeAtlasContext(params.get("atlasContext") || ""),
       atlasDataset: normalizeAtlasDataset(params.get("atlasDataset") || ""),
-      // Empty means "the default for this state" — Connections when a record
-      // is focused, the board otherwise (AtlasMapPage.atlasView decides). It is
-      // deliberately not forced to "path": serializing a default the user never
-      // chose raced with their first click and overwrote it.
-      relationshipView: normalizeRelationshipView(
-        params.get("relationshipView") || "",
-      ),
-      relationshipType: params.get("relationshipType") || "",
-      provenance: params.get("provenance") || "",
-      confidence: params.get("confidence") || "",
-      nodeType: params.get("type") || params.get("nodeType") || "",
-      includeCandidates: params.get("includeCandidates") || "",
-      relationshipSearch: params.get("relationshipSearch") || "",
-      atlasStage: params.get("atlasStage") || "",
-      relationshipGroup: params.get("relationshipGroup") || "",
-      sourceView:
-        params.get("sourceView") === "purpose" || params.get("sourceView") === "rmf"
-          ? params.get("sourceView") || "default"
-          : "default",
-      showSupportingReferences: params.get("showSupportingReferences") || "",
-      showDraftOrLegacy: params.get("showDraftOrLegacy") || "",
-      showRegistryOnly: params.get("showRegistryOnly") || "",
+      // Only a focused record has a connection list to open.
+      relationshipView: params.get("node") && params.get("relationshipView") === "list" ? "list" : "",
+      relationshipType: params.get("node") && params.get("relationshipView") === "list" ? params.get("relationshipType") || "" : "",
     };
   }
 
@@ -806,49 +699,16 @@ export function serializeViewState(state: ViewState): string {
     if (research.atlasDirection === "either") params.set("atlasDirection", "either");
     if (research.atlasHops !== "4") params.set("atlasHops", research.atlasHops);
     setIfValue(params, "node", state.node);
-    setIfValue(params, "atlasParent", state.atlasParent);
-    setIfValue(params, "atlasAxis", state.atlasAxis);
     setIfValue(params, "atlasLimb", state.atlasLimb);
     setIfValue(params, "atlasFramework", state.atlasFramework);
-    setIfValue(params, "atlasBenchmark", state.atlasBenchmark);
-    setIfValue(params, "atlasBaseline", state.atlasBaseline);
-    setIfValue(params, "atlasFamily", state.atlasFamily);
-    setIfValue(params, "atlasRmfStep", state.atlasRmfStep);
-    setIfValue(params, "atlasPivotTrail", state.atlasPivotTrail);
-    setIfValue(params, "atlasLanding", state.atlasLanding);
-    setIfValue(params, "atlasLensFamily", state.atlasLensFamily);
+    setIfValue(params, "atlasJourney", normalizeJourneyId(state.atlasJourney));
     setIfValue(params, "atlasLayer", normalizeAtlasLayer(state.atlasLayer));
     setIfValue(params, "atlasContext", normalizeAtlasContext(state.atlasContext));
     setIfValue(params, "atlasDataset", normalizeAtlasDataset(state.atlasDataset));
-    if (state.relationshipView === "path") {
-      params.set("relationshipView", "path");
-    } else if (state.relationshipView === "map") {
-      params.set("relationshipView", "map");
-    } else if (state.relationshipView === "list") {
+    if (state.node && state.relationshipView === "list") {
       params.set("relationshipView", "list");
-    } else if (state.relationshipView === "purpose") {
-      params.set("relationshipView", "purpose");
-    } else if (state.relationshipView === "rmf") {
-      params.set("relationshipView", "rmf");
+      setIfValue(params, "relationshipType", state.relationshipType);
     }
-    setIfValue(params, "relationshipType", state.relationshipType);
-    setIfValue(params, "provenance", state.provenance);
-    setIfValue(params, "confidence", state.confidence);
-    setIfValue(params, "type", state.nodeType);
-    setIfValue(params, "includeCandidates", state.includeCandidates);
-    setIfValue(params, "relationshipSearch", state.relationshipSearch);
-    setIfValue(params, "atlasStage", state.atlasStage);
-    setIfValue(params, "relationshipGroup", state.relationshipGroup);
-    if (state.sourceView === "purpose" || state.sourceView === "rmf") {
-      params.set("sourceView", state.sourceView);
-    }
-    setIfValue(
-      params,
-      "showSupportingReferences",
-      state.showSupportingReferences,
-    );
-    setIfValue(params, "showDraftOrLegacy", state.showDraftOrLegacy);
-    setIfValue(params, "showRegistryOnly", state.showRegistryOnly);
   } else if (state.view === "search") {
     setIfValue(params, "view", "search");
     setIfValue(params, "q", state.query);
@@ -964,30 +824,14 @@ export function serializeViewState(state: ViewState): string {
 
 export type AtlasMapUrlOptions = {
   node?: string;
-  atlasParent?: string;
-  atlasAxis?: string;
   atlasLimb?: string;
   atlasFramework?: string;
-  atlasBenchmark?: string;
-  atlasBaseline?: string;
-  atlasFamily?: string;
-  atlasRmfStep?: string;
-  atlasPivotTrail?: string;
-  atlasLanding?: string;
-  atlasLensFamily?: string;
+  atlasJourney?: string;
   atlasLayer?: string;
   atlasContext?: string;
   atlasDataset?: string;
-  sourceView?: "default" | "purpose" | "rmf";
-  relationshipView?: RelationshipViewMode;
+  relationshipView?: "list" | "";
   relationshipType?: string;
-  provenance?: string;
-  confidence?: string;
-  nodeType?: string;
-  includeCandidates?: boolean;
-  relationshipSearch?: string;
-  atlasStage?: string;
-  relationshipGroup?: string;
 };
 
 export type CompareUrlOptions = Partial<
@@ -1008,32 +852,13 @@ export function buildCompareUrl(options: CompareUrlOptions = {}): string {
 
 export function buildAtlasMapUrl(options: AtlasMapUrlOptions = {}): string {
   const state = normalizeViewState("atlas-map", {
+    ...atlasMapState(),
+    ...options,
     view: "atlas-map",
-    node: options.node || "",
-    atlasParent: options.atlasParent || "",
-    atlasAxis: options.atlasAxis || "",
-    atlasLimb: options.atlasLimb || "",
-    atlasFramework: options.atlasFramework || "",
-    atlasBenchmark: options.atlasBenchmark || "",
-    atlasBaseline: options.atlasBaseline || "",
-    atlasFamily: options.atlasFamily || "",
-    atlasRmfStep: options.atlasRmfStep || "",
-    atlasPivotTrail: options.atlasPivotTrail || "",
-    atlasLanding: normalizeAtlasLanding(options.atlasLanding || ""),
-    atlasLensFamily: options.atlasLensFamily || "",
+    atlasJourney: normalizeJourneyId(options.atlasJourney),
     atlasLayer: normalizeAtlasLayer(options.atlasLayer || ""),
     atlasContext: normalizeAtlasContext(options.atlasContext || ""),
     atlasDataset: normalizeAtlasDataset(options.atlasDataset || ""),
-    sourceView: options.sourceView || "default",
-    relationshipView: options.relationshipView || "",
-    relationshipType: options.relationshipType || "",
-    provenance: options.provenance || "",
-    confidence: options.confidence || "",
-    nodeType: options.nodeType || "",
-    includeCandidates: options.includeCandidates ? "true" : "",
-    relationshipSearch: options.relationshipSearch || "",
-    atlasStage: options.atlasStage || "",
-    relationshipGroup: options.relationshipGroup || "",
   }) as Extract<ViewState, { view: "atlas-map" }>;
   return serializeViewState(state);
 }

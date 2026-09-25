@@ -48,14 +48,12 @@ const ROUTES = [
   { label: "retired recovery", path: "/#/retired?q=old-control" },
   { label: "not found recovery", path: "/#/does-not-exist" },
   { label: "explore", path: "/#/explore" },
-  // All three lenses the unscoped Atlas offers, plus one group opened. The
-  // group view is a diagram built from positioned controls and coloured wires,
-  // so it is the one place in the product where meaning could slip into colour
-  // and position alone.
-  { label: "Atlas by kind", path: "/#/atlas" },
-  { label: "Atlas by publisher", path: "/#/atlas?atlasLanding=publishers" },
-  { label: "Atlas by job", path: "/#/atlas?atlasLanding=job" },
-  { label: "Atlas group landscape", path: "/#/atlas?atlasLensFamily=implementation" },
+  // The territory sheet, a practitioner journey, and saved classic links that
+  // now translate into territory state (they must still land somewhere usable).
+  { label: "Atlas overview", path: "/#/atlas" },
+  { label: "Atlas RMF journey", path: "/#/atlas?atlasJourney=rmf" },
+  { label: "Atlas working files journey", path: "/#/atlas?atlasJourney=working-files" },
+  { label: "Atlas legacy publisher lens", path: "/#/atlas?atlasLanding=publishers" },
   {
     label: "focused Atlas Path",
     path: "/#/explore?node=nist-800-53%3AAC-2&relationshipView=path",
@@ -214,17 +212,19 @@ test("a11y: focused Atlas relationship table has no serious or critical violatio
     page.getByRole("table", { name: "Relationship table" }),
   ).toBeVisible();
   await assertNoBlockingViolations(page, "focused Atlas relationship table");
+});
 
-  await page.getByRole("button", { name: "Hierarchy" }).click();
-  await expect(page.locator(".route-transition")).toBeHidden();
-  const authorityRail = page.getByRole("navigation", { name: "Where this sits" });
-  await expect(authorityRail.getByText("Authority", { exact: true })).toBeVisible();
-  await expect(
-    authorityRail.getByRole("link", {
-      name: /40 U\.S\.C\. § 11331 — Official authority/,
-    }),
-  ).toBeVisible();
-  await assertNoBlockingViolations(page, "focused Atlas authority rail");
+test("a11y: Atlas Policy & directives has no serious or critical violations", async ({
+  page,
+}) => {
+  await gotoApp(page, "/#/atlas");
+  await waitForAppReady(page, { allowPartial: true });
+  await dismissOnboarding(page);
+  await page.getByRole("button", { name: "Policy & directives" }).click();
+  const policy = page.getByRole("region", { name: /Policy & directives · \d+/ });
+  await expect(policy).toBeVisible();
+  await expect(policy.getByRole("link", { name: /Official text for 40 U\.S\.C\. § 11331/ })).toBeVisible();
+  await assertNoBlockingViolations(page, "Atlas Policy & directives");
 });
 
 test("a11y: skip link moves keyboard focus to the workspace", async ({

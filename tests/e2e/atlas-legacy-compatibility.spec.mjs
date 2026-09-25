@@ -2,9 +2,9 @@
 // protect the USER JOB, not today's implementation: a legacy scoped Atlas
 // link must still land somewhere real with its meaningful state intact, and
 // Territory's "Full connection list" handoff must still reach the
-// connection-list job for a record. Neither test names AtlasMapPage or
-// asserts that any particular surface renders it — #282 can replace the
-// implementation freely as long as these outcomes still hold.
+// connection-list job for a record. #282 retired the classic Atlas page and
+// now answers both natively on the territory sheet (legacy scopes are
+// translated in routeIdentity.ts); these outcomes are what it must keep.
 //
 // Row count is asserted only as "more than a few" (>3), never an exact
 // count: RelationshipGraphTable currently paginates at 50 with a "Show 50
@@ -38,7 +38,8 @@ test("a legacy scoped Atlas link lands on a working page with its scope intact",
   // The requested publication scope is still the one in the URL: the link's
   // meaningful state was preserved, whichever surface answered it.
   await expect(page).toHaveURL(/atlasFramework=mitre-attack/);
-  await expect(page.getByRole("main")).toContainText(/MITRE ATT&CK/i);
+  await expect(page.getByRole("main")).toContainText(/ATT&CK Enterprise/);
+  await expect(page.getByRole("main")).toContainText(/MITRE/);
 });
 
 test("a shared full-relationship-list link for a record still opens with its connections", async ({ page }) => {

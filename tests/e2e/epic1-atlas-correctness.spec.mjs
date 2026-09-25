@@ -54,32 +54,3 @@ test("no-match Atlas search stays local with announced recovery actions", async 
     `No Atlas record matches ${query}. Try Search or browse the Library.`,
   );
 });
-
-test("the full connection workspace exposes explicit lenses and class-direction List semantics", async ({
-  page,
-}) => {
-  await page.goto("/#/atlas?node=nist-800-53%3AAC-2&relationshipView=map");
-  await waitForAppReady(page);
-
-  await page.getByRole("button", { name: "Hierarchy" }).click();
-  await expect(
-    page.getByRole("navigation", { name: "Where this sits" }).first(),
-  ).toContainText("SP 800-53 Rev. 5");
-  await expect(
-    page.getByRole("navigation", { name: "Where this sits" }).first(),
-  ).toContainText("Access Control");
-  await expect(page.getByRole("heading", { name: "Connections", level: 2 })).toBeVisible();
-  await expect(page.getByRole("button", { name: "View all", exact: true })).toBeVisible();
-
-  await page.getByRole("button", { name: "View all", exact: true }).click();
-  const table = page.getByRole("table", { name: "Relationship table" });
-  await expect(table.getByRole("columnheader", { name: "Class and direction" })).toBeVisible();
-  // List reuses Map's own relationship-lens label per row (never a coarser,
-  // disagreeing taxonomy) — any of the published lens labels is valid here.
-  await expect(table.locator("tbody tr").first()).toContainText(
-    /Structure|Applicability|Correlation|Implementation|Assessment|Process|Cross-framework|Threat/,
-  );
-  await expect(table.locator("tbody tr").first()).toContainText(
-    /From selected record|To selected record/,
-  );
-});

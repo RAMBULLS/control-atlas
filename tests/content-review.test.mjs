@@ -298,7 +298,9 @@ test('Mission-level UI keeps implementation vocabulary behind technical details'
     'src/ui/components/LoadStatusPanel.tsx',
     'src/ui/components/RelationshipExplorer.tsx',
     'src/ui/components/RelationshipGraphTable.tsx',
-    'src/ui/pages/AtlasMapPage.tsx',
+    'src/ui/pages/AtlasTerritoryPage.tsx',
+    'src/ui/components/atlas-territory/ConnectionList.tsx',
+    'src/ui/components/atlas-territory/JourneyPanels.tsx',
   ];
   const visibleCopy = visibleCopyFiles
     .map((path) => readFileSync(path, 'utf8'))

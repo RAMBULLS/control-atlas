@@ -1,29 +1,9 @@
 import { parseResearchPins } from "./atlasResearchState";
 import { normalizeContextIds } from "./atlasTerritoryContext";
+import { normalizeJourneyId } from "./atlasJourneyIds";
 import { normalizeAtlasContext, normalizeAtlasDataset, type ViewState } from "./viewState";
 
 type AtlasViewState = Extract<ViewState, { view: "atlas-map" }>;
-
-export type AtlasSurface = "territory" | "classic";
-
-/**
- * The territory sheet is the default Atlas surface. A URL that carries a scope from the earlier
- * hierarchy, benchmark, baseline, RMF or relationship-filter views keeps opening that view so
- * saved and shared links still resolve. `landscape` is the earlier name for "no lens" and
- * `atlasLanding` only ever grouped the overview, so both open the territory sheet.
- */
-export function atlasSurfaceFor(state: Partial<AtlasViewState>): AtlasSurface {
-  // A research question is always answered on the territory sheet, whatever older scope rides along.
-  if (state.atlasResearch) return "territory";
-  const legacyScope =
-    (state.atlasAxis && state.atlasAxis !== "landscape")
-    || state.atlasFamily || state.atlasBenchmark || state.atlasBaseline || state.atlasRmfStep
-    || state.atlasLensFamily || state.atlasParent || state.atlasStage || state.atlasPivotTrail
-    || state.sourceView === "purpose" || state.sourceView === "rmf"
-    || state.relationshipView || state.relationshipType || state.relationshipGroup
-    || state.provenance || state.confidence || state.nodeType || state.includeCandidates || state.relationshipSearch;
-  return legacyScope ? "classic" : "territory";
-}
 
 export type TerritoryFocus =
   | { kind: "overview" }
@@ -59,6 +39,12 @@ export type TerritoryTarget = {
   context?: readonly string[];
   /** Dataset a shared view was made from. */
   dataset?: string;
+  /** Practitioner journey id; Control Atlas navigation, never a relationship. */
+  journey?: string;
+  /** "list" opens a focused record's full connection list. */
+  list?: boolean;
+  /** Relationship type filter for that list. */
+  listType?: string;
 };
 
 /**
@@ -79,6 +65,9 @@ export function territoryPatch(target: TerritoryTarget = {}): Partial<AtlasViewS
     atlasLayer: target.publisher ? `publisher:${target.publisher}` : "",
     atlasContext: normalizeAtlasContext([...(target.context || [])]),
     atlasDataset: normalizeAtlasDataset(target.dataset || ""),
+    atlasJourney: normalizeJourneyId(target.journey),
+    relationshipView: target.node && target.list ? "list" : "",
+    relationshipType: target.node && target.list ? target.listType || "" : "",
   };
 }
 
@@ -90,6 +79,9 @@ export function territoryTargetOf(state: Partial<AtlasViewState>): TerritoryTarg
     from: state.atlasFrom || "", to: state.atlasTo || "", publisher: (state.atlasLayer || "").replace(/^publisher:/, ""),
     context: normalizeContextIds(state.atlasContext || ""),
     dataset: state.atlasDataset || "",
+    journey: state.atlasJourney || "",
+    list: !!state.node && state.relationshipView === "list",
+    listType: state.relationshipType || "",
   };
 }
 
@@ -111,9 +103,9 @@ export function territoryHasWork(state: Partial<AtlasViewState>): { pins: boolea
  */
 export type ClearableTarget = TerritoryTarget & { direction?: "forward" | "either" };
 
-/** Return to the geographic overview: leaves focus and any path or shared-ground presentation. Keeps pins, context, layer and dataset. */
+/** Return to the geographic overview: leaves focus, the journey, the connection list and any path or shared-ground presentation. Keeps pins, context, layer and dataset. */
 export const overviewTarget = (t: ClearableTarget): ClearableTarget => ({
-  ...t, limb: "", framework: "", node: "", mode: "explore", from: "", to: "", direction: "forward",
+  ...t, limb: "", framework: "", node: "", mode: "explore", from: "", to: "", direction: "forward", journey: "", list: false, listType: "",
 });
 
 /** Remove the research path (mode, endpoints, direction). Keeps focus, pins, context, layer and dataset. */

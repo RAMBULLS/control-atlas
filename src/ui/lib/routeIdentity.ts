@@ -6,6 +6,7 @@ import {
   isValidBuildSourceContext,
 } from "./buildRouteState";
 import { TAXONOMY_TAG_BY_ID } from "../../shared/taxonomy-contract.mjs";
+import { normalizeJourneyId } from "./atlasJourneyIds";
 
 export type RouteIdentity = {
   path: string;
@@ -119,13 +120,52 @@ export type CanonicalRoute = {
 };
 
 const ATLAS_PARAMS = new Set([
-  "node", "atlasAxis", "atlasLimb", "atlasFramework", "atlasBenchmark", "atlasBaseline", "atlasFamily",
+  "node", "atlasLimb", "atlasFramework", "atlasJourney",
   "atlasResearch", "atlasPins", "atlasFrom", "atlasTo", "atlasDirection", "atlasHops",
-  "atlasRmfStep", "atlasPivotTrail", "atlasLanding", "atlasLensFamily", "atlasLayer", "atlasContext", "atlasDataset", "atlasParent", "relationshipView", "relationshipType", "provenance",
-  "confidence", "type", "nodeType", "includeCandidates", "relationshipSearch",
-  "atlasStage", "relationshipGroup", "sourceView", "showSupportingReferences",
-  "showDraftOrLegacy", "showRegistryOnly",
+  "atlasLayer", "atlasContext", "atlasDataset", "relationshipView", "relationshipType",
 ]);
+/**
+ * Scope parameters from the retired classic Atlas. Old and shared links still open: each is
+ * translated into the territory state that answers the same question, or dropped when it only
+ * described how the old board was drawn.
+ */
+const RETIRED_ATLAS_PARAMS = [
+  "atlasAxis", "atlasParent", "atlasBenchmark", "atlasBaseline", "atlasFamily", "atlasRmfStep", "atlasPivotTrail",
+  "atlasLanding", "atlasLensFamily", "atlasStage", "relationshipGroup", "sourceView", "provenance", "confidence",
+  "type", "nodeType", "includeCandidates", "relationshipSearch", "showSupportingReferences", "showDraftOrLegacy", "showRegistryOnly",
+] as const;
+const RMF_STEP = /^(?:nist-800-37:)?(RMF-[A-Z]+)$/i;
+
+function translateLegacyAtlas(path: string, params: URLSearchParams): string {
+  const segment = path.match(/^\/atlas\/([^/]+)$/);
+  let node = segment ? decodeURIComponent(segment[1]) : params.get("node") || "";
+  const take = (key: string) => { const value = params.get(key) || ""; params.delete(key); return value; };
+  const benchmark = take("atlasBenchmark");
+  const baseline = take("atlasBaseline");
+  const family = take("atlasFamily");
+  const rmfStep = take("atlasRmfStep");
+  if (!node && benchmark.includes(":")) node = benchmark;
+  if (!node && baseline.includes(":")) node = baseline;
+  const group = family.match(/^group:([^:]+):/);
+  if (group && !params.get("atlasFramework")) params.set("atlasFramework", group[1]);
+  else if (!group && !node && family.includes(":")) node = family;
+  // The RMF step list and the RMF lens both answered "I'm working the RMF".
+  if (params.get("sourceView") === "rmf" || params.get("relationshipView") === "rmf") {
+    if (!params.get("atlasJourney")) params.set("atlasJourney", "rmf");
+  }
+  if (rmfStep) {
+    if (!params.get("atlasJourney")) params.set("atlasJourney", "rmf");
+    const step = rmfStep.match(RMF_STEP);
+    if (step && !node) node = `nist-800-37:${step[1].toUpperCase()}`;
+  }
+  for (const key of RETIRED_ATLAS_PARAMS) params.delete(key);
+  const view = params.get("relationshipView") || "";
+  if (node && (view === "list" || view === "table")) params.set("relationshipView", "list");
+  else { params.delete("relationshipView"); params.delete("relationshipType"); }
+  params.delete("node");
+  return node ? `/atlas/${routeSegment(node)}` : "/atlas";
+}
+
 const SEARCH_PARAMS = new Set(["q", "filter", "publisher", "kind", "connectedOnly", "sort", "view", "area", "tag"]);
 const CATALOG_PARAMS = new Set(["q", "family", "browseAll", "type", "area", "publisher", "lifecycle", "page"]);
 const DETAIL_PARAMS = new Set<string>();
@@ -161,11 +201,11 @@ function permittedParams(params: URLSearchParams, permitted: Set<string>): { par
       discarded = true;
       continue;
     }
-    if (key === "relationshipView" && !["path", "map", "list", "purpose", "rmf"].includes(value)) {
+    if (key === "atlasJourney" && !normalizeJourneyId(value)) {
       discarded = true;
       continue;
     }
-    if (key === "sourceView" && !["purpose", "rmf"].includes(value)) {
+    if (key === "relationshipView" && value !== "list") {
       discarded = true;
       continue;
     }
@@ -299,14 +339,10 @@ export function canonicalizeHashLocation(input: string): CanonicalRoute {
   }
 
   // Public links keep identity in the path, not an encoded query value. The
-  // old query shape remains a supported input and is rewritten on arrival.
-  if (path === "/atlas" && params.get("node")) {
-    path = `/atlas/${routeSegment(params.get("node") || "")}`;
-    params.delete("node");
-  }
-  const atlasPath = path.match(/^\/atlas\/([^/]+)$/);
-  if (atlasPath) {
-    path = `/atlas/${routeSegment(decodeURIComponent(atlasPath[1]))}`;
+  // old query shape, and every scope the classic Atlas used, remains a
+  // supported input and is rewritten on arrival.
+  if (path === "/atlas" || /^\/atlas\/[^/]+$/.test(path)) {
+    path = translateLegacyAtlas(path, params);
   }
 
   if (path === "/compare") {

@@ -67,23 +67,13 @@ test.describe("Control Atlas Experience Guardian", () => {
       }
 
       if (state.id === "atlas-overview") {
-        await expect(page.getByTestId("atlas-map")).toBeVisible();
-        const nodes = page.locator(".atlas-decomp__node:visible");
-        const collisions = await nodes.evaluateAll((elements) => {
-          const boxes = elements.map((element) => ({ label: element.textContent?.trim() || "area", box: element.getBoundingClientRect() }));
-          return boxes.flatMap((left, index) => boxes.slice(index + 1).filter((right) => !(left.box.right + 4 <= right.box.left || right.box.right + 4 <= left.box.left || left.box.bottom + 4 <= right.box.top || right.box.bottom + 4 <= left.box.top)).map((right) => [left.label, right.label]));
-        });
-        expect(collisions, "Atlas overview labels must never collide").toEqual([]);
+        await expect(page.getByRole("button", { name: "RMF & ATO" })).toBeVisible();
+        await expect(page.getByRole("button", { name: "Policy & directives" })).toBeVisible();
+        await expect(page.locator(viewport === "desktop" ? ".terr" : ".atl--mobile")).toBeVisible();
       }
 
-      if (state.id === "atlas-publications") {
-        await expect(page.locator(".atlas-tree")).toHaveAttribute("data-layout-status", "ready");
-        await expect(page.locator(".atlas-tree-node--publication, .atlas-tree-compact__node--publication")).toHaveCount(3);
-      }
-
-      if (state.id === "atlas-structure") {
-        await expect(page.locator(".atlas-tree")).toHaveAttribute("data-layout-status", "ready");
-        await expect(page.locator(".atlas-tree-node--summary, .atlas-tree-compact__node--summary").first()).toBeVisible();
+      if (state.id === "atlas-focused") {
+        await expect(page.getByRole("link", { name: "Full connection list" })).toBeVisible({ timeout: 20000 });
       }
 
       if (["mixed-search", "exact-search", "filtered-search"].includes(state.id)) {

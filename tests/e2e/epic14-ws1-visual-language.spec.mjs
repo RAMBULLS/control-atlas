@@ -85,13 +85,16 @@ test("WS1 Atlas names every publication with its publisher and counts its author
     expect(labels.some((label) => label.includes(`, ${publisher}`)) || labels.some((label) => label.includes(publisher)), `${publisher} landmark`).toBe(true);
   }
 
-  // Authority documents are obligations, not publishers: counted, listed, never openable as a place.
-  const authority = page.getByRole("button", { name: /^Authority · \d+$/ });
-  await expect(authority).toBeVisible();
-  await authority.click();
-  const list = page.getByRole("region", { name: "Authority documents" });
-  await expect(list).toContainText("no routes lead to them");
-  await expect(list.locator("button")).toHaveCount(0);
+  // Policy documents are obligations, not publishers: counted and listed under a secondary
+  // control, never drawn or openable as a place on the map.
+  await expect(map.locator('[data-landmark^="authority-"], .shore')).toHaveCount(0);
+  const policy = page.getByRole("button", { name: "Policy & directives" });
+  await expect(policy).toBeVisible();
+  await policy.click();
+  const list = page.getByRole("region", { name: /^Policy & directives · \d+$/ });
+  await expect(list).toContainText("DoDI 8510.01");
+  // The only buttons inside open the publications that cite a document, not the document as a place.
+  for (const name of await list.locator("button").allTextContents()) expect(labels.some((label) => label.startsWith(`${name},`))).toBe(true);
 });
 
 test("WS1 no palette token lands in the purple range Orbital forbids", async ({ page }) => {

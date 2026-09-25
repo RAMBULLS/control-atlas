@@ -28,6 +28,7 @@ const { index, admittedEdgeCount } = buildTerritoryIndex({
   catalogIds: [...Object.keys(spine.catalogLimbs), ...spine.syntheticCatalogs.map(c => c.catalog_id)],
   identities: read("data/generated/publication-identity-index.json").identities,
   sources: read("data/source-registry.json").sources,
+  registryPublications: read("data/source-registry.json").publications,
   nodes, edges,
 });
 const text = JSON.stringify(index) + "\n";

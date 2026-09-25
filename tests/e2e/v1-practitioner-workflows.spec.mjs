@@ -78,36 +78,29 @@ test("V1 workflow 05 — follow a record and return without losing search state"
   await expect(page.getByLabel("Filter results by ID, title, or topic")).toHaveValue("AC-2");
 });
 
-test("V1 workflow 06 — explore one record through Connections, Hierarchy, and the full list", async ({
+test("V1 workflow 06 — explore one record on the map, through its full connection list, to its record page", async ({
   page,
 }) => {
+  // A saved classic hierarchy link still opens the record, now on the territory sheet.
   await open(page, "/#/atlas?node=nist-800-53%3AAC-2&relationshipView=path");
+  await expect(page).toHaveURL(/#\/atlas\/nist-800-53:AC-2$/);
 
-  // The focused record remains the workspace while the hierarchy panel is open.
-  await expect(page.getByRole("region", { name: "Focused Atlas record" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Connections", level: 2 })).toBeVisible();
+  const details = page.locator(".atl-inspector");
+  await expect(details).toContainText("AC-2", { timeout: 20000 });
   // Orientation stays on screen without opening anything.
-  await expect(page.getByRole("navigation", { name: "Where this sits" })).toContainText(
-    "SP 800-53 Rev. 5",
-  );
+  await expect(page.getByRole("navigation", { name: "Where you are" })).toContainText("SP 800-53 Rev. 5");
 
-  // The explicit Path deep link opens publisher hierarchy with real structural substance.
-  await expect(page).toHaveURL(/relationshipView=path/);
-  const hierarchy = page.locator("#atlas-hierarchy-panel");
-  await expect(hierarchy).toContainText("Control Atlas structure");
-  await expect(hierarchy).toContainText("Publisher hierarchy");
-  await expect(hierarchy).toContainText("Decomposes into");
-  await expect(
-    hierarchy.getByRole("link", { name: "AC-2.1", exact: true }),
-  ).toBeVisible();
-
-  // The complete list supports the Atlas map instead of replacing it.
-  await page.getByRole("button", { name: "View all", exact: true }).click();
+  // The complete list sits over the map it came from and returns to it.
+  await details.getByRole("link", { name: "Full connection list" }).click();
   await expect(page).toHaveURL(/relationshipView=list/);
-  await expect(
-    page.getByRole("table", { name: "Relationship table" }),
-  ).toBeVisible();
-  await expect(page.getByRole("region", { name: "Focused Atlas record" })).toBeVisible();
+  await expect(page.getByRole("table", { name: "Relationship table" })).toBeVisible({ timeout: 20000 });
+  await page.getByRole("button", { name: "Back to the map" }).click();
+  await expect(page).not.toHaveURL(/relationshipView=/);
+
+  // The record page carries the publisher's structure and full text.
+  await details.getByRole("link", { name: "Open the full record" }).click();
+  await expect(page).toHaveURL(/#\/record\/nist-800-53\/AC-2/);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("AC-2");
 });
 
 test("V1 workflow 07 — compare with a shareable explicit configuration", async ({

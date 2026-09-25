@@ -149,14 +149,15 @@ test("focused Atlas record stays collision and overflow free across desktop and 
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/#/atlas?node=nist-800-53%3AAC-2&relationshipView=map");
   await waitForReady(page);
-  const focused = page.getByRole("region", { name: "Focused Atlas record" });
-  await expect(focused).toBeVisible();
-  expect(await visibleCollisions(page.locator(".atlas-focused-layout > *:visible"), 8)).toEqual([]);
+  await expect(page.locator(".atl-inspector")).toContainText("AC-2", { timeout: 20000 });
+  // Header, journeys, actions and map are stacked blocks; the details panel sits inside the map.
+  expect(await visibleCollisions(page.locator(".atl > *:visible"), 0)).toEqual([]);
+  expect(await visibleCollisions(page.locator(".atl-inspector, .atl-pill--other"), 4)).toEqual([]);
   expect(await page.evaluate(() => globalThis.document.documentElement.scrollWidth - globalThis.document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await expect(focused).toBeVisible();
-  expect(await visibleCollisions(page.locator(".atlas-focused-layout > *:visible"), 4)).toEqual([]);
+  await expect(page.locator("#atl-focus")).toContainText("AC-2");
+  expect(await visibleCollisions(page.locator(".atl--mobile > *:visible"), 4)).toEqual([]);
   expect(await page.evaluate(() => globalThis.document.documentElement.scrollWidth - globalThis.document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
 });
 

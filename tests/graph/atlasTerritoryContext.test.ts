@@ -17,7 +17,7 @@ const edges = readGeneratedCollection(process.cwd(), "edges").edges;
 const catalogIds = [...Object.keys(treeSpine.catalogLimbs), ...treeSpine.syntheticCatalogs.map((c) => c.catalog_id)];
 const { index } = buildTerritoryIndex({
   generatedAt: "t", datasetId: "0123456789ab", geometryVersion: geometry.version, catalogIds, nodes, edges,
-  identities: read("data/generated/publication-identity-index.json").identities, sources: read("data/source-registry.json").sources,
+  identities: read("data/generated/publication-identity-index.json").identities, sources: read("data/source-registry.json").sources, registryPublications: read("data/source-registry.json").publications,
   taxonomy: read("data/generated/taxonomy-registry.json"),
 });
 const ctx = index.context;

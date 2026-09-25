@@ -79,22 +79,22 @@ test("malformed or excessive saved pins cannot expand work or inject controls", 
 });
 
 test("research state survives canonical URL serialization without corrupting the return map scope", () => {
-  const state=normalizeViewState("atlas-map",{view:"atlas-map",atlasResearch:"path",atlasPins:'["disa-stig:V-205646","nist-800-53:IA-5.2"]',atlasFrom:"disa-stig:V-205646",atlasTo:"nist-800-53:IA-5.2",atlasDirection:"either",atlasHops:"2",atlasLanding:"publishers",atlasFramework:"disa-stig"});
+  const state=normalizeViewState("atlas-map",{view:"atlas-map",atlasResearch:"path",atlasPins:'["disa-stig:V-205646","nist-800-53:IA-5.2"]',atlasFrom:"disa-stig:V-205646",atlasTo:"nist-800-53:IA-5.2",atlasDirection:"either",atlasHops:"2",atlasJourney:"stig",atlasFramework:"disa-stig"});
   const hash=serializeHashUrl(state); const route=hash.slice(1); const i=route.indexOf("?"); const restored=parseHashLocation(route.slice(0,i),route.slice(i));
   assert.equal(restored.view,"atlas-map");
-  for(const key of ["atlasPins","atlasFrom","atlasTo","atlasResearch","atlasDirection","atlasHops","atlasLanding","atlasFramework"]) assert.equal(restored[key],state[key]);
+  for(const key of ["atlasPins","atlasFrom","atlasTo","atlasResearch","atlasDirection","atlasHops","atlasJourney","atlasFramework"]) assert.equal(restored[key],state[key]);
   assert.ok(hash.includes("atlasResearch=path"));
 });
 
 test("ordinary Atlas URLs never acquire research fields or load its graph", () => {
   const state=normalizeViewState("atlas-map",{view:"atlas-map"});
   assert.doesNotMatch(serializeViewState(state),/atlasResearch|atlasPins|atlasFrom|atlasTo|atlasDirection|atlasHops/);
-  const source=readFileSync("src/ui/pages/AtlasMapPage.tsx","utf8");
-  assert.doesNotMatch(source,/import .*atlasResearchClient|import .*atlasResearchIndex/);
-  const research=normalizeViewState("atlas-map",{view:"atlas-map",atlasResearch:"path",atlasBaseline:"fedramp-rev5:HIGH",atlasRmfStep:"RMF-SELECT"});
+  const source=readFileSync("src/ui/pages/AtlasTerritoryPage.tsx","utf8");
+  assert.doesNotMatch(source,/import .*atlasResearchIndex/);
+  const research=normalizeViewState("atlas-map",{view:"atlas-map",atlasResearch:"path",atlasJourney:"rmf"});
   assert.equal(requiresFullGraph(research),false);
   const plan=runtimeArtifactPlan(research);
-  assert.equal(plan.fullGraph,false);assert.equal(plan.atlasNetwork,false);assert.equal(plan.catalogId,"");assert.equal(plan.atlasSpine,false);assert.equal(plan.librarySearch,true,"record-level research shows record search");assert.equal(plan.sources,true);
+  assert.equal(plan.fullGraph,false);assert.equal(plan.catalogId,"");assert.equal(plan.atlasSpine,false);assert.equal(plan.librarySearch,true,"record-level research shows record search");assert.equal(plan.sources,true);
 });
 
 

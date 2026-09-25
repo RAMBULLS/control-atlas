@@ -32,7 +32,7 @@ test("critical path: Template B landing hero and four entry cards are visible", 
   await expect(page.locator(".home-library-kpis .home-library-kpi")).toHaveCount(5);
 });
 
-test("critical path: the Atlas Path walks to a published connected record", async ({
+test("critical path: the Atlas connection list walks to a published connected record", async ({
   page,
 }) => {
   await gotoApp(
@@ -42,40 +42,27 @@ test("critical path: the Atlas Path walks to a published connected record", asyn
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
-  const connected = page
-    .getByRole("region", { name: "Relationship map" })
-    .getByRole("button", { name: "Preview" })
-    .first();
-  await connected.click();
-  const previousUrl = page.url();
-  await page
-    .getByRole("link", { name: "See this record's connections" })
-    .click();
-  await expect(page).not.toHaveURL(previousUrl);
-  await expect(page).not.toHaveURL(/node=nist-800-53%3AAC-2(?:&|$)/);
+  const table = page.getByRole("table", { name: "Relationship table" });
+  await expect(table).toBeVisible({ timeout: 20000 });
+  await table.locator("tbody tr").first().getByRole("link").first().click();
+  await expect(page).toHaveURL(/#\/record\//);
+  await expect(page).not.toHaveURL(/AC-2$/);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  // …and back into Atlas for that record's own connections.
+  await page.getByRole("link", { name: "See connections", exact: true }).click();
+  await expect(page).toHaveURL(/#\/atlas\//);
+  await expect(page.getByRole("link", { name: "Full connection list" })).toBeVisible({ timeout: 20000 });
 });
 
-test("critical path: Atlas selected title leaves the map for record detail", async ({
+test("critical path: Atlas selected record leaves the map for record detail", async ({
   page,
 }) => {
-  await gotoApp(
-    page,
-    "/#/explore?node=nist-800-53%3AAC-2&relationshipView=list",
-  );
+  await gotoApp(page, "/#/explore?node=nist-800-53%3AAC-2");
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
-  await page
-    .getByRole("region", { name: "Relationship map" })
-    .getByRole("button", { name: "Preview" })
-    .first()
-    .click();
-  const brief = page.getByLabel(/record brief/);
-  await expect(brief.getByRole("button", { name: "Open full record" })).toHaveCount(0);
-  await brief.locator("h2 a").click();
-
-  await expect(page).toHaveURL(/#\/record\//);
+  await page.locator(".atl-inspector").getByRole("link", { name: "Open the full record" }).click();
+  await expect(page).toHaveURL(/#\/record\/nist-800-53\/AC-2/);
   await expect(page.locator(".detail-page")).toBeVisible();
   await expect(page.getByRole("link", { name: "See connections", exact: true })).toBeVisible();
 });

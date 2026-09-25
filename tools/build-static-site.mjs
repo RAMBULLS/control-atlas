@@ -159,11 +159,6 @@ if (reuseStagedData) {
   for (const [sourceRelativePath, destRelativePath] of COPY_PATHS) {
     copyIntoDist(sourceRelativePath, destRelativePath);
   }
-
-  runNodeSync(
-    ["--import", "tsx", join(ROOT, "scripts/build-atlas-network-artifact.ts"), "--output", "dist/site/data/generated/atlas-network.json"],
-    { cwd: ROOT, stdio: "inherit" },
-  );
 }
 
 // Research data is requested only when a visitor opens the research view.

@@ -76,8 +76,9 @@ test("Resource detail context preserves the active Resources workspace on return
 
 test("Phase 3 durable paths and old bookmarks resolve to one canonical IA", () => {
   const cases = [
-    ["/atlas?node=nist-800-53%3AAC-2&relationshipView=map", "/atlas/nist-800-53:AC-2?relationshipView=map"],
-    ["/explore?node=nist-800-53%3AAC-2&relationshipView=map", "/atlas/nist-800-53:AC-2?relationshipView=map"],
+    // The classic "map" view is the territory record focus now; its old parameter is translated away.
+    ["/atlas?node=nist-800-53%3AAC-2&relationshipView=map", "/atlas/nist-800-53:AC-2"],
+    ["/explore?node=nist-800-53%3AAC-2&relationshipView=list", "/atlas/nist-800-53:AC-2?relationshipView=list"],
     ["/search?q=access+control&connectedOnly=true", "/library?q=access+control&connectedOnly=true"],
     ["/catalog", "/library"],
     ["/catalog/nist-800-53?q=account&family=AC", "/library/publication/nist-800-53?q=account&family=AC"],
@@ -129,8 +130,8 @@ test("invalid comparison and Library boolean state still fail closed", () => {
 });
 
 test("WS7 promotes record identity and supported comparison mode into readable path segments", () => {
-  const atlas = canonicalizeHashLocation("/atlas/nist-800-53%3AAC-2?relationshipView=map");
-  assert.equal(atlas.canonicalPath, "/atlas/nist-800-53:AC-2?relationshipView=map");
+  const atlas = canonicalizeHashLocation("/atlas/nist-800-53%3AAC-2?relationshipView=list");
+  assert.equal(atlas.canonicalPath, "/atlas/nist-800-53:AC-2?relationshipView=list");
 
   const legacyCompare = canonicalizeHashLocation(
     "/compare?crosswalk=relationships&workbench=relationships&source=nist-800-53&target=csf-2",
@@ -141,17 +142,12 @@ test("WS7 promotes record identity and supported comparison mode into readable p
   const atlasState = normalizeViewState("atlas-map", {
     view: "atlas-map",
     node: "nist-800-53:AC-2",
-    atlasParent: "nist-800-53:FAMILY-AC",
-    relationshipView: "map",
+    atlasJourney: "rmf",
+    relationshipView: "list",
   });
-  assert.equal(serializeHashLocation(atlasState), "/atlas/nist-800-53:AC-2?atlasParent=nist-800-53:FAMILY-AC&relationshipView=map");
-  assert.equal(
-    parseHashLocation(
-      "/atlas/mitre-attack:T1000",
-      "?atlasParent=mitre-attack%3ATACTIC-TA0001",
-    ).atlasParent,
-    "mitre-attack:TACTIC-TA0001",
-  );
+  assert.equal(serializeHashLocation(atlasState), "/atlas/nist-800-53:AC-2?atlasJourney=rmf&relationshipView=list");
+  const parsedAtlas = parseHashLocation("/atlas/mitre-attack:T1000", "?atlasJourney=threats");
+  assert.equal(parsedAtlas.view === "atlas-map" && parsedAtlas.atlasJourney, "threats");
 
   const compareState = normalizeViewState("matrix", {
     view: "matrix",
@@ -308,13 +304,11 @@ test("durable Phase 3 view fields survive canonicalization", () => {
   const samples = [
     ["/atlas", {
       node: "nist-800-53:AC-2",
-      atlasAxis: "framework",
       atlasLimb: "atlas:LIMB-COMPLIANCE",
       atlasFramework: "nist-800-53",
-      atlasBaseline: "nist-800-53b:MODERATE",
-      atlasFamily: "nist-800-53:AC",
-      atlasRmfStep: "nist-800-37:RMF-SELECT",
-      relationshipView: "map",
+      atlasJourney: "rmf",
+      atlasContext: "program.stig",
+      atlasLayer: "publisher:DISA",
     }],
     ["/library", {
       q: "access control",

@@ -242,7 +242,7 @@ test('secondary route pages are lazy loaded behind a suspense fallback', () => {
   // guarantee under test is code splitting, so assert the wrapper delegates to
   // lazy() rather than pinning how each call site is spelled.
   assert.match(reactApp, /function lazyRoute[\s\S]{0,200}?return lazy\(/);
-  assert.match(reactApp, /lazyRoute\(\(\) =>\s*import\("\.\/pages\/AtlasMapPage"\)/);
+  assert.match(reactApp, /lazyRoute\(\(\) =>\s*import\("\.\/pages\/AtlasTerritoryPage"\)/);
   assert.match(reactApp, /lazyRoute\(\(\) =>\s*import\("\.\/pages\/ComparePage"\)/);
   assert.match(reactApp, /lazyRoute\(\(\) =>\s*import\("\.\/pages\/ObjectDetailPage"\)/);
   assert.match(reactApp, /<Suspense/);
@@ -438,7 +438,7 @@ test('skip links focus the workspace without turning the target into an applicat
 test('mounted record surfaces render official descriptions rather than synthetic translations', () => {
   const detailPage = readFileSync('src/ui/pages/ObjectDetailPage.tsx', 'utf8');
   const publishedText = readFileSync('src/ui/components/RecordPublishedText.tsx', 'utf8');
-  const surfaces = [detailPage, readFileSync('src/ui/pages/CatalogDetailPage.tsx', 'utf8'), readFileSync('src/ui/pages/AtlasMapPage.tsx', 'utf8'), readFileSync('src/ui/pages/ExplorePage.tsx', 'utf8'), readFileSync('src/ui/components/SearchOverlay.tsx', 'utf8')].join('\n');
+  const surfaces = [detailPage, readFileSync('src/ui/pages/CatalogDetailPage.tsx', 'utf8'), readFileSync('src/ui/pages/AtlasTerritoryPage.tsx', 'utf8'), readFileSync('src/ui/pages/ExplorePage.tsx', 'utf8'), readFileSync('src/ui/components/SearchOverlay.tsx', 'utf8')].join('\n');
   assert.match(detailPage, /recordPresentationContract/);
   assert.match(detailPage, /<RecordPublishedText/);
   assert.match(publishedText, /data-source-text="published"/);
@@ -553,21 +553,18 @@ test('Templates stays locally coherent while Resources owns resource discovery',
 
 test('route interactions keep canonical context and synchronize visible state', () => {
   const searchOverlay = readFileSync('src/ui/components/SearchOverlay.tsx', 'utf8');
-  const atlasMap = readFileSync('src/ui/pages/AtlasMapPage.tsx', 'utf8');
+  const atlasPage = readFileSync('src/ui/pages/AtlasTerritoryPage.tsx', 'utf8');
+  const connectionList = readFileSync('src/ui/components/atlas-territory/ConnectionList.tsx', 'utf8');
   const explore = readFileSync('src/ui/pages/ExplorePage.tsx', 'utf8');
   assert.match(searchOverlay, /onOpenNode\(nodeId\)/);
-  assert.match(atlasMap, /loadAtlasNeighborhood\(nodeId\)/);
-  assert.match(atlasMap, /buildAtlasContextGroups\(record, filters\)/);
-  assert.match(atlasMap, /buildAtlasContextRows\(record, filters\)/);
-  // The Path/Map/List tabs were folded into one record workspace: Connections
-  // is always rendered and relationshipView now decides which supporting panel
-  // is open, so every existing deep link still resolves.
-  assert.match(atlasMap, /relationshipView: hierarchyOpen \? "map" : "path"/);
-  assert.match(atlasMap, /relationshipView: listOpen \? "map" : "list"/);
-  assert.doesNotMatch(atlasMap, /role="tablist"/);
-  assert.match(atlasMap, /buildStructuralChildren\(record\)/);
-  assert.match(atlasMap, /relationshipGroup/);
-  assert.doesNotMatch(atlasMap, /RelationshipExplorer/);
+  // A record's full connection list is native to the territory sheet: the same neighborhood shard
+  // and relationship groups, opened by relationshipView=list so every saved list link still resolves.
+  assert.match(connectionList, /loadAtlasNeighborhood\(nodeId\)/);
+  assert.match(connectionList, /buildAtlasContextGroups\(record, filters\)/);
+  assert.match(connectionList, /buildAtlasContextRows\(record, filters\)/);
+  assert.match(atlasPage, /state\.relationshipView === "list"/);
+  assert.match(atlasPage, /Full connection list/);
+  assert.doesNotMatch(atlasPage, /RelationshipExplorer/);
   assert.match(explore, /<WorkspaceTemplate/);
   assert.match(explore, /rows\.slice\(0, visibleCount\)/);
   assert.match(explore, /recordIdentityPresentationFor/);

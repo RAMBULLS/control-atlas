@@ -2,24 +2,42 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { normalizeViewState, parseViewState, serializeViewState } from "../../src/ui/lib/viewState";
 import { runtimeArtifactPlan } from "../../src/ui/lib/runtimeLoader";
-import { atlasSurfaceFor, territoryFocusOf, territoryHasWork, territoryModeOf, territoryPatch, territoryTargetOf } from "../../src/ui/lib/atlasTerritoryState";
+import { canonicalizeHashLocation } from "../../src/ui/lib/routeIdentity";
+import { territoryFocusOf, territoryHasWork, territoryModeOf, territoryPatch, territoryTargetOf } from "../../src/ui/lib/atlasTerritoryState";
 
 const atlas = (patch: Record<string, unknown> = {}) => normalizeViewState("atlas-map", { view: "atlas-map", ...patch } as never) as never as Record<string, any>;
 const roundTrip = (state: Record<string, any>) => parseViewState(serializeViewState(state as never)) as Record<string, any>;
 
-test("the territory sheet is the default surface for the overview and for a focused record", () => {
-  assert.equal(atlasSurfaceFor(atlas()), "territory");
-  assert.equal(atlasSurfaceFor(atlas({ node: "disa-stig:V-205646" })), "territory");
-  assert.equal(atlasSurfaceFor(atlas({ atlasLimb: "atlas:LIMB-COMPLIANCE", atlasFramework: "nist-800-53" })), "territory");
-  assert.equal(atlasSurfaceFor(atlas({ atlasAxis: "landscape", atlasFramework: "nist-800-53" })), "territory");
-  assert.equal(atlasSurfaceFor(atlas({ atlasLanding: "publishers" })), "territory", "the retired landing lens opens the sheet");
+test("every Atlas link opens the territory sheet; classic scopes translate into territory state", () => {
+  const canon = (hash: string) => canonicalizeHashLocation(hash).canonicalPath;
+  assert.equal(canon("/atlas?atlasAxis=framework&atlasFramework=mitre-attack"), "/atlas?atlasFramework=mitre-attack");
+  assert.equal(canon("/atlas?atlasAxis=landscape&atlasLanding=publishers"), "/atlas");
+  assert.equal(canon("/atlas?atlasBenchmark=disa-stig:BENCHMARK-ORACLE-LINUX-9-STIG"), "/atlas/disa-stig:BENCHMARK-ORACLE-LINUX-9-STIG");
+  assert.equal(canon("/atlas?atlasFamily=group%3Anist-800-53%3A0"), "/atlas?atlasFramework=nist-800-53");
+  assert.equal(canon("/atlas?atlasFamily=nist-800-53:FAMILY-AC"), "/atlas/nist-800-53:FAMILY-AC");
+  assert.equal(canon("/atlas?atlasBaseline=nist-800-53b:MODERATE"), "/atlas/nist-800-53b:MODERATE");
+  assert.equal(canon("/atlas?atlasRmfStep=RMF-CATEGORIZE"), "/atlas/nist-800-37:RMF-CATEGORIZE?atlasJourney=rmf");
+  assert.equal(canon("/atlas?atlasRmfStep=prepare"), "/atlas?atlasJourney=rmf");
+  assert.equal(canon("/atlas?sourceView=rmf"), "/atlas?atlasJourney=rmf");
+  assert.equal(canon("/atlas?node=nist-800-53:AC-2&relationshipView=list&relationshipType=maps_to"), "/atlas/nist-800-53:AC-2?relationshipView=list&relationshipType=maps_to");
+  assert.equal(canon("/atlas/nist-800-53:AC-2?relationshipView=table"), "/atlas/nist-800-53:AC-2?relationshipView=list");
+  assert.equal(canon("/atlas/nist-800-53:AC-2?relationshipView=map&atlasParent=nist-800-53:FAMILY-AC&atlasPivotTrail=x"), "/atlas/nist-800-53:AC-2");
+  assert.equal(canon("/atlas?relationshipView=list&relationshipType=maps_to"), "/atlas", "a list needs a record");
+  assert.equal(canon("/atlas?atlasJourney=nope"), "/atlas");
+  for (const legacy of ["atlasStage=s", "sourceView=purpose", "relationshipGroup=g", "provenance=x", "confidence=high", "type=control", "includeCandidates=true", "relationshipSearch=q", "showRegistryOnly=true"]) {
+    assert.equal(canon(`/atlas?atlasLimb=atlas:LIMB-RISK&${legacy}`), "/atlas?atlasLimb=atlas:LIMB-RISK", legacy);
+  }
 });
 
-test("saved links to earlier scoped views keep opening those views", () => {
-  for (const legacy of [{ atlasAxis: "framework" }, { atlasAxis: "process" }, { atlasFamily: "AC" }, { atlasBenchmark: "x" }, { atlasBaseline: "moderate" },
-    { atlasRmfStep: "prepare" }, { relationshipView: "list" }, { relationshipType: "maps_to" }, { atlasStage: "s" }, { sourceView: "rmf" }, { atlasParent: "p" }]) {
-    assert.equal(atlasSurfaceFor(atlas(legacy)), "classic", JSON.stringify(legacy));
-  }
+test("a journey and a record's connection list round-trip through the URL", () => {
+  const back = roundTrip(atlas(territoryPatch({ journey: "rmf", pins: ["nist-800-53"] })));
+  assert.equal(back.atlasJourney, "rmf");
+  assert.equal(territoryTargetOf(back).journey, "rmf");
+  assert.equal(roundTrip(atlas({ atlasJourney: "not-a-journey" })).atlasJourney, "");
+  const list = roundTrip(atlas(territoryPatch({ node: "nist-800-53:AC-2", list: true, listType: "maps_to" })));
+  assert.deepEqual([list.node, list.relationshipView, list.relationshipType], ["nist-800-53:AC-2", "list", "maps_to"]);
+  assert.equal(territoryPatch({ list: true }).relationshipView, "", "no record, no list");
+  assert.equal(territoryTargetOf(list).list, true);
 });
 
 test("focus resolves record over publication over territory over overview", () => {
@@ -69,15 +87,14 @@ test("layer and pin changes do not enter the route transition scope", async () =
   for (const key of ["atlasLayer", "atlasPins", "atlasFrom", "atlasTo"]) assert.equal(scope.includes(key), false, key);
 });
 
-test("the territory sheet skips the relationship network and hierarchy; classic views still load them", () => {
+test("the territory sheet loads neither a relationship network nor the hierarchy spine", () => {
   const overview = runtimeArtifactPlan(atlas() as never);
-  assert.deepEqual([overview.atlasNetwork, overview.atlasSpine, overview.fullGraph, overview.recordNodeId], [false, false, false, ""]);
+  assert.deepEqual([overview.atlasSpine, overview.fullGraph, overview.recordNodeId, overview.sources], [false, false, "", false]);
+  assert.equal(runtimeArtifactPlan(atlas({ atlasJourney: "rmf" }) as never).fullGraph, false, "a journey is authored navigation; it needs no graph");
   assert.equal(overview.librarySearch, false, "record search shards load only when the reader reaches for search");
   assert.equal(runtimeArtifactPlan(atlas() as never, { librarySearchRequested: true }).librarySearch, true);
   const record = runtimeArtifactPlan(atlas({ node: "disa-stig:V-205646" }) as never);
-  assert.deepEqual([record.atlasNetwork, record.recordNodeId, record.sources], [false, "disa-stig:V-205646", true]);
-  const classic = runtimeArtifactPlan(atlas({ atlasAxis: "framework" }) as never);
-  assert.deepEqual([classic.atlasNetwork, classic.atlasSpine], [true, true]);
+  assert.deepEqual([record.atlasSpine, record.recordNodeId, record.sources], [false, "disa-stig:V-205646", true]);
 });
 
 test("entering research inside the app changes the runtime scope, so record sources load", async () => {
@@ -95,7 +112,6 @@ test("context choices and the source dataset round-trip through the URL, bounded
   assert.equal(roundTrip(atlas({ atlasDataset: "not-a-dataset" })).atlasDataset, "");
   assert.equal(roundTrip(atlas({ atlasContext: "<script>,program.stig" })).atlasContext, "program.stig");
   assert.equal(territoryHasWork(back).context, true);
-  assert.equal(atlasSurfaceFor(back), "territory", "context never sends a link to the earlier workspace");
 });
 
 test("context and dataset never carry a computed result", () => {
@@ -108,6 +124,7 @@ import { clearContextTarget, clearLayerTarget, clearPathTarget, clearPinsTarget,
 const SCENE: ClearableTarget = {
   limb: "atlas:LIMB-IMPLEMENTATION", framework: "disa-stig", node: "", pins: ["cmmc-2", "fedramp-rev5"], mode: "path", from: "disa-cci", to: "disa-stig",
   publisher: "DISA", context: ["asset.server", "product.microsoft-windows", "program.stig"], dataset: "0123456789ab", direction: "either",
+  journey: "stig", list: false, listType: "",
 };
 const changed = (a: ClearableTarget, b: ClearableTarget) => (Object.keys({ ...a, ...b }) as (keyof ClearableTarget)[]).filter((k) => JSON.stringify(a[k]) !== JSON.stringify(b[k])).sort();
 
@@ -116,7 +133,7 @@ test("each clear action changes only the fields it names and never the others", 
   assert.deepEqual(changed(SCENE, clearContextTarget(SCENE)), ["context"]);
   assert.deepEqual(changed(SCENE, clearLayerTarget(SCENE)), ["publisher"]);
   assert.deepEqual(changed(SCENE, clearPinsTarget(SCENE)), ["pins"]);
-  assert.deepEqual(changed(SCENE, overviewTarget(SCENE)), ["direction", "framework", "from", "limb", "mode", "to"]);
+  assert.deepEqual(changed(SCENE, overviewTarget(SCENE)), ["direction", "framework", "from", "journey", "limb", "mode", "to"]);
 });
 
 test("Atlas overview keeps pins, context, layer and the source dataset", () => {

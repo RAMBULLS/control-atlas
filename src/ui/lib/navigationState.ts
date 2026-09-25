@@ -18,20 +18,9 @@ export function isStaticViewWithoutBundle(view: ViewState["view"]) {
 
 export function requiresFullGraph(state: ViewState) {
   return (
-    // The Atlas landing uses the compact Atlas-spine artifact. Baseline and
-    // RMF choices still need the monolithic graph; Atlas area,
-    // publication, and native-group choices read from atlas-spine.json. A
-    // focused record uses its neighborhood shard. These boundaries are
-    // enforced by the bootstrap payload tests.
-    (state.view === "atlas-map" &&
-      !state.atlasResearch &&
-      !state.node &&
-      Boolean(
-        state.atlasBaseline ||
-          state.atlasRmfStep ||
-          state.sourceView === "rmf" ||
-          state.relationshipView === "rmf",
-      )) ||
+    // The Atlas never needs the monolithic graph: the territory sheet reads its own small index and
+    // a focused record uses its neighborhood shard. These boundaries are enforced by the bootstrap
+    // payload tests.
     (state.view === "matrix" &&
       (state.compareRun === "true" ||
         (state.intent === "item-mapping" &&

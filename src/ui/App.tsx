@@ -9,7 +9,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { atlasSurfaceFor } from "./lib/atlasTerritoryState";
 import {
   DataPendingNotice,
   LoadErrorPanel,
@@ -92,11 +91,6 @@ const AboutPage = lazyRoute(() =>
 );
 const AtlasTerritoryPage = lazyRoute(() =>
   import("./pages/AtlasTerritoryPage").then((module) => ({ default: module.AtlasTerritoryPage })),
-);
-const AtlasMapPage = lazyRoute(() =>
-  import("./pages/AtlasMapPage").then((module) => ({
-    default: module.AtlasMapPage,
-  })),
 );
 const ComparePage = lazyRoute(() =>
   import("./pages/ComparePage").then((module) => ({
@@ -205,14 +199,8 @@ function routeTransitionScope(state: ViewState): string {
       return [
         state.view,
         state.node,
-        state.atlasAxis,
         state.atlasLimb,
         state.atlasFramework,
-        state.atlasBenchmark,
-        state.atlasBaseline,
-        state.atlasFamily,
-        state.atlasRmfStep,
-        state.atlasStage,
         state.atlasResearch,
       ].join(":");
     case "catalog-detail":
@@ -339,7 +327,7 @@ export function App() {
     viewState.view === "library-detail"
       ? `${viewState.view}:${viewState.node}`
       : viewState.view === "atlas-map"
-        ? `${viewState.view}:${atlasSurfaceFor(viewState) === "territory" ? `territory:${viewState.node || "none"}:${viewState.atlasResearch ? "research" : ""}` : "map"}:${viewState.atlasAxis || "landing"}:${viewState.atlasFramework || "none"}:${viewState.atlasBenchmark || "none"}`
+        ? `${viewState.view}:territory:${viewState.node || "none"}:${viewState.atlasResearch ? "research" : ""}:${viewState.atlasFramework || "none"}`
       : viewState.view === "catalog-detail"
         ? `${viewState.view}:${viewState.catalog}:${viewState.family || "all"}`
       : viewState.view === "matrix"
@@ -673,22 +661,18 @@ export function App() {
   }
 
   const canRenderWithoutBundle = isStaticViewWithoutBundle(viewState.view);
-  const hasRequiredRouteArtifacts =
-    viewState.view !== "atlas-map" || atlasSurfaceFor(viewState) === "territory" || Boolean(bundle?.atlasSpine);
-  const hasRequiredSearchArtifacts =
-    viewState.view !== "atlas-map" || atlasSurfaceFor(viewState) === "territory" || Boolean(bundle?.librarySearchReady);
   const readyState = loadError
     ? "error"
     : canRenderWithoutBundle && viewState.view !== "search"
       ? "true"
-    : bundle?.routeReady && hasRequiredRouteArtifacts && hasRequiredSearchArtifacts &&
+    : bundle?.routeReady &&
         (!requiresFullGraph(viewState) || bundle.graphReady)
       ? "true"
       : bundle
         ? "partial"
         : "false";
   const showWorkspaceContent =
-    (Boolean(bundle) && hasRequiredRouteArtifacts) ||
+    Boolean(bundle) ||
     canRenderWithoutBundle ||
     viewState.view === "search";
   const routeContext = orbitalRouteContext(viewState, routeEntityName);
@@ -731,7 +715,7 @@ export function App() {
         onOpenSearch={openSearchOverlay}
         viewState={viewState}
       /> : null}
-      {chromeReady ? <OrbitalContextBar entityName={viewState.view === "atlas-map" && atlasSurfaceFor(viewState) === "territory" ? "" : routeEntityName} onNavigate={navigate} state={viewState} /> : null}
+      {chromeReady ? <OrbitalContextBar entityName={viewState.view === "atlas-map" ? "" : routeEntityName} onNavigate={navigate} state={viewState} /> : null}
 
       <main id="workspace" tabIndex={-1}>
         {routeRecovery ? (
@@ -949,17 +933,7 @@ function AppContent(props: {
         <DataPendingNotice onRetry={onRetryLoad} slow={loadSlow} title="Loading the Atlas" />
       );
     }
-    if (atlasSurfaceFor(state) === "territory") {
-      return <AtlasTerritoryPage bundle={bundle} onNavigate={onNavigate} onOpenNode={onOpenNode} state={state} />;
-    }
-    return (
-      <AtlasMapPage
-        bundle={bundle}
-        onNavigate={onNavigate}
-        onOpenNode={onOpenNode}
-        state={state}
-      />
-    );
+    return <AtlasTerritoryPage bundle={bundle} onNavigate={onNavigate} onOpenNode={onOpenNode} state={state} />;
   }
 
   if (state.view === "library-detail") {

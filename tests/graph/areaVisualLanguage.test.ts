@@ -18,7 +18,7 @@ const tokens = [
   readFileSync("styles/tokens.css", "utf8"),
 ].join("\n");
 const components = readFileSync("styles/components.css", "utf8");
-const surfaces = readFileSync("styles/surfaces.css", "utf8");
+const atlasTerritoryCss = readFileSync("styles/atlas-territory.css", "utf8");
 const tagComponent = readFileSync("src/ui/components/TaxonomyTag.tsx", "utf8");
 
 // Governance and architecture were violet (#5a63d6/#8791f0, #8a57cc/#b085ec)
@@ -175,8 +175,8 @@ test("bucket tags stay neutral and area fills remain inside Atlas", () => {
   assert.match(components, /\.bucket-tag,[\s\S]*background:\s*var\(--ca-surface\)/);
   assert.match(components, /\.bucket-tag:not\(\.bucket-tag--neutral\)\s*\{[\s\S]*border-left:[^}]*--ca-area-color/);
   assert.doesNotMatch(components, /\.bucket-tag\s*\{[^}]*background:[^;}]*--ca-area-color/s);
-  assert.match(surfaces, /\.atlas-tree-node--area\s*\{[^}]*background:[^;}]*--ca-area-color/s);
-  assert.match(surfaces, /\.atlas-tree-node--authority\s*\{[^}]*background:[^;}]*--ca-area-color/s);
+  // Area colour fills belong to the Atlas territory map, never to tags elsewhere.
+  assert.match(atlasTerritoryCss, /\.district, [^{]*\{\s*--c: var\(--ca-area-color-on-dark, var\(--ca-area-color/);
 });
 
 test("stylesheets never reference undefined font tokens (the canonical names are --ca-font-*)", () => {

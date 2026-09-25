@@ -601,8 +601,9 @@ function warmInteractiveRoute() {
     case 'search':
       void import('./ui/pages/ExplorePage').catch(() => undefined);
       break;
+    case 'atlas':
     case 'explore':
-      void import('./ui/pages/AtlasMapPage').catch(() => undefined);
+      void import('./ui/pages/AtlasTerritoryPage').catch(() => undefined);
       break;
     case 'catalog':
       void import('./ui/pages/CatalogDetailPage').catch(() => undefined);

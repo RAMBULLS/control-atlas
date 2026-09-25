@@ -319,7 +319,7 @@ export function migrateSourceRegistryDocument(registry, fedramp2026, mitreCatalo
     if (publication.id === "mitre-d3fend-ontology") {
       publication.metadata = {
         ...(publication.metadata || {}),
-        provenance_note: "The official destination is mutable. Control Atlas binds version 1.5.0 to the committed ontology capture and its SHA-256 checksum.",
+        provenance_note: "The official destination is mutable. Control Atlas binds the recorded version to the committed ontology capture and its SHA-256 checksum.",
       };
     }
     if (publication.id === "dod-rai-toolkit") {

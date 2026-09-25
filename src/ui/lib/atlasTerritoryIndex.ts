@@ -1,7 +1,7 @@
 import { isAtlasResearchEdge } from "./atlasResearch";
 import type { AtlasGraphSourceEdge } from "./atlasGraphModel";
-import { catalogDisplayNameFor, catalogProfileFor } from "./catalogProfiles";
-import { officialSourceFor } from "./officialSource";
+import { catalogProfileFor } from "./catalogProfiles";
+import { publicationTrustFor } from "./publicationIdentity";
 import { areaPresentationForCatalog } from "./areaVisualLanguage";
 import type { TerritoryRoute } from "./atlasTerritoryRoutes";
 import { CONTEXT_DIMENSIONS, type ContextIndex, type ContextSignature } from "./atlasTerritoryContext";
@@ -72,12 +72,18 @@ export function buildTerritoryIndex(input: TerritoryBuildInput): { index: Territ
   const catalogOf = new Map<string, string>(input.nodes.map((n) => [n.id, n.metadata?.catalog_id || ""]));
   const sources = new Map<string, Row>(input.sources.map((s) => [s.id, s]));
 
+  const registry = new Map<string, Row>(input.registryPublications.map((r) => [r.id, r]));
+  // Name and publisher come from the one governed resolver, so the map, the publication page and the
+  // Sources register print the same official title and the same publisher for the same publication.
+  const trustOf = (identity: Row, catalogId: string | null) =>
+    publicationTrustFor({ source: registry.get(identity.id) || { id: identity.id, name: identity.name, owner: identity.publisher }, catalogId });
   const publications: TerritoryPublication[] = input.catalogIds.map((id) => {
     const identity = identityByCatalog.get(id);
     const area = areaPresentationForCatalog(id);
     if (!identity || !area) throw new Error(`Publication ${id} needs an identity and a Control Atlas area.`);
+    const trust = trustOf(identity, id);
     return {
-      id, name: catalogDisplayNameFor(id, identity.name), publisher: identity.publisher || "",
+      id, name: trust.officialTitle, publisher: trust.publisher,
       kind: catalogProfileFor(id).publicationKind, area: area.id,
       records: identity.catalog_counts?.normalized_records || 0,
     };
@@ -138,13 +144,12 @@ export function buildTerritoryIndex(input: TerritoryBuildInput): { index: Territ
   };
 
   const unmapped = input.identities.filter((i) => !i.catalog_id).sort((a, b) => a.id.localeCompare(b.id));
-  const registry = new Map<string, Row>(input.registryPublications.map((r) => [r.id, r]));
   const listed = (i: Row): TerritoryListed => {
     const r = registry.get(i.id) || {};
-    const title = String(r.name || "").trim();
+    const trust = trustOf(i, null);
     return {
-      id: i.id, name: i.name, publisher: i.publisher || "", title: title && title !== i.name ? title : "",
-      group: String(r.display_group || "").trim(), url: officialSourceFor(r, { allowArtifactFallback: true }).url,
+      id: i.id, name: trust.practitionerName, publisher: trust.publisher, title: trust.showsOfficialTitle ? trust.officialTitle : "",
+      group: String(r.display_group || "").trim(), url: trust.official.url,
     };
   };
   return {

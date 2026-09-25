@@ -1,4 +1,4 @@
-import authoritySpine from "../../../data/curated/authority-spine.json";
+import { publicationsCitingPolicy, recordedBasisFor } from "./publicationIdentity";
 
 /**
  * Practitioner journeys: "start with what you're working on".
@@ -283,22 +283,9 @@ export const JOURNEYS: readonly Journey[] = Object.freeze([
 
 export const journeyById = new Map(JOURNEYS.map((j) => [j.id, j]));
 
-type SpineInstrument = { id: string; source_id: string; node_type: string; label: string };
-type SpinePublication = { catalog_id: string; primary_authority: string | null; also_required_by?: string[] };
-const INSTRUMENTS = new Map((authoritySpine.instruments as SpineInstrument[]).map((i) => [i.id, i]));
-const MANDATES = new Map((authoritySpine.publications as SpinePublication[]).map((p) => [p.catalog_id, p]));
-
 /** Policy documents recorded (with cited sources) as the basis for a publication, by source id. */
-export function policyForPublication(catalogId: string): string[] {
-  const m = MANDATES.get(catalogId);
-  if (!m) return [];
-  return [m.primary_authority, ...(m.also_required_by || [])].flatMap((id) => (id && INSTRUMENTS.has(id) ? [INSTRUMENTS.get(id)!.source_id] : []));
-}
-
-/** Publications whose recorded mandate cites a policy document. */
-export function publicationsCitingPolicy(sourceId: string): string[] {
-  return [...MANDATES.values()].filter((m) => policyForPublication(m.catalog_id).includes(sourceId)).map((m) => m.catalog_id).sort();
-}
+export const policyForPublication = recordedBasisFor;
+export { publicationsCitingPolicy };
 
 export type JourneyPolicyEntry = { id: string; basis: string; cites: string[] };
 /**

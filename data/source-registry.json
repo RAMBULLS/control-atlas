@@ -2075,7 +2075,7 @@
         ],
         "parser": "json-ld",
         "identity_kind": "publication",
-        "provenance_note": "The official destination is mutable. Control Atlas binds version 1.5.0 to the committed ontology capture and its SHA-256 checksum."
+        "provenance_note": "The official destination is mutable. Control Atlas binds the recorded version to the committed ontology capture and its SHA-256 checksum."
       },
       "entity_kind": "publication",
       "profile_id": "publication.publication",

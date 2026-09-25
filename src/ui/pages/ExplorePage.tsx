@@ -25,6 +25,7 @@ import {
 } from "../lib/areaVisualLanguage";
 import { buildCatalogCoverageList, catalogCoverageForId, isLowCatalogCoverage } from "../lib/catalogCoverage";
 import { catalogDisplayNameFor } from "../lib/catalogProfiles";
+import { publicationTrustFor } from "../lib/publicationIdentity";
 import { LIBRARY_KINDS, libraryKindForRawType, libraryKindLabel, rawTypesForKind } from "../lib/informationArchitecture";
 import { selectLibraryResultTags } from "../lib/libraryResultTags";
 import { queryDiscoveryIndex } from "../../shared/discovery-index.mjs";
@@ -320,14 +321,18 @@ export function ExplorePage(props: {
 
   const publishers = libraryFacets.publishers || [];
   const topCatalogs = useMemo(() => runtimeCatalogs
-    .map((catalog: any) => ({
-      ...catalog,
-      publisher: recordPublisherName(
-        catalog.display_group,
-        catalog.source_id ? bundle.runtime.getSource(catalog.source_id)?.owner : "",
-        catalog.display_group,
-      ),
-    }))
+    .map((catalog: any) => {
+      // The governed identity every surface shares (#284): practitioner name,
+      // exact official title, and the register's publisher.
+      const source = catalog.source_id ? bundle.runtime.getSource(catalog.source_id) : null;
+      const trust = source ? publicationTrustFor({ source, catalogId: catalog.id }) : null;
+      return {
+        ...catalog,
+        name: trust?.practitionerName || catalog.name,
+        officialTitle: trust?.showsOfficialTitle ? trust.officialTitle : "",
+        publisher: trust?.publisher || "",
+      };
+    })
     .filter((catalog: any) => catalog.leaf_record_count > 0)
     .sort((left: any, right: any) => right.leaf_record_count - left.leaf_record_count || left.name.localeCompare(right.name))
     .slice(0, 6), [bundle.runtime, runtimeCatalogs]);
@@ -683,9 +688,10 @@ export function ExplorePage(props: {
             <h3 id="top-publications-heading">Top publications</h3>
             <div className="workspace-browse-grid">
               {topCatalogs.map((catalog: any) => (
-                <button className="workspace-browse-card" key={catalog.id} onClick={() => onNavigate("catalog-detail", { catalog: catalog.id })} type="button">
+                <button className="workspace-browse-card" data-publication-card={catalog.id} key={catalog.id} onClick={() => onNavigate("catalog-detail", { catalog: catalog.id })} type="button">
                   <strong>{catalog.name}</strong>
-                  <span>{catalog.publisher}</span>
+                  {catalog.officialTitle ? <small className="workspace-browse-card__official">{catalog.officialTitle}</small> : null}
+                  {catalog.publisher ? <span>{catalog.publisher}</span> : null}
                   <small>{catalog.leaf_record_count.toLocaleString()} records</small>
                 </button>
               ))}

@@ -493,12 +493,14 @@ test("publication register source-file memberships match the canonical identity 
 test("publication register exposes truthful absence states for version and last checked", () => {
   const publications = buildPublicationRegister(sources.sources, catalogs);
 
-  // Publications without an explicit version report missing state
+  // A publication whose register records that the publisher states no version
+  // reports that recorded reason, not a generic "missing" (#284).
   const dodRai = publications.find((pub) => pub.id === "dod-rai-toolkit");
   assert.ok(dodRai);
-  assert.equal(dodRai.version.state, "missing");
+  assert.equal(dodRai.version.state, "not_applicable");
   assert.equal(dodRai.version.value, null);
-  assert.equal(dodRai.version.reason, "Publisher version is not recorded.");
+  assert.equal(dodRai.version.reason, "The current publisher landing page and operational toolkit do not expose a release version.");
+  assert.equal(dodRai.trust.version.state, "not_stated");
 
   // A publication with no recorded check date reports the retrieval date in the
   // "derived" state. Blank cells hid information the register actually holds,

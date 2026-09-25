@@ -1,49 +1,26 @@
-import {
-  IconArrowLeft,
-  IconExternalLink,
-  IconSearch,
-} from "@tabler/icons-react";
+import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
 import { useLayoutEffect, useMemo, useState } from "react";
 import { RETIRED_RECORD_TYPES } from "../../shared/record-acceptance.mjs";
 
-import { Button, ButtonLink } from "../components/lsm/Button";
+import { Button } from "../components/lsm/Button";
 import { AppLink } from "../components/AppLink";
 import {
   paginateCatalogRecords,
   publicationSourceForCatalog,
 } from "../lib/catalogInventory";
 import { catalogDisplayNameFor, catalogProfileFor } from "../lib/catalogProfiles";
-import {
-  officialSourceActionLabel,
-  officialSourceFor,
-  OFFICIAL_PUBLICATION_VERBS,
-} from "../lib/officialSource";
 import { PageHeader, WorkbenchControlSurface } from "../lib/pagePrimitives";
-import {
-  recordIdentityPresentationFor,
-  recordPublisherName,
-} from "../lib/recordTitle";
-import { AtlasTag } from "../components/AtlasTag";
+import { recordIdentityPresentationFor } from "../lib/recordTitle";
 import { taxonomyTagsForRecord } from "../../shared/record-taxonomy.mjs";
 import type { RuntimeBundle } from "../lib/runtimeLoader";
 import type { ViewState } from "../lib/viewState";
-import {
-  sourceFreshnessPresentation,
-  sourceLifecycleDisplayName,
-  sourcePublicationTitle,
-  sourcePublisherDisplayName,
-} from "../lib/sourcePresentation";
+import { datasetCheckedThroughFor, publicationTrustFor } from "../lib/publicationIdentity";
+import { publicationIdentityFor } from "../lib/sourceRegister";
+import { PublicationOverview } from "../components/PublicationOverview";
+import { inlineLabel, PUBLICATION_NON_LEAF_NODE_TYPES } from "../lib/publicationActions";
 
 const PAGE_SIZE = 100;
-const NON_LEAF_NODE_TYPES = new Set([
-  "catalog",
-  "family",
-  "benchmark",
-  "function",
-  "category",
-  "tactic",
-  "group",
-]);
+const NON_LEAF_NODE_TYPES = PUBLICATION_NON_LEAF_NODE_TYPES;
 
 type CatalogState = Extract<ViewState, { view: "catalog-detail" }>;
 
@@ -88,15 +65,17 @@ export function CatalogDetailPage(props: {
   const profile = catalogProfileFor(catalog.id, catalog.name);
   const source = publicationSourceForCatalog(bundle.runtime, catalog.id)
     || (catalog.source_id ? bundle.runtime.getSource(catalog.source_id) : null);
-  const officialPublication = officialSourceFor(source);
   const catalogName = catalogDisplayNameFor(catalog.id, catalog.name);
-  const publicationTitle = sourcePublicationTitle(source, catalogName);
-  const publisherName = sourcePublisherDisplayName(recordPublisherName(
-    source?.owner,
-    source?.publisher,
-    catalog.display_group,
-  ));
-  const sourceFreshness = sourceFreshnessPresentation(source);
+  const identityIndexEntry = publicationIdentityFor(source?.id || catalog.source_id || "");
+  const trust = publicationTrustFor({
+    source: source || { id: catalog.source_id || catalog.id, name: catalogName },
+    catalogId: catalog.id,
+    review: catalog.source_review,
+    counts: identityIndexEntry?.catalog_counts,
+    datasetCheckedThrough: datasetCheckedThroughFor(bundle.runtime.dataset?.sources || []),
+  });
+  const publicationTitle = trust.practitionerName;
+  const publisherName = trust.publisher;
   const catalogAtlasTagIds = taxonomyTagsForRecord({ catalog_id: catalog.id })
     .filter((t: { kind?: string }) => ["organization", "framework", "program"].includes(t.kind ?? ""))
     .map((t: { id: string }) => t.id);
@@ -171,80 +150,24 @@ export function CatalogDetailPage(props: {
         <IconArrowLeft aria-hidden="true" size={17} /> Back to Library
       </AppLink>
 
-      <header className="catalog-detail-hero" data-route-primary-header="true">
-        <p className="eyebrow" data-route-primary-copy="true">PUBLICATION</p>
-        <h1 data-route-primary-copy="true">{publicationTitle}</h1>
-        <p className="catalog-publisher" data-route-primary-copy="true">
-          {publisherName}
-        </p>
-        {catalogAtlasTagIds.length > 0 ? (
-          <div className="related-in-atlas__tags related-in-atlas__tags--inline">
-            {catalogAtlasTagIds.map((tagId: string) => (
-              <AtlasTag key={tagId} onNavigate={onNavigate} showIdentity size="sm" tagId={tagId} />
-            ))}
-          </div>
-        ) : null}
-        <div className="catalog-facts" aria-label="Publication summary" data-route-primary-support="true">
-          <span>
-            <strong>
-              {(catalog.leaf_record_count ?? catalog.node_count).toLocaleString()}
-            </strong>{" "}
-            {profile.recordLabel}
-          </span>
-          <span>
-            <strong>{catalog.connected_count.toLocaleString()}</strong>{" "}
-            connected records
-          </span>
-          {source?.version ? (
-            <span>
-              Version <strong>{source.version}</strong>
-            </span>
-          ) : null}
-          <span>
-            Status <strong>{sourceLifecycleDisplayName(source?.lifecycle_status)}</strong>
-          </span>
-          <span>
-            {sourceFreshness.label} <strong>
-              {sourceFreshness.dateTime ? (
-                <time dateTime={sourceFreshness.dateTime}>{sourceFreshness.value}</time>
-              ) : sourceFreshness.value}
-            </strong>
-          </span>
-        </div>
-        <div className="catalog-source-actions" data-route-primary-support="true">
-          {officialPublication.url ? (
-            <ButtonLink
-              className="catalog-source-link"
-              href={officialPublication.url}
-              rel="noreferrer"
-              target="_blank"
-              variant="primary"
-            >
-              {officialSourceActionLabel(
-                officialPublication,
-                OFFICIAL_PUBLICATION_VERBS,
-              )}
-              <IconExternalLink aria-hidden="true" size={16} />
-            </ButtonLink>
-          ) : null}
-          {source?.id ? (
-            <AppLink
-              onNavigate={onNavigate}
-              patch={{ source: source.id }}
-              variant="secondary"
-              view="sources"
-            >
-              Review source details
-            </AppLink>
-          ) : null}
-        </div>
-      </header>
+      <PublicationOverview
+        bundle={bundle}
+        catalog={catalog}
+        catalogAtlasTagIds={catalogAtlasTagIds}
+        onNavigate={onNavigate}
+        records={records}
+        recordLabel={profile.recordLabel}
+        tierCount={families.length}
+        tierLabel={tierLabel}
+        tierLabelPlural={tierLabelPlural}
+        trust={trust}
+      />
 
       <section aria-labelledby="catalog-records-title" className="catalog-records">
         <div className="catalog-records-heading">
           <div>
-            <h2 id="catalog-records-title">
-              {publicationTitle} {profile.recordLabel}
+            <h2 id="catalog-records-title" tabIndex={-1}>
+              Browse {publicationTitle} {inlineLabel(profile.recordLabel)}
             </h2>
             <p>
               {showTierBrowser
@@ -466,15 +389,16 @@ function CatalogInventory(props: {
         const source =
           (entry.source_id ? bundle.runtime.getSource(entry.source_id) : null) ||
           publicationSourceForCatalog(bundle.runtime, entry.id);
-        const publicationTitle = sourcePublicationTitle(source, entry.name);
+        const trust = publicationTrustFor({ source: source || { id: entry.source_id || entry.id, name: entry.name }, catalogId: entry.id });
         return {
           entry,
           profile,
-          publicationTitle,
+          trust,
+          publicationTitle: trust.practitionerName,
           // Omit absent metadata instead of turning it into public copy.
-          publisher: sourcePublisherDisplayName(source?.owner),
+          publisher: source?.owner ? trust.publisher : "",
           lifecycle: source?.lifecycle_status || "",
-          lifecycleLabel: sourceLifecycleDisplayName(source?.lifecycle_status),
+          lifecycleLabel: source?.lifecycle_status ? trust.lifecycle.label : "",
         };
       }),
     [bundle.runtime, catalogs],
@@ -483,7 +407,7 @@ function CatalogInventory(props: {
   const eligible = rows.filter(
     (row) =>
       (!query ||
-        [row.entry.id, row.entry.name, row.publicationTitle, row.publisher, row.profile.recordLabel, row.profile.publicationKind]
+        [row.entry.id, row.entry.name, row.publicationTitle, row.trust.officialTitle, row.publisher, row.profile.recordLabel, row.profile.publicationKind]
           .some((value) => String(value).toLowerCase().includes(query))) &&
       (!state.type || row.profile.recordLabel === state.type) &&
       (!state.area || row.profile.area === state.area) &&
@@ -561,15 +485,17 @@ function CatalogInventory(props: {
         <section className="catalog-index-group" key={group.label}>
           <h2 className="catalog-index-group-label">{group.label}</h2>
           <ul className="catalog-index-list">
-            {group.rows.map(({ entry, profile, publicationTitle, publisher, lifecycleLabel }) => (
+            {group.rows.map(({ entry, profile, publicationTitle, trust, publisher, lifecycleLabel }) => (
               <li key={entry.id}><AppLink
                 className="catalog-index-row"
+                data-publication-row={entry.id}
                 onNavigate={onNavigate}
                 patch={{ ...emptyCatalogState(), catalog: entry.id }}
                 view="catalog-detail"
               >
                 <span>
                   <h3>{publicationTitle}</h3>
+                  {trust.showsOfficialTitle ? <small className="catalog-index-row-official">{trust.officialTitle}</small> : null}
                   {profile.synopsis ? <small>{profile.synopsis}</small> : null}
                   {[publisher, profile.area, lifecycleLabel].filter(Boolean).length ? (
                     <small className="catalog-index-row-meta">

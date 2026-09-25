@@ -3,9 +3,14 @@ import { catalogDisplayNameFor } from "./catalogProfiles";
 import { officialSourceFor, retrievedArtifactFor } from "./officialSource";
 import { sourceIdentityPresentationFor } from "./sourceIdentity";
 import {
-  sourcePublicationTitle,
-  sourcePublisherDisplayName,
-} from "./sourcePresentation";
+  datasetCheckedThroughFor,
+  publicationTrustFor,
+  publicationsCitingPolicy,
+  recordedBasisFor,
+  type PublicationKind,
+  type PublicationTrust,
+} from "./publicationIdentity";
+import { sourcePublisherDisplayName } from "./sourcePresentation";
 import publicationIdentityIndexArtifact from "../../../data/generated/publication-identity-index.json";
 
 export type SourceLayerId =
@@ -117,10 +122,24 @@ export type SourceRegisterRow = {
 };
 
 export type PublicationRegisterRow = SourceRegisterRow & {
+  /** Publication, policy document, or reference page. Policy has its own register view. */
+  kind: PublicationKind;
+  /** The governed identity and trust story shared with Atlas and the publication page. */
+  trust: PublicationTrust;
+  /** Policy documents the authority spine records as this publication's basis (source ids). */
+  recordedBasis: string[];
+  /** For a policy document: catalogs whose recorded basis cites it. */
+  citedBy: string[];
   familyName: string;
   officialTitle: string;
   catalogId: string | null;
-  catalogCounts: { discovered_records: number; normalized_records: number } | null;
+  catalogCounts: {
+    discovered_records: number;
+    normalized_records: number;
+    evidence_class?: string | null;
+    excluded_records?: number;
+    exclusions?: Array<{ count: number; reason: string }>;
+  } | null;
   coverageSummary: string;
   sourceMaterials: {
     primary: SourceMaterialItem[];
@@ -485,6 +504,8 @@ function matchesPublicationFilters(
   const candidateStrings: string[] = [
     row.id,
     row.displayTitle,
+    row.officialTitle,
+    row.trust.practitionerName,
     row.familyName,
     row.publisher.value || "",
     row.version.value || "",
@@ -524,7 +545,8 @@ export function buildPublicationRegister(
     ]),
   );
 
-  const rawIdentities = publicationIdentityIndexArtifact.identities || [];
+  const rawIdentities = (publicationIdentityIndexArtifact.identities || []) as any[];
+  const datasetCheckedThrough = datasetCheckedThroughFor(sources);
 
   const rows: PublicationRegisterRow[] = rawIdentities.map((identity) => {
     const source =
@@ -545,19 +567,32 @@ export function buildPublicationRegister(
     const isAuthority = identity.id.startsWith("authority-");
     const quarantineReason = quarantineById.get(identity.id);
     const identityPresentation = sourceIdentityPresentationFor(source);
+    const catalogId = identity.catalog_id || null;
+    const trust = publicationTrustFor({
+      source,
+      catalogId,
+      review: catalogs.find((catalog) => catalog.id === catalogId)?.source_review,
+      counts: identity.catalog_counts,
+      datasetCheckedThrough,
+      heldForReview: Boolean(quarantineReason),
+    });
 
-    const versionField = isRecordedString(source.version)
-      ? recorded(source.version.trim())
-      : isAuthority
-        ? notApplicable(
-            "Authority documents are identified by statutory citation, not release version.",
-          )
-        : missing("Publisher version is not recorded.");
+    // A retrieval date recorded in the version slot is not a publisher version.
+    const versionField: SourceField<string> =
+      trust.version.state === "recorded" || trust.version.state === "current_through"
+        ? recorded(trust.version.value)
+        : trust.version.state === "unknown"
+          ? isAuthority
+            ? notApplicable("Authority documents are identified by citation, not release version.")
+            : missing("Publisher version is not recorded.")
+          : notApplicable(trust.version.detail);
 
     const verifiedField = verificationField(source);
 
+    // The register's hold reason is operational detail; the public field says only that an
+    // accepted edition stays in place (see the trust limitation), never why automation held it.
     const lifecycleField: SourceField<string> = quarantineReason
-      ? blocked<string>(quarantineReason)
+      ? blocked<string>("An update is being reviewed; the previously accepted edition is shown.")
       : stringField(source.lifecycle_status, "Lifecycle status is not recorded.");
 
     const publisher = publisherField(source, null);
@@ -626,11 +661,12 @@ export function buildPublicationRegister(
     return {
       id: identity.id,
       layer: "publication",
+      kind: trust.kind,
+      trust,
+      recordedBasis: catalogId ? recordedBasisFor(catalogId) : [],
+      citedBy: trust.kind === "policy" ? publicationsCitingPolicy(identity.id) : [],
       displayTitle: identity.name || sourceTitle(source, null),
-      officialTitle: sourcePublicationTitle(
-        source,
-        identity.name || sourceTitle(source, null),
-      ),
+      officialTitle: trust.officialTitle,
       familyName: identityPresentation.familyName,
       publicationSourceId: null,
       publisher,
@@ -650,7 +686,7 @@ export function buildPublicationRegister(
       provenance: source.provenance_class || "official",
       eligibility: source.eligibility_status || "eligible",
       access: source.access_status || "public",
-      catalogId: identity.catalog_id || null,
+      catalogId,
       catalogCounts: identity.catalog_counts || null,
       coverageSummary,
       sourceMaterials,
@@ -833,4 +869,13 @@ export function sourceLayerEntityLabel(layer: SourceLayerId, count: number): str
     organization: ["structure record", "structure records"],
   };
   return labels[layer][count === 1 ? 0 : 1];
+}
+
+/** The publication-identity index entry a source id belongs to (canonical id or alias), or null. */
+export function publicationIdentityFor(sourceId: string): any | null {
+  if (!sourceId) return null;
+  const identities = (publicationIdentityIndexArtifact.identities || []) as any[];
+  return identities.find((identity) => identity.id === sourceId)
+    || identities.find((identity) => (identity.alias_source_ids || []).includes(sourceId))
+    || null;
 }

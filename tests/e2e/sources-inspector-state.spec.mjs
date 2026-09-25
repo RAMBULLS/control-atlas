@@ -23,7 +23,7 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     await expect(table).toBeVisible();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Sources");
     await expect(page.locator(".sources-page .page-header")).toContainText(
-      "Verify publisher, version, and source material for publications used in Control Atlas.",
+      "Who published each source Control Atlas uses, which edition it holds, and how recently it was checked.",
     );
     await expect(table.getByRole("columnheader")).toHaveText([
       "Publication",
@@ -36,8 +36,9 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     await expect(page.locator(".sources-inspector-pane")).toHaveCount(0);
     await expect(page.locator(".sources-inspector-pane .source-inspector")).toHaveCount(0);
 
-    // Select the official CDAO publication identity.
-    const rowButton = page.getByRole("button", { name: "CDAO AI Assurance Toolkit" });
+    // Select the CDAO publication: the practitioner name leads, the official title sits beside it.
+    const rowButton = page.getByRole("button", { name: "DoD AI Assurance", exact: true });
+    await expect(page.locator(".source-register-row").filter({ has: rowButton })).toContainText("CDAO AI Assurance Toolkit");
     await expect(rowButton).toBeVisible();
     await rowButton.click();
     await waitForAppReady(page);
@@ -58,7 +59,7 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     await gotoApp(page, "/#/sources");
     await waitForAppReady(page);
 
-    await page.getByRole("button", { name: "CDAO AI Assurance Toolkit" }).click();
+    await page.getByRole("button", { name: "DoD AI Assurance", exact: true }).click();
     await waitForAppReady(page);
 
     // The register remains visually present behind the modal, but the modal's
@@ -75,7 +76,7 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     await gotoApp(page, "/#/sources");
     await waitForAppReady(page);
 
-    const rowButton = page.getByRole("button", { name: "CDAO AI Assurance Toolkit" });
+    const rowButton = page.getByRole("button", { name: "DoD AI Assurance", exact: true });
     await expect(rowButton).toBeVisible();
     await rowButton.click();
     await waitForAppReady(page);
@@ -114,7 +115,7 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     await expect(page).toHaveURL(/q=DoD(?:%20|\+)AI(?:%20|\+)Assurance/);
     await expect(page.locator(".calibration-rail")).toHaveCount(1);
     await expect(page.locator(".calibration-rail")).toContainText("Showing 1–1 of 1");
-    await expect(page.getByRole("button", { name: "CDAO AI Assurance Toolkit" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "DoD AI Assurance", exact: true })).toBeVisible();
   });
 
   test("zero results use a truthful count and one primary recovery action", async ({ page }) => {
@@ -126,15 +127,19 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     await expect(page.getByRole("button", { name: "Clear publication filters" })).toHaveCount(1);
   });
 
-  test("register rows use the same official publication name as the inspector", async ({ page }) => {
+  test("register rows use the same publication identity as the inspector", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
     await gotoApp(page, "/#/sources?q=DISA%20STIG");
     await waitForAppReady(page);
 
-    const publication = page.getByRole("button", { name: "DISA Public STIG Library" });
+    const publication = page.getByRole("button", { name: "DISA STIG", exact: true });
     await expect(publication).toBeVisible();
+    await expect(page.locator(".source-register-row").filter({ has: publication })).toContainText("DISA Public STIG Library");
     await publication.click();
-    await expect(page.getByRole("heading", { name: "DISA Public STIG Library", level: 2 })).toBeVisible();
+    const inspector = page.locator(".sources-inspector-pane .source-inspector--inline");
+    await expect(inspector.getByRole("heading", { name: "DISA STIG", level: 2 })).toBeVisible();
+    await expect(inspector.locator("[data-official-title]")).toContainText("DISA Public STIG Library");
+    await expect(inspector).toContainText("Defense Information Systems Agency (DISA)");
     await expect(page.getByRole("region", { name: "Page context" })).toHaveCount(0);
   });
 
@@ -143,7 +148,7 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     await gotoApp(page, "/#/sources");
     await waitForAppReady(page);
 
-    await page.getByRole("button", { name: "CDAO AI Assurance Toolkit" }).click();
+    await page.getByRole("button", { name: "DoD AI Assurance", exact: true }).click();
     await waitForAppReady(page);
 
     await expect(page.getByRole("dialog")).toBeVisible();

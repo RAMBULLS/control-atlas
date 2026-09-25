@@ -2741,6 +2741,179 @@ li {
   color: var(--ca-text);
 }
 
+/* Publication identity (#284): the practitioner name leads, the exact official
+   title sits directly under it, then the publisher. None of it waits behind a
+   disclosure. */
+.catalog-official-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--ca-space-1) var(--ca-space-2);
+  max-width: 70ch;
+  margin: calc(var(--ca-space-2) * -1) 0 0;
+  color: var(--ca-text);
+  font-size: var(--ca-text-lg);
+  line-height: 1.35;
+}
+
+.catalog-official-title__label,
+.catalog-publisher__label,
+.catalog-trust-facts dt,
+.publication-dates dt {
+  color: var(--ca-text-muted);
+  font: 600 var(--ca-text-xs) / 1.4 var(--ca-font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.catalog-role {
+  letter-spacing: inherit;
+}
+
+.catalog-index-row-official {
+  color: var(--ca-text);
+}
+
+.catalog-trust-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
+  gap: var(--ca-space-3) var(--ca-space-5);
+  max-width: 64rem;
+  margin: 0;
+  padding: var(--ca-space-3) 0;
+  border-block: 1px solid var(--ca-border-subtle);
+}
+
+.catalog-trust-facts > div,
+.publication-dates > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.catalog-trust-facts dd,
+.publication-dates dd {
+  margin: 0;
+  color: var(--ca-text);
+  overflow-wrap: anywhere;
+}
+
+.publication-fact-detail {
+  display: block;
+  margin-top: 2px;
+  color: var(--ca-text-muted);
+  font-size: var(--ca-text-sm);
+  line-height: 1.4;
+}
+
+/* Status is written out; the icon repeats it and colour only reinforces it. */
+.publication-lifecycle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.publication-lifecycle--active svg {
+  color: var(--ca-success, var(--ca-primary));
+}
+
+.publication-lifecycle--historical svg,
+.publication-lifecycle--superseded svg,
+.publication-lifecycle--draft svg,
+.publication-lifecycle--deprecated svg {
+  color: var(--ca-warning, var(--ca-text-muted));
+}
+
+.catalog-about {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+  gap: var(--ca-space-4);
+  padding-top: var(--ca-space-6);
+}
+
+.catalog-about__panel {
+  display: grid;
+  align-content: start;
+  gap: var(--ca-space-3);
+  min-width: 0;
+  padding: var(--ca-space-4);
+  border: 1px solid var(--ca-border-subtle);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--ca-surface-deep) 36%, transparent);
+}
+
+.catalog-about__panel h3,
+.catalog-about__panel h4,
+.catalog-about__panel p {
+  margin: 0;
+}
+
+.catalog-about__panel h3 {
+  font-size: var(--ca-text-lg);
+}
+
+.catalog-about__panel h4 {
+  color: var(--ca-text-muted);
+  font: 600 var(--ca-text-xs) / 1.4 var(--ca-font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.catalog-kind-list,
+.catalog-next-list,
+.catalog-basis-list,
+.publication-limitations {
+  display: grid;
+  gap: var(--ca-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.catalog-next-list li,
+.catalog-basis-list li {
+  display: grid;
+}
+
+.catalog-next-list a,
+.catalog-basis-list a,
+.catalog-about__panel p > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.catalog-next-list small,
+.catalog-basis-list small,
+.catalog-coverage-note,
+.catalog-basis-intro {
+  color: var(--ca-text-muted);
+  font-size: var(--ca-text-sm);
+}
+
+.publication-dates {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
+  gap: var(--ca-space-3);
+  margin: 0;
+}
+
+.publication-limitations li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--ca-space-2);
+  align-items: start;
+  color: var(--ca-text);
+  font-size: var(--ca-text-sm);
+  line-height: 1.45;
+}
+
+.publication-limitations svg {
+  margin-top: 2px;
+  color: var(--ca-warning, var(--ca-text-muted));
+}
+
 .catalog-records {
   padding-top: var(--ca-space-8);
 }

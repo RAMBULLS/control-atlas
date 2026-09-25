@@ -215,7 +215,7 @@ test("catalog identity renders before its full record payload arrives", async ({
   await expect(page.getByText("Loading this publication's records…")).toBeHidden({
     timeout: 15000,
   });
-  await expect(page.getByRole("heading", { level: 2 })).toContainText(
+  await expect(page.locator("#catalog-records-title")).toContainText(
     "SP 800-53 Rev. 5",
   );
 });

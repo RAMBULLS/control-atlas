@@ -83,9 +83,11 @@ jobs:
         shell: bash
         run: |
           echo "No public route is affected (${{ steps.material.outputs.ui_review_reason }})."
-          echo "### Visual approval not required" >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "This change touches no public UI route, so there is nothing for a person to look at." >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo "### Visual approval not required"
+            echo
+            echo "This change touches no public UI route, so there is nothing for a person to look at."
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Require the owner's approval of this exact head
         if: ${{ steps.material.outputs.ui_review_required == 'true' }}

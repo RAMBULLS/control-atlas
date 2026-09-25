@@ -9,13 +9,13 @@
         {
           "type": "application",
           "name": "npm",
-          "version": "10.9.3"
+          "version": "10.9.8"
         },
         {
           "type": "library",
           "name": "cyclonedx-library",
           "group": "@cyclonedx",
-          "version": "10.1.1",
+          "version": "10.3.0",
           "author": "Jan Kowalleck",
           "description": "Core functionality of CycloneDX for JavaScript (Node.js or WebBrowser).",
           "licenses": [
@@ -40,6 +40,12 @@
               "url": "https://github.com/CycloneDX/cyclonedx-javascript-library#readme",
               "type": "website",
               "comment": "as detected from PackageJson property \"homepage\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:constraint:engine:node",
+              "value": ">=20.18.0"
             }
           ]
         },
@@ -73,6 +79,16 @@
               "type": "website",
               "comment": "as detected from PackageJson property \"homepage\""
             }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:constraint:engine:node",
+              "value": ">=20.18.0"
+            },
+            {
+              "name": "cdx:npm:package:constraint:engine:npm",
+              "value": ">=9"
+            }
           ]
         }
       ]
@@ -85,6 +101,10 @@
       "description": "Control Atlas is a public research tool for federal cybersecurity requirements, controls, techniques, and guidance.",
       "purl": "pkg:npm/control-atlas@1.0.2",
       "properties": [
+        {
+          "name": "cdx:npm:package:constraint:engine:node",
+          "value": "^22.22.2 || ^24.15.0 || >=26.0.0"
+        },
         {
           "name": "cdx:npm:package:path",
           "value": ""
@@ -2070,6 +2090,45 @@
     },
     {
       "type": "library",
+      "name": "promise-retry",
+      "group": "@gar",
+      "version": "1.0.3",
+      "bom-ref": "control-atlas@1.0.2|@gar/promise-retry@1.0.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "acknowledgement": "declared"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40gar/promise-retry@1.0.3",
+      "externalReferences": [
+        {
+          "url": "https://registry.npmjs.org/@gar/promise-retry/-/promise-retry-1.0.3.tgz",
+          "type": "distribution",
+          "hashes": [
+            {
+              "alg": "SHA-512",
+              "content": "1a6cc0f5c90da243f2a53835d298297873507bba61fa220a2a684abb739bf40364b30ade0b1ed1ddc2a663bf352bc40adc0a952f7c5587d038d89bc801b92448"
+            }
+          ],
+          "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+        }
+      ],
+      "properties": [
+        {
+          "name": "cdx:npm:package:development",
+          "value": "true"
+        },
+        {
+          "name": "cdx:npm:package:path",
+          "value": "node_modules/@gar/promise-retry"
+        }
+      ]
+    },
+    {
+      "type": "library",
       "name": "core",
       "group": "@humanfs",
       "version": "0.19.2",
@@ -2269,6 +2328,7 @@
       "group": "@isaacs",
       "version": "8.0.2",
       "bom-ref": "control-atlas@1.0.2|@isaacs/cliui@8.0.2",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -2307,6 +2367,7 @@
           "name": "ansi-regex",
           "version": "6.3.0",
           "bom-ref": "control-atlas@1.0.2|@isaacs/cliui@8.0.2|ansi-regex@6.3.0",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -2345,6 +2406,7 @@
           "name": "emoji-regex",
           "version": "9.2.2",
           "bom-ref": "control-atlas@1.0.2|@isaacs/cliui@8.0.2|emoji-regex@9.2.2",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -2383,6 +2445,7 @@
           "name": "string-width",
           "version": "5.1.2",
           "bom-ref": "control-atlas@1.0.2|@isaacs/cliui@8.0.2|string-width@5.1.2",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -2421,6 +2484,7 @@
           "name": "strip-ansi",
           "version": "7.2.0",
           "bom-ref": "control-atlas@1.0.2|@isaacs/cliui@8.0.2|strip-ansi@7.2.0",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -2462,6 +2526,7 @@
       "group": "@isaacs",
       "version": "4.0.1",
       "bom-ref": "control-atlas@1.0.2|@isaacs/fs-minipass@4.0.1",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -3250,8 +3315,8 @@
       "type": "library",
       "name": "agent",
       "group": "@npmcli",
-      "version": "3.0.0",
-      "bom-ref": "control-atlas@1.0.2|@npmcli/agent@3.0.0",
+      "version": "5.0.2",
+      "bom-ref": "control-atlas@1.0.2|@npmcli/agent@5.0.2",
       "licenses": [
         {
           "license": {
@@ -3260,15 +3325,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/%40npmcli/agent@3.0.0",
+      "purl": "pkg:npm/%40npmcli/agent@5.0.2",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/@npmcli/agent/-/agent-3.0.0.tgz",
+          "url": "https://registry.npmjs.org/@npmcli/agent/-/agent-5.0.2.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "4bbf4d74480341dfcd1826b2e930a85735d28fbe2c9116482897292630b994eab7e12673c88e8caad8a25a88955a856b4dc1a335e0b88a96e1d552079697c5e5"
+              "content": "124cc6984b206d0d6ba9691125ed8fd28407c7fca5668cc350d3cc5c29252ee4852f7198f90c847c15238630ac8065f3878386a671ef91ba124207338cffe326"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -3283,14 +3348,168 @@
           "name": "cdx:npm:package:path",
           "value": "node_modules/@npmcli/agent"
         }
+      ],
+      "components": [
+        {
+          "type": "library",
+          "name": "agent-base",
+          "version": "9.0.0",
+          "bom-ref": "control-atlas@1.0.2|@npmcli/agent@5.0.2|agent-base@9.0.0",
+          "licenses": [
+            {
+              "license": {
+                "id": "MIT",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/agent-base@9.0.0",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/agent-base/-/agent-base-9.0.0.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "4d07f9f41b199f2b6df0674928b3df519e7883f89a50bd8e583485082bcc3a1b0776e0d0c4ef310b83cd7b222455c0392b02f6a613d2bf4768b82d1f816ce69c"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/@npmcli/agent/node_modules/agent-base"
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "name": "http-proxy-agent",
+          "version": "9.1.0",
+          "bom-ref": "control-atlas@1.0.2|@npmcli/agent@5.0.2|http-proxy-agent@9.1.0",
+          "licenses": [
+            {
+              "license": {
+                "id": "MIT",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/http-proxy-agent@9.1.0",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/http-proxy-agent/-/http-proxy-agent-9.1.0.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "d8dc68bde4d3e7c9a3613e27dd13d311f09918b31b89da0ef171227977e9498c6ef8f409d6aa71e32a701fa37eb85f6dc013c8bd1460be4bd6e4751361610d8a"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/@npmcli/agent/node_modules/http-proxy-agent"
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "name": "https-proxy-agent",
+          "version": "9.1.0",
+          "bom-ref": "control-atlas@1.0.2|@npmcli/agent@5.0.2|https-proxy-agent@9.1.0",
+          "licenses": [
+            {
+              "license": {
+                "id": "MIT",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/https-proxy-agent@9.1.0",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/https-proxy-agent/-/https-proxy-agent-9.1.0.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "6a0f3bcbb70927dff7f86c45afc3b2e0ee5f683b064469c11ac263fd88ce4ac4b1ff979a74a2d84cc3e5cee47aa1b8280830e6d1a6c00198ad5d742430e3d2a4"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/@npmcli/agent/node_modules/https-proxy-agent"
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "name": "socks-proxy-agent",
+          "version": "10.1.0",
+          "bom-ref": "control-atlas@1.0.2|@npmcli/agent@5.0.2|socks-proxy-agent@10.1.0",
+          "licenses": [
+            {
+              "license": {
+                "id": "MIT",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/socks-proxy-agent@10.1.0",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/socks-proxy-agent/-/socks-proxy-agent-10.1.0.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "5a5323ffaedc109e8c0c8d4e72c9e3b98283343a323c2098676e3d92eb973e2303c3d17c3d7915690ed85aedec893c9d7d0ff804465cbc6ceef9a62fcfb74309"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/@npmcli/agent/node_modules/socks-proxy-agent"
+            }
+          ]
+        }
       ]
     },
     {
       "type": "library",
       "name": "fs",
       "group": "@npmcli",
-      "version": "4.0.0",
-      "bom-ref": "control-atlas@1.0.2|@npmcli/fs@4.0.0",
+      "version": "6.0.0",
+      "bom-ref": "control-atlas@1.0.2|@npmcli/fs@6.0.0",
       "licenses": [
         {
           "license": {
@@ -3299,15 +3518,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/%40npmcli/fs@4.0.0",
+      "purl": "pkg:npm/%40npmcli/fs@6.0.0",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/@npmcli/fs/-/fs-4.0.0.tgz",
+          "url": "https://registry.npmjs.org/@npmcli/fs/-/fs-6.0.0.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "ff11a57b323ac5f18ef4dc2e2659f0cff2b5e2a0f59024801ad69c0479c6cde008b8919acdca78e4a3f936ec80457a0a6fb730ba5006595b1b792c5d1bf71bd1"
+              "content": "02178eb38b302a46bf5cbb61b7ac712433dece543b2b621843d63c9524f824b0e39eb6a59d6b8c33d004d82755720409e689ab5e1b11cccec5eda62679906f29"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -3321,6 +3540,45 @@
         {
           "name": "cdx:npm:package:path",
           "value": "node_modules/@npmcli/fs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "redact",
+      "group": "@npmcli",
+      "version": "5.0.0",
+      "bom-ref": "control-atlas@1.0.2|@npmcli/redact@5.0.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "ISC",
+            "acknowledgement": "declared"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40npmcli/redact@5.0.0",
+      "externalReferences": [
+        {
+          "url": "https://registry.npmjs.org/@npmcli/redact/-/redact-5.0.0.tgz",
+          "type": "distribution",
+          "hashes": [
+            {
+              "alg": "SHA-512",
+              "content": "df370de50df21267b2c57073a81e9f5cf405cd86b644eb06152afaf56d00ad7200189ab197f6851023953c3da46e460f9b453f107c452a07252b7500f56420e4"
+            }
+          ],
+          "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+        }
+      ],
+      "properties": [
+        {
+          "name": "cdx:npm:package:development",
+          "value": "true"
+        },
+        {
+          "name": "cdx:npm:package:path",
+          "value": "node_modules/@npmcli/redact"
         }
       ]
     },
@@ -6338,6 +6596,76 @@
     },
     {
       "type": "library",
+      "name": "react-virtual",
+      "group": "@tanstack",
+      "version": "3.14.13",
+      "bom-ref": "control-atlas@1.0.2|@tanstack/react-virtual@3.14.13",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "acknowledgement": "declared"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40tanstack/react-virtual@3.14.13",
+      "externalReferences": [
+        {
+          "url": "https://registry.npmjs.org/@tanstack/react-virtual/-/react-virtual-3.14.13.tgz",
+          "type": "distribution",
+          "hashes": [
+            {
+              "alg": "SHA-512",
+              "content": "25b0d3030b7367df5a39e0ab01f5b912c139292ab945687a01fd9db45c322c8224e3c25aeef9ba9f86b1bbfe374f7bdf8c59c41896a5c49d70c988d2403e9b4a"
+            }
+          ],
+          "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+        }
+      ],
+      "properties": [
+        {
+          "name": "cdx:npm:package:path",
+          "value": "node_modules/@tanstack/react-virtual"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "virtual-core",
+      "group": "@tanstack",
+      "version": "3.17.11",
+      "bom-ref": "control-atlas@1.0.2|@tanstack/virtual-core@3.17.11",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "acknowledgement": "declared"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40tanstack/virtual-core@3.17.11",
+      "externalReferences": [
+        {
+          "url": "https://registry.npmjs.org/@tanstack/virtual-core/-/virtual-core-3.17.11.tgz",
+          "type": "distribution",
+          "hashes": [
+            {
+              "alg": "SHA-512",
+              "content": "f882e3bed1eea7a63687343a633c0c817d50fa8429c4418e5c212c08d68fa083f457131b8b32014e66130ed91eae42104bcfc26cfd4146ecadf15ffc042b32d6"
+            }
+          ],
+          "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+        }
+      ],
+      "properties": [
+        {
+          "name": "cdx:npm:package:path",
+          "value": "node_modules/@tanstack/virtual-core"
+        }
+      ]
+    },
+    {
+      "type": "library",
       "name": "quickjs-emscripten",
       "group": "@tootallnate",
       "version": "0.23.0",
@@ -6706,8 +7034,8 @@
       "type": "library",
       "name": "node",
       "group": "@types",
-      "version": "26.2.0",
-      "bom-ref": "control-atlas@1.0.2|@types/node@26.2.0",
+      "version": "26.4.1",
+      "bom-ref": "control-atlas@1.0.2|@types/node@26.4.1",
       "licenses": [
         {
           "license": {
@@ -6716,15 +7044,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/%40types/node@26.2.0",
+      "purl": "pkg:npm/%40types/node@26.4.1",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/@types/node/-/node-26.2.0.tgz",
+          "url": "https://registry.npmjs.org/@types/node/-/node-26.4.1.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "e48be2ba54d9791369daf009e75e1c73f1d4958e6767d7c26eaf433320b9d81ae1159002a379c8d11eea0718509a8fdddbb3457bdeaeaff6fb5b0c6495d6be92"
+              "content": "93dec436f656b6f03acaacf9fc54ba6bb76e0e038f11e39039cda2292fe763a997eaa2542ad2e75b3412f978fab57c1eca3e9971300ad9079c7ad9ef8bd9c22c"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -6823,8 +7151,8 @@
       "type": "library",
       "name": "eslint-plugin",
       "group": "@typescript-eslint",
-      "version": "8.67.0",
-      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/eslint-plugin@8.67.0",
+      "version": "8.69.0",
+      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/eslint-plugin@8.69.0",
       "licenses": [
         {
           "license": {
@@ -6833,15 +7161,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/%40typescript-eslint/eslint-plugin@8.67.0",
+      "purl": "pkg:npm/%40typescript-eslint/eslint-plugin@8.69.0",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/@typescript-eslint/eslint-plugin/-/eslint-plugin-8.67.0.tgz",
+          "url": "https://registry.npmjs.org/@typescript-eslint/eslint-plugin/-/eslint-plugin-8.69.0.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "527ec77a8ca3eb935111b280c88ac5c5e335e37359a44c569b2d4d7a9e032de40e78b9537ae98f8e834a9c1ad4e43e66a165db3c98116b953071dbb47da54d19"
+              "content": "b798d04ca3c88155b53c4e9d47a1fa433e609bcce33255f9ff681168e19df5e3ba57b27eb5073a8962ae9047bb758f2ef47c986ac434c9f174fc54924c43b680"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -6862,8 +7190,8 @@
       "type": "library",
       "name": "parser",
       "group": "@typescript-eslint",
-      "version": "8.67.0",
-      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/parser@8.67.0",
+      "version": "8.69.0",
+      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/parser@8.69.0",
       "licenses": [
         {
           "license": {
@@ -6872,15 +7200,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/%40typescript-eslint/parser@8.67.0",
+      "purl": "pkg:npm/%40typescript-eslint/parser@8.69.0",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/@typescript-eslint/parser/-/parser-8.67.0.tgz",
+          "url": "https://registry.npmjs.org/@typescript-eslint/parser/-/parser-8.69.0.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "7d405f4eeb84ba55aa5fa57cf8edcfb52715d35b736184540d3022ac714aa1102dee73b3a0688fb7433f6c1e3bc16372d1ca0e39c804c00314b41a7290cc65eb"
+              "content": "9786f40e15a2a0683a1add9e6c696f7e414c3a346c6aec6db270d1c144915f5a87ab71dd4df40757cc16f7311779c89a8ba1df79a28e79d427d99a287f1dd607"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -6901,8 +7229,8 @@
       "type": "library",
       "name": "project-service",
       "group": "@typescript-eslint",
-      "version": "8.67.0",
-      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/project-service@8.67.0",
+      "version": "8.69.0",
+      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/project-service@8.69.0",
       "licenses": [
         {
           "license": {
@@ -6911,15 +7239,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/%40typescript-eslint/project-service@8.67.0",
+      "purl": "pkg:npm/%40typescript-eslint/project-service@8.69.0",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/@typescript-eslint/project-service/-/project-service-8.67.0.tgz",
+          "url": "https://registry.npmjs.org/@typescript-eslint/project-service/-/project-service-8.69.0.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "72f13c73bba561e5cdf5f62eb33842782b1bcf25445ee86b442c9b9c1adeed3526a9be6746605f400c028f43b75891437b2019b78558bf9d6f3020bd2c749d63"
+              "content": "ca2e286c5ac73269ec7ac59e8476e483dccc03b26df1c5d3fa628cd3c1bdf7da47d724fa9ea82c1f1ecc626d2e635c008fc0aa8815d8449ed6013d107501d05e"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -6940,8 +7268,8 @@
       "type": "library",
       "name": "scope-manager",
       "group": "@typescript-eslint",
-      "version": "8.67.0",
-      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/scope-manager@8.67.0",
+      "version": "8.69.0",
+      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/scope-manager@8.69.0",
       "licenses": [
         {
           "license": {
@@ -6950,15 +7278,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/%40typescript-eslint/scope-manager@8.67.0",
+      "purl": "pkg:npm/%40typescript-eslint/scope-manager@8.69.0",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/@typescript-eslint/scope-manager/-/scope-manager-8.67.0.tgz",
+          "url": "https://registry.npmjs.org/@typescript-eslint/scope-manager/-/scope-manager-8.69.0.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "120bec95e4f04b813e5b3cd2bde9bc7c052e6cbc1ab4c345d41e611d22d0c5cbeceead9db51846cae8c7c0b2526251b8d67889ec63f6e0085adbed266f56f692"
+              "content": "7b07eca6a5af4b129239aa65a8050d6da4853b4781eb0d44b50f9eb1f605466dfad784f2e2e36d13191c6e077a9d6b17a616ea2b27fd65875b65dbf6c44a1611"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -6979,8 +7307,8 @@
       "type": "library",
       "name": "tsconfig-utils",
       "group": "@typescript-eslint",
-      "version": "8.67.0",
-      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/tsconfig-utils@8.67.0",
+      "version": "8.69.0",
+      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/tsconfig-utils@8.69.0",
       "licenses": [
         {
           "license": {
@@ -6989,15 +7317,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/%40typescript-eslint/tsconfig-utils@8.67.0",
+      "purl": "pkg:npm/%40typescript-eslint/tsconfig-utils@8.69.0",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/@typescript-eslint/tsconfig-utils/-/tsconfig-utils-8.67.0.tgz",
+          "url": "https://registry.npmjs.org/@typescript-eslint/tsconfig-utils/-/tsconfig-utils-8.69.0.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "bd5f8b512bf99e3516b249c4ef57ea29395752f6be47be9269e39177a6688dcba793fe83bca15738d53706b02cd87e3d99bca0517b7a81b62e9f3c2a37096176"
+              "content": "c4da8aed84c366c2e7890315ff8ae9151f19e4996a791bd58ee1b562017f99d3d51fce07483d7d2fc09cccc034aa0d917f0115db7d461c7dd59d3a090e8e0c7d"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -7018,8 +7346,8 @@
       "type": "library",
       "name": "type-utils",
       "group": "@typescript-eslint",
-      "version": "8.67.0",
-      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/type-utils@8.67.0",
+      "version": "8.69.0",
+      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/type-utils@8.69.0",
       "licenses": [
         {
           "license": {
@@ -7028,15 +7356,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/%40typescript-eslint/type-utils@8.67.0",
+      "purl": "pkg:npm/%40typescript-eslint/type-utils@8.69.0",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/@typescript-eslint/type-utils/-/type-utils-8.67.0.tgz",
+          "url": "https://registry.npmjs.org/@typescript-eslint/type-utils/-/type-utils-8.69.0.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "6955835db4667573bdb224df5f8762b502354fdfb355c35acd3e3c109083d2fe34ffd448168520674e4298612af47da08b14698d49ff8a9970be572fbad256fd"
+              "content": "65fa090158372599dd404a4497da5eb559716aede546e1257381d132e0252c27fcb68d38fe21f3ebdd915123665ca0e312e26620bf8a676fc1b0e701735e9db0"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -7057,8 +7385,8 @@
       "type": "library",
       "name": "types",
       "group": "@typescript-eslint",
-      "version": "8.67.0",
-      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/types@8.67.0",
+      "version": "8.69.0",
+      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/types@8.69.0",
       "licenses": [
         {
           "license": {
@@ -7067,15 +7395,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/%40typescript-eslint/types@8.67.0",
+      "purl": "pkg:npm/%40typescript-eslint/types@8.69.0",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/@typescript-eslint/types/-/types-8.67.0.tgz",
+          "url": "https://registry.npmjs.org/@typescript-eslint/types/-/types-8.69.0.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "b01b60b25c30f27b0c6148e174f0624b252a4b34fcb91ea0f770364179d00bcf9c19d8f3d02c9a39da870d125bd40b4e45b64235424105e140fed351dae426c3"
+              "content": "2b756bb9b50f865a3d543052e90748f180798fb0a5a6a2d175e7dccfa3c5ae19f089c7a10707aa43d12f865e25f85633d0774398ca888925f46a5746458b4308"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -7096,8 +7424,8 @@
       "type": "library",
       "name": "typescript-estree",
       "group": "@typescript-eslint",
-      "version": "8.67.0",
-      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/typescript-estree@8.67.0",
+      "version": "8.69.0",
+      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/typescript-estree@8.69.0",
       "licenses": [
         {
           "license": {
@@ -7106,15 +7434,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/%40typescript-eslint/typescript-estree@8.67.0",
+      "purl": "pkg:npm/%40typescript-eslint/typescript-estree@8.69.0",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/@typescript-eslint/typescript-estree/-/typescript-estree-8.67.0.tgz",
+          "url": "https://registry.npmjs.org/@typescript-eslint/typescript-estree/-/typescript-estree-8.69.0.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "10a401084f72365449626ee37535b90210da7035264b041bd050090262b610a62b35722c6b6bf1712671e8fbc9fdd11d23a952f98f56f845dc90b8f488f14673"
+              "content": "01d16482a724dd5b9d6ff9169f197269f53fe1a0611eb6d0f65a1c3f6378a6c5d3cb998e060d121c9ba69cbbf1eebea0d605780cabd41705769c9641a2a383f3"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -7135,8 +7463,8 @@
       "type": "library",
       "name": "utils",
       "group": "@typescript-eslint",
-      "version": "8.67.0",
-      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/utils@8.67.0",
+      "version": "8.69.0",
+      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/utils@8.69.0",
       "licenses": [
         {
           "license": {
@@ -7145,15 +7473,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/%40typescript-eslint/utils@8.67.0",
+      "purl": "pkg:npm/%40typescript-eslint/utils@8.69.0",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/@typescript-eslint/utils/-/utils-8.67.0.tgz",
+          "url": "https://registry.npmjs.org/@typescript-eslint/utils/-/utils-8.69.0.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "53d0f515dc04581c28937871c5276172531bd2dc2fb7d4278c843455f4350225f67a99e94a0bf6b9b543b1ac8e17263c2ba157f8043b13414a5951b788ab23d4"
+              "content": "b546f1eb4041a906b7d645c5e4c0ac38e2cbe44fd6cd4bb1227ed8a40beaf9e69496abe4f3f3579d730134074b0abd227239337a6ee2500e50a961defe12756b"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -7174,8 +7502,8 @@
       "type": "library",
       "name": "visitor-keys",
       "group": "@typescript-eslint",
-      "version": "8.67.0",
-      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/visitor-keys@8.67.0",
+      "version": "8.69.0",
+      "bom-ref": "control-atlas@1.0.2|@typescript-eslint/visitor-keys@8.69.0",
       "licenses": [
         {
           "license": {
@@ -7184,15 +7512,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/%40typescript-eslint/visitor-keys@8.67.0",
+      "purl": "pkg:npm/%40typescript-eslint/visitor-keys@8.69.0",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/@typescript-eslint/visitor-keys/-/visitor-keys-8.67.0.tgz",
+          "url": "https://registry.npmjs.org/@typescript-eslint/visitor-keys/-/visitor-keys-8.69.0.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "7e4bfc747443a9f1ad4c7b8979e6ddad0edc5fa01de16012d34ae01e1f541af332705d668c17ecc6bcb55ec2c8161599e89b9d961e947732be4d895ba425e09c"
+              "content": "fab99d80f03e11790d80a62f1ef15f86bb37e6eb576f0682e4f1a90eab925dca174032940395235742e64ee706ff825790cdf5053bb84e2947b6b37c21505ef3"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -7213,7 +7541,7 @@
           "type": "library",
           "name": "eslint-visitor-keys",
           "version": "5.0.1",
-          "bom-ref": "control-atlas@1.0.2|@typescript-eslint/visitor-keys@8.67.0|eslint-visitor-keys@5.0.1",
+          "bom-ref": "control-atlas@1.0.2|@typescript-eslint/visitor-keys@8.69.0|eslint-visitor-keys@5.0.1",
           "licenses": [
             {
               "license": {
@@ -7292,8 +7620,8 @@
       "type": "library",
       "name": "react",
       "group": "@xyflow",
-      "version": "12.11.3",
-      "bom-ref": "control-atlas@1.0.2|@xyflow/react@12.11.3",
+      "version": "12.11.6",
+      "bom-ref": "control-atlas@1.0.2|@xyflow/react@12.11.6",
       "licenses": [
         {
           "license": {
@@ -7302,15 +7630,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/%40xyflow/react@12.11.3",
+      "purl": "pkg:npm/%40xyflow/react@12.11.6",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/@xyflow/react/-/react-12.11.3.tgz",
+          "url": "https://registry.npmjs.org/@xyflow/react/-/react-12.11.6.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "1b78e8807cf619652d20e9216af5069e8d98cd8f6ee9f20b20906db5fb017a775bd3f1d607dd091beb0e4c0be520c130cafabdce0cbd57d6504b0c908d1e50cd"
+              "content": "f57b0424d1e36ad2989ddb3329317f6ec53b14e3fd749e95fc4430cf2de831db6a801b94abb063292c24128f82eece2a1ecb4741fc30a0703713c41fa4fc5965"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -7327,8 +7655,8 @@
       "type": "library",
       "name": "system",
       "group": "@xyflow",
-      "version": "0.0.80",
-      "bom-ref": "control-atlas@1.0.2|@xyflow/system@0.0.80",
+      "version": "0.0.82",
+      "bom-ref": "control-atlas@1.0.2|@xyflow/system@0.0.82",
       "licenses": [
         {
           "license": {
@@ -7337,15 +7665,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/%40xyflow/system@0.0.80",
+      "purl": "pkg:npm/%40xyflow/system@0.0.82",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/@xyflow/system/-/system-0.0.80.tgz",
+          "url": "https://registry.npmjs.org/@xyflow/system/-/system-0.0.82.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "cb073766a1bdd5baf35ab1f55a5c0c7485f882839fae9072e806cb75549aa1ffd7c7d975dfc8a320a444c4ce8490cae8d85f8e2261a64a203f58a717bca55c7c"
+              "content": "e032a72f7086b4218b4529a00ea69a8d15607a4b0c5eafd8c38c0f7dd31f9bb26f7488961c6cd560e7c5533b62013c1d05766a514e8785e87051d6d5f46db73d"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -8718,8 +9046,8 @@
     {
       "type": "library",
       "name": "body-parser",
-      "version": "1.20.6",
-      "bom-ref": "control-atlas@1.0.2|body-parser@1.20.6",
+      "version": "1.20.8",
+      "bom-ref": "control-atlas@1.0.2|body-parser@1.20.8",
       "licenses": [
         {
           "license": {
@@ -8728,15 +9056,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/body-parser@1.20.6",
+      "purl": "pkg:npm/body-parser@1.20.8",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/body-parser/-/body-parser-1.20.6.tgz",
+          "url": "https://registry.npmjs.org/body-parser/-/body-parser-1.20.8.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "a79b40cd2e7b8b9315f5f6450e3f4b788893644b9f6d27b6783a333fe12585e494ab59bbe0246ad63238998343755b3dbd0ced5c52ee93f19de81593770449e6"
+              "content": "24d732150eb83a28a31243f35014c27be8723d7503ff72c495d190ea21792d1d70d349b1f68ef1b435875c1636888b63742146a2294e2cd41b1fde37badee91c"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -8757,7 +9085,7 @@
           "type": "library",
           "name": "debug",
           "version": "2.6.9",
-          "bom-ref": "control-atlas@1.0.2|body-parser@1.20.6|debug@2.6.9",
+          "bom-ref": "control-atlas@1.0.2|body-parser@1.20.8|debug@2.6.9",
           "licenses": [
             {
               "license": {
@@ -8795,7 +9123,7 @@
           "type": "library",
           "name": "ms",
           "version": "2.0.0",
-          "bom-ref": "control-atlas@1.0.2|body-parser@1.20.6|ms@2.0.0",
+          "bom-ref": "control-atlas@1.0.2|body-parser@1.20.8|ms@2.0.0",
           "licenses": [
             {
               "license": {
@@ -9012,8 +9340,8 @@
     {
       "type": "library",
       "name": "cacache",
-      "version": "19.0.1",
-      "bom-ref": "control-atlas@1.0.2|cacache@19.0.1",
+      "version": "21.0.1",
+      "bom-ref": "control-atlas@1.0.2|cacache@21.0.1",
       "licenses": [
         {
           "license": {
@@ -9022,15 +9350,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/cacache@19.0.1",
+      "purl": "pkg:npm/cacache@21.0.1",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/cacache/-/cacache-19.0.1.tgz",
+          "url": "https://registry.npmjs.org/cacache/-/cacache-21.0.1.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "85db14c6e9570a2e524c877bf2f455604b43023abdf48080524b4b4de4d8b0ba1313a67c752d1cf2958d0b1c1dae4f587c97a86c365cd98d7cea10ffe5942015"
+              "content": "a53c33fee8f7272a7a597749e9f5a147eecb57156ce91caba104a7eca2701ec4b15eec864a9d2970c55cc12c13a4216ad57d981bc4017b45bebcdf9caf44b0cc"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -9242,6 +9570,7 @@
       "name": "chownr",
       "version": "3.0.0",
       "bom-ref": "control-atlas@1.0.2|chownr@3.0.0",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -12021,6 +12350,7 @@
       "name": "eastasianwidth",
       "version": "0.2.0",
       "bom-ref": "control-atlas@1.0.2|eastasianwidth@0.2.0",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -12546,6 +12876,7 @@
       "name": "err-code",
       "version": "2.0.3",
       "bom-ref": "control-atlas@1.0.2|err-code@2.0.3",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -14021,8 +14352,8 @@
     {
       "type": "library",
       "name": "fast-uri",
-      "version": "3.1.5",
-      "bom-ref": "control-atlas@1.0.2|fast-uri@3.1.5",
+      "version": "3.1.7",
+      "bom-ref": "control-atlas@1.0.2|fast-uri@3.1.7",
       "licenses": [
         {
           "license": {
@@ -14031,15 +14362,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/fast-uri@3.1.5",
+      "purl": "pkg:npm/fast-uri@3.1.7",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.5.tgz",
+          "url": "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.7.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "807c00d4ef4b0c870aba730a84e6d2fc78a6c2d7a13b59cf50408a02ee53a4a81a3b5f5f716125e1b96259ed635b1545bc85f3b498e34382fc5d0d4453d7fb27"
+              "content": "74ebd95738dd65dcfba6177dbfa8c26f0c6b056ddf2ba9fc45cd02b5d98ce1bba6ccc9f1cb005886ea61e89f35f51470fe4bbeacb6de9707ccba792dbb35551e"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -14097,8 +14428,8 @@
     {
       "type": "library",
       "name": "fast-xml-parser",
-      "version": "5.11.0",
-      "bom-ref": "control-atlas@1.0.2|fast-xml-parser@5.11.0",
+      "version": "5.11.1",
+      "bom-ref": "control-atlas@1.0.2|fast-xml-parser@5.11.1",
       "licenses": [
         {
           "license": {
@@ -14107,15 +14438,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/fast-xml-parser@5.11.0",
+      "purl": "pkg:npm/fast-xml-parser@5.11.1",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/fast-xml-parser/-/fast-xml-parser-5.11.0.tgz",
+          "url": "https://registry.npmjs.org/fast-xml-parser/-/fast-xml-parser-5.11.1.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "f481b132abea2ce9ea3fe1208b59ea0c72afe64f1a67bafd9f9e7c7a7c5cb9c9b254610134f014f8c3a0ffc8cf212eeb3bbb12ab88059b5fe71ed89ab9b32bbb"
+              "content": "4c1c3a2bf7f1a101868c29990f0f70fd9c0fdee0dc9d3338607fe0f8f1515abf2c6dee62757b7134deaf213878fb5aee0996a1a3ab8116eac496c03b174cf383"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -14554,6 +14885,7 @@
       "name": "foreground-child",
       "version": "3.3.1",
       "bom-ref": "control-atlas@1.0.2|foreground-child@3.3.1",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -15184,25 +15516,25 @@
     {
       "type": "library",
       "name": "glob",
-      "version": "10.5.0",
-      "bom-ref": "control-atlas@1.0.2|glob@10.5.0",
+      "version": "13.0.6",
+      "bom-ref": "control-atlas@1.0.2|glob@13.0.6",
       "licenses": [
         {
           "license": {
-            "id": "ISC",
+            "id": "BlueOak-1.0.0",
             "acknowledgement": "declared"
           }
         }
       ],
-      "purl": "pkg:npm/glob@10.5.0",
+      "purl": "pkg:npm/glob@13.0.6",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/glob/-/glob-10.5.0.tgz",
+          "url": "https://registry.npmjs.org/glob/-/glob-13.0.6.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "0df5cdf037e127b347dce7bb7059aedcd0aed7029b911789f13a2bcd20056d22ab94d69048a7c8cea62a558f3395bb3634b05b5a9462539d865f63db68154d92"
+              "content": "5a3972ae89669bcb83a66fe8806c976576f567e09ad81f0d6c9c2a0558346b12bd19b05ea12ef2195eaf8d79d87469ba5f9de27a112ec716f288aa7c42637857"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -15216,122 +15548,6 @@
         {
           "name": "cdx:npm:package:path",
           "value": "node_modules/glob"
-        }
-      ],
-      "components": [
-        {
-          "type": "library",
-          "name": "balanced-match",
-          "version": "1.0.2",
-          "bom-ref": "control-atlas@1.0.2|glob@10.5.0|balanced-match@1.0.2",
-          "licenses": [
-            {
-              "license": {
-                "id": "MIT",
-                "acknowledgement": "declared"
-              }
-            }
-          ],
-          "purl": "pkg:npm/balanced-match@1.0.2",
-          "externalReferences": [
-            {
-              "url": "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz",
-              "type": "distribution",
-              "hashes": [
-                {
-                  "alg": "SHA-512",
-                  "content": "de849e50ed13315ebb84dd4099b5ec2b8c9aa94eed8e21e56f144364ea47d0a5bdf82797e1b440697d009f1b74b71d8cae94695b041a3f02252121098585393f"
-                }
-              ],
-              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
-            }
-          ],
-          "properties": [
-            {
-              "name": "cdx:npm:package:development",
-              "value": "true"
-            },
-            {
-              "name": "cdx:npm:package:path",
-              "value": "node_modules/glob/node_modules/balanced-match"
-            }
-          ]
-        },
-        {
-          "type": "library",
-          "name": "brace-expansion",
-          "version": "2.1.4",
-          "bom-ref": "control-atlas@1.0.2|glob@10.5.0|brace-expansion@2.1.4",
-          "licenses": [
-            {
-              "license": {
-                "id": "MIT",
-                "acknowledgement": "declared"
-              }
-            }
-          ],
-          "purl": "pkg:npm/brace-expansion@2.1.4",
-          "externalReferences": [
-            {
-              "url": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-2.1.4.tgz",
-              "type": "distribution",
-              "hashes": [
-                {
-                  "alg": "SHA-512",
-                  "content": "8467d5ccfc6d85b7f7fb6ca383f441b3ad1c074161a814bfcef755ff8c27e3f0663746cd30c1cf73857f05b1627aa7f54ca0061801e76387928da8c29747f65e"
-                }
-              ],
-              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
-            }
-          ],
-          "properties": [
-            {
-              "name": "cdx:npm:package:development",
-              "value": "true"
-            },
-            {
-              "name": "cdx:npm:package:path",
-              "value": "node_modules/glob/node_modules/brace-expansion"
-            }
-          ]
-        },
-        {
-          "type": "library",
-          "name": "minimatch",
-          "version": "9.0.9",
-          "bom-ref": "control-atlas@1.0.2|glob@10.5.0|minimatch@9.0.9",
-          "licenses": [
-            {
-              "license": {
-                "id": "ISC",
-                "acknowledgement": "declared"
-              }
-            }
-          ],
-          "purl": "pkg:npm/minimatch@9.0.9",
-          "externalReferences": [
-            {
-              "url": "https://registry.npmjs.org/minimatch/-/minimatch-9.0.9.tgz",
-              "type": "distribution",
-              "hashes": [
-                {
-                  "alg": "SHA-512",
-                  "content": "381c0137d00be1daa61139694b6cdab31faf4de59c956ce46e57d993b2930398f78de38e373fed4429d9a26532bcd83cdf02f966ff52b3a1cc2570202fc47662"
-                }
-              ],
-              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
-            }
-          ],
-          "properties": [
-            {
-              "name": "cdx:npm:package:development",
-              "value": "true"
-            },
-            {
-              "name": "cdx:npm:package:path",
-              "value": "node_modules/glob/node_modules/minimatch"
-            }
-          ]
         }
       ]
     },
@@ -15662,46 +15878,6 @@
         {
           "name": "cdx:npm:package:path",
           "value": "node_modules/hosted-git-info"
-        }
-      ],
-      "components": [
-        {
-          "type": "library",
-          "name": "lru-cache",
-          "version": "11.5.2",
-          "bom-ref": "control-atlas@1.0.2|hosted-git-info@9.0.3|lru-cache@11.5.2",
-          "licenses": [
-            {
-              "license": {
-                "id": "BlueOak-1.0.0",
-                "acknowledgement": "declared"
-              }
-            }
-          ],
-          "purl": "pkg:npm/lru-cache@11.5.2",
-          "externalReferences": [
-            {
-              "url": "https://registry.npmjs.org/lru-cache/-/lru-cache-11.5.2.tgz",
-              "type": "distribution",
-              "hashes": [
-                {
-                  "alg": "SHA-512",
-                  "content": "e297ccd457f4c79d28d2d4306f9b9cc3f4733720f4fd824c13a215712b5a959b8c5b176ddec47786e4ad4edc73e0f526bd97d182ebc37a36acbd0da489f475d6"
-                }
-              ],
-              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
-            }
-          ],
-          "properties": [
-            {
-              "name": "cdx:npm:package:development",
-              "value": "true"
-            },
-            {
-              "name": "cdx:npm:package:path",
-              "value": "node_modules/hosted-git-info/node_modules/lru-cache"
-            }
-          ]
         }
       ]
     },
@@ -16755,6 +16931,7 @@
       "name": "jackspeak",
       "version": "3.4.3",
       "bom-ref": "control-atlas@1.0.2|jackspeak@3.4.3",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -16905,8 +17082,8 @@
     {
       "type": "library",
       "name": "js-yaml",
-      "version": "3.15.1",
-      "bom-ref": "control-atlas@1.0.2|js-yaml@3.15.1",
+      "version": "3.15.2",
+      "bom-ref": "control-atlas@1.0.2|js-yaml@3.15.2",
       "licenses": [
         {
           "license": {
@@ -16915,15 +17092,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/js-yaml@3.15.1",
+      "purl": "pkg:npm/js-yaml@3.15.2",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/js-yaml/-/js-yaml-3.15.1.tgz",
+          "url": "https://registry.npmjs.org/js-yaml/-/js-yaml-3.15.2.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "4bdf56b8edc79613b75cde3512d614365f73cd78e8271ed0be68a9c6c255c6d0814f4607105cbe88e2618d2beb995d769d8856a5968cf253c79099b4c9431b6a"
+              "content": "e84b8bf3bf5591103ed42cf9efc98a3222af8cf344ba4ebeaf525a173a1259e8d99ad7fbc566c8cb0d5edca931964cd322df536b0e89061129a46eeeb5cd4ffb"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -19415,25 +19592,25 @@
     {
       "type": "library",
       "name": "lru-cache",
-      "version": "10.4.3",
-      "bom-ref": "control-atlas@1.0.2|lru-cache@10.4.3",
+      "version": "11.5.2",
+      "bom-ref": "control-atlas@1.0.2|lru-cache@11.5.2",
       "licenses": [
         {
           "license": {
-            "id": "ISC",
+            "id": "BlueOak-1.0.0",
             "acknowledgement": "declared"
           }
         }
       ],
-      "purl": "pkg:npm/lru-cache@10.4.3",
+      "purl": "pkg:npm/lru-cache@11.5.2",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/lru-cache/-/lru-cache-10.4.3.tgz",
+          "url": "https://registry.npmjs.org/lru-cache/-/lru-cache-11.5.2.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "24d03365c5eb0ade365462ee633d337c0cc37c0bc9596e807d8943050c835790c2948da6e6c0262be3883bbb39f577ec46c587a74da3009ad169d3d1193b7a49"
+              "content": "e297ccd457f4c79d28d2d4306f9b9cc3f4733720f4fd824c13a215712b5a959b8c5b176ddec47786e4ad4edc73e0f526bd97d182ebc37a36acbd0da489f475d6"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -19491,8 +19668,8 @@
     {
       "type": "library",
       "name": "make-fetch-happen",
-      "version": "14.0.3",
-      "bom-ref": "control-atlas@1.0.2|make-fetch-happen@14.0.3",
+      "version": "16.0.1",
+      "bom-ref": "control-atlas@1.0.2|make-fetch-happen@16.0.1",
       "licenses": [
         {
           "license": {
@@ -19501,15 +19678,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/make-fetch-happen@14.0.3",
+      "purl": "pkg:npm/make-fetch-happen@16.0.1",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/make-fetch-happen/-/make-fetch-happen-14.0.3.tgz",
+          "url": "https://registry.npmjs.org/make-fetch-happen/-/make-fetch-happen-16.0.1.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "40c8c66c54cfd1b963f7b11e89d1b9864fd084a4374f82027244062e0cf7f1017b5606e4e9ee854c044df0a84ac7205b5a7f11d0753e6e7c3c692a053c3e2ab5"
+              "content": "b94bf5cb11f368a55510f7dc15e192368bff09e863bf4f28be563c2264e58e02fb43e4a203474060b43a49855ada490aa8d8f8637699108ef1bf6b5e69d89ed0"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -19530,7 +19707,7 @@
           "type": "library",
           "name": "negotiator",
           "version": "1.0.0",
-          "bom-ref": "control-atlas@1.0.2|make-fetch-happen@14.0.3|negotiator@1.0.0",
+          "bom-ref": "control-atlas@1.0.2|make-fetch-happen@16.0.1|negotiator@1.0.0",
           "licenses": [
             {
               "license": {
@@ -19561,6 +19738,44 @@
             {
               "name": "cdx:npm:package:path",
               "value": "node_modules/make-fetch-happen/node_modules/negotiator"
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "name": "proc-log",
+          "version": "7.0.0",
+          "bom-ref": "control-atlas@1.0.2|make-fetch-happen@16.0.1|proc-log@7.0.0",
+          "licenses": [
+            {
+              "license": {
+                "id": "ISC",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/proc-log@7.0.0",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/proc-log/-/proc-log-7.0.0.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "15881f680ebd5d9f77cda5cba0c350f958835c6181811f1a2e1d37b71cdc16157ef71397c7bfbc0cb0942eb28aa51f7e1ac1fd65f1e6f3669250fa68cd7d19b6"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/make-fetch-happen/node_modules/proc-log"
             }
           ]
         }
@@ -20142,8 +20357,8 @@
     {
       "type": "library",
       "name": "minipass-fetch",
-      "version": "4.0.1",
-      "bom-ref": "control-atlas@1.0.2|minipass-fetch@4.0.1",
+      "version": "6.0.0",
+      "bom-ref": "control-atlas@1.0.2|minipass-fetch@6.0.0",
       "licenses": [
         {
           "license": {
@@ -20152,15 +20367,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/minipass-fetch@4.0.1",
+      "purl": "pkg:npm/minipass-fetch@6.0.0",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/minipass-fetch/-/minipass-fetch-4.0.1.tgz",
+          "url": "https://registry.npmjs.org/minipass-fetch/-/minipass-fetch-6.0.0.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "8fb535d42e475e2815baeb7179b15a7686016dded549d65682049eeb835576f58d06a1808973cbd905427a18e6c3b958d6817d80e96561b39187e8623607cf81"
+              "content": "01623c6ca6a91a6831fc9d04e8819848a8fc4e21de6d99262964acf2b68f4b0f0a5f0804009f81c37f8b49d5c747a4ff4472805823989363222eb625b9a514eb"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -20174,6 +20389,47 @@
         {
           "name": "cdx:npm:package:path",
           "value": "node_modules/minipass-fetch"
+        }
+      ],
+      "components": [
+        {
+          "type": "library",
+          "name": "iconv-lite",
+          "version": "0.7.3",
+          "bom-ref": "control-atlas@1.0.2|minipass-fetch@6.0.0|iconv-lite@0.7.3",
+          "scope": "optional",
+          "licenses": [
+            {
+              "license": {
+                "id": "MIT",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/iconv-lite@0.7.3",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.7.3.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "20a5e9bc8ce39c2f574c051b54170c7c64b410f6885ed5babfecebf91469fa1a942c4a68d28c196b1eb0c91c0f3896d66f38d8b29430bac4ec7d5af489f878b9"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/minipass-fetch/node_modules/iconv-lite"
+            }
+          ]
         }
       ]
     },
@@ -20412,8 +20668,8 @@
     {
       "type": "library",
       "name": "minipass-sized",
-      "version": "1.0.3",
-      "bom-ref": "control-atlas@1.0.2|minipass-sized@1.0.3",
+      "version": "2.0.0",
+      "bom-ref": "control-atlas@1.0.2|minipass-sized@2.0.0",
       "licenses": [
         {
           "license": {
@@ -20422,15 +20678,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/minipass-sized@1.0.3",
+      "purl": "pkg:npm/minipass-sized@2.0.0",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/minipass-sized/-/minipass-sized-1.0.3.tgz",
+          "url": "https://registry.npmjs.org/minipass-sized/-/minipass-sized-2.0.0.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "31b9104360938813250360e6ff9718fbd49614437ca73cce5e2eab94ce57c6ad18a9b75ae59432f6c53be5aebbdc513d64ad19b1bafa63988feaef6792d7e0da"
+              "content": "cd2b0786da3905c5153369b52eeae75d8e8cfff70685569e813ef539f397a29af14faa3bf3419977bf7679ae857eb424b94e2eb0764851ccc040c454136a65cc"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -20444,84 +20700,6 @@
         {
           "name": "cdx:npm:package:path",
           "value": "node_modules/minipass-sized"
-        }
-      ],
-      "components": [
-        {
-          "type": "library",
-          "name": "minipass",
-          "version": "3.3.6",
-          "bom-ref": "control-atlas@1.0.2|minipass-sized@1.0.3|minipass@3.3.6",
-          "licenses": [
-            {
-              "license": {
-                "id": "ISC",
-                "acknowledgement": "declared"
-              }
-            }
-          ],
-          "purl": "pkg:npm/minipass@3.3.6",
-          "externalReferences": [
-            {
-              "url": "https://registry.npmjs.org/minipass/-/minipass-3.3.6.tgz",
-              "type": "distribution",
-              "hashes": [
-                {
-                  "alg": "SHA-512",
-                  "content": "0f188d89dc5210afad1c6eb3388925bcd3b09b786f0ab6d4addb7363be14e87293271bc80df3942f95b93f61a17770d392184a3d81aa78d508879a9c3386017f"
-                }
-              ],
-              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
-            }
-          ],
-          "properties": [
-            {
-              "name": "cdx:npm:package:development",
-              "value": "true"
-            },
-            {
-              "name": "cdx:npm:package:path",
-              "value": "node_modules/minipass-sized/node_modules/minipass"
-            }
-          ]
-        },
-        {
-          "type": "library",
-          "name": "yallist",
-          "version": "4.0.0",
-          "bom-ref": "control-atlas@1.0.2|minipass-sized@1.0.3|yallist@4.0.0",
-          "licenses": [
-            {
-              "license": {
-                "id": "ISC",
-                "acknowledgement": "declared"
-              }
-            }
-          ],
-          "purl": "pkg:npm/yallist@4.0.0",
-          "externalReferences": [
-            {
-              "url": "https://registry.npmjs.org/yallist/-/yallist-4.0.0.tgz",
-              "type": "distribution",
-              "hashes": [
-                {
-                  "alg": "SHA-512",
-                  "content": "df074689d672ab93c1d3ce172c44b94e9392440df08d7025216321ba6da445cbffe354a7d9e990d1dc9c416e2e6572de8f02af83a12cbdb76554bf8560472dec"
-                }
-              ],
-              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
-            }
-          ],
-          "properties": [
-            {
-              "name": "cdx:npm:package:development",
-              "value": "true"
-            },
-            {
-              "name": "cdx:npm:package:path",
-              "value": "node_modules/minipass-sized/node_modules/yallist"
-            }
-          ]
         }
       ]
     },
@@ -21369,6 +21547,281 @@
       "components": [
         {
           "type": "library",
+          "name": "agent",
+          "group": "@npmcli",
+          "version": "3.0.0",
+          "bom-ref": "control-atlas@1.0.2|node-gyp@11.5.0|@npmcli/agent@3.0.0",
+          "scope": "optional",
+          "licenses": [
+            {
+              "license": {
+                "id": "ISC",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/%40npmcli/agent@3.0.0",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/@npmcli/agent/-/agent-3.0.0.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "4bbf4d74480341dfcd1826b2e930a85735d28fbe2c9116482897292630b994eab7e12673c88e8caad8a25a88955a856b4dc1a335e0b88a96e1d552079697c5e5"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/node-gyp/node_modules/@npmcli/agent"
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "name": "fs",
+          "group": "@npmcli",
+          "version": "4.0.0",
+          "bom-ref": "control-atlas@1.0.2|node-gyp@11.5.0|@npmcli/fs@4.0.0",
+          "scope": "optional",
+          "licenses": [
+            {
+              "license": {
+                "id": "ISC",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/%40npmcli/fs@4.0.0",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/@npmcli/fs/-/fs-4.0.0.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "ff11a57b323ac5f18ef4dc2e2659f0cff2b5e2a0f59024801ad69c0479c6cde008b8919acdca78e4a3f936ec80457a0a6fb730ba5006595b1b792c5d1bf71bd1"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/node-gyp/node_modules/@npmcli/fs"
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "name": "balanced-match",
+          "version": "1.0.2",
+          "bom-ref": "control-atlas@1.0.2|node-gyp@11.5.0|balanced-match@1.0.2",
+          "scope": "optional",
+          "licenses": [
+            {
+              "license": {
+                "id": "MIT",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/balanced-match@1.0.2",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "de849e50ed13315ebb84dd4099b5ec2b8c9aa94eed8e21e56f144364ea47d0a5bdf82797e1b440697d009f1b74b71d8cae94695b041a3f02252121098585393f"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/node-gyp/node_modules/balanced-match"
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "name": "brace-expansion",
+          "version": "2.1.4",
+          "bom-ref": "control-atlas@1.0.2|node-gyp@11.5.0|brace-expansion@2.1.4",
+          "scope": "optional",
+          "licenses": [
+            {
+              "license": {
+                "id": "MIT",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/brace-expansion@2.1.4",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-2.1.4.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "8467d5ccfc6d85b7f7fb6ca383f441b3ad1c074161a814bfcef755ff8c27e3f0663746cd30c1cf73857f05b1627aa7f54ca0061801e76387928da8c29747f65e"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/node-gyp/node_modules/brace-expansion"
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "name": "cacache",
+          "version": "19.0.1",
+          "bom-ref": "control-atlas@1.0.2|node-gyp@11.5.0|cacache@19.0.1",
+          "scope": "optional",
+          "licenses": [
+            {
+              "license": {
+                "id": "ISC",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/cacache@19.0.1",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/cacache/-/cacache-19.0.1.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "85db14c6e9570a2e524c877bf2f455604b43023abdf48080524b4b4de4d8b0ba1313a67c752d1cf2958d0b1c1dae4f587c97a86c365cd98d7cea10ffe5942015"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/node-gyp/node_modules/cacache"
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "name": "content-type",
+          "version": "2.1.0",
+          "bom-ref": "control-atlas@1.0.2|node-gyp@11.5.0|content-type@2.1.0",
+          "scope": "optional",
+          "licenses": [
+            {
+              "license": {
+                "id": "MIT",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/content-type@2.1.0",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/content-type/-/content-type-2.1.0.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "9a3ed43d71348daa9a3acba435945411f122d8070bec2fefc26c1c1d5d0ef7b78ed44d69c4166eca3959af1e6c79368d060d54ebea37e70a5adf941f71cfbb6a"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/node-gyp/node_modules/content-type"
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "name": "glob",
+          "version": "10.5.0",
+          "bom-ref": "control-atlas@1.0.2|node-gyp@11.5.0|glob@10.5.0",
+          "scope": "optional",
+          "licenses": [
+            {
+              "license": {
+                "id": "ISC",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/glob@10.5.0",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/glob/-/glob-10.5.0.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "0df5cdf037e127b347dce7bb7059aedcd0aed7029b911789f13a2bcd20056d22ab94d69048a7c8cea62a558f3395bb3634b05b5a9462539d865f63db68154d92"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/node-gyp/node_modules/glob"
+            }
+          ]
+        },
+        {
+          "type": "library",
           "name": "isexe",
           "version": "3.1.5",
           "bom-ref": "control-atlas@1.0.2|node-gyp@11.5.0|isexe@3.1.5",
@@ -21408,6 +21861,359 @@
         },
         {
           "type": "library",
+          "name": "lru-cache",
+          "version": "10.4.3",
+          "bom-ref": "control-atlas@1.0.2|node-gyp@11.5.0|lru-cache@10.4.3",
+          "scope": "optional",
+          "licenses": [
+            {
+              "license": {
+                "id": "ISC",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/lru-cache@10.4.3",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/lru-cache/-/lru-cache-10.4.3.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "24d03365c5eb0ade365462ee633d337c0cc37c0bc9596e807d8943050c835790c2948da6e6c0262be3883bbb39f577ec46c587a74da3009ad169d3d1193b7a49"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/node-gyp/node_modules/lru-cache"
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "name": "make-fetch-happen",
+          "version": "14.0.3",
+          "bom-ref": "control-atlas@1.0.2|node-gyp@11.5.0|make-fetch-happen@14.0.3",
+          "scope": "optional",
+          "licenses": [
+            {
+              "license": {
+                "id": "ISC",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/make-fetch-happen@14.0.3",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/make-fetch-happen/-/make-fetch-happen-14.0.3.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "40c8c66c54cfd1b963f7b11e89d1b9864fd084a4374f82027244062e0cf7f1017b5606e4e9ee854c044df0a84ac7205b5a7f11d0753e6e7c3c692a053c3e2ab5"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/node-gyp/node_modules/make-fetch-happen"
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "name": "minimatch",
+          "version": "9.0.9",
+          "bom-ref": "control-atlas@1.0.2|node-gyp@11.5.0|minimatch@9.0.9",
+          "scope": "optional",
+          "licenses": [
+            {
+              "license": {
+                "id": "ISC",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/minimatch@9.0.9",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/minimatch/-/minimatch-9.0.9.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "381c0137d00be1daa61139694b6cdab31faf4de59c956ce46e57d993b2930398f78de38e373fed4429d9a26532bcd83cdf02f966ff52b3a1cc2570202fc47662"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/node-gyp/node_modules/minimatch"
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "name": "minipass-fetch",
+          "version": "4.0.1",
+          "bom-ref": "control-atlas@1.0.2|node-gyp@11.5.0|minipass-fetch@4.0.1",
+          "scope": "optional",
+          "licenses": [
+            {
+              "license": {
+                "id": "MIT",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/minipass-fetch@4.0.1",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/minipass-fetch/-/minipass-fetch-4.0.1.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "8fb535d42e475e2815baeb7179b15a7686016dded549d65682049eeb835576f58d06a1808973cbd905427a18e6c3b958d6817d80e96561b39187e8623607cf81"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/node-gyp/node_modules/minipass-fetch"
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "name": "minipass-sized",
+          "version": "1.0.3",
+          "bom-ref": "control-atlas@1.0.2|node-gyp@11.5.0|minipass-sized@1.0.3",
+          "scope": "optional",
+          "licenses": [
+            {
+              "license": {
+                "id": "ISC",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/minipass-sized@1.0.3",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/minipass-sized/-/minipass-sized-1.0.3.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "31b9104360938813250360e6ff9718fbd49614437ca73cce5e2eab94ce57c6ad18a9b75ae59432f6c53be5aebbdc513d64ad19b1bafa63988feaef6792d7e0da"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/node-gyp/node_modules/minipass-sized"
+            }
+          ],
+          "components": [
+            {
+              "type": "library",
+              "name": "minipass",
+              "version": "3.3.6",
+              "bom-ref": "control-atlas@1.0.2|node-gyp@11.5.0|minipass-sized@1.0.3|minipass@3.3.6",
+              "scope": "optional",
+              "licenses": [
+                {
+                  "license": {
+                    "id": "ISC",
+                    "acknowledgement": "declared"
+                  }
+                }
+              ],
+              "purl": "pkg:npm/minipass@3.3.6",
+              "externalReferences": [
+                {
+                  "url": "https://registry.npmjs.org/minipass/-/minipass-3.3.6.tgz",
+                  "type": "distribution",
+                  "hashes": [
+                    {
+                      "alg": "SHA-512",
+                      "content": "0f188d89dc5210afad1c6eb3388925bcd3b09b786f0ab6d4addb7363be14e87293271bc80df3942f95b93f61a17770d392184a3d81aa78d508879a9c3386017f"
+                    }
+                  ],
+                  "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+                }
+              ],
+              "properties": [
+                {
+                  "name": "cdx:npm:package:development",
+                  "value": "true"
+                },
+                {
+                  "name": "cdx:npm:package:path",
+                  "value": "node_modules/node-gyp/node_modules/minipass-sized/node_modules/minipass"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "name": "negotiator",
+          "version": "1.1.0",
+          "bom-ref": "control-atlas@1.0.2|node-gyp@11.5.0|negotiator@1.1.0",
+          "scope": "optional",
+          "licenses": [
+            {
+              "license": {
+                "id": "MIT",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/negotiator@1.1.0",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/negotiator/-/negotiator-1.1.0.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "34c3c144c2608901e36ddf29846dd579b771e246751f5db5adb97922432a78eb1a869b41f412a8fddee8277cd35ea4e06a09f66d694d497921d10506337d5162"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/node-gyp/node_modules/negotiator"
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "name": "path-scurry",
+          "version": "1.11.1",
+          "bom-ref": "control-atlas@1.0.2|node-gyp@11.5.0|path-scurry@1.11.1",
+          "scope": "optional",
+          "licenses": [
+            {
+              "license": {
+                "id": "BlueOak-1.0.0",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/path-scurry@1.11.1",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/path-scurry/-/path-scurry-1.11.1.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "5dae0dc35ec54bd02940527dba62e2252e28ac68e6ed9cf052bc1a99c190b874b30f2b61f5ba0a0dac9c61d0dc643baa6004d7c381c55e06aa59372d5bfbf51c"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/node-gyp/node_modules/path-scurry"
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "name": "ssri",
+          "version": "12.0.0",
+          "bom-ref": "control-atlas@1.0.2|node-gyp@11.5.0|ssri@12.0.0",
+          "scope": "optional",
+          "licenses": [
+            {
+              "license": {
+                "id": "ISC",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/ssri@12.0.0",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/ssri/-/ssri-12.0.0.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "4bb886368b1ea71f5169d5fcda88a6524bebd02b7b22325b11bb38989713c6cb7cba6f79277b03614d510443af76eea82f559e9363832398b8300c3e759e9c01"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/node-gyp/node_modules/ssri"
+            }
+          ]
+        },
+        {
+          "type": "library",
           "name": "which",
           "version": "5.0.0",
           "bom-ref": "control-atlas@1.0.2|node-gyp@11.5.0|which@5.0.0",
@@ -21442,6 +22248,45 @@
             {
               "name": "cdx:npm:package:path",
               "value": "node_modules/node-gyp/node_modules/which"
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "name": "yallist",
+          "version": "4.0.0",
+          "bom-ref": "control-atlas@1.0.2|node-gyp@11.5.0|yallist@4.0.0",
+          "scope": "optional",
+          "licenses": [
+            {
+              "license": {
+                "id": "ISC",
+                "acknowledgement": "declared"
+              }
+            }
+          ],
+          "purl": "pkg:npm/yallist@4.0.0",
+          "externalReferences": [
+            {
+              "url": "https://registry.npmjs.org/yallist/-/yallist-4.0.0.tgz",
+              "type": "distribution",
+              "hashes": [
+                {
+                  "alg": "SHA-512",
+                  "content": "df074689d672ab93c1d3ce172c44b94e9392440df08d7025216321ba6da445cbffe354a7d9e990d1dc9c416e2e6572de8f02af83a12cbdb76554bf8560472dec"
+                }
+              ],
+              "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
+            }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:development",
+              "value": "true"
+            },
+            {
+              "name": "cdx:npm:package:path",
+              "value": "node_modules/node-gyp/node_modules/yallist"
             }
           ]
         }
@@ -22035,8 +22880,8 @@
     {
       "type": "library",
       "name": "p-map",
-      "version": "7.0.6",
-      "bom-ref": "control-atlas@1.0.2|p-map@7.0.6",
+      "version": "7.0.7",
+      "bom-ref": "control-atlas@1.0.2|p-map@7.0.7",
       "licenses": [
         {
           "license": {
@@ -22045,15 +22890,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/p-map@7.0.6",
+      "purl": "pkg:npm/p-map@7.0.7",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/p-map/-/p-map-7.0.6.tgz",
+          "url": "https://registry.npmjs.org/p-map/-/p-map-7.0.7.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "2383ebc3a8af91dea9f0f898475b57012380381cc8270bb44c1edfa9a5f473ff1cdd001e84d6265f9ec48a3c8618606dddcfc1228c06c15d3745506d5ef1c456"
+              "content": "55a591bb68b8149351b624560aeb904607d0d41edaebe80c4ab3bede3d04422fe4d142df4bd928b11c46a22ab0cc88d94c3234dad19f9399975e5b4b83a42d7d"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -22189,6 +23034,7 @@
       "name": "package-json-from-dist",
       "version": "1.0.1",
       "bom-ref": "control-atlas@1.0.2|package-json-from-dist@1.0.1",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -22481,8 +23327,8 @@
     {
       "type": "library",
       "name": "path-scurry",
-      "version": "1.11.1",
-      "bom-ref": "control-atlas@1.0.2|path-scurry@1.11.1",
+      "version": "2.0.2",
+      "bom-ref": "control-atlas@1.0.2|path-scurry@2.0.2",
       "licenses": [
         {
           "license": {
@@ -22491,15 +23337,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/path-scurry@1.11.1",
+      "purl": "pkg:npm/path-scurry@2.0.2",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/path-scurry/-/path-scurry-1.11.1.tgz",
+          "url": "https://registry.npmjs.org/path-scurry/-/path-scurry-2.0.2.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "5dae0dc35ec54bd02940527dba62e2252e28ac68e6ed9cf052bc1a99c190b874b30f2b61f5ba0a0dac9c61d0dc643baa6004d7c381c55e06aa59372d5bfbf51c"
+              "content": "dcefe2555b0900fb0e9e9c1621e0fe77acffecf9aa029c9078f52d0a77636ad8fff48e4bca51efb79aa5b856814f7239877af57a37d1d39e9cf850aff8d9cd5e"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -22936,6 +23782,7 @@
       "name": "proc-log",
       "version": "5.0.0",
       "bom-ref": "control-atlas@1.0.2|proc-log@5.0.0",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -23008,6 +23855,7 @@
       "name": "promise-retry",
       "version": "2.0.1",
       "bom-ref": "control-atlas@1.0.2|promise-retry@2.0.1",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -23084,7 +23932,6 @@
       "name": "proxy-agent-negotiate",
       "version": "1.1.0",
       "bom-ref": "control-atlas@1.0.2|proxy-agent-negotiate@1.1.0",
-      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -24397,8 +25244,8 @@
     {
       "type": "library",
       "name": "qs",
-      "version": "6.15.3",
-      "bom-ref": "control-atlas@1.0.2|qs@6.15.3",
+      "version": "6.16.0",
+      "bom-ref": "control-atlas@1.0.2|qs@6.16.0",
       "licenses": [
         {
           "license": {
@@ -24407,15 +25254,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/qs@6.15.3",
+      "purl": "pkg:npm/qs@6.16.0",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/qs/-/qs-6.15.3.tgz",
+          "url": "https://registry.npmjs.org/qs/-/qs-6.16.0.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "3bd825df30a5e61e5b970d4a194cd02a1039a145d297caf0508339a344b79c25cc9624afcb90f3c7bfc325c23e4b08080aff889de499c21061d684b210703bd4"
+              "content": "87a7e1388691ac80f609b118d9faacfbbb7e517668f8c2c09d4e60448abce6e16d76250f09db00a4c947857a202953381ccd8355b22318d4d3607d8e7263f5bc"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -25316,6 +26163,7 @@
       "name": "retry",
       "version": "0.12.0",
       "bom-ref": "control-atlas@1.0.2|retry@0.12.0",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -26525,6 +27373,7 @@
       "name": "signal-exit",
       "version": "4.1.0",
       "bom-ref": "control-atlas@1.0.2|signal-exit@4.1.0",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -27136,8 +27985,8 @@
     {
       "type": "library",
       "name": "ssri",
-      "version": "12.0.0",
-      "bom-ref": "control-atlas@1.0.2|ssri@12.0.0",
+      "version": "14.0.0",
+      "bom-ref": "control-atlas@1.0.2|ssri@14.0.0",
       "licenses": [
         {
           "license": {
@@ -27146,15 +27995,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/ssri@12.0.0",
+      "purl": "pkg:npm/ssri@14.0.0",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/ssri/-/ssri-12.0.0.tgz",
+          "url": "https://registry.npmjs.org/ssri/-/ssri-14.0.0.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "4bb886368b1ea71f5169d5fcda88a6524bebd02b7b22325b11bb38989713c6cb7cba6f79277b03614d510443af76eea82f559e9363832398b8300c3e759e9c01"
+              "content": "8d0c4a234cb1d199d32abaa32a42c35760d7901427de4e3d255995a8319c0f0283b460db2260ff197b2ad38283d1557309043dc192586a5dd1c11d46cd64d2a3"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -27364,6 +28213,7 @@
       "name": "string-width",
       "version": "4.2.3",
       "bom-ref": "control-atlas@1.0.2|string-width@4.2.3",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -27402,6 +28252,7 @@
           "name": "ansi-regex",
           "version": "5.0.1",
           "bom-ref": "control-atlas@1.0.2|string-width@4.2.3|ansi-regex@5.0.1",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -27440,6 +28291,7 @@
           "name": "is-fullwidth-code-point",
           "version": "3.0.0",
           "bom-ref": "control-atlas@1.0.2|string-width@4.2.3|is-fullwidth-code-point@3.0.0",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -27478,6 +28330,7 @@
           "name": "strip-ansi",
           "version": "6.0.1",
           "bom-ref": "control-atlas@1.0.2|string-width@4.2.3|strip-ansi@6.0.1",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -27556,6 +28409,7 @@
       "name": "strip-ansi",
       "version": "6.0.1",
       "bom-ref": "control-atlas@1.0.2|strip-ansi@6.0.1",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -27594,6 +28448,7 @@
           "name": "ansi-regex",
           "version": "5.0.1",
           "bom-ref": "control-atlas@1.0.2|strip-ansi@6.0.1|ansi-regex@5.0.1",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -28049,6 +28904,7 @@
       "name": "tar",
       "version": "7.5.22",
       "bom-ref": "control-atlas@1.0.2|tar@7.5.22",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -28841,6 +29697,7 @@
       "name": "unique-filename",
       "version": "4.0.0",
       "bom-ref": "control-atlas@1.0.2|unique-filename@4.0.0",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -28879,6 +29736,7 @@
       "name": "unique-slug",
       "version": "5.0.0",
       "bom-ref": "control-atlas@1.0.2|unique-slug@5.0.0",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -30349,6 +31207,7 @@
       "name": "wrap-ansi",
       "version": "7.0.0",
       "bom-ref": "control-atlas@1.0.2|wrap-ansi@7.0.0",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -30387,6 +31246,7 @@
           "name": "ansi-regex",
           "version": "5.0.1",
           "bom-ref": "control-atlas@1.0.2|wrap-ansi@7.0.0|ansi-regex@5.0.1",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -30425,6 +31285,7 @@
           "name": "ansi-styles",
           "version": "4.3.0",
           "bom-ref": "control-atlas@1.0.2|wrap-ansi@7.0.0|ansi-styles@4.3.0",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -30463,6 +31324,7 @@
           "name": "color-convert",
           "version": "2.0.1",
           "bom-ref": "control-atlas@1.0.2|wrap-ansi@7.0.0|color-convert@2.0.1",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -30501,6 +31363,7 @@
           "name": "color-name",
           "version": "1.1.4",
           "bom-ref": "control-atlas@1.0.2|wrap-ansi@7.0.0|color-name@1.1.4",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -30539,6 +31402,7 @@
           "name": "is-fullwidth-code-point",
           "version": "3.0.0",
           "bom-ref": "control-atlas@1.0.2|wrap-ansi@7.0.0|is-fullwidth-code-point@3.0.0",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -30577,6 +31441,7 @@
           "name": "string-width",
           "version": "4.2.3",
           "bom-ref": "control-atlas@1.0.2|wrap-ansi@7.0.0|string-width@4.2.3",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -30615,6 +31480,7 @@
           "name": "strip-ansi",
           "version": "6.0.1",
           "bom-ref": "control-atlas@1.0.2|wrap-ansi@7.0.0|strip-ansi@6.0.1",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -30655,6 +31521,7 @@
       "name": "wrap-ansi",
       "version": "8.1.0",
       "bom-ref": "control-atlas@1.0.2|wrap-ansi@8.1.0",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -30693,6 +31560,7 @@
           "name": "ansi-regex",
           "version": "6.3.0",
           "bom-ref": "control-atlas@1.0.2|wrap-ansi@8.1.0|ansi-regex@6.3.0",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -30731,6 +31599,7 @@
           "name": "ansi-styles",
           "version": "6.2.3",
           "bom-ref": "control-atlas@1.0.2|wrap-ansi@8.1.0|ansi-styles@6.2.3",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -30769,6 +31638,7 @@
           "name": "emoji-regex",
           "version": "9.2.2",
           "bom-ref": "control-atlas@1.0.2|wrap-ansi@8.1.0|emoji-regex@9.2.2",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -30807,6 +31677,7 @@
           "name": "string-width",
           "version": "5.1.2",
           "bom-ref": "control-atlas@1.0.2|wrap-ansi@8.1.0|string-width@5.1.2",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -30845,6 +31716,7 @@
           "name": "strip-ansi",
           "version": "7.2.0",
           "bom-ref": "control-atlas@1.0.2|wrap-ansi@8.1.0|strip-ansi@7.2.0",
+          "scope": "optional",
           "licenses": [
             {
               "license": {
@@ -31107,8 +31979,8 @@
         {
           "type": "library",
           "name": "js-yaml",
-          "version": "4.3.1",
-          "bom-ref": "control-atlas@1.0.2|xmlbuilder2@4.0.3|js-yaml@4.3.1",
+          "version": "4.3.2",
+          "bom-ref": "control-atlas@1.0.2|xmlbuilder2@4.0.3|js-yaml@4.3.2",
           "licenses": [
             {
               "license": {
@@ -31117,15 +31989,15 @@
               }
             }
           ],
-          "purl": "pkg:npm/js-yaml@4.3.1",
+          "purl": "pkg:npm/js-yaml@4.3.2",
           "externalReferences": [
             {
-              "url": "https://registry.npmjs.org/js-yaml/-/js-yaml-4.3.1.tgz",
+              "url": "https://registry.npmjs.org/js-yaml/-/js-yaml-4.3.2.tgz",
               "type": "distribution",
               "hashes": [
                 {
                   "alg": "SHA-512",
-                  "content": "098e9cac6ab7d77317f06930bc1eedce0a7df6f8d0c58d7efb9cb5d3f04a37f1947c7a9668e19030d66406fa92cec64a5a4fe28f01e55b3ce42ee96c18786359"
+                  "content": "48534ebd227e0e07fff409fdd38631f828129483c2908a5aa38aa8e7596979edb94c845e8dd1f7ae1478119306a0dc77fd33f73bec335ae893165e2ca9b96dcc"
                 }
               ],
               "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -31221,6 +32093,7 @@
       "name": "yallist",
       "version": "5.0.0",
       "bom-ref": "control-atlas@1.0.2|yallist@5.0.0",
+      "scope": "optional",
       "licenses": [
         {
           "license": {
@@ -32072,13 +32945,14 @@
         "control-atlas@1.0.2|@radix-ui/react-dialog@1.1.23",
         "control-atlas@1.0.2|@tabler/icons-react@3.46.0",
         "control-atlas@1.0.2|@tailwindcss/vite@4.3.3",
-        "control-atlas@1.0.2|@types/node@26.2.0",
+        "control-atlas@1.0.2|@tanstack/react-virtual@3.14.13",
+        "control-atlas@1.0.2|@types/node@26.4.1",
         "control-atlas@1.0.2|@types/react-dom@19.2.4",
         "control-atlas@1.0.2|@types/react@19.2.18",
-        "control-atlas@1.0.2|@typescript-eslint/eslint-plugin@8.67.0",
-        "control-atlas@1.0.2|@typescript-eslint/parser@8.67.0",
+        "control-atlas@1.0.2|@typescript-eslint/eslint-plugin@8.69.0",
+        "control-atlas@1.0.2|@typescript-eslint/parser@8.69.0",
         "control-atlas@1.0.2|@vitejs/plugin-react@6.1.0",
-        "control-atlas@1.0.2|@xyflow/react@12.11.3",
+        "control-atlas@1.0.2|@xyflow/react@12.11.6",
         "control-atlas@1.0.2|ajv-formats@3.0.1",
         "control-atlas@1.0.2|ajv@8.20.0",
         "control-atlas@1.0.2|class-variance-authority@0.7.1",
@@ -32086,11 +32960,11 @@
         "control-atlas@1.0.2|elkjs@0.12.0",
         "control-atlas@1.0.2|eslint@10.8.1",
         "control-atlas@1.0.2|exceljs@4.4.0",
-        "control-atlas@1.0.2|fast-xml-parser@5.11.0",
+        "control-atlas@1.0.2|fast-xml-parser@5.11.1",
         "control-atlas@1.0.2|fflate@0.8.3",
         "control-atlas@1.0.2|globals@17.11.0",
         "control-atlas@1.0.2|graphology@0.26.0",
-        "control-atlas@1.0.2|make-fetch-happen@14.0.3",
+        "control-atlas@1.0.2|make-fetch-happen@16.0.1",
         "control-atlas@1.0.2|minisearch@7.2.0",
         "control-atlas@1.0.2|node-html-parser@9.0.1",
         "control-atlas@1.0.2|orbital-archive-no-01@1.8.0",
@@ -32367,6 +33241,9 @@
       ]
     },
     {
+      "ref": "control-atlas@1.0.2|@gar/promise-retry@1.0.3"
+    },
+    {
       "ref": "control-atlas@1.0.2|@humanfs/core@0.19.2",
       "dependsOn": [
         "control-atlas@1.0.2|@humanfs/types@0.15.0"
@@ -32478,7 +33355,7 @@
       "dependsOn": [
         "control-atlas@1.0.2|debug@4.4.3",
         "control-atlas@1.0.2|isomorphic-fetch@3.0.0",
-        "control-atlas@1.0.2|js-yaml@3.15.1",
+        "control-atlas@1.0.2|js-yaml@3.15.2",
         "control-atlas@1.0.2|lighthouse@13.4.1",
         "control-atlas@1.0.2|tree-kill@1.2.2"
       ]
@@ -32532,20 +33409,50 @@
       "ref": "control-atlas@1.0.2|@nodable/entities@3.0.0"
     },
     {
-      "ref": "control-atlas@1.0.2|@npmcli/agent@3.0.0",
+      "ref": "control-atlas@1.0.2|@npmcli/agent@5.0.2",
       "dependsOn": [
-        "control-atlas@1.0.2|agent-base@7.1.4",
-        "control-atlas@1.0.2|http-proxy-agent@7.0.2",
-        "control-atlas@1.0.2|https-proxy-agent@7.0.6",
-        "control-atlas@1.0.2|lru-cache@10.4.3",
-        "control-atlas@1.0.2|socks-proxy-agent@8.0.5"
+        "control-atlas@1.0.2|@npmcli/agent@5.0.2|agent-base@9.0.0",
+        "control-atlas@1.0.2|@npmcli/agent@5.0.2|http-proxy-agent@9.1.0",
+        "control-atlas@1.0.2|@npmcli/agent@5.0.2|https-proxy-agent@9.1.0",
+        "control-atlas@1.0.2|@npmcli/agent@5.0.2|socks-proxy-agent@10.1.0",
+        "control-atlas@1.0.2|lru-cache@11.5.2"
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|@npmcli/fs@4.0.0",
+      "ref": "control-atlas@1.0.2|@npmcli/agent@5.0.2|agent-base@9.0.0"
+    },
+    {
+      "ref": "control-atlas@1.0.2|@npmcli/agent@5.0.2|http-proxy-agent@9.1.0",
+      "dependsOn": [
+        "control-atlas@1.0.2|@npmcli/agent@5.0.2|agent-base@9.0.0",
+        "control-atlas@1.0.2|debug@4.4.3",
+        "control-atlas@1.0.2|proxy-agent-negotiate@1.1.0"
+      ]
+    },
+    {
+      "ref": "control-atlas@1.0.2|@npmcli/agent@5.0.2|https-proxy-agent@9.1.0",
+      "dependsOn": [
+        "control-atlas@1.0.2|@npmcli/agent@5.0.2|agent-base@9.0.0",
+        "control-atlas@1.0.2|debug@4.4.3",
+        "control-atlas@1.0.2|proxy-agent-negotiate@1.1.0"
+      ]
+    },
+    {
+      "ref": "control-atlas@1.0.2|@npmcli/agent@5.0.2|socks-proxy-agent@10.1.0",
+      "dependsOn": [
+        "control-atlas@1.0.2|@npmcli/agent@5.0.2|agent-base@9.0.0",
+        "control-atlas@1.0.2|debug@4.4.3",
+        "control-atlas@1.0.2|socks@2.8.9"
+      ]
+    },
+    {
+      "ref": "control-atlas@1.0.2|@npmcli/fs@6.0.0",
       "dependsOn": [
         "control-atlas@1.0.2|semver@7.8.5"
       ]
+    },
+    {
+      "ref": "control-atlas@1.0.2|@npmcli/redact@5.0.0"
     },
     {
       "ref": "control-atlas@1.0.2|@oozcitak/dom@2.0.2",
@@ -33083,6 +33990,17 @@
       ]
     },
     {
+      "ref": "control-atlas@1.0.2|@tanstack/react-virtual@3.14.13",
+      "dependsOn": [
+        "control-atlas@1.0.2|@tanstack/virtual-core@3.17.11",
+        "control-atlas@1.0.2|react-dom@19.2.8",
+        "control-atlas@1.0.2|react@19.2.8"
+      ]
+    },
+    {
+      "ref": "control-atlas@1.0.2|@tanstack/virtual-core@3.17.11"
+    },
+    {
       "ref": "control-atlas@1.0.2|@tootallnate/quickjs-emscripten@0.23.0"
     },
     {
@@ -33126,7 +34044,7 @@
       "ref": "control-atlas@1.0.2|@types/json-schema@7.0.15"
     },
     {
-      "ref": "control-atlas@1.0.2|@types/node@26.2.0",
+      "ref": "control-atlas@1.0.2|@types/node@26.4.1",
       "dependsOn": [
         "control-atlas@1.0.2|undici-types@8.3.0"
       ]
@@ -33144,14 +34062,14 @@
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|@typescript-eslint/eslint-plugin@8.67.0",
+      "ref": "control-atlas@1.0.2|@typescript-eslint/eslint-plugin@8.69.0",
       "dependsOn": [
         "control-atlas@1.0.2|@eslint-community/regexpp@4.12.2",
-        "control-atlas@1.0.2|@typescript-eslint/parser@8.67.0",
-        "control-atlas@1.0.2|@typescript-eslint/scope-manager@8.67.0",
-        "control-atlas@1.0.2|@typescript-eslint/type-utils@8.67.0",
-        "control-atlas@1.0.2|@typescript-eslint/utils@8.67.0",
-        "control-atlas@1.0.2|@typescript-eslint/visitor-keys@8.67.0",
+        "control-atlas@1.0.2|@typescript-eslint/parser@8.69.0",
+        "control-atlas@1.0.2|@typescript-eslint/scope-manager@8.69.0",
+        "control-atlas@1.0.2|@typescript-eslint/type-utils@8.69.0",
+        "control-atlas@1.0.2|@typescript-eslint/utils@8.69.0",
+        "control-atlas@1.0.2|@typescript-eslint/visitor-keys@8.69.0",
         "control-atlas@1.0.2|eslint@10.8.1",
         "control-atlas@1.0.2|ignore@7.0.6",
         "control-atlas@1.0.2|natural-compare@1.4.0",
@@ -33160,45 +34078,45 @@
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|@typescript-eslint/parser@8.67.0",
+      "ref": "control-atlas@1.0.2|@typescript-eslint/parser@8.69.0",
       "dependsOn": [
-        "control-atlas@1.0.2|@typescript-eslint/scope-manager@8.67.0",
-        "control-atlas@1.0.2|@typescript-eslint/types@8.67.0",
-        "control-atlas@1.0.2|@typescript-eslint/typescript-estree@8.67.0",
-        "control-atlas@1.0.2|@typescript-eslint/visitor-keys@8.67.0",
+        "control-atlas@1.0.2|@typescript-eslint/scope-manager@8.69.0",
+        "control-atlas@1.0.2|@typescript-eslint/types@8.69.0",
+        "control-atlas@1.0.2|@typescript-eslint/typescript-estree@8.69.0",
+        "control-atlas@1.0.2|@typescript-eslint/visitor-keys@8.69.0",
         "control-atlas@1.0.2|debug@4.4.3",
         "control-atlas@1.0.2|eslint@10.8.1",
         "control-atlas@1.0.2|typescript@6.0.3"
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|@typescript-eslint/project-service@8.67.0",
+      "ref": "control-atlas@1.0.2|@typescript-eslint/project-service@8.69.0",
       "dependsOn": [
-        "control-atlas@1.0.2|@typescript-eslint/tsconfig-utils@8.67.0",
-        "control-atlas@1.0.2|@typescript-eslint/types@8.67.0",
+        "control-atlas@1.0.2|@typescript-eslint/tsconfig-utils@8.69.0",
+        "control-atlas@1.0.2|@typescript-eslint/types@8.69.0",
         "control-atlas@1.0.2|debug@4.4.3",
         "control-atlas@1.0.2|typescript@6.0.3"
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|@typescript-eslint/scope-manager@8.67.0",
+      "ref": "control-atlas@1.0.2|@typescript-eslint/scope-manager@8.69.0",
       "dependsOn": [
-        "control-atlas@1.0.2|@typescript-eslint/types@8.67.0",
-        "control-atlas@1.0.2|@typescript-eslint/visitor-keys@8.67.0"
+        "control-atlas@1.0.2|@typescript-eslint/types@8.69.0",
+        "control-atlas@1.0.2|@typescript-eslint/visitor-keys@8.69.0"
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|@typescript-eslint/tsconfig-utils@8.67.0",
+      "ref": "control-atlas@1.0.2|@typescript-eslint/tsconfig-utils@8.69.0",
       "dependsOn": [
         "control-atlas@1.0.2|typescript@6.0.3"
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|@typescript-eslint/type-utils@8.67.0",
+      "ref": "control-atlas@1.0.2|@typescript-eslint/type-utils@8.69.0",
       "dependsOn": [
-        "control-atlas@1.0.2|@typescript-eslint/types@8.67.0",
-        "control-atlas@1.0.2|@typescript-eslint/typescript-estree@8.67.0",
-        "control-atlas@1.0.2|@typescript-eslint/utils@8.67.0",
+        "control-atlas@1.0.2|@typescript-eslint/types@8.69.0",
+        "control-atlas@1.0.2|@typescript-eslint/typescript-estree@8.69.0",
+        "control-atlas@1.0.2|@typescript-eslint/utils@8.69.0",
         "control-atlas@1.0.2|debug@4.4.3",
         "control-atlas@1.0.2|eslint@10.8.1",
         "control-atlas@1.0.2|ts-api-utils@2.5.0",
@@ -33206,15 +34124,15 @@
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|@typescript-eslint/types@8.67.0"
+      "ref": "control-atlas@1.0.2|@typescript-eslint/types@8.69.0"
     },
     {
-      "ref": "control-atlas@1.0.2|@typescript-eslint/typescript-estree@8.67.0",
+      "ref": "control-atlas@1.0.2|@typescript-eslint/typescript-estree@8.69.0",
       "dependsOn": [
-        "control-atlas@1.0.2|@typescript-eslint/project-service@8.67.0",
-        "control-atlas@1.0.2|@typescript-eslint/tsconfig-utils@8.67.0",
-        "control-atlas@1.0.2|@typescript-eslint/types@8.67.0",
-        "control-atlas@1.0.2|@typescript-eslint/visitor-keys@8.67.0",
+        "control-atlas@1.0.2|@typescript-eslint/project-service@8.69.0",
+        "control-atlas@1.0.2|@typescript-eslint/tsconfig-utils@8.69.0",
+        "control-atlas@1.0.2|@typescript-eslint/types@8.69.0",
+        "control-atlas@1.0.2|@typescript-eslint/visitor-keys@8.69.0",
         "control-atlas@1.0.2|debug@4.4.3",
         "control-atlas@1.0.2|minimatch@10.2.6",
         "control-atlas@1.0.2|semver@7.8.5",
@@ -33224,25 +34142,25 @@
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|@typescript-eslint/utils@8.67.0",
+      "ref": "control-atlas@1.0.2|@typescript-eslint/utils@8.69.0",
       "dependsOn": [
         "control-atlas@1.0.2|@eslint-community/eslint-utils@4.10.1",
-        "control-atlas@1.0.2|@typescript-eslint/scope-manager@8.67.0",
-        "control-atlas@1.0.2|@typescript-eslint/types@8.67.0",
-        "control-atlas@1.0.2|@typescript-eslint/typescript-estree@8.67.0",
+        "control-atlas@1.0.2|@typescript-eslint/scope-manager@8.69.0",
+        "control-atlas@1.0.2|@typescript-eslint/types@8.69.0",
+        "control-atlas@1.0.2|@typescript-eslint/typescript-estree@8.69.0",
         "control-atlas@1.0.2|eslint@10.8.1",
         "control-atlas@1.0.2|typescript@6.0.3"
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|@typescript-eslint/visitor-keys@8.67.0",
+      "ref": "control-atlas@1.0.2|@typescript-eslint/visitor-keys@8.69.0",
       "dependsOn": [
-        "control-atlas@1.0.2|@typescript-eslint/types@8.67.0",
-        "control-atlas@1.0.2|@typescript-eslint/visitor-keys@8.67.0|eslint-visitor-keys@5.0.1"
+        "control-atlas@1.0.2|@typescript-eslint/types@8.69.0",
+        "control-atlas@1.0.2|@typescript-eslint/visitor-keys@8.69.0|eslint-visitor-keys@5.0.1"
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|@typescript-eslint/visitor-keys@8.67.0|eslint-visitor-keys@5.0.1"
+      "ref": "control-atlas@1.0.2|@typescript-eslint/visitor-keys@8.69.0|eslint-visitor-keys@5.0.1"
     },
     {
       "ref": "control-atlas@1.0.2|@vitejs/plugin-react@6.1.0",
@@ -33252,11 +34170,11 @@
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|@xyflow/react@12.11.3",
+      "ref": "control-atlas@1.0.2|@xyflow/react@12.11.6",
       "dependsOn": [
         "control-atlas@1.0.2|@types/react-dom@19.2.4",
         "control-atlas@1.0.2|@types/react@19.2.18",
-        "control-atlas@1.0.2|@xyflow/system@0.0.80",
+        "control-atlas@1.0.2|@xyflow/system@0.0.82",
         "control-atlas@1.0.2|classcat@5.0.5",
         "control-atlas@1.0.2|react-dom@19.2.8",
         "control-atlas@1.0.2|react@19.2.8",
@@ -33264,7 +34182,7 @@
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|@xyflow/system@0.0.80",
+      "ref": "control-atlas@1.0.2|@xyflow/system@0.0.82",
       "dependsOn": [
         "control-atlas@1.0.2|@types/d3-drag@3.0.7",
         "control-atlas@1.0.2|@types/d3-interpolate@3.0.4",
@@ -33322,7 +34240,7 @@
       "ref": "control-atlas@1.0.2|ajv@8.20.0",
       "dependsOn": [
         "control-atlas@1.0.2|fast-deep-equal@3.1.3",
-        "control-atlas@1.0.2|fast-uri@3.1.5",
+        "control-atlas@1.0.2|fast-uri@3.1.7",
         "control-atlas@1.0.2|json-schema-traverse@1.0.0",
         "control-atlas@1.0.2|require-from-string@2.0.2"
       ]
@@ -33484,9 +34402,9 @@
       "ref": "control-atlas@1.0.2|bluebird@3.7.2"
     },
     {
-      "ref": "control-atlas@1.0.2|body-parser@1.20.6",
+      "ref": "control-atlas@1.0.2|body-parser@1.20.8",
       "dependsOn": [
-        "control-atlas@1.0.2|body-parser@1.20.6|debug@2.6.9",
+        "control-atlas@1.0.2|body-parser@1.20.8|debug@2.6.9",
         "control-atlas@1.0.2|bytes@3.1.2",
         "control-atlas@1.0.2|content-type@1.0.5",
         "control-atlas@1.0.2|depd@2.0.0",
@@ -33494,20 +34412,20 @@
         "control-atlas@1.0.2|http-errors@2.0.1",
         "control-atlas@1.0.2|iconv-lite@0.4.24",
         "control-atlas@1.0.2|on-finished@2.4.1",
-        "control-atlas@1.0.2|qs@6.15.3",
+        "control-atlas@1.0.2|qs@6.16.0",
         "control-atlas@1.0.2|raw-body@2.5.3",
         "control-atlas@1.0.2|type-is@1.6.18",
         "control-atlas@1.0.2|unpipe@1.0.0"
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|body-parser@1.20.6|debug@2.6.9",
+      "ref": "control-atlas@1.0.2|body-parser@1.20.8|debug@2.6.9",
       "dependsOn": [
-        "control-atlas@1.0.2|body-parser@1.20.6|ms@2.0.0"
+        "control-atlas@1.0.2|body-parser@1.20.8|ms@2.0.0"
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|body-parser@1.20.6|ms@2.0.0"
+      "ref": "control-atlas@1.0.2|body-parser@1.20.8|ms@2.0.0"
     },
     {
       "ref": "control-atlas@1.0.2|boolbase@1.0.0"
@@ -33532,20 +34450,18 @@
       "ref": "control-atlas@1.0.2|bytes@3.1.2"
     },
     {
-      "ref": "control-atlas@1.0.2|cacache@19.0.1",
+      "ref": "control-atlas@1.0.2|cacache@21.0.1",
       "dependsOn": [
-        "control-atlas@1.0.2|@npmcli/fs@4.0.0",
+        "control-atlas@1.0.2|@npmcli/fs@6.0.0",
         "control-atlas@1.0.2|fs-minipass@3.0.3",
-        "control-atlas@1.0.2|glob@10.5.0",
-        "control-atlas@1.0.2|lru-cache@10.4.3",
+        "control-atlas@1.0.2|glob@13.0.6",
+        "control-atlas@1.0.2|lru-cache@11.5.2",
         "control-atlas@1.0.2|minipass-collect@2.0.1",
         "control-atlas@1.0.2|minipass-flush@1.0.7",
         "control-atlas@1.0.2|minipass-pipeline@1.2.4",
         "control-atlas@1.0.2|minipass@7.1.3",
-        "control-atlas@1.0.2|p-map@7.0.6",
-        "control-atlas@1.0.2|ssri@12.0.0",
-        "control-atlas@1.0.2|tar@7.5.22",
-        "control-atlas@1.0.2|unique-filename@4.0.0"
+        "control-atlas@1.0.2|p-map@7.0.7",
+        "control-atlas@1.0.2|ssri@14.0.0"
       ]
     },
     {
@@ -33582,7 +34498,7 @@
     {
       "ref": "control-atlas@1.0.2|chrome-launcher@0.13.4",
       "dependsOn": [
-        "control-atlas@1.0.2|@types/node@26.2.0",
+        "control-atlas@1.0.2|@types/node@26.4.1",
         "control-atlas@1.0.2|escape-string-regexp@1.0.5",
         "control-atlas@1.0.2|is-wsl@2.2.0",
         "control-atlas@1.0.2|lighthouse-logger@1.2.0",
@@ -34226,7 +35142,7 @@
       "dependsOn": [
         "control-atlas@1.0.2|accepts@1.3.8",
         "control-atlas@1.0.2|array-flatten@1.1.1",
-        "control-atlas@1.0.2|body-parser@1.20.6",
+        "control-atlas@1.0.2|body-parser@1.20.8",
         "control-atlas@1.0.2|content-disposition@0.5.4",
         "control-atlas@1.0.2|content-type@1.0.5",
         "control-atlas@1.0.2|cookie-signature@1.0.7",
@@ -34245,7 +35161,7 @@
         "control-atlas@1.0.2|parseurl@1.3.3",
         "control-atlas@1.0.2|path-to-regexp@0.1.13",
         "control-atlas@1.0.2|proxy-addr@2.0.7",
-        "control-atlas@1.0.2|qs@6.15.3",
+        "control-atlas@1.0.2|qs@6.16.0",
         "control-atlas@1.0.2|range-parser@1.2.1",
         "control-atlas@1.0.2|safe-buffer@5.2.1",
         "control-atlas@1.0.2|send@0.19.2",
@@ -34294,7 +35210,7 @@
       "ref": "control-atlas@1.0.2|fast-levenshtein@2.0.6"
     },
     {
-      "ref": "control-atlas@1.0.2|fast-uri@3.1.5"
+      "ref": "control-atlas@1.0.2|fast-uri@3.1.7"
     },
     {
       "ref": "control-atlas@1.0.2|fast-xml-builder@1.3.1",
@@ -34304,7 +35220,7 @@
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|fast-xml-parser@5.11.0",
+      "ref": "control-atlas@1.0.2|fast-xml-parser@5.11.1",
       "dependsOn": [
         "control-atlas@1.0.2|@nodable/entities@3.0.0",
         "control-atlas@1.0.2|fast-xml-builder@1.3.1",
@@ -34464,29 +35380,11 @@
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|glob@10.5.0",
+      "ref": "control-atlas@1.0.2|glob@13.0.6",
       "dependsOn": [
-        "control-atlas@1.0.2|foreground-child@3.3.1",
-        "control-atlas@1.0.2|glob@10.5.0|minimatch@9.0.9",
-        "control-atlas@1.0.2|jackspeak@3.4.3",
+        "control-atlas@1.0.2|minimatch@10.2.6",
         "control-atlas@1.0.2|minipass@7.1.3",
-        "control-atlas@1.0.2|package-json-from-dist@1.0.1",
-        "control-atlas@1.0.2|path-scurry@1.11.1"
-      ]
-    },
-    {
-      "ref": "control-atlas@1.0.2|glob@10.5.0|balanced-match@1.0.2"
-    },
-    {
-      "ref": "control-atlas@1.0.2|glob@10.5.0|brace-expansion@2.1.4",
-      "dependsOn": [
-        "control-atlas@1.0.2|glob@10.5.0|balanced-match@1.0.2"
-      ]
-    },
-    {
-      "ref": "control-atlas@1.0.2|glob@10.5.0|minimatch@9.0.9",
-      "dependsOn": [
-        "control-atlas@1.0.2|glob@10.5.0|brace-expansion@2.1.4"
+        "control-atlas@1.0.2|path-scurry@2.0.2"
       ]
     },
     {
@@ -34523,11 +35421,8 @@
     {
       "ref": "control-atlas@1.0.2|hosted-git-info@9.0.3",
       "dependsOn": [
-        "control-atlas@1.0.2|hosted-git-info@9.0.3|lru-cache@11.5.2"
+        "control-atlas@1.0.2|lru-cache@11.5.2"
       ]
-    },
-    {
-      "ref": "control-atlas@1.0.2|hosted-git-info@9.0.3|lru-cache@11.5.2"
     },
     {
       "ref": "control-atlas@1.0.2|http-cache-semantics@4.2.0"
@@ -34688,7 +35583,7 @@
       "ref": "control-atlas@1.0.2|js-library-detector@6.7.0"
     },
     {
-      "ref": "control-atlas@1.0.2|js-yaml@3.15.1",
+      "ref": "control-atlas@1.0.2|js-yaml@3.15.2",
       "dependsOn": [
         "control-atlas@1.0.2|argparse@1.0.10",
         "control-atlas@1.0.2|esprima@4.0.1"
@@ -34860,7 +35755,7 @@
     {
       "ref": "control-atlas@1.0.2|lighthouse@13.4.1|chrome-launcher@1.2.1",
       "dependsOn": [
-        "control-atlas@1.0.2|@types/node@26.2.0",
+        "control-atlas@1.0.2|@types/node@26.4.1",
         "control-atlas@1.0.2|is-wsl@2.2.0",
         "control-atlas@1.0.2|lighthouse@13.4.1|escape-string-regexp@4.0.0",
         "control-atlas@1.0.2|lighthouse@13.4.1|lighthouse-logger@2.0.2"
@@ -35049,7 +35944,7 @@
       "ref": "control-atlas@1.0.2|lookup-closest-locale@6.2.0"
     },
     {
-      "ref": "control-atlas@1.0.2|lru-cache@10.4.3"
+      "ref": "control-atlas@1.0.2|lru-cache@11.5.2"
     },
     {
       "ref": "control-atlas@1.0.2|magic-string@0.30.21",
@@ -35058,23 +35953,27 @@
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|make-fetch-happen@14.0.3",
+      "ref": "control-atlas@1.0.2|make-fetch-happen@16.0.1",
       "dependsOn": [
-        "control-atlas@1.0.2|@npmcli/agent@3.0.0",
-        "control-atlas@1.0.2|cacache@19.0.1",
+        "control-atlas@1.0.2|@gar/promise-retry@1.0.3",
+        "control-atlas@1.0.2|@npmcli/agent@5.0.2",
+        "control-atlas@1.0.2|@npmcli/redact@5.0.0",
+        "control-atlas@1.0.2|cacache@21.0.1",
         "control-atlas@1.0.2|http-cache-semantics@4.2.0",
-        "control-atlas@1.0.2|make-fetch-happen@14.0.3|negotiator@1.0.0",
-        "control-atlas@1.0.2|minipass-fetch@4.0.1",
+        "control-atlas@1.0.2|make-fetch-happen@16.0.1|negotiator@1.0.0",
+        "control-atlas@1.0.2|make-fetch-happen@16.0.1|proc-log@7.0.0",
+        "control-atlas@1.0.2|minipass-fetch@6.0.0",
         "control-atlas@1.0.2|minipass-flush@1.0.7",
         "control-atlas@1.0.2|minipass-pipeline@1.2.4",
         "control-atlas@1.0.2|minipass@7.1.3",
-        "control-atlas@1.0.2|proc-log@5.0.0",
-        "control-atlas@1.0.2|promise-retry@2.0.1",
-        "control-atlas@1.0.2|ssri@12.0.0"
+        "control-atlas@1.0.2|ssri@14.0.0"
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|make-fetch-happen@14.0.3|negotiator@1.0.0"
+      "ref": "control-atlas@1.0.2|make-fetch-happen@16.0.1|negotiator@1.0.0"
+    },
+    {
+      "ref": "control-atlas@1.0.2|make-fetch-happen@16.0.1|proc-log@7.0.0"
     },
     {
       "ref": "control-atlas@1.0.2|marky@1.3.0"
@@ -35131,12 +36030,18 @@
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|minipass-fetch@4.0.1",
+      "ref": "control-atlas@1.0.2|minipass-fetch@6.0.0",
       "dependsOn": [
-        "control-atlas@1.0.2|encoding@0.1.13",
-        "control-atlas@1.0.2|minipass-sized@1.0.3",
+        "control-atlas@1.0.2|minipass-fetch@6.0.0|iconv-lite@0.7.3",
+        "control-atlas@1.0.2|minipass-sized@2.0.0",
         "control-atlas@1.0.2|minipass@7.1.3",
         "control-atlas@1.0.2|minizlib@3.1.0"
+      ]
+    },
+    {
+      "ref": "control-atlas@1.0.2|minipass-fetch@6.0.0|iconv-lite@0.7.3",
+      "dependsOn": [
+        "control-atlas@1.0.2|safer-buffer@2.1.2"
       ]
     },
     {
@@ -35170,19 +36075,10 @@
       "ref": "control-atlas@1.0.2|minipass-pipeline@1.2.4|yallist@4.0.0"
     },
     {
-      "ref": "control-atlas@1.0.2|minipass-sized@1.0.3",
+      "ref": "control-atlas@1.0.2|minipass-sized@2.0.0",
       "dependsOn": [
-        "control-atlas@1.0.2|minipass-sized@1.0.3|minipass@3.3.6"
+        "control-atlas@1.0.2|minipass@7.1.3"
       ]
-    },
-    {
-      "ref": "control-atlas@1.0.2|minipass-sized@1.0.3|minipass@3.3.6",
-      "dependsOn": [
-        "control-atlas@1.0.2|minipass-sized@1.0.3|yallist@4.0.0"
-      ]
-    },
-    {
-      "ref": "control-atlas@1.0.2|minipass-sized@1.0.3|yallist@4.0.0"
     },
     {
       "ref": "control-atlas@1.0.2|minipass@7.1.3"
@@ -35272,7 +36168,7 @@
         "control-atlas@1.0.2|env-paths@2.2.1",
         "control-atlas@1.0.2|exponential-backoff@3.1.3",
         "control-atlas@1.0.2|graceful-fs@4.2.11",
-        "control-atlas@1.0.2|make-fetch-happen@14.0.3",
+        "control-atlas@1.0.2|node-gyp@11.5.0|make-fetch-happen@14.0.3",
         "control-atlas@1.0.2|node-gyp@11.5.0|which@5.0.0",
         "control-atlas@1.0.2|nopt@8.1.0",
         "control-atlas@1.0.2|proc-log@5.0.0",
@@ -35282,13 +36178,137 @@
       ]
     },
     {
+      "ref": "control-atlas@1.0.2|node-gyp@11.5.0|@npmcli/agent@3.0.0",
+      "dependsOn": [
+        "control-atlas@1.0.2|agent-base@7.1.4",
+        "control-atlas@1.0.2|http-proxy-agent@7.0.2",
+        "control-atlas@1.0.2|https-proxy-agent@7.0.6",
+        "control-atlas@1.0.2|node-gyp@11.5.0|lru-cache@10.4.3",
+        "control-atlas@1.0.2|socks-proxy-agent@8.0.5"
+      ]
+    },
+    {
+      "ref": "control-atlas@1.0.2|node-gyp@11.5.0|@npmcli/fs@4.0.0",
+      "dependsOn": [
+        "control-atlas@1.0.2|semver@7.8.5"
+      ]
+    },
+    {
+      "ref": "control-atlas@1.0.2|node-gyp@11.5.0|balanced-match@1.0.2"
+    },
+    {
+      "ref": "control-atlas@1.0.2|node-gyp@11.5.0|brace-expansion@2.1.4",
+      "dependsOn": [
+        "control-atlas@1.0.2|node-gyp@11.5.0|balanced-match@1.0.2"
+      ]
+    },
+    {
+      "ref": "control-atlas@1.0.2|node-gyp@11.5.0|cacache@19.0.1",
+      "dependsOn": [
+        "control-atlas@1.0.2|fs-minipass@3.0.3",
+        "control-atlas@1.0.2|minipass-collect@2.0.1",
+        "control-atlas@1.0.2|minipass-flush@1.0.7",
+        "control-atlas@1.0.2|minipass-pipeline@1.2.4",
+        "control-atlas@1.0.2|minipass@7.1.3",
+        "control-atlas@1.0.2|node-gyp@11.5.0|@npmcli/fs@4.0.0",
+        "control-atlas@1.0.2|node-gyp@11.5.0|glob@10.5.0",
+        "control-atlas@1.0.2|node-gyp@11.5.0|lru-cache@10.4.3",
+        "control-atlas@1.0.2|node-gyp@11.5.0|ssri@12.0.0",
+        "control-atlas@1.0.2|p-map@7.0.7",
+        "control-atlas@1.0.2|tar@7.5.22",
+        "control-atlas@1.0.2|unique-filename@4.0.0"
+      ]
+    },
+    {
+      "ref": "control-atlas@1.0.2|node-gyp@11.5.0|content-type@2.1.0"
+    },
+    {
+      "ref": "control-atlas@1.0.2|node-gyp@11.5.0|glob@10.5.0",
+      "dependsOn": [
+        "control-atlas@1.0.2|foreground-child@3.3.1",
+        "control-atlas@1.0.2|jackspeak@3.4.3",
+        "control-atlas@1.0.2|minipass@7.1.3",
+        "control-atlas@1.0.2|node-gyp@11.5.0|minimatch@9.0.9",
+        "control-atlas@1.0.2|node-gyp@11.5.0|path-scurry@1.11.1",
+        "control-atlas@1.0.2|package-json-from-dist@1.0.1"
+      ]
+    },
+    {
       "ref": "control-atlas@1.0.2|node-gyp@11.5.0|isexe@3.1.5"
+    },
+    {
+      "ref": "control-atlas@1.0.2|node-gyp@11.5.0|lru-cache@10.4.3"
+    },
+    {
+      "ref": "control-atlas@1.0.2|node-gyp@11.5.0|make-fetch-happen@14.0.3",
+      "dependsOn": [
+        "control-atlas@1.0.2|http-cache-semantics@4.2.0",
+        "control-atlas@1.0.2|minipass-flush@1.0.7",
+        "control-atlas@1.0.2|minipass-pipeline@1.2.4",
+        "control-atlas@1.0.2|minipass@7.1.3",
+        "control-atlas@1.0.2|node-gyp@11.5.0|@npmcli/agent@3.0.0",
+        "control-atlas@1.0.2|node-gyp@11.5.0|cacache@19.0.1",
+        "control-atlas@1.0.2|node-gyp@11.5.0|minipass-fetch@4.0.1",
+        "control-atlas@1.0.2|node-gyp@11.5.0|negotiator@1.1.0",
+        "control-atlas@1.0.2|node-gyp@11.5.0|ssri@12.0.0",
+        "control-atlas@1.0.2|proc-log@5.0.0",
+        "control-atlas@1.0.2|promise-retry@2.0.1"
+      ]
+    },
+    {
+      "ref": "control-atlas@1.0.2|node-gyp@11.5.0|minimatch@9.0.9",
+      "dependsOn": [
+        "control-atlas@1.0.2|node-gyp@11.5.0|brace-expansion@2.1.4"
+      ]
+    },
+    {
+      "ref": "control-atlas@1.0.2|node-gyp@11.5.0|minipass-fetch@4.0.1",
+      "dependsOn": [
+        "control-atlas@1.0.2|encoding@0.1.13",
+        "control-atlas@1.0.2|minipass@7.1.3",
+        "control-atlas@1.0.2|minizlib@3.1.0",
+        "control-atlas@1.0.2|node-gyp@11.5.0|minipass-sized@1.0.3"
+      ]
+    },
+    {
+      "ref": "control-atlas@1.0.2|node-gyp@11.5.0|minipass-sized@1.0.3",
+      "dependsOn": [
+        "control-atlas@1.0.2|node-gyp@11.5.0|minipass-sized@1.0.3|minipass@3.3.6"
+      ]
+    },
+    {
+      "ref": "control-atlas@1.0.2|node-gyp@11.5.0|minipass-sized@1.0.3|minipass@3.3.6",
+      "dependsOn": [
+        "control-atlas@1.0.2|node-gyp@11.5.0|yallist@4.0.0"
+      ]
+    },
+    {
+      "ref": "control-atlas@1.0.2|node-gyp@11.5.0|negotiator@1.1.0",
+      "dependsOn": [
+        "control-atlas@1.0.2|node-gyp@11.5.0|content-type@2.1.0"
+      ]
+    },
+    {
+      "ref": "control-atlas@1.0.2|node-gyp@11.5.0|path-scurry@1.11.1",
+      "dependsOn": [
+        "control-atlas@1.0.2|minipass@7.1.3",
+        "control-atlas@1.0.2|node-gyp@11.5.0|lru-cache@10.4.3"
+      ]
+    },
+    {
+      "ref": "control-atlas@1.0.2|node-gyp@11.5.0|ssri@12.0.0",
+      "dependsOn": [
+        "control-atlas@1.0.2|minipass@7.1.3"
+      ]
     },
     {
       "ref": "control-atlas@1.0.2|node-gyp@11.5.0|which@5.0.0",
       "dependsOn": [
         "control-atlas@1.0.2|node-gyp@11.5.0|isexe@3.1.5"
       ]
+    },
+    {
+      "ref": "control-atlas@1.0.2|node-gyp@11.5.0|yallist@4.0.0"
     },
     {
       "ref": "control-atlas@1.0.2|node-html-parser@9.0.1",
@@ -35381,7 +36401,7 @@
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|p-map@7.0.6"
+      "ref": "control-atlas@1.0.2|p-map@7.0.7"
     },
     {
       "ref": "control-atlas@1.0.2|p-try@2.2.0"
@@ -35431,9 +36451,9 @@
       "ref": "control-atlas@1.0.2|path-key@3.1.1"
     },
     {
-      "ref": "control-atlas@1.0.2|path-scurry@1.11.1",
+      "ref": "control-atlas@1.0.2|path-scurry@2.0.2",
       "dependsOn": [
-        "control-atlas@1.0.2|lru-cache@10.4.3",
+        "control-atlas@1.0.2|lru-cache@11.5.2",
         "control-atlas@1.0.2|minipass@7.1.3"
       ]
     },
@@ -35737,7 +36757,7 @@
       ]
     },
     {
-      "ref": "control-atlas@1.0.2|qs@6.15.3",
+      "ref": "control-atlas@1.0.2|qs@6.16.0",
       "dependsOn": [
         "control-atlas@1.0.2|es-define-property@1.0.1",
         "control-atlas@1.0.2|side-channel@1.1.1"
@@ -36150,7 +37170,7 @@
     {
       "ref": "control-atlas@1.0.2|speedline-core@1.4.3",
       "dependsOn": [
-        "control-atlas@1.0.2|@types/node@26.2.0",
+        "control-atlas@1.0.2|@types/node@26.4.1",
         "control-atlas@1.0.2|image-ssim@0.2.0",
         "control-atlas@1.0.2|jpeg-js@0.4.4"
       ]
@@ -36159,7 +37179,7 @@
       "ref": "control-atlas@1.0.2|sprintf-js@1.0.3"
     },
     {
-      "ref": "control-atlas@1.0.2|ssri@12.0.0",
+      "ref": "control-atlas@1.0.2|ssri@14.0.0",
       "dependsOn": [
         "control-atlas@1.0.2|minipass@7.1.3"
       ]
@@ -36466,7 +37486,7 @@
     {
       "ref": "control-atlas@1.0.2|vite@8.2.2",
       "dependsOn": [
-        "control-atlas@1.0.2|@types/node@26.2.0",
+        "control-atlas@1.0.2|@types/node@26.4.1",
         "control-atlas@1.0.2|esbuild@0.28.2",
         "control-atlas@1.0.2|jiti@2.7.0",
         "control-atlas@1.0.2|picomatch@4.0.5",
@@ -36661,14 +37681,14 @@
         "control-atlas@1.0.2|@oozcitak/dom@2.0.2",
         "control-atlas@1.0.2|@oozcitak/infra@2.0.2",
         "control-atlas@1.0.2|@oozcitak/util@10.0.0",
-        "control-atlas@1.0.2|xmlbuilder2@4.0.3|js-yaml@4.3.1"
+        "control-atlas@1.0.2|xmlbuilder2@4.0.3|js-yaml@4.3.2"
       ]
     },
     {
       "ref": "control-atlas@1.0.2|xmlbuilder2@4.0.3|argparse@2.0.1"
     },
     {
-      "ref": "control-atlas@1.0.2|xmlbuilder2@4.0.3|js-yaml@4.3.1",
+      "ref": "control-atlas@1.0.2|xmlbuilder2@4.0.3|js-yaml@4.3.2",
       "dependsOn": [
         "control-atlas@1.0.2|xmlbuilder2@4.0.3|argparse@2.0.1"
       ]

@@ -1,5 +1,6 @@
 import * as Accordion from "@radix-ui/react-accordion";
-import { useEffect, useId, useMemo, useState } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ComponentProps } from "react";
 
 import { displayNameFor } from "../../app/display-names.mjs";
 import { aggregateRelationshipRows } from "../../app/runtime.mjs";
@@ -24,7 +25,12 @@ import {
   resolveMappingSource,
   type CompareModeId,
 } from "../lib/compareModeState";
-import { COMPARE_TARGET_PREVIEW, paginateCompareRows } from "../lib/comparePagination";
+import {
+  COMPARE_COMPACT_INLINE_TARGET_LIMIT,
+  COMPARE_COMPACT_QUERY,
+  COMPARE_INLINE_TARGET_LIMIT,
+  paginateCompareRows,
+} from "../lib/comparePagination";
 import { compareTaxonomyTags } from "../lib/compareTaxonomy.mjs";
 import {
   Field,
@@ -32,6 +38,7 @@ import {
   PageHeader,
   SelectField,
   StepIndicator,
+  stepEyebrow,
 } from "../lib/pagePrimitives";
 import type { RuntimeBundle } from "../lib/runtimeLoader";
 import type { ViewState } from "../lib/viewState";
@@ -66,9 +73,6 @@ function downloadBinaryFile(filename: string, content: Uint8Array, mimeType: str
   anchor.remove();
   URL.revokeObjectURL(url);
 }
-
-/** Enough to show every connected publication without becoming a wall. */
-const OPTION_LIST_LIMIT = 24;
 
 function SearchablePublicationField(props: {
   label: string;
@@ -109,8 +113,10 @@ function SearchablePublicationField(props: {
   const matches = needle
     ? props.options.filter((option) => option.label.toLowerCase().includes(needle))
     : props.options;
-  const visibleOptions = matches.slice(0, OPTION_LIST_LIMIT);
-  const hiddenCount = matches.length - visibleOptions.length;
+  // Every match is listed. The set is every publication with a published
+  // crosswalk (22 today), and typing narrows it, so a fixed cap only ever hid
+  // real choices behind "N more match your search".
+  const visibleOptions = matches;
 
   return (
     <>
@@ -172,13 +178,6 @@ function SearchablePublicationField(props: {
             </button>
           </li>
         ))}
-        {hiddenCount > 0 ? (
-          <li>
-            <span className="compare-option-list__note">
-              {hiddenCount.toLocaleString()} more match your search
-            </span>
-          </li>
-        ) : null}
       </ul>
       {visibleOptions.length === 0 ? (
         <p className="compare-option-list__note" role="status">
@@ -232,7 +231,7 @@ function CompareScopeRail(props: {
         ) : null}
         {props.targetLabel ? (
           <div>
-            <dt>Target</dt>
+            <dt>Compare with</dt>
             <dd>{props.targetLabel}</dd>
           </div>
         ) : null}
@@ -291,12 +290,15 @@ function LazyEvidenceDetails({ targets }: { targets: any[] }) {
 function TargetItem({
   onOpenNode,
   target,
+  ...listItem
 }: {
   onOpenNode: (nodeId: string) => void;
   target: any;
-}) {
+} & Omit<ComponentProps<"li">, "className" | "children">) {
+  // A title that only repeats the identifier (every CCI) is not shown twice.
+  const title = target.to_title && target.to_title !== target.to_item_id ? target.to_title : "";
   return (
-    <li className="target-mapping-item">
+    <li className="target-mapping-item" {...listItem}>
       <div>
         <span className="target-mapping-line">
           <RecordLink nodeId={target.to_id} onOpenNode={onOpenNode}>
@@ -308,9 +310,132 @@ function TargetItem({
             </span>
           ) : null}
         </span>
-        <span className="target-item-title">{target.to_title}</span>
+        {title ? <span className="target-item-title">{title}</span> : null}
       </div>
     </li>
+  );
+}
+
+/**
+ * The inline target limit for the current viewport. It follows resizes and
+ * rotation through the media query's change event, not just the width at load.
+ */
+function useInlineTargetLimit() {
+  const [compact, setCompact] = useState(() =>
+    typeof window === "undefined" ? false : window.matchMedia(COMPARE_COMPACT_QUERY).matches,
+  );
+  useEffect(() => {
+    const media = window.matchMedia(COMPARE_COMPACT_QUERY);
+    setCompact(media.matches);
+    const onChange = (event: MediaQueryListEvent) => setCompact(event.matches);
+    media.addEventListener("change", onChange);
+    return () => media.removeEventListener("change", onChange);
+  }, []);
+  return compact ? COMPARE_COMPACT_INLINE_TARGET_LIMIT : COMPARE_INLINE_TARGET_LIMIT;
+}
+
+/**
+ * Every target of a source record, shown with no reveal click. Up to the
+ * inline limit (COMPARE_INLINE_TARGET_LIMIT, or
+ * COMPARE_COMPACT_INLINE_TARGET_LIMIT on phones) they render in the row. Past it (one CCI maps to
+ * 5,313 STIG rules) they render in a bounded, scrollable window that mounts
+ * only the visible entries, states the true total, and exposes each entry's
+ * position to assistive technology.
+ */
+function RowTargets({
+  inlineLimit,
+  onOpenNode,
+  row,
+}: {
+  inlineLimit: number;
+  onOpenNode: (nodeId: string) => void;
+  row: any;
+}) {
+  const targets: any[] = row.targets;
+  if (targets.length <= inlineLimit) {
+    return (
+      <ul className="target-mapping-list">
+        {targets.map((target) => (
+          <TargetItem
+            key={target.edge_id || `${row.from_id}-${target.to_id}`}
+            onOpenNode={onOpenNode}
+            target={target}
+          />
+        ))}
+      </ul>
+    );
+  }
+  return <TargetWindow onOpenNode={onOpenNode} row={row} />;
+}
+
+function TargetWindow({
+  onOpenNode,
+  row,
+}: {
+  onOpenNode: (nodeId: string) => void;
+  row: any;
+}) {
+  const targets: any[] = row.targets;
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const sizerRef = useRef<HTMLSpanElement>(null);
+  const captionId = useId();
+  // Every entry has one fixed height, --target-window-row in CSS, which
+  // changes with the window's width. The hidden sizer reports it in pixels.
+  // A known size keeps the list's total height exact, so End and the
+  // scrollbar reach the true last target instead of a moving estimate.
+  const [rowPx, setRowPx] = useState(80);
+  useLayoutEffect(() => {
+    const sizer = sizerRef.current;
+    if (!sizer) return undefined;
+    const read = () => setRowPx(sizer.getBoundingClientRect().height || 80);
+    read();
+    const observer = new ResizeObserver(read);
+    observer.observe(sizer);
+    return () => observer.disconnect();
+  }, []);
+  const virtualizer = useVirtualizer({
+    count: targets.length,
+    estimateSize: () => rowPx,
+    getItemKey: (index) => targets[index].edge_id || `${row.from_id}-${targets[index].to_id}`,
+    getScrollElement: () => scrollRef.current,
+    overscan: 6,
+  });
+  useLayoutEffect(() => {
+    virtualizer.measure();
+  }, [rowPx, virtualizer]);
+  const total = targets.length.toLocaleString();
+  return (
+    <div className="target-window">
+      <span aria-hidden="true" className="target-window-sizer" ref={sizerRef} />
+      <p className="target-window-caption" id={captionId}>
+        All {total} targets. Scroll the list to see each one.
+      </p>
+      <div
+        aria-labelledby={captionId}
+        className="target-window-scroll"
+        ref={scrollRef}
+        role="region"
+        tabIndex={0}
+      >
+        <ul
+          aria-label={`${total} targets for ${row.from_item_id}`}
+          className="target-mapping-list target-window-list"
+          style={{ height: virtualizer.getTotalSize() }}
+        >
+          {virtualizer.getVirtualItems().map((item) => (
+            <TargetItem
+              aria-posinset={item.index + 1}
+              aria-setsize={targets.length}
+              data-index={item.index}
+              key={item.key}
+              onOpenNode={onOpenNode}
+              style={{ transform: `translateY(${item.start}px)` }}
+              target={targets[item.index]}
+            />
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 }
 
@@ -322,6 +447,7 @@ export function ComparePage(props: {
 }) {
   const { bundle, state, onNavigate, onOpenNode } = props;
   const [resultQuery, setResultQuery] = useState("");
+  const inlineTargetLimit = useInlineTargetLimit();
   const catalogs = bundle.runtime.getCatalogs();
   const mode: CompareModeId =
     state.intent === "item-mapping" ? "item-mapping" : "frameworks";
@@ -670,7 +796,7 @@ export function ComparePage(props: {
         ))}
       </div>
 
-      <StepIndicator currentStep={currentStep} steps={[...steps]} />
+      <StepIndicator currentStep={currentStep} steps={steps} />
 
       <section className="compare-flow-grid">
         <section
@@ -679,9 +805,7 @@ export function ComparePage(props: {
         >
           {!showResults && currentStep === 1 ? (
             <>
-              <span className="label">
-                01 / {mode === "item-mapping" ? "ITEM" : "SOURCE"}
-              </span>
+              <span className="label">{stepEyebrow(steps, steps[0].id)}</span>
               <h2 id="compare-active-step">
                 {mode === "item-mapping"
                   ? "Choose an item"
@@ -721,7 +845,7 @@ export function ComparePage(props: {
 
           {!showResults && currentStep === 2 ? (
             <>
-              <span className="label">02 / TARGET</span>
+              <span className="label">{stepEyebrow(steps, "target")}</span>
               <h2 id="compare-active-step">Choose a framework to compare with</h2>
               <p className="compare-preserved-context">
                 <span>Source</span>
@@ -735,7 +859,7 @@ export function ComparePage(props: {
                   flow - which frameworks connect to mine - behind a click. */}
               <SearchablePublicationField
                 hint={`${targetOptions.length.toLocaleString()} ${targetOptions.length === 1 ? "publication has" : "publications have"} a published crosswalk with ${sourceLabel}.`}
-                label="Target publication"
+                label="Compare with"
                 onChange={(target) =>
                   patchCompare({
                     compareRun: target ? "true" : "",
@@ -759,7 +883,7 @@ export function ComparePage(props: {
                   <p>This reflects the published crosswalks in the current data.</p>
                   <div className="actions">
                     <Button onClick={changeTarget} type="button" variant="secondary">
-                      Change target
+                      Compare with another
                     </Button>
                     {state.relationshipType || state.mappingSource ? (
                       <Button
@@ -803,14 +927,14 @@ export function ComparePage(props: {
             >
               <header className="compare-results-head">
                 <div>
-                  <span className="label">03 / RESULTS</span>
+                  <span className="label">{stepEyebrow(steps, "results")}</span>
                   <h2 id="compare-active-step">
                     {sourceLabel} <span aria-hidden="true">↔</span>{" "}
                     {targetLabel}
                   </h2>
                 </div>
                 <Button onClick={changeTarget} type="button" variant="secondary">
-                  Change target
+                  Compare with another
                 </Button>
               </header>
 
@@ -947,34 +1071,16 @@ export function ComparePage(props: {
                               <RecordLink nodeId={row.from_id} onOpenNode={onOpenNode}>
                                 <strong>{row.from_item_id}</strong>
                               </RecordLink>
-                              <span className="compare-record-title">{row.from_title}</span>
+                              {row.from_title && row.from_title !== row.from_item_id ? (
+                                <span className="compare-record-title">{row.from_title}</span>
+                              ) : null}
                             </td>
                             <td data-label="Maps to">
-                              <ul className="target-mapping-list">
-                                {row.targets.slice(0, COMPARE_TARGET_PREVIEW).map((target: any) => (
-                                  <TargetItem
-                                    key={target.edge_id || `${row.from_id}-${target.to_id}`}
-                                    onOpenNode={onOpenNode}
-                                    target={target}
-                                  />
-                                ))}
-                              </ul>
-                              {row.targets.length > COMPARE_TARGET_PREVIEW ? (
-                                <details className="target-more">
-                                  <summary>
-                                    Show {(row.targets.length - COMPARE_TARGET_PREVIEW).toLocaleString()} more {row.targets.length - COMPARE_TARGET_PREVIEW === 1 ? "target" : "targets"}
-                                  </summary>
-                                  <ul className="target-mapping-list">
-                                    {row.targets.slice(COMPARE_TARGET_PREVIEW).map((target: any) => (
-                                      <TargetItem
-                                            key={target.edge_id || `${row.from_id}-${target.to_id}`}
-                                        onOpenNode={onOpenNode}
-                                        target={target}
-                                      />
-                                    ))}
-                                  </ul>
-                                </details>
-                              ) : null}
+                              <RowTargets
+                                inlineLimit={inlineTargetLimit}
+                                onOpenNode={onOpenNode}
+                                row={row}
+                              />
                               <LazyEvidenceDetails targets={row.targets} />
                             </td>
                           </tr>
@@ -982,12 +1088,18 @@ export function ComparePage(props: {
                       </tbody>
                     </table>
                   </div>
+                  {/* Page controls only exist when there is a next page. A
+                      one-page result showed "Page 1 of 1" and two disabled
+                      buttons that asked the reader to wonder about more. */}
+                  {pageWindow.pageCount > 1 || !pageWindow.valid ? (
                   <nav aria-label="Mapping result pages" className="compare-pagination">
                     {!pageWindow.valid ? (
                       <p className="compare-page-recovery" role="alert">
                         That result page is not available. Showing page {pageWindow.page.toLocaleString()} of {pageWindow.pageCount.toLocaleString()}.
                       </p>
                     ) : null}
+                    {pageWindow.pageCount > 1 ? (
+                    <>
                     <p className="compare-pagination-caption">
                       Showing source records {pageWindow.start.toLocaleString()}–{pageWindow.end.toLocaleString()} of {visibleAggregatedRows.length.toLocaleString()}.
                       Page {pageWindow.page.toLocaleString()} of {pageWindow.pageCount.toLocaleString()}.
@@ -1013,7 +1125,10 @@ export function ComparePage(props: {
                     <small>
                       Counts and exports cover all {visibleMappingCount.toLocaleString()} published mappings matching the current filters and search.
                     </small>
+                    </>
+                    ) : null}
                   </nav>
+                  ) : null}
                 </>
               ) : emptyKind === "none" ? (
                 <section className="empty-state compare-results-empty" role="status">
@@ -1021,7 +1136,7 @@ export function ComparePage(props: {
                   <p>This reflects the published crosswalks in the current data.</p>
                   <div className="actions">
                     <Button onClick={changeTarget} type="button" variant="secondary">
-                      Change target
+                      Compare with another
                     </Button>
                     <Button onClick={resetToSource} type="button" variant="secondary">
                       Change source

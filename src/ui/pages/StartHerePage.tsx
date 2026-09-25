@@ -12,11 +12,17 @@ import {
 import { Button } from "../components/lsm";
 import { AppLink } from "../components/AppLink";
 import { catalogProfileFor } from "../lib/catalogProfiles";
-import { MissionPage, PageHeader, StepIndicator } from "../lib/pagePrimitives";
+import { MissionPage, PageHeader, StepIndicator, stepEyebrow, type FlowStep } from "../lib/pagePrimitives";
 import type { RuntimeBundle } from "../lib/runtimeLoader";
 import type { ViewState } from "../lib/viewState";
 
 type StartHereState = Extract<ViewState, { view: "start-here" }>;
+
+const START_HERE_STEPS: readonly FlowStep[] = [
+  { id: "goal", label: "Goal" },
+  { id: "context", label: "Context" },
+  { id: "plan", label: "Your plan", outcome: true },
+];
 
 function publicationName(bundle: RuntimeBundle | null, catalogId: string) {
   return bundle?.runtime?.getCatalogs?.()?.find((entry: any) => entry.id === catalogId)?.name || publicationNameFor(catalogId);
@@ -59,20 +65,13 @@ export function StartHerePage(props: {
     >
       <PageHeader primary summary={SITE_COPY.routes.start.purpose} title={SITE_COPY.routes.start.title} />
 
-      <StepIndicator
-        currentStep={step}
-        steps={[
-          { id: "goal", label: "Goal" },
-          { id: "context", label: "Context" },
-          { id: "plan", label: "Your starting plan", outcome: true },
-        ]}
-      />
+      <StepIndicator currentStep={step} steps={START_HERE_STEPS} />
 
       <section className="compare-flow-grid">
         <section className="compare-flow-task panel">
           {step === 1 ? (
             <div aria-labelledby="start-here-goal" className="stack">
-              <span className="label">01 / Goal</span>
+              <span className="label">{stepEyebrow(START_HERE_STEPS, "goal")}</span>
               <h2 id="start-here-goal">What are you trying to do?</h2>
               <p>Choose the work in front of you.</p>
               <div className="start-here-choice-grid">
@@ -83,7 +82,7 @@ export function StartHerePage(props: {
 
           {step === 2 ? (
             <div aria-labelledby="start-here-context" className="stack">
-              <span className="label">02 / Context</span>
+              <span className="label">{stepEyebrow(START_HERE_STEPS, "context")}</span>
               <h2 id="start-here-context">What kind of system are you working with?</h2>
               <p>This opens the right publication first.</p>
               <div className="start-here-choice-grid">
@@ -97,9 +96,15 @@ export function StartHerePage(props: {
 
           {step === 3 && plan ? (
             <div aria-labelledby="start-here-plan" className="stack start-here-plan">
-              <span className="label">Your starting plan</span>
+              <span className="label">{stepEyebrow(START_HERE_STEPS, "plan")}</span>
               <h2 id="start-here-plan">Start with {publicationName(bundle, plan.startWith.catalogId)}</h2>
               <p>Based on your answers, begin with this publication.</p>
+              {/* The plan's own first move lives in the plan. It used to exist
+                  only in the side rail, which on phones sits below Back and
+                  Start over, so the one action the plan recommends came last. */}
+              <div className="start-here-primary-action">
+                <AppLink onNavigate={onNavigate} patch={{ catalog: plan.startWith.catalogId }} variant="primary" view="catalog-detail">Open {publicationName(bundle, plan.startWith.catalogId)}<IconArrowRight aria-hidden="true" size={17} /></AppLink>
+              </div>
               <p className="notice-inline">{SITE_COPY.product.boundary}</p>
               <div className="start-here-followups">
                 <PlanStep bundle={bundle} catalogId={plan.thenReview.catalogId} onNavigate={onNavigate} role="Then review" />
@@ -139,12 +144,6 @@ export function StartHerePage(props: {
               <p><strong>Next:</strong> choose the system context.</p>
               <Button onClick={() => update({ goal: "", context: "" })} type="button" variant="secondary">Change goal</Button>
             </>
-          ) : null}
-          {step === 3 && plan ? (
-            <div className="stack">
-              <p><strong>Next:</strong> open the first publication.</p>
-              <AppLink onNavigate={onNavigate} patch={{ catalog: plan.startWith.catalogId }} variant="primary" view="catalog-detail">Open {publicationName(bundle, plan.startWith.catalogId)}<IconArrowRight aria-hidden="true" size={17} /></AppLink>
-            </div>
           ) : null}
         </aside>
       </section>

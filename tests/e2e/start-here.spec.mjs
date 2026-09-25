@@ -68,6 +68,26 @@ test("Start here produces a plan traceable to real publications", async ({
   await expect(page).toHaveURL(/#\/library\/publication\/fedramp-rev5/);
 });
 
+// #281: the plan carries its own first move. It used to live only in the side
+// rail, which on a phone sits below Back and Start over.
+for (const width of [1440, 390, 320]) {
+  test(`at ${width}px the plan's primary action is in the plan, ahead of Back and Start over`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto("/#/start?goal=assess&context=fedramp");
+    await waitForAppReady(page);
+    await dismissOnboarding(page);
+    const plan = page.locator(".start-here-plan");
+    const open = plan.getByRole("link", { name: /^Open FedRAMP/ });
+    await expect(open).toBeVisible();
+    await expect(page.getByRole("link", { name: /^Open FedRAMP/ })).toHaveCount(1);
+    const [o, back] = await Promise.all([open.boundingBox(), plan.getByRole("button", { name: "Back to context" }).boundingBox()]);
+    expect(o.y).toBeLessThan(back.y);
+    const nav = page.getByRole("navigation", { name: "Step progress" });
+    await expect(nav.locator('[aria-current="step"]')).toContainText("Your plan");
+    await expect(nav.locator("a, button")).toHaveCount(0);
+  });
+}
+
 test("retired questionnaire parameters are removed with visible recovery", async ({
   page,
 }) => {

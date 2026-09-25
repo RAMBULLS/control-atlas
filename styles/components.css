@@ -2632,88 +2632,127 @@
   text-underline-offset: 3px;
 }
 
-/* ── Staged flow step indicator ── */
+/* ── Staged flow step indicator ──
+   Markers sit at the start of equal columns, so the track runs from the first
+   marker's centre to the last one's: (count - 1) / count of the row. The fill
+   is that length times the real progress, set from the step state. State never
+   rests on color alone: done shows a check, current a ring with a centre dot
+   and an underlined label, future a hollow ring, and the outcome a diamond. */
 .staged-flow-steps {
-  margin: 28px 0;
+  --step-marker: 16px;
+
+  margin: var(--ca-space-5) 0 var(--ca-space-6);
 }
 
-.step-list.progress-trajectory {
+.step-list {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0;
+  grid-template-columns: repeat(var(--step-count, 3), minmax(0, 1fr));
   margin: 0;
-  padding: 26px 0 0;
+  padding: 0;
   list-style: none;
 }
 
-.step-list.progress-trajectory::before {
+.step-list::before,
+.step-list::after {
   position: absolute;
-  top: 10px;
-  right: 7%;
-  left: 7%;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    var(--ca-primary),
-    var(--ca-secondary) 54%,
-    var(--ca-border-strong) 54%
-  );
+  top: calc(var(--step-marker) / 2 - 1px);
+  left: calc(var(--step-marker) / 2);
+  height: 2px;
   content: "";
+}
+
+.step-list::before {
+  width: calc(100% * (var(--step-count, 3) - 1) / var(--step-count, 3));
+  background: var(--ca-border-strong);
+}
+
+.step-list::after {
+  width: calc(100% * (var(--step-count, 3) - 1) / var(--step-count, 3) * var(--step-progress, 0));
+  background: var(--ca-primary);
+  transition: width 220ms ease;
 }
 
 .step-item {
   position: relative;
-  display: block;
-  color: var(--ca-text-muted);
-  font-family: var(--ca-font-mono);
-  font-size: 12px;
-  line-height: 1.3;
-  text-transform: uppercase;
+  display: grid;
+  align-content: start;
+  gap: var(--ca-space-2);
+  min-width: 0;
+  padding-right: var(--ca-space-3);
 }
 
-.step-item::before {
-  position: absolute;
-  top: -21px;
-  left: 0;
-  width: 10px;
-  height: 10px;
-  border: 1px solid var(--ca-border-strong);
+.step-marker {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: var(--step-marker);
+  height: var(--step-marker);
+  border: 2px solid var(--ca-border-strong);
   border-radius: 50%;
   background: var(--ca-surface-deep);
-  content: "";
+  color: var(--ca-surface-deep);
 }
 
-.step-item.step-active {
-  color: var(--ca-secondary);
-}
-
-.step-item.step-complete {
-  color: var(--ca-text-secondary);
-}
-
-.step-item.step-complete::before {
+.step-item.is-done .step-marker {
   border-color: var(--ca-primary);
   background: var(--ca-primary);
 }
 
-.step-item.step-active::before {
+.step-item.is-current .step-marker {
   border-color: var(--ca-secondary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ca-secondary) 22%, transparent);
+}
+
+.step-item.is-current .step-marker::after {
+  width: 6px;
+  height: 6px;
+  border-radius: inherit;
   background: var(--ca-secondary);
-  box-shadow: 0 0 20px var(--ca-secondary);
+  content: "";
+}
+
+.step-item.is-outcome .step-marker {
+  border-radius: 2px;
+  transform: rotate(45deg) scale(0.9);
+}
+
+.step-text {
+  display: grid;
+  gap: 2px;
+  color: var(--ca-text-muted);
+  font-family: var(--ca-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  /* Wrap between words only: a label never splits inside a word. */
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: manual;
 }
 
 .step-number {
-  font: inherit;
   font-weight: 700;
 }
 
-.step-info {
-  display: inline;
+.step-item.is-done .step-text,
+.step-item.is-current .step-text {
+  color: var(--ca-text);
 }
 
-.step-label {
-  font: inherit;
+.step-item.is-current .step-label {
+  font-weight: 700;
+  text-decoration: underline 2px var(--ca-secondary);
+  text-underline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step-list::after {
+    transition: none;
+  }
 }
 
 /* ── Aggregated mapping table items ── */

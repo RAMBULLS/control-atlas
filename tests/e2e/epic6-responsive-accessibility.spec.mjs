@@ -38,8 +38,10 @@ for (const viewport of [
     await waitForAppReady(page);
     await dismissOnboarding(page);
 
+    // The count is data, not a constant: it must match the publications offered.
+    await expect(page.locator(".compare-option").first()).toBeVisible();
     await expect(page.locator(".page-header-eyebrow")).toHaveText(
-      "PUBLISHED CROSSWALKS / 21 CONNECTED PUBLICATIONS",
+      `PUBLISHED CROSSWALKS / ${await page.locator(".compare-option").count()} CONNECTED PUBLICATIONS`,
     );
     await expect(page.getByRole("tablist", { name: "Comparison mode" })).toBeInViewport();
     await expect(page.getByRole("navigation", { name: "Step progress" })).toBeInViewport();

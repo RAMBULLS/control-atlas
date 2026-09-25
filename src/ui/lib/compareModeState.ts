@@ -32,15 +32,16 @@ export type CompareStep = {
   description?: string;
 };
 
+// "Compare with" names the reader's job; "Target" was crosswalk-schema jargon.
 export const COMPARE_MODE_STEPS: Record<CompareModeId, readonly CompareStep[]> = {
   frameworks: [
     { id: "source", label: "Source", description: "Choose a framework" },
-    { id: "target", label: "Target", description: "Choose a connected framework" },
+    { id: "target", label: "Compare with", description: "Choose a connected framework" },
     { id: "results", label: "Results", description: "Review published mappings" },
   ],
   "item-mapping": [
     { id: "item", label: "Item", description: "Choose a publication and exact item" },
-    { id: "target", label: "Target", description: "Choose a mapped framework" },
+    { id: "target", label: "Compare with", description: "Choose a mapped framework" },
     { id: "results", label: "Results", description: "Review published mappings" },
   ],
 };

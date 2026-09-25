@@ -16,6 +16,7 @@ import {
   StepIndicator,
   FilterBar,
   SourceProvenanceSummary,
+  stepEyebrow,
 } from "../../src/ui/lib/pagePrimitives";
 
 test("UI_WORKFLOW_STATES covers all required standardized lifecycle states", () => {
@@ -185,7 +186,7 @@ test("EmptyState renders accessible status and actionable recovery", () => {
   assert.match(markup, /<button.*?>Reset filters<\/button>/);
 });
 
-test("StepIndicator renders staged-flow indicators with current, completed, and pending steps", () => {
+test("StepIndicator renders ordered, non-interactive progress with done, current and future steps", () => {
   const steps = [
     { id: "mode", label: "Select Mode" },
     { id: "source", label: "Choose Source" },
@@ -199,12 +200,45 @@ test("StepIndicator renders staged-flow indicators with current, completed, and 
     }),
   );
 
-  assert.match(markup, /class="staged-flow-steps"/);
-  assert.match(markup, /class="step-list progress-trajectory"/);
-  assert.match(markup, /class="step-item step step-complete done"/, "Step 1 should be complete");
-  assert.match(markup, /class="step-item step step-active active"/, "Step 2 should have active class");
-  assert.match(markup, /aria-current="step"/, "Step 2 should have aria-current");
-  assert.match(markup, /class="step-item step step-pending"/, "Step 3 should be pending");
+  assert.match(markup, /<nav aria-label="Step progress" class="staged-flow-steps"><ol class="step-list"/);
+  assert.match(markup, /--step-count:3;--step-progress:0.5/, "the line is drawn from the real position");
+  assert.match(markup, /class="step-item is-done"/, "Step 1 should be done");
+  assert.match(markup, /aria-current="step" class="step-item is-current"/, "Step 2 is the current step");
+  assert.match(markup, /class="step-item is-future"/, "Step 3 is still ahead");
+  assert.equal((markup.match(/aria-current=/g) || []).length, 1, "exactly one current step");
+  // State is carried by more than color: a check mark and hidden text for done.
+  assert.match(markup, /<svg[^>]*tabler-icon-check/, "done steps show a check mark");
+  assert.match(markup, /<span class="visually-hidden"> \(done\)<\/span>/);
+  // Steps are status, not controls.
+  assert.doesNotMatch(markup, /<(a|button)\b/);
+});
+
+test("StepIndicator supports any step count and draws the outcome step without a number", () => {
+  const steps = [
+    { id: "a", label: "One" },
+    { id: "b", label: "Two" },
+    { id: "c", label: "Three" },
+    { id: "d", label: "Four" },
+    { id: "plan", label: "Your plan", outcome: true },
+  ];
+  const first = renderToStaticMarkup(React.createElement(StepIndicator, { steps, currentStep: 1 }));
+  const last = renderToStaticMarkup(React.createElement(StepIndicator, { steps, currentStep: 5 }));
+
+  assert.match(first, /--step-count:5;--step-progress:0"/);
+  assert.match(last, /--step-progress:1"/);
+  assert.match(last, /class="step-item is-current is-outcome"/);
+  assert.equal((last.match(/class="step-number"/g) || []).length, 4, "the outcome is not numbered");
+});
+
+test("stepEyebrow derives a panel label from the same step definitions", () => {
+  const steps = [
+    { id: "choose", label: "Choose" },
+    { id: "set-up", label: "Set up" },
+    { id: "plan", label: "Your plan", outcome: true },
+  ];
+  assert.equal(stepEyebrow(steps, "set-up"), "02 / Set up");
+  assert.equal(stepEyebrow(steps, "plan"), "Your plan");
+  assert.equal(stepEyebrow(steps, "missing"), "");
 });
 
 test("FilterBar renders controls container and clear action when filters are active", () => {

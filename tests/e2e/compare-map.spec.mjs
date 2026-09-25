@@ -26,8 +26,10 @@ test("Compare opens as the Orbital three-stage Frameworks flow", async ({
   await expect(
     page.getByRole("heading", { level: 1, name: "Compare" }),
   ).toBeVisible();
+  // The count is data, not a constant: it must match the publications offered.
+  await expect(page.locator(".compare-option").first()).toBeVisible();
   await expect(page.locator(".page-header-eyebrow")).toHaveText(
-    "PUBLISHED CROSSWALKS / 21 CONNECTED PUBLICATIONS",
+    `PUBLISHED CROSSWALKS / ${await page.locator(".compare-option").count()} CONNECTED PUBLICATIONS`,
   );
   await expect(page.locator(".page-summary")).toHaveText(
     "See how frameworks connect using published crosswalks.",
@@ -45,12 +47,12 @@ test("Compare opens as the Orbital three-stage Frameworks flow", async ({
   const progress = page.getByRole("navigation", { name: "Step progress" });
   await expect(progress.locator("li")).toHaveCount(3);
   await expect(progress.locator("li")).toHaveText([
-    /01 \/ Source/,
-    /02 \/ Target/,
-    /03 \/ Results/,
+    /^01Source/,
+    /^02Compare with/,
+    /^03Results/,
   ]);
   await expect(progress.locator('[aria-current="step"]')).toContainText(
-    "01 / Source",
+    "Source",
   );
 
   await expect(
@@ -59,7 +61,7 @@ test("Compare opens as the Orbital three-stage Frameworks flow", async ({
   const source = page.getByRole("combobox", { name: "Publication" });
   await expect(source).toBeVisible();
   await expect(source).toHaveAttribute("list", /-options$/);
-  await expect(page.getByLabel("Target publication")).toHaveCount(0);
+  await expect(page.getByRole("combobox", { name: /^Compare with/ })).toHaveCount(0);
   await expect(
     page.getByRole("heading", { level: 2, name: "Nothing selected yet" }),
   ).toBeVisible();
@@ -106,7 +108,7 @@ test("Frameworks reveals connected targets and a two-column published result", a
   await expect(
     page.getByRole("navigation", { name: "Step progress" })
       .locator('[aria-current="step"]'),
-  ).toContainText("02 / Target");
+  ).toContainText("Compare with");
 
   const support = page.locator(".compare-flow-support");
   await expect(support).toContainText("SP 800-53 Rev. 5");
@@ -115,7 +117,7 @@ test("Frameworks reveals connected targets and a two-column published result", a
   // Both steps now pick a publication the same way: a searchable field over an
   // open list of every connected publication, rather than a dropdown for the
   // target and an open list for the source.
-  const target = page.getByLabel("Target publication");
+  const target = page.getByRole("combobox", { name: /^Compare with/ });
   await expect(target).toBeVisible();
   const targetOptions = page.locator(".compare-option-list");
   await expect(targetOptions.getByRole("button", { name: "NIST CSF 2.0", exact: true })).toBeVisible();
@@ -240,7 +242,7 @@ test("Specific item reveals only targets with a real mapping for the exact item"
   ).toHaveAttribute("aria-selected", "true");
   await expect(
     page.getByRole("navigation", { name: "Step progress" }).locator("li"),
-  ).toHaveText([/01 \/ Item/, /02 \/ Target/, /03 \/ Results/]);
+  ).toHaveText([/^01Item/, /^02Compare with/, /^03Results/]);
   await expect(page.getByLabel("Control / requirement / rule")).toBeVisible();
 
   await page.getByRole("combobox", { name: "Publication" }).fill(
@@ -248,7 +250,7 @@ test("Specific item reveals only targets with a real mapping for the exact item"
   );
   await page.getByLabel("Control / requirement / rule").fill("3.1.1");
 
-  const target = page.getByLabel("Target publication");
+  const target = page.getByRole("combobox", { name: /^Compare with/ });
   await expect(target).toBeVisible({ timeout: 30_000 });
   await expect(
     page.locator(".compare-option-list").getByRole("button", {
@@ -286,7 +288,7 @@ test("invalid and zero-capability scopes never become selectable result states",
       name: "Choose a framework to compare with",
     }),
   ).toBeVisible();
-  await expect(page.getByLabel("Target publication")).toHaveValue("");
+  await expect(page.getByRole("combobox", { name: /^Compare with/ })).toHaveValue("");
   await expect(
     page.getByRole("button", { name: "Show published mappings" }),
   ).toBeDisabled();

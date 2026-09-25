@@ -2,8 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  COMPARE_COMPACT_INLINE_TARGET_LIMIT,
+  COMPARE_COMPACT_QUERY,
+  COMPARE_INLINE_TARGET_LIMIT,
   COMPARE_PAGE_SIZE,
-  COMPARE_TARGET_PREVIEW,
   paginateCompareRows,
 } from "../../src/ui/lib/comparePagination";
 import { parseHashLocation, serializeHashLocation } from "../../src/ui/lib/hashRoutes";
@@ -15,7 +17,17 @@ test("Compare uses bounded fixed windows that replace rather than accumulate", (
   const last = paginateCompareRows(rows, "3");
 
   assert.equal(COMPARE_PAGE_SIZE, 25, "a page is a bounded window of the answer");
-  assert.ok(COMPARE_TARGET_PREVIEW >= 3 && COMPARE_TARGET_PREVIEW <= 8);
+  // Rows up to the limit show every target inline; past it a virtualized window
+  // shows them all. A small preview limit would return the "Show N more" click
+  // #281 removed; a huge one would mount thousands of entries per page.
+  assert.ok(
+    COMPARE_INLINE_TARGET_LIMIT >= 25 && COMPARE_INLINE_TARGET_LIMIT <= 100,
+    "the inline limit is chosen from measured render cost, not a preview size",
+  );
+  // Phones: 25 titled targets made ~3,400px rows; 8 keeps an inline row within
+  // ~1.5 viewports (1,266px at 844px tall). Larger rows use the window.
+  assert.equal(COMPARE_COMPACT_INLINE_TARGET_LIMIT, 8);
+  assert.equal(COMPARE_COMPACT_QUERY, "(max-width: 599px)");
   assert.deepEqual(first.rows, rows.slice(0, 25));
   assert.deepEqual(second.rows, rows.slice(25, 50));
   assert.deepEqual(last.rows, rows.slice(50, 60));

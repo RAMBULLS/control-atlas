@@ -66,4 +66,3 @@ export function publicationNextActions(input: {
   }
   return actions;
 }
-

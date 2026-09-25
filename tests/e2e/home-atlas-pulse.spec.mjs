@@ -82,7 +82,7 @@ test("a Pulse destination opens the thing it names", async ({ page, request }) =
   test.skip(!event, "no publication event in the current bounded set");
   await openHome(page);
   await page.locator(`.home-pulse__action[href="${event.destination.href}"]`).first().click();
-  await expect(page).toHaveURL(new RegExp(`${event.destination.href.replace(/[/?]/g, "\\$&")}$`));
+  await expect(page).toHaveURL((url) => url.hash === event.destination.href);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible({ timeout: 30_000 });
 });
 

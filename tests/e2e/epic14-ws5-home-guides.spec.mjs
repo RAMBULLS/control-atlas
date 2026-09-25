@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
 });
 
-test("WS5 Home implements Template B with one search, three destinations, and Library discovery", async ({ page }) => {
+test("WS5 Home implements Template B with one search, four destinations, and Library discovery", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await gotoApp(page, "/");
   await waitForAppReady(page, { allowPartial: true });
@@ -20,13 +20,14 @@ test("WS5 Home implements Template B with one search, three destinations, and Li
   await expect(template).toBeVisible();
   await expect(template.locator(".home-hero")).toHaveCount(1);
   await expect(template.locator(".home-search")).toHaveCount(1);
-  await expect(template.locator(".home-secondary-action")).toHaveCount(3);
+  await expect(template.locator(".home-secondary-action")).toHaveCount(4);
   await expect(template.locator(".home-secondary-action strong")).toHaveText([
     "Start guided setup",
+    "Browse the Atlas",
     "Search the Library",
     "Browse Resources",
   ]);
-  await expect(template.getByRole("heading", { name: "Explore federal cybersecurity", level: 1 })).toBeVisible();
+  await expect(template.getByRole("heading", { name: "Make federal cybersecurity make sense.", level: 1 })).toBeVisible();
   await expect(template.getByText("Understand what applies, what it means, and what to do next.", { exact: true })).toBeVisible();
   await expect(template.getByText(/publisher|provenance|mapping/i)).toHaveCount(0);
   await expect(template.locator(".home-ecosystem, .home-primary-actions")).toHaveCount(0);

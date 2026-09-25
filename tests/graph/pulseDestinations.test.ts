@@ -28,7 +28,7 @@ const pulse = buildPulseArtifact();
 test("the Pulse artifact is rebuilt byte for byte from the same accepted inputs", () => {
   assert.equal(JSON.stringify(buildPulseArtifact()), JSON.stringify(pulse));
   assert.match(pulse.dataset.dataset_id, /^[a-f0-9]{12}$/);
-  for (const path of ["data/source-change-log.json", "data/source-baselines.json", "data/product-release-log.json"]) {
+  for (const path of ["data/source-change-log.json", "data/source-baselines.json", "data/pulse-presentation.json"]) {
     assert.match(pulse.inputs[path], /^sha256:[a-f0-9]{64}$/, `${path} is recorded as an input`);
   }
 });

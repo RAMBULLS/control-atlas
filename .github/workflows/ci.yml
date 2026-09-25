@@ -286,6 +286,12 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
+      # Pulse product events are derived from Git: merged pull requests on the
+      # first-parent history of the built commit and tags reachable from it.
+      # Commits and tags only (no trees or blobs), so the checkout stays small.
+      - name: Fetch commit history and release tags for Pulse
+        shell: bash
+        run: git fetch --no-recurse-submodules --filter=tree:0 --unshallow --tags origin "$GITHUB_SHA" '+refs/heads/main:refs/remotes/origin/main'
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: ${{ env.NODE_VERSION }}

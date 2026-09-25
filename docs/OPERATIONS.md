@@ -158,27 +158,50 @@ rolled back and never recorded.
 
 ## Pulse
 
-Pulse is an output of accepted lifecycle data, not a crawler:
-accepted refresh or release, then governed diff, then Pulse artifact, then site
-build. `build:site` runs `scripts/build-pulse-artifact.mjs`, which reads only
-`data/source-change-log.json`, `data/source-baselines.json`, the served
-relationship sets, `data/source-registry.json` and `data/product-release-log.json`,
-and writes `data/generated/pulse.json` (published at the same path). The artifact
-records the sha256 of every input and the dataset identity, lists every event with
-its evidence pointer, and lists every accepted log entry it did not show with the
-reason (`no_verified_content_change`, `not_in_accepted_baseline_chain`,
-`decision_not_accepted`, `does_not_match_served_set`, ...). A source event is shown
-only when its decision is an accepted one and its snapshot is in the accepted
-baseline chain. Quarantined sources are listed with `shown_as_event: false`. The
-same inputs give the same bytes; an event id is derived from the accepted
-transition (catalog and both snapshot hashes, or the release id), so it is stable
-across rebuilds and duplicates collapse.
+Pulse is an output of accepted lifecycle data and Git history, not a crawler:
+accepted refresh or merged release, then governed diff, then Pulse artifact, then
+site build. `build:site` runs `scripts/build-pulse-artifact.mjs`, which writes
+`data/generated/pulse.json` (published at the same path).
 
-`data/product-release-log.json` is the one authored input: the pull request that
-ships a visitor-facing change adds its entry in the same commit, citing its issue
-or pull request (and, once merged, its merge commit); a release cites its tag.
-Entries are validated in `tests/pulse.test.mjs`. No other news source, forum or
-feed is read.
+Source events come only from `data/source-change-log.json`, the accepted baseline
+chain in `data/source-baselines.json`, the served relationship sets and
+`data/source-registry.json`. A source event is shown only when its decision is an
+accepted one and its snapshot is in the accepted baseline chain. Quarantined
+sources are listed with `shown_as_event: false`.
+
+Product events come only from the Git history of the commit being built
+(`scripts/lib/product-history.mjs`):
+
+- A feature exists only as a pull request that GitHub merged onto the
+  first-parent history of the build commit: a commit on that history, committed by
+  `noreply@github.com`, whose subject ends with `(#<number>)`. Its merge SHA and
+  UTC timestamp are that commit's. A pull request that is not merged there,
+  including one still in review, produces no event.
+- A release exists only as a tag whose commit is reachable from the build commit.
+  Its timestamp is the tag date (or the tagged commit's date for a lightweight
+  tag).
+- Without full history (a shallow checkout) no product event is shown, and the
+  artifact says why. The CI build job fetches commits and tags only
+  (`--filter=tree:0 --unshallow --tags`) before building.
+
+`data/pulse-presentation.json` is presentation metadata, not a release feed: for a
+pull request number or a tag it holds a title, a summary and a destination. It
+cannot hold a date, commit, issue or any other shipping fact; validation rejects
+them. An entry whose pull request or tag is not in the build history is listed as
+withheld with its reason.
+
+The artifact records the sha256 of every input file, the dataset identity and
+the build head, lists every event with its evidence (change-log pointer, or the
+merge commit and subject, or the tag, tag object and commit), and lists every
+accepted log entry or presentation entry it did not show with the reason
+(`no_verified_content_change`, `not_in_accepted_baseline_chain`,
+`decision_not_accepted`, `does_not_match_served_set`,
+`pull_request_not_merged_on_build_history`, `tag_not_found`,
+`tag_not_reachable_from_build_history`, `git_history_unavailable`). Events are
+ordered by their UTC timestamp. The same inputs give the same bytes, and an event
+id is derived from its identity (catalog and both snapshot hashes, relationship
+set and both identities, pull request number, or tag), so it is stable across
+rebuilds and duplicates collapse. No news source, forum or feed is read.
 
 Retrieval failures are separated by whether asking again could help. Timeouts,
 dropped connections, HTTP 408, 425, 429 and 5xx are retried: at most three

@@ -66,7 +66,7 @@ test("What changed lists a bounded set of dated, typed events that match the Pul
     await expect(item.locator("time")).toHaveAttribute("datetime", event.date);
     await expect(item.locator("time")).toHaveText(new RegExp(`^${event.date_kind === "accepted" ? "Accepted" : "Shipped"} [A-Z][a-z]{2} \\d{1,2}, \\d{4}$`));
     // Every event is backed by evidence in the published artifact, and has one useful next step.
-    expect(event.evidence.pointer).toMatch(/^data\/(source-change-log|product-release-log)\.json#/);
+    expect(event.evidence.pointer).toMatch(/^data\/(source-change-log|pulse-presentation)\.json#/);
     const action = item.getByRole("link");
     await expect(action).toHaveCount(1);
     await expect(action).toHaveAttribute("href", event.destination.href);

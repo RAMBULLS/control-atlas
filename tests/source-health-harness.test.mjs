@@ -467,7 +467,7 @@ const pulsePublications = new Map([[NIST, { name: 'NIST SP 800-53', publisher: '
 function pulseOf(w) {
   const served = existsSync(join(w.root, CSF_SET)) ? observeRelationshipSet(JSON.parse(w.get(CSF_SET))) : null;
   return buildPulse({
-    changeLog: w.changeLog(), baselines: w.baseline(), releaseLog: null, registry: JSON.parse(w.get('data/source-registry.json')),
+    changeLog: w.changeLog(), baselines: w.baseline(), presentation: null, history: null, registry: JSON.parse(w.get('data/source-registry.json')),
     publications: pulsePublications, relationshipSets: RELATIONSHIP_SET_ENDPOINTS, servedSets: new Map(served ? [[CSF_SET, served]] : []),
     dataset: { dataset_id: 'abcdefabcdef', source_data_generated_at: '2026-09-23T00:00:00.000Z' }, inputs: {},
   });

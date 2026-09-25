@@ -4,8 +4,10 @@
 //   accepted refresh or release -> governed diff -> Pulse artifact -> site build.
 // Inputs are the admitted change log (data/source-change-log.json, written only by
 // an admitted refresh), the accepted baseline chain (data/source-baselines.json),
-// the served relationship sets (maps/*.json) and the product release log
-// (data/product-release-log.json). A quarantined or rejected fetch never reaches
+// the served relationship sets (maps/*.json) and, for product events, the Git
+// history the site is built from (merged pull requests and reachable release
+// tags; see product-history.mjs). data/pulse-presentation.json only words those
+// events; it never establishes that anything shipped. A quarantined or rejected fetch never reaches
 // the change log; an entry that does not match the accepted chain is withheld and
 // listed with its reason, so every shown and every withheld item can be audited.
 import { createHash } from 'node:crypto';
@@ -225,47 +227,106 @@ function relationshipEvent(entry, index, isLatest, { publications, relationshipS
   };
 }
 
-/** Throws when a release log entry cannot be audited. */
-export function validateReleaseEntry(entry) {
-  const problem = (message) => { throw new Error(`product-release-log ${entry?.id || '(no id)'}: ${message}`); };
-  if (typeof entry?.id !== 'string' || !/^[a-z0-9][a-z0-9.-]*$/.test(entry.id)) problem('id must be a lowercase slug');
-  if (!['feature', 'release'].includes(entry.kind)) problem('kind must be feature or release');
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.shipped_at || '') || !utc(`${entry.shipped_at}T00:00:00Z`)) problem('shipped_at must be YYYY-MM-DD');
-  for (const field of ['title', 'summary']) if (typeof entry[field] !== 'string' || !entry[field].trim()) problem(`${field} is required`);
-  const evidence = entry.evidence || {};
-  if (entry.kind === 'release' && !(typeof evidence.tag === 'string' && /^https:\/\/github\.com\/RAMBULLS\/control-atlas\/releases\/tag\//.test(evidence.release_url || ''))) problem('a release cites its tag and release URL');
-  if (entry.kind === 'feature' && !(Number.isSafeInteger(evidence.issue) || Number.isSafeInteger(evidence.pull_request))) problem('a feature cites its issue or pull request');
-  if (evidence.merge_commit !== undefined && !/^[a-f0-9]{40}$/.test(evidence.merge_commit)) problem('merge_commit must be a full commit SHA');
-  const destination = entry.destination || {};
-  if (typeof destination.label !== 'string' || !destination.label.trim() || !RELEASE_VIEWS.has(destination.view)) problem('destination needs a label and a known view');
-  if (destination.patch !== undefined && (typeof destination.patch !== 'object' || Array.isArray(destination.patch))) problem('destination patch must be an object');
+export const PRESENTATION_PATH = 'data/pulse-presentation.json';
+const FEATURE_KEYS = ['pull_request', 'title', 'summary', 'destination'];
+const RELEASE_KEYS = ['tag', 'title', 'summary', 'destination'];
+
+/**
+ * Presentation text is only words and a destination. Any shipping fact (a date, a commit,
+ * an issue, a "shipped" flag) is rejected, so authored text can never make an event exist,
+ * date it or order it.
+ */
+export function validatePresentation(document) {
+  const problem = (where, message) => { throw new Error(`${PRESENTATION_PATH} ${where}: ${message}`); };
+  if (document?.schema_version !== '1.0') problem('', 'schema_version must be 1.0');
+  const check = (entry, keys, where) => {
+    const extra = Object.keys(entry || {}).filter((key) => !keys.includes(key));
+    if (extra.length) problem(where, `only ${keys.join(', ')} are allowed; shipping facts come from Git (${extra.join(', ')})`);
+    for (const field of ['title', 'summary']) if (typeof entry[field] !== 'string' || !entry[field].trim()) problem(where, `${field} is required`);
+    const destination = entry.destination || {};
+    if (typeof destination.label !== 'string' || !destination.label.trim() || !RELEASE_VIEWS.has(destination.view)) problem(where, 'destination needs a label and a known view');
+    if (destination.patch !== undefined && (typeof destination.patch !== 'object' || Array.isArray(destination.patch))) problem(where, 'destination patch must be an object');
+  };
+  const seen = new Set();
+  (document.features || []).forEach((entry, index) => {
+    check(entry, FEATURE_KEYS, `features[${index}]`);
+    if (!Number.isSafeInteger(entry.pull_request) || entry.pull_request < 1) problem(`features[${index}]`, 'pull_request must be a pull request number');
+    if (seen.has(`pr-${entry.pull_request}`)) problem(`features[${index}]`, 'duplicate pull request');
+    seen.add(`pr-${entry.pull_request}`);
+  });
+  (document.releases || []).forEach((entry, index) => {
+    check(entry, RELEASE_KEYS, `releases[${index}]`);
+    if (typeof entry.tag !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(entry.tag)) problem(`releases[${index}]`, 'tag must be a tag name');
+    if (seen.has(`tag-${entry.tag}`)) problem(`releases[${index}]`, 'duplicate tag');
+    seen.add(`tag-${entry.tag}`);
+  });
+  return document;
 }
 
-function releaseEvent(entry, index) {
-  validateReleaseEntry(entry);
-  const key = `release|${entry.id}`;
-  return {
-    key,
-    event: {
-      id: entry.id,
-      type: entry.kind === 'release' ? 'product_release' : 'feature_shipped',
-      date: entry.shipped_at,
-      timestamp: null,
-      date_kind: 'shipped',
-      title: entry.title,
-      summary: entry.summary,
-      subject: { kind: 'product', id: 'control-atlas', name: 'Control Atlas', publisher: 'Control Atlas' },
-      counts: {},
-      destination: { label: entry.destination.label, view: entry.destination.view, patch: entry.destination.patch || {} },
-      identity: {
-        tag: entry.evidence.tag ?? null,
-        merge_commit: entry.evidence.merge_commit ?? null,
-        pull_request: entry.evidence.pull_request ?? null,
-        issue: entry.evidence.issue ?? null,
+const PRODUCT_SUBJECT = Object.freeze({ kind: 'product', id: 'control-atlas', name: 'Control Atlas', publisher: 'Control Atlas' });
+
+/** Product events: presentation text joined to shipping facts derived from Git. */
+function productEvents(presentation, history) {
+  if (!presentation) return [];
+  validatePresentation(presentation);
+  const results = [];
+  const withheld = (pointer, reason, extra) => results.push({ withheld: { pointer, reason, ...extra } });
+  const destinationOf = (entry) => ({ label: entry.destination.label, view: entry.destination.view, patch: entry.destination.patch || {} });
+  (presentation.features || []).forEach((entry, index) => {
+    const pointer = `${PRESENTATION_PATH}#features[${index}]`;
+    if (!history?.available) return withheld(pointer, 'git_history_unavailable', { pull_request: entry.pull_request });
+    const merge = history.merges.get(entry.pull_request);
+    if (!merge?.committed_at) return withheld(pointer, 'pull_request_not_merged_on_build_history', { pull_request: entry.pull_request });
+    results.push({
+      key: `feature|${entry.pull_request}`,
+      event: {
+        id: `feature-pr-${entry.pull_request}`,
+        type: 'feature_shipped',
+        date: merge.committed_at.slice(0, 10),
+        timestamp: merge.committed_at,
+        date_kind: 'shipped',
+        title: entry.title,
+        summary: entry.summary,
+        subject: { ...PRODUCT_SUBJECT },
+        counts: {},
+        destination: destinationOf(entry),
+        identity: { pull_request: entry.pull_request, merge_commit: merge.sha, tag: null, tag_commit: null },
+        evidence: {
+          basis: 'merged_pull_request', pointer, commit: merge.sha, committed_at: merge.committed_at,
+          subject: merge.subject, history: 'first-parent history of the build commit', build_head: history.head,
+        },
       },
-      evidence: { basis: 'product_release_log', pointer: `data/product-release-log.json#releases[${index}]`, ...(entry.evidence.release_url ? { release_url: entry.evidence.release_url } : {}) },
-    },
-  };
+    });
+  });
+  (presentation.releases || []).forEach((entry, index) => {
+    const pointer = `${PRESENTATION_PATH}#releases[${index}]`;
+    if (!history?.available) return withheld(pointer, 'git_history_unavailable', { tag: entry.tag });
+    const tag = history.tags.get(entry.tag);
+    if (!tag?.found) return withheld(pointer, 'tag_not_found', { tag: entry.tag });
+    if (!tag.reachable) return withheld(pointer, 'tag_not_reachable_from_build_history', { tag: entry.tag });
+    if (!tag.tagged_at) return withheld(pointer, 'tag_has_no_date', { tag: entry.tag });
+    results.push({
+      key: `release|${entry.tag}`,
+      event: {
+        id: `release-${entry.tag.toLowerCase()}`,
+        type: 'product_release',
+        date: tag.tagged_at.slice(0, 10),
+        timestamp: tag.tagged_at,
+        date_kind: 'shipped',
+        title: entry.title,
+        summary: entry.summary,
+        subject: { ...PRODUCT_SUBJECT },
+        counts: {},
+        destination: destinationOf(entry),
+        identity: { pull_request: null, merge_commit: null, tag: entry.tag, tag_commit: tag.commit },
+        evidence: {
+          basis: 'release_tag', pointer, tag: entry.tag, tag_object: tag.tag_object, commit: tag.commit,
+          tagged_at: tag.tagged_at, annotated: tag.annotated, build_head: history.head,
+        },
+      },
+    });
+  });
+  return results;
 }
 
 const byRecency = (left, right) => right.date.localeCompare(left.date)
@@ -281,7 +342,8 @@ const daysBetween = (fromDate, toDate) => Math.round((Date.parse(`${toDate}T00:0
  * @param {object} input
  * @param {object|null} input.changeLog data/source-change-log.json
  * @param {object} input.baselines data/source-baselines.json
- * @param {object|null} input.releaseLog data/product-release-log.json
+ * @param {object|null} input.presentation data/pulse-presentation.json (words and destinations only)
+ * @param {object|null} input.history readProductHistory(): merged pull requests and release tags on the build history
  * @param {object} input.registry data/source-registry.json (quarantine state is reported, never shown as events)
  * @param {Map<string,{name:string,publisher:string}>} input.publications catalog id -> display identity
  * @param {Record<string,[string,string]>} input.relationshipSets relationship set path -> [from catalog, to catalog]
@@ -289,7 +351,7 @@ const daysBetween = (fromDate, toDate) => Math.round((Date.parse(`${toDate}T00:0
  * @param {{dataset_id:string, source_data_generated_at:string}} input.dataset
  * @param {Record<string,string>} input.inputs input file path -> sha256 of its bytes
  */
-export function buildPulse({ changeLog, baselines, releaseLog, registry, publications, relationshipSets, servedSets, dataset, inputs }) {
+export function buildPulse({ changeLog, baselines, presentation = null, history = null, registry, publications, relationshipSets, servedSets, dataset, inputs }) {
   const found = new Map();
   const withheld = [];
   const keep = (result) => {
@@ -302,7 +364,7 @@ export function buildPulse({ changeLog, baselines, releaseLog, registry, publica
   for (const [, entries] of Object.entries(changeLog?.relationship_sets || {}).sort(([a], [b]) => a.localeCompare(b))) {
     entries.forEach((entry, index) => keep(relationshipEvent(entry, index, index === entries.length - 1, { publications, relationshipSets, servedSets })));
   }
-  (releaseLog?.releases || []).forEach((entry, index) => keep(releaseEvent(entry, index)));
+  for (const result of productEvents(presentation, history)) keep(result);
 
   const ids = new Set();
   for (const event of found.values()) {
@@ -320,6 +382,9 @@ export function buildPulse({ changeLog, baselines, releaseLog, registry, publica
     dataset: { dataset_id: dataset.dataset_id, source_data_generated_at: dataset.source_data_generated_at },
     inputs,
     status: { latest_event_date: latest, source_data_date: builtOn, quiet: Boolean(quiet), quiet_after_days: PULSE_QUIET_AFTER_DAYS },
+    product_history: history?.available
+      ? { available: true, build_head: history.head, basis: 'merged pull requests on the first-parent history of the build commit; tags reachable from it' }
+      : { available: false, reason: history?.reason || 'not_read' },
     events,
     withheld,
     quarantine: (registry?.quarantine || []).map((item) => ({

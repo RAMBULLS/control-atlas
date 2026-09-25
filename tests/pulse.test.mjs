@@ -2,13 +2,17 @@
 // quarantined, rejected, unaccepted or merely re-stamped can surface, and the
 // same inputs always give the same artifact with the same event ids.
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import test from 'node:test';
 import {
-  ACCEPTED_DECISIONS, PULSE_EVENT_TYPES, PULSE_HOME_LIMIT, PULSE_TYPE_LABELS, buildPulse, pulseHomeSlice, validateReleaseEntry,
+  ACCEPTED_DECISIONS, PULSE_EVENT_TYPES, PULSE_HOME_LIMIT, PULSE_TYPE_LABELS, buildPulse, pulseHomeSlice, validatePresentation,
 } from '../scripts/lib/pulse.mjs';
 import { CONTENT_DIFF_BASIS, buildChangeEntry, buildRelationshipChangeEntry, diffCatalogRecords, mergeChangeLog, observeRelationshipSet } from '../scripts/lib/source-change-evidence.mjs';
 import { RELATIONSHIP_SET_ENDPOINTS } from '../scripts/lib/catalog-refresh-profiles.mjs';
+import { readProductHistory } from '../scripts/lib/product-history.mjs';
 
 const sha = (n) => `sha256:${String(n).padStart(64, '0')}`;
 const publications = new Map([
@@ -32,8 +36,14 @@ function entry({ id = 'disa-stig', from = 1, to = 2, fromCount = 100, toCount = 
   });
 }
 const build = (overrides = {}) => buildPulse({
-  changeLog: null, baselines: { catalogs: {} }, releaseLog: null, registry: { quarantine: [] }, publications,
+  changeLog: null, baselines: { catalogs: {} }, presentation: null, history: null, registry: { quarantine: [] }, publications,
   relationshipSets: RELATIONSHIP_SET_ENDPOINTS, servedSets: new Map(), dataset, inputs: {}, ...overrides,
+});
+// Product helpers: presentation is words only; history stands in for readProductHistory().
+const feature = (pr, title) => ({ pull_request: pr, title, summary: 'S', destination: { label: 'Open', view: 'atlas-map' } });
+const merged = (pairs, tags = new Map()) => ({
+  available: true, head: 'f'.repeat(40), tags,
+  merges: new Map(pairs.map(([pr, at]) => [pr, { sha: String(pr).padStart(40, 'a'), committed_at: new Date(at).toISOString(), subject: `feat: x (#${pr})` }])),
 });
 const added31 = diffCatalogRecords(Array.from({ length: 100 }, (_, i) => rec(`V-${i}`)), Array.from({ length: 131 }, (_, i) => rec(`V-${i}`)));
 
@@ -141,31 +151,17 @@ test('relationship-set changes keep direction, and only a set matching the serve
   assert.equal(notServed.withheld[0].reason, 'does_not_match_served_set');
 });
 
-test('shipped features and releases need auditable evidence and a destination', () => {
-  const good = { id: 'feature-x', kind: 'feature', shipped_at: '2026-09-24', title: 'T', summary: 'S', evidence: { pull_request: 1 }, destination: { label: 'Open', view: 'atlas-map', patch: {} } };
-  assert.doesNotThrow(() => validateReleaseEntry(good));
-  assert.throws(() => validateReleaseEntry({ ...good, evidence: {} }), /cites its issue or pull request/);
-  assert.throws(() => validateReleaseEntry({ ...good, evidence: { pull_request: 1, merge_commit: 'abc' } }), /full commit SHA/);
-  assert.throws(() => validateReleaseEntry({ ...good, destination: { label: 'x', view: 'nowhere' } }), /known view/);
-  assert.throws(() => validateReleaseEntry({ ...good, kind: 'release', evidence: { tag: 'v1' } }), /tag and release URL/);
-  assert.throws(() => validateReleaseEntry({ ...good, shipped_at: 'yesterday' }), /YYYY-MM-DD/);
-  const [event] = build({ releaseLog: { releases: [good] } }).events;
-  assert.deepEqual([event.type, event.date_kind, event.timestamp], ['feature_shipped', 'shipped', null]);
-});
-
 test('the same inputs give byte-identical output, stable ids, deduplicated events and newest-first order', () => {
   const log = mergeChangeLog(null, [entry({ diff: added31 })]);
   // The same accepted transition logged twice (for example a replayed merge) is one event.
   log.catalogs['disa-stig'].push(structuredClone(log.catalogs['disa-stig'][0]));
-  const releaseLog = { releases: [
-    { id: 'feature-old', kind: 'feature', shipped_at: '2026-09-01', title: 'Old', summary: 'S', evidence: { issue: 1 }, destination: { label: 'Open', view: 'atlas-map' } },
-    { id: 'feature-new', kind: 'feature', shipped_at: '2026-09-30', title: 'New', summary: 'S', evidence: { issue: 2 }, destination: { label: 'Open', view: 'atlas-map' } },
-  ] };
-  const input = { changeLog: log, releaseLog, baselines: { catalogs: { 'disa-stig': baselineFor(1, 2) } } };
+  const presentation = { schema_version: '1.0', features: [feature(1, 'Old'), feature(2, 'New')] };
+  const history = merged([[1, '2026-09-01T10:00:00Z'], [2, '2026-09-30T10:00:00Z']]);
+  const input = { changeLog: log, presentation, history, baselines: { catalogs: { 'disa-stig': baselineFor(1, 2) } } };
   const first = build(input);
-  const second = build(structuredClone(input));
+  const second = build({ ...structuredClone({ ...input, history: null }), history });
   assert.equal(JSON.stringify(first), JSON.stringify(second));
-  assert.deepEqual(first.events.map((e) => e.id), ['feature-new', second.events[1].id, 'feature-old']);
+  assert.deepEqual(first.events.map((e) => e.id), ['feature-pr-2', second.events[1].id, 'feature-pr-1']);
   assert.match(first.events[1].id, /^source-disa-stig-[a-f0-9]{12}$/);
   assert.equal(first.events.filter((e) => e.subject.id === 'disa-stig').length, 1);
   // An unrelated later entry does not move an existing event's id.
@@ -176,36 +172,134 @@ test('the same inputs give byte-identical output, stable ids, deduplicated event
 });
 
 test('quiet periods are computed from the evidence dates, not the clock', () => {
-  const releaseLog = { releases: [{ id: 'feature-a', kind: 'feature', shipped_at: '2026-08-01', title: 'A', summary: 'S', evidence: { issue: 1 }, destination: { label: 'Open', view: 'atlas-map' } }] };
-  const quiet = build({ releaseLog });
+  const presentation = { schema_version: '1.0', features: [feature(1, 'A')] };
+  const quiet = build({ presentation, history: merged([[1, '2026-08-01T12:00:00Z']]) });
   assert.equal(quiet.status.quiet, true);
   assert.equal(quiet.status.latest_event_date, '2026-08-01');
-  const recent = build({ releaseLog: { releases: [{ ...releaseLog.releases[0], shipped_at: '2026-09-20' }] } });
+  const recent = build({ presentation, history: merged([[1, '2026-09-20T12:00:00Z']]) });
   assert.equal(recent.status.quiet, false);
 });
 
 test('Home receives only a bounded slice with no evidence payload', () => {
-  const releases = Array.from({ length: 12 }, (_, i) => ({ id: `feature-${i}`, kind: 'feature', shipped_at: `2026-09-${String(i + 10).padStart(2, '0')}`, title: `T${i}`, summary: 'S', evidence: { issue: i + 1 }, destination: { label: 'Open', view: 'atlas-map' } }));
-  const slice = pulseHomeSlice(build({ releaseLog: { releases } }));
+  const presentation = { schema_version: '1.0', features: Array.from({ length: 12 }, (_, i) => feature(i + 1, `T${i}`)) };
+  const history = merged(Array.from({ length: 12 }, (_, i) => [i + 1, `2026-09-${String(i + 10).padStart(2, '0')}T12:00:00Z`]));
+  const slice = pulseHomeSlice(build({ presentation, history }));
   assert.equal(slice.events.length, PULSE_HOME_LIMIT);
   assert.ok(PULSE_HOME_LIMIT >= 3 && PULSE_HOME_LIMIT <= 5);
   for (const event of slice.events) assert.deepEqual(Object.keys(event).sort(), ['date', 'date_kind', 'destination', 'id', 'subject', 'summary', 'title', 'type']);
 });
 
-test('the tracked release log validates and every relationship set the gate records has declared endpoints', () => {
-  const log = JSON.parse(readFileSync('data/product-release-log.json', 'utf8'));
-  assert.equal(log.schema_version, '1.0');
-  const ids = new Set();
-  for (const release of log.releases) {
-    validateReleaseEntry(release);
-    assert.ok(!ids.has(release.id), `duplicate release id ${release.id}`);
-    ids.add(release.id);
-  }
-  const dates = log.releases.map((r) => r.shipped_at);
-  assert.deepEqual(dates, [...dates].sort(), 'newest last');
+test('the tracked presentation file holds words only, and every relationship set the gate records has declared endpoints', () => {
+  const presentation = validatePresentation(JSON.parse(readFileSync('data/pulse-presentation.json', 'utf8')));
+  assert.ok(presentation.features.length && presentation.releases.length);
+  assert.doesNotMatch(readFileSync('data/pulse-presentation.json', 'utf8'), /shipped_at|merge_commit|"issue"|"date"/);
   for (const [path, endpoints] of Object.entries(RELATIONSHIP_SET_ENDPOINTS)) {
     const document = JSON.parse(readFileSync(path, 'utf8'));
     assert.ok(Array.isArray(document.relationships) && document.relationships.length, `${path} is a relationship set`);
     assert.equal(endpoints.length, 2);
   }
+});
+
+// ---- Product events come from Git, never from authored facts -------------------
+// A real repository: main carries GitHub squash merges; a side branch carries an unmerged pull request.
+function repository(t) {
+  const dir = mkdtempSync(join(tmpdir(), 'pulse-git-'));
+  t.after(() => rmSync(dir, { recursive: true, force: true }));
+  const git = (args, env = {}) => execFileSync('git', args, { cwd: dir, encoding: 'utf8', env: { ...process.env, GIT_CONFIG_NOSYSTEM: '1', HOME: dir, ...env } }).trim();
+  git(['init', '-q', '-b', 'main']);
+  git(['config', 'user.name', 'Author']);
+  git(['config', 'user.email', 'author@example.com']);
+  git(['config', 'commit.gpgsign', 'false']);
+  git(['config', 'tag.gpgsign', 'false']);
+  let n = 0;
+  const commit = (subject, at, committer = ['GitHub', 'noreply@github.com']) => {
+    writeFileSync(join(dir, 'file.txt'), `${n += 1}`);
+    git(['add', 'file.txt']);
+    git(['commit', '-q', '-m', subject], { GIT_AUTHOR_DATE: at, GIT_COMMITTER_DATE: at, GIT_COMMITTER_NAME: committer[0], GIT_COMMITTER_EMAIL: committer[1] });
+    return git(['rev-parse', 'HEAD']);
+  };
+  return { dir, git, commit };
+}
+const releaseEntry = (tag) => ({ tag, title: `Release ${tag}`, summary: 'S', destination: { label: 'About', view: 'about' } });
+const productPulse = (repo, presentation, head = 'HEAD') => build({
+  presentation, history: readProductHistory(repo.dir, { head, tags: (presentation.releases || []).map((r) => r.tag) }),
+});
+
+test('Git: a nonexistent pull request, an unmerged one, and a locally forged merge subject cannot surface', (t) => {
+  const repo = repository(t);
+  repo.commit('feat: shipped (#10)', '2026-09-24T12:00:00Z');
+  repo.commit('feat: typed by hand to look merged (#12)', '2026-09-24T13:00:00Z', ['Someone', 'someone@example.com']);
+  repo.git(['checkout', '-q', '-b', 'unmerged']);
+  repo.commit('feat: still in review (#11)', '2026-09-24T14:00:00Z');
+  repo.git(['checkout', '-q', 'main']);
+  const pulse = productPulse(repo, { schema_version: '1.0', features: [feature(10, 'Shipped'), feature(11, 'Unmerged'), feature(12, 'Forged'), feature(999, 'Nonexistent')] });
+  assert.deepEqual(pulse.events.map((e) => e.id), ['feature-pr-10']);
+  assert.deepEqual(pulse.withheld.map((w) => [w.pull_request, w.reason]), [
+    [11, 'pull_request_not_merged_on_build_history'],
+    [12, 'pull_request_not_merged_on_build_history'],
+    [999, 'pull_request_not_merged_on_build_history'],
+  ]);
+  // The unmerged pull request surfaces only once main actually carries its merge.
+  repo.commit('feat: still in review (#11)', '2026-09-25T09:00:00Z');
+  assert.ok(productPulse(repo, { schema_version: '1.0', features: [feature(11, 'Now merged')] }).events.some((e) => e.id === 'feature-pr-11'));
+});
+
+test('Git: authored dates and SHAs are rejected; the event carries the derived merge commit and time', (t) => {
+  const repo = repository(t);
+  const sha = repo.commit('feat: shipped (#10)', '2026-09-24T12:00:00Z');
+  for (const forged of [{ shipped_at: '2030-01-01' }, { merge_commit: 'b'.repeat(40) }, { timestamp: '2030-01-01T00:00:00Z' }, { issue: 1 }]) {
+    assert.throws(() => productPulse(repo, { schema_version: '1.0', features: [{ ...feature(10, 'Shipped'), ...forged }] }), /shipping facts come from Git/);
+  }
+  const [event] = productPulse(repo, { schema_version: '1.0', features: [feature(10, 'Shipped')] }).events;
+  assert.equal(event.identity.merge_commit, sha);
+  assert.equal(event.evidence.commit, sha);
+  assert.equal(event.timestamp, '2026-09-24T12:00:00.000Z');
+  assert.equal(event.date, '2026-09-24');
+  assert.equal(event.evidence.basis, 'merged_pull_request');
+  assert.equal(event.evidence.subject, 'feat: shipped (#10)');
+});
+
+test('Git: two merges on the same day order by their actual merge time, not by the presentation order', (t) => {
+  const repo = repository(t);
+  repo.commit('feat: morning (#20)', '2026-09-24T08:15:00-04:00');
+  repo.commit('feat: evening (#21)', '2026-09-24T19:40:00-04:00');
+  const pulse = productPulse(repo, { schema_version: '1.0', features: [feature(20, 'Morning'), feature(21, 'Evening')] });
+  assert.deepEqual(pulse.events.map((e) => [e.id, e.timestamp]), [
+    ['feature-pr-21', '2026-09-24T23:40:00.000Z'],
+    ['feature-pr-20', '2026-09-24T12:15:00.000Z'],
+  ]);
+});
+
+test('Git: a real merged feature is the same stable event on every rebuild, including after later merges', (t) => {
+  const repo = repository(t);
+  repo.commit('feat: shipped (#10)', '2026-09-24T12:00:00Z');
+  const presentation = { schema_version: '1.0', features: [feature(10, 'Shipped')] };
+  const first = productPulse(repo, presentation).events[0];
+  const again = productPulse(repo, presentation).events[0];
+  assert.deepEqual({ ...again, evidence: { ...again.evidence } }, first);
+  repo.commit('feat: later (#30)', '2026-09-26T12:00:00Z');
+  const later = productPulse(repo, presentation).events[0];
+  assert.equal(later.id, first.id);
+  assert.deepEqual([later.timestamp, later.identity], [first.timestamp, first.identity]);
+});
+
+test('Git: a release event needs a real tag whose commit is reachable from the build history', (t) => {
+  const repo = repository(t);
+  const tagged = repo.commit('chore: release (#40)', '2026-07-28T22:00:00Z');
+  repo.git(['tag', '-a', 'v1.0.0', '-m', 'v1.0.0'], { GIT_COMMITTER_DATE: '2026-07-28T22:59:23Z' });
+  repo.git(['checkout', '-q', '-b', 'side']);
+  repo.commit('feat: side (#41)', '2026-07-29T10:00:00Z');
+  repo.git(['tag', '-a', 'v9.9.9', '-m', 'v9.9.9'], { GIT_COMMITTER_DATE: '2026-07-29T11:00:00Z' });
+  repo.git(['checkout', '-q', 'main']);
+  const pulse = productPulse(repo, { schema_version: '1.0', releases: [releaseEntry('v1.0.0'), releaseEntry('v9.9.9'), releaseEntry('v0.0.1')] });
+  assert.deepEqual(pulse.events.map((e) => [e.id, e.type, e.timestamp, e.identity.tag_commit]), [['release-v1.0.0', 'product_release', '2026-07-28T22:59:23.000Z', tagged]]);
+  assert.deepEqual(pulse.withheld.map((w) => [w.tag, w.reason]), [['v9.9.9', 'tag_not_reachable_from_build_history'], ['v0.0.1', 'tag_not_found']]);
+});
+
+test('Git: without full history nothing is asserted as shipped', (t) => {
+  const repo = repository(t);
+  repo.commit('feat: shipped (#10)', '2026-09-24T12:00:00Z');
+  const shallow = build({ presentation: { schema_version: '1.0', features: [feature(10, 'Shipped')] }, history: { available: false, reason: 'shallow_history' } });
+  assert.deepEqual(shallow.events, []);
+  assert.deepEqual([shallow.withheld[0].reason, shallow.product_history], ['git_history_unavailable', { available: false, reason: 'shallow_history' }]);
 });

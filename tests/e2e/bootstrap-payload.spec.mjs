@@ -33,10 +33,23 @@ test("home bootstrap avoids graph JSON artifacts", async ({ page }) => {
 
   expect(graphArtifactUrls(requested)).toEqual([]);
   expect(requested).toEqual([]);
-  // The tiny classic shell sets route identity before first paint; the only
-  // other script is the deferred interactive entry. Home still requests no
-  // route or graph payload until the user leaves the static front door.
-  expect(scripts).toHaveLength(2);
+  // Home requests no route or graph payload until the reader leaves the static
+  // front door, and its script graph stays small: the shell that sets route
+  // identity before first paint, the deferred interactive entry, and the
+  // shared chunks that entry pulls in.
+  //
+  // This asserted exactly two scripts. The bundler now emits its runtime and
+  // the shared header data as their own chunks, so main has been loading four
+  // for some time and this test has been red on main without anyone seeing it
+  // — it is not in test:e2e:smoke, so CI never runs it on a pull request. A
+  // fixed count tracks the bundler's chunking, not the thing worth protecting.
+  // The budget is what protects Home: no route chunk, no page code.
+  expect(scripts.length, `Home loaded ${scripts.length} scripts: ${scripts.join(", ")}`).toBeLessThanOrEqual(4);
+  for (const script of scripts) {
+    expect(script, "Home must not load a route chunk").not.toMatch(
+      /\/assets\/(?:AtlasTerritoryPage|ExplorePage|ComparePage|TemplatesPage|SourcesPage|CatalogDetailPage|ObjectDetailPage|CommonsPage|PlaybooksPage|AboutPage|StartHerePage)-/,
+    );
+  }
 
   await page.getByRole("link", { name: "Search the Library" }).click();
   await waitForAppReady(page);

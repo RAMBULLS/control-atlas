@@ -81,9 +81,34 @@ function stagedGeneratedDataMatches() {
   const stagedManifest = join(DIST, "data/generated/build-manifest.json");
   if (!existsSync(sourceManifest) || !existsSync(stagedManifest)) return false;
   if (!readFileSync(sourceManifest).equals(readFileSync(stagedManifest))) return false;
-  return REQUIRED_GENERATED_FILES.every((path) =>
-    existsSync(join(DIST, path)),
-  );
+  if (!REQUIRED_GENERATED_FILES.every((path) => existsSync(join(DIST, path)))) return false;
+
+  // The manifest lists artifact names and the source-data date; it carries no
+  // content digest. Two data builds from the same snapshot date produce an
+  // identical manifest even when an artifact's contents differ, so matching it
+  // alone let the staged copy win over freshly regenerated data. A registry
+  // text change was rebuilt, written to data/generated, and then served from
+  // the previous dist — the site showed the old words while the repository
+  // held the new ones. Size and mtime are cheap and catch that; nodes.json and
+  // edges.json are tens of megabytes and are not worth hashing on every build.
+  // The manifest names its own runtime artifacts, so this stays right when
+  // that list changes. Directory entries are covered by the files inside them
+  // that the manifest names individually.
+  const manifest = JSON.parse(readFileSync(sourceManifest, "utf8"));
+  const runtimeArtifacts = (manifest.build_manifest?.runtime_artifacts || [])
+    .filter((name) => !name.endsWith("/"))
+    .map((name) => `data/generated/${name}`);
+
+  return [...new Set([...REQUIRED_GENERATED_FILES, ...runtimeArtifacts])].every((path) => {
+    const source = join(ROOT, path);
+    const staged = join(DIST, path);
+    if (!existsSync(source)) return true;
+    if (!existsSync(staged)) return false;
+    const sourceStats = statSync(source);
+    if (sourceStats.isDirectory()) return true;
+    const stagedStats = statSync(staged);
+    return stagedStats.size === sourceStats.size && stagedStats.mtimeMs >= sourceStats.mtimeMs;
+  });
 }
 
 if (reuseGenerated) {

@@ -105,6 +105,28 @@ Sources is the public trust register with two views: Publications, and Policy & 
 
 The generated Publication Acceptance Matrix (`npm run audit:publication-matrix`, gated by `tests/graph/publicationAcceptance.test.ts`) covers every public publication in the corpus, classifies each missing source fact, and blocks any publication whose Atlas, Library, publication page and Sources identity disagree.
 
+## Public copy
+
+Public copy is written for the practitioner doing the work, not for the people who built the product. Every default surface answers three questions: what is this, why does it matter to the work I am doing, and what can I do next. If a specific fact exists, state the fact; vague reassurance is not a substitute for a date, a publisher or a count.
+
+Source trust information is concrete: publisher, official title, version or current-through, the retrieval date and the check date kept distinct, lifecycle, what Control Atlas indexes, any known limitation, and the official source.
+
+**Never on a default surface.** Process and meta narration, in any wording:
+
+- how something passed our own review, for example "Nothing appears here until it passes review"
+- what Control Atlas has accepted, decided or validated as the subject of a sentence
+- the product describing its own pages, for example "Home shows what changed" or "This page now..."
+- release announcements as the framing for a source change, for example "New in Control Atlas" when the subject is a publisher's update
+- "We shipped", "This feature", and other product-changelog voice
+- any mention of CI, builds, tests, review queues or validation machinery
+- implementation reassurance, and self-validation that asks the reader to trust the product because our own process says so
+
+**Never on a default surface.** Implementation vocabulary: workflow, job, branch, validator, normalized, build artifact, dataset identity, internal route or state names, quarantine or hold tokens. A reader who opened a technical-details view has asked for that information and may have it there; nobody else has.
+
+The reason an update is held is never public. Say only that the edition Control Atlas last added is what is shown.
+
+**Enforcement.** `PROHIBITED_PRIMARY_SURFACE_PATTERNS` in `src/shared/site-copy.mjs` holds the phrase set; `tests/copy-contract.test.mjs` checks product-authored source files against it, and `tests/e2e/public-copy.spec.mjs` checks the *rendered* text of the critical public routes, which catches copy assembled at runtime that a source scan cannot see. The rendered check exempts a subtree marked `data-technical-details`, which is the only escape hatch and belongs on genuine technical-details disclosures. This is a small, maintained phrase list and a rendered-text check, not a general English linter: it is meant to stop the class of copy we have already shipped once, not to grade prose.
+
 ## Responsive verification widths
 
 All page contracts are checked at 320, 375, 390, 768, 1024, and 1440 pixels. Required assertions cover visible primary content, document height, useful-space utilization, DOM size, overflow, focus order, keyboard operation, and preserved back/forward and deep-link state. Atlas mobile is list-first; it never presents a shrunken canvas as the only way to reach evidence.

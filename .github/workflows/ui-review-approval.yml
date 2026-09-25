@@ -1,0 +1,148 @@
+name: UI review approval
+
+# The human half of the UI gate.
+#
+# Control Atlas CI can tell you a page does not overflow, meets contrast, keeps
+# its heading order and stays inside its performance budget. It passed the Home
+# redesign that was withdrawn in #283. Green is necessary and it is not
+# permission to ship public UI, so a material public UI or copy change also
+# needs the owner to look at the renders the `UI review renders` job uploads
+# and say so.
+#
+# Saying so is the `visual-approved` label, and three things make it mean
+# something:
+#   1. It is removed automatically whenever the PR head changes, so approval
+#      always refers to the commit that was actually looked at.
+#   2. It only counts when the person who applied it can administer the
+#      repository. A bot or an agent with write access cannot approve its own
+#      work by adding a label.
+#   3. The check is required, and it fails closed: if the materiality of the
+#      change cannot be determined, approval is required.
+#
+# This runs on pull_request_target and never checks out the pull request's
+# code. The classifier, the route list and this workflow are always read from
+# the base branch, so a pull request cannot edit its own gate.
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, labeled, unlabeled, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: ui-approval-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  APPROVAL_LABEL: visual-approved
+
+jobs:
+  gate:
+    name: Owner visual and copy approval
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the base branch, never the pull request
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+
+      - name: A new commit withdraws any earlier approval
+        if: ${{ github.event.action == 'synchronize' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        shell: bash
+        run: |
+          # Removing a label that is not there is not an error worth failing on.
+          gh pr edit "$PR" --remove-label "$APPROVAL_LABEL" 2>/dev/null \
+            || echo "No $APPROVAL_LABEL label to withdraw."
+
+      - name: Decide whether this change needs a person to look
+        id: material
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The file list comes from the API, so no pull request code is run.
+          gh pr diff "$PR" --name-only > changed-paths.txt
+          echo "Changed paths:"
+          cat changed-paths.txt
+          node tools/ui-review-routes.mjs --paths-file changed-paths.txt >> "$GITHUB_OUTPUT"
+
+      - name: Data, docs, CI and backend changes need no visual approval
+        if: ${{ steps.material.outputs.ui_review_required != 'true' }}
+        shell: bash
+        run: |
+          echo "No public route is affected (${{ steps.material.outputs.ui_review_reason }})."
+          echo "### Visual approval not required" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "This change touches no public UI route, so there is nothing for a person to look at." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Require the owner's approval of this exact head
+        if: ${{ steps.material.outputs.ui_review_required == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          ROUTES: ${{ steps.material.outputs.ui_review_routes }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          has_label=$(gh pr view "$PR" --json labels \
+            --jq "[.labels[].name] | index(\"$APPROVAL_LABEL\") != null")
+
+          if [ "$has_label" != "true" ]; then
+            {
+              echo "### Waiting on visual and copy approval"
+              echo
+              echo "This pull request changes public UI or copy on: \`$ROUTES\`"
+              echo
+              echo "Open the **UI review renders** artifact from the CI run for \`$HEAD_SHA\`, look at the"
+              echo "desktop and phone renders, and add the \`$APPROVAL_LABEL\` label if the layout and the"
+              echo "visible words are right. The label is removed again on the next commit."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error::Public UI change is not approved for $HEAD_SHA. Add the $APPROVAL_LABEL label after reviewing the renders."
+            exit 1
+          fi
+
+          # A label anyone with write access can add is a checkbox an agent can
+          # tick. Only someone who can administer the repository can approve.
+          approver=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/timeline" --paginate \
+            --jq "[.[] | select(.event == \"labeled\" and .label.name == \"$APPROVAL_LABEL\")] | last | .actor.login")
+
+          if [ -z "$approver" ] || [ "$approver" = "null" ]; then
+            echo "::error::Could not determine who applied $APPROVAL_LABEL."
+            exit 1
+          fi
+
+          permission=$(gh api "repos/$GITHUB_REPOSITORY/collaborators/$approver/permission" --jq '.permission' 2>/dev/null || echo "none")
+          echo "$APPROVAL_LABEL was applied by $approver (permission: $permission)."
+
+          if [ "$permission" != "admin" ]; then
+            {
+              echo "### Visual approval rejected"
+              echo
+              echo "\`$APPROVAL_LABEL\` was applied by \`$approver\`, who has \`$permission\` access."
+              echo "Only a repository administrator can approve public UI and copy."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error::$approver has $permission access and cannot approve public UI."
+            exit 1
+          fi
+
+          {
+            echo "### Visual and copy approval recorded"
+            echo
+            echo "\`$approver\` approved the renders for \`$HEAD_SHA\`."
+            echo
+            echo "Routes: \`$ROUTES\`"
+          } >> "$GITHUB_STEP_SUMMARY"

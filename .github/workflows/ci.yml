@@ -66,6 +66,9 @@ jobs:
       data_required: ${{ steps.scope.outputs.data_required }}
       security_required: ${{ steps.scope.outputs.security_required }}
       workflow_lint_required: ${{ steps.scope.outputs.workflow_lint_required }}
+      ui_review_required: ${{ steps.review.outputs.ui_review_required }}
+      ui_review_routes: ${{ steps.review.outputs.ui_review_routes }}
+      ui_review_reason: ${{ steps.review.outputs.ui_review_reason }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
@@ -99,10 +102,24 @@ jobs:
             --json ci-change-map.json >> "$GITHUB_OUTPUT"
           cat ci-change-map.json
 
+      - name: Select the public routes a person has to look at
+        id: review
+        env:
+          BASE_SHA: ${{ steps.base.outputs.base }}
+        shell: bash
+        run: |
+          node tools/ui-review-routes.mjs \
+            --base "$BASE_SHA" \
+            --head "$GITHUB_SHA" \
+            --json ci-ui-review.json >> "$GITHUB_OUTPUT"
+          cat ci-ui-review.json
+
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: ci-change-map
-          path: ci-change-map.json
+          path: |
+            ci-change-map.json
+            ci-ui-review.json
           if-no-files-found: error
           retention-days: 2
 
@@ -466,6 +483,90 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+  ui-review:
+    name: UI review renders
+    needs: [changes, build]
+    if: ${{ needs.changes.outputs.ui_review_required == 'true' && needs.changes.outputs.build_required == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: site-build
+          path: dist/site
+
+      - name: Serve the candidate build
+        run: |
+          PORT=4317 CONTROL_ATLAS_PLAYWRIGHT_SERVER=1 node tools/serve-static-site.mjs &
+          for _ in $(seq 1 30); do
+            curl --silent --fail http://localhost:4317/release.json > /dev/null && break
+            sleep 1
+          done
+
+      - name: Capture candidate renders with the real design package
+        env:
+          ROUTES: ${{ needs.changes.outputs.ui_review_routes }}
+        run: |
+          node tools/capture-ui-review.mjs \
+            --base-url http://localhost:4317 \
+            --out artifacts/ui-review/candidate \
+            --label candidate \
+            --routes "$ROUTES"
+
+      # Base renders come from the deployed site, which is main built with the
+      # same design package. Building main again here would double the job for
+      # renders nobody would trust more.
+      - name: Capture base renders from the deployed site
+        continue-on-error: true
+        env:
+          ROUTES: ${{ needs.changes.outputs.ui_review_routes }}
+          BASE_URL: https://rambulls.github.io/control-atlas
+        run: |
+          node tools/capture-ui-review.mjs \
+            --base-url "$BASE_URL" \
+            --out artifacts/ui-review/base \
+            --label base \
+            --routes "$ROUTES"
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        id: upload
+        with:
+          name: ui-review-${{ github.event.pull_request.number || github.run_id }}-${{ github.sha }}
+          path: artifacts/ui-review
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Say where the renders are and what they do not prove
+        env:
+          ARTIFACT_URL: ${{ steps.upload.outputs.artifact-url }}
+          ROUTES: ${{ needs.changes.outputs.ui_review_routes }}
+          REASON: ${{ needs.changes.outputs.ui_review_reason }}
+        shell: bash
+        run: |
+          {
+            echo "## UI review renders"
+            echo
+            echo "**[Download the ui-review artifact]($ARTIFACT_URL)** — head \`$GITHUB_SHA\`"
+            echo
+            echo "Routes selected ($REASON): \`$ROUTES\`"
+            echo
+            echo "Each route is captured at 1440 desktop and 390 phone, first viewport and full page,"
+            echo "against the real design-token package. \`base/\` is the deployed main; \`candidate/\` is this head."
+            echo
+            echo "> These are renders for a person to look at. Layout, accessibility and performance"
+            echo "> contracts passing elsewhere in this run is not visual or copy approval, and nothing"
+            echo "> in this job approves anything. Approval is the \`visual-approved\` label, applied by"
+            echo "> the owner after looking, and it is removed automatically when the head changes."
+          } >> "$GITHUB_STEP_SUMMARY"
+
   workflow-lint:
     name: Workflow syntax and action pins
     needs: changes
@@ -492,7 +593,7 @@ jobs:
   required:
     name: Required CI
     if: ${{ always() && needs.changes.result != 'skipped' }}
-    needs: [changes, evidence, automation, content, fast, generated, windows-process, unit, build, contracts, browser, accessibility, visual, lighthouse, workflow-lint]
+    needs: [changes, evidence, automation, content, fast, generated, windows-process, unit, build, contracts, browser, accessibility, visual, lighthouse, workflow-lint, ui-review]
     runs-on: ubuntu-latest
     steps:
       - name: Require every selected gate

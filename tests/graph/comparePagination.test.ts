@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  COMPARE_COMPACT_INLINE_TARGET_LIMIT,
+  COMPARE_COMPACT_QUERY,
   COMPARE_INLINE_TARGET_LIMIT,
   COMPARE_PAGE_SIZE,
   paginateCompareRows,
@@ -22,6 +24,10 @@ test("Compare uses bounded fixed windows that replace rather than accumulate", (
     COMPARE_INLINE_TARGET_LIMIT >= 25 && COMPARE_INLINE_TARGET_LIMIT <= 100,
     "the inline limit is chosen from measured render cost, not a preview size",
   );
+  // Phones: 25 titled targets made ~3,400px rows; 8 keeps an inline row within
+  // ~1.5 viewports (1,266px at 844px tall). Larger rows use the window.
+  assert.equal(COMPARE_COMPACT_INLINE_TARGET_LIMIT, 8);
+  assert.equal(COMPARE_COMPACT_QUERY, "(max-width: 599px)");
   assert.deepEqual(first.rows, rows.slice(0, 25));
   assert.deepEqual(second.rows, rows.slice(25, 50));
   assert.deepEqual(last.rows, rows.slice(50, 60));

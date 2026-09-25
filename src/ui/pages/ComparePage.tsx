@@ -25,7 +25,12 @@ import {
   resolveMappingSource,
   type CompareModeId,
 } from "../lib/compareModeState";
-import { COMPARE_INLINE_TARGET_LIMIT, paginateCompareRows } from "../lib/comparePagination";
+import {
+  COMPARE_COMPACT_INLINE_TARGET_LIMIT,
+  COMPARE_COMPACT_QUERY,
+  COMPARE_INLINE_TARGET_LIMIT,
+  paginateCompareRows,
+} from "../lib/comparePagination";
 import { compareTaxonomyTags } from "../lib/compareTaxonomy.mjs";
 import {
   Field,
@@ -312,8 +317,27 @@ function TargetItem({
 }
 
 /**
- * Every target of a source record, shown with no reveal click. Up to
- * COMPARE_INLINE_TARGET_LIMIT they render in the row. Past it (one CCI maps to
+ * The inline target limit for the current viewport. It follows resizes and
+ * rotation through the media query's change event, not just the width at load.
+ */
+function useInlineTargetLimit() {
+  const [compact, setCompact] = useState(() =>
+    typeof window === "undefined" ? false : window.matchMedia(COMPARE_COMPACT_QUERY).matches,
+  );
+  useEffect(() => {
+    const media = window.matchMedia(COMPARE_COMPACT_QUERY);
+    setCompact(media.matches);
+    const onChange = (event: MediaQueryListEvent) => setCompact(event.matches);
+    media.addEventListener("change", onChange);
+    return () => media.removeEventListener("change", onChange);
+  }, []);
+  return compact ? COMPARE_COMPACT_INLINE_TARGET_LIMIT : COMPARE_INLINE_TARGET_LIMIT;
+}
+
+/**
+ * Every target of a source record, shown with no reveal click. Up to the
+ * inline limit (COMPARE_INLINE_TARGET_LIMIT, or
+ * COMPARE_COMPACT_INLINE_TARGET_LIMIT on phones) they render in the row. Past it (one CCI maps to
  * 5,313 STIG rules) they render in a bounded, scrollable window that mounts
  * only the visible entries, states the true total, and exposes each entry's
  * position to assistive technology.
@@ -326,7 +350,8 @@ function RowTargets({
   row: any;
 }) {
   const targets: any[] = row.targets;
-  if (targets.length <= COMPARE_INLINE_TARGET_LIMIT) {
+  const inlineLimit = useInlineTargetLimit();
+  if (targets.length <= inlineLimit) {
     return (
       <ul className="target-mapping-list">
         {targets.map((target) => (

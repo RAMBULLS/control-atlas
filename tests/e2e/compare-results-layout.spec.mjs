@@ -17,6 +17,10 @@ import {
 const CONFIGURED = "/#/compare/relationships?intent=frameworks&source=nist-800-53&target=csf-2";
 const PAIR = `${CONFIGURED}&compareRun=true`;
 const ROWS = ".compare-results-table tbody tr";
+const DENSE = "/#/compare/relationships?intent=frameworks&source=disa-cci&target=disa-stig&compareRun=true";
+// ~1.5 phone viewports at 844px tall.
+const PHONE_ROW_MAX = 1266;
+const COMPACT_INLINE_LIMIT = 8;
 
 test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
@@ -112,11 +116,10 @@ for (const width of [320, 375, 390]) {
     expect(m.overflow).toBeLessThanOrEqual(1);
     expect(m.headingToFirstRow, "first mapping close to the heading (baseline 2,180)").toBeLessThan(900);
     expect(m.pageHeight, "page height (baseline 77,433)").toBeLessThan(20_000);
-    // #281: every target now shows with no reveal click, so the busiest record
-    // (25 titled CSF targets) is ~1,270-1,470px on a phone. The old 1,100px bound
-    // held only because 20 of them hid behind "Show N more". Records past the
-    // inline limit use a bounded window, so rows still cannot run away.
-    expect(m.maxRowHeight, "no giant row (baseline 3,856)").toBeLessThan(1700);
+    // #281: every target shows with no reveal click. On phones only rows of up
+    // to 8 targets render inline; larger ones use the bounded window, so no row
+    // passes ~1.5 viewports (1,266px at 844px tall).
+    expect(m.maxRowHeight, "no giant row (baseline 3,856)").toBeLessThanOrEqual(PHONE_ROW_MAX);
     const labels = await page.evaluate(() => getComputedStyle(document.querySelector(".compare-results-table td"), "::before").display);
     expect(labels, "no repeated From / Maps to label in every row").toBe("none");
     const spill = await page.evaluate(() => {
@@ -149,7 +152,7 @@ test("every record shows all of its targets with no reveal click", async ({ page
 // only what is in view, so the page never renders thousands of entries.
 test("an extreme one-to-many record shows its true total in a bounded window, no click", async ({ page }) => {
   test.setTimeout(180_000);
-  await open(page, "/#/compare/relationships?intent=frameworks&source=disa-cci&target=disa-stig&compareRun=true");
+  await open(page, DENSE);
   await expect(page.getByText(/^Show \d[\d,]* more/)).toHaveCount(0);
   const windowed = page.locator(".target-window").first();
   await expect(windowed).toBeVisible();
@@ -168,6 +171,35 @@ test("an extreme one-to-many record shows its true total in a bounded window, no
   const pageNodes = await page.locator(".compare-results-table").evaluate((table) => table.getElementsByTagName("*").length);
   expect(pageNodes, "a page stays in the low thousands of nodes").toBeLessThan(8000);
 });
+
+// Phones: 25 inline titled targets made rows ~3,400px tall. Past 8 targets a
+// record uses the window straight away, with no reveal click and its true total.
+for (const width of [320, 375, 390]) {
+  test(`dense one-to-many rows stay bounded on a ${width}px phone`, async ({ page }) => {
+    test.setTimeout(180_000);
+    await open(page, DENSE, { width, height: 844 });
+    await expect(page.getByText(/^Show \d[\d,]* more/)).toHaveCount(0);
+    const rows = await page.locator(ROWS).evaluateAll((trs) => trs.map((tr) => ({
+      height: tr.getBoundingClientRect().height,
+      inline: tr.querySelectorAll(".target-mapping-list:not(.target-window-list) > .target-mapping-item").length,
+      windowed: tr.querySelector(".target-window") !== null,
+      total: Number((tr.querySelector(".mapping-row-details > summary")?.textContent.match(/for ([\d,]+) mapping/) || [0, "0"])[1].replace(/,/g, "")),
+    })));
+    for (const row of rows) {
+      expect(row.height, "no Compare row passes ~1.5 viewports").toBeLessThanOrEqual(PHONE_ROW_MAX);
+      expect(row.inline, "at most 8 targets render inline on a phone").toBeLessThanOrEqual(COMPACT_INLINE_LIMIT);
+      if (row.total > COMPACT_INLINE_LIMIT) expect(row.windowed, "a row above 8 targets uses the window").toBe(true);
+    }
+    expect(rows.some((row) => row.windowed), "the dense page includes a windowed row").toBe(true);
+    const windowed = page.locator(".target-window").first();
+    const caption = await windowed.locator(".target-window-caption").innerText();
+    const total = Number(caption.match(/All ([\d,]+) targets/)[1].replace(/,/g, ""));
+    expect(total).toBeGreaterThan(COMPACT_INLINE_LIMIT);
+    await windowed.getByRole("region").focus();
+    await page.keyboard.press("End");
+    await expect(windowed.locator(`.target-mapping-item[aria-posinset="${total}"]`)).toBeVisible();
+  });
+}
 
 test("export says what it covers and delivers every matching mapping, not the page", async ({ page }) => {
   test.setTimeout(120_000);

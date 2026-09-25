@@ -54,3 +54,11 @@ export function paginateCompareRows<T>(
 // At 25 the heaviest page mounts 346 entries / 2,700 table nodes and next-page-to-paint is
 // 281ms worst case across the seven measured crosswalks.
 export const COMPARE_INLINE_TARGET_LIMIT = 25;
+
+// Phones get a lower inline limit. At compact widths titled targets stack one per
+// line, and 25 of them made single rows up to ~3,400px tall on a 320-390 x 844 phone.
+// The goal is that an inline row stays within ~1.5 viewports (1,266px at 844px tall):
+// 25 x 1,266 / 3,400 is ~9.3 targets, rounded down to a conservative 8. Rows with more
+// targets go straight to the virtualized window, still with no reveal click.
+export const COMPARE_COMPACT_INLINE_TARGET_LIMIT = 8;
+export const COMPARE_COMPACT_QUERY = "(max-width: 599px)";

@@ -167,7 +167,7 @@ export function JourneyCard(props: {
       ) : null}
       {policies.length ? (
         <details className="atl-inline atl-journey__policy">
-          <summary>Governing policy · {policies.length}</summary>
+          <summary>Policy &amp; directives · {policies.length}</summary>
           <ul className="atl-policy">
             {policies.map(({ item, entry }) => <PolicyItem basis={entry.basis} cites={entry.cites} item={item} key={item.id} model={model} onNavigate={onNavigate} onPublication={props.onPublication} />)}
           </ul>

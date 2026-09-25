@@ -107,7 +107,6 @@ export const JOURNEYS: readonly Journey[] = Object.freeze([
     collections: [{ id: "stig-configuration-automation", label: "STIG and configuration automation" }],
     resources: [
       { id: "portal-dod-stig-srg", label: "DISA STIG and SRG portal" },
-      { id: "tool-disa-stig-viewer", label: "DISA STIG Viewer" },
       { id: "tool-disa-scap-compliance-checker", label: "DISA SCAP Compliance Checker" },
       { id: "tool-stig-manager", label: "STIG Manager" },
     ],

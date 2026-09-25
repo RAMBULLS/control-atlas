@@ -3,6 +3,9 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import geometry from "../../data/curated/atlas-territory-geography.json";
 import authoritySpine from "../../data/curated/authority-spine.json";
+import treeSpine from "../../data/curated/tree-spine.json";
+import { readGeneratedCollection } from "../../scripts/lib/generated-graph-artifacts.mjs";
+import { buildTerritoryIndex } from "../../src/ui/lib/atlasTerritoryIndex";
 import { JOURNEY_IDS, normalizeJourneyId } from "../../src/ui/lib/atlasJourneyIds";
 import { JOURNEYS, policyForJourney, policyForPublication, publicationsCitingPolicy, searchJourneys } from "../../src/ui/lib/atlasJourneys";
 
@@ -17,6 +20,15 @@ const registry = read("data/source-registry.json");
 const registered = new Set([...registry.publications, ...registry.sources].map((s: any) => s.id));
 const rmfSteps = new Set(read("data/tasks-800-37.json").records.map((r: any) => `nist-800-37:${r.id}`));
 const instruments = new Set((authoritySpine.instruments as any[]).map((i) => i.source_id));
+// The actual published territory routes, built the same way the release artifact is.
+const { index: territory } = buildTerritoryIndex({
+  generatedAt: "t", datasetId: "0123456789ab", geometryVersion: geometry.version,
+  catalogIds: [...Object.keys(treeSpine.catalogLimbs), ...treeSpine.syntheticCatalogs.map((c) => c.catalog_id)],
+  identities: read("data/generated/publication-identity-index.json").identities, taxonomy: read("data/generated/taxonomy-registry.json"),
+  sources: registry.sources, registryPublications: registry.publications,
+  nodes: readGeneratedCollection(process.cwd(), "nodes").nodes, edges: readGeneratedCollection(process.cwd(), "edges").edges,
+});
+const publishedRoutes = new Set(territory.routes.map((r) => r.key));
 
 test("journey ids used for URL parsing match the journey data exactly", () => {
   assert.deepEqual([...JOURNEY_IDS], JOURNEYS.map((j) => j.id));
@@ -41,13 +53,35 @@ test("every journey destination exists in the corpus; nothing is invented", () =
       assert.ok(registered.has(e.id), `${j.id}: policy ${e.id} is not in the source register`);
       assert.ok(e.basis.length > 10, `${j.id}: ${e.id} must state its basis`);
     }
-    for (const [a, b] of j.compare) assert.ok(onMap.has(a) && onMap.has(b) && a !== b, `${j.id}: compare ${a}/${b}`);
     const destinations = j.publications.length + j.tasks.length + j.templates.length + j.resources.length + j.sources.length;
     assert.ok(destinations >= 3, `${j.id} needs real destinations`);
   }
 });
 
-test("governing policy comes only from the cited authority spine or a stated basis", () => {
+test("every declared Compare pair has a published territory route; none is invented or stale", () => {
+  const publications = new Set(territory.publications.map((p) => p.id));
+  for (const j of JOURNEYS) {
+    for (const [a, b] of j.compare) {
+      assert.ok(publications.has(a), `${j.id}: ${a} is not a publication`);
+      assert.ok(publications.has(b), `${j.id}: ${b} is not a publication`);
+      assert.notEqual(a, b, `${j.id}: a pair needs two publications`);
+      assert.ok(publishedRoutes.has(a < b ? `${a}|${b}` : `${b}|${a}`), `${j.id}: no published route joins ${a} and ${b}`);
+    }
+  }
+});
+
+test("journey policy additions state a basis and never borrow an authority-spine citation", () => {
+  for (const j of JOURNEYS) {
+    for (const entry of policyForJourney(j)) {
+      if (j.extraPolicy.some((e) => e.id === entry.id) && !instruments.has(entry.id)) {
+        assert.deepEqual(entry.cites, [], `${j.id}: ${entry.id} has no recorded citation`);
+        assert.ok(entry.basis, `${j.id}: ${entry.id} must show its stated basis`);
+      }
+    }
+  }
+});
+
+test("policy & directives come only from the cited authority spine or a stated basis", () => {
   for (const j of JOURNEYS) {
     const stated = new Set(j.extraPolicy.map((e) => e.id));
     for (const entry of policyForJourney(j)) {

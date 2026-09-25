@@ -44,7 +44,11 @@ test("RMF leads with the practitioner name and keeps the exact publication ident
   await expect(rmf.getByRole("link", { name: "Build an authorization package" })).toHaveAttribute("href", /#\/build\/tasks\/build-authorization-package/);
   await expect(rmf.getByRole("link", { name: "Security Plan Starter" })).toHaveAttribute("href", /#\/build\/documents\/security_plan_starter/);
   await expect(rmf.getByRole("link", { name: "DoD RMF Knowledge Service" })).toHaveAttribute("href", /#\/resources\/service-dod-rmf-knowledge-service/);
-  await rmf.getByText(/Governing policy · \d+/).click();
+  await rmf.getByText(/^Policy & directives · \d+$/).click();
+  // A journey addition shows its stated basis, never a citation the authority data does not record.
+  const dodi = rmf.locator(".atl-policy__item", { hasText: "DoDI 8510.01" });
+  await expect(dodi).toContainText("Its official title is Risk Management Framework for DoD Systems.");
+  await expect(dodi).not.toContainText("Cited as the basis for");
   await expect(rmf).toContainText("OMB Circular A-130");
   // A step opens the published step record on the map; back returns to the journey.
   await rmf.getByRole("button", { name: "Categorize" }).click();

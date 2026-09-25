@@ -1,0 +1,308 @@
+/* Publication pages and the Sources trust register (issue 284).
+   Loaded with those routes only, so Home and other entry routes carry none of it. */
+
+/* Publication identity (issue 284): the practitioner name leads, the exact official
+   title sits directly under it, then the publisher. None of it waits behind a
+   disclosure. */
+.catalog-official-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--ca-space-1) var(--ca-space-2);
+  max-width: 70ch;
+  margin: calc(var(--ca-space-2) * -1) 0 0;
+  color: var(--ca-text);
+  font-size: var(--ca-text-lg);
+  line-height: 1.35;
+}
+
+.catalog-official-title__label,
+.catalog-publisher__label,
+.catalog-trust-facts dt,
+.publication-dates dt {
+  color: var(--ca-text-muted);
+  font: 600 var(--ca-text-xs) / 1.4 var(--ca-font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.catalog-role {
+  letter-spacing: inherit;
+}
+
+.catalog-index-row-official {
+  color: var(--ca-text);
+}
+
+.catalog-trust-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
+  gap: var(--ca-space-3) var(--ca-space-5);
+  max-width: 64rem;
+  margin: 0;
+  padding: var(--ca-space-3) 0;
+  border-block: 1px solid var(--ca-border-subtle);
+}
+
+.catalog-trust-facts > div,
+.publication-dates > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.catalog-trust-facts dd,
+.publication-dates dd {
+  margin: 0;
+  color: var(--ca-text);
+  overflow-wrap: anywhere;
+}
+
+.publication-fact-detail {
+  display: block;
+  margin-top: 2px;
+  color: var(--ca-text-muted);
+  font-size: var(--ca-text-sm);
+  line-height: 1.4;
+}
+
+/* Status is written out; the icon repeats it and colour only reinforces it. */
+.publication-lifecycle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.publication-lifecycle--active svg {
+  color: var(--ca-success, var(--ca-primary));
+}
+
+.publication-lifecycle--historical svg,
+.publication-lifecycle--superseded svg,
+.publication-lifecycle--draft svg,
+.publication-lifecycle--deprecated svg {
+  color: var(--ca-warning, var(--ca-text-muted));
+}
+
+.catalog-about {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+  gap: var(--ca-space-4);
+  padding-top: var(--ca-space-6);
+}
+
+.catalog-about__panel {
+  display: grid;
+  align-content: start;
+  gap: var(--ca-space-3);
+  min-width: 0;
+  padding: var(--ca-space-4);
+  border: 1px solid var(--ca-border-subtle);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--ca-surface-deep) 36%, transparent);
+}
+
+.catalog-about__panel h3,
+.catalog-about__panel h4,
+.catalog-about__panel p {
+  margin: 0;
+}
+
+.catalog-about__panel h3 {
+  font-size: var(--ca-text-lg);
+}
+
+.catalog-about__panel h4 {
+  color: var(--ca-text-muted);
+  font: 600 var(--ca-text-xs) / 1.4 var(--ca-font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.catalog-kind-list,
+.catalog-next-list,
+.catalog-basis-list,
+.publication-limitations {
+  display: grid;
+  gap: var(--ca-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.catalog-next-list li,
+.catalog-basis-list li {
+  display: grid;
+}
+
+.catalog-next-list a,
+.catalog-basis-list a,
+.catalog-about__panel p > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.catalog-next-list small,
+.catalog-basis-list small,
+.catalog-coverage-note,
+.catalog-basis-intro {
+  color: var(--ca-text-muted);
+  font-size: var(--ca-text-sm);
+}
+
+.publication-dates {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
+  gap: var(--ca-space-3);
+  margin: 0;
+}
+
+.publication-limitations li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--ca-space-2);
+  align-items: start;
+  color: var(--ca-text);
+  font-size: var(--ca-text-sm);
+  line-height: 1.45;
+}
+
+.publication-limitations svg {
+  margin-top: 2px;
+  color: var(--ca-warning, var(--ca-text-muted));
+}
+
+/* Sources as the public trust register (issue 284). */
+.sources-page .source-register-views {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ca-space-2);
+  margin-block: var(--ca-space-3) var(--ca-space-4);
+}
+
+.sources-page .source-register-views button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ca-space-2);
+  min-height: 44px;
+  padding-inline: var(--ca-space-4);
+  border: 1px solid var(--ca-border);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--ca-text);
+  font: 600 var(--ca-text-sm) / 1.2 var(--ca-font-sans, inherit);
+  cursor: pointer;
+}
+
+.sources-page .source-register-views button small {
+  color: var(--ca-text-muted);
+  font-family: var(--ca-font-mono);
+}
+
+.sources-page .source-register-views button[aria-pressed="true"] {
+  border-color: var(--ca-primary);
+  background: color-mix(in srgb, var(--ca-primary) 14%, transparent);
+  box-shadow: inset 0 -2px var(--ca-primary);
+}
+
+.sources-page .source-register-views button:focus-visible {
+  outline: 2px solid var(--ca-primary);
+  outline-offset: 2px;
+}
+
+.sources-page .source-official-title,
+.sources-page .source-policy-group {
+  display: block;
+  flex-basis: 100%;
+  color: var(--ca-text-muted);
+  font-size: var(--ca-text-xs);
+  line-height: 1.4;
+}
+
+.sources-page .source-policy-group {
+  font-family: var(--ca-font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.source-other-view-hint {
+  margin: 0 0 var(--ca-space-2);
+}
+
+.source-other-view-hint .link-button {
+  min-height: 44px;
+}
+
+.sources-page .source-inspector-official,
+.source-inspector--modal .source-inspector-official {
+  margin: var(--ca-space-2) 0 0;
+  color: var(--ca-text);
+  font-size: var(--ca-text-sm);
+  line-height: 1.4;
+}
+
+.source-inspector-label {
+  display: block;
+  color: var(--ca-text-muted);
+  font: 600 var(--ca-text-micro, var(--ca-text-xs)) / 1.5 var(--ca-font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.source-inspector-summary {
+  margin: var(--ca-space-3) 0 0;
+  color: var(--ca-text);
+  font-size: var(--ca-text-sm);
+  line-height: 1.5;
+}
+
+.source-inspector-actions {
+  display: grid;
+  gap: var(--ca-space-2);
+  margin-top: var(--ca-space-3);
+}
+
+.source-inspector-block {
+  display: grid;
+  gap: var(--ca-space-2);
+  margin-top: var(--ca-space-4);
+}
+
+.source-inspector-block h3 {
+  margin: 0;
+  color: var(--ca-text-muted);
+  font: 600 var(--ca-text-xs) / 1.4 var(--ca-font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.source-basis-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--ca-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.source-basis-list a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.source-basis-note {
+  margin: 0;
+  color: var(--ca-text-muted);
+  font-size: var(--ca-text-xs);
+  line-height: 1.45;
+}
+
+.source-material-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+}

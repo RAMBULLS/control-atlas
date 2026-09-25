@@ -1,6 +1,7 @@
 import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
 import { useLayoutEffect, useMemo, useState } from "react";
 import { RETIRED_RECORD_TYPES } from "../../shared/record-acceptance.mjs";
+import "../../../styles/publication-trust.css";
 
 import { Button } from "../components/lsm/Button";
 import { AppLink } from "../components/AppLink";

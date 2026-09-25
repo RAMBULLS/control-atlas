@@ -7,6 +7,7 @@ import type { MouseEvent, ReactNode } from "react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { displayNameFor } from "../../app/display-names.mjs";
+import "../../../styles/publication-trust.css";
 import { SITE_COPY } from "../../shared/site-copy.mjs";
 import { Button, ButtonLink } from "../components/lsm";
 import {

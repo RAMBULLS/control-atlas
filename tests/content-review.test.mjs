@@ -240,8 +240,7 @@ test('Home is an entry surface, not a lesson about the data model', () => {
   const homeContent = readFileSync('src/shared/home-content.mjs', 'utf8');
   const viteConfig = readFileSync('vite.config.ts', 'utf8');
   assert.match(homeContent, /SITE_COPY\.home/);
-  // Atlas is the flagship: the h1 is Atlas's headline, not the product slogan.
-  assert.match(homePage, /<h1 id="home-title">\{ATLAS\.headline\}<\/h1>/);
+  assert.match(homePage, /HOME_CONTENT\.headline/);
   assert.match(homePage, /home-library-discovery/);
   assert.match(homePage, /BROWSE THE LIBRARY/);
   // Cards lead with the practitioner question and the collection name; the

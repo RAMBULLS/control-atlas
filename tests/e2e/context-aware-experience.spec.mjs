@@ -12,12 +12,12 @@ async function open(page, path) {
 test("Home is a calm, task-focused front door", async ({ page }) => {
   await open(page, "/#/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "Explore federal cybersecurity",
+    "Make federal cybersecurity make sense.",
   );
   await expect(page.getByText("Understand what applies, what it means, and what to do next.", { exact: true })).toBeVisible();
   await expect(page.getByRole("searchbox", { name: "Search Control Atlas" })).toBeVisible();
   await expect(page.locator(".home-search").getByRole("button", { name: "Search" })).toBeVisible();
-  for (const entrance of ["Open Atlas", "Search the Library", "Browse Resources"]) {
+  for (const entrance of ["Browse the Atlas", "Search the Library", "Browse Resources"]) {
     await expect(page.getByRole("link", { name: new RegExp(entrance) })).toBeVisible();
   }
   // Five practitioner questions, ordered the way the work runs. The sixth

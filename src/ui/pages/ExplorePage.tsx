@@ -322,7 +322,7 @@ export function ExplorePage(props: {
   const publishers = libraryFacets.publishers || [];
   const topCatalogs = useMemo(() => runtimeCatalogs
     .map((catalog: any) => {
-      // The governed identity every surface shares (#284): practitioner name,
+      // The governed identity every surface shares (issue 284): practitioner name,
       // exact official title, and the register's publisher.
       const source = catalog.source_id ? bundle.runtime.getSource(catalog.source_id) : null;
       const trust = source ? publicationTrustFor({ source, catalogId: catalog.id }) : null;

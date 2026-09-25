@@ -6,7 +6,7 @@ import { datasetCheckedThroughFor, publicationTrustFor, type PublicationTrust } 
 import { buildPublicationRegister, type CatalogSummary } from "./sourceRegister";
 
 /**
- * Publication Acceptance Matrix (issue #284), generated from the accepted
+ * Publication Acceptance Matrix (issue 284), generated from the accepted
  * corpus. One row per public publication: every canonical identity in the
  * publication-identity index, which covers every Library catalog and every
  * policy document in the source register. Nothing here is a hand-kept list.

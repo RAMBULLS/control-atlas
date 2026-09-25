@@ -3037,7 +3037,7 @@
   color: var(--ca-link-hover);
 }
 
-/* Sources as the public trust register (#284). */
+/* Sources as the public trust register (issue 284). */
 .sources-page .source-register-views {
   display: flex;
   flex-wrap: wrap;

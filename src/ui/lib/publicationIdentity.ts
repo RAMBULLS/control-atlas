@@ -9,7 +9,7 @@ import { publisherDisplayName } from "./publisherName";
 export { publisherDisplayName };
 
 /**
- * One governed identity and trust story per publication (issue #284).
+ * One governed identity and trust story per publication (issue 284).
  *
  * Atlas, the Library, a publication page and the Sources register all answer
  * "what is this, who published it, which edition does Control Atlas use, and

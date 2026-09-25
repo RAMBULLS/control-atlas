@@ -2741,7 +2741,7 @@ li {
   color: var(--ca-text);
 }
 
-/* Publication identity (#284): the practitioner name leads, the exact official
+/* Publication identity (issue 284): the practitioner name leads, the exact official
    title sits directly under it, then the publisher. None of it waits behind a
    disclosure. */
 .catalog-official-title {

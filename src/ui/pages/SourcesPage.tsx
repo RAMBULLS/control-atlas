@@ -147,13 +147,20 @@ function PublicationInspectorContent(props: {
     .map(([role]) => String(role))
     .join(", ");
 
+  // This is a value in a label/value row, so it stays a phrase. "Held as a
+  // source record" described our storage rather than what the reader gets; a
+  // whole sentence here wrapped across four right-aligned lines. The detail
+  // belongs in the coverage note below, which is ordinary body text.
   const coverageText = publication.catalogCounts
     ? `${publication.catalogCounts.normalized_records.toLocaleString()} records indexed`
+    : isPolicy && publication.citedBy.length
+      ? `Cited by ${publication.citedBy.length} publication${publication.citedBy.length === 1 ? "" : "s"}`
+      : "Not indexed";
+  const coverageNote = publication.catalogCounts
+    ? ""
     : isPolicy
-      ? publication.citedBy.length
-        ? `Recorded as the basis for ${publication.citedBy.length} publication${publication.citedBy.length === 1 ? "" : "s"}`
-        : "Held as a source record"
-      : "Held as a source record; no records indexed";
+      ? "Control Atlas records this document's identity and what cites it. Its text is not indexed here; read the official document for the wording."
+      : "Control Atlas records this publication's identity. Its contents are not indexed here; read the official publication for the wording.";
 
   return (
     <>
@@ -198,6 +205,7 @@ function PublicationInspectorContent(props: {
           </div>
         </section>
 
+        {coverageNote ? <p className="source-coverage-basis">{coverageNote}</p> : null}
         {trust.lifecycle.note ? <p className="source-coverage-basis">{trust.lifecycle.note}</p> : null}
 
         <div className="source-inspector-actions">
@@ -408,7 +416,10 @@ function PublicationInspectorContent(props: {
 
         <details className="source-inspector-provenance">
           <summary>Technical details</summary>
-          <div className="source-inspector-provenance-body">
+          {/* The only place implementation vocabulary is allowed on a public
+              surface: the reader opened this on purpose. tests/e2e/public-copy
+              .spec.mjs exempts this subtree and nothing else. */}
+          <div className="source-inspector-provenance-body" data-technical-details="">
             <div className="source-inspector-id-block">
               <span className="source-inspector-label">Stable Source ID</span>
               <CopyStableSourceId id={publication.id} />
@@ -812,8 +823,11 @@ export function SourcesPage(props: {
 
       <p className="source-register-boundary">
         {registerView === "policy"
-          ? `${policyCount.toLocaleString()} statutes, regulations, orders and directives that Control Atlas's authority record cites as the basis for publications. Each keeps its official title, issuer and official text. Listing here does not state legal precedence or whether one applies to you.`
-          : `${publicationCount.toLocaleString()} publisher publications that anchor searchable records or published connections. Supporting files and crosswalks appear inside each publication.`}
+          ? `${policyCount.toLocaleString()} statutes, regulations, orders and directives that Control Atlas records as the basis for the publications it holds. Each keeps its official title, issuer and a link to the official text. Listing one here does not state legal precedence or whether it applies to you.`
+          // "anchor searchable records or published connections" was our
+          // vocabulary for what a publication does in the graph. Say what the
+          // reader gets from it.
+          : `${publicationCount.toLocaleString()} publications Control Atlas has read in full, so you can search their contents or follow their published links to other publications. Supporting files and crosswalks appear inside each one.`}
       </p>
 
       <nav aria-label="Source register views" className="source-register-views">
@@ -860,6 +874,12 @@ export function SourcesPage(props: {
               value={queryDraft}
             />
 
+            {/* The publisher bands below are the same filter, so this register
+                carries two controls for one choice. Removing the select broke
+                deep-link state restoration and the keyboard path that the
+                workspace specs depend on, so it stays until the duplication is
+                resolved deliberately across Library, Resources and Sources —
+                they share this pattern. */}
             {publisherOptions.length >= 2 ? (
               <select
                 aria-label="Publisher"

@@ -77,9 +77,19 @@ export function CatalogDetailPage(props: {
   });
   const publicationTitle = trust.practitionerName;
   const publisherName = trust.publisher;
-  const catalogAtlasTagIds = taxonomyTagsForRecord({ catalog_id: catalog.id })
-    .filter((t: { kind?: string }) => ["organization", "framework", "program"].includes(t.kind ?? ""))
-    .map((t: { id: string }) => t.id);
+  // CMMC is tagged as both a framework and a program, so the hero showed two
+  // chips both reading "CMMC". The dimension glyph does not rescue a duplicate
+  // label; keep the first of each visible label.
+  const catalogAtlasTagIds: string[] = Array.from(
+    taxonomyTagsForRecord({ catalog_id: catalog.id })
+      .filter((t: { kind?: string }) => ["organization", "framework", "program"].includes(t.kind ?? ""))
+      .reduce((byLabel: Map<string, string>, tag: { id: string; label?: string }) => {
+        const key = String(tag.label || tag.id).trim().toLowerCase();
+        if (!byLabel.has(key)) byLabel.set(key, tag.id);
+        return byLabel;
+      }, new Map<string, string>())
+      .values(),
+  );
   const tierLabel = String(catalog.tier_label || "section").trim();
   const tierLabelPlural = String(
     catalog.tier_label_plural || `${tierLabel}s`,

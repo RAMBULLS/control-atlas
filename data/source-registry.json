@@ -1511,7 +1511,7 @@
         ],
         "parser": "dod-rai-toolkit-html",
         "version_unknown_reason": "The current publisher landing page and operational toolkit do not expose a release version.",
-        "provenance_note": "The official CDAO Responsible AI Toolkit article is canonical. Operational or secondary toolkit destinations are supporting links only.",
+        "provenance_note": "The CDAO Responsible AI Toolkit article is the official source. Other toolkit links are supporting material.",
         "identity_kind": "publication"
       },
       "entity_kind": "publication",
@@ -2075,7 +2075,7 @@
         ],
         "parser": "json-ld",
         "identity_kind": "publication",
-        "provenance_note": "The official destination is mutable. Control Atlas binds the recorded version to the committed ontology capture and its SHA-256 checksum."
+        "provenance_note": "MITRE updates the published ontology in place. Control Atlas indexes a dated copy of the recorded version, so it can fall behind the live site."
       },
       "entity_kind": "publication",
       "profile_id": "publication.publication",
@@ -2653,7 +2653,7 @@
         ],
         "parser": "nist-iot-requirement-xlsx",
         "identity_kind": "publication",
-        "provenance_note": "The official catalog page establishes publication identity. Indexed records were normalized from NIST's two draft mapping workbooks; Control Atlas does not claim an independent catalog extraction."
+        "provenance_note": "These records come from NIST's two draft mapping workbooks, not from the catalog page itself. Read the official catalog page for the authoritative list."
       },
       "entity_kind": "publication",
       "profile_id": "publication.publication",
@@ -3560,7 +3560,7 @@
       "license_or_use": "CDAO public resource; no separate license stated",
       "metadata": {
         "version_unknown_reason": "The current operational toolkit does not expose a release version.",
-        "provenance_note": "Supporting operational toolkit capture. The official ai.mil CDAO article is canonical for publication identity."
+        "provenance_note": "Supporting toolkit material. The official ai.mil CDAO article is the source of record."
       },
       "entity_kind": "artifact",
       "profile_id": "artifact.html",
@@ -7372,7 +7372,7 @@
         ],
         "parser": "dod-rai-toolkit-html",
         "version_unknown_reason": "The current publisher landing page and operational toolkit do not expose a release version.",
-        "provenance_note": "Catalog records are deterministic Atlas projections reconciled to the official CDAO Responsible AI Toolkit article; they are not verbatim publisher records."
+        "provenance_note": "These records restate the official CDAO Responsible AI Toolkit article in a comparable form. They are not the publisher's own wording."
       },
       "entity_kind": "artifact",
       "profile_id": "artifact.publication",

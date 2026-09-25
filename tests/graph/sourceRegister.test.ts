@@ -157,7 +157,7 @@ test("artifact publishers resolve from their parent publications without fabrica
   assert.equal(cci?.publisher.state, "derived");
   assert.equal(
     cci?.publisher.reason,
-    "Inherited from parent publication DISA CCI.",
+    "Taken from DISA CCI, the publication this belongs to.",
   );
 
   const sourcesById = new Map(sources.sources.map((source) => [source.id, source]));
@@ -199,12 +199,12 @@ test("artifact publishers resolve from their parent publications without fabrica
   assert.equal(fallback.publisher.state, "derived");
   assert.equal(
     fallback.publisher.reason,
-    "Inherited from the linked parent publication.",
+    "Taken from the publication this belongs to.",
   );
   assert.ok(!fallback.publisher.reason.includes("parent-publication-id"));
 });
 
-test("quarantined sources surface an explicit blocked field state with the registry's reason", () => {
+test("a source held for review shows a blocked state and never the operational reason", () => {
   const layers = buildSourceLayers(
     [
       {
@@ -221,10 +221,12 @@ test("quarantined sources surface an explicit blocked field state with the regis
     [{ id: "quarantined-source-id", reason: "Checksum could not be verified against the publisher release." }],
   ).ingestion[0];
   assert.equal(layers.lifecycle.state, "blocked");
-  assert.equal(
-    layers.lifecycle.reason,
-    "Checksum could not be verified against the publisher release.",
-  );
+  // This used to assert the registry's own reason reached the public field,
+  // which is the leak docs/PAGE_CONTRACTS.md forbids: a reader learns nothing
+  // useful from a checksum failure and it names our machinery. The public
+  // sentence says only that the edition already added is what is shown.
+  assert.doesNotMatch(layers.lifecycle.reason, /checksum|publisher release/i);
+  assert.match(layers.lifecycle.reason, /edition Control Atlas last added/i);
   assert.equal(layers.lifecycle.value, null);
 });
 

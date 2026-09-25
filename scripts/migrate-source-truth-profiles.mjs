@@ -313,13 +313,13 @@ export function migrateSourceRegistryDocument(registry, fedramp2026, mitreCatalo
     if (publication.id === "nist-iot-device-cybersecurity-requirement-catalogs") {
       publication.metadata = {
         ...(publication.metadata || {}),
-        provenance_note: "The official catalog page establishes publication identity. Indexed records were normalized from NIST's two draft mapping workbooks; Control Atlas does not claim an independent catalog extraction.",
+        provenance_note: "These records come from NIST's two draft mapping workbooks, not from the catalog page itself. Read the official catalog page for the authoritative list.",
       };
     }
     if (publication.id === "mitre-d3fend-ontology") {
       publication.metadata = {
         ...(publication.metadata || {}),
-        provenance_note: "The official destination is mutable. Control Atlas binds the recorded version to the committed ontology capture and its SHA-256 checksum.",
+        provenance_note: "MITRE updates the published ontology in place. Control Atlas indexes a dated copy of the recorded version, so it can fall behind the live site.",
       };
     }
     if (publication.id === "dod-rai-toolkit") {
@@ -327,7 +327,7 @@ export function migrateSourceRegistryDocument(registry, fedramp2026, mitreCatalo
       publication.catalog_browse_url = publication.artifact_url;
       publication.metadata = {
         ...(publication.metadata || {}),
-        provenance_note: "The official CDAO Responsible AI Toolkit article is canonical. Operational or secondary toolkit destinations are supporting links only.",
+        provenance_note: "The CDAO Responsible AI Toolkit article is the official source. Other toolkit links are supporting material.",
       };
     }
     const identityKind = publication.metadata?.identity_kind || "publication";
@@ -367,7 +367,7 @@ export function migrateSourceRegistryDocument(registry, fedramp2026, mitreCatalo
       artifact.source_role = "reference_only";
       artifact.metadata = {
         ...(artifact.metadata || {}),
-        provenance_note: "Supporting operational toolkit capture. The official ai.mil CDAO article is canonical for publication identity.",
+        provenance_note: "Supporting toolkit material. The official ai.mil CDAO article is the source of record.",
       };
     }
     artifact.entity_kind = "artifact";
@@ -395,7 +395,7 @@ export function migrateSourceRegistryDocument(registry, fedramp2026, mitreCatalo
       source.retrieved_at = officialArtifact?.retrieved_at || source.retrieved_at;
       source.metadata = {
         ...(source.metadata || {}),
-        provenance_note: "Catalog records are deterministic Atlas projections reconciled to the official CDAO Responsible AI Toolkit article; they are not verbatim publisher records.",
+        provenance_note: "These records restate the official CDAO Responsible AI Toolkit article in a comparable form. They are not the publisher's own wording.",
       };
     }
     source.entity_kind = "artifact";
@@ -417,7 +417,7 @@ export function migrateSourceRegistryDocument(registry, fedramp2026, mitreCatalo
         "artifact-nist-iot-requirements-csf11-mapping-draft",
       ];
       bundle.expected_inventory ||= {
-        basis: "Unique NIST IoT catalog records normalized from the two publisher mapping workbooks and reconciled by exact record path. The catalog page supplies publication identity; the draft workbooks supply mapping data.",
+        basis: "Built from NIST's two draft mapping workbooks, matched by record path so each entry appears once. The official catalog page names the publication; the workbooks supply the mappings.",
         evidence_class: "publisher_mapping_inventory",
         primary_extraction_status: "not_performed",
         evidence_locator: "data/curated/nist-structured-catalogs/source-manifest.json#reconciliation.iot.records",

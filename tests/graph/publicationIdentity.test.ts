@@ -94,7 +94,7 @@ test("a recorded upstream review is reported, not inferred from a newer edition 
 test("an update held for review never leaks the operational reason", () => {
   const held = publicationTrustFor({ source: base, heldForReview: true });
   const text = held.limitations.map((limitation) => limitation.text).join(" ");
-  assert.match(text, /previous|last accepted/i);
+  assert.match(text, /previous|last (?:accepted|added)/i);
   assert.doesNotMatch(text, /quarantin|workflow|validator|branch|job|error/i);
 });
 

@@ -140,7 +140,7 @@ test("historical and superseded editions are stated, never inferred", async ({ p
   // 800-171 Rev. 2 is active in the register; the recorded source review says the publisher superseded it.
   await open(page, "/#/library/publication/nist-800-171-rev2");
   await expect(page.locator(".catalog-trust-facts [data-lifecycle]")).toHaveText("Active");
-  await expect(page.locator('[data-limitation="superseded_upstream"]')).toContainText("recorded that the publisher has superseded this edition");
+  await expect(page.locator('[data-limitation="superseded_upstream"]')).toContainText("The publisher has superseded this edition");
 
   // A retrieval date is not presented as the publisher's version.
   await open(page, "/#/library/publication/cmmc-2");

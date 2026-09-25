@@ -255,14 +255,14 @@ export function publicationTrustFor(input: PublicationTrustInput): PublicationTr
 
   const limitations: Limitation[] = [];
   if (input.heldForReview) {
-    limitations.push({ code: "held_for_review", text: "An update to this publication is being reviewed. Control Atlas continues to show the edition it last accepted." });
+    limitations.push({ code: "held_for_review", text: "A newer edition from the publisher is not indexed here yet. What you see is the edition Control Atlas last added." });
   }
   if (freshness.state !== "checked") {
     limitations.push({
       code: "no_check_recorded",
       text: dates.retrieved
-        ? `No check against the publisher is recorded. The date shown is when Control Atlas retrieved it, ${formatPublicationDate(dates.retrieved)}.`
-        : "No check against the publisher or retrieval date is recorded.",
+        ? `Retrieved ${formatPublicationDate(dates.retrieved)} and not re-checked against the publisher since.`
+        : "No retrieval or check date is recorded for this material.",
     });
   } else if (input.datasetCheckedThrough) {
     const window = Number.isInteger(source?.stale_after_days) ? source.stale_after_days : DEFAULT_FRESHNESS_WINDOW_DAYS;
@@ -270,22 +270,24 @@ export function publicationTrustFor(input: PublicationTrustInput): PublicationTr
     if (age > window) {
       limitations.push({
         code: "check_older_than_window",
-        text: `Last checked against the publisher on ${formatPublicationDate(dates.checked)}, more than ${window} days before the newest check in this data set. The publisher may have made changes since.`,
+        // The window itself and how this data set is assembled are our
+        // business, not the reader's. They need the date and the consequence.
+        text: `Not checked against the publisher since ${formatPublicationDate(dates.checked)}, longer than the ${window} days Control Atlas aims for. The publisher may have changed it.`,
       });
     }
   }
   if (version.state === "retrieval_dated") limitations.push({ code: "retrieval_dated_version", text: `The publisher does not state a version for this material. ${version.detail}` });
   if (version.state === "not_stated") limitations.push({ code: "version_not_stated", text: version.detail });
   if (review?.currentness === "superseded") {
-    limitations.push({ code: "superseded_upstream", text: `Control Atlas's source review on ${formatPublicationDate(review.reviewedAt)} recorded that the publisher has superseded this edition.` });
+    limitations.push({ code: "superseded_upstream", text: `The publisher has superseded this edition. Control Atlas recorded that on ${formatPublicationDate(review.reviewedAt)}.` });
   } else if (review?.currentness === "refresh_required") {
-    limitations.push({ code: "update_pending", text: `Control Atlas's source review on ${formatPublicationDate(review.reviewedAt)} found a publisher update that is not yet reflected here.` });
+    limitations.push({ code: "update_pending", text: `The publisher has changed this material since ${formatPublicationDate(review.reviewedAt)}. That change is not indexed here yet.` });
   } else if (review?.currentness === "blocked") {
-    limitations.push({ code: "review_incomplete", text: `Control Atlas could not complete its currentness review on ${formatPublicationDate(review.reviewedAt)}.` });
+    limitations.push({ code: "review_incomplete", text: `Control Atlas could not confirm this is the publisher's current edition. It last tried on ${formatPublicationDate(review.reviewedAt)}.` });
   }
   const counts = input.counts;
   if (counts?.evidence_class === "reviewed_snapshot") {
-    limitations.push({ code: "count_not_independently_confirmed", text: "Control Atlas has not independently confirmed that its records are every entry the publisher lists." });
+    limitations.push({ code: "count_not_independently_confirmed", text: "This may not be every entry the publisher lists. Control Atlas has not confirmed the count against the publisher." });
   }
   for (const exclusion of counts?.exclusions || []) {
     limitations.push({ code: "records_excluded", text: `${exclusion.count.toLocaleString()} publisher ${exclusion.count === 1 ? "entry is" : "entries are"} not indexed: ${exclusion.reason}` });

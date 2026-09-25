@@ -177,6 +177,14 @@ export type SourceLayerCompleteness = {
   >;
 };
 
+/**
+ * What the public is told when an update to a source is on hold: that the
+ * edition already added is what they are looking at, and nothing about why.
+ */
+const HOLD_NOTICE = "Showing the edition Control Atlas last added; a newer one is not indexed yet.";
+/** Internal marker for "a hold exists" when no reason was supplied. Never rendered. */
+const HOLD_MARKER = "hold-recorded";
+
 const CONNECTION_ROLES = new Set(["mapping"]);
 const INGESTION_ROLES = new Set([
   "primary_data",
@@ -204,7 +212,7 @@ function isRecordedString(value: unknown): value is string {
   );
 }
 
-function recorded<T>(value: T, reason = "Recorded by the source registry."): SourceField<T> {
+function recorded<T>(value: T, reason = "Recorded for this source."): SourceField<T> {
   return { value, state: "recorded", reason };
 }
 
@@ -325,8 +333,8 @@ function sourceDisplayName(source: any): string {
 function parentPublicationReason(parent: any): string {
   const parentName = recordedSourceDisplayName(parent);
   return parentName
-    ? `Inherited from parent publication ${parentName}.`
-    : "Inherited from the linked parent publication.";
+    ? `Taken from ${parentName}, the publication this belongs to.`
+    : "Taken from the publication this belongs to.";
 }
 
 function sourceTitle(source: any, parent: any | null): string {
@@ -541,7 +549,8 @@ export function buildPublicationRegister(
   const quarantineById = new Map(
     quarantine.map((entry) => [
       entry.id,
-      entry.reason || "This publication is quarantined pending review.",
+      // Kept only to mark that a hold exists. It is never rendered.
+      entry.reason || HOLD_MARKER,
     ]),
   );
 
@@ -592,7 +601,7 @@ export function buildPublicationRegister(
     // The register's hold reason is operational detail; the public field says only that an
     // accepted edition stays in place (see the trust limitation), never why automation held it.
     const lifecycleField: SourceField<string> = quarantineReason
-      ? blocked<string>("An update is being reviewed; the previously accepted edition is shown.")
+      ? blocked<string>(HOLD_NOTICE)
       : stringField(source.lifecycle_status, "Lifecycle status is not recorded.");
 
     const publisher = publisherField(source, null);
@@ -744,8 +753,11 @@ function buildRows(
       version: stringField(source.version, "Publisher version is not recorded."),
       retrievedAt: stringField(source.retrieved_at, "Retrieval date is not recorded."),
       verifiedAt: verificationField(source),
+      // The hold reason is operational detail and never public (see "Public
+      // copy" in docs/PAGE_CONTRACTS.md). The publication path already said
+      // only this; this path was still printing the raw reason.
       lifecycle: quarantineReason
-        ? blocked(quarantineReason)
+        ? blocked<string>(HOLD_NOTICE)
         : stringField(source.lifecycle_status, "Lifecycle status is not recorded."),
       recordCount: isReference
         ? notApplicable("Reference pages do not import records.")
@@ -801,7 +813,7 @@ export function buildSourceLayers(
     ingestion: [],
   };
   const quarantineById = new Map(
-    quarantine.map((entry) => [entry.id, entry.reason || "This source is quarantined pending review."]),
+    quarantine.map((entry) => [entry.id, entry.reason || HOLD_MARKER]),
   );
 
   for (const row of buildRows(sources, catalogs, quarantineById)) {

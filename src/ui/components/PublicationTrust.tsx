@@ -81,17 +81,49 @@ export function publisherLine(trust: Pick<PublicationTrust, "publisher" | "publi
   return trust.publisherFullName ? `${trust.publisherFullName} (${trust.publisher})` : trust.publisher;
 }
 
-/** The dated facts, each under its own name. Retrieval, check and acceptance are never merged. */
+/**
+ * Retrieval, check and acceptance stay separate facts, but they very often
+ * fall on the same day. Printing one date three times under three long labels
+ * read as a database dump and buried the one date that mattered, so dates that
+ * are genuinely the same day are named together and shown once. Different days
+ * still get their own line, and a missing check is still said out loud.
+ */
 export function SourceDates(props: { trust: PublicationTrust }) {
   const { dates, review } = props.trust;
+  // Each fact carries a short form for when it shares a date with another, so
+  // a collapsed row stays one readable line instead of "RETRIEVED, LAST
+  // CHECKED AND ADDED TO CONTROL ATLAS" wrapping across two.
+  const entries: { label: string; short: string; value: string }[] = [];
+  if (dates.retrieved) entries.push({ label: "Retrieved", short: "retrieved", value: dates.retrieved });
+  if (dates.checked) entries.push({ label: "Last checked", short: "checked", value: dates.checked });
+  if (dates.accepted) entries.push({ label: "Added to Control Atlas", short: "added", value: dates.accepted });
+
+  const grouped: { labels: string[]; single: string; value: string }[] = [];
+  for (const entry of entries) {
+    const existing = grouped.find((group) => group.value === entry.value);
+    if (existing) existing.labels.push(entry.short);
+    else grouped.push({ labels: [entry.short], single: entry.label, value: entry.value });
+  }
+
   return (
     <dl className="publication-dates">
-      <div><dt>Retrieved by Control Atlas</dt><dd><RecordedDate value={dates.retrieved} /></dd></div>
-      <div><dt>Last checked against the publisher</dt><dd>{dates.checked ? <RecordedDate value={dates.checked} /> : "No check recorded"}</dd></div>
-      <div><dt>Accepted into Control Atlas</dt><dd><RecordedDate value={dates.accepted} /></dd></div>
-      {review ? <div><dt>Control Atlas source review</dt><dd>{review.label} · <RecordedDate value={review.reviewedAt} /></dd></div> : null}
+      {grouped.map((group) => (
+        <div key={group.value}>
+          <dt>{group.labels.length === 1 ? group.single : joinLabels(group.labels)}</dt>
+          <dd><RecordedDate value={group.value} /></dd>
+        </div>
+      ))}
+      {dates.checked ? null : (
+        <div><dt>Last checked</dt><dd>No check recorded</dd></div>
+      )}
+      {review ? <div><dt>Checked for a newer edition</dt><dd>{review.label} · <RecordedDate value={review.reviewedAt} /></dd></div> : null}
     </dl>
   );
+}
+
+function joinLabels(labels: string[]): string {
+  const joined = `${labels.slice(0, -1).join(", ")} and ${labels[labels.length - 1]}`;
+  return `${joined.charAt(0).toUpperCase()}${joined.slice(1)}`;
 }
 
 export { inlineLabel } from "../lib/publicationActions";

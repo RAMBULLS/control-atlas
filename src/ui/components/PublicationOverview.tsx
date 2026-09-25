@@ -122,46 +122,100 @@ export function PublicationOverview(props: {
         </div>
       </header>
 
+      {/* Order is deliberate: what you can do with the publication, then the
+          reference facts, then the policy context. These were four equal
+          bordered boxes in an auto-fit grid, which put "Work with it" alone on
+          a second row at a third of the width while two thirds sat empty, and
+          made a two-line panel as loud as an eight-line one. Rules and
+          whitespace carry the hierarchy now; nothing here is a card. */}
       <section aria-labelledby="catalog-about-title" className="catalog-about" data-publication-about={catalog.id}>
         <h2 className="visually-hidden" id="catalog-about-title">About {trust.practitionerName}</h2>
 
-        <section aria-labelledby="catalog-indexes-title" className="catalog-about__panel">
-          <h3 id="catalog-indexes-title">What Control Atlas indexes</h3>
-          {recordsReady && kindRows.length ? (
-            <ul className="catalog-kind-list">
-              {kindRows.map(([kind, count]) => (
-                <li key={kind}><strong>{count.toLocaleString()}</strong> {pluralKind(kind, count)}</li>
-              ))}
-            </ul>
-          ) : (
-            <p><strong>{recordCount.toLocaleString()}</strong> {inlineLabel(recordLabel)}</p>
-          )}
-          {props.tierCount > 1 ? <p>Organized the way the publisher organizes it: {props.tierCount.toLocaleString()} {props.tierLabelPlural}.</p> : null}
-          {crossConnected > 0 ? (
-            <p>{crossConnected.toLocaleString()} {crossConnected === 1 ? "record connects" : "records connect"} to other publications through published relationships.</p>
-          ) : (
-            <p>No published relationships connect these records to other publications.</p>
-          )}
-          {trust.coverageNote ? <p className="catalog-coverage-note">{trust.coverageNote}</p> : null}
-        </section>
+        {compares.length || journeys.length || templates.length ? (
+          <section aria-labelledby="catalog-next-title" className="catalog-about__work">
+            <h3 id="catalog-next-title">Work with it</h3>
+            <div className="catalog-work-groups">
+              {compares.length ? (
+                <div className="catalog-work-group">
+                  <h4>Published crosswalks</h4>
+                  <ul className="catalog-next-list">
+                    {compares.slice(0, COMPARE_LIMIT).map((action) => (
+                      <li key={action.target}>
+                        <AppLink onNavigate={onNavigate} patch={{ crosswalk: "relationships", intent: "frameworks", source: trust.catalogId, target: action.target, compareRun: "true" } as Partial<ViewState>} view="matrix">{action.label}</AppLink>
+                        <small>Evidence: {action.via}</small>
+                      </li>
+                    ))}
+                  </ul>
+                  {compares.length > COMPARE_LIMIT ? <p><AppLink onNavigate={onNavigate} patch={{ crosswalk: "relationships", intent: "frameworks", source: trust.catalogId } as Partial<ViewState>} view="matrix">All {compares.length} crosswalks in Compare</AppLink></p> : null}
+                </div>
+              ) : null}
+              {journeys.length ? (
+                <div className="catalog-work-group">
+                  <h4>Atlas journeys</h4>
+                  <ul className="catalog-next-list">
+                    {journeys.map((action) => (
+                      <li key={action.journeyId}><AppLink onNavigate={onNavigate} patch={{ atlasJourney: action.journeyId } as Partial<ViewState>} view="atlas-map">{action.label}</AppLink></li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+              {templates.length ? (
+                <div className="catalog-work-group">
+                  <h4>Templates that cite it</h4>
+                  <ul className="catalog-next-list">
+                    {templates.map((action) => (
+                      <li key={action.templateName}><AppLink onNavigate={onNavigate} patch={{ buildSection: "documents", templateType: action.templateName } as Partial<ViewState>} view="templates">{action.label}</AppLink></li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+            </div>
+          </section>
+        ) : null}
 
-        <section aria-labelledby="catalog-source-title" className="catalog-about__panel">
-          <h3 id="catalog-source-title">Edition and freshness</h3>
-          {trust.version.state !== "recorded" && trust.version.detail ? <p className="publication-fact-detail">{trust.version.detail}</p> : null}
-          {trust.lifecycle.note ? <p className="publication-fact-detail">{trust.lifecycle.note}</p> : null}
-          <SourceDates trust={trust} />
-          {trust.limitations.length ? (
-            <>
-              <h4>Known limitations</h4>
-              <LimitationList limitations={trust.limitations} />
-            </>
-          ) : null}
-        </section>
+        <div className="catalog-about__reference">
+          <section aria-labelledby="catalog-indexes-title" className="catalog-about__panel">
+            <h3 id="catalog-indexes-title">What Control Atlas indexes</h3>
+            {recordsReady && kindRows.length ? (
+              <ul className="catalog-kind-list">
+                {kindRows.map(([kind, count]) => (
+                  <li key={kind}><strong>{count.toLocaleString()}</strong> {pluralKind(kind, count)}</li>
+                ))}
+              </ul>
+            ) : (
+              <p><strong>{recordCount.toLocaleString()}</strong> {inlineLabel(recordLabel)}</p>
+            )}
+            {props.tierCount > 1 ? <p>Organized the way the publisher organizes it: {props.tierCount.toLocaleString()} {props.tierLabelPlural}.</p> : null}
+            {crossConnected > 0 ? (
+              <p>{crossConnected.toLocaleString()} {crossConnected === 1 ? "record connects" : "records connect"} to other publications through published relationships.</p>
+            ) : (
+              <p>No published relationships connect these records to other publications.</p>
+            )}
+            {trust.coverageNote ? <p className="catalog-coverage-note">{trust.coverageNote}</p> : null}
+          </section>
+
+          <section aria-labelledby="catalog-source-title" className="catalog-about__panel">
+            <h3 id="catalog-source-title">Edition and freshness</h3>
+            {trust.version.state !== "recorded" && trust.version.detail ? <p className="publication-fact-detail">{trust.version.detail}</p> : null}
+            {trust.lifecycle.note ? <p className="publication-fact-detail">{trust.lifecycle.note}</p> : null}
+            <SourceDates trust={trust} />
+            {trust.limitations.length ? (
+              <>
+                <h4>Known limitations</h4>
+                <LimitationList limitations={trust.limitations} />
+              </>
+            ) : null}
+          </section>
+        </div>
 
         {basis.length || basisNote ? (
-          <section aria-labelledby="catalog-basis-title" className="catalog-about__panel">
+          <section aria-labelledby="catalog-basis-title" className="catalog-about__basis">
             <h3 id="catalog-basis-title">Recorded policy basis</h3>
-            <p className="catalog-basis-intro">Policy the Control Atlas authority record cites for this publication. It does not decide whether the publication applies to you.</p>
+            {/* The intro promises a list. With no policy recorded it promised
+                one and delivered a note, which read as a missing section. */}
+            {basis.length ? (
+              <p className="catalog-basis-intro">Policy that Control Atlas records as the basis for this publication. It does not decide whether the publication applies to you.</p>
+            ) : null}
             {basis.length ? (
               <ul className="catalog-basis-list">
                 {basis.map((policy) => (
@@ -173,46 +227,6 @@ export function PublicationOverview(props: {
               </ul>
             ) : null}
             {basisNote ? <p>{basisNote}</p> : null}
-          </section>
-        ) : null}
-
-        {compares.length || journeys.length || templates.length ? (
-          <section aria-labelledby="catalog-next-title" className="catalog-about__panel">
-            <h3 id="catalog-next-title">Work with it</h3>
-            {compares.length ? (
-              <>
-                <h4>Published crosswalks</h4>
-                <ul className="catalog-next-list">
-                  {compares.slice(0, COMPARE_LIMIT).map((action) => (
-                    <li key={action.target}>
-                      <AppLink onNavigate={onNavigate} patch={{ crosswalk: "relationships", intent: "frameworks", source: trust.catalogId, target: action.target, compareRun: "true" } as Partial<ViewState>} view="matrix">{action.label}</AppLink>
-                      <small>Evidence: {action.via}</small>
-                    </li>
-                  ))}
-                </ul>
-                {compares.length > COMPARE_LIMIT ? <p><AppLink onNavigate={onNavigate} patch={{ crosswalk: "relationships", intent: "frameworks", source: trust.catalogId } as Partial<ViewState>} view="matrix">All {compares.length} crosswalks in Compare</AppLink></p> : null}
-              </>
-            ) : null}
-            {journeys.length ? (
-              <>
-                <h4>Atlas journeys</h4>
-                <ul className="catalog-next-list">
-                  {journeys.map((action) => (
-                    <li key={action.journeyId}><AppLink onNavigate={onNavigate} patch={{ atlasJourney: action.journeyId } as Partial<ViewState>} view="atlas-map">{action.label}</AppLink></li>
-                  ))}
-                </ul>
-              </>
-            ) : null}
-            {templates.length ? (
-              <>
-                <h4>Templates that cite it</h4>
-                <ul className="catalog-next-list">
-                  {templates.map((action) => (
-                    <li key={action.templateName}><AppLink onNavigate={onNavigate} patch={{ buildSection: "documents", templateType: action.templateName } as Partial<ViewState>} view="templates">{action.label}</AppLink></li>
-                  ))}
-                </ul>
-              </>
-            ) : null}
           </section>
         ) : null}
       </section>

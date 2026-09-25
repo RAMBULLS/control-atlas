@@ -85,11 +85,37 @@
   color: var(--ca-warning, var(--ca-text-muted));
 }
 
+/* Three stacked bands, not a grid of cards: what you can do with the
+   publication, the reference facts, then the policy context. Each band is
+   separated by the same hairline the hero already uses, so hierarchy comes
+   from rules and space instead of four more borders and fills. */
 .catalog-about {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
-  gap: var(--ca-space-4);
+  gap: var(--ca-space-6);
   padding-top: var(--ca-space-6);
+}
+
+.catalog-about__work,
+.catalog-about__basis {
+  display: grid;
+  align-content: start;
+  gap: var(--ca-space-3);
+  min-width: 0;
+}
+
+/* The reference facts are a real pair, so they share a two-column track that
+   collapses at once rather than auto-fitting into an orphan. */
+.catalog-about__reference {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(24rem, 100%), 1fr));
+  gap: var(--ca-space-6);
+  padding-top: var(--ca-space-6);
+  border-top: 1px solid var(--ca-border-subtle);
+}
+
+.catalog-about__basis {
+  padding-top: var(--ca-space-6);
+  border-top: 1px solid var(--ca-border-subtle);
 }
 
 .catalog-about__panel {
@@ -97,23 +123,75 @@
   align-content: start;
   gap: var(--ca-space-3);
   min-width: 0;
-  padding: var(--ca-space-4);
-  border: 1px solid var(--ca-border-subtle);
-  border-radius: 3px;
-  background: color-mix(in srgb, var(--ca-surface-deep) 36%, transparent);
 }
 
 .catalog-about__panel h3,
 .catalog-about__panel h4,
-.catalog-about__panel p {
+.catalog-about__panel p,
+.catalog-about__work h3,
+.catalog-about__work h4,
+.catalog-about__work p,
+.catalog-about__basis h3,
+.catalog-about__basis p {
   margin: 0;
 }
 
-.catalog-about__panel h3 {
-  font-size: var(--ca-text-lg);
+.catalog-about__panel h3,
+.catalog-about__work h3,
+.catalog-about__basis h3 {
+  font-family: var(--ca-font-display);
+  font-size: var(--ca-text-xl, var(--ca-text-lg));
+  line-height: 1.15;
 }
 
-.catalog-about__panel h4 {
+/* Crosswalks, journeys and templates read side by side at full width; they
+   were a tall single column with two thirds of the row empty. Columns cap at a
+   readable measure and pack left, so two short lists do not end up with a lake
+   of space between them. */
+.catalog-work-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 26rem));
+  justify-content: start;
+  gap: var(--ca-space-5) var(--ca-space-6);
+  align-items: start;
+}
+
+.catalog-work-group {
+  display: grid;
+  align-content: start;
+  gap: var(--ca-space-2);
+  min-width: 0;
+}
+
+.catalog-work-group h4 {
+  margin: 0;
+}
+
+/* The policy citations are short; let them sit on one line rather than
+   stacking into a column of 44px rows with dead air between them. */
+/* Citations sit on one wrapping row. Items are top-aligned because some carry
+   an official title underneath and some do not; centring them left the row
+   with ragged baselines. */
+.catalog-about__basis .catalog-basis-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+  gap: var(--ca-space-2) var(--ca-space-5);
+}
+
+.catalog-about__basis .catalog-basis-list li {
+  display: grid;
+  align-content: start;
+  max-width: 28rem;
+}
+
+.catalog-about__basis .catalog-basis-intro,
+.catalog-about__basis > p:last-child {
+  max-width: 70ch;
+}
+
+.catalog-about__panel h4,
+.catalog-work-group h4 {
   color: var(--ca-text-muted);
   font: 600 var(--ca-text-xs) / 1.4 var(--ca-font-mono);
   letter-spacing: 0.08em;
@@ -152,11 +230,23 @@
   font-size: var(--ca-text-sm);
 }
 
+/* One fact per line, label beside value. A second column inside a column
+   turned four dates into a small grid within a grid and scattered the reading
+   order; a single stack reads top to bottom at every width. */
 .publication-dates {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
-  gap: var(--ca-space-3);
+  gap: var(--ca-space-2);
   margin: 0;
+}
+
+.publication-dates > div {
+  grid-template-columns: minmax(9rem, auto) 1fr;
+  gap: var(--ca-space-3);
+  align-items: baseline;
+}
+
+.publication-dates dd {
+  text-align: right;
 }
 
 .publication-limitations li {
@@ -305,4 +395,44 @@
   align-items: center;
   gap: 4px;
   min-height: 44px;
+}
+
+/* The four trust facts in the Sources inspector inherit .system-stat, which
+   upper-cases the whole row. That is right for a label and wrong for a value:
+   "RETRIEVED AUG 26, 2026 · NO CHECK RECORDED" reads as machine output and
+   wraps badly right-aligned. Labels keep the established mono caps; the values
+   read as sentences. Scoped to the Sources inspector, where these facts live. */
+.source-status-overview .system-stat > strong,
+.source-status-overview .system-stat > div {
+  text-transform: none;
+  font-family: var(--ca-font-body);
+  font-size: var(--ca-text-sm);
+  text-align: right;
+}
+
+/* The status row's value is a div, not a strong, so it needs the alignment
+   the grid gives the other three. */
+.source-status-overview .system-stat > div {
+  justify-self: end;
+}
+
+/* Phone: the hero facts stacked label-over-value, so four facts cost eight
+   lines and pushed the primary action to the bottom of the first screen. One
+   line each puts it back above the fold. */
+@media (max-width: 640px) {
+  .catalog-trust-facts {
+    grid-template-columns: 1fr;
+    gap: var(--ca-space-2);
+  }
+
+  .catalog-trust-facts > div {
+    grid-template-columns: minmax(8rem, auto) 1fr;
+    gap: var(--ca-space-3);
+    align-items: baseline;
+  }
+
+  .catalog-trust-facts dd {
+    text-align: right;
+  }
+
 }

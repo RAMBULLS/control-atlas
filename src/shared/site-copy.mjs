@@ -13,6 +13,27 @@ export const SITE_COPY = Object.freeze({
       "Understand what applies, what it means, and what to do next.",
     breadth:
       "Search requirements, controls, STIGs, assessments, Zero Trust, threats, defenses, and guidance to see how the pieces fit together.",
+    // Atlas is the flagship. Its journeys come from src/ui/lib/atlasJourneys.ts;
+    // Home never keeps a list of its own.
+    atlas: Object.freeze({
+      eyebrow: "Atlas",
+      headline: "Explore federal cybersecurity",
+      lead:
+        "See how RMF, STIGs, Zero Trust, CMMC, FedRAMP and the controls behind them connect, straight from the official documents.",
+      action: "Open Atlas",
+      journeysHeading: "Start with what you're working on",
+      searchLabel: "Or search every record",
+    }),
+    // Pulse, Phase 1: accepted source changes and shipped product changes only.
+    pulse: Object.freeze({
+      heading: "What changed",
+      intro:
+        "Source updates Control Atlas has accepted and features it has shipped. Nothing appears here until it passes review.",
+      empty:
+        "No accepted changes to show yet. Source updates appear here once they pass review, and features once they ship.",
+      quietLead: "Nothing new since",
+      checkedLead: "Source data last rebuilt",
+    }),
     // Depth-0 Signal cover (first paint, before the Home surface). Composed as
     // the Orbital "editorial split, one invitation" landing recipe: eyebrow,
     // display headline with a signal word, lead, one action, and an archival
@@ -38,13 +59,6 @@ export const SITE_COPY = Object.freeze({
         description: "Answer two questions to find where to begin.",
         view: "start-here",
         href: "#/start",
-      }),
-      Object.freeze({
-        id: "atlas",
-        label: "Browse the Atlas",
-        description: "Start with a topic.",
-        view: "atlas-map",
-        href: "#/atlas",
       }),
       Object.freeze({
         id: "library",

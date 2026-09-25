@@ -140,6 +140,46 @@ counts, lifecycle transitions and accepted time. A field is `null` when it was
 not measured. No publisher version is ever invented. The admission gate
 recomputes the log and rejects a pull request whose log does not match.
 
+`changed_count` counts records whose own content changed. Provenance stamps that
+a refresh copies onto every record (`source.snapshot_date`, `source.version`,
+`source.checksum`) are not content: a record that differs only there is counted in
+`stamp_only_count`, and entries measured this way carry
+`diff_basis: content_excluding_provenance_stamps`. Entries written before this
+rule have no `diff_basis`; their `changed_count` includes re-stamped records and
+is not shown to readers.
+
+Published relationship sets that refresh rewrites (`RELATIONSHIP_SET_ENDPOINTS` in
+`scripts/lib/catalog-refresh-profiles.mjs`) are recorded under `relationship_sets`
+in the same log, keyed by file. A set's identity is its directed relationships
+(source, relationship type, target); a re-fetch that only moves dates or checksums
+records nothing. Each entry keeps the previous and current identity and version,
+added and removed counts, and direction-preserving samples. A quarantined unit is
+rolled back and never recorded.
+
+## Pulse
+
+Pulse is an output of accepted lifecycle data, not a crawler:
+accepted refresh or release, then governed diff, then Pulse artifact, then site
+build. `build:site` runs `scripts/build-pulse-artifact.mjs`, which reads only
+`data/source-change-log.json`, `data/source-baselines.json`, the served
+relationship sets, `data/source-registry.json` and `data/product-release-log.json`,
+and writes `data/generated/pulse.json` (published at the same path). The artifact
+records the sha256 of every input and the dataset identity, lists every event with
+its evidence pointer, and lists every accepted log entry it did not show with the
+reason (`no_verified_content_change`, `not_in_accepted_baseline_chain`,
+`decision_not_accepted`, `does_not_match_served_set`, ...). A source event is shown
+only when its decision is an accepted one and its snapshot is in the accepted
+baseline chain. Quarantined sources are listed with `shown_as_event: false`. The
+same inputs give the same bytes; an event id is derived from the accepted
+transition (catalog and both snapshot hashes, or the release id), so it is stable
+across rebuilds and duplicates collapse.
+
+`data/product-release-log.json` is the one authored input: the pull request that
+ships a visitor-facing change adds its entry in the same commit, citing its issue
+or pull request (and, once merged, its merge commit); a release cites its tag.
+Entries are validated in `tests/pulse.test.mjs`. No other news source, forum or
+feed is read.
+
 Retrieval failures are separated by whether asking again could help. Timeouts,
 dropped connections, HTTP 408, 425, 429 and 5xx are retried: at most three
 requests per URL, waiting 1 and 2 seconds (a `Retry-After` is honored up to 15

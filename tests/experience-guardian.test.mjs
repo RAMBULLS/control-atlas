@@ -82,7 +82,7 @@ test("record review states cover the required object classes and responsive temp
   assert.match(home, /data-visual-identity="universal-front-door"/);
   assert.match(
     home,
-    /DESTINATION_ICONS[\s\S]*IconRocket[\s\S]*IconTopologyStar3[\s\S]*IconBooks[\s\S]*IconUsersGroup/,
+    /DESTINATION_ICONS[\s\S]*IconRocket[\s\S]*IconBooks[\s\S]*IconUsersGroup/,
   );
   assert.match(records, /data-template="E"/);
   assert.match(records, /<RecordPublishedText[\s\S]*claimOrigin={claimOrigin}/);

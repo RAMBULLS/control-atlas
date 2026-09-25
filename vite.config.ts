@@ -14,6 +14,11 @@ import {
   deriveAtlasScopeMetrics,
 } from './src/shared/brand-signals.mjs';
 import { HOME_LIBRARY_DISCOVERY } from './src/ui/lib/homeTagConstellation.ts';
+import { JOURNEYS } from './src/ui/lib/atlasJourneys.ts';
+import { serializeHashUrl } from './src/ui/lib/hashRoutes.ts';
+import { normalizeViewState } from './src/ui/lib/viewState.ts';
+import { PULSE_TYPE_LABELS, pulseHomeSlice } from './scripts/lib/pulse.mjs';
+import type { HomeSurface } from './src/shared/home-surface.ts';
 
 const rootDir = fileURLToPath(new URL('.', import.meta.url));
 
@@ -61,6 +66,49 @@ const DATE_FORMATTER = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
 });
 
+const SHORT_DATE = new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short', timeZone: 'UTC', year: 'numeric' });
+const shortDate = (date: string) => SHORT_DATE.format(new Date(`${date}T00:00:00Z`));
+
+// Pulse is built from accepted lifecycle evidence by scripts/build-pulse-artifact.mjs
+// (run by build:site before this config). Home renders only its bounded slice.
+const pulsePath = resolve(rootDir, 'data/generated/pulse.json');
+let pulseArtifact;
+try {
+  pulseArtifact = JSON.parse(readFileSync(pulsePath, 'utf8'));
+} catch {
+  throw new Error('data/generated/pulse.json is missing: run `node --import tsx scripts/build-pulse-artifact.mjs --output data/generated` (build:site does this).');
+}
+const pulseSlice = pulseHomeSlice(pulseArtifact);
+// One surface for the static first paint and React; see src/shared/home-surface.ts.
+const homeSurface: HomeSurface = {
+  journeys: JOURNEYS.map((journey) => ({
+    id: journey.id,
+    label: journey.label,
+    expansion: journey.expansion,
+    href: serializeHashUrl(normalizeViewState('atlas-map', { atlasJourney: journey.id })),
+  })),
+  pulse: {
+    datasetId: pulseSlice.dataset_id,
+    quiet: pulseSlice.status.quiet,
+    latestLabel: pulseSlice.status.latest_event_date ? shortDate(pulseSlice.status.latest_event_date) : '',
+    checkedLabel: pulseSlice.status.source_data_date ? shortDate(pulseSlice.status.source_data_date) : '',
+    events: pulseSlice.events.map((event) => ({
+      id: event.id,
+      type: event.type,
+      typeLabel: PULSE_TYPE_LABELS[event.type as keyof typeof PULSE_TYPE_LABELS],
+      date: event.date,
+      dateKind: event.date_kind,
+      dateLabel: `${event.date_kind === 'accepted' ? 'Accepted' : 'Shipped'} ${shortDate(event.date)}`,
+      title: event.title,
+      summary: event.summary,
+      destination: event.destination,
+    })),
+  },
+};
+for (const event of homeSurface.pulse.events) {
+  if (!event.typeLabel || !event.destination?.href?.startsWith('#/')) throw new Error(`Pulse event ${event.id} has no label or destination.`);
+}
+
 function formatBuildDate(value: string | undefined) {
   return value ? DATE_FORMATTER.format(new Date(value)) : 'local development build';
 }
@@ -81,6 +129,22 @@ function renderStaticHome() {
     // when React takes over the pre-rendered shell.
     return `<li><a class="home-library-kpi" data-route="${href}" href="${href}"><span class="home-library-kpi__question">${escapeHtml(item.question)}</span><strong class="home-library-kpi__label">${escapeHtml(item.label)}</strong><small class="home-library-kpi__description">${escapeHtml(item.description)}</small><span class="home-library-kpi__footer"><span class="home-library-kpi__count">${item.count.toLocaleString('en-US')} records</span><span aria-hidden="true">→</span></span></a></li>`;
   }).join('');
+  const atlas = SITE_COPY.home.atlas;
+  const pulseCopy = SITE_COPY.home.pulse;
+  const journeys = homeSurface.journeys.map((journey) =>
+    `<li><a class="home-journey" data-route="${escapeHtml(journey.href)}" href="${escapeHtml(journey.href)}">${escapeHtml(journey.label)}</a></li>`).join('');
+  const pulse = homeSurface.pulse;
+  // Must match HomePage.tsx HomePulse exactly.
+  const pulseEvents = pulse.events.map((event) => {
+    const href = escapeHtml(event.destination.href);
+    return `<li class="home-pulse__event" data-pulse-type="${escapeHtml(event.type)}"><article aria-labelledby="pulse-${escapeHtml(event.id)}"><p class="home-pulse__meta"><span class="home-pulse__type">${escapeHtml(event.typeLabel)}</span><time datetime="${escapeHtml(event.date)}">${escapeHtml(event.dateLabel)}</time></p><h3 class="home-pulse__title" id="pulse-${escapeHtml(event.id)}">${escapeHtml(event.title)}</h3><p class="home-pulse__summary">${escapeHtml(event.summary)}</p><a class="home-pulse__action" data-route="${href}" href="${href}">${escapeHtml(event.destination.label)}<span class="home-sr"> for ${escapeHtml(event.title)}</span> <span aria-hidden="true">→</span></a></article></li>`;
+  }).join('');
+  const pulseStatus = pulse.events.length === 0
+    ? `<p class="home-pulse__empty">${escapeHtml(pulseCopy.empty)}</p>`
+    : pulse.quiet
+      ? `<p class="home-pulse__quiet">${escapeHtml(pulseCopy.quietLead)} ${escapeHtml(pulse.latestLabel)}. ${escapeHtml(pulseCopy.checkedLead)} ${escapeHtml(pulse.checkedLabel)}.</p>`
+      : '';
+  const pulseList = pulse.events.length ? `<ol class="home-pulse__list">${pulseEvents}</ol>` : '';
   const destinations = HOME_DESTINATIONS.map((destination) => `
     <a class="home-secondary-action" data-route="${destination.href}" href="${destination.href}">
       <span><strong>${escapeHtml(destination.label)}</strong><small>${escapeHtml(destination.description)}</small></span>
@@ -103,14 +167,20 @@ function renderStaticHome() {
   const coverFlightPlan = `<svg class="signal-cover__flightplan" viewBox="0 0 760 430" aria-hidden="true" focusable="false"><g fill="none" stroke-linecap="round"><path d="M32 392C182 144 422 58 752 146" stroke="var(--lsm-grid-line)" opacity=".52"/><path d="M80 420C252 238 482 186 746 232" stroke="var(--lsm-gold)" opacity=".6"/><path d="M180 440C340 326 536 294 728 318" stroke="var(--lsm-gold)" stroke-dasharray="8 10" opacity=".44"/><path d="M476 306C572 260 650 248 734 252" stroke="var(--lsm-orange)" opacity=".56"/><circle cx="540" cy="214" r="7" stroke="var(--lsm-grid-line)"/><path d="M540 194v40M520 214h40" stroke="var(--lsm-dust)" opacity=".3"/></g><circle cx="540" cy="214" r="3" fill="var(--lsm-bone)"/><circle cx="670" cy="258" r="5" fill="var(--lsm-orange)"/></svg>`;
   const signalCover = `<div class="signal-cover" data-signal-cover hidden role="dialog" aria-modal="true" aria-label="Control Atlas introduction"><section class="signal-cover__hero">${coverFlightPlan}<div class="signal-cover__copy"><p class="signal-cover__eyebrow">${escapeHtml(cover.eyebrow)}</p><h1 class="signal-cover__headline">${escapeHtml(cover.headlineLead)}<br><span class="signal-cover__signal-word">${escapeHtml(cover.headlineSignal)}</span></h1><p class="signal-cover__lead">${escapeHtml(cover.lead)}</p><p class="signal-cover__actions"><button class="signal-cover__action" data-signal-cover-enter type="button">${escapeHtml(cover.action)}</button></p></div><aside class="signal-cover__meta"><p aria-hidden="true" class="signal-cover__brand-signature"><span>Ctrl</span><b>+</b><span>Alt</span><b>+</b><span class="signal-cover__brand-signal"><i>${escapeHtml(longestBrandSignal)}</i><strong data-signal-cover-word>${escapeHtml(atlasBrandSignals[0].label)}</strong></span></p><span class="signal-cover__meta-title">${escapeHtml(cover.metaTitle)}</span>${coverMeta}</aside></section><div class="signal-cover__rail"><span>${escapeHtml(cover.railLeft)}</span><span class="signal-cover__prompt">${escapeHtml(cover.prompt)}</span></div></div>`;
   return `${signalCover}<section class="home-entry" aria-labelledby="home-title" data-template="B" data-visual-identity="universal-front-door">
-    <div class="home-hero">
+    <div class="home-hero home-atlas" data-home-flagship="atlas">
       <div class="home-hero-lead">
         <header class="home-entry-header">
-          <h1 id="home-title">${escapeHtml(HOME_CONTENT.headline)}</h1>
+          <p class="eyebrow home-atlas__eyebrow">${escapeHtml(atlas.eyebrow)}</p>
+          <h1 id="home-title">${escapeHtml(atlas.headline)}</h1>
           <p class="home-product-identity">${escapeHtml(HOME_CONTENT.definition)}</p>
-          <p class="home-breadth">${escapeHtml(HOME_CONTENT.breadth)}</p>
+          <p class="home-breadth">${escapeHtml(atlas.lead)}</p>
         </header>
-        <form class="home-search" data-home-search role="search">
+        <p class="home-atlas__actions"><a class="home-atlas__open" data-route="#/atlas" href="#/atlas">${escapeHtml(atlas.action)} <span aria-hidden="true">→</span></a></p>
+        <nav aria-labelledby="home-journeys-heading" class="home-journeys">
+          <h2 class="home-journeys__heading" id="home-journeys-heading">${escapeHtml(atlas.journeysHeading)}</h2>
+          <ul class="home-journeys__list">${journeys}</ul>
+        </nav>
+        <form aria-label="${escapeHtml(atlas.searchLabel)}" class="home-search" data-home-search role="search">
           <svg aria-hidden="true" fill="none" height="20" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
           <input aria-label="Search Control Atlas" name="query" placeholder="${escapeHtml(HOME_CONTENT.searchPlaceholder)}" type="search">
           <button class="home-search-submit" type="submit">Search</button>
@@ -118,6 +188,10 @@ function renderStaticHome() {
         <p class="atlas-scope-strip">${escapeHtml(atlasScopeMetrics.compact.records)} searchable records <span aria-hidden="true">·</span> ${escapeHtml(atlasScopeMetrics.compact.connections)} connections <span aria-hidden="true">·</span> ${escapeHtml(atlasScopeMetrics.compact.publications)} source publications</p>
       </div>
     </div>
+    <section aria-labelledby="home-pulse-heading" class="home-pulse" data-dataset-id="${escapeHtml(pulse.datasetId)}" data-pulse-quiet="${pulse.quiet}">
+      <div class="home-pulse__heading"><h2 id="home-pulse-heading">${escapeHtml(pulseCopy.heading)}</h2><p>${escapeHtml(pulseCopy.intro)}</p></div>
+      ${pulseStatus}${pulseList}
+    </section>
     <nav aria-label="Choose a Control Atlas destination" class="home-secondary-grid">${destinations}</nav>
     <nav aria-labelledby="home-library-heading" class="home-library-discovery">
       <div class="home-library-discovery__heading"><div><p class="eyebrow">BROWSE THE LIBRARY</p><h2 id="home-library-heading">Start with what you came to find.</h2></div><a class="home-library-discovery__all" data-route="#/library" href="#/library">Browse everything <span aria-hidden="true">→</span></a></div>
@@ -143,6 +217,7 @@ export default defineConfig({
   define: {
     'globalThis.__ATLAS_BRAND_SIGNALS__': JSON.stringify(atlasBrandSignals),
     'globalThis.__ATLAS_SCOPE_METRICS__': JSON.stringify(atlasScopeMetrics),
+    'globalThis.__HOME_SURFACE__': JSON.stringify(homeSurface),
   },
   plugins: [
     {

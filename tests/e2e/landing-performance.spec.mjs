@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
 });
 
-test("landing presents Template B search, four destinations, and governed tag browsing", async ({
+test("landing presents Template B search, three destinations, and governed tag browsing", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -19,7 +19,7 @@ test("landing presents Template B search, four destinations, and governed tag br
 
   await expect(
     page.getByRole("heading", {
-      name: "Make federal cybersecurity make sense.",
+      name: "Explore federal cybersecurity",
     }),
   ).toBeVisible();
 
@@ -30,7 +30,7 @@ test("landing presents Template B search, four destinations, and governed tag br
   // Acronyms such as NIST are valid signals. Rotation behavior is covered
   // below; this assertion only requires a non-empty initial signal.
   await expect(page.locator("[data-brand-word]")).toHaveText(/\S+/);
-  await expect(page.locator(".home-secondary-action")).toHaveCount(4);
+  await expect(page.locator(".home-secondary-action")).toHaveCount(3);
   // Five practitioner questions, ordered the way the work runs. The sixth
   // card was a record-volume statistic, not a place to start.
   await expect(page.locator(".home-library-kpis .home-library-kpi")).toHaveCount(5);
@@ -79,7 +79,7 @@ test("Ctrl + Alt brand signature rotates and native Home history remains coheren
   await waitForAppReady(page);
   await expect(
     page.getByRole("heading", {
-      name: "Make federal cybersecurity make sense.",
+      name: "Explore federal cybersecurity",
     }),
   ).toBeVisible();
 
@@ -106,7 +106,7 @@ test("landing search and brand-home flow work without legacy onboarding surfaces
     .click();
   await expect(
     page.getByRole("heading", {
-      name: "Make federal cybersecurity make sense.",
+      name: "Explore federal cybersecurity",
     }),
   ).toBeVisible({
     timeout: 15000,

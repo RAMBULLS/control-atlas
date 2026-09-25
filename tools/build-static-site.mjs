@@ -131,6 +131,11 @@ if (!/^\d{4}-\d{2}-\d{2}T/.test(sourceDataGeneratedAt || "")) {
   throw new Error("Generated sources are missing a valid generated_at timestamp");
 }
 
+// Pulse is derived from accepted lifecycle evidence before the app build: Home
+// renders its bounded slice statically, so Home never fetches it.
+runNodeSync(["--import", "tsx", join(ROOT, "scripts/build-pulse-artifact.mjs"),
+  "--output", join(ROOT, "data/generated")], { cwd: ROOT, stdio: "inherit" });
+
 runNodeSync([join(ROOT, "node_modules/vite/bin/vite.js"), "build"], {
   cwd: ROOT,
   env: {
@@ -160,6 +165,11 @@ if (reuseStagedData) {
     copyIntoDist(sourceRelativePath, destRelativePath);
   }
 }
+
+// The full Pulse artifact (every event with its evidence, and what was withheld)
+// is published beside the site for audit, even when staged data is reused.
+mkdirSync(join(DIST, "data/generated"), { recursive: true });
+cpSync(join(ROOT, "data/generated/pulse.json"), join(DIST, "data/generated/pulse.json"));
 
 // Research data is requested only when a visitor opens the research view.
 // Build against the same accepted corpus even when application assets are reused.

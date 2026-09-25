@@ -3,6 +3,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { readGeneratedCollection } from "./lib/generated-graph-artifacts.mjs";
+import { datasetIdentity } from "./lib/dataset-identity.mjs";
 import { buildTerritoryIndex, TERRITORY_INDEX_MAX_BYTES, TERRITORY_INDEX_VERSION } from "../src/ui/lib/atlasTerritoryIndex.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -14,10 +15,7 @@ const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const nodes = readGeneratedCollection(root, "nodes").nodes;
 const edges = readGeneratedCollection(root, "edges").edges;
 if (!nodes?.length || !edges?.length) throw new Error("Incomplete graph collections; do not publish territory data.");
-// Identity of the accepted dataset: the content digests of the node and edge collections.
-const digestOf = name => read(`data/generated/${name}.json`).sharded_collection?.content_sha256 || "";
-if (!digestOf("nodes") || !digestOf("edges")) throw new Error("Missing collection digests; cannot identify the dataset.");
-const datasetId = hash(digestOf("nodes") + digestOf("edges")).slice(0, 12);
+const datasetId = datasetIdentity(root);
 const spine = read("data/curated/tree-spine.json");
 const geometry = read("data/curated/atlas-territory-geography.json");
 const { index, admittedEdgeCount } = buildTerritoryIndex({

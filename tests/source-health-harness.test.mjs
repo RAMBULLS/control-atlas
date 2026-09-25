@@ -7,7 +7,9 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import test from 'node:test';
-import { CATALOG_REFRESH_PROFILES, catalogPath } from '../scripts/lib/catalog-refresh-profiles.mjs';
+import { CATALOG_REFRESH_PROFILES, RELATIONSHIP_SET_ENDPOINTS, catalogPath } from '../scripts/lib/catalog-refresh-profiles.mjs';
+import { observeRelationshipSet } from '../scripts/lib/source-change-evidence.mjs';
+import { buildPulse } from '../scripts/lib/pulse.mjs';
 import { CHANGE_LOG_PATH, createCandidateGate } from '../scripts/lib/refresh-candidate-gate.mjs';
 import { createStrictConditionalFetch } from '../scripts/lib/strict-conditional-fetch.mjs';
 import { observeCatalog } from '../scripts/lib/source-baseline.mjs';
@@ -453,4 +455,83 @@ test('Q: the next schedule recovers by itself: one issue while failing, updated 
   const [close] = planAlertChanges([{ sourceId: 'fetch-nist', status: 'accepted' }], [issue], runUrl(3));
   assert.equal(close.number, 300);
   assert.equal(close.payload.state, 'closed');
+});
+
+// ---- Pulse: accepted change -> governed diff -> Pulse ----------------------
+const CSF_SET = 'maps/800-53-to-csf.json';
+const crosswalk = (pairs, version = '2.0-final', date = '2026-09-01') => JSON.stringify({
+  source_key: 'nist-olir-csf2-to-sp800-53', source_version: version, snapshot_date: date,
+  relationships: pairs.map(([source_id, target_id]) => ({ source_id, target_id, relationship_type: 'Concept Crosswalk' })),
+});
+const pulsePublications = new Map([[NIST, { name: 'NIST SP 800-53', publisher: 'NIST' }], ['csf-2', { name: 'NIST CSF 2.0', publisher: 'NIST' }], ['nist-800-171', { name: 'NIST SP 800-171', publisher: 'NIST' }]]);
+function pulseOf(w) {
+  const served = existsSync(join(w.root, CSF_SET)) ? observeRelationshipSet(JSON.parse(w.get(CSF_SET))) : null;
+  return buildPulse({
+    changeLog: w.changeLog(), baselines: w.baseline(), releaseLog: null, registry: JSON.parse(w.get('data/source-registry.json')),
+    publications: pulsePublications, relationshipSets: RELATIONSHIP_SET_ENDPOINTS, servedSets: new Map(served ? [[CSF_SET, served]] : []),
+    dataset: { dataset_id: 'abcdefabcdef', source_data_generated_at: '2026-09-23T00:00:00.000Z' }, inputs: {},
+  });
+}
+async function refreshSet(w, gate, bytes, validate = () => {}) {
+  const unit = { sourceId: 'fetch-olir-mappings', taskId: 'fetch-olir-mappings', paths: [CSF_SET], retries: 1 };
+  const result = await runSourceTransaction({ root: w.root, sourceId: unit.sourceId, paths: unit.paths, attempts: 1, operation: () => w.put(CSF_SET, bytes), validate });
+  gate.recordResult({ ...unit, ...result });
+  return { unit, result };
+}
+
+test('Pulse: an accepted catalog change surfaces as a verified event; a quarantined one in the same run never does', async (t) => {
+  const w = world(t);
+  const gate = w.gate();
+  const paths = { 'fetch-good': [catalogPath(NIST)], 'fetch-bad': [catalogPath('nist-800-171')] };
+  await runRefreshPipeline({
+    root: w.root, tasks: pipelineTasks(), validateCandidate: (unit) => gate.validateCandidate(unit), recordResult: (entry) => gate.recordResult(entry),
+    finalize: (results) => gate.finalize(results), describeProjection: () => null,
+    describeSources: (task) => [{ taskId: task.id, sourceId: task.id, script: task.script, args: [], paths: paths[task.id], retries: 1 }],
+    executor: (unit) => {
+      if (unit.sourceId === 'fetch-good') w.put(catalogPath(NIST), bytesOf([...records(100), record(100)]));
+      if (unit.sourceId === 'fetch-bad') w.put(catalogPath('nist-800-171'), bytesOf([...records(99), record(0)]));
+    },
+  });
+  const pulse = pulseOf(w);
+  assert.deepEqual(pulse.events.map((event) => [event.subject.id, event.type, event.counts.added]), [[NIST, 'records_added', 1]]);
+  assert.ok(!pulse.events.some((event) => event.subject.id === 'nist-800-171'), 'the quarantined candidate is not an event');
+  assert.ok(!pulse.withheld.some((item) => item.catalog_id === 'nist-800-171'), 'nor even an accepted-log entry: it never reached the change log');
+  assert.equal(pulse.quarantine.length, 1);
+  assert.equal(pulse.quarantine[0].shown_as_event, false);
+});
+
+test('Pulse: an accepted relationship-set change is logged with direction and surfaces; a re-stamp and a quarantined set do not', async (t) => {
+  const w = world(t);
+  const before = crosswalk([['AC-01', 'GV.OC-03']]);
+  w.committed.set(CSF_SET, Buffer.from(before));
+  w.put(CSF_SET, before);
+
+  // A quarantined candidate is rolled back and leaves no evidence.
+  let gate = w.gate();
+  const bad = await refreshSet(w, gate, crosswalk([['AC-01', 'GV.OC-03'], ['AC-02', 'PR.AA-01']]), () => { throw new Error('schema drift'); });
+  assert.equal(bad.result.status, 'quarantined');
+  gate.finalize([{ ...bad.unit, status: 'quarantined' }]);
+  assert.equal(w.changeLog(), null);
+  assert.deepEqual(pulseOf(w).events, []);
+
+  // Each run starts from the committed state, as a real refresh does.
+  const fresh = () => { w.put('data/source-baselines.json', w.committed.get('data/source-baselines.json')); return w.gate(); };
+  // Only the retrieval date moved: nothing to record.
+  gate = fresh();
+  const stamped = await refreshSet(w, gate, crosswalk([['AC-01', 'GV.OC-03']], '2.0-final', '2026-09-23'));
+  gate.finalize([{ ...stamped.unit, status: 'accepted' }]);
+  assert.equal(w.changeLog(), null);
+
+  // A real change is recorded, verifiable by admission, and shown with its direction.
+  w.put(CSF_SET, before);
+  gate = fresh();
+  const good = await refreshSet(w, gate, crosswalk([['AC-01', 'GV.OC-03'], ['AC-02', 'PR.AA-01']]));
+  assert.equal(good.result.status, 'accepted');
+  gate.finalize([{ ...good.unit, status: 'accepted' }]);
+  const [entry] = w.changeLog().relationship_sets[CSF_SET];
+  assert.deepEqual([entry.added_count, entry.removed_count, entry.direction], [1, 0, 'source_to_target']);
+  assert.equal(w.gate().verifyPublished(), true);
+  const [event] = pulseOf(w).events;
+  assert.equal(event.type, 'relationships_changed');
+  assert.deepEqual(event.subject.direction, { from: NIST, to: 'csf-2' });
 });

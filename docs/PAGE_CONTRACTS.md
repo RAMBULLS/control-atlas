@@ -13,7 +13,9 @@ The desktop header provides Start Here, Atlas, Library, Compare, Resources, Temp
 
 ## A. Landing
 
-Home presents the product purpose, one primary search action, and concise entrances to Atlas, Library, and Resources. It does not duplicate legal, source, or provenance boilerplate already owned by About or the footer.
+Home leads with Atlas, the flagship. The hero is Atlas: its headline, one primary action (Open Atlas), and the practitioner journeys ("Start with what you're working on"). The journeys are read from `src/ui/lib/atlasJourneys.ts` at build time; Home keeps no journey list of its own and no journey data in its bundle. Search follows the journeys, then "What changed", then concise entrances to Start Here, Library, and Resources, then Library browse. There is no Atlas card among equals. Home does not duplicate legal, source, or provenance boilerplate already owned by About or the footer.
+
+"What changed" (Pulse, Phase 1) shows at most five of the newest events from `data/generated/pulse.json`, rendered into the static first paint and into React from the same build-time values. Each event has a type label, a `<time datetime>` date that says whether it was accepted (a source change) or shipped (a product change), a plain title and summary, and exactly one action to where the change can be seen. An empty Pulse says so; a period with no new event for more than 14 days before the latest source rebuild is stated as quiet. Nothing is invented to fill the list. Home never requests the Pulse artifact, the graph, the Atlas indexes, or search data.
 
 ## B. Workspace
 

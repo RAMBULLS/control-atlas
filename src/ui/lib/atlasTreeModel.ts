@@ -1,7 +1,7 @@
 import type {
   AtlasSpine,
   AtlasSpineEntry,
-} from "./atlasDrilldown";
+} from "./atlasSpine";
 
 export const ATLAS_TRUNK_ID = "atlas:TRUNK";
 

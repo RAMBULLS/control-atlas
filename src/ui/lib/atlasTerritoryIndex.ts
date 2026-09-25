@@ -1,17 +1,23 @@
 import { isAtlasResearchEdge } from "./atlasResearch";
 import type { AtlasGraphSourceEdge } from "./atlasGraphModel";
 import { catalogDisplayNameFor, catalogProfileFor } from "./catalogProfiles";
+import { officialSourceFor } from "./officialSource";
 import { areaPresentationForCatalog } from "./areaVisualLanguage";
 import type { TerritoryRoute } from "./atlasTerritoryRoutes";
 import { CONTEXT_DIMENSIONS, type ContextIndex, type ContextSignature } from "./atlasTerritoryContext";
 
-export const TERRITORY_INDEX_VERSION = 2;
+export const TERRITORY_INDEX_VERSION = 3;
 export const TERRITORY_INDEX_MAX_BYTES = 256 * 1024;
 
 export type TerritoryPublication = {
   id: string; name: string; publisher: string; kind: string; area: string; records: number;
 };
-export type TerritoryListed = { id: string; name: string; publisher: string };
+/**
+ * A document Control Atlas holds but does not place on the map. `title` is the official title and `group` the
+ * register group (United States Code, DoD Issuances, ...) as recorded in the source register; `url` is its
+ * official publisher destination. Empty strings when the register records none; nothing here is synthesized.
+ */
+export type TerritoryListed = { id: string; name: string; publisher: string; title: string; group: string; url: string };
 export type TerritoryEvidenceSample = {
   edgeId: string; relationshipType: string; relationshipClass: string; from: string; to: string;
   lifecycle: string; locator: string; sourceName: string; sourceVersion: string;
@@ -48,6 +54,8 @@ export type TerritoryBuildInput = {
   nodes: readonly Row[];
   edges: readonly Row[];
   sources: readonly Row[];
+  /** Source-register publication records (official titles, register groups, publisher URLs). */
+  registryPublications: readonly Row[];
 };
 
 const pairKey = (a: string, b: string) => (a < b ? `${a}|${b}` : `${b}|${a}`);
@@ -130,7 +138,15 @@ export function buildTerritoryIndex(input: TerritoryBuildInput): { index: Territ
   };
 
   const unmapped = input.identities.filter((i) => !i.catalog_id).sort((a, b) => a.id.localeCompare(b.id));
-  const listed = (i: Row): TerritoryListed => ({ id: i.id, name: i.name, publisher: i.publisher || "" });
+  const registry = new Map<string, Row>(input.registryPublications.map((r) => [r.id, r]));
+  const listed = (i: Row): TerritoryListed => {
+    const r = registry.get(i.id) || {};
+    const title = String(r.name || "").trim();
+    return {
+      id: i.id, name: i.name, publisher: i.publisher || "", title: title && title !== i.name ? title : "",
+      group: String(r.display_group || "").trim(), url: officialSourceFor(r, { allowArtifactFallback: true }).url,
+    };
+  };
   return {
     admittedEdgeCount: admitted.length,
     index: {

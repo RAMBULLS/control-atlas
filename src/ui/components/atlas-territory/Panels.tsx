@@ -4,10 +4,12 @@ import type { TerritoryListed, TerritoryIndexRoute } from "../../lib/atlasTerrit
 import type { TerritoryModel, Hit } from "../../lib/atlasTerritoryModel";
 import type { RouteReveal } from "../../lib/atlasTerritoryRoutes";
 import type { SharedGround } from "../../lib/atlasTerritoryShared";
+import type { JourneyHit } from "../../lib/atlasJourneys";
+import type { ViewState } from "../../lib/viewState";
 import { AppLink, type AppNavigate } from "../AppLink";
 
 export type RecordHit = { type: "record"; id: string; label: string; sub: string };
-export type AnyHit = Hit | RecordHit;
+export type AnyHit = Hit | RecordHit | JourneyHit;
 
 const relation = (type: string) => displayNameFor("relationship_type", type) || type.replace(/_/g, " ");
 const plural = (n: number, one: string, many = `${one}s`) => `${n.toLocaleString()} ${n === 1 ? one : many}`;
@@ -73,22 +75,17 @@ export function LayersMenu(props: { publishers: readonly string[]; publisher: st
   );
 }
 
-export function AuthorityPanel({ items }: { items: readonly TerritoryListed[] }) {
-  return (
-    <div aria-label="Authority documents" className="atl-pop atl-pop--authority" role="region">
-      <h2>Authority · {items.length}</h2>
-      <p className="atl-note">Statutes, regulations and directives. They publish no crosswalks, so no routes lead to them. They are context, not missing publications.</p>
-      <ul>{items.map((a) => <li key={a.id}>{a.name}<small>{a.publisher}</small></li>)}</ul>
-    </div>
-  );
-}
-
-export function OtherPanel({ items }: { items: readonly TerritoryListed[] }) {
+export function OtherPanel({ items, onNavigate }: { items: readonly TerritoryListed[]; onNavigate: AppNavigate }) {
   return (
     <div aria-label="Other publications" className="atl-pop atl-pop--other" role="dialog">
       <h2>Other publications · {items.length}</h2>
       <p className="atl-note">Not yet placed in a territory.</p>
-      <ul>{items.map((p) => <li key={p.id}>{p.name}<small>{p.publisher}</small></li>)}</ul>
+      <ul>{items.map((p) => (
+        <li key={p.id}>
+          <AppLink onNavigate={onNavigate} patch={{ source: p.id } as Partial<ViewState>} view="sources">{p.name}</AppLink>
+          <small>{p.title ? `${p.title} · ` : ""}{p.publisher}</small>
+        </li>
+      ))}</ul>
     </div>
   );
 }
@@ -98,7 +95,8 @@ export const HelpPanel = () => (
     <h2>About this map</h2>
     <p>Territories organize Control Atlas material for navigation. Neighboring territories do not imply authority, applicability, equivalence, dependency or hierarchy.</p>
     <p>A line means published records connect two places. Every line opens the evidence behind it.</p>
-    <p className="atl-note">At overview the map names a reviewed set of major publications. Select a territory to see all of its publications.</p>
+    <p>The shortcuts under “Start with what you’re working on” are Control Atlas groupings, not publisher mappings.</p>
+    <p className="atl-note">At overview the map names a reviewed set of major publications. Select a territory to see all of its publications. Statutes, regulations and directives are under Policy &amp; directives.</p>
   </div>
 );
 

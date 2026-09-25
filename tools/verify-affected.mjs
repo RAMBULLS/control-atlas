@@ -204,7 +204,7 @@ export function createVerificationPlan(paths, changeMap) {
     path === 'tests/e2e/compare-pagination.spec.mjs' ||
     path === 'tests/e2e/compare-cross-route-corruption.spec.mjs');
   const boundedWorkbenchesChanged = paths.some((path) =>
-    path === 'src/ui/pages/AtlasMapPage.tsx' ||
+    path === 'src/ui/pages/AtlasTerritoryPage.tsx' ||
     path === 'src/ui/pages/ExplorePage.tsx' ||
     path === 'src/ui/pages/CommonsPage.tsx' ||
     path === 'src/ui/components/LibraryAtlasMap.tsx' ||

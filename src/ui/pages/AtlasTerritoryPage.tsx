@@ -19,16 +19,19 @@ import { normalizeViewState, type ViewState } from "../lib/viewState";
 import { AppLink } from "../components/AppLink";
 import { MiniMap, TerritoryMap, type MapActions, type MapHop, type MapRecord } from "../components/atlas-territory/TerritoryMap";
 import {
-  AuthorityPanel, Breadcrumb, HelpPanel, LayersMenu, OtherPanel, PinButton, PinTray, PublicationCard, RouteCard, SearchBox, SharedCard, TerritoryCard,
+  Breadcrumb, HelpPanel, LayersMenu, OtherPanel, PinButton, PinTray, PublicationCard, RouteCard, SearchBox, SharedCard, TerritoryCard,
   type AnyHit,
 } from "../components/atlas-territory/Panels";
 import { ContextBar, ContextMatchSection, ContextMenu, ContextResultsCard } from "../components/atlas-territory/ContextPanels";
 import { EvidenceCard, RecordCard, RecordSharedCard, ResearchNotice, TrailCard, recordLabel } from "../components/atlas-territory/RecordPanels";
+import { JourneyBar, JourneyCard, PolicyPanel } from "../components/atlas-territory/JourneyPanels";
+import { ConnectionList } from "../components/atlas-territory/ConnectionList";
+import { journeyById, searchJourneys } from "../lib/atlasJourneys";
 import "../../../styles/atlas-territory.css";
 
 type AtlasState = Extract<ViewState, { view: "atlas-map" }>;
 type Navigate = (view: ViewState["view"], patch?: Partial<ViewState>) => void;
-type Menu = "layers" | "context" | "authority" | "other" | "help" | "";
+type Menu = "layers" | "context" | "policy" | "other" | "help" | "";
 type Described = { label: string; title: string; publication: string; catalogId: string };
 
 const MAX_TRAIL_HOPS = 4;
@@ -65,10 +68,10 @@ export function AtlasTerritoryPage(props: { state: AtlasState; bundle: RuntimeBu
   const model = useMemo(() => (index ? buildTerritoryModel(index) : null), [index]);
   if (error) return <section className="atl-status" role="alert"><h1>The Atlas could not load</h1><p>The map data did not arrive. Check your connection and try again.</p><button onClick={retry} type="button">Try again</button></section>;
   if (!index || !model) return <section aria-busy="true" className="atl-status" role="status"><h1>Loading the Atlas</h1></section>;
-  return <TerritorySheet bundle={bundle} index={index} model={model} onNavigate={onNavigate} state={state} />;
+  return <TerritorySheet bundle={bundle} index={index} model={model} onNavigate={onNavigate} onOpenNode={props.onOpenNode} state={state} />;
 }
 
-function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index: TerritoryIndex; model: TerritoryModel; onNavigate: Navigate }) {
+function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index: TerritoryIndex; model: TerritoryModel; onNavigate: Navigate; onOpenNode: (nodeId: string) => void }) {
   const { state, bundle, index, model, onNavigate } = props;
   const narrow = useNarrow(760);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -129,11 +132,14 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
   // A different data version is stated as such. Nothing here knows or claims which one is newer.
   const differentData = !!state.atlasDataset && state.atlasDataset !== index.datasetId;
   const direction: "forward" | "either" = state.atlasDirection === "either" ? "either" : "forward";
+  const journey = journeyById.get(state.atlasJourney || "") || null;
+  const policyById = useMemo(() => new Map(index.authority.map((a) => [a.id, a])), [index]);
 
   const go = useCallback((next: TerritoryTarget & { direction?: "forward" | "either" }, keepMenuOpen = false) => {
     if (!keepMenuOpen) setMenu("");
     // Context and the source dataset ride along with every move unless a move says otherwise.
-    const merged = { ...next, context: next.context ?? territoryTargetOf(state).context, dataset: next.dataset ?? territoryTargetOf(state).dataset };
+    const current = territoryTargetOf(state);
+    const merged = { ...next, context: next.context ?? current.context, dataset: next.dataset ?? current.dataset, journey: next.journey ?? current.journey };
     onNavigate("atlas-map", { ...territoryPatch(merged), atlasDirection: next.direction === "either" ? "either" : "" });
   }, [onNavigate, state]);
   const keep = (change: TerritoryTarget & { direction?: "forward" | "either" }) => ({ ...target, direction, ...change });
@@ -215,16 +221,19 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
     if (selectedRoute) { s.add(selectedRoute.a); s.add(selectedRoute.b); }
     if (sharing) { pubPins.forEach((p) => s.add(p)); ground.all.forEach((p) => s.add(p)); ground.some.forEach((x) => s.add(x.id)); }
     if (trail.length || (recordShared && mapRecords.length)) mapRecords.forEach((r) => s.add(r.catalogId));
+    // An open journey marks where its publications sit. Styling and framing only: it draws no line.
+    if (!s.size && journey && focus.kind === "overview") journey.publications.forEach((p) => { if (model.publicationById.has(p.id)) s.add(p.id); });
     return s;
-  }, [selectedRoute, sharing, ground, pubPins.join("|"), trail, recordShared, mapRecords]);
+  }, [selectedRoute, sharing, ground, pubPins.join("|"), trail, recordShared, mapRecords, journey, focus.kind, model]);
   const sharedLines = useMemo(() => (sharing
     ? [...ground.all, ...ground.some.map((x) => x.id)].flatMap((id) => pubPins.filter((p) => model.routeByKey.has(p < id ? `${p}|${id}` : `${id}|${p}`)).map((p) => [p, id] as const))
       .concat(ground.direct.map((r) => [r.a, r.b] as const))
     : []), [sharing, ground, model, pubPins.join("|")]);
 
   // ---- what the details panel shows ----
-  const showContextCard = contextOn && !evidenceEdge && !selectedRoute && !sharing && !recordShared && !tracing && !focusRecord && !focusPublication;
-  const cardKey = showContextCard ? `context:${selectedContext.join(",")}` : evidenceEdge ? `edge:${evidenceEdge.id}` : selectedRoute ? `route:${selectedRoute.key}` : sharing ? "shared" : recordShared ? "rshared"
+  const showJourneyCard = !!journey && !evidenceEdge && !selectedRoute && !sharing && !recordShared && !tracing && focus.kind === "overview";
+  const showContextCard = !showJourneyCard && contextOn && !evidenceEdge && !selectedRoute && !sharing && !recordShared && !tracing && !focusRecord && !focusPublication;
+  const cardKey = showJourneyCard ? `journey:${journey!.id}` : showContextCard ? `context:${selectedContext.join(",")}` : evidenceEdge ? `edge:${evidenceEdge.id}` : selectedRoute ? `route:${selectedRoute.key}` : sharing ? "shared" : recordShared ? "rshared"
     : tracing ? `trail:${target.from}` : focusRecord ? `rec:${focusRecord}` : focusPublication ? `pub:${focusPublication}` : focusAreaId ? `area:${focusAreaId}` : "";
   const inspectorOpen = !!cardKey && closedFor !== cardKey;
   useEffect(() => { setClosedFor(""); }, [cardKey]);
@@ -246,13 +255,18 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
       });
     }
     // A name the query matches at a word boundary is a publication lookup; anything else leads with the best record.
+    // Practitioner words ("RMF", "STIGs", "ATO") open a journey; an exact publication name still wins.
+    const journeys = searchJourneys(q);
     const byName = publications.length > 0 && publications[0].strong;
-    setHits((byName ? [...publications, ...records] : [...records.slice(0, 1), ...publications, ...records.slice(1)]).slice(0, 7));
+    const journeyFirst = !byName && journeys.some((j) => j.exact);
+    setHits((byName ? [...publications, ...journeys, ...records] : journeyFirst ? [...journeys, ...records.slice(0, 1), ...publications, ...records.slice(1)]
+      : [...records.slice(0, 1), ...publications, ...journeys, ...records.slice(1)]).slice(0, 7));
   }, [query, model, libraryReady, bundle]);
 
   const pick = (hit: AnyHit) => {
     setQuery(""); setMenu("");
     if (hit.type === "publication") go({ limb: model.areaOf(hit.id).id, framework: hit.id, pins, publisher });
+    else if (hit.type === "journey") openJourney(hit.id);
     else go({ node: hit.id, pins, publisher });
   };
   const togglePin = (id: string) => {
@@ -275,6 +289,8 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
     const found = searchPublications(model, q, 4);
     const exact = found.find((h) => model.alias(h.id).toLowerCase() === q.toLowerCase() || model.publicationById.get(h.id)!.name.toLowerCase() === q.toLowerCase());
     if (exact) { pick(exact); return; }
+    const journeyHit = searchJourneys(q).find((j) => j.exact);
+    if (journeyHit && !found.some((h) => h.strong)) { setQuery(""); openJourney(journeyHit.id); return; }
     if (!libraryReady) {
       // Record search files are fetched when the box is reached for; answer as soon as they arrive.
       setPendingSearch(q);
@@ -297,13 +313,15 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
     if (libraryReady && pendingSearch) { const q = pendingSearch; setPendingSearch(""); submitSearch(q); }
   }, [libraryReady, pendingSearch]);
   const goRecord = (id: string) => go({ node: id, pins, publisher });
+  // A journey opens on the overview; the map frames its publications without drawing anything new.
+  function openJourney(id: string) { go({ ...overviewTarget(keep({})), journey: id, pins, publisher }); }
+  const leaveJourney = () => go({ ...keep({}), journey: "" });
   const actions: MapActions = {
     selectDistrict: (id) => go({ limb: id, pins, publisher }),
     selectPublication: (id) => go({ limb: model.areaOf(id).id, framework: id, pins, publisher }),
     selectRoute: (key) => { const r = model.routeByKey.get(key)!; go({ pins, publisher, mode: "path", from: r.from, to: r.to }); },
     selectRecord: goRecord,
     selectHop: (i) => { const h = hops[i]; if (h) setEdgeId(h.key); },
-    openAuthority: () => setMenu((m) => (m === "authority" ? "" : "authority")),
     closeInspector: () => { setClosedFor(cardKey); setMenu(""); },
   };
 
@@ -327,13 +345,23 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
   };
   const inspectorInset = inspectorOpen && !narrow ? 372 : 0;
   const toggleMenu = (m: Menu) => setMenu((cur) => (cur === m ? "" : m));
-  const zoomed = focus.kind !== "overview" || !!selectedRoute || sharing || recordShared || tracing;
+  const zoomed = focus.kind !== "overview" || !!journey || !!selectedRoute || sharing || recordShared || tracing;
 
   const pinControl = (id: string) => <PinButton full={pins.length >= MAX_PINS} label={label(id)} onToggle={() => togglePin(id)} pinned={pins.includes(id)} />;
   const getSource = (id: string) => bundle.runtime.getSource(id);
   const focusInfo = focusRecord ? describe(focusRecord) : null;
   const recordMissing = !!focusRecord && !focusInfo && libraryReady && research.status === "ready";
-  const inspector = evidenceEdge ? (
+  const listOpen = !!focusRecord && state.relationshipView === "list";
+  const recordName = focusRecord ? focusInfo?.label || recordLabel(research.records, focusRecord) : "";
+  const connectionList = listOpen ? (
+    <ConnectionList label={recordName} nodeId={focusRecord} onBack={() => go(keep({ list: false, listType: "" }))} onOpenNode={props.onOpenNode}
+      onType={(t) => go(keep({ list: true, listType: t }))} type={state.relationshipType || ""} />
+  ) : null;
+  const journeyCard = journey ? (
+    <JourneyCard journey={journey} model={model} onNavigate={onNavigate} onPublication={(id) => go({ limb: model.areaOf(id).id, framework: id, pins, publisher })}
+      onRecord={(id) => go({ node: id, pins, publisher })} policy={(id) => policyById.get(id)} />
+  ) : null;
+  const inspector = showJourneyCard ? journeyCard : evidenceEdge ? (
     <EvidenceCard edge={evidenceEdge} getSource={getSource} onBack={() => setEdgeId("")} onNavigate={onNavigate} records={research.records} />
   ) : selectedRoute ? <RouteCard model={model} route={selectedRoute} />
     : sharing ? <SharedCard ground={ground} model={model} onRoute={(key) => actions.selectRoute(key)} onSelect={actions.selectPublication} pins={pubPins} />
@@ -345,7 +373,7 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
       <RecordCard areaLabel={focusInfo && isPublication(focusInfo.catalogId) ? model.areaOf(focusInfo.catalogId).label : ""} canTrace={!!focusInfo && research.status !== "error"} degree={research.degree.get(focusRecord) ?? null}
         openRecord={retiresIntoAtlas(String(bundle.runtime.getNode(focusRecord)?.node_type || "")) ? null : <AppLink onNavigate={onNavigate} patch={{ node: focusRecord }} view="library-detail">Open the full record</AppLink>}
         notice={research.failed ? <ResearchNotice research={research} what="Connection data" /> : null}
-        fullList={<AppLink onNavigate={onNavigate} patch={{ node: focusRecord, relationshipView: "list" }} view="atlas-map">Full connection list</AppLink>}
+        fullList={<AppLink onNavigate={onNavigate} patch={territoryPatch({ ...target, list: true, listType: "" })} view="atlas-map">Full connection list</AppLink>}
         label={focusInfo?.label || recordLabel(research.records, focusRecord)} loading={!focusInfo && !recordMissing} missing={recordMissing} onTrace={() => go({ node: focusRecord, pins, publisher, mode: "upstream", from: focusRecord })}
         pin={pinControl(focusRecord)} publication={focusInfo?.publication || ""} title={focusInfo?.title || ""} tracing={false} />
     ) : focusPublication ? (
@@ -381,8 +409,8 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
     <>
       {menu === "context" ? contextMenu : null}
       {menu === "layers" ? <LayersMenu onPublisher={(value) => go(keep({ publisher: value }))} publisher={publisher} publishers={model.publishers} /> : null}
-      {menu === "authority" ? <AuthorityPanel items={index.authority} /> : null}
-      {menu === "other" ? <OtherPanel items={index.other} /> : null}
+      {menu === "policy" ? <PolicyPanel items={index.authority} model={model} onNavigate={onNavigate} onPublication={(id) => actions.selectPublication(id)} /> : null}
+      {menu === "other" ? <OtherPanel items={index.other} onNavigate={onNavigate} /> : null}
       {menu === "help" ? <HelpPanel /> : null}
     </>
   );
@@ -391,7 +419,9 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
   const crumb = <Breadcrumb areaId={contextAreaId} label={crumbLabel} model={model} publicationId={crumbPublication} />;
   const search = <SearchBox placeholder={narrow ? "Search, e.g. V-205646" : undefined} hits={hits} noMatch={noMatch} onClose={() => { setQuery(""); setNoMatch(""); }} onNavigate={onNavigate} onPick={pick} onQuery={(value) => { setNoMatch(""); setQuery(value); }} onSubmit={() => submitSearch()} open={query.trim().length >= 2} query={query} ready={libraryReady} />;
 
-  const focusedSection = inspector ? <section aria-labelledby="atl-focus-h" className="atl-m-sec" id="atl-focus" ref={focusRef} tabIndex={-1}><h2 id="atl-focus-h">{showContextCard ? "Context results" : "Focused"}</h2>{inspector}</section> : null;
+  const backToJourney = journey && !showJourneyCard ? <button className="atl-back" onClick={() => openJourney(journey.id)} type="button">‹ Back to {journey.label}</button> : null;
+  const journeyBar = <JourneyBar active={journey?.id || ""} onPick={(id) => { if (id) openJourney(id); else if (showJourneyCard && !inspectorOpen && !narrow) setClosedFor(""); else leaveJourney(); }} onPolicy={() => toggleMenu("policy")} phone={narrow} policyOpen={menu === "policy"} />;
+  const focusedSection = inspector ? <section aria-labelledby="atl-focus-h" className="atl-m-sec" id="atl-focus" ref={focusRef} tabIndex={-1}><h2 id="atl-focus-h">{showJourneyCard ? "Journey" : showContextCard ? "Context results" : "Focused"}</h2>{backToJourney}{inspector}</section> : null;
 
   if (narrow) {
     const area = contextAreaId ? model.areaById.get(contextAreaId)! : null;
@@ -402,7 +432,6 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
         <div className="atl-m-row">
           <button aria-expanded={menu === "context"} onClick={() => toggleMenu("context")} type="button">Context{contextOn ? ` · ${selectedContext.length}` : ""}</button>
           <button aria-expanded={menu === "layers"} onClick={() => toggleMenu("layers")} type="button">Layers</button>
-          <button aria-expanded={menu === "authority"} onClick={() => toggleMenu("authority")} type="button">Authority · {index.authority.length}</button>
           <button aria-expanded={menu === "other"} onClick={() => toggleMenu("other")} type="button">Other · {index.other.length}</button>
           {shareButton}
         </div>
@@ -413,9 +442,12 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
             {clear.layer ? <button onClick={clearLayer} type="button">Clear layer</button> : null}
           </div>
         ) : null}
-        {menus}
+        {menu !== "policy" ? menus : null}
         {contextBar}
-        {showContextCard && inspector ? focusedSection : null}
+        {listOpen ? null : journeyBar}
+        {menu === "policy" ? menus : null}
+        {listOpen ? connectionList : null}
+        {(showContextCard || showJourneyCard) && inspector && !listOpen ? focusedSection : null}
         <section aria-labelledby="atl-where" className="atl-m-sec">
           <h2 id="atl-where">{area ? `Current area · ${area.label}` : "Territories"}</h2>
           <div className={`atl-m-district${area ? "" : " atl-m-district--rest"}`}>
@@ -424,7 +456,7 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
           </div>
           {!area ? <ul className="atl-list">{model.areas.map((a) => <li key={a.id}><button onClick={() => actions.selectDistrict(a.id)} type="button"><b>{a.label}</b><small>{a.empty ? "No publications placed yet" : a.blurb}</small></button></li>)}</ul> : null}
         </section>
-        {!showContextCard && inspector ? focusedSection : null}
+        {!showContextCard && !showJourneyCard && inspector && !listOpen ? focusedSection : null}
         {pins.length ? <section aria-labelledby="atl-pins" className="atl-m-sec"><h2 id="atl-pins">Pinned</h2>{tray}</section> : null}
         {area && !focusPublication && !focusRecord && !selectedRoute && !sharing && !tracing ? (
           <section aria-labelledby="atl-near" className="atl-m-sec">
@@ -445,13 +477,13 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
         {crumb}
         <div className="atl-top__right">
           <button aria-expanded={menu === "context"} onClick={() => toggleMenu("context")} type="button">Context{contextOn ? ` · ${selectedContext.length}` : ""}</button>
-          <button aria-expanded={menu === "authority"} onClick={() => toggleMenu("authority")} type="button">Authority · {index.authority.length}</button>
           <button aria-expanded={menu === "layers"} onClick={() => toggleMenu("layers")} type="button">Layers{work.layer ? " · on" : ""}</button>
           {shareButton}
           <button aria-expanded={menu === "help"} aria-label="About this map" className="atl-icon" onClick={() => toggleMenu("help")} type="button">i</button>
         </div>
         {menu === "layers" || menu === "help" || menu === "context" ? menus : null}
       </header>
+      {journeyBar}
       {contextBar}
       {zoomed || clear.path || clear.layer ? (
         <div className="atl-map__actions">
@@ -462,18 +494,20 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
       ) : null}
       <div className="atl-map" ref={wrapRef}>
         <TerritoryMap
-          actions={actions} active={active} authority={index.authority} focusAreaId={focusAreaId} focusPublication={focusPublication} hops={hops} inspectorInset={inspectorInset} model={model}
+          actions={actions} active={active} focusAreaId={focusAreaId} focusPublication={focusPublication} hops={hops} inspectorInset={inspectorInset} model={model}
           context={contextOn ? contextResult.publications : null} pins={pubPins} publisher={publisher} records={mapRecords} revealed={sharing || selectedRoute || tracing ? [] : reveal.visible} selectedRouteKey={selectedRoute?.key || null} sharedLines={sharedLines} size={size}
         />
-        {menu === "authority" || menu === "other" ? menus : null}
+        {menu === "policy" || menu === "other" ? menus : null}
         <button aria-expanded={menu === "other"} className="atl-pill atl-pill--other" onClick={() => toggleMenu("other")} type="button">Other publications · {index.other.length}</button>
         {inspectorOpen && inspector ? (
           <aside aria-label="Details" className="atl-inspector">
             <button aria-label="Close details" className="atl-inspector__close" onClick={actions.closeInspector} type="button">×</button>
+            {backToJourney}
             {inspector}
           </aside>
         ) : null}
         {tray}
+        {connectionList}
         {status}
       </div>
     </section>

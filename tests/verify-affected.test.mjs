@@ -101,11 +101,11 @@ test('trust and workbench changes select bounded route families and the incremen
     assert.equal(comparePlan.steps.at(-1).budgetSeconds, 45);
 
   const boundedPlan = createVerificationPlan([
-    'src/ui/pages/AtlasMapPage.tsx',
+    'src/ui/pages/AtlasTerritoryPage.tsx',
     'src/ui/pages/ExplorePage.tsx',
     'src/ui/pages/CommonsPage.tsx',
   ], classifyChangedPaths([
-    'src/ui/pages/AtlasMapPage.tsx',
+    'src/ui/pages/AtlasTerritoryPage.tsx',
     'src/ui/pages/ExplorePage.tsx',
     'src/ui/pages/CommonsPage.tsx',
   ]));

@@ -37,7 +37,10 @@ test("overview names only reviewed major landmarks and mutes empty territories",
   expect(named).not.toContain("DISA CCI");
   expect(await page.locator(".district.is-empty").count()).toBe(2);
   expect(await page.locator(".dname.is-empty").count(), "empty territories are named at rest").toBe(2);
-  await expect(page.getByRole("button", { name: /Authority · \d+/ })).toBeVisible();
+  // Statutes and directives stay one click away under a secondary control, not a primary count or a shoreline.
+  await expect(page.getByRole("button", { name: "Policy & directives" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Authority · \d+/ })).toHaveCount(0);
+  await expect(page.locator(".shore")).toHaveCount(0);
   await expect(page.getByRole("button", { name: /Other publications · 2/ })).toBeVisible();
   await expect(page.locator(".atl-inspector")).toHaveCount(0);
 });
@@ -116,10 +119,14 @@ test("search finds a record by identifier and a publication by alias", async ({ 
   await expect(page.locator(".atl-inspector")).toContainText("CMMC 2.0");
 });
 
-test("Authority and Other publications are visible lists, not buried drawers", async ({ page }) => {
+test("Policy & directives and Other publications are visible lists, not buried drawers", async ({ page }) => {
   await open(page);
-  await page.getByRole("button", { name: /Authority · \d+/ }).click();
-  await expect(page.getByRole("region", { name: "Authority documents" })).toContainText("no routes lead to them");
+  await page.getByRole("button", { name: "Policy & directives" }).click();
+  const policy = page.getByRole("region", { name: /Policy & directives · \d+/ });
+  await expect(policy).toContainText("DoDI 8500.01");
+  await expect(policy.getByRole("link", { name: "Source record" }).first()).toHaveAttribute("href", /sources\?source=authority-/);
+  await policy.getByRole("button", { name: "DISA STIG" }).click();
+  await expect(page.locator(".atl-inspector")).toContainText("DISA STIG");
   await page.getByRole("button", { name: /Other publications · 2/ }).click();
   await expect(page.getByRole("dialog", { name: "Other publications" })).toBeVisible();
 });

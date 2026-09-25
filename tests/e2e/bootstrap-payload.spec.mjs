@@ -98,7 +98,8 @@ test("the Atlas territory sheet uses its own small index without monolithic grap
   expect(graphArtifactUrls(requested)).toEqual([]);
 
   // Opening a territory and then a publication inside it needs no further artifact.
-  await sheet.locator('[data-district="atlas:LIMB-COMPLIANCE"] .district__shape').click();
+  await sheet.locator('[data-district="atlas:LIMB-COMPLIANCE"] .district__shape').focus();
+  await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/atlasLimb=/);
   await sheet.locator('[data-landmark="nist-800-53"]').click();
   await expect(page).toHaveURL(/atlasFramework=nist-800-53/);
@@ -133,8 +134,8 @@ test("focused Atlas loads one neighborhood without monolithic graph JSON", async
   );
   await waitForAppReady(page);
   await dismissOnboarding(page);
-  await expect(page.getByRole("region", { name: "Focused Atlas record" })).toBeVisible();
-  await expect(page.getByRole("region", { name: "Relationship map" })).toBeVisible();
+  await expect(page.locator(".atl-inspector")).toContainText("AC-2", { timeout: 20000 });
+  await expect(page.locator(".terr")).toBeVisible();
 
   expect(graphArtifactUrls(requested)).toEqual([]);
   expect(
@@ -177,7 +178,7 @@ test("focused Atlas loading state avoids a content-agnostic mobile minimum heigh
   );
 
   releaseNeighborhood();
-  await expect(page.getByRole("region", { name: "Focused Atlas record" })).toBeVisible({
+  await expect(page.locator("#atl-focus")).toContainText("AC-2", {
     timeout: 30000,
   });
   const loadedHeight = await page.locator("#app").evaluate(

@@ -56,12 +56,14 @@ The research index keeps original admitted edge objects, verifies its SHA-256 an
 - **Compare.** Offered only for exactly two publication pins, as a link into the existing Compare with those two publications; otherwise absent, not disabled.
 - **Layers.** Only Publisher, because it is the only layer with governed publication-level data. Product, security domain, lifecycle and change layers are not shown until their data exists.
 - **Search.** Existing infrastructure: `resolveAtlasSearchTransition` for records, reviewed aliases for publications. An identifier opens the record; a publication name opens the publication; ambiguous text goes to Library search; no match stays on the page with recovery links.
-- **Authority · N** and **Other publications · N** are visible lists.
+- **Journeys.** “Start with what you’re working on” names the work the way practitioners do (`src/ui/lib/atlasJourneys.ts`). Every destination is checked against the corpus in `tests/graph/atlasJourneys.test.ts`. An open journey frames its publications on the map by styling only; Compare is offered only for pairs a published route joins; governing policy comes only from `authority-spine.json` or an addition that states its basis.
+- **Policy & directives** and **Other publications · N** are visible lists. Policy is secondary: no count in the header and no shoreline on the map, because lacking crosswalks is a data fact, not a reason for prominence.
+- **Full connection list.** `relationshipView=list` on a focused record opens every published connection of that record as a table over the map, from the same neighborhood shard, with a relationship filter (`relationshipType`).
 - **Phone.** List first. The map becomes a small tappable orientation map; every fact is in the list; the selected item's details come right after the current area.
 
 ## URL state
 
-`atlasLimb` (area), `atlasFramework` (publication), `node` (record), `atlasPins`, `atlasResearch` (`path`, `shared`, `upstream`), `atlasFrom`, `atlasTo`, `atlasDirection`, `atlasLayer` (`publisher:<name>`), `atlasContext` (comma-separated tag ids), `atlasDataset` (12 hex characters). A computed path is never serialized. Older scoped links (`atlasAxis=framework`, `atlasFamily`, `atlasBenchmark`, `atlasBaseline`, `atlasRmfStep`, `relationshipView`, relationship filters) keep opening the earlier workspace, which is also where "Full connection list" leads.
+`atlasLimb` (area), `atlasFramework` (publication), `node` (record), `atlasJourney` (journey id), `relationshipView=list` and `relationshipType` (a record's connection list), `atlasPins`, `atlasResearch` (`path`, `shared`, `upstream`), `atlasFrom`, `atlasTo`, `atlasDirection`, `atlasLayer` (`publisher:<name>`), `atlasContext` (comma-separated tag ids), `atlasDataset` (12 hex characters). A computed path is never serialized. Links from the retired classic Atlas are translated on arrival (`routeIdentity.ts`): `atlasBenchmark`, a record-id `atlasBaseline` or `atlasFamily` open that record; `atlasFamily=group:<catalog>:n` opens the publication; `atlasRmfStep` opens the RMF journey (and the step record when it names one); `relationshipView=list` (or `table`) on a record opens its full connection list; everything that only described how the old board was drawn is dropped.
 
 ## Verification
 

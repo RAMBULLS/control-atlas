@@ -16,7 +16,6 @@
   .clear-filter-link,
   .workbench-toggle button,
   .relationship-view-tabs .tab,
-  .atlas-view-tabs button,
   .source-view-toggle button,
   .library-view-toggle button,
   .workspace-view-toggle button,
@@ -25,8 +24,7 @@
   .search-mobile-filter-button,
   .workspace-mobile-filter-button,
   .drawer-tab,
-  .compare-mode-tab,
-  .atlas-decomp__orientation-button
+  .compare-mode-tab
 ) {
   /* Alignment only. Do not set display here: .search-mobile-filter-button and
      .workspace-mobile-filter-button are display:none until a media query
@@ -45,7 +43,6 @@
   .clear-filter-link,
   .workbench-toggle button,
   .relationship-view-tabs .tab,
-  .atlas-view-tabs button,
   .source-view-toggle button,
   .library-view-toggle button,
   .workspace-view-toggle button,
@@ -54,8 +51,7 @@
   .search-mobile-filter-button,
   .workspace-mobile-filter-button,
   .drawer-tab,
-  .compare-mode-tab,
-  .atlas-decomp__orientation-button
+  .compare-mode-tab
 ) > svg {
   flex: 0 0 auto;
 }

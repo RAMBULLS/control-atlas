@@ -4,7 +4,6 @@ import type { Pt } from "../../lib/atlasTerritoryGeography";
 import { boundsOf, fitView, type TerritoryModel, type View } from "../../lib/atlasTerritoryModel";
 import type { TerritoryRoute } from "../../lib/atlasTerritoryRoutes";
 import { hitsRects, rectsOverlap, routeBetween, type Rect, type Routed } from "../../lib/atlasTerritoryRouting";
-import type { TerritoryListed } from "../../lib/atlasTerritoryIndex";
 import type { ContextMatch } from "../../lib/atlasTerritoryContext";
 
 export type MapRecord = { id: string; code: string; catalogId: string; pinned: boolean; focused: boolean };
@@ -16,7 +15,6 @@ export type MapActions = {
   selectRoute: (key: string) => void;
   selectRecord: (id: string) => void;
   selectHop: (index: number) => void;
-  openAuthority: () => void;
   closeInspector: () => void;
 };
 
@@ -34,7 +32,6 @@ export type MapProps = {
   publisher: string;
   records: readonly MapRecord[];
   hops: readonly MapHop[];
-  authority: readonly TerritoryListed[];
   inspectorInset: number;
   /** Publications containing records that match the chosen context; null when no context is on. Styling only. */
   context: ReadonlyMap<string, ContextMatch> | null;
@@ -55,8 +52,8 @@ const styleFor = (areaId: string) => {
 const relationLabel = (types: readonly string[]) => types.join(" · ").replace(/_/g, " ");
 
 export function TerritoryMap(props: MapProps & { actions: MapActions }) {
-  const { model, size, focusAreaId, focusPublication, selectedRouteKey, revealed, pins, active, sharedLines, publisher, records, hops, authority, inspectorInset, context, actions } = props;
-  const [hover, setHover] = useState<{ kind: "publication" | "district" | "route" | "shore"; id: string } | null>(null);
+  const { model, size, focusAreaId, focusPublication, selectedRouteKey, revealed, pins, active, sharedLines, publisher, records, hops, inspectorInset, context, actions } = props;
+  const [hover, setHover] = useState<{ kind: "publication" | "district" | "route"; id: string } | null>(null);
   const aspect = size.w / Math.max(1, size.h);
   const dimming = active.size > 0 || !!selectedRouteKey || hops.length > 0;
   const overview: View = model.geometry.overview;
@@ -184,20 +181,6 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
                 {a.name.lines.map((l, i) => <tspan dy={i ? 27 * ut : 0} key={l} x={a.name.x}>{l}</tspan>)}
               </text>
               <text aria-hidden="true" className="dname__blurb" fontSize={12.5 * ut} strokeWidth={4 * ut} x={a.name.x} y={a.name.y + (a.name.lines.length - 1) * 27 * ut + 21 * ut}>{rest ? "No publications placed yet" : a.blurb}</text>
-            </g>
-          );
-        })}
-      </g>
-
-      <g className="shore">
-        <text aria-hidden="true" className="shore__label" fontSize={11.5 * ut} textAnchor="end" x={410} y={50}>AUTHORITY</text>
-        {authority.map((a, i) => {
-          const x = 430 + i * 40; const on = hover?.kind === "shore" && hover.id === a.id;
-          return (
-            <g aria-label={`Authority: ${a.name}. Open the authority list.`} className={`shore__item${on ? " is-hover" : ""}`} key={a.id} onClick={actions.openAuthority} onKeyDown={onKey(actions.openAuthority)} onPointerEnter={() => setHover({ kind: "shore", id: a.id })} onPointerLeave={() => setHover(null)} role="button" tabIndex={0}>
-              <circle className="hit" cx={x} cy={44} r={24 * u} />
-              <rect className="shore__mark" height={9 * u} transform={`rotate(45 ${x} 44)`} width={9 * u} x={x - 4.5 * u} y={44 - 4.5 * u} />
-              {on ? <text className="shore__name" fontSize={12.5 * ut} strokeWidth={4 * ut} textAnchor="middle" x={x} y={22}>{a.name}</text> : null}
             </g>
           );
         })}

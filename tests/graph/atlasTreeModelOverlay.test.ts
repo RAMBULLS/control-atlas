@@ -3,17 +3,13 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { atlasNeighborhoodShardId } from "../../src/app/atlas-neighborhood.mjs";
-import type { AtlasSpine } from "../../src/ui/lib/atlasDrilldown";
+import type { AtlasSpine } from "../../src/ui/lib/atlasSpine";
 import {
   atlasDisplayTrace,
   buildAtlasTreeModel,
   canonicalAtlasPath,
   extendDisplayedAuthorityTrace,
 } from "../../src/ui/lib/atlasTreeModel";
-import {
-  preserveTreeIdentityWithOverlay,
-  rankAtlasMappingOverlay,
-} from "../../src/ui/lib/atlasTreeOverlay";
 import type {
   AtlasNeighborhoodEdge,
   AtlasNeighborhoodNode,
@@ -84,74 +80,12 @@ test("the record rail and Atlas trace use the same full authority hop sequence",
   assert.deepEqual(displayedRail.map((hop) => hop.id), expected.map((hop) => hop.id));
 });
 
-test("CCI-000366 ranks 24 highlights plus one Compare summary chip without mutating tree identity", () => {
-  const record = neighborhood("disa-cci:CCI-000366");
-  const overlay = rankAtlasMappingOverlay(record);
-  // The publisher adds STIG rules under this CCI with every refresh, so the
-  // expected overflow is counted from the record's own edges, not pinned.
-  const knownNodes = new Set(record.nodes.map((node) => node.id));
-  const counterparts = new Set(record.edges
-    .filter((edge) => edge.relationship_class === "correlation" && edge.publication_status === "published")
-    .map((edge) => (edge.source_node_id === record.center_node.id ? edge.target_node_id : edge.source_node_id))
-    .filter((id) => knownNodes.has(id)));
-  assert.ok(counterparts.size > 1_000, "CCI-000366 is one of the most heavily mapped controls");
-  assert.equal(overlay.highlights.length, 24);
-  assert.equal(overlay.overflowCount, counterparts.size - 24);
-  assert.equal(overlay.summaryChip?.destination, "compare");
-  const nodes = [{ id: "atlas:TRUNK" }];
-  const edges = [{ id: "tree:trunk-area" }];
-  const decorated = preserveTreeIdentityWithOverlay(nodes, edges, overlay);
-  assert.strictEqual(decorated.nodes, nodes);
-  assert.strictEqual(decorated.edges, edges);
-  assert.equal(decorated.highlightedIds.size, 0);
-});
-
-test("a median mapped node yields one highlight and no summary chip", () => {
-  const overlay = rankAtlasMappingOverlay(neighborhood("disa-cci:CCI-000079"));
-  assert.equal(overlay.highlights.length, 1);
-  assert.equal(overlay.summaryChip, null);
-});
-
-test("overlay ranking prefers publisher-declared, then confidence, then lexical ID", () => {
-  const ids = ["center", "publisher-z", "publisher-a", "publisher-moderate", "derived-direct"];
-  const nodes = ids.map((id) => ({ id, metadata: { title: id } }));
-  const edge = (
-    target_node_id: string,
-    provenance_class: string,
-    confidence: string,
-  ): AtlasNeighborhoodEdge => ({
-    id: `edge:${target_node_id}`,
-    source_node_id: "center",
-    target_node_id,
-    relationship_type: "maps_to",
-    relationship_class: "correlation",
-    provenance_class,
-    publication_status: "published",
-    confidence,
-  });
-  const overlay = rankAtlasMappingOverlay({
-    center_node: nodes[0],
-    nodes,
-    edges: [
-      edge("derived-direct", "control_atlas_derived", "direct"),
-      edge("publisher-moderate", "federal_published", "moderate"),
-      edge("publisher-z", "federal_published", "high"),
-      edge("publisher-a", "federal_published", "high"),
-    ],
-  });
-  assert.deepEqual(overlay.highlights.map((entry) => entry.node.id), [
-    "publisher-a", "publisher-z", "publisher-moderate", "derived-direct",
-  ]);
-});
-
-test("atlasBenchmark survives parse, serialization, and canonical route handling", () => {
+test("a saved benchmark link opens that benchmark record on the territory sheet", () => {
   const benchmarkId = "disa-stig:BENCHMARK-ORACLE-LINUX-9-STIG";
-  const parsed = parseViewState(`?view=atlas-map&atlasFramework=disa-stig&atlasBenchmark=${benchmarkId}`);
-  assert.equal(parsed.view, "atlas-map");
-  if (parsed.view !== "atlas-map") return;
-  assert.equal(parsed.atlasBenchmark, benchmarkId);
-  assert.match(serializeViewState(parsed), /atlasBenchmark=disa-stig%3ABENCHMARK-ORACLE-LINUX-9-STIG/);
   const canonical = canonicalizeHashLocation(`#/atlas?atlasFramework=disa-stig&atlasBenchmark=${benchmarkId}`);
-  assert.match(canonical.canonicalPath, /atlasBenchmark=disa-stig:BENCHMARK-ORACLE-LINUX-9-STIG/);
-  assert.equal(canonical.requiresReplace, false);
+  assert.equal(canonical.canonicalPath, `/atlas/${benchmarkId}?atlasFramework=disa-stig`);
+  assert.equal(canonical.requiresReplace, true);
+  const parsed = parseViewState(`?view=atlas-map&node=${benchmarkId}`);
+  assert.equal(parsed.view === "atlas-map" && parsed.node, benchmarkId);
+  assert.match(serializeViewState(parsed), /node=disa-stig%3ABENCHMARK-ORACLE-LINUX-9-STIG/);
 });

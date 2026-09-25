@@ -17,9 +17,9 @@ import { attachPageDiagnostics, dismissOnboarding, gotoApp, waitForAppReady } fr
 
 const geography = JSON.parse(readFileSync("data/curated/atlas-territory-geography.json", "utf8"));
 const registry = JSON.parse(readFileSync("data/source-registry.json", "utf8"));
-const bootstrap = JSON.parse(readFileSync("data/generated/catalog-bootstrap.json", "utf8")).catalog_bootstrap;
+// Committed data only: the browser job ships the built site, not data/generated.
 const sourceById = new Map(registry.publications.map((source) => [source.id, source]));
-const catalogById = new Map(bootstrap.catalogs.map((catalog) => [catalog.id, catalog]));
+const publicationSourceByCatalog = new Map(registry.catalog_source_bundles.map((bundle) => [bundle.catalog_id, bundle.publication_source_id]));
 
 const REPRESENTATIVE = [
   "nist-800-53", "nist-800-53a", "nist-800-53b", "nist-800-37",
@@ -45,8 +45,7 @@ async function open(page, path, width = 1440) {
 }
 
 function expected(catalogId) {
-  const catalog = catalogById.get(catalogId);
-  const source = sourceById.get(catalog.source_id);
+  const source = sourceById.get(publicationSourceByCatalog.get(catalogId));
   return { alias: geography.presentation[catalogId].alias, official: source.name, sourceId: source.id };
 }
 

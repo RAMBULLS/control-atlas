@@ -93,6 +93,44 @@ Compare, Templates, and other task flows present scope, working controls, result
 
 Compare results lead with the answer: what is compared, the exact count of published mappings, then the mappings. Search, connection type and crosswalk source share one compact toolbar; taxonomy context is a collapsed inline disclosure with a one-line summary, never a wall of tags ahead of the rows, and there is no collapsed drawer at the foot of the page. A page holds a bounded window of source records (`COMPARE_PAGE_SIZE`), a record shows its first few targets with the rest one click away, and counts, evidence and exports always cover every matching mapping; the export note says so. On a phone each row is scannable (source, target, relationship, evidence cue) without repeated column labels. Choosing the target in the page runs the comparison. A link that only names a source and a target waits for one explained action ("Show published mappings"), because results download the full connection graph; links that carry `compareRun=true`, including the Atlas and Library handoffs, land on the result. A pair with no published mappings says "No published mappings were found between these selections." and offers change source, change target and clear filters. Dense controls progressively disclose on compact screens.
 
+## G. Publications and Sources (the trust layer)
+
+One resolver, `src/ui/lib/publicationIdentity.ts`, answers who published a publication, which edition Control Atlas uses and how fresh it is. Atlas, the Library, the publication page and Sources all read it; none keeps a naming list of its own. The practitioner name is Atlas's reviewed alias (`atlas-territory-geography.json`) for a mapped publication, otherwise the source register's `display_name`. The exact official title is the register's `name` and is shown beside the practitioner name whenever it says more. The publisher is the register's `owner`, with the long form only where the curated identity registry records one.
+
+A publication page answers, without a disclosure click: the practitioner name (H1), the official title, the publisher, what the publication is for (its governed synopsis or authority blurb, or nothing), version, status (written out, never colour alone), source freshness, and how many records Control Atlas holds. Primary actions follow: browse the records, the official publication (its accessible name names the publication and says it opens a new tab), See it on the Atlas, and Source details. Before the record inventory it shows what Control Atlas indexes (record kinds with honest counts, the publisher's structure, published connections, coverage basis), edition and freshness (dates and known limitations), the recorded policy basis from the authority spine, and "Work with it": Compare only for pairs with a published crosswalk, templates only where the template registry cites this exact publication, and Atlas journeys that list it. Sections without supporting data are absent rather than filled.
+
+Dates are separate facts and are never merged: the publisher's version or current-through statement, the date Control Atlas retrieved the material, the date it was last checked against the publisher, the date the accepted snapshot entered Control Atlas, and Control Atlas's source review. A retrieval date recorded in the version slot is shown as "Not stated by the publisher" with the retrieval date explained. Lifecycle is the register's value; "Not recorded" never becomes current, and a newer edition existing never retires an older one unless the source review records it.
+
+Sources is the public trust register with two views: Publications, and Policy & directives (`layer=policy`) for the statutes, regulations, orders and directives the authority record cites. The inspector leads with identity, the four status facts (Version / current through, Status, Source freshness, Control Atlas coverage), the official action and the dates, then known limitations and the recorded basis relationships ("Recorded as the basis for" on a policy document, "Recorded policy basis" on a publication, each stating that it does not decide legal precedence or applicability). Source files, published crosswalk evidence and reference material follow; an inventory of more than four items starts collapsed. Stable IDs, checksums and provenance classes live under Technical details. Workflow, branch, job, validator and hold reasons never appear publicly; an update held for review is described only as the previously accepted edition remaining in place.
+
+One filter, one visible control. The register's publisher filter is the band row: it names every publisher in the current view with its count, so the shape of the register is visible without opening anything. It replaced a select that set the same state and sat directly above it — two controls for one choice. `?publisher=` still restores, and the active band reports `aria-pressed`.
+
+The publication page and Sources share one content grid. They are one journey — a reader arrives from the Library, opens a publication, and follows Source details — and a different page width at any step in it is a visible jump. `tests/e2e/layout-guardrails.spec.mjs` holds the two to the same gutter.
+
+The generated Publication Acceptance Matrix (`npm run audit:publication-matrix`, gated by `tests/graph/publicationAcceptance.test.ts`) covers every public publication in the corpus, classifies each missing source fact, and blocks any publication whose Atlas, Library, publication page and Sources identity disagree.
+
+## Public copy
+
+Public copy is written for the practitioner doing the work, not for the people who built the product. Every default surface answers three questions: what is this, why does it matter to the work I am doing, and what can I do next. If a specific fact exists, state the fact; vague reassurance is not a substitute for a date, a publisher or a count.
+
+Source trust information is concrete: publisher, official title, version or current-through, the retrieval date and the check date kept distinct, lifecycle, what Control Atlas indexes, any known limitation, and the official source.
+
+**Never on a default surface.** Process and meta narration, in any wording:
+
+- how something passed our own review, for example "Nothing appears here until it passes review"
+- what Control Atlas has accepted, decided or validated as the subject of a sentence
+- the product describing its own pages, for example "Home shows what changed" or "This page now..."
+- release announcements as the framing for a source change, for example "New in Control Atlas" when the subject is a publisher's update
+- "We shipped", "This feature", and other product-changelog voice
+- any mention of CI, builds, tests, review queues or validation machinery
+- implementation reassurance, and self-validation that asks the reader to trust the product because our own process says so
+
+**Never on a default surface.** Implementation vocabulary: workflow, job, branch, validator, normalized, build artifact, dataset identity, internal route or state names, quarantine or hold tokens. A reader who opened a technical-details view has asked for that information and may have it there; nobody else has.
+
+The reason an update is held is never public. Say only that the edition Control Atlas last added is what is shown.
+
+**Enforcement.** `PROHIBITED_PRIMARY_SURFACE_PATTERNS` in `src/shared/site-copy.mjs` holds the phrase set; `tests/copy-contract.test.mjs` checks product-authored source files against it, and `tests/e2e/public-copy.spec.mjs` checks the *rendered* text of the critical public routes, which catches copy assembled at runtime that a source scan cannot see. The rendered check exempts a subtree marked `data-technical-details`, which is the only escape hatch and belongs on genuine technical-details disclosures. This is a small, maintained phrase list and a rendered-text check, not a general English linter: it is meant to stop the class of copy we have already shipped once, not to grade prose.
+
 ## Responsive verification widths
 
 All page contracts are checked at 320, 375, 390, 768, 1024, and 1440 pixels. Required assertions cover visible primary content, document height, useful-space utilization, DOM size, overflow, focus order, keyboard operation, and preserved back/forward and deep-link state. Atlas mobile is list-first; it never presents a shrunken canvas as the only way to reach evidence.

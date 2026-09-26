@@ -13,6 +13,8 @@ import {
 import { execFileSync } from "node:child_process";
 import { dirname, join, extname } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+
+import { generatedDataIsIdentical } from "./lib/generated-data-digest.mjs";
 import { gzipSync } from "node:zlib";
 import { runNodeSync } from "./lib/process-runner.mjs";
 
@@ -76,14 +78,21 @@ function assertGeneratedDataComplete() {
   }
 }
 
-function stagedGeneratedDataMatches() {
-  const sourceManifest = join(ROOT, "data/generated/build-manifest.json");
-  const stagedManifest = join(DIST, "data/generated/build-manifest.json");
-  if (!existsSync(sourceManifest) || !existsSync(stagedManifest)) return false;
-  if (!readFileSync(sourceManifest).equals(readFileSync(stagedManifest))) return false;
-  return REQUIRED_GENERATED_FILES.every((path) =>
-    existsSync(join(DIST, path)),
+/**
+ * May the build reuse the generated data already staged in dist?
+ *
+ * Only when the bytes are the same. See tools/lib/generated-data-digest.mjs
+ * for why a manifest comparison, and then a size-and-mtime comparison, were
+ * both wrong.
+ */
+async function stagedGeneratedDataMatches() {
+  if (!REQUIRED_GENERATED_FILES.every((path) => existsSync(join(DIST, path)))) return false;
+  const verdict = await generatedDataIsIdentical(
+    join(ROOT, "data/generated"),
+    join(DIST, "data/generated"),
   );
+  if (!verdict.identical) console.log(`Staged data is not reusable: ${verdict.reason}.`);
+  return verdict.identical;
 }
 
 if (reuseGenerated) {
@@ -104,7 +113,7 @@ if (reuseGenerated) {
 }
 
 assertGeneratedDataComplete();
-const reuseStagedData = reuseGenerated && stagedGeneratedDataMatches();
+const reuseStagedData = reuseGenerated && await stagedGeneratedDataMatches();
 if (reuseStagedData) {
   rmSync(join(DIST, "assets"), { force: true, recursive: true });
   console.log("Reusing unchanged staged data and rebuilding application assets only.");

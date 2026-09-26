@@ -299,7 +299,11 @@ export function CommonsPage(props: {
               </div>
             </section>
           ) : null}
-          <ul aria-label="Resource results" className="workspace-result-list resource-catalog-grid">
+          {/* The result cards are h3, so without a heading of their own they
+              hung straight off the page h1 and skipped a level for anyone
+              navigating by heading. */}
+          <h2 className="visually-hidden" id="resource-results-heading">Resources</h2>
+          <ul aria-labelledby="resource-results-heading" className="workspace-result-list resource-catalog-grid">
             {filtered.slice(0, visibleCount).map((resource) => {
               const selected = selectedResourceIds.includes(resource.id);
               const summary = resourceSummaryPresentation(resource);

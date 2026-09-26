@@ -3,9 +3,14 @@ import { catalogDisplayNameFor } from "./catalogProfiles";
 import { officialSourceFor, retrievedArtifactFor } from "./officialSource";
 import { sourceIdentityPresentationFor } from "./sourceIdentity";
 import {
-  sourcePublicationTitle,
-  sourcePublisherDisplayName,
-} from "./sourcePresentation";
+  datasetCheckedThroughFor,
+  publicationTrustFor,
+  publicationsCitingPolicy,
+  recordedBasisFor,
+  type PublicationKind,
+  type PublicationTrust,
+} from "./publicationIdentity";
+import { sourcePublisherDisplayName } from "./sourcePresentation";
 import publicationIdentityIndexArtifact from "../../../data/generated/publication-identity-index.json";
 
 export type SourceLayerId =
@@ -117,10 +122,24 @@ export type SourceRegisterRow = {
 };
 
 export type PublicationRegisterRow = SourceRegisterRow & {
+  /** Publication, policy document, or reference page. Policy has its own register view. */
+  kind: PublicationKind;
+  /** The governed identity and trust story shared with Atlas and the publication page. */
+  trust: PublicationTrust;
+  /** Policy documents the authority spine records as this publication's basis (source ids). */
+  recordedBasis: string[];
+  /** For a policy document: catalogs whose recorded basis cites it. */
+  citedBy: string[];
   familyName: string;
   officialTitle: string;
   catalogId: string | null;
-  catalogCounts: { discovered_records: number; normalized_records: number } | null;
+  catalogCounts: {
+    discovered_records: number;
+    normalized_records: number;
+    evidence_class?: string | null;
+    excluded_records?: number;
+    exclusions?: Array<{ count: number; reason: string }>;
+  } | null;
   coverageSummary: string;
   sourceMaterials: {
     primary: SourceMaterialItem[];
@@ -158,6 +177,14 @@ export type SourceLayerCompleteness = {
   >;
 };
 
+/**
+ * What the public is told when an update to a source is on hold: that the
+ * edition already added is what they are looking at, and nothing about why.
+ */
+const HOLD_NOTICE = "Showing the edition Control Atlas last added; a newer one is not indexed yet.";
+/** Internal marker for "a hold exists" when no reason was supplied. Never rendered. */
+const HOLD_MARKER = "hold-recorded";
+
 const CONNECTION_ROLES = new Set(["mapping"]);
 const INGESTION_ROLES = new Set([
   "primary_data",
@@ -185,7 +212,7 @@ function isRecordedString(value: unknown): value is string {
   );
 }
 
-function recorded<T>(value: T, reason = "Recorded by the source registry."): SourceField<T> {
+function recorded<T>(value: T, reason = "Recorded for this source."): SourceField<T> {
   return { value, state: "recorded", reason };
 }
 
@@ -306,8 +333,8 @@ function sourceDisplayName(source: any): string {
 function parentPublicationReason(parent: any): string {
   const parentName = recordedSourceDisplayName(parent);
   return parentName
-    ? `Inherited from parent publication ${parentName}.`
-    : "Inherited from the linked parent publication.";
+    ? `Taken from ${parentName}, the publication this belongs to.`
+    : "Taken from the publication this belongs to.";
 }
 
 function sourceTitle(source: any, parent: any | null): string {
@@ -485,6 +512,8 @@ function matchesPublicationFilters(
   const candidateStrings: string[] = [
     row.id,
     row.displayTitle,
+    row.officialTitle,
+    row.trust.practitionerName,
     row.familyName,
     row.publisher.value || "",
     row.version.value || "",
@@ -520,11 +549,13 @@ export function buildPublicationRegister(
   const quarantineById = new Map(
     quarantine.map((entry) => [
       entry.id,
-      entry.reason || "This publication is quarantined pending review.",
+      // Kept only to mark that a hold exists. It is never rendered.
+      entry.reason || HOLD_MARKER,
     ]),
   );
 
-  const rawIdentities = publicationIdentityIndexArtifact.identities || [];
+  const rawIdentities = (publicationIdentityIndexArtifact.identities || []) as any[];
+  const datasetCheckedThrough = datasetCheckedThroughFor(sources);
 
   const rows: PublicationRegisterRow[] = rawIdentities.map((identity) => {
     const source =
@@ -545,19 +576,32 @@ export function buildPublicationRegister(
     const isAuthority = identity.id.startsWith("authority-");
     const quarantineReason = quarantineById.get(identity.id);
     const identityPresentation = sourceIdentityPresentationFor(source);
+    const catalogId = identity.catalog_id || null;
+    const trust = publicationTrustFor({
+      source,
+      catalogId,
+      review: catalogs.find((catalog) => catalog.id === catalogId)?.source_review,
+      counts: identity.catalog_counts,
+      datasetCheckedThrough,
+      heldForReview: Boolean(quarantineReason),
+    });
 
-    const versionField = isRecordedString(source.version)
-      ? recorded(source.version.trim())
-      : isAuthority
-        ? notApplicable(
-            "Authority documents are identified by statutory citation, not release version.",
-          )
-        : missing("Publisher version is not recorded.");
+    // A retrieval date recorded in the version slot is not a publisher version.
+    const versionField: SourceField<string> =
+      trust.version.state === "recorded" || trust.version.state === "current_through"
+        ? recorded(trust.version.value)
+        : trust.version.state === "unknown"
+          ? isAuthority
+            ? notApplicable("Authority documents are identified by citation, not release version.")
+            : missing("Publisher version is not recorded.")
+          : notApplicable(trust.version.detail);
 
     const verifiedField = verificationField(source);
 
+    // The register's hold reason is operational detail; the public field says only that an
+    // accepted edition stays in place (see the trust limitation), never why automation held it.
     const lifecycleField: SourceField<string> = quarantineReason
-      ? blocked<string>(quarantineReason)
+      ? blocked<string>(HOLD_NOTICE)
       : stringField(source.lifecycle_status, "Lifecycle status is not recorded.");
 
     const publisher = publisherField(source, null);
@@ -626,11 +670,12 @@ export function buildPublicationRegister(
     return {
       id: identity.id,
       layer: "publication",
+      kind: trust.kind,
+      trust,
+      recordedBasis: catalogId ? recordedBasisFor(catalogId) : [],
+      citedBy: trust.kind === "policy" ? publicationsCitingPolicy(identity.id) : [],
       displayTitle: identity.name || sourceTitle(source, null),
-      officialTitle: sourcePublicationTitle(
-        source,
-        identity.name || sourceTitle(source, null),
-      ),
+      officialTitle: trust.officialTitle,
       familyName: identityPresentation.familyName,
       publicationSourceId: null,
       publisher,
@@ -650,7 +695,7 @@ export function buildPublicationRegister(
       provenance: source.provenance_class || "official",
       eligibility: source.eligibility_status || "eligible",
       access: source.access_status || "public",
-      catalogId: identity.catalog_id || null,
+      catalogId,
       catalogCounts: identity.catalog_counts || null,
       coverageSummary,
       sourceMaterials,
@@ -708,8 +753,11 @@ function buildRows(
       version: stringField(source.version, "Publisher version is not recorded."),
       retrievedAt: stringField(source.retrieved_at, "Retrieval date is not recorded."),
       verifiedAt: verificationField(source),
+      // The hold reason is operational detail and never public (see "Public
+      // copy" in docs/PAGE_CONTRACTS.md). The publication path already said
+      // only this; this path was still printing the raw reason.
       lifecycle: quarantineReason
-        ? blocked(quarantineReason)
+        ? blocked<string>(HOLD_NOTICE)
         : stringField(source.lifecycle_status, "Lifecycle status is not recorded."),
       recordCount: isReference
         ? notApplicable("Reference pages do not import records.")
@@ -765,7 +813,7 @@ export function buildSourceLayers(
     ingestion: [],
   };
   const quarantineById = new Map(
-    quarantine.map((entry) => [entry.id, entry.reason || "This source is quarantined pending review."]),
+    quarantine.map((entry) => [entry.id, entry.reason || HOLD_MARKER]),
   );
 
   for (const row of buildRows(sources, catalogs, quarantineById)) {
@@ -833,4 +881,13 @@ export function sourceLayerEntityLabel(layer: SourceLayerId, count: number): str
     organization: ["structure record", "structure records"],
   };
   return labels[layer][count === 1 ? 0 : 1];
+}
+
+/** The publication-identity index entry a source id belongs to (canonical id or alias), or null. */
+export function publicationIdentityFor(sourceId: string): any | null {
+  if (!sourceId) return null;
+  const identities = (publicationIdentityIndexArtifact.identities || []) as any[];
+  return identities.find((identity) => identity.id === sourceId)
+    || identities.find((identity) => (identity.alias_source_ids || []).includes(sourceId))
+    || null;
 }

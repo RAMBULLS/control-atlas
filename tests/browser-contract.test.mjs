@@ -469,9 +469,13 @@ test('Catalog controls stay anchored to the records section', () => {
   assert.match(catalogPage, /className="catalog-record-toolbar"/);
   assert.doesNotMatch(catalogPage, />Published group</);
   // The publication action label resolves through the shared official-source
-  // module so a raw download is never labelled "Open". The catalog page must
-  // route through it rather than hardcoding its own label.
-  assert.match(catalogPage, /OFFICIAL_PUBLICATION_VERBS/);
+  // module so a raw download is never labelled "Open". The publication page's
+  // next-action contract (#284) must route through it rather than hardcoding
+  // its own label, and the page must render that contract.
+  const overview = readFileSync('src/ui/components/PublicationOverview.tsx', 'utf8');
+  assert.match(readFileSync('src/ui/lib/publicationActions.ts', 'utf8'), /OFFICIAL_PUBLICATION_VERBS/);
+  assert.match(overview, /publicationNextActions/);
+  assert.match(catalogPage, /<PublicationOverview/);
   assert.match(
     readFileSync('src/ui/lib/officialSource.ts', 'utf8'),
     /Open official publication/,
@@ -479,7 +483,7 @@ test('Catalog controls stay anchored to the records section', () => {
   assert.match(catalogPage, /Search records/);
   assert.match(catalogPage, /Search \$\{tierLabelPlural/);
   assert.match(catalogPage, /data-published-tier/);
-  assert.match(catalogPage, /className="catalog-source-link"/);
+  assert.match(overview, /className="catalog-source-link"/);
   assert.match(surfaces, /\.catalog-record-toolbar\s*\{/);
   assert.match(surfaces, /\.catalog-source-link\s*\{[^}]*justify-self:\s*start;/s);
 });

@@ -30,12 +30,15 @@ export type CompareViewMode = "map" | "list";
 
 export type SourceLayerMode =
   | "publication"
+  /** Policy & directives: statutes, regulations, orders and directives in the register. */
+  | "policy"
   | "connection"
   | "ingestion"
   | "organization";
 
 const SOURCE_LAYER_MODES = new Set<SourceLayerMode>([
   "publication",
+  "policy",
   "connection",
   "ingestion",
   "organization",

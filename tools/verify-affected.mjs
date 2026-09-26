@@ -5,6 +5,7 @@ import process from 'node:process';
 import { pathToFileURL } from 'node:url';
 
 import { classifyNameStatus } from './classify-change-scope.mjs';
+import { reviewSelection } from './ui-review-routes.mjs';
 
 const AUTOMATION_TESTS = new Set([
   'tests/recover-refresh-pr.test.mjs',
@@ -198,6 +199,10 @@ export function createVerificationPlan(paths, changeMap) {
     path === 'src/shared/source-text-presentation.mjs' ||
     path.includes('source-truth') ||
     path === 'tests/e2e/source-trust-surfaces.spec.mjs');
+  // Any change that can move a public layout or rewrite a visible string
+  // re-runs the product-level guardrails. This is the same question the CI
+  // ui-review gate asks, answered by the same module so the two cannot drift.
+  const publicUiChanged = reviewSelection(paths).material;
   const compareWorkbenchChanged = paths.some((path) =>
     path === 'src/ui/pages/ComparePage.tsx' ||
     path === 'src/ui/lib/comparePagination.ts' ||
@@ -431,6 +436,17 @@ export function createVerificationPlan(paths, changeMap) {
         '--grep',
         'publication pages use|OSCAL-fed records|WS2 exposes governed'],
       expectedTests: 3, workers: 2, budgetSeconds: 30,
+    });
+  }
+  if (publicUiChanged) {
+    // The rendered-copy check is the cheap half and catches the class of
+    // failure we actually shipped, so it belongs in the inner loop. The full
+    // layout sweep walks every route at six widths and costs minutes; it runs
+    // in the CI browser gate via test:e2e:smoke, not on every local edit.
+    addStep(steps, {
+      id: 'public-copy-browser',
+      command: ['npm', 'run', 'test:e2e:run', '--', 'tests/e2e/public-copy.spec.mjs'],
+      expectedTests: 23, workers: 2, budgetSeconds: 60,
     });
   }
   if (compareWorkbenchChanged) {

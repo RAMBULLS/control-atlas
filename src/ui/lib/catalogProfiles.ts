@@ -153,47 +153,6 @@ const SYNOPSES: Record<string, string> = {
     "NIST mobile threats with exploit examples, CVE references, and possible countermeasures.",
 };
 
-// What a practitioner calls the publication out loud. The register's full
-// titles ("NIST IoT Device Cybersecurity Requirement Catalog") are correct and
-// stay correct everywhere a title is claimed, but they cannot be labels on a
-// map — at that length they collide long before the twenty-eighth catalog is
-// placed. These are the spoken names, used only where space is the constraint.
-const SHORT_NAMES: Record<string, string> = {
-  "nist-800-53": "800-53",
-  "nist-800-53a": "800-53A",
-  "nist-800-53b": "800-53B",
-  "nist-800-171": "800-171 r3",
-  "nist-800-171-rev2": "800-171 r2",
-  "nist-800-172": "800-172",
-  "nist-800-37": "RMF (800-37)",
-  "nist-ssdf": "SSDF",
-  "nist-ai-rmf": "AI RMF",
-  "nist-zt": "NIST ZT",
-  "nist-iot-cybersecurity": "IoT",
-  "nist-mobile-threats": "Mobile Threats",
-  "csf-2": "CSF 2.0",
-  "fips-199": "FIPS 199",
-  "fips-200": "FIPS 200",
-  "cmmc-2": "CMMC 2.0",
-  "cui-policy": "CUI",
-  "dod-zt": "DoD ZT",
-  "dod-rai": "DoD Responsible AI",
-  "fedramp-rev5": "FedRAMP r5",
-  "fedramp-2026": "FedRAMP 2026",
-  "disa-stig": "STIGs",
-  "disa-srg": "SRGs",
-  "disa-cci": "CCIs",
-  "mitre-attack": "ATT&CK",
-  "mitre-attack-ics": "ATT&CK ICS",
-  "mitre-d3fend": "D3FEND",
-  "microsoft-zt-maturity": "Microsoft ZT",
-};
-
-/** The spoken name, for labels where the full publication title cannot fit. */
-export function catalogShortNameFor(catalogId: string, fallback = ""): string {
-  return SHORT_NAMES[catalogId] || fallback || catalogDisplayNameFor(catalogId);
-}
-
 export function catalogProfileFor(
   catalogId: string,
   _catalogName = "this catalog",

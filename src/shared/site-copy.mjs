@@ -155,6 +155,39 @@ export const PROHIBITED_PRIMARY_SURFACE_PATTERNS = Object.freeze([
   /published structure/i,
   /source-backed/i,
 
+  // Process and meta narration. Public copy describes the publisher's material
+  // and the reader's next step; it never narrates our review, our releases or
+  // the page itself. See "Public copy" in docs/PAGE_CONTRACTS.md. This list
+  // grew out of the Home copy withdrawn in issue 283 and the publication and
+  // Sources pass in issue 284: a fence around copy we have shipped once,
+  // not a general prose grader.
+  /\b(?:until|unless) it passes review\b/i,
+  /\bpasses? (?:our|its|the) (?:own )?review\b/i,
+  /\bnothing appears here until\b/i,
+  /\bcontrol atlas has (?:accepted|approved|validated|verified|reviewed)\b/i,
+  /\b(?:home|this page|the page) (?:now )?shows\b/i,
+  /\bthis page now\b/i,
+  /\bnew in control atlas\b/i,
+  /\bwe (?:shipped|built|added|released|rebuilt)\b/i,
+  /\bthis feature\b/i,
+  /\bis being reviewed\b/i,
+  /\bheld for review\b/i,
+
+  // Build and test machinery named on a public surface
+  /\b(?:ci|continuous integration) (?:run|job|check|pipeline)\b/i,
+  /\bbuild (?:artifact|pipeline|step)\b/i,
+  /\btest suite\b/i,
+  /\bworkflow run\b/i,
+  /\bquarantine[ds]?\b/i,
+
+  // Implementation vocabulary leaking out of technical-details views
+  /\bdataset identity\b/i,
+  /\bin this data ?set\b/i,
+  /\bnormalized (?:from|records|into)\b/i,
+  /\bvalidator\b/i,
+  /\bdeterministic (?:atlas )?projections?\b/i,
+  /\bcommitted .{0,24}capture\b/i,
+
   // Compliance claim overreach
   /\b(?:proves?|ensures?|guarantees?|achieves?) compliance\b/i,
 

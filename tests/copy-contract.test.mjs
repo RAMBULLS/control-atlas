@@ -12,6 +12,7 @@ import {
   formatRecordTypeLabel,
 } from "../src/shared/site-copy.mjs";
 import { provenanceDescriptionMap } from "../src/content/copy.mjs";
+import { findProhibitedCopy } from "../tools/lib/public-copy-scan.mjs";
 
 const read = (path) => readFileSync(path, "utf8");
 const PUBLIC_COPY_FILES = [
@@ -43,6 +44,18 @@ const PUBLIC_COPY_FILES = [
   "src/ui/pages/SourcesPage.tsx",
   "src/ui/pages/StartHerePage.tsx",
   "src/ui/pages/TemplatesPage.tsx",
+  // The trust layer writes the most process-flavoured copy in the product —
+  // freshness, limitations, lifecycle, coverage notes — and none of it was
+  // covered here while it was being written (#284).
+  "src/ui/components/PublicationOverview.tsx",
+  "src/ui/components/PublicationTrust.tsx",
+  "src/ui/lib/publicationIdentity.ts",
+  "src/ui/lib/publicationActions.ts",
+  "src/ui/lib/sourceRegister.ts",
+  "src/ui/lib/sourcePresentation.ts",
+  // Registry notes are authored here and rendered verbatim on publication
+  // pages, so they are product copy even though they live in a build script.
+  "scripts/migrate-source-truth-profiles.mjs",
   "src/ui/lib/buildRouteState.ts",
   "src/ui/lib/catalogProfiles.ts",
   "src/ui/lib/pagePrimitives.tsx",
@@ -75,11 +88,16 @@ test("third-party federal-use provenance is described without changing its publi
   );
 });
 
-test("product-authored route copy excludes banned metaphor and generated guidance", () => {
-  const copy = PUBLIC_COPY_FILES.map((path) => read(path)).join("\n");
-  for (const pattern of PROHIBITED_PRIMARY_SURFACE_PATTERNS) {
-    assert.doesNotMatch(copy, pattern);
-  }
+test("product-authored route copy excludes banned metaphor, process narration and generated guidance", () => {
+  // Authored strings only. A raw file scan reported a parameter named
+  // `quarantine` and a `normalized` variable as public copy, and a check that
+  // cries wolf is a check people delete.
+  const violations = findProhibitedCopy(PUBLIC_COPY_FILES, PROHIBITED_PRIMARY_SURFACE_PATTERNS, read);
+  assert.deepEqual(
+    violations,
+    [],
+    `Prohibited public copy:\n${violations.map((v) => `  ${v.file}:${v.line}  ${v.pattern}\n    "${v.text}"`).join("\n")}`,
+  );
 });
 
 test("product-authored Resource collection summaries stay short and task-focused", () => {

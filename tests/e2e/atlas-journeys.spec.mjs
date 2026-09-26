@@ -38,8 +38,8 @@ test("RMF leads with the practitioner name and keeps the exact publication ident
   await page.getByRole("button", { name: "RMF & ATO", exact: true }).click();
   expect(query(page).get("atlasJourney")).toBe("rmf");
   const rmf = card(page);
-  await expect(rmf.getByRole("button", { name: /RMF process: SP 800-37 Rev\. 2/ })).toBeVisible();
-  await expect(rmf.getByRole("button", { name: /Control catalog: SP 800-53 Rev\. 5/ })).toBeVisible();
+  await expect(rmf.getByRole("button", { name: /RMF process: NIST SP 800-37 Rev\. 2 Risk Management Framework/ })).toBeVisible();
+  await expect(rmf.getByRole("button", { name: /Control catalog: NIST SP 800-53 Rev\. 5/ })).toBeVisible();
   await expect(rmf.getByRole("link", { name: "Compare SP 800-53 Rev. 5 and 800-53B" })).toHaveAttribute("href", /compare\/relationships\?.*source=nist-800-53.*target=nist-800-53b/);
   await expect(rmf.getByRole("link", { name: "Build an authorization package" })).toHaveAttribute("href", /#\/build\/tasks\/build-authorization-package/);
   await expect(rmf.getByRole("link", { name: "Security Plan Starter" })).toHaveAttribute("href", /#\/build\/documents\/security_plan_starter/);
@@ -63,7 +63,7 @@ test("RMF leads with the practitioner name and keeps the exact publication ident
 
 test("a publication opened from a journey keeps its Library and map handoffs", async ({ page }) => {
   await open(page, "/#/atlas?atlasJourney=stig");
-  await card(page).getByRole("button", { name: /^STIGs: DISA STIG/ }).click();
+  await card(page).getByRole("button", { name: /^STIGs: DISA Public STIG Library/ }).click();
   await expect(page).toHaveURL(/atlasFramework=disa-stig/);
   await expect(page.locator(".atl-inspector")).toContainText("DISA STIG");
   await expect(page.locator(".atl-inspector").getByRole("link", { name: "Open in the Library" })).toHaveAttribute("href", /library\/publication\/disa-stig/);

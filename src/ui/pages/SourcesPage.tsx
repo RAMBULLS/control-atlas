@@ -7,6 +7,7 @@ import type { MouseEvent, ReactNode } from "react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { displayNameFor } from "../../app/display-names.mjs";
+import "../../../styles/publication-trust.css";
 import { SITE_COPY } from "../../shared/site-copy.mjs";
 import { Button, ButtonLink } from "../components/lsm";
 import {
@@ -28,37 +29,30 @@ import {
   formatSourceDate,
   sourceFieldAbsenceDisplayName,
 } from "../lib/sourcePresentation";
+import { officialSourceActionLabel, OFFICIAL_PUBLICATION_VERBS, type SourceActionVerbs } from "../lib/officialSource";
+import { practitionerNameForCatalog } from "../lib/publicationIdentity";
+import { AppLink } from "../components/AppLink";
+import {
+  FreshnessValue,
+  LifecycleStatus,
+  LimitationList,
+  publisherLine,
+  SourceDates,
+  VersionValue,
+} from "../components/PublicationTrust";
+
+type Navigate = (view: ViewState["view"], patch?: Partial<ViewState>) => void;
+
+const OFFICIAL_TEXT_VERBS: SourceActionVerbs = {
+  view: "Read the official text",
+  download: "Download the official text",
+};
+
+/** Said wherever an authority relationship is shown, in the same words. */
+const POLICY_BASIS_NOTE =
+  "Control Atlas records this basis and cites a source for it. It does not state legal precedence or whether it applies to you.";
 
 const SOURCE_PAGE_SIZE = 25;
-
-/**
- * A recorded check date prints plainly. A date derived from retrieval is
- * labelled as retrieval, so the register never implies a verification that did
- * not happen. The field's reason carries the full sentence in the tooltip.
- */
-function VerificationDate(props: { field: { value: string | null; state: string; reason: string } }) {
-  const { field } = props;
-  if (!field.value) {
-    return (
-      <span className="source-field-absence" title={field.reason}>
-        {sourceFieldAbsenceDisplayName(field.state)}
-      </span>
-    );
-  }
-  const date = <time dateTime={field.value}>{formatSourceDate(field.value)}</time>;
-  if (field.state === "derived") {
-    return (
-      <span className="source-checked-derived" title={field.reason}>
-        <span className="source-checked-qualifier">Retrieved</span> {date}
-      </span>
-    );
-  }
-  return (
-    <span className="source-checked-derived" title={field.reason}>
-      <span className="source-checked-qualifier">Checked</span> {date}
-    </span>
-  );
-}
 
 function SourceFieldText(props: {
   field: { value: string | null; state: string; reason: string };
@@ -73,9 +67,9 @@ function SourceFieldText(props: {
 }
 
 /** Enough to show the register's shape without becoming a second filter list. */
-const PUBLISHER_BAND_LIMIT = 8;
+const PUBLISHER_BAND_LIMIT = 16;
 /** A chip for two rows is not navigation; the dropdown already covers the tail. */
-const PUBLISHER_BAND_MINIMUM = 3;
+const PUBLISHER_BAND_MINIMUM = 1;
 
 function CopyStableSourceId(props: { id: string }) {
   const [copied, setCopied] = useState(false);
@@ -118,13 +112,19 @@ function useCompactSourceInspector() {
   return isCompact;
 }
 
+/** More source files than this start collapsed, so a file inventory never pushes the trust story off a phone screen. */
+const OPEN_INVENTORY_LIMIT = 4;
+
 function PublicationInspectorContent(props: {
   publication: PublicationRegisterRow;
   heading: ReactNode;
   close?: ReactNode;
+  onNavigate: Navigate;
+  policyNameFor: (sourceId: string) => string;
 }) {
-  const { publication, heading, close } = props;
-  const isAuthority = publication.id.startsWith("authority-");
+  const { publication, heading, close, onNavigate, policyNameFor } = props;
+  const { trust } = publication;
+  const isPolicy = publication.kind === "policy";
   const allSupplemental = [
     ...publication.sourceMaterials.enrichment,
     ...publication.sourceMaterials.supplemental,
@@ -147,78 +147,139 @@ function PublicationInspectorContent(props: {
     .map(([role]) => String(role))
     .join(", ");
 
+  // This is a value in a label/value row, so it stays a phrase. "Held as a
+  // source record" described our storage rather than what the reader gets; a
+  // whole sentence here wrapped across four right-aligned lines. The detail
+  // belongs in the coverage note below, which is ordinary body text.
   const coverageText = publication.catalogCounts
-    ? `${publication.catalogCounts.normalized_records.toLocaleString()} normalized records indexed in Search & Explore`
-    : isAuthority
-      ? "Statutory / regulatory reference document"
-      : publication.coverageSummary;
+    ? `${publication.catalogCounts.normalized_records.toLocaleString()} records indexed`
+    : isPolicy && publication.citedBy.length
+      ? `Cited by ${publication.citedBy.length} publication${publication.citedBy.length === 1 ? "" : "s"}`
+      : "Not indexed";
+  const coverageNote = publication.catalogCounts
+    ? ""
+    : isPolicy
+      ? "Control Atlas records this document's identity and what cites it. Its text is not indexed here; read the official document for the wording."
+      : "Control Atlas records this publication's identity. Its contents are not indexed here; read the official publication for the wording.";
 
   return (
     <>
       <header className="source-inspector-header">
         <div>
-          <span className="label">SELECTED PUBLICATION</span>
+          <span className="label">{isPolicy ? "POLICY DOCUMENT" : "SELECTED PUBLICATION"}</span>
           {heading}
+          {trust.showsOfficialTitle ? (
+            <p className="source-inspector-official" data-official-title="">
+              <span className="source-inspector-label">Official title</span> {trust.officialTitle}
+            </p>
+          ) : null}
           <p className="source-inspector-publisher">
-            <SourceFieldText field={publication.publisher} />
+            {trust.publisher ? <><span className="source-inspector-label">{isPolicy ? "Issued by" : "Published by"}</span> {publisherLine(trust)}</> : <SourceFieldText field={publication.publisher} />}
           </p>
         </div>
         {close}
       </header>
 
       <div className="source-inspector-content">
+        {trust.summary ? <p className="source-inspector-summary">{trust.summary}</p> : null}
+
         <section aria-label="Source status summary" className="source-status-overview">
           <div className="system-stat">
             <span>Version / current through</span>
-            <strong><SourceFieldText field={publication.version} notApplicable="Not versioned" /></strong>
+            <strong><VersionValue showDetail version={trust.version} /></strong>
           </div>
 
           <div className="system-stat">
             <span>Status</span>
-            <div>
-              {publication.lifecycle.value ? (
-                <Badge tone={publication.lifecycle.value === "active" ? "success" : "warning"}>
-                  {displayNameFor("lifecycle_status", publication.lifecycle.value)}
-                </Badge>
-              ) : (
-                <SourceFieldText field={publication.lifecycle} />
-              )}
-            </div>
+            <div><LifecycleStatus lifecycle={trust.lifecycle} /></div>
           </div>
 
           <div className="system-stat">
             <span>Source freshness</span>
-            <strong><VerificationDate field={publication.verifiedAt} /></strong>
+            <strong><FreshnessValue freshness={trust.freshness} /></strong>
           </div>
 
           <div className="system-stat">
             <span>Control Atlas coverage</span>
             <strong>{coverageText}</strong>
           </div>
-
         </section>
 
-        {publication.rawSource?.metadata?.provenance_note ? (
+        {coverageNote ? <p className="source-coverage-basis">{coverageNote}</p> : null}
+        {trust.lifecycle.note ? <p className="source-coverage-basis">{trust.lifecycle.note}</p> : null}
+
+        <div className="source-inspector-actions">
+          {trust.official.url ? (
+            <ButtonLink
+              className="source-inspector-official-link"
+              href={trust.official.url}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <span>{isPolicy ? officialSourceActionLabel(trust.official, OFFICIAL_TEXT_VERBS) : officialSourceActionLabel(trust.official, OFFICIAL_PUBLICATION_VERBS)}</span>
+              <span className="visually-hidden"> for {trust.officialTitle} (opens in a new tab)</span>
+              <IconExternalLink aria-hidden="true" size={14} />
+            </ButtonLink>
+          ) : null}
+          {publication.catalogId ? (
+            <AppLink onNavigate={onNavigate} patch={{ catalog: publication.catalogId } as Partial<ViewState>} variant="secondary" view="catalog-detail">
+              Open the publication page
+            </AppLink>
+          ) : null}
+        </div>
+
+        <section aria-labelledby={`source-dates-${publication.id}`} className="source-inspector-block">
+          <h3 id={`source-dates-${publication.id}`}>Dates</h3>
+          <SourceDates trust={trust} />
+        </section>
+
+        {trust.limitations.length ? (
+          <section aria-labelledby={`source-limits-${publication.id}`} className="source-inspector-block">
+            <h3 id={`source-limits-${publication.id}`}>Known limitations</h3>
+            <LimitationList limitations={trust.limitations} />
+          </section>
+        ) : null}
+
+        {trust.coverageNote ? (
           <p className="source-coverage-basis">
-            <strong>Coverage basis:</strong>{" "}
-            {publication.rawSource.metadata.provenance_note}
+            <strong>Coverage basis:</strong> {trust.coverageNote}
           </p>
         ) : null}
 
-        {publication.officialLink ? (
-          <ButtonLink
-            className="source-inspector-official-link"
-            href={publication.officialLink}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            <span>Open official publication</span>
-            <IconExternalLink aria-hidden="true" size={14} />
-          </ButtonLink>
+        {isPolicy && publication.citedBy.length ? (
+          <section aria-labelledby={`source-cited-${publication.id}`} className="source-inspector-block">
+            <h3 id={`source-cited-${publication.id}`}>Recorded as the basis for</h3>
+            <ul className="source-basis-list">
+              {publication.citedBy.map((catalogId) => (
+                <li key={catalogId}>
+                  <AppLink onNavigate={onNavigate} patch={{ catalog: catalogId } as Partial<ViewState>} view="catalog-detail">
+                    {practitionerNameForCatalog(catalogId)}
+                  </AppLink>
+                </li>
+              ))}
+            </ul>
+            <p className="source-basis-note">{POLICY_BASIS_NOTE}</p>
+          </section>
+        ) : null}
+
+        {!isPolicy && publication.recordedBasis.length ? (
+          <section aria-labelledby={`source-basis-${publication.id}`} className="source-inspector-block">
+            <h3 id={`source-basis-${publication.id}`}>Recorded policy basis</h3>
+            <ul className="source-basis-list">
+              {publication.recordedBasis.map((sourceId) => (
+                <li key={sourceId}>
+                  <AppLink onNavigate={onNavigate} patch={{ source: sourceId, layer: "policy" } as Partial<ViewState>} view="sources">
+                    {policyNameFor(sourceId)}
+                  </AppLink>
+                </li>
+              ))}
+            </ul>
+            <p className="source-basis-note">{POLICY_BASIS_NOTE}</p>
+          </section>
         ) : null}
 
         {sourceFilesCount > 0 ? (
-          <details className="source-inspector-section" open>
+          <details className="source-inspector-section" open={sourceFilesCount <= OPEN_INVENTORY_LIMIT}>
             <summary>
               <strong>Source files ({sourceFilesCount})</strong>
             </summary>
@@ -251,9 +312,6 @@ function PublicationInspectorContent(props: {
                     {typeof item.recordCount === "number" && item.recordCount > 0 ? (
                       <span>{item.recordCount.toLocaleString()} records</span>
                     ) : null}
-                    {item.checksum ? (
-                      <span title={item.checksum}>SHA-256 {item.checksum.replace(/^sha256:/i, "").slice(0, 12)}…</span>
-                    ) : null}
                   </div>
                   {item.url ? (
                     <a
@@ -263,6 +321,7 @@ function PublicationInspectorContent(props: {
                       target="_blank"
                     >
                       <span>Open source file</span>
+                      <span className="visually-hidden"> {item.displayTitle} (opens in a new tab)</span>
                       <IconExternalLink aria-hidden="true" size={14} />
                     </a>
                   ) : null}
@@ -273,10 +332,10 @@ function PublicationInspectorContent(props: {
         ) : null}
 
         {publication.connectionEvidence.length > 0 ? (
-          <details className="source-inspector-section" open>
+          <details className="source-inspector-section" open={publication.connectionEvidence.length <= OPEN_INVENTORY_LIMIT}>
             <summary>
               <strong>
-                Published crosswalks ({publication.connectionEvidence.length})
+                Published crosswalk evidence ({publication.connectionEvidence.length})
               </strong>
             </summary>
             <ul className="source-material-list">
@@ -307,6 +366,7 @@ function PublicationInspectorContent(props: {
                       target="_blank"
                     >
                       <span>Open crosswalk file</span>
+                      <span className="visually-hidden"> {item.displayTitle} (opens in a new tab)</span>
                       <IconExternalLink aria-hidden="true" size={14} />
                     </a>
                   ) : null}
@@ -344,6 +404,7 @@ function PublicationInspectorContent(props: {
                       target="_blank"
                     >
                       <span>View reference page</span>
+                      <span className="visually-hidden"> {item.displayTitle} (opens in a new tab)</span>
                       <IconExternalLink aria-hidden="true" size={14} />
                     </a>
                   ) : null}
@@ -355,7 +416,10 @@ function PublicationInspectorContent(props: {
 
         <details className="source-inspector-provenance">
           <summary>Technical details</summary>
-          <div className="source-inspector-provenance-body">
+          {/* The only place implementation vocabulary is allowed on a public
+              surface: the reader opened this on purpose. tests/e2e/public-copy
+              .spec.mjs exempts this subtree and nothing else. */}
+          <div className="source-inspector-provenance-body" data-technical-details="">
             <div className="source-inspector-id-block">
               <span className="source-inspector-label">Stable Source ID</span>
               <CopyStableSourceId id={publication.id} />
@@ -369,16 +433,22 @@ function PublicationInspectorContent(props: {
               </li> : null}
               {publication.provenance ? <li>
                 <strong>Provenance class:</strong>{" "}
-                <span>{publication.provenance}</span>
+                <span>{displayNameFor("provenance_class", publication.provenance)}</span>
               </li> : null}
               {publication.eligibility ? <li>
                 <strong>Eligibility status:</strong>{" "}
-                <span>{publication.eligibility}</span>
+                <span>{displayNameFor("eligibility_status", publication.eligibility)}</span>
               </li> : null}
               <li>
                 <strong>Access status:</strong>{" "}
-                <span>{publication.access || "Public"}</span>
+                <span>{displayNameFor("access_status", publication.access || "public")}</span>
               </li>
+              {primaryAndSupplemental.filter((item) => item.checksum).map((item) => (
+                <li key={`sha-${item.id}`}>
+                  <strong>{item.displayTitle}:</strong>{" "}
+                  <span className="source-checksum" title={item.checksum || ""}>SHA-256 {String(item.checksum).replace(/^sha256:/i, "").slice(0, 12)}…</span>
+                </li>
+              ))}
             </ul>
           </div>
         </details>
@@ -390,9 +460,11 @@ function PublicationInspectorContent(props: {
 function PublicationInspector(props: {
   publication: PublicationRegisterRow;
   onClose: () => void;
+  onNavigate: Navigate;
+  policyNameFor: (sourceId: string) => string;
 }) {
   const isCompact = useCompactSourceInspector();
-  const title = props.publication.officialTitle;
+  const title = props.publication.trust.practitionerName;
 
   useEffect(() => {
     if (!isCompact) return undefined;
@@ -444,6 +516,8 @@ function PublicationInspector(props: {
                 </button>
               }
               heading={<Dialog.Title className="source-inspector-title">{title}</Dialog.Title>}
+              onNavigate={props.onNavigate}
+              policyNameFor={props.policyNameFor}
               publication={props.publication}
             />
           </Dialog.Content>
@@ -470,10 +544,16 @@ function PublicationInspector(props: {
           </button>
         }
         heading={<h2 className="source-inspector-title">{title}</h2>}
+        onNavigate={props.onNavigate}
+        policyNameFor={props.policyNameFor}
         publication={props.publication}
       />
     </article>
   );
+}
+
+function inRegisterView(row: PublicationRegisterRow, view: "publication" | "policy") {
+  return view === "policy" ? row.kind === "policy" : row.kind !== "policy";
 }
 
 export function SourcesPage(props: {
@@ -486,17 +566,50 @@ export function SourcesPage(props: {
   const debounceTimerRef = useRef<number | null>(null);
 
   const allSources = bundle.runtime.dataset.sources;
-  const sourceCatalogs = useMemo(
-    () => bundle.runtime.getCatalogs() as CatalogSummary[],
-    [bundle.runtime],
-  );
+  // The bootstrap summaries carry each catalog's source review; the runtime's
+  // own catalog list does not, so review facts are merged from them by id.
+  const sourceCatalogs = useMemo(() => {
+    const reviews = new Map((bundle.catalogSummaries || []).map((entry: any) => [entry.id, entry.source_review]));
+    return (bundle.runtime.getCatalogs() as CatalogSummary[]).map((catalog) =>
+      catalog.source_review || !reviews.get(catalog.id) ? catalog : { ...catalog, source_review: reviews.get(catalog.id) },
+    );
+  }, [bundle.runtime, bundle.catalogSummaries]);
 
-  const allPublicationRows = useMemo(
+  const registerRows = useMemo(
     () => buildPublicationRegister(allSources, sourceCatalogs),
     [allSources, sourceCatalogs],
   );
+  // Two views of one register: the publications Control Atlas indexes, and the
+  // statutes, regulations, orders and directives behind them (Policy & directives).
+  const selectedPublicationRow = useMemo(() => {
+    if (!state.source) return null;
+    return (
+      registerRows.find(
+        (pub) =>
+          pub.id === state.source ||
+          pub.associatedSourceIds?.includes(state.source) ||
+          pub.sourceMaterials.primary.some((m) => m.id === state.source) ||
+          pub.sourceMaterials.enrichment.some((m) => m.id === state.source) ||
+          pub.sourceMaterials.supplemental.some((m) => m.id === state.source) ||
+          pub.sourceMaterials.reference.some((m) => m.id === state.source) ||
+          pub.connectionEvidence.some((e) => e.id === state.source),
+      ) || null
+    );
+  }, [registerRows, state.source]);
+  // A link to a policy document opens the Policy & directives view it belongs to.
+  const registerView: "publication" | "policy" =
+    state.layer === "policy" || selectedPublicationRow?.kind === "policy" ? "policy" : "publication";
+  const inView = (row: PublicationRegisterRow) => inRegisterView(row, registerView);
+  const allPublicationRows = useMemo(
+    () => registerRows.filter((row) => inRegisterView(row, registerView)),
+    [registerRows, registerView],
+  );
+  const viewCounts = useMemo(() => ({
+    publication: registerRows.filter((row) => row.kind !== "policy").length,
+    policy: registerRows.filter((row) => row.kind === "policy").length,
+  }), [registerRows]);
 
-  const filteredPublicationRows = useMemo(
+  const matchingRows = useMemo(
     () =>
       buildPublicationRegister(allSources, sourceCatalogs, {
         query: state.query,
@@ -505,6 +618,17 @@ export function SourcesPage(props: {
       }),
     [allSources, sourceCatalogs, state.lifecycle, state.publisher, state.query],
   );
+  const filteredPublicationRows = useMemo(() => {
+    const rows = matchingRows.filter((row) => inRegisterView(row, registerView));
+    return registerView === "policy"
+      ? [...rows].sort((left, right) => left.trust.role.localeCompare(right.trust.role) || left.trust.practitionerName.localeCompare(right.trust.practitionerName))
+      : rows;
+  }, [matchingRows, registerView]);
+  const otherViewMatches = state.query
+    ? matchingRows.filter((row) => !inView(row)).length
+    : 0;
+  const policyNameFor = (sourceId: string) =>
+    registerRows.find((row) => row.id === sourceId)?.trust.practitionerName || sourceId;
 
   const options = useMemo(() => {
     const sortedDistinct = (values: Array<string | null>) =>
@@ -519,16 +643,16 @@ export function SourcesPage(props: {
     };
   }, [allPublicationRows]);
 
-  const publisherOptions = options.publishers.map((value) => ({
-    value,
-    label: value,
-  }));
-
   /**
-   * The register is one flat list of 192 entries behind a publisher dropdown,
-   * so the shape of it — who publishes what, and how much — was invisible
-   * until you opened the select. These bands put the largest publishers up
-   * front as one-click filters and keep the dropdown for the long tail.
+   * The one publisher control. It used to sit beside a select that set the
+   * same state, which is two visible controls for one choice; the bands won
+   * because they show who publishes what and how much without being opened.
+   *
+   * They cover every publisher in the current view — ten in Publications,
+   * seven in Policy & directives — so nothing hides behind a "long tail" the
+   * way it did when this was a shortcut past a dropdown. PUBLISHER_BAND_MINIMUM
+   * is 1 for that reason; the limit is a guard against a future corpus, not a
+   * design choice.
    */
   const publisherBands = useMemo(() => {
     const counts = new Map<string, number>();
@@ -556,21 +680,6 @@ export function SourcesPage(props: {
 
   const visibleRows = filteredPublicationRows.slice(0, visibleLimit);
 
-  const selectedPublicationRow = useMemo(() => {
-    if (!state.source) return null;
-    return (
-      allPublicationRows.find(
-        (pub) =>
-          pub.id === state.source ||
-          pub.associatedSourceIds?.includes(state.source) ||
-          pub.sourceMaterials.primary.some((m) => m.id === state.source) ||
-          pub.sourceMaterials.enrichment.some((m) => m.id === state.source) ||
-          pub.sourceMaterials.supplemental.some((m) => m.id === state.source) ||
-          pub.sourceMaterials.reference.some((m) => m.id === state.source) ||
-          pub.connectionEvidence.some((e) => e.id === state.source),
-      ) || null
-    );
-  }, [allPublicationRows, state.source]);
 
   const hasActiveFilters = Boolean(
     state.query || state.publisher || state.lifecycle,
@@ -648,7 +757,7 @@ export function SourcesPage(props: {
       const trigger = rememberedTrigger?.isConnected
         ? rememberedTrigger
         : document.getElementById(`source-trigger-${triggerId}`);
-      if (trigger instanceof HTMLElement && !app?.hasAttribute("inert")) {
+      if (trigger instanceof HTMLElement && !app?.hasAttribute("inert") && !trigger.closest("[inert]")) {
         // App route orientation also focuses on the next frame. Restore the
         // originating control after that route-level focus has settled so the
         // dialog contract remains deterministic under concurrent browser load.
@@ -657,11 +766,17 @@ export function SourcesPage(props: {
             const settledTrigger = rememberedTrigger?.isConnected
               ? rememberedTrigger
               : document.getElementById(`source-trigger-${triggerId}`);
+            // The route transition marks the workspace inert for a moment;
+            // focus() inside an inert subtree is silently ignored, so wait it out.
             if (
               settledTrigger instanceof HTMLElement &&
-              !document.getElementById("app")?.hasAttribute("inert")
+              !settledTrigger.closest("[inert]")
             ) {
               settledTrigger.focus({ preventScroll: true });
+              if (document.activeElement !== settledTrigger) {
+                attempts += 1;
+                if (attempts < 20) window.setTimeout(restoreTriggerFocus, 50);
+              }
             } else {
               attempts += 1;
               if (attempts < 20) window.setTimeout(restoreTriggerFocus, 50);
@@ -687,8 +802,11 @@ export function SourcesPage(props: {
     });
   };
 
-  const publicationCount = allPublicationRows.length;
-  const eyebrow = `SOURCE REGISTER / ${publicationCount} PUBLICATIONS`;
+  const publicationCount = viewCounts.publication;
+  const policyCount = viewCounts.policy;
+  const eyebrow = `SOURCE REGISTER / ${publicationCount} PUBLICATIONS / ${policyCount} POLICY DOCUMENTS`;
+  const switchView = (layer: "publication" | "policy") =>
+    onNavigate("sources", { ...state, layer, publisher: "", lifecycle: "", source: "" });
 
   return (
     <MissionPage
@@ -699,13 +817,27 @@ export function SourcesPage(props: {
       <PageHeader
         eyebrow={eyebrow}
         primary
-        summary="Verify publisher, version, and source material for publications used in Control Atlas."
+        summary="Who published each source Control Atlas uses, which edition it holds, and how recently it was checked."
         title={SITE_COPY.routes.sources.title}
       />
 
       <p className="source-register-boundary">
-        This register includes {publicationCount.toLocaleString()} publisher publications that anchor searchable records or published connections. Supporting files and crosswalks appear inside each publication.
+        {registerView === "policy"
+          ? `${policyCount.toLocaleString()} statutes, regulations, orders and directives that Control Atlas records as the basis for the publications it holds. Each keeps its official title, issuer and a link to the official text. Listing one here does not state legal precedence or whether it applies to you.`
+          // "anchor searchable records or published connections" was our
+          // vocabulary for what a publication does in the graph. Say what the
+          // reader gets from it.
+          : `${publicationCount.toLocaleString()} publications Control Atlas has read in full, so you can search their contents or follow their published links to other publications. Supporting files and crosswalks appear inside each one.`}
       </p>
+
+      <nav aria-label="Source register views" className="source-register-views">
+        <button aria-pressed={registerView === "publication"} onClick={() => switchView("publication")} type="button">
+          Publications<small>{publicationCount.toLocaleString()}</small>
+        </button>
+        <button aria-pressed={registerView === "policy"} onClick={() => switchView("policy")} type="button">
+          Policy &amp; directives<small>{policyCount.toLocaleString()}</small>
+        </button>
+      </nav>
 
       {state.source && !selectedPublicationRow ? (
         <div className="source-not-found-banner" role="alert">
@@ -737,28 +869,10 @@ export function SourcesPage(props: {
                   handleQueryCommit(event.currentTarget.value);
                 }
               }}
-              placeholder="Search title, publisher, version, or ID"
+              placeholder={registerView === "policy" ? "Search citation, title, or issuer" : "Search title, publisher, version, or ID"}
               type="search"
               value={queryDraft}
             />
-
-            {publisherOptions.length >= 2 ? (
-              <select
-                aria-label="Publisher"
-                className="source-filter-select"
-                onChange={(event) =>
-                  onNavigate("sources", { ...state, publisher: event.target.value })
-                }
-                value={state.publisher || ""}
-              >
-                <option value="">All publishers</option>
-                {publisherOptions.map((option) => (
-                  <option key={`pub-${option.value}`} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            ) : null}
 
             {statusOptions.length >= 2 ? (
               <select
@@ -826,6 +940,14 @@ export function SourcesPage(props: {
             </span>
           </div>
 
+          {otherViewMatches > 0 ? (
+            <p className="source-other-view-hint">
+              <button className="link-button" onClick={() => onNavigate("sources", { ...state, layer: registerView === "policy" ? "publication" : "policy", publisher: "", lifecycle: "" })} type="button">
+                {otherViewMatches} {otherViewMatches === 1 ? "match" : "matches"} in {registerView === "policy" ? "Publications" : "Policy & directives"}
+              </button>
+            </p>
+          ) : null}
+
           {/* S5 & S6 Table */}
           {filteredPublicationRows.length === 0 ? (
             <EmptyState
@@ -838,14 +960,14 @@ export function SourcesPage(props: {
           ) : (
             <div className="table-scroll">
               <table
-                aria-label="Control Atlas publication register"
+                aria-label={registerView === "policy" ? "Policy and directives register" : "Control Atlas publication register"}
                 className="table source-table"
                 id="source-register-table"
               >
                 <thead>
                   <tr>
-                    <th scope="col">Publication</th>
-                    <th scope="col">Publisher</th>
+                    <th scope="col">{registerView === "policy" ? "Document" : "Publication"}</th>
+                    <th scope="col">{registerView === "policy" ? "Issued by" : "Publisher"}</th>
                     <th scope="col">Version / current through</th>
                     <th scope="col">Source freshness</th>
                     <th scope="col">Status</th>
@@ -884,22 +1006,22 @@ export function SourcesPage(props: {
                               }
                               type="button"
                             >
-                              {row.officialTitle}
+                              {row.trust.practitionerName}
                             </button>
+                            {row.trust.showsOfficialTitle ? (
+                              <span className="source-official-title">{row.trust.officialTitle}</span>
+                            ) : null}
+                            {registerView === "policy" && row.trust.role ? (
+                              <span className="source-policy-group">{row.trust.role}</span>
+                            ) : null}
                             {row.publisher.value ? (
                               <span className="source-mobile-publisher">{row.publisher.value}</span>
                             ) : null}
-                            {row.version.value || row.lifecycle.value ? (
-                              <div className="source-mobile-meta">
-                                {row.version.value ? <span>{row.version.value}</span> : null}
-                                {row.version.value && row.lifecycle.value ? <span> · </span> : null}
-                                {row.lifecycle.value ? (
-                                  <span className="source-mobile-status">
-                                    {displayNameFor("lifecycle_status", row.lifecycle.value)}
-                                  </span>
-                                ) : null}
-                              </div>
-                            ) : null}
+                            <div className="source-mobile-meta">
+                              <span>{row.trust.version.label}</span>
+                              <span> · </span>
+                              <LifecycleStatus lifecycle={row.trust.lifecycle} />
+                            </div>
                             {materialCount > 0 || mappingCount > 0 ? (
                               <span
                                 className="source-attached-pill"
@@ -935,19 +1057,15 @@ export function SourcesPage(props: {
                         </td>
 
                         <td className="source-col-version">
-                          <SourceFieldText field={row.version} notApplicable="Not versioned" />
+                          <VersionValue version={row.trust.version} />
                         </td>
 
                         <td className="source-col-checked">
-                          <VerificationDate field={row.verifiedAt} />
+                          <FreshnessValue freshness={row.trust.freshness} />
                         </td>
 
                         <td className="source-col-status">
-                          {row.lifecycle.value ? (
-                            <Badge tone={row.lifecycle.value === "active" ? "success" : "warning"}>
-                              {displayNameFor("lifecycle_status", row.lifecycle.value)}
-                            </Badge>
-                          ) : <SourceFieldText field={row.lifecycle} />}
+                          <LifecycleStatus lifecycle={row.trust.lifecycle} />
                         </td>
                       </tr>
                     );
@@ -987,6 +1105,8 @@ export function SourcesPage(props: {
           <aside className="work-stack sources-inspector-pane">
             <PublicationInspector
               onClose={handleCloseInspector}
+              onNavigate={onNavigate}
+              policyNameFor={policyNameFor}
               publication={selectedPublicationRow}
             />
           </aside>

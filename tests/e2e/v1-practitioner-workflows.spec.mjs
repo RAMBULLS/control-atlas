@@ -177,16 +177,18 @@ test("V1 workflow 08 — inspect a source and how it is used", async ({ page }) 
   await expect(assessmentDetail).toContainText("Revision 5, Release 5.2.0");
   // Shape, not a frozen value: this date advances with every source refresh.
   await expect(assessmentDetail).toContainText(/\w{3} \d{1,2}, \d{4}/);
-  await expect(assessmentDetail).toContainText("1,014 normalized records");
+  await expect(assessmentDetail).toContainText("1,014 records indexed");
 });
 
 test("source detail routes use specific identity at every governed width", async ({ page, context, browserName }) => {
   test.setTimeout(120_000);
   const sources = [
-    { id: "nist-800-53", name: "NIST SP 800-53 Rev. 5" },
+    // The inspector leads with the practitioner name; the page title keeps the exact official title.
+    { id: "nist-800-53", name: "NIST SP 800-53 Rev. 5", heading: "SP 800-53 Rev. 5" },
     {
       id: "nist-iot-device-cybersecurity-requirement-catalogs",
       name: "NIST IoT Device Cybersecurity Requirement Catalogs",
+      heading: "NIST IoT",
     },
   ];
   if (browserName === "chromium") {
@@ -200,7 +202,8 @@ test("source detail routes use specific identity at every governed width", async
       await waitForAppReady(page);
       await dismissOnboarding(page);
       const inspector = page.locator(".source-inspector");
-      await expect(inspector.getByRole("heading", { name: source.name, level: 2 })).toBeVisible();
+      await expect(inspector.getByRole("heading", { name: source.heading, level: 2 })).toBeVisible();
+      await expect(inspector.locator("[data-official-title]")).toContainText(source.name);
       await expect(page).toHaveTitle(`${source.name} — Control Atlas`);
       const technicalDetails = inspector.locator("details.source-inspector-provenance");
       if ((await technicalDetails.getAttribute("open")) === null) {
@@ -221,11 +224,11 @@ test("source detail routes use specific identity at every governed width", async
   await waitForAppReady(page);
   await page.goBack();
   await waitForAppReady(page);
-  await expect(page.getByRole("heading", { name: sources[0].name, level: 2 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: sources[0].heading, level: 2 })).toBeVisible();
   await expect(page).toHaveTitle(`${sources[0].name} — Control Atlas`);
   await page.goForward();
   await waitForAppReady(page);
-  await expect(page.getByRole("heading", { name: sources[1].name, level: 2 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: sources[1].heading, level: 2 })).toBeVisible();
   await expect(page).toHaveTitle(`${sources[1].name} — Control Atlas`);
 
   const inspector = page.locator(".source-inspector");
@@ -253,7 +256,7 @@ test("a supplemental source material resolves to its parent publication's identi
   for (const materialId of ["cyber-mil-stig-downloads", "cyber-mil-stig-compilations"]) {
     await open(page, `/#/sources?source=${materialId}`);
     await expect(
-      page.getByRole("heading", { name: "DISA Public STIG Library", level: 2 }),
+      page.getByRole("heading", { name: "DISA STIG", level: 2 }),
     ).toBeVisible();
     const inspector = page.locator(".source-inspector");
     const technicalDetails = inspector.locator("details.source-inspector-provenance");
@@ -301,7 +304,9 @@ test("source detail has one return action and preserves the Sources workspace", 
     await waitForAppReady(page);
     await expect(page.getByRole("heading", { name: "Sources", level: 1 })).toBeVisible();
     await expect(page.locator("#source-search")).toHaveValue("DISA");
-    await expect(page.getByLabel("Publisher", { exact: true })).toHaveValue("DISA");
+    await expect(
+      page.getByRole("navigation", { name: "Publishers" }).getByRole("button", { name: /^DISA/ }),
+    ).toHaveAttribute("aria-pressed", "true");
     expect(
       await page.evaluate(() =>
         new URLSearchParams(globalThis.location.hash.split("?")[1]).has("source"),
@@ -311,7 +316,7 @@ test("source detail has one return action and preserves the Sources workspace", 
     await page.goBack();
     await waitForAppReady(page);
     await expect(
-      page.getByRole("heading", { name: "DISA Public STIG Library", level: 2 }),
+      page.getByRole("heading", { name: "DISA STIG", level: 2 }),
     ).toBeVisible();
 
     await page.goForward();
@@ -365,7 +370,9 @@ test("unknown Source detail links fail closed and preserve recovery state", asyn
     await waitForAppReady(page);
     await expect(page.getByRole("heading", { name: "Sources", level: 1 })).toBeVisible();
     await expect(page.locator("#source-search")).toHaveValue("DISA");
-    await expect(page.getByLabel("Publisher", { exact: true })).toHaveValue("DISA");
+    await expect(
+      page.getByRole("navigation", { name: "Publishers" }).getByRole("button", { name: /^DISA/ }),
+    ).toHaveAttribute("aria-pressed", "true");
 
     await page.goBack();
     await waitForAppReady(page);

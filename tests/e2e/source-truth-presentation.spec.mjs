@@ -42,7 +42,8 @@ test('sourced lifecycle and replacement history remain visible', async ({ page }
   // The official-source action resolves to the issuance itself, not the
   // directory of every DoD instruction. Sending a practitioner to an index and
   // making them find the document by hand is the work they came here to avoid.
-  await expect(replacementInspector.getByRole('link', { name: /^Open official publication/ })).toHaveAttribute(
+  await expect(page.getByRole('button', { name: /^Policy & directives/ })).toHaveAttribute('aria-pressed', 'true');
+  await expect(replacementInspector.getByRole('link', { name: /^Read the official text/ })).toHaveAttribute(
     'href',
     'https://www.esd.whs.mil/Portals/54/Documents/DD/issuances/dodi/851001p.pdf',
   );
@@ -79,19 +80,21 @@ test('Source Register separates current, historical, mapping, and reproducible e
   await gotoApp(page, '/#/sources');
   await waitForAppReady(page);
   await dismissOnboarding(page);
-  await expect(page.getByText(/This register includes \d+ publisher publications/)).toBeVisible();
-  await expect(page.getByRole('button', { name: 'FedRAMP Consolidated Rules for 2026' })).toBeVisible();
+  await expect(page.getByText(/\d+ publications Control Atlas has read in full/)).toBeVisible();
+  const fedramp2026 = page.getByRole('button', { name: 'FedRAMP 2026', exact: true });
+  await expect(fedramp2026).toBeVisible();
+  await expect(page.locator('.source-register-row').filter({ has: fedramp2026 })).toContainText('FedRAMP Consolidated Rules for 2026');
   await expect(page.getByRole('button', { name: /FedRAMP Rev\. 5/ })).toBeVisible();
   await gotoApp(page, '/#/sources?source=nist-iot-device-cybersecurity-requirement-catalogs');
   await waitForAppReady(page);
   const iotInspector = page.locator('.sources-inspector-pane .source-inspector--inline');
-  await expect(iotInspector).toContainText('Control Atlas does not claim an independent catalog extraction');
-  await expect(iotInspector).toContainText('Published crosswalks (2)');
+  await expect(iotInspector).toContainText('not from the catalog page itself');
+  await expect(iotInspector).toContainText('Published crosswalk evidence (2)');
   await expect(iotInspector.getByText(/Source files \(/)).toHaveCount(0);
   await gotoApp(page, '/#/sources?source=mitre-d3fend-ontology');
   await waitForAppReady(page);
   const d3fendInspector = page.locator('.sources-inspector-pane .source-inspector--inline');
   await expect(d3fendInspector).toContainText('Version 1.6.0');
   await expect(d3fendInspector).toContainText(/SHA-256 [a-f0-9]{12}…/);
-  await expect(d3fendInspector).toContainText('committed ontology capture');
+  await expect(d3fendInspector).toContainText('indexes a dated copy of the recorded version');
 });

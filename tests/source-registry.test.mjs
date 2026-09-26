@@ -85,11 +85,11 @@ test('reviewed publication identity stays distinct from parser artifacts', () =>
     'https://www.ai.mil/Latest/Blog/Article-Display/Article/3940314/responsible-ai-toolkit/',
   );
   assert.match(rai.metadata.version_unknown_reason, /do not expose a release version/);
-  assert.match(rai.metadata.provenance_note, /official CDAO Responsible AI Toolkit article is canonical/);
+  assert.match(rai.metadata.provenance_note, /CDAO Responsible AI Toolkit article is the official source/);
 
   const derivedCatalog = registry.sources.find((entry) => entry.id === 'dod-rai-toolkit');
   assert.equal(derivedCatalog.provenance_class, 'control_atlas_derived');
-  assert.match(derivedCatalog.metadata.provenance_note, /not verbatim publisher records/);
+  assert.match(derivedCatalog.metadata.provenance_note, /not the publisher's own wording/);
 
   assert.match(
     byId.get('artifact-ai-mil-responsible-ai').metadata.version_unknown_reason,

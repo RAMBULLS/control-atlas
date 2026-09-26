@@ -1,0 +1,187 @@
+name: UI review approval
+
+# The human half of the UI gate.
+#
+# Control Atlas CI can tell you a page does not overflow, meets contrast, keeps
+# its heading order and stays inside its performance budget. It passed the Home
+# redesign that was withdrawn in issue 283. Green is necessary and it is not
+# permission to ship public UI, so a material public UI or copy change also
+# needs the owner to look at the renders and say so.
+#
+# Saying so is the `visual-approved` label. The label is the owner's switch;
+# it is not the integrity boundary. When an administrator applies it, this
+# workflow records an approval as a **check run against that exact commit**.
+# GitHub attaches a check run to the commit it was created for, so an approval
+# of commit A does not exist on commit B: a new push fails by construction,
+# whatever the label says and whichever run wins the race to remove it.
+#
+# Three things make it mean something:
+#   1. Approval is bound to one commit SHA, not to label state.
+#   2. It is only recorded when the person applying the label can administer
+#      the repository and is not a bot. An agent holding a write token cannot
+#      approve its own work.
+#   3. The check is required and fails closed: if materiality cannot be
+#      determined, approval is required.
+#
+# This runs on pull_request_target and never checks out the pull request's
+# code. The classifier, the decision logic and this workflow are always read
+# from the base branch, so a pull request cannot edit its own gate.
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, labeled, unlabeled, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+concurrency:
+  # Deliberately not cancel-in-progress: a labelled run that is recording an
+  # approval must not be cancelled by an unrelated event on the same pull
+  # request.
+  group: ui-approval-${{ github.event.pull_request.number }}
+
+env:
+  APPROVAL_LABEL: visual-approved
+  RECORD_NAME: owner-visual-approval-record
+
+jobs:
+  gate:
+    name: Owner visual and copy approval
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the base branch, never the pull request
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+
+      - name: Decide whether this change needs a person to look
+        id: material
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The file list comes from the API, so no pull request code is run.
+          gh pr diff "$PR" --name-only > changed-paths.txt
+          echo "Changed paths:"
+          cat changed-paths.txt
+          node tools/ui-review-routes.mjs --paths-file changed-paths.txt >> "$GITHUB_OUTPUT"
+
+      # A new commit withdraws the label. This is convenience for the owner, so
+      # the pull request reads correctly; the SHA-bound record below is what
+      # actually stops a stale approval.
+      - name: A new commit withdraws the label
+        if: ${{ github.event.action == 'synchronize' }}
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        shell: bash
+        run: |
+          gh pr edit "$PR" --remove-label "$APPROVAL_LABEL" 2>/dev/null \
+            || echo "No $APPROVAL_LABEL label to withdraw."
+
+      # Record an approval only when a human administrator just applied the
+      # label. Everything about who may approve is decided here, once.
+      - name: Record the owner's approval of this exact commit
+        if: ${{ github.event.action == 'labeled' && github.event.label.name == 'visual-approved' && steps.material.outputs.ui_review_required == 'true' }}
+        id: record
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ACTOR: ${{ github.event.sender.login }}
+          ACTOR_TYPE: ${{ github.event.sender.type }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          permission=$(gh api "repos/$GITHUB_REPOSITORY/collaborators/$ACTOR/permission" --jq '.permission' 2>/dev/null || echo "none")
+          printf '{"login":"%s","type":"%s"}' "$ACTOR" "$ACTOR_TYPE" > actor.json
+          node tools/ui-review-approval.mjs --can-record --actor actor.json --permission "$permission" >> "$GITHUB_OUTPUT"
+
+          can_record=$(node tools/ui-review-approval.mjs --can-record --actor actor.json --permission "$permission" | grep '^can_record=' | cut -d= -f2)
+          if [ "$can_record" != "true" ]; then
+            echo "::warning::$ACTOR ($permission) cannot approve public UI. No approval recorded."
+            exit 0
+          fi
+
+          gh api -X POST "repos/$GITHUB_REPOSITORY/check-runs" \
+            -f name="$RECORD_NAME" \
+            -f head_sha="$HEAD_SHA" \
+            -f status=completed \
+            -f conclusion=success \
+            -f "output[title]=Approved by $ACTOR" \
+            -f "output[summary]=$ACTOR looked at the ui-review renders for $HEAD_SHA and approved the layout and visible copy." \
+            --jq '.id'
+          echo "Recorded approval of $HEAD_SHA by $ACTOR."
+
+      - name: Require an approval recorded against this exact commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          REQUIRES_REVIEW: ${{ steps.material.outputs.ui_review_required }}
+          ROUTES: ${{ steps.material.outputs.ui_review_routes }}
+          REASON: ${{ steps.material.outputs.ui_review_reason }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          gh api "repos/$GITHUB_REPOSITORY/commits/$HEAD_SHA/check-runs?per_page=100" > check-runs.json 2>/dev/null \
+            || echo '{"check_runs":[]}' > check-runs.json
+
+          has_label=$(gh pr view "$PR" --json labels \
+            --jq "[.labels[].name] | index(\"$APPROVAL_LABEL\") != null")
+
+          node tools/ui-review-approval.mjs \
+            --head "$HEAD_SHA" \
+            --label "$has_label" \
+            --requires-review "$REQUIRES_REVIEW" \
+            --check-runs check-runs.json > decision.txt
+          cat decision.txt
+          approved=$(grep '^approved=' decision.txt | cut -d= -f2)
+          reason=$(grep '^approval_reason=' decision.txt | cut -d= -f2)
+
+          if [ "$approved" = "true" ] && [ "$reason" = "no-public-ui-change" ]; then
+            {
+              echo "### Visual approval not required"
+              echo
+              echo "This change touches no public UI route ($REASON), so there is nothing for a person to look at."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          if [ "$approved" = "true" ]; then
+            {
+              echo "### Visual and copy approval recorded"
+              echo
+              echo "Approved for \`$HEAD_SHA\`."
+              echo
+              echo "Routes: \`$ROUTES\`"
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          {
+            echo "### Waiting on visual and copy approval"
+            echo
+            echo "This pull request changes public UI or copy on: \`$ROUTES\`"
+            echo
+            echo "**Start with the \`ui-review-summary\` artifact** from the CI run for \`$HEAD_SHA\`."
+            echo "It is a single contact sheet of the representative before/after pairs."
+            echo "The full \`ui-review\` artifact holds every render when you want to look closer."
+            echo
+            echo "If the layout and the visible words are right, add the \`$APPROVAL_LABEL\` label."
+            echo "Approval is recorded against \`$HEAD_SHA\` and does not carry to any later commit."
+            echo
+            echo "Reason: \`$reason\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::error::Public UI change is not approved for $HEAD_SHA ($reason)."
+          exit 1

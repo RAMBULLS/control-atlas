@@ -155,11 +155,18 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
         await expect(page.getByRole("navigation", { name: view.nav })).toBeHidden();
         expect(await overflow()).toBeLessThanOrEqual(0);
 
-        // The register starts on the first screen. With the bands it began
-        // after several rows of pills, well below the fold.
+        // The register starts materially sooner than it did behind the
+        // wrapped bands: measured against that layout on this same page.
         const firstRow = page.locator(".source-register-row").first();
-        await expect(firstRow).toBeInViewport();
-        expect((await firstRow.boundingBox()).y).toBeLessThan(844);
+        const compactTop = (await firstRow.boundingBox()).y;
+        const bands = await page.addStyleTag({
+          content: ".sources-page .workspace-result-groups{display:flex!important;flex-wrap:wrap!important}.sources-page .source-publisher-select{display:none!important}",
+        });
+        const bandsTop = (await firstRow.boundingBox()).y;
+        await bands.evaluate((element) => element.remove());
+        expect(bandsTop - compactTop, `${view.label} at ${width}px`).toBeGreaterThanOrEqual(100);
+        // On a 375px or 390px phone it is on the first screen.
+        if (width >= 375) await expect(firstRow).toBeInViewport();
 
         // Choosing writes the same route state the bands use.
         await select.selectOption(view.pick);

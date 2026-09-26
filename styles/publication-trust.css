@@ -513,7 +513,7 @@
     min-width: 0;
   }
 
-  .sources-page .source-publisher-select > span {
+  .sources-page .source-publisher-select > label {
     color: var(--ca-text-muted);
     font: 600 var(--ca-text-xs) / 1.4 var(--ca-font-mono);
     letter-spacing: 0.08em;

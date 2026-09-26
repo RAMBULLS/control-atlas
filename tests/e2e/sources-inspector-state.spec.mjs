@@ -189,7 +189,7 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
       await page.setViewportSize({ width, height: 900 });
       await gotoApp(page, "/#/sources?publisher=NIST");
       await waitForAppReady(page);
-      await expect(page.getByRole("navigation", { name: "Publishers" }).getByRole("button", { name: /^NIST/ })).toHaveAttribute("aria-pressed", "true");
+      await expect(page.getByRole("navigation", { name: "Publishers" }).getByRole("button", { name: /^NIST \d/ })).toHaveAttribute("aria-pressed", "true");
       await expect(page.getByLabel("Publisher", { exact: true })).toBeHidden();
     }
   });

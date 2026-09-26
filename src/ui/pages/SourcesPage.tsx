@@ -901,10 +901,11 @@ export function SourcesPage(props: {
                 into a wall of pills above the register. CSS shows exactly one
                 of the two; both write the same `publisher` route state. */}
             {publisherBands.length > 1 ? (
-              <label className="source-publisher-select">
-                <span>{publisherNoun}</span>
+              <div className="source-publisher-select">
+                <label htmlFor="source-publisher-filter">{publisherNoun}</label>
                 <select
                   className="source-filter-select"
+                  id="source-publisher-filter"
                   onChange={(event) => onNavigate("sources", { ...state, publisher: event.target.value })}
                   value={state.publisher || ""}
                 >
@@ -913,7 +914,7 @@ export function SourcesPage(props: {
                     <option key={band.value} value={band.value}>{band.value} ({band.count.toLocaleString()})</option>
                   ))}
                 </select>
-              </label>
+              </div>
             ) : null}
 
             {hasActiveFilters && filteredPublicationRows.length > 0 ? (

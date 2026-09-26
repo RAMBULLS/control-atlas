@@ -175,6 +175,12 @@ test('package scripts expose deterministic split gates and full local verificati
     'verify:quality',
   ]) assert.equal(typeof packageJson.scripts[script], 'string', script);
 
+  // The documented publication acceptance command. A merge dropped it once.
+  assert.equal(
+    packageJson.scripts['audit:publication-matrix'],
+    'node --import tsx ./tools/publication-acceptance-matrix.mjs',
+  );
+
   assert.match(packageJson.scripts['test:data'], /--test-concurrency=1/);
   assert.match(
     packageJson.scripts['test:graph'],

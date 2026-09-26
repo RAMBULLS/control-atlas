@@ -492,6 +492,9 @@
    baseline alignment left it at the top of a 44px target. */
 .sources-page .workspace-result-group {
   align-items: center;
+  max-width: 100%;
+  white-space: normal;
+  text-align: left;
 }
 
 @media (width < 48rem) {
@@ -503,13 +506,20 @@
   }
 }
 
-/* "Source details" is the tertiary action, but the quiet button's muted text
-   and faded border read as disabled. It keeps the quiet weight and takes the
-   link colour and a solid border, so it looks available without competing
-   with Browse or the official publication. */
+/* "Source details" is the tertiary action. As a quiet button its muted text
+   and faded border read as disabled, and the button utilities are layered
+   !important, so they cannot be restyled from here. It is a plain link
+   instead: link colour and underline say it is available, and it stays
+   lighter than Browse or the official publication. */
 .catalog-source-actions .catalog-source-details {
-  border-color: var(--ca-border-strong);
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: var(--ca-space-1);
   color: var(--ca-link);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 
 .catalog-source-actions .catalog-source-details:hover,

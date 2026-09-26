@@ -116,7 +116,7 @@ export function PublicationOverview(props: {
               See it on the Atlas
             </AppLink>
           ) : null}
-          <AppLink className="catalog-source-details" onNavigate={onNavigate} patch={{ source: trust.sourceId } as Partial<ViewState>} variant="secondary-quiet" view="sources">
+          <AppLink className="catalog-source-details" onNavigate={onNavigate} patch={{ source: trust.sourceId } as Partial<ViewState>} view="sources">
             Source details
           </AppLink>
         </div>

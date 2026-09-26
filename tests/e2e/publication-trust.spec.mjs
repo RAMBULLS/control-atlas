@@ -257,6 +257,7 @@ test("390px Edition facts stack instead of squeezing the value into a sliver", a
   for (const id of ["nist-800-53", "cmmc-2", "fips-199"]) {
     await open(page, `/#/library/publication/${id}`, 390);
     const rows = page.locator(".catalog-about .publication-dates > div");
+    await expect(rows.first()).toBeVisible();
     const count = await rows.count();
     expect(count, id).toBeGreaterThan(0);
     for (let index = 0; index < count; index += 1) {

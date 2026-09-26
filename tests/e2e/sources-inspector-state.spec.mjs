@@ -136,6 +136,64 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     await expect(page.locator(".source-register-row").first()).toBeVisible();
   });
 
+  for (const width of [320, 375, 390]) {
+    test(`${width}px filters by publisher or issuer with one labelled selector, not a wall of bands`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 844 });
+      const overflow = () => page.locator("html").evaluate((element) => element.scrollWidth - element.clientWidth);
+
+      for (const view of [
+        { path: "/#/sources", label: "Publisher", all: /^All publishers/, pick: "NIST", nav: "Publishers" },
+        { path: "/#/sources?layer=policy", label: "Issuer", all: /^All issuers/, pick: "Department of Defense", nav: "Issuers" },
+      ]) {
+        await gotoApp(page, view.path);
+        await waitForAppReady(page);
+
+        // Exactly one publisher/issuer control is shown, and it says what it filters.
+        const select = page.getByLabel(view.label, { exact: true });
+        await expect(select).toBeVisible();
+        await expect(select.locator("option").first()).toHaveText(view.all);
+        await expect(page.getByRole("navigation", { name: view.nav })).toBeHidden();
+        expect(await overflow()).toBeLessThanOrEqual(0);
+
+        // The register starts on the first screen. With the bands it began
+        // after several rows of pills, well below the fold.
+        const firstRow = page.locator(".source-register-row").first();
+        await expect(firstRow).toBeInViewport();
+        expect((await firstRow.boundingBox()).y).toBeLessThan(844);
+
+        // Choosing writes the same route state the bands use.
+        await select.selectOption(view.pick);
+        await waitForAppReady(page);
+        await expect.poll(() => page.evaluate(() =>
+          new URLSearchParams(globalThis.location.hash.split("?")[1]).get("publisher"),
+        )).toBe(view.pick);
+        await expect(page.locator(".calibration-rail")).toContainText(/Showing 1–\d+ of \d+/);
+        expect(await overflow()).toBeLessThanOrEqual(0);
+
+        // Back clears it; forward and a reload restore it.
+        await page.goBack();
+        await waitForAppReady(page);
+        await expect(select).toHaveValue("");
+        await page.goForward();
+        await waitForAppReady(page);
+        await expect(page.getByLabel(view.label, { exact: true })).toHaveValue(view.pick);
+        await page.reload();
+        await waitForAppReady(page);
+        await expect(page.getByLabel(view.label, { exact: true })).toHaveValue(view.pick);
+      }
+    });
+  }
+
+  test("tablet and desktop keep the publisher bands and hide the selector", async ({ page }) => {
+    for (const width of [768, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await gotoApp(page, "/#/sources?publisher=NIST");
+      await waitForAppReady(page);
+      await expect(page.getByRole("navigation", { name: "Publishers" }).getByRole("button", { name: /^NIST/ })).toHaveAttribute("aria-pressed", "true");
+      await expect(page.getByLabel("Publisher", { exact: true })).toBeHidden();
+    }
+  });
+
   test("search commits immediately on Enter without duplicating result counts", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
     await gotoApp(page, "/#/sources");

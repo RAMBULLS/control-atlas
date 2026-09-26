@@ -284,11 +284,11 @@ export function publicationTrustFor(input: PublicationTrustInput): PublicationTr
   } else if (review?.currentness === "refresh_required") {
     limitations.push({ code: "update_pending", text: `The publisher has changed this material since ${formatPublicationDate(review.reviewedAt)}. That change is not indexed here yet.` });
   } else if (review?.currentness === "blocked") {
-    limitations.push({ code: "review_incomplete", text: `Control Atlas could not confirm this is the publisher's current edition. It last tried on ${formatPublicationDate(review.reviewedAt)}.` });
+    limitations.push({ code: "review_incomplete", text: `Not confirmed as the publisher's current edition as of ${formatPublicationDate(review.reviewedAt)}.` });
   }
   const counts = input.counts;
   if (counts?.evidence_class === "reviewed_snapshot") {
-    limitations.push({ code: "count_not_independently_confirmed", text: "This may not be every entry the publisher lists. Control Atlas has not confirmed the count against the publisher." });
+    limitations.push({ code: "count_not_independently_confirmed", text: "This may not be every entry the publisher lists. The total shown here has not been independently confirmed against the publisher." });
   }
   for (const exclusion of counts?.exclusions || []) {
     limitations.push({ code: "records_excluded", text: `${exclusion.count.toLocaleString()} publisher ${exclusion.count === 1 ? "entry is" : "entries are"} not indexed: ${exclusion.reason}` });

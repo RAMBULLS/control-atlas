@@ -654,7 +654,9 @@ export function SourcesPage(props: {
    * is 1 for that reason; the limit is a guard against a future corpus, not a
    * design choice.
    */
-  const publisherBands = useMemo(() => {
+  // Every publisher (or issuer) in this view, most sources first. The bands
+  // show the top of this list; the phone selector shows all of it.
+  const publisherCounts = useMemo(() => {
     const counts = new Map<string, number>();
     for (const row of allPublicationRows) {
       const name = row.publisher.value;
@@ -662,10 +664,13 @@ export function SourcesPage(props: {
     }
     return [...counts.entries()]
       .map(([value, count]) => ({ count, value }))
-      .filter((band) => band.count >= PUBLISHER_BAND_MINIMUM)
-      .sort((left, right) => right.count - left.count || left.value.localeCompare(right.value))
-      .slice(0, PUBLISHER_BAND_LIMIT);
+      .sort((left, right) => right.count - left.count || left.value.localeCompare(right.value));
   }, [allPublicationRows]);
+  const publisherBands = useMemo(
+    () => publisherCounts.filter((band) => band.count >= PUBLISHER_BAND_MINIMUM).slice(0, PUBLISHER_BAND_LIMIT),
+    [publisherCounts],
+  );
+  const publisherNoun = registerView === "policy" ? "Issuer" : "Publisher";
   const statusOptions = options.lifecycleStatuses
     .map((value) => ({
       value,
@@ -890,6 +895,25 @@ export function SourcesPage(props: {
                   </option>
                 ))}
               </select>
+            ) : null}
+
+            {/* Phone: one labelled selector instead of the bands, which wrapped
+                into a wall of pills above the register. CSS shows exactly one
+                of the two; both write the same `publisher` route state. */}
+            {publisherBands.length > 1 ? (
+              <label className="source-publisher-select">
+                <span>{publisherNoun}</span>
+                <select
+                  className="source-filter-select"
+                  onChange={(event) => onNavigate("sources", { ...state, publisher: event.target.value })}
+                  value={state.publisher || ""}
+                >
+                  <option value="">{registerView === "policy" ? "All issuers" : "All publishers"} ({allPublicationRows.length.toLocaleString()})</option>
+                  {publisherCounts.map((band) => (
+                    <option key={band.value} value={band.value}>{band.value} ({band.count.toLocaleString()})</option>
+                  ))}
+                </select>
+              </label>
             ) : null}
 
             {hasActiveFilters && filteredPublicationRows.length > 0 ? (

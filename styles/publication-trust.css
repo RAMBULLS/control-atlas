@@ -485,11 +485,11 @@
 
 }
 
-/* Sources has a handful of publishers and issuers, not a long facet list. The
-   shared scrolling chip row cut "Department of Defense" mid-word at the panel
-   edge, which read as a layout bug rather than "scroll for more". Here the
-   bands wrap, so every issuer is visible and whole. The chip text is centred:
-   baseline alignment left it at the top of a 44px target. */
+/* Publisher / issuer filter. Wide screens show the bands; a phone shows one
+   labelled selector, because the bands wrapped into several rows of pills
+   and pushed the register off the first screen. Exactly one is displayed at
+   any width, and both drive the same `publisher` route state. The chip text
+   is centred: baseline alignment left it at the top of a 44px target. */
 .sources-page .workspace-result-group {
   align-items: center;
   max-width: 100%;
@@ -497,12 +497,33 @@
   text-align: left;
 }
 
+.sources-page .source-publisher-select {
+  display: none;
+}
+
 @media (width < 48rem) {
   .sources-page .workspace-result-groups {
-    flex-wrap: wrap;
-    overflow-x: visible;
-    -webkit-mask-image: none;
-    mask-image: none;
+    display: none;
+  }
+
+  .sources-page .source-publisher-select {
+    display: grid;
+    flex: 1 1 100%;
+    gap: var(--ca-space-1);
+    min-width: 0;
+  }
+
+  .sources-page .source-publisher-select > span {
+    color: var(--ca-text-muted);
+    font: 600 var(--ca-text-xs) / 1.4 var(--ca-font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .sources-page .source-publisher-select select {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
   }
 }
 

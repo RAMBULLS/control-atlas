@@ -304,7 +304,9 @@ test("source detail has one return action and preserves the Sources workspace", 
     await waitForAppReady(page);
     await expect(page.getByRole("heading", { name: "Sources", level: 1 })).toBeVisible();
     await expect(page.locator("#source-search")).toHaveValue("DISA");
-    await expect(
+    // Phones filter with one labelled selector; wider screens with the bands.
+    if (width < 768) await expect(page.getByLabel("Publisher", { exact: true })).toHaveValue("DISA");
+    else await expect(
       page.getByRole("navigation", { name: "Publishers" }).getByRole("button", { name: /^DISA/ }),
     ).toHaveAttribute("aria-pressed", "true");
     expect(
@@ -370,7 +372,9 @@ test("unknown Source detail links fail closed and preserve recovery state", asyn
     await waitForAppReady(page);
     await expect(page.getByRole("heading", { name: "Sources", level: 1 })).toBeVisible();
     await expect(page.locator("#source-search")).toHaveValue("DISA");
-    await expect(
+    // Phones filter with one labelled selector; wider screens with the bands.
+    if (width < 768) await expect(page.getByLabel("Publisher", { exact: true })).toHaveValue("DISA");
+    else await expect(
       page.getByRole("navigation", { name: "Publishers" }).getByRole("button", { name: /^DISA/ }),
     ).toHaveAttribute("aria-pressed", "true");
 

@@ -259,6 +259,7 @@
   gap: var(--ca-space-2);
   max-width: 34rem;
   margin: 0;
+  container-type: inline-size;
 }
 
 .publication-dates > div {
@@ -269,6 +270,20 @@
 
 .publication-dates dd {
   text-align: right;
+}
+
+/* Narrow panel (phone, or the Sources inspector): a long label such as
+   "Checked for a newer edition" left the value a sliver of a right column.
+   Stack label over value, reading left to right like everything else. */
+@container (max-width: 30rem) {
+  .publication-dates > div {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .publication-dates dd {
+    text-align: left;
+  }
 }
 
 .publication-limitations li {
@@ -345,6 +360,17 @@
 
 .source-other-view-hint .link-button {
   min-height: 44px;
+}
+
+/* The compact inspector is a modal sheet, but it also carries `.panel`, and
+   orbital.css (loaded after components.css) gives `.panel` position: relative.
+   That won, so on a phone the "modal" fell out of the overlay and rendered in
+   flow after the whole register: a reader who picked a source had to scroll
+   past every other source to reach it. Qualified to beat `.panel` on
+   specificity rather than on stylesheet order. */
+.source-inspector--modal.panel {
+  position: fixed;
+  inset: 0 0 0 auto;
 }
 
 .sources-page .source-inspector-official,
@@ -457,4 +483,36 @@
     text-align: right;
   }
 
+}
+
+/* Sources has a handful of publishers and issuers, not a long facet list. The
+   shared scrolling chip row cut "Department of Defense" mid-word at the panel
+   edge, which read as a layout bug rather than "scroll for more". Here the
+   bands wrap, so every issuer is visible and whole. The chip text is centred:
+   baseline alignment left it at the top of a 44px target. */
+.sources-page .workspace-result-group {
+  align-items: center;
+}
+
+@media (width < 48rem) {
+  .sources-page .workspace-result-groups {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
+/* "Source details" is the tertiary action, but the quiet button's muted text
+   and faded border read as disabled. It keeps the quiet weight and takes the
+   link colour and a solid border, so it looks available without competing
+   with Browse or the official publication. */
+.catalog-source-actions .catalog-source-details {
+  border-color: var(--ca-border-strong);
+  color: var(--ca-link);
+}
+
+.catalog-source-actions .catalog-source-details:hover,
+.catalog-source-actions .catalog-source-details:focus-visible {
+  color: var(--ca-text);
 }

@@ -146,6 +146,10 @@ test("historical and superseded editions are stated, never inferred", async ({ p
   await open(page, "/#/library/publication/cmmc-2");
   await expect(page.locator(".catalog-trust-facts [data-version-state]")).toHaveText("Not stated by the publisher");
   await expect(page.locator('[data-limitation="retrieval_dated_version"]')).toBeVisible();
+  // Said once, as a fact about the publisher, never as how the page labels it.
+  const cmmcText = await page.locator("main").innerText();
+  expect(cmmcText.match(/does not state a version/g) || []).toHaveLength(1);
+  expect(cmmcText).not.toMatch(/labell?ed here|by the date Control Atlas retrieved/i);
 });
 
 test("Compare, templates and journeys appear only where governed data supports them", async ({ page }) => {
@@ -171,7 +175,10 @@ test("Policy & directives is a first-class Sources view with recorded basis only
   const table = page.getByRole("table", { name: "Policy and directives register" });
   await expect(table.getByRole("columnheader")).toHaveText(["Document", "Issued by", "Version / current through", "Source freshness", "Status"]);
   for (const id of POLICY) await expect(page.locator(`#source-trigger-${id}`)).toBeVisible();
-  await expect(page.locator(".source-register-boundary")).toContainText("does not state legal precedence");
+  await expect(page.locator(".source-register-boundary")).toContainText("does not decide legal precedence");
+  // Policy documents have issuers, not publishers, and the band says so.
+  await expect(page.getByRole("navigation", { name: "Issuers" }).getByRole("button", { name: /^All issuers/ })).toBeVisible();
+  await expect(page.getByText(/^All publishers/)).toHaveCount(0);
 
   await page.locator("#source-trigger-authority-dodi-8500-01").click();
   const inspector = page.locator(".sources-inspector-pane .source-inspector--inline");
@@ -181,7 +188,7 @@ test("Policy & directives is a first-class Sources view with recorded basis only
   await expect(inspector.getByRole("link", { name: /^Read the official text/ })).toBeVisible();
   const basis = inspector.getByRole("region", { name: "Recorded as the basis for" });
   await expect(basis.getByRole("link")).toHaveText(["DISA CCI", "DISA SRG", "DISA STIG"]);
-  await expect(basis).toContainText("It does not state legal precedence or whether it applies to you.");
+  await expect(basis).toContainText("It does not decide legal precedence or whether it applies to you.");
   await expect(inspector).not.toContainText(LEAK);
 
   // A policy document with no recorded basis relationship claims none.
@@ -245,3 +252,39 @@ for (const [label, path] of [
     expect(results.violations.filter((violation) => ["serious", "critical"].includes(violation.impact || ""))).toEqual([]);
   });
 }
+
+test("390px Edition facts stack instead of squeezing the value into a sliver", async ({ page }) => {
+  for (const id of ["nist-800-53", "cmmc-2", "fips-199"]) {
+    await open(page, `/#/library/publication/${id}`, 390);
+    const rows = page.locator(".catalog-about .publication-dates > div");
+    const count = await rows.count();
+    expect(count, id).toBeGreaterThan(0);
+    for (let index = 0; index < count; index += 1) {
+      const [label, value] = await Promise.all([
+        rows.nth(index).locator("dt").boundingBox(),
+        rows.nth(index).locator("dd").boundingBox(),
+      ]);
+      // Value sits under its label and gets the row's full width.
+      expect(value.y, `${id} row ${index}`).toBeGreaterThanOrEqual(label.y + label.height - 1);
+      expect(Math.abs(value.x - label.x), `${id} row ${index}`).toBeLessThanOrEqual(1);
+    }
+  }
+});
+
+test("Source details reads as an available action, not disabled text", async ({ page }) => {
+  await open(page, "/#/library/publication/nist-800-53");
+  const details = page.locator(".catalog-source-actions").getByRole("link", { name: "Source details" });
+  await expect(details).toBeVisible();
+  const [color, muted] = await Promise.all([
+    details.evaluate((element) => element.ownerDocument.defaultView.getComputedStyle(element).color),
+    page.evaluate(() => {
+      const probe = document.createElement("span");
+      probe.style.color = "var(--ca-text-muted)";
+      document.body.append(probe);
+      const value = probe.ownerDocument.defaultView.getComputedStyle(probe).color;
+      probe.remove();
+      return value;
+    }),
+  ]);
+  expect(color).not.toBe(muted);
+});

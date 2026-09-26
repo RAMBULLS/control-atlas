@@ -51,12 +51,15 @@ export function FreshnessValue(props: { freshness: PublicationTrust["freshness"]
   return <span data-freshness="unrecorded">Not recorded</span>;
 }
 
+// These states already produce a known limitation with the same sentence.
+const REPEATED_AS_LIMITATION = new Set(["recorded", "retrieval_dated", "not_stated"]);
+
 export function VersionValue(props: { version: PublicationTrust["version"]; showDetail?: boolean }) {
   const { version } = props;
   return (
     <span data-version-state={version.state}>
       {version.label}
-      {props.showDetail && version.detail && version.state !== "recorded" ? <small className="publication-fact-detail">{version.detail}</small> : null}
+      {props.showDetail && version.detail && !REPEATED_AS_LIMITATION.has(version.state) ? <small className="publication-fact-detail">{version.detail}</small> : null}
     </span>
   );
 }

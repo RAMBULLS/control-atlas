@@ -116,7 +116,7 @@ export function PublicationOverview(props: {
               See it on the Atlas
             </AppLink>
           ) : null}
-          <AppLink onNavigate={onNavigate} patch={{ source: trust.sourceId } as Partial<ViewState>} variant="secondary-quiet" view="sources">
+          <AppLink className="catalog-source-details" onNavigate={onNavigate} patch={{ source: trust.sourceId } as Partial<ViewState>} variant="secondary-quiet" view="sources">
             Source details
           </AppLink>
         </div>
@@ -196,7 +196,9 @@ export function PublicationOverview(props: {
 
           <section aria-labelledby="catalog-source-title" className="catalog-about__panel">
             <h3 id="catalog-source-title">Edition and freshness</h3>
-            {trust.version.state !== "recorded" && trust.version.detail ? <p className="publication-fact-detail">{trust.version.detail}</p> : null}
+            {/* A version the publisher does not state is already a known limitation
+                below; saying it here as well printed the same sentence twice. */}
+            {trust.version.state !== "recorded" && trust.version.state !== "retrieval_dated" && trust.version.state !== "not_stated" && trust.version.detail ? <p className="publication-fact-detail">{trust.version.detail}</p> : null}
             {trust.lifecycle.note ? <p className="publication-fact-detail">{trust.lifecycle.note}</p> : null}
             <SourceDates trust={trust} />
             {trust.limitations.length ? (
@@ -214,7 +216,7 @@ export function PublicationOverview(props: {
             {/* The intro promises a list. With no policy recorded it promised
                 one and delivered a note, which read as a missing section. */}
             {basis.length ? (
-              <p className="catalog-basis-intro">Policy that Control Atlas records as the basis for this publication. It does not decide whether the publication applies to you.</p>
+              <p className="catalog-basis-intro">Policy cited as the basis for this publication. It does not decide whether the publication applies to you.</p>
             ) : null}
             {basis.length ? (
               <ul className="catalog-basis-list">

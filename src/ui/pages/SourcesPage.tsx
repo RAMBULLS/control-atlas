@@ -50,7 +50,7 @@ const OFFICIAL_TEXT_VERBS: SourceActionVerbs = {
 
 /** Said wherever an authority relationship is shown, in the same words. */
 const POLICY_BASIS_NOTE =
-  "Control Atlas records this basis and cites a source for it. It does not state legal precedence or whether it applies to you.";
+  "A relationship recorded with a cited source, not a statement by the issuer. It does not decide legal precedence or whether it applies to you.";
 
 const SOURCE_PAGE_SIZE = 25;
 
@@ -823,11 +823,11 @@ export function SourcesPage(props: {
 
       <p className="source-register-boundary">
         {registerView === "policy"
-          ? `${policyCount.toLocaleString()} statutes, regulations, orders and directives that Control Atlas records as the basis for the publications it holds. Each keeps its official title, issuer and a link to the official text. Listing one here does not state legal precedence or whether it applies to you.`
+          ? `${policyCount.toLocaleString()} statutes, regulations, orders and directives cited as the basis for the publications listed here. Each shows its official title, issuer and a link to the official text. Being listed does not decide legal precedence or whether it applies to you.`
           // "anchor searchable records or published connections" was our
           // vocabulary for what a publication does in the graph. Say what the
           // reader gets from it.
-          : `${publicationCount.toLocaleString()} publications Control Atlas has read in full, so you can search their contents or follow their published links to other publications. Supporting files and crosswalks appear inside each one.`}
+          : `${publicationCount.toLocaleString()} publications with their full contents indexed: search their records or follow their published links to other publications. Supporting files and crosswalks are inside each one.`}
       </p>
 
       <nav aria-label="Source register views" className="source-register-views">
@@ -905,14 +905,14 @@ export function SourcesPage(props: {
           </div>
 
           {publisherBands.length > 1 ? (
-            <nav aria-label="Publishers" className="workspace-result-groups" data-group-count={publisherBands.length}>
+            <nav aria-label={registerView === "policy" ? "Issuers" : "Publishers"} className="workspace-result-groups" data-group-count={publisherBands.length}>
               <button
                 aria-pressed={!state.publisher}
                 className="workspace-result-group"
                 onClick={() => onNavigate("sources", { ...state, publisher: "" })}
                 type="button"
               >
-                All publishers<small>{allPublicationRows.length.toLocaleString()}</small>
+                {registerView === "policy" ? "All issuers" : "All publishers"}<small>{allPublicationRows.length.toLocaleString()}</small>
               </button>
               {publisherBands.map((band) => (
                 <button

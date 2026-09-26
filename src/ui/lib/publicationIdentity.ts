@@ -194,7 +194,7 @@ function versionFor(source: any): PublicationTrust["version"] {
   if (day && acquisitionDates.includes(day)) {
     return {
       state: "retrieval_dated", value, label: "Not stated by the publisher",
-      detail: `It is labelled here by the date Control Atlas retrieved it, ${formatPublicationDate(day)}.`,
+      detail: "The publisher does not state a version for this material.",
     };
   }
   return { state: "recorded", value, label: value, detail: "" };
@@ -277,7 +277,7 @@ export function publicationTrustFor(input: PublicationTrustInput): PublicationTr
       });
     }
   }
-  if (version.state === "retrieval_dated") limitations.push({ code: "retrieval_dated_version", text: `The publisher does not state a version for this material. ${version.detail}` });
+  if (version.state === "retrieval_dated") limitations.push({ code: "retrieval_dated_version", text: version.detail });
   if (version.state === "not_stated") limitations.push({ code: "version_not_stated", text: version.detail });
   if (review?.currentness === "superseded") {
     limitations.push({ code: "superseded_upstream", text: `The publisher has superseded this edition. Control Atlas recorded that on ${formatPublicationDate(review.reviewedAt)}.` });

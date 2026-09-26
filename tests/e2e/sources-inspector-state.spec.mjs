@@ -103,6 +103,39 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     expect(await page.locator("html").evaluate((element) => element.scrollWidth)).toBeLessThanOrEqual(390);
   });
 
+  test("390px direct link to a source opens its details on top, not after the register", async ({ page }) => {
+    // `.panel { position: relative }` once beat the modal's position: fixed, so
+    // the "modal" rendered in flow after every other source. toBeVisible() still
+    // passed; only geometry catches it.
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoApp(page, "/#/sources?source=disa-cci-list");
+    await waitForAppReady(page);
+
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).toBeVisible();
+    await expect(dialog).toHaveCSS("position", "fixed");
+    await expect(dialog.getByRole("heading", { name: "DISA CCI" })).toBeInViewport();
+    const heading = await dialog.getByRole("heading", { name: "DISA CCI" }).boundingBox();
+    expect(heading.y).toBeLessThan(200);
+    const primary = dialog.locator(".source-inspector-official-link").first();
+    await expect(primary).toBeInViewport();
+    expect((await primary.boundingBox()).y + 44).toBeLessThan(844);
+    expect(await page.locator("html").evaluate((element) => element.ownerDocument.defaultView.scrollY)).toBe(0);
+
+    // Closing keeps the deep link honest: the register comes back list-first.
+    await page.keyboard.press("Escape");
+    await waitForAppReady(page);
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await expect(page).not.toHaveURL(/source=/);
+    await expect(page.getByRole("button", { name: "DISA CCI", exact: true })).toBeFocused();
+
+    // Without a selection, nothing overlays the list.
+    await gotoApp(page, "/#/sources");
+    await waitForAppReady(page);
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await expect(page.locator(".source-register-row").first()).toBeVisible();
+  });
+
   test("search commits immediately on Enter without duplicating result counts", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
     await gotoApp(page, "/#/sources");

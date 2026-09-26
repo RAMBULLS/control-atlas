@@ -26,17 +26,17 @@ const publicationRecords = [
 ];
 
 const publicationRoutes = [
-  ["nist-800-53", "NIST SP 800-53 Rev. 5", "NIST", "family", "families"],
-  ["csf-2", "NIST Cybersecurity Framework 2.0", "NIST", "category", "categories"],
+  ["nist-800-53", "SP 800-53 Rev. 5", "NIST SP 800-53 Rev. 5", "National Institute of Standards and Technology (NIST)", "family", "families"],
+  ["csf-2", "CSF 2.0", "NIST Cybersecurity Framework 2.0", "National Institute of Standards and Technology (NIST)", "category", "categories"],
 ];
 
-test("publication pages use official human identity and publisher-native tiers", async ({
+test("publication pages lead with the practitioner name, keep the official identity, and use publisher-native tiers", async ({
   page,
 }) => {
   test.setTimeout(120_000);
   attachPageDiagnostics(page);
 
-  for (const [catalog, title, publisher, tier, tiers] of publicationRoutes) {
+  for (const [catalog, name, official, publisher, tier, tiers] of publicationRoutes) {
     await gotoApp(page, `/#/library/publication/${catalog}`);
     await waitForAppReady(page, { allowPartial: true });
     await dismissOnboarding(page);
@@ -44,15 +44,16 @@ test("publication pages use official human identity and publisher-native tiers",
     const publication = page.locator(".catalog-detail-page");
     await expect(publication).toBeVisible();
     await expect(publication).not.toHaveClass(/\bpanel\b/);
-    await expect(publication.getByText("PUBLICATION", { exact: true })).toBeVisible();
-    await expect(publication.getByRole("heading", { name: title, level: 1 })).toBeVisible();
-    await expect(publication.locator(".catalog-publisher")).toHaveText(publisher);
+    await expect(publication.locator(".catalog-detail-hero .eyebrow")).toContainText("Publication");
+    await expect(publication.getByRole("heading", { name, level: 1, exact: true })).toBeVisible();
+    await expect(publication.locator(".catalog-official-title")).toContainText(official);
+    await expect(publication.locator(".catalog-publisher")).toHaveText(`Published by ${publisher}`);
     await expect(
-      publication.getByRole("link", { name: "Open official publication", exact: true }),
+      publication.getByRole("link", { name: new RegExp(`^Open official publication for ${official.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`) }),
     ).toBeVisible();
     await expect(publication.locator(`[data-published-tier="${tier}"]`).first()).toBeVisible();
     await expect(
-      publication.getByRole("searchbox", { name: `Search ${title} ${tiers}` }),
+      publication.getByRole("searchbox", { name: `Search ${name} ${tiers}` }),
     ).toBeVisible();
     await expect(publication).not.toContainText("Control Atlas note:");
     await expect(publication).not.toContainText("Published group");

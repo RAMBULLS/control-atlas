@@ -60,7 +60,7 @@ function PolicyItem(props: { item: TerritoryListed; model: TerritoryModel; onPub
       ) : null}
       {props.basis ? <small>{props.basis}</small> : null}
       <div className="atl-policy__links">
-        <AppLink onNavigate={onNavigate} patch={{ source: item.id } as Partial<ViewState>} view="sources">Source record</AppLink>
+        <AppLink onNavigate={onNavigate} patch={{ source: item.id, layer: "policy" } as Partial<ViewState>} view="sources">Source record</AppLink>
         {item.url ? <a href={item.url} rel="noopener noreferrer" target="_blank">Official text<span className="atl-sr"> for {item.name} (opens in a new tab)</span></a> : null}
       </div>
     </li>
@@ -74,7 +74,7 @@ export function PolicyPanel(props: { items: readonly TerritoryListed[]; model: T
   return (
     <div aria-labelledby="atl-policy-h" className="atl-pop atl-pop--policy" role="region">
       <h2 id="atl-policy-h">Policy &amp; directives · {props.items.length}</h2>
-      <p className="atl-note">{POLICY_NOTE}</p>
+      <p className="atl-note">{POLICY_NOTE} <AppLink onNavigate={props.onNavigate} patch={{ layer: "policy" } as Partial<ViewState>} view="sources">All policy &amp; directives in Sources</AppLink></p>
       {[...groups].map(([group, items]) => (
         <section className="atl-policy__group" key={group}>
           <h3>{group}</h3>

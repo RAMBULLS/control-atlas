@@ -55,6 +55,8 @@ test('trust and workbench changes select bounded route families and the incremen
     'source-truth-contract',
     'source-trust-browser',
     'source-identity-compatibility-browser',
+    // A public surface changed, so the rendered copy is checked too.
+    'public-copy-browser',
   ]);
   assert.equal(plan.steps.find((step) => step.id === 'source-trust-browser').expectedTests, 21);
   assert.equal(plan.steps.find((step) => step.id === 'source-trust-browser').workers, 2);
@@ -94,6 +96,7 @@ test('trust and workbench changes select bounded route families and the incremen
   assert.deepEqual(comparePlan.steps.map((step) => step.id), [
     'typecheck',
     'incremental-site-build',
+    'public-copy-browser',
     'compare-workbench-browser',
   ]);
     assert.equal(comparePlan.steps.at(-1).expectedTests, 4);

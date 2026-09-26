@@ -36,10 +36,8 @@ test("selected publications expose their verified official destinations", async 
     );
     await expect(inspector).toBeVisible();
     await expect(
-      inspector.getByRole("link", {
-        name: "Open official publication",
-        exact: true,
-      }),
+      // The accessible name also says which publication opens, and that it opens in a new tab.
+      inspector.getByRole("link", { name: /^Open official publication for .+ \(opens in a new tab\)$/ }),
     ).toHaveAttribute("href", fixture.href);
   }
 });
@@ -91,7 +89,9 @@ test("Sources preserves useful search and publisher state without legacy layers"
   await expect(page.getByRole("searchbox", { name: "Search publications" })).toHaveValue(
     "DISA",
   );
-  await expect(page.getByLabel("Publisher", { exact: true })).toHaveValue("DISA");
+  await expect(
+    page.getByRole("navigation", { name: "Publishers" }).getByRole("button", { name: /^DISA/ }),
+  ).toHaveAttribute("aria-pressed", "true");
   await expect(
     page.getByRole("table", { name: "Control Atlas publication register" }),
   ).toBeVisible();
@@ -105,7 +105,7 @@ test("compact Sources opens a modal inspector without horizontal overflow", asyn
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
-  await page.getByRole("button", { name: "CDAO AI Assurance Toolkit" }).click();
+  await page.getByRole("button", { name: "DoD AI Assurance", exact: true }).click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
   await expect(dialog).toHaveAttribute("aria-modal", "true");

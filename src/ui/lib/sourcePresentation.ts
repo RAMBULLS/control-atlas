@@ -1,4 +1,5 @@
 import { displayNameFor } from "../../app/display-names.mjs";
+import { publisherDisplayName } from "./publisherName";
 
 export type SourceFreshnessPresentation = {
   label: "Source last checked" | "Source retrieved" | "Source freshness";
@@ -7,15 +8,8 @@ export type SourceFreshnessPresentation = {
   state: "checked" | "retrieved" | "missing";
 };
 
-const PUBLISHER_DISPLAY_NAMES: Record<string, string> = {
-  dod: "Department of Defense",
-};
-
-export function sourcePublisherDisplayName(value: unknown): string {
-  const recorded = String(value || "").trim();
-  if (!recorded) return "";
-  return PUBLISHER_DISPLAY_NAMES[recorded.toLocaleLowerCase()] || recorded;
-}
+/** One publisher rule for every surface; see publicationIdentity.ts. */
+export const sourcePublisherDisplayName = publisherDisplayName;
 
 export function sourcePublicationTitle(source: any, fallback = ""): string {
   return String(source?.name || source?.display_name || fallback || "").trim();

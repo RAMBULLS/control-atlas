@@ -34,6 +34,9 @@ const ROUTES = [
   { label: "start here", path: "/#/start" },
   { label: "catalog inventory", path: "/#/catalog" },
   { label: "catalog", path: "/#/catalog/nist-800-53" },
+  // Publication pages (#284): a dense implementation standard and a sparse standard.
+  { label: "publication page STIG", path: "/#/library/publication/disa-stig" },
+  { label: "publication page sparse FIPS 199", path: "/#/library/publication/fips-199" },
   {
     label: "record detail",
     path: "/#/record/nist-800-53/AC-2",
@@ -101,6 +104,8 @@ const ROUTES = [
     label: "source detail",
     path: "/#/sources?source=nist-iot-device-cybersecurity-requirement-catalogs",
   },
+  { label: "Sources policy & directives", path: "/#/sources?layer=policy" },
+  { label: "Sources policy document", path: "/#/sources?layer=policy&source=authority-dodi-8500-01" },
   {
     label: "source not found",
     path: "/#/sources?source=not-a-real-source",
@@ -134,7 +139,8 @@ for (const route of ROUTES) {
       ).toBeVisible();
       await expect(
         page.getByRole("heading", {
-          name: "NIST IoT Device Cybersecurity Requirement Catalogs",
+          name: "NIST IoT",
+          exact: true,
           level: 2,
         }),
       ).toBeVisible();

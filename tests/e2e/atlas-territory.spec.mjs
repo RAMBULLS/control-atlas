@@ -124,7 +124,7 @@ test("Policy & directives and Other publications are visible lists, not buried d
   await page.getByRole("button", { name: "Policy & directives" }).click();
   const policy = page.getByRole("region", { name: /Policy & directives · \d+/ });
   await expect(policy).toContainText("DoDI 8500.01");
-  await expect(policy.getByRole("link", { name: "Source record" }).first()).toHaveAttribute("href", /sources\?source=authority-/);
+  await expect(policy.getByRole("link", { name: "Source record" }).first()).toHaveAttribute("href", /sources\?layer=policy&source=authority-/);
   await policy.getByRole("button", { name: "DISA STIG" }).click();
   await expect(page.locator(".atl-inspector")).toContainText("DISA STIG");
   await page.getByRole("button", { name: /Other publications · 2/ }).click();

@@ -182,7 +182,7 @@ const OBSOLETE_COMPARE_PARAMS = [
 const LEARN_PARAMS = new Set(["pattern"]);
 const BUILD_PARAMS = new Set(["templateType", "framework", "format", "environment", "baseline", "controlFamily", "category", "q"]);
 const SOURCE_PARAMS = new Set(["layer", "q", "source", "publisher", "provenance", "eligibility", "lifecycle", "access"]);
-const SOURCE_LAYERS = new Set(["publication", "connection", "ingestion", "organization"]);
+const SOURCE_LAYERS = new Set(["publication", "policy", "connection", "ingestion", "organization"]);
 const RESOURCE_PARAMS = new Set(["q", "resourceType", "collection", "owner", "sort", "showAll", "viewMode"]);
 const RETIRED_PARAMS = new Set(["q"]);
 

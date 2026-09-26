@@ -127,13 +127,14 @@ test("catalog detail keeps source context and opens a specific record", async ({
   await dismissOnboarding(page);
 
   await expect(
-    page.getByRole("heading", { name: "SP 800-171 Rev. 2", exact: true }),
+    page.getByRole("heading", { name: "800-171 Rev. 2", exact: true, level: 1 }),
   ).toBeVisible();
+  await expect(page.locator(".catalog-official-title")).toContainText("SP 800-171 Rev. 2");
   await expect(
     page.getByRole("link", { name: /(?:Open|Download) official publication/ }),
   ).toBeVisible();
   await page.getByRole("button", { name: /Family Access Control/ }).click();
-  await page.getByRole("searchbox", { name: "Search SP 800-171 Rev. 2" }).fill("3.1.1");
+  await page.getByRole("searchbox", { name: "Search 800-171 Rev. 2" }).fill("3.1.1");
   await page.getByRole("button", { name: "Search records" }).click();
   const row = page
     .locator(".catalog-record-row")

@@ -163,7 +163,7 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
           content: ".sources-page .workspace-result-groups{display:flex!important;flex-wrap:wrap!important}.sources-page .source-publisher-select{display:none!important}",
         });
         const bandsTop = (await firstRow.boundingBox()).y;
-        await bands.evaluate((element) => element.remove());
+        await bands.evaluate((element) => element.parentNode?.removeChild(element));
         expect(bandsTop - compactTop, `${view.label} at ${width}px`).toBeGreaterThanOrEqual(100);
         // On a 375px or 390px phone it is on the first screen.
         if (width >= 375) await expect(firstRow).toBeInViewport();

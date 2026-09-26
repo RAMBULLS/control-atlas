@@ -539,7 +539,7 @@ jobs:
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         id: upload
         with:
-          name: ui-review-${{ github.event.pull_request.number || github.run_id }}-${{ github.sha }}
+          name: ui-review-${{ github.event.pull_request.number || github.run_id }}-${{ github.event.pull_request.head.sha || github.sha }}
           path: artifacts/ui-review
           if-no-files-found: error
           retention-days: 30
@@ -549,12 +549,13 @@ jobs:
           ARTIFACT_URL: ${{ steps.upload.outputs.artifact-url }}
           ROUTES: ${{ needs.changes.outputs.ui_review_routes }}
           REASON: ${{ needs.changes.outputs.ui_review_reason }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         shell: bash
         run: |
           {
             echo "## UI review renders"
             echo
-            echo "**[Download the ui-review artifact]($ARTIFACT_URL)** — head \`$GITHUB_SHA\`"
+            echo "**[Download the ui-review artifact]($ARTIFACT_URL)** — head \`$HEAD_SHA\`"
             echo
             echo "Routes selected ($REASON): \`$ROUTES\`"
             echo

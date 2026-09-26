@@ -133,8 +133,9 @@ test("CI captures both viewports and both page extents, and claims nothing about
   assert.match(ci, /ui-review:\n\s+name: UI review renders/);
   // Selected by the change map, and only when there is a build to look at.
   assert.match(ci, /needs\.changes\.outputs\.ui_review_required == 'true'/);
-  // The artifact is named for the head it shows.
-  assert.match(ci, /name: ui-review-.*github\.sha/);
+  // The artifact is named for the head it shows. On a pull_request event
+  // github.sha is the merge commit, which is not the commit anyone approves.
+  assert.match(ci, /name: ui-review-.*pull_request\.head\.sha/);
   // The summary must not read as approval.
   assert.match(ci, /is not visual or copy approval/);
   // And the required gate waits on it.

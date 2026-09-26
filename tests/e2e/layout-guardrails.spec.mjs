@@ -170,8 +170,10 @@ test("the two halves of the trust layer share one gutter", async ({ page }) => {
   };
   const publication = await gutterFor("/#/library/publication/nist-800-53");
   const sources = await gutterFor("/#/sources");
+  // Equal, not merely close. This used to allow a 28px difference, which is
+  // exactly the jump it was supposed to catch.
   expect(
     Math.abs(publication - sources),
     `Publication pages sit at ${publication}px and Sources at ${sources}px.`,
-  ).toBeLessThanOrEqual(28);
+  ).toBeLessThanOrEqual(1);
 });

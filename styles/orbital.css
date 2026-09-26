@@ -294,12 +294,20 @@ body {
 
 /* Directory and data routes are working surfaces, not reading pages. Their
    children already declare workspace ceilings, but the old outer content
-   ceiling constrained them first and stranded roughly half of wide screens. */
+   ceiling constrained them first and stranded roughly half of wide screens.
+
+   catalog-detail joins them because a publication page is the middle of this
+   journey, not a destination: you arrive from the Library and leave for
+   Sources, and both of those are here. Sitting on the narrower reading ceiling
+   made the page jump 28px sideways in both directions. Its prose still reads
+   at its own measure — the heading, synopsis, fact row and reference columns
+   all cap themselves — and the record inventory wants the width. */
 #workspace:has(.app-shell:is(
   [data-view="search"],
   [data-view="commons"],
   [data-view="compare"],
-  [data-view="sources"]
+  [data-view="sources"],
+  [data-view="catalog-detail"]
 )) {
   width: min(
     var(--ca-workspace-max),

@@ -40,6 +40,8 @@ const AUTOMATION_FILES = new Set([
   'tools/ui-review-routes.mjs',
   'tools/capture-ui-review.mjs',
   'tools/lib/public-copy-scan.mjs',
+  'tools/lib/generated-data-digest.mjs',
+  'tests/generated-data-digest.test.mjs',
   'tests/ui-review-gate.test.mjs',
   'tests/route-style-scope.test.mjs',
   'tools/detection.mjs',

@@ -1,6 +1,26 @@
 /* Publication pages and the Sources trust register (issue 284).
    Loaded with those routes only, so Home and other entry routes carry none of it. */
 
+/* One grid across the trust layer.
+   A publication page capped at --ca-content-max (82rem) while Sources used
+   --ca-workspace-max (100rem), so following "Source details" from a
+   publication moved the whole page 28px sideways in the middle of one journey.
+   Library, which is where you reach a publication page from, is also on the
+   workspace width, so the publication page was the odd one out of its own
+   journey. Route-scoped: this sheet loads with the publication page and
+   Sources and with nothing else, so Home, Atlas and the record pages keep
+   their own widths. */
+.catalog-detail-page {
+  max-width: var(--ca-workspace-max);
+}
+
+/* Widening the page must not stretch the reading content with it. The record
+   inventory and the crosswalk lists want the room; a column of dates does not,
+   and right-aligned values 800px from their labels are unreadable. */
+.catalog-about__reference > .catalog-about__panel {
+  max-width: 44rem;
+}
+
 /* Publication identity (issue 284): the practitioner name leads, the exact official
    title sits directly under it, then the publisher. None of it waits behind a
    disclosure. */
@@ -232,10 +252,12 @@
 
 /* One fact per line, label beside value. A second column inside a column
    turned four dates into a small grid within a grid and scattered the reading
-   order; a single stack reads top to bottom at every width. */
+   order; a single stack reads top to bottom at every width. Capped because a
+   right-aligned date 600px from its label is not a pair any more. */
 .publication-dates {
   display: grid;
   gap: var(--ca-space-2);
+  max-width: 34rem;
   margin: 0;
 }
 

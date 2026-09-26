@@ -186,7 +186,7 @@ function versionFor(source: any): PublicationTrust["version"] {
   if (/^current(\s+published\s+data)?$/i.test(value)) {
     return {
       state: "unversioned", value, label: "Not versioned by the publisher",
-      detail: `The source register records “${value}”; the publisher does not state a release version.`,
+      detail: `The publisher publishes this as “${value}” and does not give it a release version.`,
     };
   }
   const day = /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : "";
@@ -194,7 +194,7 @@ function versionFor(source: any): PublicationTrust["version"] {
   if (day && acquisitionDates.includes(day)) {
     return {
       state: "retrieval_dated", value, label: "Not stated by the publisher",
-      detail: `Control Atlas identifies this snapshot by the date it was retrieved, ${formatPublicationDate(day)}.`,
+      detail: `It is labelled here by the date Control Atlas retrieved it, ${formatPublicationDate(day)}.`,
     };
   }
   return { state: "recorded", value, label: value, detail: "" };
@@ -270,9 +270,10 @@ export function publicationTrustFor(input: PublicationTrustInput): PublicationTr
     if (age > window) {
       limitations.push({
         code: "check_older_than_window",
-        // The window itself and how this data set is assembled are our
-        // business, not the reader's. They need the date and the consequence.
-        text: `Not checked against the publisher since ${formatPublicationDate(dates.checked)}, longer than the ${window} days Control Atlas aims for. The publisher may have changed it.`,
+        // The window decides whether this warning appears. It is not the
+        // warning: a reader does not need our freshness target narrated to
+        // them, only the date and what it means for them.
+        text: `Last checked against the publisher on ${formatPublicationDate(dates.checked)}. The publisher may have changed it since then.`,
       });
     }
   }

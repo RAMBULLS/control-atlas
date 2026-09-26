@@ -13,6 +13,8 @@ import {
 import { execFileSync } from "node:child_process";
 import { dirname, join, extname } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+
+import { generatedDataIsIdentical } from "./lib/generated-data-digest.mjs";
 import { gzipSync } from "node:zlib";
 import { runNodeSync } from "./lib/process-runner.mjs";
 
@@ -76,39 +78,21 @@ function assertGeneratedDataComplete() {
   }
 }
 
-function stagedGeneratedDataMatches() {
-  const sourceManifest = join(ROOT, "data/generated/build-manifest.json");
-  const stagedManifest = join(DIST, "data/generated/build-manifest.json");
-  if (!existsSync(sourceManifest) || !existsSync(stagedManifest)) return false;
-  if (!readFileSync(sourceManifest).equals(readFileSync(stagedManifest))) return false;
+/**
+ * May the build reuse the generated data already staged in dist?
+ *
+ * Only when the bytes are the same. See tools/lib/generated-data-digest.mjs
+ * for why a manifest comparison, and then a size-and-mtime comparison, were
+ * both wrong.
+ */
+async function stagedGeneratedDataMatches() {
   if (!REQUIRED_GENERATED_FILES.every((path) => existsSync(join(DIST, path)))) return false;
-
-  // The manifest lists artifact names and the source-data date; it carries no
-  // content digest. Two data builds from the same snapshot date produce an
-  // identical manifest even when an artifact's contents differ, so matching it
-  // alone let the staged copy win over freshly regenerated data. A registry
-  // text change was rebuilt, written to data/generated, and then served from
-  // the previous dist — the site showed the old words while the repository
-  // held the new ones. Size and mtime are cheap and catch that; nodes.json and
-  // edges.json are tens of megabytes and are not worth hashing on every build.
-  // The manifest names its own runtime artifacts, so this stays right when
-  // that list changes. Directory entries are covered by the files inside them
-  // that the manifest names individually.
-  const manifest = JSON.parse(readFileSync(sourceManifest, "utf8"));
-  const runtimeArtifacts = (manifest.build_manifest?.runtime_artifacts || [])
-    .filter((name) => !name.endsWith("/"))
-    .map((name) => `data/generated/${name}`);
-
-  return [...new Set([...REQUIRED_GENERATED_FILES, ...runtimeArtifacts])].every((path) => {
-    const source = join(ROOT, path);
-    const staged = join(DIST, path);
-    if (!existsSync(source)) return true;
-    if (!existsSync(staged)) return false;
-    const sourceStats = statSync(source);
-    if (sourceStats.isDirectory()) return true;
-    const stagedStats = statSync(staged);
-    return stagedStats.size === sourceStats.size && stagedStats.mtimeMs >= sourceStats.mtimeMs;
-  });
+  const verdict = await generatedDataIsIdentical(
+    join(ROOT, "data/generated"),
+    join(DIST, "data/generated"),
+  );
+  if (!verdict.identical) console.log(`Staged data is not reusable: ${verdict.reason}.`);
+  return verdict.identical;
 }
 
 if (reuseGenerated) {
@@ -129,7 +113,7 @@ if (reuseGenerated) {
 }
 
 assertGeneratedDataComplete();
-const reuseStagedData = reuseGenerated && stagedGeneratedDataMatches();
+const reuseStagedData = reuseGenerated && await stagedGeneratedDataMatches();
 if (reuseStagedData) {
   rmSync(join(DIST, "assets"), { force: true, recursive: true });
   console.log("Reusing unchanged staged data and rebuilding application assets only.");

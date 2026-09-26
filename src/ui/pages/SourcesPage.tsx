@@ -50,7 +50,7 @@ const OFFICIAL_TEXT_VERBS: SourceActionVerbs = {
 
 /** Said wherever an authority relationship is shown, in the same words. */
 const POLICY_BASIS_NOTE =
-  "Recorded in the Control Atlas authority record with a cited source. It does not state legal precedence or whether it applies to you.";
+  "Control Atlas records this basis and cites a source for it. It does not state legal precedence or whether it applies to you.";
 
 const SOURCE_PAGE_SIZE = 25;
 
@@ -67,9 +67,9 @@ function SourceFieldText(props: {
 }
 
 /** Enough to show the register's shape without becoming a second filter list. */
-const PUBLISHER_BAND_LIMIT = 8;
+const PUBLISHER_BAND_LIMIT = 16;
 /** A chip for two rows is not navigation; the dropdown already covers the tail. */
-const PUBLISHER_BAND_MINIMUM = 3;
+const PUBLISHER_BAND_MINIMUM = 1;
 
 function CopyStableSourceId(props: { id: string }) {
   const [copied, setCopied] = useState(false);
@@ -643,16 +643,16 @@ export function SourcesPage(props: {
     };
   }, [allPublicationRows]);
 
-  const publisherOptions = options.publishers.map((value) => ({
-    value,
-    label: value,
-  }));
-
   /**
-   * The register is one flat list of 192 entries behind a publisher dropdown,
-   * so the shape of it — who publishes what, and how much — was invisible
-   * until you opened the select. These bands put the largest publishers up
-   * front as one-click filters and keep the dropdown for the long tail.
+   * The one publisher control. It used to sit beside a select that set the
+   * same state, which is two visible controls for one choice; the bands won
+   * because they show who publishes what and how much without being opened.
+   *
+   * They cover every publisher in the current view — ten in Publications,
+   * seven in Policy & directives — so nothing hides behind a "long tail" the
+   * way it did when this was a shortcut past a dropdown. PUBLISHER_BAND_MINIMUM
+   * is 1 for that reason; the limit is a guard against a future corpus, not a
+   * design choice.
    */
   const publisherBands = useMemo(() => {
     const counts = new Map<string, number>();
@@ -873,30 +873,6 @@ export function SourcesPage(props: {
               type="search"
               value={queryDraft}
             />
-
-            {/* The publisher bands below are the same filter, so this register
-                carries two controls for one choice. Removing the select broke
-                deep-link state restoration and the keyboard path that the
-                workspace specs depend on, so it stays until the duplication is
-                resolved deliberately across Library, Resources and Sources —
-                they share this pattern. */}
-            {publisherOptions.length >= 2 ? (
-              <select
-                aria-label="Publisher"
-                className="source-filter-select"
-                onChange={(event) =>
-                  onNavigate("sources", { ...state, publisher: event.target.value })
-                }
-                value={state.publisher || ""}
-              >
-                <option value="">All publishers</option>
-                {publisherOptions.map((option) => (
-                  <option key={`pub-${option.value}`} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            ) : null}
 
             {statusOptions.length >= 2 ? (
               <select

@@ -89,7 +89,9 @@ test("Sources preserves useful search and publisher state without legacy layers"
   await expect(page.getByRole("searchbox", { name: "Search publications" })).toHaveValue(
     "DISA",
   );
-  await expect(page.getByLabel("Publisher", { exact: true })).toHaveValue("DISA");
+  await expect(
+    page.getByRole("navigation", { name: "Publishers" }).getByRole("button", { name: /^DISA/ }),
+  ).toHaveAttribute("aria-pressed", "true");
   await expect(
     page.getByRole("table", { name: "Control Atlas publication register" }),
   ).toBeVisible();

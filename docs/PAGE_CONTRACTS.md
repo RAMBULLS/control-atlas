@@ -103,6 +103,10 @@ Dates are separate facts and are never merged: the publisher's version or curren
 
 Sources is the public trust register with two views: Publications, and Policy & directives (`layer=policy`) for the statutes, regulations, orders and directives the authority record cites. The inspector leads with identity, the four status facts (Version / current through, Status, Source freshness, Control Atlas coverage), the official action and the dates, then known limitations and the recorded basis relationships ("Recorded as the basis for" on a policy document, "Recorded policy basis" on a publication, each stating that it does not decide legal precedence or applicability). Source files, published crosswalk evidence and reference material follow; an inventory of more than four items starts collapsed. Stable IDs, checksums and provenance classes live under Technical details. Workflow, branch, job, validator and hold reasons never appear publicly; an update held for review is described only as the previously accepted edition remaining in place.
 
+One filter, one visible control. The register's publisher filter is the band row: it names every publisher in the current view with its count, so the shape of the register is visible without opening anything. It replaced a select that set the same state and sat directly above it — two controls for one choice. `?publisher=` still restores, and the active band reports `aria-pressed`.
+
+The publication page and Sources share one content grid. They are one journey — a reader arrives from the Library, opens a publication, and follows Source details — and a different page width at any step in it is a visible jump. `tests/e2e/layout-guardrails.spec.mjs` holds the two to the same gutter.
+
 The generated Publication Acceptance Matrix (`npm run audit:publication-matrix`, gated by `tests/graph/publicationAcceptance.test.ts`) covers every public publication in the corpus, classifies each missing source fact, and blocks any publication whose Atlas, Library, publication page and Sources identity disagree.
 
 ## Public copy

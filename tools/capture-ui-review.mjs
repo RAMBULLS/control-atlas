@@ -59,9 +59,6 @@ async function capture(browser, { baseUrl, outDir, route, viewport }) {
     await settle(page);
     const prefix = `${route.id}__${viewport.id}`;
     await page.screenshot({ path: join(outDir, `${prefix}__viewport.png`) });
-    // Full page at scale 1: composition and scroll length, not legibility.
-    await page.setViewportSize({ width: viewport.width, height: viewport.height });
-    await page.screenshot({ path: join(outDir, `${prefix}__fullpage.png`), fullPage: true });
     const metrics = await page.evaluate(() => ({
       documentHeight: document.documentElement.scrollHeight,
       horizontalOverflow: document.documentElement.scrollWidth > window.innerWidth + 1,
@@ -70,6 +67,36 @@ async function capture(browser, { baseUrl, outDir, route, viewport }) {
       title: document.title,
     }));
     return { route: route.id, viewport: viewport.id, url, errors, ...metrics };
+  } finally {
+    await context.close();
+  }
+}
+
+/**
+ * The whole page, at scale 1.
+ *
+ * A first viewport is read, so it is captured at deviceScaleFactor 2. A full
+ * page is scanned for composition and scroll length, and at scale 2 a tall
+ * publication came out 2880 by 8700 pixels — files nobody opens, in an archive
+ * nobody downloads. Its own context, because deviceScaleFactor is fixed when a
+ * context is created.
+ */
+async function captureFullPage(browser, { baseUrl, outDir, route, viewport }) {
+  const context = await browser.newContext({
+    viewport: { width: viewport.width, height: viewport.height },
+    deviceScaleFactor: 1,
+    reducedMotion: "reduce",
+    colorScheme: "dark",
+  });
+  const page = await context.newPage();
+  try {
+    const url = `${baseUrl.replace(/\/$/, "")}/${route.path.replace(/^\//, "")}`;
+    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60_000 });
+    await settle(page);
+    await page.screenshot({
+      path: join(outDir, `${route.id}__${viewport.id}__fullpage.png`),
+      fullPage: true,
+    });
   } finally {
     await context.close();
   }
@@ -98,6 +125,7 @@ async function main() {
     for (const route of routes) {
       for (const viewport of VIEWPORTS) {
         const result = await capture(browser, { baseUrl, outDir, route, viewport });
+        await captureFullPage(browser, { baseUrl, outDir, route, viewport });
         results.push(result);
         const flag = result.horizontalOverflow ? " OVERFLOW" : "";
         console.log(`${label} ${route.id} ${viewport.id} ${result.documentHeight}px${flag}`);

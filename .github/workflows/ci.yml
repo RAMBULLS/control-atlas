@@ -536,6 +536,26 @@ jobs:
             --label base \
             --routes "$ROUTES"
 
+      # The concise set first. 150 raw screenshots is the audit trail, not a
+      # review: this is the handful of before/after pairs on one page.
+      - name: Build the concise review set
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          node tools/build-ui-review-summary.mjs \
+            --base artifacts/ui-review/base \
+            --candidate artifacts/ui-review/candidate \
+            --out artifacts/ui-review-summary \
+            --head "$HEAD_SHA"
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        id: summary
+        with:
+          name: ui-review-summary-${{ github.event.pull_request.number || github.run_id }}-${{ github.event.pull_request.head.sha || github.sha }}
+          path: artifacts/ui-review-summary
+          if-no-files-found: error
+          retention-days: 30
+
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         id: upload
         with:
@@ -547,6 +567,7 @@ jobs:
       - name: Say where the renders are and what they do not prove
         env:
           ARTIFACT_URL: ${{ steps.upload.outputs.artifact-url }}
+          SUMMARY_URL: ${{ steps.summary.outputs.artifact-url }}
           ROUTES: ${{ needs.changes.outputs.ui_review_routes }}
           REASON: ${{ needs.changes.outputs.ui_review_reason }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -555,7 +576,12 @@ jobs:
           {
             echo "## UI review renders"
             echo
-            echo "**[Download the ui-review artifact]($ARTIFACT_URL)** — head \`$HEAD_SHA\`"
+            echo "Head \`$HEAD_SHA\`"
+            echo
+            echo "**Start here: [ui-review-summary]($SUMMARY_URL)** — one page, the representative"
+            echo "before/after pairs at 1440 and 390, first viewport and full page."
+            echo
+            echo "[Full ui-review artifact]($ARTIFACT_URL) — every captured route, for a closer look."
             echo
             echo "Routes selected ($REASON): \`$ROUTES\`"
             echo
@@ -565,7 +591,8 @@ jobs:
             echo "> These are renders for a person to look at. Layout, accessibility and performance"
             echo "> contracts passing elsewhere in this run is not visual or copy approval, and nothing"
             echo "> in this job approves anything. Approval is the \`visual-approved\` label, applied by"
-            echo "> the owner after looking, and it is removed automatically when the head changes."
+            echo "> the owner after looking. It is recorded against this exact commit and does not"
+            echo "> carry to any later one."
           } >> "$GITHUB_STEP_SUMMARY"
 
   workflow-lint:

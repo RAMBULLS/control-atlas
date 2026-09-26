@@ -28,12 +28,13 @@ test('the automation surface contains the five admitted workflows', () => {
 });
 
 test('the UI approval gate is the one workflow allowed pull_request_target, and it never runs PR code', () => {
-  // It needs write access to withdraw its own approval label when the head
-  // moves, which pull_request needs and does not get on a fork. The trade is
+  // It needs write access to record an approval against the head commit and to
+  // withdraw its own label, which a pull_request run does not get. The trade is
   // only safe because the job checks out the base branch, runs only base-branch
   // code, and reads the pull request through the API.
   assert.match(uiApproval, /pull_request_target:/);
   assert.match(uiApproval, /pull-requests: write/);
+  assert.match(uiApproval, /checks: write/);
   assert.match(uiApproval, /ref: \$\{\{ github\.event\.pull_request\.base\.sha \}\}/);
   assert.doesNotMatch(uiApproval, /github\.event\.pull_request\.head\.ref/);
   assert.doesNotMatch(uiApproval, /npm (?:ci|install)/);

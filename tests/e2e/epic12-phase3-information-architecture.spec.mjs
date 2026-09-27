@@ -213,11 +213,12 @@ test("Phase 3 List and Map preserve Library state and never drop non-empty resul
   await expect(page.getByRole("group", { name: "Library view" })).toBeVisible();
 });
 
-test("Template B leads with guided setup and retires the legacy work-map card", async ({ page }) => {
+test("Template B offers guided setup beside the Atlas and retires the legacy work-map card", async ({ page }) => {
   await gotoApp(page, "/#/");
   await waitForAppReady(page, { allowPartial: true });
-  const homeTaxonomy = await page.locator(".home-secondary-action strong").allTextContents();
-  expect(homeTaxonomy).toEqual(["Start guided setup", "Browse the Atlas", "Search the Library", "Browse Resources"]);
+  await expect(page.locator(".home-start__link")).toHaveAttribute("href", "#/start");
+  const homeTools = await page.locator(".home-tool__label").allTextContents();
+  expect(homeTools).toEqual(["Compare", "Templates", "Resources"]);
   await expect(page.locator(".home-work-map span")).toHaveCount(0);
   await expect(page.getByText("Start with your work", { exact: true })).toHaveCount(0);
 });

@@ -80,10 +80,10 @@ test("record review states cover the required object classes and responsive temp
   const records = readFileSync("src/ui/pages/ObjectDetailPage.tsx", "utf8");
   const publishedText = readFileSync("src/ui/components/RecordPublishedText.tsx", "utf8");
   assert.match(home, /data-visual-identity="universal-front-door"/);
-  assert.match(
-    home,
-    /DESTINATION_ICONS[\s\S]*IconRocket[\s\S]*IconTopologyStar3[\s\S]*IconBooks[\s\S]*IconUsersGroup/,
-  );
+  // Home destinations are named text with one arrow, the same in the static
+  // first paint and React; no per-destination icon set (#283).
+  assert.match(home, /HOME_TOOLS\.map/);
+  assert.doesNotMatch(home, /DESTINATION_ICONS/);
   assert.match(records, /data-template="E"/);
   assert.match(records, /<RecordPublishedText[\s\S]*claimOrigin={claimOrigin}/);
   assert.match(publishedText, /data-claim-origin={props.claimOrigin}/);

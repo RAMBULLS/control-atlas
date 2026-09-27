@@ -35,7 +35,7 @@ test('B2: the Map toggle renders nodes for a non-empty query', async ({ page }) 
 
 test('B3: Tools & communities is reachable from home in <=2 clicks', async ({ page }) => {
   await page.goto('/#/');
-  const direct = page.locator('.home-secondary-action[href="#/resources"]');
+  const direct = page.locator('.home-tool[href="#/resources"]');
   await expect(direct).toBeVisible();
   await direct.click();
   await expect(page).toHaveURL(/#\/resources/);
@@ -59,25 +59,22 @@ test('B5: the hero has no reserved-but-empty second column', async ({ page }) =>
   expect(await hero.evaluate((el) => el.children.length)).toBe(1);
 });
 
-test('B6: the Template B destination grid has four uniform cards', async ({ page }) => {
+test('B6: the Home tools band holds three equal columns', async ({ page }) => {
   await page.goto('/#/');
-  const grid = page.locator('.home-secondary-grid');
-  await expect(grid).toBeVisible();
-  const info = await grid.evaluate((el) => {
+  const band = page.locator('.home-tools > ul');
+  await expect(band).toBeVisible();
+  const info = await band.evaluate((el) => {
     const cs = globalThis.getComputedStyle(el);
     const kids = /** @type {HTMLElement[]} */ ([...el.children]);
     return {
       display: cs.display,
-      columns: cs.gridTemplateColumns.split(/\s+/).length,
       count: kids.length,
-      first: kids[0].getBoundingClientRect().width,
-      last: kids[kids.length - 1].getBoundingClientRect().width,
+      widths: kids.map((kid) => kid.getBoundingClientRect().width),
     };
   });
   expect(info.display).toBe('grid');
-  expect(info.columns).toBe(4);
-  expect(info.count).toBe(4);
-  expect(Math.abs(info.last - info.first)).toBeLessThanOrEqual(2);
+  expect(info.count).toBe(3);
+  expect(Math.max(...info.widths) - Math.min(...info.widths)).toBeLessThanOrEqual(2);
 });
 
 test('B9: overlay result descriptions clamp within their rows', async ({ page }) => {

@@ -300,5 +300,10 @@ test("the review set falls back to what was captured when no representative rout
     summaryRouteIds(["publication-disa-stig", "sources-policy", "publication-800-53"]),
     ["publication-800-53", "sources-policy"],
   );
+  // Home and the Atlas are never dropped for the representative set (PR 316).
+  assert.deepEqual(
+    summaryRouteIds(["publication-800-53", "library", "home", "sources-publications", "atlas-overview"]),
+    ["home", "atlas-overview", "publication-800-53", "sources-publications"],
+  );
   assert.deepEqual(summaryRouteIds([]), []);
 });

@@ -40,6 +40,8 @@
 .atl-search__results { position: absolute; z-index: 8; top: 48px; left: 0; right: 0; margin: 0; padding: 6px; list-style: none; border: 1px solid var(--atl-border-strong); border-radius: 12px; background: var(--atl-raised); box-shadow: 0 14px 36px var(--atl-shadow); }
 .atl-search__results button { display: grid; width: 100%; text-align: left; border: 0; background: transparent; gap: 2px; }
 .atl-search__results small, .atl-search__none, .atl-note { color: var(--atl-muted); font-size: 0.8rem; }
+/* A link inside a note sits next to muted text of almost the same lightness, so color alone cannot mark it (WCAG 1.4.1). */
+.atl-note a { text-decoration: underline; text-underline-offset: 3px; }
 .atl-search__none { padding: 10px; }
 
 .atl-map { position: relative; overflow: hidden; min-height: 0; flex: 1 1 0; }

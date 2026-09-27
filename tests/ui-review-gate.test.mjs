@@ -288,3 +288,17 @@ test("the concise review set covers both viewports and both extents for its rout
     assert.ok(UI_REVIEW_ROUTES.some((route) => route.id === routeId), `${routeId} is not a review route`);
   }
 });
+
+test("the review set falls back to what was captured when no representative route was", async () => {
+  // An Atlas-only fix captured atlas-overview and nothing else; the summary was
+  // empty and the job failed with nothing for the owner to review (PR 314).
+  const { summaryRouteIds } = await import("../tools/build-ui-review-summary.mjs");
+  assert.deepEqual(summaryRouteIds(["atlas-overview"]), ["atlas-overview"]);
+  assert.deepEqual(summaryRouteIds(["atlas-overview", "home"]), ["home", "atlas-overview"]);
+  // When representative routes were captured, they stay the concise set.
+  assert.deepEqual(
+    summaryRouteIds(["publication-disa-stig", "sources-policy", "publication-800-53"]),
+    ["publication-800-53", "sources-policy"],
+  );
+  assert.deepEqual(summaryRouteIds([]), []);
+});

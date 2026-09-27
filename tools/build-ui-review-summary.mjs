@@ -11,8 +11,9 @@
 //     --base artifacts/ui-review/base \
 //     --candidate artifacts/ui-review/candidate \
 //     --out artifacts/ui-review-summary --head <sha>
-import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
+import { pathToFileURL } from "node:url";
 
 import { UI_REVIEW_ROUTES } from "./ui-review-routes.mjs";
 
@@ -30,6 +31,34 @@ const SUMMARY_ROUTES = [
   "sources-inspector",
 ];
 const VIEWPORTS = ["desktop-1440", "phone-390"];
+
+/**
+ * The routes to put in front of the reviewer, from the routes this change
+ * actually captured.
+ *
+ * When any of SUMMARY_ROUTES were captured, they are the review set, as before.
+ * A change that touches only other surfaces (an Atlas or Home fix) captures
+ * none of them; the review set is then every route it did capture, in review
+ * order. Without that fallback such a change produced an empty summary and
+ * failed CI with nothing for the owner to look at.
+ */
+export function summaryRouteIds(capturedIds) {
+  const captured = new Set(capturedIds);
+  const representative = SUMMARY_ROUTES.filter((id) => captured.has(id));
+  if (representative.length) return representative;
+  return UI_REVIEW_ROUTES.map((route) => route.id).filter((id) => captured.has(id));
+}
+
+/** Route ids with at least one capture in a folder, from the capture file names. */
+function capturedRouteIds(dir) {
+  if (!existsSync(dir)) return [];
+  const ids = new Set();
+  for (const name of readdirSync(dir)) {
+    const match = /^(.+?)__(?:desktop-1440|phone-390)__/.exec(name);
+    if (match) ids.add(match[1]);
+  }
+  return [...ids];
+}
 /** First viewport for the impression, full page for the hierarchy. */
 const EXTENTS = ["viewport", "fullpage"];
 
@@ -82,7 +111,8 @@ function main() {
   let copied = 0;
   let missing = 0;
 
-  for (const routeId of SUMMARY_ROUTES) {
+  const routeIds = summaryRouteIds([...capturedRouteIds(baseDir), ...capturedRouteIds(candidateDir)]);
+  for (const routeId of routeIds) {
     if (!UI_REVIEW_ROUTES.some((route) => route.id === routeId)) continue;
     const blocks = [];
     for (const viewport of VIEWPORTS) {
@@ -133,7 +163,7 @@ function main() {
 
   console.log(`Wrote ${sections.length} routes (${copied} images, ${missing} missing) to ${outDir}`);
   if (sections.length === 0) {
-    console.error("No summary routes were captured; nothing to review.");
+    console.error("No review routes were captured; nothing to review.");
     process.exit(1);
   }
 }
@@ -219,4 +249,4 @@ function renderContactSheet({ sections, headSha }) {
 `;
 }
 
-main();
+if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) main();

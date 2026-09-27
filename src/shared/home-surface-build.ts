@@ -2,7 +2,7 @@
  * Builds the Home surface (see home-surface.ts) at build time. Imported only by
  * vite.config.ts and tests, never by the browser bundle.
  *
- * Every value comes from an existing authority: topics from the #282 journey
+ * Every value comes from an existing authority: topics from the issue 282 journey
  * registry, the map from the Atlas territory geography, and source changes
  * from the Pulse artifact. Nothing is invented here, and the Pulse summaries
  * (which narrate our own acceptance) are never shown; each line is composed

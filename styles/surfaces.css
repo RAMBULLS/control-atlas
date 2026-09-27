@@ -3892,7 +3892,7 @@ a:focus-visible {
   max-width: 64rem;
 }
 
-/* Home (#283, owner-approved composition). Three regions on one 12-column
+/* Home (issue 283, owner-approved composition). Three regions on one 12-column
    grid: the hero (identity and search beside the Atlas map), the tools band,
    and the Library with source changes as its sidecar. Column lines 1, 5 and 9
    carry the tools, the Library and the source-change rail.
@@ -4021,8 +4021,8 @@ a:focus-visible {
 .home-entry .home-atlas .home-map {
   display: block;
   height: 350px;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 100%);
-  mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, black 7%, black 100%);
+  mask-image: linear-gradient(90deg, transparent 0, black 7%, black 100%);
 }
 
 .home-map svg {
@@ -4460,8 +4460,8 @@ a:focus-visible {
   .home-entry .home-atlas .home-map {
     overflow: hidden;
     height: 160px;
-    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 86%, transparent 100%);
-    mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, black 14%, black 86%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0, black 14%, black 86%, transparent 100%);
   }
 
   .home-map svg {

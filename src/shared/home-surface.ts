@@ -1,5 +1,5 @@
 /**
- * Build-time Home surface (#283). vite.config.ts computes it once with
+ * Build-time Home surface (issue 283). vite.config.ts computes it once with
  * src/shared/home-surface-build.ts and uses the same values for the static
  * first paint and for React, so the two never differ and Home fetches nothing
  * to render the Atlas map, the topics or the source changes.

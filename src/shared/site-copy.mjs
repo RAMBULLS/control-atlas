@@ -11,7 +11,7 @@ export const SITE_COPY = Object.freeze({
     headline: "Make federal cybersecurity make sense.",
     definition:
       "Understand what applies, what it means, and what to do next.",
-    // The Home lead (#283). U+2060 keeps the dash on the line with "guidance",
+    // The Home lead (issue 283). U+2060 keeps the dash on the line with "guidance",
     // so a narrow screen never starts a line with it.
     lead:
       "Controls, STIGs, frameworks, and federal guidance⁠—connected so you can trace where requirements come from, see how they relate, and know what to do next.",
@@ -34,7 +34,7 @@ export const SITE_COPY = Object.freeze({
       railLeft: "Find what applies · understand it · act on it",
       prompt: "Press Enter or select Enter the Atlas to start",
     }),
-    // Home (#283, owner-approved layout and copy). Journeys come from
+    // Home (issue 283, owner-approved layout and copy). Journeys come from
     // src/ui/lib/atlasJourneys.ts and source changes from the Pulse artifact,
     // both at build time; nothing here names a journey or a count.
     atlas: Object.freeze({

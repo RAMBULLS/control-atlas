@@ -32,21 +32,26 @@ const SUMMARY_ROUTES = [
 ];
 const VIEWPORTS = ["desktop-1440", "phone-390"];
 
+/** The front door and the flagship: whenever a change captured them, they are reviewed. */
+const ALWAYS_REVIEWED = ["home", "atlas-overview"];
+
 /**
  * The routes to put in front of the reviewer, from the routes this change
- * actually captured.
+ * actually captured, in review order.
  *
- * When any of SUMMARY_ROUTES were captured, they are the review set, as before.
- * A change that touches only other surfaces (an Atlas or Home fix) captures
- * none of them; the review set is then every route it did capture, in review
- * order. Without that fallback such a change produced an empty summary and
- * failed CI with nothing for the owner to look at.
+ * Home and the Atlas are always in the set when captured. Otherwise the set is
+ * the captured SUMMARY_ROUTES, and when none of those were captured, every
+ * captured route. The Home redesign (PR 316) also changed shared copy, so it
+ * captured the publication and Sources routes too, and a summary of only
+ * SUMMARY_ROUTES left out the page under review.
  */
 export function summaryRouteIds(capturedIds) {
   const captured = new Set(capturedIds);
-  const representative = SUMMARY_ROUTES.filter((id) => captured.has(id));
-  if (representative.length) return representative;
-  return UI_REVIEW_ROUTES.map((route) => route.id).filter((id) => captured.has(id));
+  const chosen = new Set([...ALWAYS_REVIEWED, ...SUMMARY_ROUTES].filter((id) => captured.has(id)));
+  const inReviewOrder = UI_REVIEW_ROUTES.map((route) => route.id);
+  return chosen.size
+    ? inReviewOrder.filter((id) => chosen.has(id))
+    : inReviewOrder.filter((id) => captured.has(id));
 }
 
 /** Route ids with at least one capture in a folder, from the capture file names. */

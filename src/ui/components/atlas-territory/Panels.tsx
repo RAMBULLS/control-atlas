@@ -95,7 +95,7 @@ export const HelpPanel = () => (
     <h2>About this map</h2>
     <p>Territories organize Control Atlas material for navigation. Neighboring territories do not imply authority, applicability, equivalence, dependency or hierarchy.</p>
     <p>A line means published records connect two places. Every line opens the evidence behind it.</p>
-    <p>The shortcuts under “Start with what you’re working on” are Control Atlas groupings, not publisher mappings.</p>
+    <p>The shortcuts under “Federal cyber work” are Control Atlas groupings, not publisher mappings.</p>
     <p className="atl-note">At overview the map names a reviewed set of major publications. Select a territory to see all of its publications. Statutes, regulations and directives are under Policy &amp; directives.</p>
   </div>
 );

@@ -65,7 +65,7 @@ export const SITE_COPY = Object.freeze({
   routes: Object.freeze({
     atlas: Object.freeze({
       title: "Atlas",
-      purpose: "Grouped by what each document is, who issues it, or what you're trying to get done.",
+      purpose: "See how federal cybersecurity fits together: the publications, who issues them, and the work they support.",
     }),
     library: Object.freeze({
       title: "Library",
@@ -172,6 +172,18 @@ export const PROHIBITED_PRIMARY_SURFACE_PATTERNS = Object.freeze([
   /\bthis feature\b/i,
   /\bis being reviewed\b/i,
   /\bheld for review\b/i,
+
+  // Interface narration. Copy names the subject, the practitioner's job and the
+  // payoff; it does not describe the interface, how a page is arranged, or the
+  // reader's "work" in the abstract. These match the phrasing, not the verb:
+  // "Explore the Atlas" and "Browse controls and requirements" stay legal.
+  // See "Public copy" in docs/PAGE_CONTRACTS.md.
+  /\bwhat you(?:'|’)?re (?:working on|trying to get done)/i,
+  /\bways to work\b/i,
+  /\bthis (?:page|section|panel|screen|view) (?:lets|helps|is where|lists|shows)\b/i,
+  /\buse this (?:page|section|panel|screen|view|tool|map) to\b/i,
+  /\b(?:grouped|organi[sz]ed|sorted) by the question/i,
+  /\bcontrol atlas (?:accepted|reviewed|organi[sz]ed|grouped|approved|validated)\b/i,
 
   // Build and test machinery named on a public surface
   /\b(?:ci|continuous integration) (?:run|job|check|pipeline)\b/i,

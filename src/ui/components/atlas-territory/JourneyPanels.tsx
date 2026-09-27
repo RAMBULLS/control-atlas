@@ -14,7 +14,7 @@ const TASK_TITLES = new Map(workflowRegistry.workflows.map((w) => [w.workflow_id
 export const JOURNEY_NOTE = "Grouped by Control Atlas for navigation. Not a publisher mapping.";
 export const POLICY_NOTE = "The laws and directives behind the publications on this map.";
 
-export const LEAD = "Start with what you’re working on";
+export const LEAD = "Federal cyber work";
 
 /** The practitioner entry layer. One row on a desktop, a short list on a phone. */
 export function JourneyBar(props: { active: string; onPick: (id: string) => void; policyOpen: boolean; onPolicy: () => void; phone?: boolean }) {

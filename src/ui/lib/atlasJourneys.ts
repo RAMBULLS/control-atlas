@@ -1,7 +1,7 @@
 import { publicationsCitingPolicy, recordedBasisFor } from "./publicationIdentity";
 
 /**
- * Practitioner journeys: "start with what you're working on".
+ * Practitioner journeys: the "Federal cyber work" shortcuts.
  *
  * A journey is Control Atlas-authored navigation. It gathers destinations that already exist in
  * the product (publications on the map, records, Compare pairs, templates, task guides, resources,

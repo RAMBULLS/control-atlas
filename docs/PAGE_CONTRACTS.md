@@ -29,7 +29,7 @@ The page has these parts and never shows an empty inspector:
 
 1. **Atlas** — the title and, once something is selected, a breadcrumb (`Atlas › Area › Publication › Record`).
 2. **Search** — one box for records and publications. An exact record identifier opens that record; a publication name or alias opens the publication; ambiguous text hands off to Library search; no match stays on the page with "Search all records" and "Browse the Library".
-3. **Start with what you’re working on** — practitioner journeys (RMF & ATO, STIGs & SRGs, Zero Trust, CMMC & CUI, FedRAMP, Controls & baselines, Assessment & evidence, Threats & defenses, Working files). Each opens a card of real destinations: publications with the practitioner name first and the exact publication identity beside it, records, Compare pairs that have published connections, templates and task guides, resources, and the policy cited for those publications. A journey is Control Atlas navigation; it never draws a line or claims applicability. **Policy & directives** sits at the end of the row as a secondary link to the statutes, regulations and directives, grouped as the source register groups them, each with its source record, official text and the publications that cite it.
+3. **Federal cyber work** — practitioner journeys (RMF & ATO, STIGs & SRGs, Zero Trust, CMMC & CUI, FedRAMP, Controls & baselines, Assessment & evidence, Threats & defenses, Working files). Each opens a card of real destinations: publications with the practitioner name first and the exact publication identity beside it, records, Compare pairs that have published connections, templates and task guides, resources, and the policy cited for those publications. A journey is Control Atlas navigation; it never draws a line or claims applicability. **Policy & directives** sits at the end of the row as a secondary link to the statutes, regulations and directives, grouped as the source register groups them, each with its source record, official text and the publications that cite it.
 4. **Context** — narrow by Program, Product and Asset. Choices show as "Showing material for:" chips with Clear context; a publication is highlighted when some of its records match, never because it carries the choice itself.
 5. **Layers** — only layers the data supports. Today that is Publisher. A layer changes styling and never moves a landmark.
 6. **Share this view** — copies the canonical link and says "Link copied" only after the clipboard accepts it.
@@ -113,6 +113,17 @@ The generated Publication Acceptance Matrix (`npm run audit:publication-matrix`,
 
 Public copy is written for the practitioner doing the work, not for the people who built the product. Every default surface answers three questions: what is this, why does it matter to the work I am doing, and what can I do next. If a specific fact exists, state the fact; vague reassurance is not a substitute for a date, a publisher or a count.
 
+**Describe the job, the subject and the payoff, never the interface.** Each line names a real subject, the practitioner's job and a useful outcome: what they can understand, find, trace, compare or build, what changed, and what to do next. It does not narrate how to use the interface, how a page is arranged, how Control Atlas grouped or processed something, or the reader's "work" in the abstract. An implementation fact appears only when a reader needs it to trust a source.
+
+| Interface narration | Job, subject and payoff |
+| --- | --- |
+| Explore by what you're working on. | See how federal cybersecurity fits together. |
+| Records grouped by the question they answer. | Find controls, baselines, assessment procedures, STIGs, threats, and more. |
+| Not sure where to start? Start guided setup. | Not sure where to begin? Answer two questions. |
+| Ways to work · This page lets you… · Use this to… · Control Atlas organized… | Follow published crosswalks · Build the working files · See what changed · Open the official source |
+
+Ordinary verbs are fine when the object is concrete: "Explore the Atlas", "Browse controls and requirements" and "Open the official source" all name a real thing. The test is the whole phrase, subject plus job plus outcome, not whether it starts with "Explore", "Browse", "Start" or "Use".
+
 Source trust information is concrete: publisher, official title, version or current-through, the retrieval date and the check date kept distinct, lifecycle, what Control Atlas indexes, any known limitation, and the official source.
 
 **Never on a default surface.** Process and meta narration, in any wording:
@@ -129,7 +140,7 @@ Source trust information is concrete: publisher, official title, version or curr
 
 The reason an update is held is never public. Say only that the edition Control Atlas last added is what is shown.
 
-**Enforcement.** `PROHIBITED_PRIMARY_SURFACE_PATTERNS` in `src/shared/site-copy.mjs` holds the phrase set; `tests/copy-contract.test.mjs` checks product-authored source files against it, and `tests/e2e/public-copy.spec.mjs` checks the *rendered* text of the critical public routes, which catches copy assembled at runtime that a source scan cannot see. The rendered check exempts a subtree marked `data-technical-details`, which is the only escape hatch and belongs on genuine technical-details disclosures. This is a small, maintained phrase list and a rendered-text check, not a general English linter: it is meant to stop the class of copy we have already shipped once, not to grade prose.
+**Enforcement.** `PROHIBITED_PRIMARY_SURFACE_PATTERNS` in `src/shared/site-copy.mjs` holds the phrase set; `tests/copy-contract.test.mjs` checks product-authored source files against it, and `tests/e2e/public-copy.spec.mjs` checks the *rendered* text of the critical public routes, which catches copy assembled at runtime that a source scan cannot see. The rendered check exempts a subtree marked `data-technical-details`, which is the only escape hatch and belongs on genuine technical-details disclosures. This is a small, maintained phrase list and a rendered-text check, not a general English linter: it is meant to stop the class of copy we have already shipped once, not to grade prose. The copy-contract test also pins both sides of the interface-narration rule: phrasings that must be caught, and ordinary verb phrases that must stay legal.
 
 ## Responsive verification widths
 

@@ -81,7 +81,7 @@ export type ViewState =
       atlasLimb: string;
       atlasFramework: string;
       /**
-       * Practitioner journey ("start with what you're working on"): an id from atlasJourneys.ts or
+       * Practitioner journey (a "Federal cyber work" shortcut): an id from atlasJourneys.ts or
        * "". A journey is Control Atlas navigation, never a publisher relationship.
        */
       atlasJourney: string;

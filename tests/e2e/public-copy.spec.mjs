@@ -31,7 +31,12 @@ async function publicText(page) {
     for (const node of [...clone.querySelectorAll(exemptSelector)]) node.remove();
     // A closed <details> still holds its text in the DOM, and it is one click
     // from public, so it stays in scope unless it is marked exempt.
-    return (clone.textContent || "").replace(/\s+/g, " ").trim();
+    // Text nodes are joined with a space: textContent glues adjacent elements
+    // ("LIBRARYStart with…"), and a glued word never matches a \b pattern.
+    const parts = [];
+    const walker = document.createTreeWalker(clone, 4 /* NodeFilter.SHOW_TEXT */);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) parts.push(node.nodeValue);
+    return parts.join(" ").replace(/\s+/g, " ").trim();
   }, EXEMPT_SELECTOR);
 }
 

@@ -20,7 +20,7 @@ const card = (page) => page.locator(".atl-journey");
 
 test("every practitioner journey is one click away without publication numbers", async ({ page }) => {
   await open(page);
-  const bar = page.getByRole("navigation", { name: "Start with what you’re working on" });
+  const bar = page.getByRole("navigation", { name: "Federal cyber work" });
   for (const name of JOURNEYS) await expect(bar.getByRole("button", { name, exact: true })).toBeVisible();
   for (const name of JOURNEYS) {
     await bar.getByRole("button", { name, exact: true }).click();
@@ -124,7 +124,7 @@ for (const width of [320, 375, 390, 768, 1024, 1440]) {
 
 test("on a phone the journeys come before the territories and an open journey leads the page", async ({ page }) => {
   await open(page, "/#/atlas", 390);
-  const journeys = page.getByRole("heading", { name: "Start with what you’re working on" });
+  const journeys = page.getByRole("heading", { name: "Federal cyber work" });
   const territories = page.getByRole("heading", { name: "Territories" });
   expect((await journeys.boundingBox()).y).toBeLessThan((await territories.boundingBox()).y);
   await page.getByRole("button", { name: "CMMC & CUI", exact: true }).click();

@@ -220,9 +220,8 @@
 .lm__count { fill: var(--atl-gold); }
 
 /* Practitioner journeys: Control Atlas navigation named the way the work is named. Never a line on the map. */
-.atl-journeys { position: relative; z-index: 5; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0 12px; padding: 0 16px 8px; border-bottom: 1px solid var(--atl-border); background: color-mix(in srgb, var(--atl-surface) 88%, transparent); }
-.atl-journeys__lead { grid-row: 1; grid-column: 1; font-size: 0.78rem; letter-spacing: 0.04em; color: var(--atl-muted); }
-.atl-journeys__list { grid-row: 2; grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 5px; margin: 0; padding: 0; list-style: none; }
+.atl-journeys { position: relative; z-index: 5; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0 12px; padding: 8px 16px; border-bottom: 1px solid var(--atl-border); background: color-mix(in srgb, var(--atl-surface) 88%, transparent); }
+.atl-journeys__list { grid-row: 1; grid-column: 1; display: flex; flex-wrap: wrap; gap: 5px; margin: 0; padding: 0; list-style: none; }
 .atl .atl-journeys__list button { min-height: 44px; padding: 0 11px; border-radius: 999px; font-size: 0.84rem; font-weight: 600; }
 .atl .atl-journeys__policy { grid-row: 1; grid-column: 2; min-height: 44px; padding: 0 4px; border-color: transparent; background: transparent; color: var(--atl-muted); font-size: 0.82rem; font-weight: 400; text-decoration: underline; text-underline-offset: 3px; }
 .atl--mobile .atl-journeys__list { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }

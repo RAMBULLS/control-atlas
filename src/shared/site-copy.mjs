@@ -11,8 +11,11 @@ export const SITE_COPY = Object.freeze({
     headline: "Make federal cybersecurity make sense.",
     definition:
       "Understand what applies, what it means, and what to do next.",
-    breadth:
-      "Search requirements, controls, STIGs, assessments, Zero Trust, threats, defenses, and guidance to see how the pieces fit together.",
+    // The Home lead (#283). U+2060 keeps the dash on the line with "guidance",
+    // so a narrow screen never starts a line with it.
+    lead:
+      "Controls, STIGs, frameworks, and federal guidance⁠—connected so you can trace where requirements come from, see how they relate, and know what to do next.",
+    searchPlaceholder: "Search by topic, title, or ID",
     // Depth-0 Signal cover (first paint, before the Home surface). Composed as
     // the Orbital "editorial split, one invitation" landing recipe: eyebrow,
     // display headline with a signal word, lead, one action, and an archival
@@ -31,36 +34,62 @@ export const SITE_COPY = Object.freeze({
       railLeft: "Find what applies · understand it · act on it",
       prompt: "Press Enter or select Enter the Atlas to start",
     }),
-    destinations: Object.freeze([
+    // Home (#283, owner-approved layout and copy). Journeys come from
+    // src/ui/lib/atlasJourneys.ts and source changes from the Pulse artifact,
+    // both at build time; nothing here names a journey or a count.
+    atlas: Object.freeze({
+      eyebrow: "Atlas",
+      heading: "See how federal cybersecurity fits together.",
+      action: "Open the Atlas",
+      // Accessible name of the journey list. The trigger shows the first
+      // journeys, so there is no visible heading.
+      topicsLabel: "Atlas topics",
+      shownTopics: 3,
+    }),
+    start: Object.freeze({
+      prompt: "Not sure where to begin?",
+      action: "Answer two questions",
+      view: "start-here",
+      href: "#/start",
+    }),
+    tools: Object.freeze([
       Object.freeze({
-        id: "start-here",
-        label: "Start guided setup",
-        description: "Answer two questions to find where to begin.",
-        view: "start-here",
-        href: "#/start",
+        id: "compare",
+        label: "Compare",
+        description: "Follow published crosswalks between frameworks and controls.",
+        action: "Compare frameworks",
+        view: "matrix",
+        href: "#/compare",
       }),
       Object.freeze({
-        id: "atlas",
-        label: "Browse the Atlas",
-        description: "Start with a topic.",
-        view: "atlas-map",
-        href: "#/atlas",
-      }),
-      Object.freeze({
-        id: "library",
-        label: "Search the Library",
-        description: "Find a specific record.",
-        view: "search",
-        href: "#/library",
+        id: "templates",
+        label: "Templates",
+        description: "Working files for RMF, authorization, assessment, and DoD cyber work.",
+        action: "Find a template",
+        view: "templates",
+        href: "#/build",
       }),
       Object.freeze({
         id: "resources",
-        label: "Browse Resources",
-        description: "Find tools, training, and guidance.",
+        label: "Resources",
+        description: "Tools, training, references, and guidance worth keeping close.",
+        action: "Browse resources",
         view: "commons",
         href: "#/resources",
       }),
     ]),
+    library: Object.freeze({
+      eyebrow: "Library",
+      heading: "Browse the Library",
+      lead: "Find controls, baselines, assessment procedures, STIGs, threats, and more.",
+      all: "All records",
+    }),
+    pulse: Object.freeze({
+      heading: "Recent source changes",
+      all: "All sources",
+      compactLabel: "Source changes",
+      quiet: "No recent source changes.",
+    }),
   }),
   routes: Object.freeze({
     atlas: Object.freeze({
@@ -179,6 +208,7 @@ export const PROHIBITED_PRIMARY_SURFACE_PATTERNS = Object.freeze([
   // "Explore the Atlas" and "Browse controls and requirements" stay legal.
   // See "Public copy" in docs/PAGE_CONTRACTS.md.
   /\bwhat you(?:'|’)?re (?:working on|trying to get done)/i,
+  /\bstart with what you\b/i,
   /\bways to work\b/i,
   /\bthis (?:page|section|panel|screen|view) (?:lets|helps|is where|lists|shows)\b/i,
   /\buse this (?:page|section|panel|screen|view|tool|map) to\b/i,

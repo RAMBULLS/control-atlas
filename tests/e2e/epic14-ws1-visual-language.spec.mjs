@@ -12,20 +12,20 @@ test("WS1 Home discovery cards lead with the question, not the record count", as
   await gotoApp(page, "/#/");
   await waitForAppReady(page, { allowPartial: true });
 
-  const discoveryLinks = page.locator(".home-library-kpis .home-library-kpi");
+  const discoveryLinks = page.locator(".home-library__list .home-library__item");
   await expect(discoveryLinks).toHaveCount(5);
   await expect(page.locator(".home-ecosystem-authorities, .home-ecosystem")).toHaveCount(0);
 
   const metrics = await discoveryLinks.evaluateAll((links) => links.map((link) => {
     return {
       href: link.getAttribute("href") || "",
-      question: link.querySelector(".home-library-kpi__question")?.textContent?.trim() || "",
-      label: link.querySelector(".home-library-kpi__label")?.textContent?.trim() || "",
-      count: link.querySelector(".home-library-kpi__count")?.textContent?.trim() || "",
+      question: link.querySelector(".home-library__question")?.textContent?.trim() || "",
+      label: link.querySelector(".home-library__label")?.textContent?.trim() || "",
+      count: link.querySelector(".home-library__count")?.textContent?.trim() || "",
     };
   }));
 
-  expect(metrics.every((entry) => /^\d[\d,]* records$/.test(entry.count))).toBe(true);
+  expect(metrics.every((entry) => /^\d[\d,]* records\s*→?$/.test(entry.count))).toBe(true);
   expect(metrics.every((entry) => entry.question.length > 0)).toBe(true);
   expect(metrics.every((entry) => entry.href.startsWith("#/library?kind=") && entry.label.length > 0)).toBe(true);
 
@@ -34,7 +34,7 @@ test("WS1 Home discovery cards lead with the question, not the record count", as
     const read = (selector) => Number.parseFloat(
       globalThis.getComputedStyle(link.querySelector(selector)).fontSize,
     );
-    return { label: read(".home-library-kpi__label"), count: read(".home-library-kpi__count") };
+    return { label: read(".home-library__label"), count: read(".home-library__count") };
   });
   expect(sizes.label).toBeGreaterThan(sizes.count);
 });
@@ -61,8 +61,9 @@ test("WS1 decorative surfaces resolve to one teal accent", async ({ page }) => {
   );
   expect(editorial).not.toBe(aliases[0]);
 
-  const cardAccentColors = await page.locator(".home-secondary-action").evaluateAll(
-    (cards) => cards.map((card) => globalThis.getComputedStyle(card, "::before").backgroundColor),
+  // The Home tool actions are the one accent, not a color per destination.
+  const cardAccentColors = await page.locator(".home-tool__action").evaluateAll(
+    (actions) => actions.map((action) => globalThis.getComputedStyle(action).color),
   );
   expect(cardAccentColors.length).toBeGreaterThan(0);
   expect(new Set(cardAccentColors).size).toBe(1);

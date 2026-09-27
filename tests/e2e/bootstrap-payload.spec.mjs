@@ -51,7 +51,7 @@ test("home bootstrap avoids graph JSON artifacts", async ({ page }) => {
     );
   }
 
-  await page.getByRole("link", { name: "Search the Library" }).click();
+  await page.getByRole("link", { name: "All records", exact: true }).click();
   await waitForAppReady(page);
   await expect(page).toHaveURL(/#\/library/);
   expect(scripts.length).toBeGreaterThan(1);

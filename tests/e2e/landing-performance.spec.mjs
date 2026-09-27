@@ -30,10 +30,10 @@ test("landing presents Template B search, four destinations, and governed tag br
   // Acronyms such as NIST are valid signals. Rotation behavior is covered
   // below; this assertion only requires a non-empty initial signal.
   await expect(page.locator("[data-brand-word]")).toHaveText(/\S+/);
-  await expect(page.locator(".home-secondary-action")).toHaveCount(4);
+  await expect(page.locator(".home-tools .home-tool")).toHaveCount(3);
   // Five practitioner questions, ordered the way the work runs. The sixth
   // card was a record-volume statistic, not a place to start.
-  await expect(page.locator(".home-library-kpis .home-library-kpi")).toHaveCount(5);
+  await expect(page.locator(".home-library__list .home-library__item")).toHaveCount(5);
   await expect(page.locator(".home-ecosystem, .home-capability-preview")).toHaveCount(0);
 
   const urlBeforeSkip = page.url();
@@ -71,7 +71,7 @@ test("Ctrl + Alt brand signature rotates and native Home history remains coheren
     })
     .not.toBe(firstWord);
 
-  await page.getByRole("link", { name: /Search the Library/ }).click();
+  await page.getByRole("link", { name: "All records", exact: true }).click();
   await waitForAppReady(page);
   await expect(page).toHaveURL(/#\/library/);
 

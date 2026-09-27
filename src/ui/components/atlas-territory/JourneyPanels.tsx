@@ -14,7 +14,8 @@ const TASK_TITLES = new Map(workflowRegistry.workflows.map((w) => [w.workflow_id
 export const JOURNEY_NOTE = "Grouped by Control Atlas for navigation. Not a publisher mapping.";
 export const POLICY_NOTE = "The laws and directives behind the publications on this map.";
 
-export const LEAD = "Start with what you’re working on";
+/** Accessible name of the topic row; the phone list also shows it as the section heading. */
+export const LEAD = "Topics";
 
 /** The practitioner entry layer. One row on a desktop, a short list on a phone. */
 export function JourneyBar(props: { active: string; onPick: (id: string) => void; policyOpen: boolean; onPolicy: () => void; phone?: boolean }) {
@@ -36,7 +37,6 @@ export function JourneyBar(props: { active: string; onPick: (id: string) => void
   }
   return (
     <nav aria-label={LEAD} className="atl-journeys">
-      <span aria-hidden="true" className="atl-journeys__lead">{LEAD}</span>
       <ul className="atl-journeys__list">{buttons}</ul>
       {policy}
     </nav>

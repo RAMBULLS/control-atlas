@@ -100,6 +100,38 @@ test("product-authored route copy excludes banned metaphor, process narration an
   );
 });
 
+test("interface narration is caught, while ordinary verbs with a concrete object are not", () => {
+  // The rule is "describe the job, the subject and the payoff, not the
+  // interface". The phrase list must catch the phrasing, never the verb.
+  const matches = (text) => PROHIBITED_PRIMARY_SURFACE_PATTERNS.some((pattern) => pattern.test(text));
+  for (const narration of [
+    "Explore by what you’re working on.",
+    "Start with what you're working on",
+    "Grouped by what each document is, who issues it, or what you're trying to get done.",
+    "Ways to work",
+    "This page lets you compare frameworks.",
+    "This section shows recent changes.",
+    "Use this map to find a publication.",
+    "Records grouped by the question they answer.",
+    "Control Atlas accepted 31 new records from DISA.",
+  ]) {
+    assert.ok(matches(narration), `expected interface narration to be caught: "${narration}"`);
+  }
+  for (const concrete of [
+    "Explore the Atlas.",
+    "Browse controls and requirements.",
+    "Browse the Library",
+    "Start guided setup",
+    "Use Control Atlas for research, not compliance or authorization decisions.",
+    "See how federal cybersecurity fits together.",
+    "Follow published crosswalks between frameworks and controls.",
+    "Open the official source.",
+    "Grouped by Control Atlas for navigation. Not a publisher mapping.",
+  ]) {
+    assert.ok(!matches(concrete), `ordinary practitioner copy must stay legal: "${concrete}"`);
+  }
+});
+
 test("product-authored Resource collection summaries stay short and task-focused", () => {
   const dataset = JSON.parse(read("data/commons-resource-dataset.json"));
   for (const collection of dataset.collections) {

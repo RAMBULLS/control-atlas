@@ -70,15 +70,24 @@ test("site copy keeps every approved anchor exact", () => {
   assert.equal(SITE_COPY.product.searchPlaceholder, "Search by topic, title, or identifier.");
   assert.equal(SITE_COPY.product.definition, "Control Atlas is a public research tool for federal cybersecurity requirements, controls, techniques, and guidance.");
   assert.equal(SITE_COPY.product.boundary, "Use Control Atlas for research, not compliance or authorization decisions.");
+  // Home (#283), owner-approved copy.
+  assert.equal(
+    SITE_COPY.home.lead,
+    "Controls, STIGs, frameworks, and federal guidance\u2060—connected so you can trace where requirements come from, see how they relate, and know what to do next.",
+  );
+  assert.equal(SITE_COPY.home.searchPlaceholder, "Search by topic, title, or ID");
+  assert.equal(SITE_COPY.home.atlas.heading, "See how federal cybersecurity fits together.");
+  assert.equal(SITE_COPY.home.atlas.topicsLabel, "Atlas topics");
+  assert.deepEqual([SITE_COPY.home.start.prompt, SITE_COPY.home.start.action], ["Not sure where to begin?", "Answer two questions"]);
   assert.deepEqual(
-    SITE_COPY.home.destinations.map(({ label, description }) => [label, description]),
+    SITE_COPY.home.tools.map(({ label, description, action }) => [label, description, action]),
     [
-      ["Start guided setup", "Answer two questions to find where to begin."],
-      ["Browse the Atlas", "Start with a topic."],
-      ["Search the Library", "Find a specific record."],
-      ["Browse Resources", "Find tools, training, and guidance."],
+      ["Compare", "Follow published crosswalks between frameworks and controls.", "Compare frameworks"],
+      ["Templates", "Working files for RMF, authorization, assessment, and DoD cyber work.", "Find a template"],
+      ["Resources", "Tools, training, references, and guidance worth keeping close.", "Browse resources"],
     ],
   );
+  assert.equal(SITE_COPY.home.library.lead, "Find controls, baselines, assessment procedures, STIGs, threats, and more.");
 });
 
 test("third-party federal-use provenance is described without changing its publisher", () => {
@@ -107,6 +116,7 @@ test("interface narration is caught, while ordinary verbs with a concrete object
   for (const narration of [
     "Explore by what you’re working on.",
     "Start with what you're working on",
+    "Start with what you came to find.",
     "Grouped by what each document is, who issues it, or what you're trying to get done.",
     "Ways to work",
     "This page lets you compare frameworks.",

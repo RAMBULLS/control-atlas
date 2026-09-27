@@ -15,6 +15,14 @@ The desktop header provides Start Here, Atlas, Library, Compare, Resources, Temp
 
 Home presents the product purpose, one primary search action, and concise entrances to Atlas, Library, and Resources. It does not duplicate legal, source, or provenance boilerplate already owned by About or the footer.
 
+The owner-approved composition (#283) is the specification. Three full-width regions on one 12-column grid:
+
+1. **Hero** — headline, one-sentence lead, search, and two real counts (records and source publications) beside a static drawing of the Atlas overview (the Atlas MiniMap geometry, built from `data/curated/atlas-territory-geography.json`). Under the map: "See how federal cybersecurity fits together.", **Open the Atlas**, and a closed-by-default list of the #282 journeys whose trigger names the first three and how many more there are; the list has no visible heading and the accessible name "Atlas topics". A quiet "Not sure where to begin? Answer two questions" leads to Start here.
+2. **Tools** — Compare, Templates and Resources, one band, three equal columns.
+3. **Library** — the five practitioner collections with their real counts, and source changes as a narrow sidecar: at most the two newest source changes (publications only, one per publication), then **All sources**. On a phone the sidecar is one row linking to Sources.
+
+Journeys, the map and source changes are computed once at build time (`src/shared/home-surface-build.ts`) and shared by the static first paint and React, which must render the same page. Home loads no graph, Atlas index, search data or Pulse file. Source-change lines are composed from the recorded publication, counts and versions, never from the Pulse summary, and there is no product release feed on Home.
+
 ## B. Workspace
 
 Library and Resources share search, visible desktop facets, a compact responsive filter drawer, result count, sorting, and incrementally rendered results. Empty search presents useful browse choices rather than the full corpus.

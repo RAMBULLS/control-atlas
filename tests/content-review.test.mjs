@@ -241,12 +241,12 @@ test('Home is an entry surface, not a lesson about the data model', () => {
   const viteConfig = readFileSync('vite.config.ts', 'utf8');
   assert.match(homeContent, /SITE_COPY\.home/);
   assert.match(homePage, /HOME_CONTENT\.headline/);
-  assert.match(homePage, /home-library-discovery/);
-  assert.match(homePage, /BROWSE THE LIBRARY/);
+  assert.match(homePage, /home-library/);
+  assert.match(homePage, /library\.heading/);
   // Cards lead with the practitioner question and the collection name; the
   // record count is supporting metadata, never the headline.
-  assert.match(homePage, /home-library-kpi__question/);
-  assert.match(homePage, /home-library-kpi__label/);
+  assert.match(homePage, /home-library__question/);
+  assert.match(homePage, /home-library__label/);
   assert.doesNotMatch(homePage, /More records, bigger tag|data-tag-count-scale|--tag-scale/);
   assert.doesNotMatch(
     readFileSync('src/ui/lib/homeTagConstellation.ts', 'utf8'),

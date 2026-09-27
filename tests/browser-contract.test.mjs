@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import test from 'node:test';
-import { HOME_CONTENT, HOME_DESTINATIONS } from '../src/shared/home-content.mjs';
+import { HOME_CONTENT, HOME_TOOLS } from '../src/shared/home-content.mjs';
 import { SITE_COPY } from '../src/shared/site-copy.mjs';
 
 const html = readFileSync('src/index.html', 'utf8');
@@ -375,12 +375,11 @@ test('landing page states what the product is before asking for action', () => {
   const homePage = readFileSync('src/ui/pages/HomePage.tsx', 'utf8');
   const homeContent = readFileSync('src/shared/home-content.mjs', 'utf8');
   const viteConfig = readFileSync('vite.config.ts', 'utf8');
-  assert.match(homePage, /HOME_CONTENT\.definition/);
-  assert.match(homePage, /HOME_CONTENT\.breadth/);
+  assert.match(homePage, /HOME_CONTENT\.lead/);
   assert.match(homePage, /ATLAS_SCOPE_METRICS/);
   assert.match(homeContent, /SITE_COPY\.home/);
   assert.equal(HOME_CONTENT.headline, 'Make federal cybersecurity make sense.');
-  assert.equal(HOME_CONTENT.definition, 'Understand what applies, what it means, and what to do next.');
+  assert.match(HOME_CONTENT.lead, /trace where requirements come from, see how they relate, and know what to do next\.$/);
   assert.match(homePage, /aria-label="Search Control Atlas"/);
   assert.match(homePage, /data-template="B"/);
   assert.match(html, /CONTROL_ATLAS_HOME/);
@@ -393,14 +392,11 @@ test('landing page states what the product is before asking for action', () => {
     /<aside class="signal-cover__meta"><p aria-hidden="true" class="signal-cover__brand-signature">[\s\S]*?signal-cover__meta-title/,
   );
   assert.match(viteConfig, /\.replace\('<!-- CONTROL_ATLAS_HOME -->'/);
-  assert.equal(HOME_DESTINATIONS.length, 4);
-  assert.deepEqual(HOME_DESTINATIONS.map(({ label }) => label), [
-    'Start guided setup', 'Browse the Atlas', 'Search the Library', 'Browse Resources',
-  ]);
+  assert.deepEqual(HOME_TOOLS.map(({ label }) => label), ['Compare', 'Templates', 'Resources']);
   assert.doesNotMatch(homePage, /home-ecosystem-authorities/);
   assert.match(homePage, /HOME_LIBRARY_DISCOVERY\.map/);
-  assert.match(homePage, /home-library-kpis/);
-  assert.match(homePage, /Start with what you came to find\./);
+  assert.match(homePage, /home-library__list/);
+  assert.doesNotMatch(homePage, /Start with what you came to find/);
   assert.doesNotMatch(homePage, /data-record-count|tag-count-scale|More records, bigger tag/);
 });
 

@@ -26,10 +26,10 @@ test("critical path: Template B landing hero and four entry cards are visible", 
   await expect(page.getByRole("searchbox", { name: "Search Control Atlas" })).toBeVisible();
   await expect(page.locator(".home-search").getByRole("button", { name: "Search" })).toBeVisible();
   await expect(page.locator('[data-template="B"]')).toBeVisible();
-  await expect(page.locator(".home-secondary-action")).toHaveCount(4);
+  await expect(page.locator(".home-tools .home-tool")).toHaveCount(3);
   // Five practitioner questions, ordered the way the work runs. The sixth
   // card was a record-volume statistic, not a place to start.
-  await expect(page.locator(".home-library-kpis .home-library-kpi")).toHaveCount(5);
+  await expect(page.locator(".home-library__list .home-library__item")).toHaveCount(5);
 });
 
 test("critical path: the Atlas connection list walks to a published connected record", async ({

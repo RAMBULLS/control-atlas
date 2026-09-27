@@ -89,7 +89,7 @@ test("Phase 5 renders canonical destinations as native links with working modifi
     "button.relationship-card",
     "button.resource-context-link",
     "button.start-here-publication",
-    "button.home-secondary-action",
+    "button.home-tool",
     "button.learn-article-grid",
   ].join(","));
   await expect(destinationButtons).toHaveCount(0);

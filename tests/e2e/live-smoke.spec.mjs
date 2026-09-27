@@ -27,12 +27,12 @@ test("live smoke: current Home contract and AC-2 record path", async ({ page }) 
   ).toBeVisible();
   await expect(page.getByRole("searchbox", { name: "Search Control Atlas" })).toBeVisible();
   await expect(page.locator(".home-search").getByRole("button", { name: "Search" })).toBeVisible();
-  await expect(page.locator(".home-secondary-action")).toHaveCount(4);
+  await expect(page.locator(".home-tools .home-tool")).toHaveCount(3);
   await expect(page.locator(".site-header .brand-key-word")).toBeVisible();
-  await expect(page.locator(".home-product-identity")).toHaveText(
-    "Understand what applies, what it means, and what to do next.",
+  await expect(page.locator(".home-lead")).toContainText(
+    "trace where requirements come from, see how they relate, and know what to do next.",
   );
-  await expect(page.locator(".home-library-kpis .home-library-kpi")).toHaveCount(5);
+  await expect(page.locator(".home-library__list .home-library__item")).toHaveCount(5);
   await expect(page.locator(".home-trust-boundary")).toHaveCount(0);
 
   await gotoApp(page, "/#/library?q=AC-2");

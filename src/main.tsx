@@ -11,6 +11,7 @@ import {
   ROUTE_TRANSITION_END_EVENT,
   SEARCH_RESULTS_FOCUS_EVENT,
 } from './shared/navigation-events';
+import { connectHomeDisclosure } from './ui/lib/homeDisclosure';
 // Orbital Archive No. 01 is the visual authority, not a copied palette. The
 // official release supplies the base recipes, DTCG tokens, and embedded fonts;
 // Control Atlas styles below are semantic/product adapters only.
@@ -398,6 +399,8 @@ function connectStaticHome() {
       if (target) navigateFromStaticHome(target);
     });
   });
+  const topics = rootElement.querySelector<HTMLDetailsElement>('[data-static-home] [data-home-topics]');
+  if (topics) connectHomeDisclosure(topics);
 
   // Below the compact-header breakpoint the persistent header's primary and
   // utility nav are CSS-hidden in favor of TopNav's real mobile sheet, which

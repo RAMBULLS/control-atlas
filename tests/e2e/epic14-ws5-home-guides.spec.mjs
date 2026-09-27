@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
 });
 
-test("WS5 Home implements Template B with one search, four destinations, and Library discovery", async ({ page }) => {
+test("WS5 Home implements Template B with one search, the Atlas, three tools, and Library discovery", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await gotoApp(page, "/");
   await waitForAppReady(page, { allowPartial: true });
@@ -20,43 +20,40 @@ test("WS5 Home implements Template B with one search, four destinations, and Lib
   await expect(template).toBeVisible();
   await expect(template.locator(".home-hero")).toHaveCount(1);
   await expect(template.locator(".home-search")).toHaveCount(1);
-  await expect(template.locator(".home-secondary-action")).toHaveCount(4);
-  await expect(template.locator(".home-secondary-action strong")).toHaveText([
-    "Start guided setup",
-    "Browse the Atlas",
-    "Search the Library",
-    "Browse Resources",
-  ]);
+  await expect(template.locator(".home-tools .home-tool")).toHaveCount(3);
+  await expect(template.locator(".home-tool__label")).toHaveText(["Compare", "Templates", "Resources"]);
+  await expect(template.getByRole("link", { name: "Open the Atlas", exact: true })).toHaveAttribute("href", "#/atlas");
+  await expect(template.locator(".home-start__link")).toHaveAttribute("href", "#/start");
   await expect(template.getByRole("heading", { name: "Make federal cybersecurity make sense.", level: 1 })).toBeVisible();
-  await expect(template.getByText("Understand what applies, what it means, and what to do next.", { exact: true })).toBeVisible();
+  await expect(template.locator(".home-lead")).toContainText("trace where requirements come from, see how they relate, and know what to do next.");
   await expect(template.getByText(/publisher|provenance|mapping/i)).toHaveCount(0);
   await expect(template.locator(".home-ecosystem, .home-primary-actions")).toHaveCount(0);
   await expect(template.getByText("Start with your work", { exact: true })).toHaveCount(0);
 
-  const libraryDiscovery = template.getByRole("navigation", { name: "Start with what you came to find." });
-  const discoveryLinks = libraryDiscovery.locator(".home-library-kpi");
-  await expect(template.getByText("BROWSE THE LIBRARY", { exact: true })).toBeVisible();
+  const libraryDiscovery = template.getByRole("region", { name: "Browse the Library" });
+  const discoveryLinks = libraryDiscovery.locator(".home-library__item");
+  await expect(libraryDiscovery.getByRole("heading", { name: "Browse the Library", level: 2 })).toBeVisible();
   await expect(discoveryLinks).toHaveCount(5);
   // The practitioner question leads and the collection name is the headline;
   // the record count is footer metadata, never the reason to look.
-  await expect(discoveryLinks.locator(".home-library-kpi__question")).toHaveText([
+  await expect(discoveryLinks.locator(".home-library__question")).toHaveText([
     "What you have to do",
     "What applies to your system",
     "How it gets checked",
     "How systems get hardened",
     "What it defends against",
   ]);
-  await expect(discoveryLinks.locator(".home-library-kpi__label")).toHaveText([
+  await expect(discoveryLinks.locator(".home-library__label")).toHaveText([
     "Controls & requirements",
     "Baselines & profiles",
     "Assessment & process",
     "Configuration rules",
     "Threats & defenses",
   ]);
-  const discoveryCounts = await discoveryLinks.locator(".home-library-kpi__count").allTextContents();
+  const discoveryCounts = await discoveryLinks.locator(".home-library__count").allTextContents();
   expect(discoveryCounts).toHaveLength(5);
-  expect(discoveryCounts.every((count) => /^\d[\d,]* records$/.test(count))).toBe(true);
-  await expect(libraryDiscovery.getByRole("link", { name: "Browse everything" })).toBeVisible();
+  expect(discoveryCounts.every((count) => /^\d[\d,]* records\s*→?$/.test(count))).toBe(true);
+  await expect(libraryDiscovery.getByRole("link", { name: "All records", exact: true })).toBeVisible();
   await expect(template.getByText(/more records|bigger tag/i)).toHaveCount(0);
   await expect(template.locator("[data-tag-count-scale]")).toHaveCount(0);
   await expect(template.locator(".home-area-browse, .home-ecosystem-areas, .home-area-link")).toHaveCount(0);
@@ -69,8 +66,8 @@ test("WS5 Home implements Template B with one search, four destinations, and Lib
     "#/library?kind=threats-defenses",
   ]);
 
-  const accentColors = await template.locator(".home-secondary-action").evaluateAll((cards) => (
-    cards.map((card) => globalThis.getComputedStyle(card, "::before").backgroundColor)
+  const accentColors = await template.locator(".home-tool__action").evaluateAll((actions) => (
+    actions.map((action) => globalThis.getComputedStyle(action).color)
   ));
   expect(new Set(accentColors).size).toBe(1);
 });
@@ -93,8 +90,8 @@ test("WS5 Library discovery cards open the counted canonical filter states", asy
   for (const [label, filterLabel] of discoveries) {
     await gotoApp(page, "/");
     await waitForAppReady(page, { allowPartial: true });
-    const discovery = page.locator(".home-library-kpi").filter({ hasText: label });
-    const count = (await discovery.locator(".home-library-kpi__count").innerText()).replace(/\s+records$/i, "");
+    const discovery = page.locator(".home-library__item").filter({ hasText: label });
+    const count = (await discovery.locator(".home-library__count").innerText()).replace(/\s+records\s*→?$/i, "");
     expect(count).toMatch(/^\d[\d,]*$/);
     await discovery.click();
 
@@ -114,13 +111,13 @@ test("WS5 Library discovery remains bounded and usable at all supported widths",
     await gotoApp(page, "/");
     await waitForAppReady(page, { allowPartial: true });
 
-    const navigation = page.getByRole("navigation", { name: "Start with what you came to find." });
-    await expect(navigation.locator(".home-library-kpi")).toHaveCount(5);
+    const navigation = page.getByRole("region", { name: "Browse the Library" });
+    await expect(navigation.locator(".home-library__item")).toHaveCount(5);
     expect(
       await page.locator("html").evaluate((element) => element.scrollWidth - element.clientWidth),
       `${width}px Home overflow`,
     ).toBeLessThanOrEqual(1);
-    const targets = await navigation.locator(".home-library-kpi").evaluateAll((links) => links.map((link) => {
+    const targets = await navigation.locator(".home-library__item").evaluateAll((links) => links.map((link) => {
       const box = link.getBoundingClientRect();
       return { height: box.height, width: box.width };
     }));

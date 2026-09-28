@@ -39,23 +39,24 @@ export function sourceChangeLine(event: PulseEvent): HomeSourceChange | null {
   const destination = event.destination;
   if (subject?.kind !== "publication" || !destination?.href?.startsWith("#/")) return null;
   const c = event.counts || {};
-  const setSize = isCount(c.current_records) ? `${n(c.current_records)} in the set.` : "";
+  // A second line only states a fact about the publication's change. No
+  // non-events ("none removed") and no totals of our own record set.
+  const removed = isCount(c.removed) && c.removed > 0 ? `${n(c.removed)} records removed.` : "";
   let title = event.title;
-  let fact = setSize;
+  let fact = removed;
   if (event.type === "records_added" && isCount(c.added)) {
     title = `${subject.name}: ${n(c.added)} new records`;
-    fact = [c.removed ? `${n(c.removed)} removed.` : "None removed.", setSize].filter(Boolean).join(" ");
   } else if (event.type === "publication_updated" && event.identity?.publisher_version) {
     title = `${subject.name} updated to ${event.identity.publisher_version}`;
     fact = [
       event.identity.previous_publisher_version ? `Was ${event.identity.previous_publisher_version}.` : "",
-      isCount(c.added) && c.added > 0 ? `${n(c.added)} records added.` : "",
-      isCount(c.removed) && c.removed > 0 ? `${n(c.removed)} removed.` : "",
+      isCount(c.added) && c.added > 0 ? `${n(c.added)} new records.` : "",
+      removed,
     ].filter(Boolean).join(" ");
   } else if (event.type === "snapshot_changed" && isCount(c.current_records) && isCount(c.previous_records)) {
-    const grew = c.current_records >= c.previous_records;
-    title = grew ? `${subject.name} grew to ${n(c.current_records)} records` : `${subject.name} now holds ${n(c.current_records)} records`;
-    fact = `${grew ? "Up" : "Down"} from ${n(c.previous_records)}.`;
+    const delta = c.current_records - c.previous_records;
+    title = delta >= 0 ? `${subject.name}: ${n(delta)} new records` : `${subject.name}: ${n(-delta)} records removed`;
+    fact = "";
   }
   return {
     id: event.id,

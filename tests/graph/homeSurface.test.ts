@@ -48,20 +48,24 @@ test("Home source changes come only from publications, newest change per publica
 test("Home composes each line from recorded counts and versions, never from the Pulse summary", () => {
   const added = sourceChangeLine(event({}))!;
   assert.equal(added.title, "Publication A: 2 new records");
-  assert.equal(added.fact, "None removed. 12 in the set.");
+  assert.equal(added.fact, "");
   const updated = sourceChangeLine(event({
     type: "publication_updated",
     identity: { publisher_version: "2026.2", previous_publisher_version: "2026.1" },
     counts: { previous_records: 10, current_records: 15, added: 5, removed: 0 },
   }))!;
   assert.equal(updated.title, "Publication A updated to 2026.2");
-  assert.equal(updated.fact, "Was 2026.1. 5 records added.");
+  assert.equal(updated.fact, "Was 2026.1. 5 new records.");
   const grew = sourceChangeLine(event({ type: "snapshot_changed", counts: { previous_records: 10, current_records: 40 } }))!;
-  assert.deepEqual([grew.title, grew.fact], ["Publication A grew to 40 records", "Up from 10."]);
+  assert.deepEqual([grew.title, grew.fact], ["Publication A: 30 new records", ""]);
+  const shrank = sourceChangeLine(event({ type: "snapshot_changed", counts: { previous_records: 40, current_records: 37 } }))!;
+  assert.deepEqual([shrank.title, shrank.fact], ["Publication A: 3 records removed", ""]);
+  const withRemovals = sourceChangeLine(event({ counts: { previous_records: 10, current_records: 11, added: 3, removed: 2 } }))!;
+  assert.equal(withRemovals.fact, "2 records removed.");
   for (const line of [added, updated, grew]) {
     for (const text of [line.title, line.fact, line.linkLabel]) {
       assert.ok(!PROHIBITED_PRIMARY_SURFACE_PATTERNS.some((pattern) => pattern.test(text)), text);
-      assert.doesNotMatch(text, /Control Atlas accepted/);
+      assert.doesNotMatch(text, /Control Atlas accepted|None removed|in the set/i);
     }
   }
   assert.equal(sourceChangeLine(event({ destination: { ...destination("pub-a"), href: "https://example.org" } })), null);

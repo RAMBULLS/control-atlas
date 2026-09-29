@@ -16,7 +16,7 @@ test("saved explanatory guide links open their current destination", async ({ pa
     await page.goto(`/#/learn?pattern=${guide}`);
     await waitForAppReady(page);
     await dismissOnboarding(page);
-    await expect(page).toHaveURL(new RegExp(`#${destination.replace(/[?]/g, "\\?")}$`));
+    await expect.poll(() => new URL(page.url()).hash).toBe(`#${destination}`);
     await expect(page.locator("main h1")).toBeVisible();
   }
 });

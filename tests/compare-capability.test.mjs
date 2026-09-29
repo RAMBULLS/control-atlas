@@ -71,3 +71,8 @@ test("mappingSourceIdsForEdge dedupes and accepts either source_id or sourceId s
   assert.deepEqual(mappingSourceIdsForEdge(edge({ source_refs: [] })), []);
   assert.deepEqual(mappingSourceIdsForEdge(edge({ source_refs: undefined })), []);
 });
+
+
+test("unknown predicates cannot become comparison capability through the default correlation class", () => {
+  assert.equal(isComparisonCapableEdge(edge({ relationship_type: "unreviewed_relation", relationship_class: undefined })), false);
+});

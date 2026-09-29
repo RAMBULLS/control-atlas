@@ -160,7 +160,7 @@ test("expensive graph scope begins only after an explicit graph-dependent action
   assert.equal(runtimeArtifactPlan(configuredCompare).fullGraph, false);
   assert.equal(
     runtimeArtifactPlan({ ...configuredCompare, compareRun: "true" }).fullGraph,
-    true,
+    false,
   );
   const configuredItemCompare = normalizeViewState("matrix", {
     crosswalk: "relationships",
@@ -170,10 +170,10 @@ test("expensive graph scope begins only after an explicit graph-dependent action
   });
   assert.equal(
     runtimeArtifactPlan(configuredItemCompare).fullGraph,
-    true,
-    "specific-item target choices require the published relationship graph",
+    false,
+    "specific-item target choices use their small catalog index",
   );
-  assert.equal(requiresFullGraph(configuredItemCompare), true);
+  assert.equal(requiresFullGraph(configuredItemCompare), false);
 
   const build = normalizeViewState("templates");
   // Templates lands on the document browser rather than an interstitial, so

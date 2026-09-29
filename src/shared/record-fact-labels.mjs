@@ -13,7 +13,7 @@ export const RECORD_FACT_LABELS = Object.freeze({
   component_class: "Component class",
   duration: "Duration",
   is_subtechnique: "Sub-technique",
-  mapping_count: "Published mappings",
+  mapping_count: "Workbook mapping entries",
   operational_technology: "Operational technology",
   pillar: "Pillar",
   product: "Product",

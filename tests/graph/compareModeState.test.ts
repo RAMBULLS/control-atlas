@@ -21,7 +21,7 @@ import { readGeneratedCollection } from "../../scripts/lib/generated-graph-artif
 import { createFederalGraphRuntime } from "../../src/app/runtime.mjs";
 
 test("each Compare mode has distinct required input state after one activation", () => {
-  assert.equal(COMPARE_MODES.length, 2);
+  assert.deepEqual(COMPARE_MODES.map((mode) => mode.id), ["frameworks", "implementation", "item-mapping"]);
   for (const mode of COMPARE_MODES) {
     const state = normalizeViewState("matrix", {
       view: "matrix",
@@ -283,4 +283,10 @@ test("staged flow steps and current step index reflect progressive completion ac
   assert.equal(getCompareCurrentStep("item-mapping", { ...itemInit, source: "nist-800-53" }), 1);
   assert.equal(getCompareCurrentStep("item-mapping", { ...itemInit, source: "nist-800-53", items: "AC-2" }), 2);
   assert.equal(getCompareCurrentStep("item-mapping", { ...itemInit, source: "nist-800-53", items: "AC-2", target: "csf-2", compareRun: "true" }), 3);
+});
+
+
+test("a stale explicit mapping source cannot be replaced by the single available source", () => {
+  assert.deepEqual(resolveMappingSource(["real-source"], "missing-source"), { status: "invalid" });
+  assert.deepEqual(resolveMappingSource(["real-source"], "real-source"), { status: "auto", value: "real-source" });
 });

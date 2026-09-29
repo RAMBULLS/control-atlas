@@ -2,6 +2,7 @@ import type { CompareCrosswalk, ViewState } from "./viewState";
 
 export type CompareModeId =
   | "frameworks"
+  | "implementation"
   | "item-mapping";
 
 type CompareState = Extract<ViewState, { view: "matrix" }>;
@@ -16,6 +17,12 @@ export const COMPARE_MODES = Object.freeze([
     // evidence, whether it auto-selects (exactly one source), defaults to
     // "all" (multiple sources, no filter chosen), or blocks readiness (zero
     // sources, or a stale value that no longer resolves). See T3.6/T3.7.
+    required: ["source", "target"],
+  },
+  {
+    id: "implementation",
+    label: "Implementation",
+    crosswalk: "relationships",
     required: ["source", "target"],
   },
   {
@@ -39,6 +46,11 @@ export const COMPARE_MODE_STEPS: Record<CompareModeId, readonly CompareStep[]> =
     { id: "target", label: "Compare with", description: "Choose a connected framework" },
     { id: "results", label: "Results", description: "Review published mappings" },
   ],
+  implementation: [
+    { id: "source", label: "Source", description: "Choose a publication" },
+    { id: "target", label: "Compare with", description: "Choose published component mappings" },
+    { id: "results", label: "Results", description: "Review implementation support" },
+  ],
   "item-mapping": [
     { id: "item", label: "Item", description: "Choose a publication and exact item" },
     { id: "target", label: "Compare with", description: "Choose a mapped framework" },
@@ -52,12 +64,13 @@ export function getCompareSteps(modeId: CompareModeId): readonly CompareStep[] {
 
 // The results step needs an explicit run: choosing the target in the page sets `compareRun`,
 // while a link that only names a source and target waits for the reader to ask, because
-// showing results downloads the full connection graph.
+// showing results loads only that published pair.
 export function getCompareCurrentStep(
   modeId: CompareModeId,
   state: CompareState,
 ): number {
   switch (modeId) {
+    case "implementation":
     case "frameworks":
       if (state.compareRun === "true" && state.source && state.target) return 3;
       if (state.source) return 2;
@@ -119,7 +132,7 @@ export function activateCompareMode(modeId: CompareModeId): Partial<CompareState
   };
 }
 
-const MODES_WITH_MAPPING_SOURCE = new Set(["frameworks", "item-mapping"]);
+const MODES_WITH_MAPPING_SOURCE = new Set(["frameworks", "implementation", "item-mapping"]);
 
 export type MappingSourceResolution =
   // No mapping source has any evidence for this pair yet (scope incomplete,
@@ -140,6 +153,7 @@ export function resolveMappingSource(
   currentValue: string,
 ): MappingSourceResolution {
   if (!eligibleMappingSources.length) return { status: "none" };
+  if (currentValue && !eligibleMappingSources.includes(currentValue)) return { status: "invalid" };
   if (eligibleMappingSources.length === 1) {
     return { status: "auto", value: eligibleMappingSources[0] };
   }

@@ -524,7 +524,7 @@ test('result-affecting controls have one visible workbench owner', () => {
   assert.match(compare, /data-continuous-results/);
   assert.match(compare, /id="compare-results"/);
   assert.match(compare, /<th scope="col">From<\/th>/);
-  assert.match(compare, /<th scope="col">Maps to<\/th>/);
+  assert.match(compare, /<th scope="col">\{requestedPair\?\.scope === "implementation" \? "Related component or outcome" : "Maps to"\}<\/th>/);
   assert.match(record, /buildRecordConnectionGroups/);
   assert.doesNotMatch(record, /RelationshipExplorer|SelectField/);
 });

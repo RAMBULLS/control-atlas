@@ -77,7 +77,7 @@ test("a link that only names both publications waits for one explained, primary 
   await dismissOnboarding(page);
   const button = page.getByRole("button", { name: "Show published mappings" });
   await expect(button).toBeVisible();
-  await expect(page.getByText(/loads the full published connection data/)).toBeVisible();
+  await expect(page.getByText(/loads the full published connection data/)).toHaveCount(0);
   await expect(page.locator("#compare-results")).toHaveCount(0);
   await button.click();
   await expect(page.locator("#compare-results")).toBeVisible({ timeout: 90_000 });

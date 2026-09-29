@@ -974,6 +974,7 @@ function AppContent(props: {
         bundle={bundle}
         onNavigate={onNavigate}
         onOpenNode={onOpenNode}
+        onRetry={onRetryLoad}
         state={state}
       />
     );

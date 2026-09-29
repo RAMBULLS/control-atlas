@@ -1,3 +1,4 @@
+import { orientedRelationshipType } from "../shared/compare-scope.mjs";
 import {
   isComparisonCapableEdge,
   mappingSourceIdsForEdge,
@@ -723,7 +724,12 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
     to_title: itemTitleFor(toNode),
     to_catalog_id: toNode.metadata?.catalog_id || "",
     to_taxonomy_tags: toNode.metadata?.taxonomy_tags || [],
-    relationship_type: edge.relationship_type,
+    relationship_type: orientedRelationshipType(edge.relationship_type, fromNode.id !== edge.source_node_id),
+    published_source_id: edge.source_node_id,
+    published_target_id: edge.target_node_id,
+    published_relationship_type: edge.relationship_type,
+    raw_relationship_type: edge.raw_relationship_type || edge.relationship_type,
+    publisher_assertions: edge.publisher_assertions || [],
     provenance_class: edge.provenance_class,
     confidence: edge.confidence,
     publication_status: edge.publication_status,
@@ -737,6 +743,7 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
     const requestedNodeIds = new Set(request.node_ids || []);
     const matchedEdges = dataset.edges
       .map((edge) => {
+        if (request.comparisons_only && (!isComparisonCapableEdge(edge) || !mappingSourceIdsForEdge(edge).length)) return null;
         const orientation = relationshipOrientation(
           edge,
           request.source_catalog,
@@ -750,7 +757,7 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
           return null;
         if (
           request.relationship_type &&
-          edge.relationship_type !== request.relationship_type
+          orientedRelationshipType(edge.relationship_type, orientation.fromNode.id !== edge.source_node_id) !== request.relationship_type
         )
           return null;
         if (
@@ -811,6 +818,11 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
         to_catalog_id: row.to_catalog_id,
         to_taxonomy_tags: row.to_taxonomy_tags || [],
         relationship_type: row.relationship_type,
+        published_source_id: row.published_source_id,
+        published_target_id: row.published_target_id,
+        published_relationship_type: row.published_relationship_type,
+        raw_relationship_type: row.raw_relationship_type,
+        publisher_assertions: row.publisher_assertions || [],
         provenance_class: row.provenance_class,
         confidence: row.confidence,
         publication_status: row.publication_status,
@@ -2479,6 +2491,11 @@ export function aggregateRelationshipRows(rows = []) {
       to_catalog_id: row.to_catalog_id,
       to_taxonomy_tags: row.to_taxonomy_tags || [],
       relationship_type: row.relationship_type,
+      published_source_id: row.published_source_id,
+      published_target_id: row.published_target_id,
+      published_relationship_type: row.published_relationship_type,
+      raw_relationship_type: row.raw_relationship_type,
+      publisher_assertions: row.publisher_assertions || [],
       provenance_class: row.provenance_class,
       confidence: row.confidence,
       publication_status: row.publication_status,

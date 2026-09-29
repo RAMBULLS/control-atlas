@@ -1,12 +1,14 @@
 /* global document */
+import { readFile } from "node:fs/promises";
 import { AxeBuilder } from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import readXlsxFile from "read-excel-file/node";
 import { dismissOnboarding, gotoApp, waitForAppReady } from "./support.mjs";
 
 const EXACT = "/#/compare/relationships?source=csf-2&target=nist-zt&intent=frameworks&compareRun=true";
 const IMPLEMENTATION = EXACT.replace("intent=frameworks", "intent=implementation");
 const pairRequest = (url) => url.includes("/compare-data/csf-2--nist-zt-");
-const fullGraphRequest = (url) => /\/data\/generated\/(?:nodes|edges|evidence)(?:\/|\.json)/.test(url)
+const fullGraphRequest = (url) => /\/data\/generated\/(?:graph-data\/)?(?:nodes|edges|evidence)(?:\/|\.json)/.test(url)
   || /\/data\/generated\/library-search/.test(url);
 const results = (page) => page.locator(".compare-results-table tbody tr");
 async function open(page, route) {
@@ -30,9 +32,11 @@ for (const width of [320, 390, 1440]) {
     await expect(results(page).first()).toBeVisible({ timeout: 30_000 });
     await expect(page).toHaveURL(/intent=implementation/);
     await expect(page.getByText("Published component-support mappings, not framework equivalence.", { exact: true })).toBeVisible();
+    await expect(page.locator(".compare-mapping-total")).toContainText("632 published mappings");
     expect(requests.some(fullGraphRequest)).toBe(false);
     const paths = requests.filter((url) => url.includes("/compare-data/")).map((url) => new URL(url).pathname);
-    expect(paths.length).toBeGreaterThan(0);
+    expect(paths.length).toBe(7); // Pair index and all six bounded chunks.
+    expect(new Set(paths).size).toBe(7);
     expect(paths.every((path) => path.includes("/csf-2--nist-zt-"))).toBe(true);
     expect(await results(page).count()).toBeLessThanOrEqual(25);
     await expect(page.locator(".compare-results-table").getByText("Supported by", { exact: true }).first()).toBeVisible();
@@ -78,4 +82,27 @@ test("reversing the selected publications reverses the displayed support predica
   await page.locator(".mapping-row-details > summary").first().click();
   await expect(page.locator(".mapping-evidence-list").first()).toContainText(/Supports|Is supported by/i);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+});
+
+test("reversed Zero Trust exports retain the native assertion in CSV and Excel", async ({ page }) => {
+  test.setTimeout(120_000);
+  await open(page, IMPLEMENTATION);
+  await expect(page.locator(".compare-mapping-total")).toContainText("632 published mappings");
+  const [csvDownload] = await Promise.all([
+    page.waitForEvent("download"), page.getByRole("button", { name: "CSV", exact: true }).click(),
+  ]);
+  const csv = await readFile(await csvDownload.path(), "utf8");
+  expect(csv).toContain('"Published Source ID","Published Relationship","Published Target ID","Publisher Relationship Text"');
+  expect(csv).toContain("Is supported by");
+
+  const [xlsxDownload] = await Promise.all([
+    page.waitForEvent("download"), page.getByRole("button", { name: "Excel workbook" }).click(),
+  ]);
+  const parsed = /** @type {any} */ (await readXlsxFile(await xlsxDownload.path()));
+  const rows = Array.isArray(parsed) && parsed[0]?.data ? parsed[0].data : parsed.data || parsed;
+  expect(rows.length - 1).toBe(632);
+  expect(rows[0].slice(13)).toEqual([
+    "Published Source ID", "Published Relationship", "Published Target ID", "Publisher Relationship Text",
+  ]);
+  expect(rows.some((row) => row[4] === "supports" && row[14] === "supported_by" && row[16])).toBe(true);
 });

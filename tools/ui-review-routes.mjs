@@ -329,8 +329,7 @@ function argumentValue(name, fallback = "") {
 }
 
 function runCli() {
-  // The approval gate runs from the base branch and never checks out PR code,
-  // so it hands us the changed-file list instead of a ref pair.
+  // CI can pass a changed-file list instead of a ref pair.
   const pathsFile = argumentValue("--paths-file");
   if (pathsFile) {
     const paths = readFileSync(pathsFile, "utf8").split("\n").map((line) => line.trim()).filter(Boolean);

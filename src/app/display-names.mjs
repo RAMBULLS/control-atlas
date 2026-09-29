@@ -32,6 +32,12 @@ const DISPLAY_NAMES = {
     restricted: 'Restricted access',
     private: 'Private access',
   },
+  zt_mapping_kind: {
+    csf_2: 'NIST CSF 2.0',
+    csf_1_1: 'NIST CSF 1.1',
+    sp_800_53: 'NIST SP 800-53',
+    critical_software: 'NIST critical software measures',
+  },
   relationship_type: {
     maps_to: 'Maps to',
     supports: 'Supports',

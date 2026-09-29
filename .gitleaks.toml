@@ -67,3 +67,14 @@ paths = [
   '''data/srg-requirements\.json''',
   '''data/stig-rules\.json''',
 ]
+
+# The retained NIST workbook key is public provenance, not an API credential.
+# Limit this exception to that exact field, value, and accepted collection file.
+[[rules]]
+id = "generic-api-key"
+  [[rules.allowlists]]
+  description = "Public NIST SP 1800-35 workbook source key"
+  condition = "AND"
+  regexTarget = "line"
+  paths = ['''^data/nist-zt\.json$''']
+  regexes = ['''"source_key": "nist-sp-1800-35-critical-software-mappings"''']

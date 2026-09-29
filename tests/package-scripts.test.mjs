@@ -10,13 +10,12 @@ const ci = readFileSync('.github/workflows/ci.yml', 'utf8');
 const security = readFileSync('.github/workflows/security.yml', 'utf8');
 const deploy = readFileSync('.github/workflows/deploy.yml', 'utf8');
 const refreshMerge = readFileSync('.github/workflows/automerge-refresh.yml', 'utf8');
-const uiApproval = readFileSync('.github/workflows/ui-review-approval.yml', 'utf8');
 const workflows = { ci, security, deploy, refreshMerge };
 
-test('the automation surface contains the five admitted workflows', () => {
+test('the automation surface contains the four admitted workflows', () => {
   assert.deepEqual(
     readdirSync('.github/workflows').filter((name) => /\.ya?ml$/.test(name)).sort(),
-    ['automerge-refresh.yml', 'ci.yml', 'deploy.yml', 'security.yml', 'ui-review-approval.yml'],
+    ['automerge-refresh.yml', 'ci.yml', 'deploy.yml', 'security.yml'],
   );
   assert.match(ci, /name: Control Atlas CI/);
   assert.match(security, /name: Control Atlas Security/);
@@ -24,22 +23,9 @@ test('the automation surface contains the five admitted workflows', () => {
   assert.match(refreshMerge, /name: Merge validated source refresh/);
   assert.match(refreshMerge, /ref: main/);
   assert.doesNotMatch(refreshMerge, /pull_request_target:/);
-  assert.match(uiApproval, /name: UI review approval/);
 });
 
-test('the UI approval gate is the one workflow allowed pull_request_target, and it never runs PR code', () => {
-  // It needs write access to record an approval against the head commit and to
-  // withdraw its own label, which a pull_request run does not get. The trade is
-  // only safe because the job checks out the base branch, runs only base-branch
-  // code, and reads the pull request through the API.
-  assert.match(uiApproval, /pull_request_target:/);
-  assert.match(uiApproval, /pull-requests: write/);
-  assert.match(uiApproval, /checks: write/);
-  assert.match(uiApproval, /ref: \$\{\{ github\.event\.pull_request\.base\.sha \}\}/);
-  assert.doesNotMatch(uiApproval, /github\.event\.pull_request\.head\.ref/);
-  assert.doesNotMatch(uiApproval, /npm (?:ci|install)/);
-  assert.doesNotMatch(uiApproval, /npm run build/);
-  // No other workflow may take that trigger.
+test('no workflow uses the privileged pull_request_target trigger', () => {
   for (const [name, contents] of Object.entries(workflows)) {
     assert.doesNotMatch(contents, /pull_request_target:/, `${name} must not use pull_request_target`);
   }

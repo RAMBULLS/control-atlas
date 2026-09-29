@@ -1,3 +1,4 @@
+import { comparisonPairKey, comparisonScopeAllowed } from "../../shared/compare-scope.mjs";
 import * as Accordion from "@radix-ui/react-accordion";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ComponentProps } from "react";
@@ -278,6 +279,13 @@ function LazyEvidenceDetails({ targets }: { targets: any[] }) {
               key={`evidence-${target.edge_id || target.to_id}`}
             >
               <strong>{target.to_item_id}</strong>
+              {target.publisher_assertions?.length ? (
+                <ul>{target.publisher_assertions.map((assertion: any, index: number) => (
+                  <li key={`${assertion.locator}-${index}`}>{assertion.relationship}</li>
+                ))}</ul>
+              ) : target.raw_relationship_type && target.raw_relationship_type !== target.published_relationship_type ? (
+                <p>{target.raw_relationship_type}</p>
+              ) : null}
               <SourceRefList refs={target.source_refs} />
             </section>
           ))}
@@ -444,20 +452,24 @@ export function ComparePage(props: {
   state: CompareState;
   onNavigate: (view: ViewState["view"], patch?: Partial<ViewState>) => void;
   onOpenNode: (nodeId: string) => void;
+  onRetry?: () => void;
 }) {
-  const { bundle, state, onNavigate, onOpenNode } = props;
+  const { bundle, state, onNavigate, onOpenNode, onRetry } = props;
   const [resultQuery, setResultQuery] = useState("");
   const inlineTargetLimit = useInlineTargetLimit();
   const catalogs = bundle.runtime.getCatalogs();
   const mode: CompareModeId =
-    state.intent === "item-mapping" ? "item-mapping" : "frameworks";
+    state.intent === "item-mapping" ? "item-mapping" : state.intent === "implementation" ? "implementation" : "frameworks";
 
   const publishedPairEntries = useMemo(
     () =>
       Object.entries(bundle.mappingSources || {}).filter(
-        ([key, sources]) => key.includes("|") && sources.length > 0,
+        ([key, sources]) => key.includes("|") && sources.length > 0 &&
+          (!bundle.comparisonPairs || comparisonScopeAllowed(
+            bundle.comparisonPairs[comparisonPairKey(...key.split("|"))]?.scope, mode,
+          )),
       ),
-    [bundle.mappingSources],
+    [bundle.mappingSources, bundle.comparisonPairs, mode],
   );
 
   const pairCount = useMemo(
@@ -499,21 +511,19 @@ export function ComparePage(props: {
 
   const specificTargetOptions = useMemo(() => {
     if (!state.source || !state.items.trim()) return [];
+    if (bundle.comparisonItemTargets) {
+      const targets = new Set(relationshipNodeIds.flatMap((id) => bundle.comparisonItemTargets?.[id] || []));
+      return frameworkTargetOptions.filter((option) => targets.has(option.value));
+    }
+    if (!bundle.graphReady) return [];
     return frameworkTargetOptions.filter((option) =>
       bundle.runtime.buildRelationshipRows({
-        include_candidates: false,
-        node_ids: relationshipNodeIds,
-        source_catalog: state.source,
-        target_catalog: option.value,
+        include_candidates: false, comparisons_only: true,
+        node_ids: relationshipNodeIds, source_catalog: state.source, target_catalog: option.value,
       }).rows.length > 0,
     );
-  }, [
-    bundle.runtime,
-    frameworkTargetOptions,
-    relationshipNodeIds,
-    state.items,
-    state.source,
-  ]);
+  }, [bundle.runtime, bundle.graphReady, bundle.comparisonItemTargets, frameworkTargetOptions,
+    relationshipNodeIds, state.items, state.source]);
 
   const targetOptions =
     mode === "item-mapping" ? specificTargetOptions : frameworkTargetOptions;
@@ -522,6 +532,7 @@ export function ComparePage(props: {
     if (!state.source || !state.target) return null;
     return bundle.runtime.buildRelationshipRows({
       include_candidates: false,
+      comparisons_only: true,
       node_ids: mode === "item-mapping" ? relationshipNodeIds : [],
       source_catalog: state.source,
       target_catalog: state.target,
@@ -647,17 +658,21 @@ export function ComparePage(props: {
   const targetIsValid = targetOptions.some(
     (option) => option.value === state.target,
   );
-  const itemIsReady = mode === "frameworks" || Boolean(state.items.trim());
+  const itemIsReady = mode !== "item-mapping" || Boolean(state.items.trim());
   const comparisonReady =
     sourceIsValid &&
     targetIsValid &&
     itemIsReady &&
     mappingResolution.status !== "none" &&
     mappingResolution.status !== "invalid";
-  // Choosing the target in the page is the request and sets compareRun. A link that only
-  // names a source and target waits for an explicit action, because results download the
-  // full connection graph (about 22 MB).
-  const showResults = state.compareRun === "true" && comparisonReady;
+  // Catalog admission and data readiness are separate. An invalid deep link
+  // gets an explanation from the small metadata, not a full-graph timeout.
+  const showResults = state.compareRun === "true" && comparisonReady &&
+    (bundle.comparisonStatus === "ready" || bundle.graphReady);
+  const comparisonLoading = state.compareRun === "true" && comparisonReady && !bundle.graphReady &&
+    !["ready", "error", "unsupported", "scope-mismatch"].includes(bundle.comparisonStatus || "");
+  const requestedPair = bundle.comparisonPairs?.[comparisonPairKey(state.source, state.target)];
+  const wrongScope = Boolean(requestedPair && !comparisonScopeAllowed(requestedPair.scope, mode));
   const scopeComplete = sourceIsValid && targetIsValid && itemIsReady;
   const currentStep = getCompareCurrentStep(mode, {
     ...state,
@@ -781,6 +796,7 @@ export function ComparePage(props: {
       <div aria-label="Comparison mode" className="compare-mode-tabs" role="tablist">
         {[
           { id: "frameworks" as const, label: "Frameworks" },
+          { id: "implementation" as const, label: "Implementation" },
           { id: "item-mapping" as const, label: "Specific item" },
         ].map((entry) => (
           <button
@@ -798,6 +814,42 @@ export function ComparePage(props: {
 
       <StepIndicator currentStep={currentStep} steps={steps} />
 
+      {wrongScope ? (
+        <section className="notice" role="status">
+          <h2>{requestedPair?.scope === "implementation"
+            ? "These are implementation mappings, not a framework crosswalk."
+            : "These are framework mappings, not component mappings."}</h2>
+          <p>{requestedPair?.scope === "implementation"
+            ? "The published relationships connect reference or product components with controls and outcomes."
+            : "The published relationships connect requirements, controls or outcomes."}</p>
+          <Button onClick={() => onNavigate("matrix", { ...state, intent: requestedPair?.scope,
+            compareRun: "true", relationshipType: "", page: "" })} type="button" variant="primary">
+            {requestedPair?.scope === "implementation" ? "View component mappings" : "View framework mappings"}
+          </Button>
+        </section>
+      ) : bundle.comparisonStatus === "unsupported" ? (
+        <section className="notice" role="status">
+          <h2>No published mapping is available for this pair.</h2>
+          <p>Choose another publication. This does not mean the publications are unrelated.</p>
+        </section>
+      ) : null}
+      {mappingResolution.status === "invalid" ? (
+        <section className="notice" role="alert">
+          <h2>This mapping source is not available for the selected pair.</h2>
+          <Button onClick={() => patchCompare({ mappingSource: "" })} type="button" variant="secondary">
+            Clear source filter
+          </Button>
+        </section>
+      ) : null}
+      {comparisonLoading ? <p role="status">Loading the selected published mappings…</p> : null}
+      {bundle.comparisonStatus === "error" ? (
+        <section className="notice" role="alert">
+          <h2>Unable to load these mappings</h2>
+          <p>{bundle.comparisonError}</p>
+          <Button onClick={onRetry} type="button" variant="secondary">Try again</Button>
+        </section>
+      ) : null}
+
       <section className="compare-flow-grid">
         <section
           aria-labelledby="compare-active-step"
@@ -809,7 +861,7 @@ export function ComparePage(props: {
               <h2 id="compare-active-step">
                 {mode === "item-mapping"
                   ? "Choose an item"
-                  : "Choose a framework"}
+                  : mode === "implementation" ? "Choose implementation mappings" : "Choose a framework"}
               </h2>
               <div className="compare-step-fields">
                 <SearchablePublicationField
@@ -817,7 +869,7 @@ export function ComparePage(props: {
                   onChange={selectSource}
                   hint={`${sourceCatalogOptions.length.toLocaleString()} publications are connected by ${pairCount.toLocaleString()} published crosswalks.`}
                   options={sourceCatalogOptions}
-                  placeholder="Search published frameworks"
+                  placeholder={mode === "implementation" ? "Search component mapping publications" : "Search published frameworks"}
                   value={sourceIsValid ? state.source : ""}
                 />
                 {mode === "item-mapping" ? (
@@ -846,7 +898,7 @@ export function ComparePage(props: {
           {!showResults && currentStep === 2 ? (
             <>
               <span className="label">{stepEyebrow(steps, "target")}</span>
-              <h2 id="compare-active-step">Choose a framework to compare with</h2>
+              <h2 id="compare-active-step">{mode === "implementation" ? "Choose a connected publication" : "Choose a framework to compare with"}</h2>
               <p className="compare-preserved-context">
                 <span>Source</span>
                 <strong>{sourceLabel}</strong>
@@ -897,11 +949,6 @@ export function ComparePage(props: {
                   </div>
                 </section>
               ) : null}
-              {comparisonReady && !showResults ? (
-                <p className="field-hint compare-run-prompt">
-                  This link names both publications but has not been run. Showing the mappings loads the full published connection data, which takes a few seconds.
-                </p>
-              ) : null}
               <div className="actions compare-step-actions">
                 <Button onClick={resetToSource} type="button" variant="secondary">
                   Change source
@@ -938,6 +985,9 @@ export function ComparePage(props: {
                 </Button>
               </header>
 
+              {requestedPair?.scope === "implementation" ? (
+                <p className="notice">Published component-support mappings, not framework equivalence.</p>
+              ) : null}
               <div className="compare-answer">
                 <div className="compare-answer-count">
                   <p aria-live="polite" className="compare-mapping-total" role="status">
@@ -1061,7 +1111,7 @@ export function ComparePage(props: {
                       <thead>
                         <tr>
                           <th scope="col">From</th>
-                          <th scope="col">Maps to</th>
+                          <th scope="col">{requestedPair?.scope === "implementation" ? "Related component or outcome" : "Maps to"}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1075,7 +1125,7 @@ export function ComparePage(props: {
                                 <span className="compare-record-title">{row.from_title}</span>
                               ) : null}
                             </td>
-                            <td data-label="Maps to">
+                            <td data-label={requestedPair?.scope === "implementation" ? "Related component or outcome" : "Maps to"}>
                               <RowTargets
                                 inlineLimit={inlineTargetLimit}
                                 onOpenNode={onOpenNode}

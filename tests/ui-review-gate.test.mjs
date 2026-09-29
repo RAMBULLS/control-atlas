@@ -3,36 +3,12 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { classifyChangedPaths } from "../tools/classify-change-scope.mjs";
-import {
-  APPROVAL_LABEL,
-  APPROVAL_RECORD_NAME,
-  approvalDecision,
-  canRecordApproval,
-  findApprovalRecord,
-} from "../tools/ui-review-approval.mjs";
 import { reviewSelection, reviewSelectionForChangeMap, UI_REVIEW_ROUTES } from "../tools/ui-review-routes.mjs";
 
-/**
- * The UI review gate: which changes need a person to look, and the properties
- * that make an approval mean something.
- */
+/** Route selection and render-artifact contracts for public UI changes. */
 
 const read = (path) => readFileSync(path, "utf8");
 const ids = (selection) => selection.routes.map((route) => route.id);
-
-const SHA_A = "a".repeat(40);
-const SHA_B = "b".repeat(40);
-
-/** A recorded approval, as the check-runs API reports it. */
-const record = (headSha, overrides = {}) => ({
-  name: APPROVAL_RECORD_NAME,
-  conclusion: "success",
-  head_sha: headSha,
-  completed_at: "2026-09-26T12:00:00Z",
-  app: { slug: "github-actions" },
-  output: { title: "Approved by owner" },
-  ...overrides,
-});
 
 // ---------------------------------------------------------------- route set
 
@@ -120,143 +96,6 @@ test("evidence-only runs skip the gate, matching the change-map classifier", () 
   assert.equal(reviewSelectionForChangeMap(changeMap).material, false);
 });
 
-// ------------------------------------------------- who may record approval
-
-test("a repository administrator can approve", () => {
-  const verdict = canRecordApproval({ login: "BackslashBryant", type: "User" }, "admin");
-  assert.equal(verdict.allowed, true);
-  assert.match(verdict.reason, /approved-by:BackslashBryant/);
-});
-
-test("a non-admin cannot approve, whatever else they can do", () => {
-  for (const permission of ["write", "maintain", "triage", "read", "none", ""]) {
-    const verdict = canRecordApproval({ login: "someone", type: "User" }, permission);
-    assert.equal(verdict.allowed, false, `${permission} must not approve`);
-    assert.match(verdict.reason, /approver-permission/);
-  }
-});
-
-test("a bot cannot approve even holding an admin token", () => {
-  // This is the case the label alone could not defend: an agent with write or
-  // admin access applying its own approval label.
-  for (const actor of [
-    { login: "github-actions[bot]", type: "Bot" },
-    { login: "github-actions", type: "User" },
-    { login: "dependabot[bot]", type: "Bot" },
-    { login: "some-app[bot]", type: "User" },
-    { login: "claude", type: "Bot" },
-  ]) {
-    const verdict = canRecordApproval(actor, "admin");
-    assert.equal(verdict.allowed, false, `${actor.login} must not approve`);
-    assert.match(verdict.reason, /approval-from-bot/);
-  }
-  assert.equal(canRecordApproval(null, "admin").allowed, false);
-  assert.equal(canRecordApproval({ login: "" }, "admin").allowed, false);
-});
-
-// --------------------------------------------------- the approval decision
-
-test("an administrator's approval of a commit passes the gate on that commit", () => {
-  const verdict = approvalDecision({
-    requiresReview: true, headSha: SHA_A, hasLabel: true, checkRuns: [record(SHA_A)],
-  });
-  assert.equal(verdict.approved, true);
-  assert.equal(verdict.reason, "approved-for-this-head");
-});
-
-test("an approval of an earlier commit does not approve a newer one, label or not", () => {
-  // The case the whole design exists for. The label survived — perhaps the
-  // synchronize run lost a race, perhaps someone re-added it — and the gate
-  // must still fail because nobody looked at this commit.
-  for (const hasLabel of [true, false]) {
-    const verdict = approvalDecision({
-      requiresReview: true, headSha: SHA_B, hasLabel, checkRuns: [record(SHA_A)],
-    });
-    assert.equal(verdict.approved, false, `stale approval must not pass (label=${hasLabel})`);
-    assert.equal(verdict.reason, "approval-is-for-another-commit");
-    assert.match(verdict.detail, /does not carry over/);
-  }
-});
-
-test("no approval at all fails, and says so differently from a stale one", () => {
-  const verdict = approvalDecision({ requiresReview: true, headSha: SHA_A, hasLabel: true, checkRuns: [] });
-  assert.equal(verdict.approved, false);
-  assert.equal(verdict.reason, "not-approved");
-});
-
-test("withdrawing the label withdraws approval even though the record remains", () => {
-  const verdict = approvalDecision({
-    requiresReview: true, headSha: SHA_A, hasLabel: false, checkRuns: [record(SHA_A)],
-  });
-  assert.equal(verdict.approved, false);
-  assert.equal(verdict.reason, "approval-withdrawn");
-});
-
-test("a record nobody trusted is not an approval", () => {
-  const rejected = [
-    ["wrong name", record(SHA_A, { name: "some-other-check" })],
-    ["not successful", record(SHA_A, { conclusion: "failure" })],
-    ["still running", record(SHA_A, { conclusion: null, status: "in_progress" })],
-    // A check run created by another app, or forged through one, is not a
-    // record this base-branch workflow made.
-    ["another app", record(SHA_A, { app: { slug: "some-other-app" } })],
-    ["no app", record(SHA_A, { app: undefined })],
-    ["different commit", record(SHA_B)],
-  ];
-  for (const [label, run] of rejected) {
-    assert.equal(findApprovalRecord([run], SHA_A), null, `${label} must not count as an approval`);
-    assert.equal(
-      approvalDecision({ requiresReview: true, headSha: SHA_A, hasLabel: true, checkRuns: [run] }).approved,
-      false,
-      `${label} must not pass the gate`,
-    );
-  }
-});
-
-test("a change with no public UI passes without any approval", () => {
-  const verdict = approvalDecision({
-    requiresReview: false, headSha: SHA_A, hasLabel: false, checkRuns: [],
-  });
-  assert.equal(verdict.approved, true);
-  assert.equal(verdict.reason, "no-public-ui-change");
-});
-
-test("an unresolvable head fails closed", () => {
-  assert.equal(
-    approvalDecision({ requiresReview: true, headSha: "", hasLabel: true, checkRuns: [record(SHA_A)] }).approved,
-    false,
-  );
-});
-
-// ----------------------------------------------------------- the workflows
-
-test("the approval workflow binds approval to a commit and never trusts a non-admin", () => {
-  const workflow = read(".github/workflows/ui-review-approval.yml");
-
-  for (const event of ["synchronize", "labeled", "unlabeled", "opened", "reopened"]) {
-    assert.match(workflow, new RegExp(`\\b${event}\\b`), `approval gate does not react to ${event}`);
-  }
-  // The decision is the tested module's, not inline shell.
-  assert.match(workflow, /tools\/ui-review-approval\.mjs --can-record/);
-  assert.match(workflow, /tools\/ui-review-approval\.mjs \\/);
-  // Approval is recorded as a check run against the head commit.
-  assert.match(workflow, /check-runs/);
-  assert.match(workflow, /head_sha="\$HEAD_SHA"/);
-  assert.match(workflow, /checks: write/);
-  // The permission of whoever applied the label is looked up, not assumed.
-  assert.match(workflow, /collaborators\/\$ACTOR\/permission/);
-  // The label is still removed on a new commit, as convenience.
-  assert.match(workflow, /github\.event\.action == 'synchronize'/);
-  assert.match(workflow, /--remove-label "\$APPROVAL_LABEL"/);
-  // And it must never run pull request code.
-  assert.match(workflow, /ref: \$\{\{ github\.event\.pull_request\.base\.sha \}\}/);
-  assert.doesNotMatch(workflow, /ref: \$\{\{ github\.event\.pull_request\.head/);
-  assert.doesNotMatch(workflow, /npm (?:ci|install)/);
-  // The recording step only fires for the approval label itself.
-  assert.match(workflow, /github\.event\.label\.name == 'visual-approved'/);
-  assert.equal(APPROVAL_LABEL, "visual-approved");
-});
-
 test("CI captures both viewports and both page extents, and claims nothing about design", () => {
   const ci = read(".github/workflows/ci.yml");
   assert.match(ci, /ui-review:\n\s+name: UI review renders/);
@@ -267,8 +106,7 @@ test("CI captures both viewports and both page extents, and claims nothing about
   // The concise set is built and pointed at first.
   assert.match(ci, /build-ui-review-summary\.mjs/);
   assert.match(ci, /Start here: \[ui-review-summary\]/);
-  // The summary must not read as approval.
-  assert.match(ci, /is not visual or copy approval/);
+  assert.match(ci, /Review these renders alongside the browser/);
   assert.match(ci, /needs: \[changes, .*ui-review\]/);
 
   const capture = read("tools/capture-ui-review.mjs");

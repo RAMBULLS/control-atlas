@@ -54,12 +54,13 @@ test("Home composes each line from recorded counts and versions, never from the 
     identity: { publisher_version: "2026.2", previous_publisher_version: "2026.1" },
     counts: { previous_records: 10, current_records: 15, added: 5, removed: 0 },
   }))!;
-  assert.equal(updated.title, "Publication A updated to 2026.2");
-  assert.equal(updated.fact, "Was 2026.1. 5 new records.");
+  assert.equal(updated.title, "Publication A updated");
+  assert.equal(updated.fact, "Version 2026.2 replaces 2026.1.");
+  assert.doesNotMatch(updated.fact, /records|Was /);
   const grew = sourceChangeLine(event({ type: "snapshot_changed", counts: { previous_records: 10, current_records: 40 } }))!;
-  assert.deepEqual([grew.title, grew.fact], ["Publication A: 30 new records", ""]);
+  assert.deepEqual([grew.title, grew.fact], ["Publication A updated", "The record count changed; individual changes are not available."]);
   const shrank = sourceChangeLine(event({ type: "snapshot_changed", counts: { previous_records: 40, current_records: 37 } }))!;
-  assert.deepEqual([shrank.title, shrank.fact], ["Publication A: 3 records removed", ""]);
+  assert.deepEqual([shrank.title, shrank.fact], ["Publication A updated", "The record count changed; individual changes are not available."]);
   const withRemovals = sourceChangeLine(event({ counts: { previous_records: 10, current_records: 11, added: 3, removed: 2 } }))!;
   assert.equal(withRemovals.fact, "2 records removed.");
   for (const line of [added, updated, grew]) {
@@ -104,4 +105,20 @@ test("an Atlas area without a color token fails the build instead of drawing gre
     areaTokens: {},
     pulse: { events: [] },
   }), /has no color token/);
+});
+
+
+test("Home source events use governed short names and never guess from a net delta", () => {
+  const version = sourceChangeLine(event({
+    type: "publication_updated",
+    subject: { kind: "publication", id: "fedramp-2026", name: "FedRAMP Consolidated Rules for 2026" },
+    identity: { publisher_version: "2026.09.13.02", previous_publisher_version: "2026.07.14.01" },
+    counts: { added: 5, removed: 1 },
+  }), "FedRAMP 2026")!;
+  assert.equal(version.title, "FedRAMP 2026 updated");
+  assert.equal(version.linkLabel, "Open FedRAMP 2026");
+  assert.equal(version.fact, "Version 2026.09.13.02 replaces 2026.07.14.01.");
+  assert.equal(sourceChangeLine(event({ type: "future_event" })), null);
+  assert.equal(sourceChangeLine(event({ counts: { added: 0 } })), null);
+  assert.equal(sourceChangeLine(event({ type: "snapshot_changed", counts: { previous_records: 8, current_records: 8 } })), null);
 });

@@ -1,3 +1,4 @@
+import { displayNameFor } from "../../app/display-names.mjs";
 import { createContext, Fragment, useCallback, useContext, useState, type ReactNode } from "react";
 import { RECORD_FACT_LABELS } from "../../shared/record-fact-labels.mjs";
 import { translateMicrosoftZtCategory } from "../../shared/microsoft-zt-category-labels.mjs";
@@ -299,7 +300,14 @@ export function SourceSectionContent(props: { kind: string; value: any; presenta
       <ul className="source-structured-list">
         {props.value.map((mapping: any, index: number) => (
           <li key={`${mapping.kind}:${mapping.target_id}:${index}`}>
-            <strong>{mapping.kind}</strong>{mapping.target_id ? ` · ${mapping.target_id}` : ""}
+            <strong>{displayNameFor("zt_mapping_kind", mapping.kind)}</strong>{mapping.target_id ? ` · ${mapping.target_id}` : ""}
+            {mapping.relationship_clauses?.length ? (
+              <span>{" · "}{mapping.relationship_clauses.map((clause: any) =>
+                `${formatRelationshipLabel({ relationship_type: clause.relationship_type })}${clause.property ? ` (${clause.property})` : ""}`,
+              ).join("; ")}</span>
+            ) : mapping.relationship_parse_status === "unresolved" ? (
+              <span> · Relationship not specified in the source cell.</span>
+            ) : null}
           </li>
         ))}
       </ul>

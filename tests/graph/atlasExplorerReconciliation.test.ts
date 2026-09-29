@@ -467,6 +467,10 @@ test("AC-2 neighborhood preserves accepted canonical relationship semantics and 
     "nist-iot-cybersecurity|iot_capability_subelement|maps_to|correlation|incoming|correlation|federal_published|direct|nist-iot-requirements-80053-mapping-draft|active|published",
     "nist-zt|zt_product_component|supports|correlation|incoming|correlation|federal_published|direct|nist-sp-1800-35-sp80053-mappings|active|published",
     "nist-zt|zt_reference_component|supports|correlation|incoming|correlation|federal_published|direct|nist-sp-1800-35-sp80053-mappings|active|published",
+    // SP800-53Mapping.xlsx: Reference Arch row 145 and Microsoft row 242
+    // explicitly say "Supported by (example of) AC-2", not "Supports".
+    "nist-zt|zt_reference_component|supported_by|correlation|incoming|correlation|federal_published|direct|nist-sp-1800-35-sp80053-mappings|active|published",
+    "nist-zt|zt_product_component|supported_by|correlation|incoming|correlation|federal_published|direct|nist-sp-1800-35-sp80053-mappings|active|published",
   ]);
   const nodeTypes = new Map(neighborhood.nodes.map((node) => [node[0], node[1]]));
   for (const edge of canonicalEdges) {

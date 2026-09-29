@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { buildComparisonArtifacts } from "./lib/compare-artifacts.mjs";
 import {
   existsSync,
   mkdirSync,
@@ -1494,6 +1495,7 @@ function addPublishedEdge(state, registry, nodeIds, payload) {
     target_node_id: payload.targetNodeId,
     relationship_type: relationshipType,
     raw_relationship_type: payload.rawRelationshipType || payload.relationshipType,
+    ...(payload.publisherAssertions?.length ? { publisher_assertions: payload.publisherAssertions } : {}),
     relationship_class:
       payload.relationshipClass ||
       defaultRelationshipClass(relationshipType),
@@ -1554,6 +1556,7 @@ function addDocumentRelationshipEdges(state, registry, nodeIds) {
           targetNodeId,
           relationshipType: relationship.relationship_type || "references",
           rawRelationshipType: relationship.raw_relationship_type,
+          publisherAssertions: relationship.publisher_assertions,
           locator: relationship.source_locator || `${record.source?.locator || `${filename}#${record.id}`}->${relationship.target_catalog}:${relationship.target_id}`,
           evidenceLocators: relationship.source_locators,
           retrievedAt: record.source?.snapshot_date,
@@ -2835,6 +2838,7 @@ function createBuildManifest(graph) {
       "atlas-neighborhood/",
       "catalog-bootstrap.json",
       "catalog-records/",
+      "compare-data/",
     ],
     governance_artifacts: GOVERNANCE_FILES,
     source_registry_path: "data/source-registry.json",
@@ -3944,8 +3948,11 @@ export function buildFrameworkData() {
       mappingSourcesByPair.set(key, values);
     }
   }
+  const comparisons = buildComparisonArtifacts(graph);
   const catalogBootstrap = {
     catalogs,
+    comparison_pairs: comparisons.manifest,
+    comparison_items: comparisons.itemManifest,
     mapping_sources: Object.fromEntries(
       [...mappingSourcesByPair.entries()].map(([key, sourceIds]) => [
         key,
@@ -3986,6 +3993,7 @@ const catalogRecords = new Map();
       entry === "library-search-index" ||
       entry === "atlas-neighborhood" ||
       entry === "catalog-records" ||
+      entry === "compare-data" ||
       entry === "graph-data"
     ) {
       rmSync(entryPath, { recursive: true, force: true });
@@ -4158,6 +4166,9 @@ const catalogRecords = new Map();
     `${JSON.stringify(librarySearchIndexManifest)}\n`,
     "utf8",
   );
+
+  mkdirSync(join(GENERATED, "compare-data"), { recursive: true });
+  for (const [path, text] of comparisons.files) writeFileSync(join(GENERATED, path), text, "utf8");
 
   writeFileSync(
     join(GENERATED, "catalog-bootstrap.json"),

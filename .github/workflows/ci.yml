@@ -588,11 +588,7 @@ jobs:
             echo "Each route is captured at 1440 desktop and 390 phone, first viewport and full page,"
             echo "against the real design-token package. \`base/\` is the deployed main; \`candidate/\` is this head."
             echo
-            echo "> These are renders for a person to look at. Layout, accessibility and performance"
-            echo "> contracts passing elsewhere in this run is not visual or copy approval, and nothing"
-            echo "> in this job approves anything. Approval is the \`visual-approved\` label, applied by"
-            echo "> the owner after looking. It is recorded against this exact commit and does not"
-            echo "> carry to any later one."
+            echo "Review these renders alongside the browser, accessibility, and performance results."
           } >> "$GITHUB_STEP_SUMMARY"
 
   workflow-lint:

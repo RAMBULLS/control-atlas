@@ -21,11 +21,6 @@ export function requiresFullGraph(state: ViewState) {
     // The Atlas never needs the monolithic graph: the territory sheet reads its own small index and
     // a focused record uses its neighborhood shard. These boundaries are enforced by the bootstrap
     // payload tests.
-    (state.view === "matrix" &&
-      (state.compareRun === "true" ||
-        (state.intent === "item-mapping" &&
-          Boolean(state.source) &&
-          Boolean(state.items)))) ||
     (state.view === "templates" && Boolean(state.templateType))
   );
 }

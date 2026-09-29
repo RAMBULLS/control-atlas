@@ -5437,6 +5437,24 @@ a:focus-visible {
   outline-offset: 2px;
 }
 
+@media (max-width: 480px) {
+  .compare-mode-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  .compare-mode-tab {
+    min-width: 0;
+    padding-inline: 4px;
+    font-size: 0.875rem;
+  }
+
+  .compare-mode-tab:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
 .compare-flow-grid {
   display: grid;
   grid-template-columns: minmax(0, 2.35fr) minmax(20rem, 0.8fr);

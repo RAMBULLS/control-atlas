@@ -152,9 +152,9 @@ test("every record shows all of its targets with no reveal click", async ({ page
 // only what is in view, so the page never renders thousands of entries.
 test("an extreme one-to-many record shows its true total in a bounded window, no click", async ({ page }) => {
   test.setTimeout(180_000);
-  const bootstrap = JSON.parse(await readFile("data/generated/catalog-bootstrap.json", "utf8")).catalog_bootstrap;
+  const bootstrap = JSON.parse(await readFile("dist/site/data/generated/catalog-bootstrap.json", "utf8")).catalog_bootstrap;
   const pair = bootstrap.comparison_pairs["disa-cci|disa-stig"];
-  const index = JSON.parse(await readFile(`data/generated/${pair.path}`, "utf8"));
+  const index = JSON.parse(await readFile(`dist/site/data/generated/${pair.path}`, "utf8"));
   const pairRequests = [];
   page.on("request", (request) => {
     if (request.url().includes("/compare-data/disa-cci--disa-stig-")) pairRequests.push(request.url());

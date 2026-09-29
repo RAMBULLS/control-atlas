@@ -24,6 +24,19 @@ for (const width of [320, 390, 1440]) {
     const requests = [];
     page.on("request", (request) => requests.push(request.url()));
     await open(page, EXACT);
+    if (width <= 480) {
+      const tabList = page.getByRole("tablist", { name: "Comparison mode" });
+      await expect(tabList.getByRole("tab")).toHaveCount(3);
+      const tabs = await tabList.getByRole("tab").all();
+      const bounds = await Promise.all(tabs.map((tab) => tab.boundingBox()));
+      expect(bounds).toHaveLength(3);
+      expect(bounds.every(Boolean)).toBe(true);
+      expect(bounds[0].x + bounds[0].width).toBeLessThanOrEqual(bounds[1].x + 1);
+      expect(bounds[2].y).toBeGreaterThanOrEqual(bounds[0].y + bounds[0].height - 1);
+      for (const tab of tabs) {
+        expect(await tab.evaluate((element) => element.scrollWidth - element.clientWidth)).toBeLessThanOrEqual(1);
+      }
+    }
     await expect(page.getByRole("heading", { name: "These are implementation mappings, not a framework crosswalk." })).toBeVisible();
     expect(requests.some(pairRequest)).toBe(false);
     expect(requests.some(fullGraphRequest)).toBe(false);

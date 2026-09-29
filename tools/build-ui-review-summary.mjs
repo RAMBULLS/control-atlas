@@ -245,9 +245,8 @@ function renderContactSheet({ sections, headSha }) {
 </header>
 <main>${body}</main>
 <footer>
-  These are renders for a person to look at. Layout, accessibility and performance contracts
-  passing in CI is not visual or copy approval. The full <code>ui-review</code> artifact holds
-  every captured route when you want to look closer.
+  Review these renders alongside browser, accessibility and performance results.
+  The full <code>ui-review</code> artifact holds every captured route.
 </footer>
 </body>
 </html>

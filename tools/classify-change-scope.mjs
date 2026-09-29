@@ -38,7 +38,6 @@ const AUTOMATION_FILES = new Set([
   'tools/check-licenses.mjs',
   'tools/classify-change-scope.mjs',
   'tools/ui-review-routes.mjs',
-  'tools/ui-review-approval.mjs',
   'tools/capture-ui-review.mjs',
   'tools/build-ui-review-summary.mjs',
   'tools/lib/public-copy-scan.mjs',

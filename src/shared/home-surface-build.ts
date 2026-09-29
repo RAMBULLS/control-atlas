@@ -20,7 +20,7 @@ type PulseEvent = {
   timestamp: string;
   subject?: { kind: string; id: string; name: string };
   title: string;
-  counts?: { previous_records?: number; current_records?: number; added?: number; removed?: number };
+  counts?: { previous_records?: number; current_records?: number; added?: number; removed?: number; changed?: number; superseded?: number };
   identity?: { publisher_version?: string; previous_publisher_version?: string };
   destination?: { label: string; view: string; patch: Record<string, unknown>; href: string };
 };
@@ -34,29 +34,40 @@ const isCount = (value: unknown): value is number => Number.isInteger(value) && 
 const d = (points: readonly Pt[]) => `M${points.map((p) => `${Math.round(p[0])} ${Math.round(p[1])}`).join("L")}Z`;
 
 /** The home line for one source change, or null when it has no publication subject or no destination. */
-export function sourceChangeLine(event: PulseEvent): HomeSourceChange | null {
+export function sourceChangeLine(event: PulseEvent, displayName = event.subject?.name): HomeSourceChange | null {
   const subject = event.subject;
   const destination = event.destination;
   if (subject?.kind !== "publication" || !destination?.href?.startsWith("#/")) return null;
   const c = event.counts || {};
-  // A second line only states a fact about the publication's change. No
-  // non-events ("none removed") and no totals of our own record set.
-  const removed = isCount(c.removed) && c.removed > 0 ? `${n(c.removed)} records removed.` : "";
-  let title = event.title;
-  let fact = removed;
-  if (event.type === "records_added" && isCount(c.added)) {
-    title = `${subject.name}: ${n(c.added)} new records`;
-  } else if (event.type === "publication_updated" && event.identity?.publisher_version) {
-    title = `${subject.name} updated to ${event.identity.publisher_version}`;
-    fact = [
-      event.identity.previous_publisher_version ? `Was ${event.identity.previous_publisher_version}.` : "",
-      isCount(c.added) && c.added > 0 ? `${n(c.added)} new records.` : "",
-      removed,
-    ].filter(Boolean).join(" ");
+  const name = displayName?.trim() || subject.name;
+  // One event, one useful fact. Version changes do not also narrate ingestion
+  // counts. Unknown event types do not fall back to pipeline-authored copy.
+  let title: string;
+  let fact = "";
+  if (event.type === "publication_updated" && event.identity?.publisher_version) {
+    title = `${name} updated`;
+    const previous = event.identity.previous_publisher_version;
+    fact = previous && previous !== event.identity.publisher_version
+      ? `Version ${event.identity.publisher_version} replaces ${previous}.`
+      : `Version ${event.identity.publisher_version}.`;
+  } else if (event.type === "records_added" && isCount(c.added) && c.added > 0) {
+    title = `${name}: ${n(c.added)} new records`;
+    if (isCount(c.removed) && c.removed > 0) fact = `${n(c.removed)} records removed.`;
+  } else if (event.type === "records_removed" && isCount(c.removed) && c.removed > 0) {
+    title = `${name}: ${n(c.removed)} records removed`;
+  } else if (event.type === "records_changed" && isCount(c.changed) && c.changed > 0) {
+    title = `${name}: ${n(c.changed)} records revised`;
+  } else if (event.type === "records_superseded" && isCount(c.superseded) && c.superseded > 0) {
+    title = `${name}: ${n(c.superseded)} records superseded`;
   } else if (event.type === "snapshot_changed" && isCount(c.current_records) && isCount(c.previous_records)) {
-    const delta = c.current_records - c.previous_records;
-    title = delta >= 0 ? `${subject.name}: ${n(delta)} new records` : `${subject.name}: ${n(-delta)} records removed`;
-    fact = "";
+    // A net count difference does not identify additions or removals. Both can
+    // occur in the same snapshot. Preserve that uncertainty rather than invent
+    // an itemized publisher change from two totals.
+    if (c.current_records === c.previous_records) return null;
+    title = `${name} updated`;
+    fact = "The record count changed; individual changes are not available.";
+  } else {
+    return null;
   }
   return {
     id: event.id,
@@ -67,16 +78,16 @@ export function sourceChangeLine(event: PulseEvent): HomeSourceChange | null {
     href: destination.href,
     view: destination.view,
     patch: destination.patch,
-    linkLabel: destination.label,
+    linkLabel: `Open ${name}`,
   };
 }
 
 /** Source changes only, newest change per publication, newest first. */
-export function homePulse(pulse: PulseArtifact, limit = 2): HomePulse {
+export function homePulse(pulse: PulseArtifact, limit = 2, displayNames: Readonly<Record<string, { alias: string }>> = {}): HomePulse {
   const seen = new Set<string>();
   const newestPerPublication: { event: PulseEvent; line: HomeSourceChange }[] = [];
   for (const event of [...pulse.events].sort((a, b) => b.timestamp.localeCompare(a.timestamp))) {
-    const line = sourceChangeLine(event);
+    const line = sourceChangeLine(event, displayNames[event.subject?.id || ""]?.alias);
     if (!line || seen.has(event.subject!.id)) continue;
     seen.add(event.subject!.id);
     newestPerPublication.push({ event, line });
@@ -137,6 +148,6 @@ export function buildHomeSurface(input: {
     topics,
     topicsHint: [...shown, ...(more > 0 ? [`${more} more`] : [])].join(" · "),
     map: homeMap(input.geometry, input.areaTokens),
-    pulse: homePulse(input.pulse),
+    pulse: homePulse(input.pulse, 2, input.geometry.presentation),
   };
 }

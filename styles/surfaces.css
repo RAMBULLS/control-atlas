@@ -5257,7 +5257,7 @@ a:focus-visible {
 
 .about-page .learn-article > section,
 .guide-article .learn-article > section {
-  padding-block: var(--ca-space-7);
+  padding-block: var(--ca-space-8);
   border-bottom: 1px solid var(--ca-border);
   scroll-margin-top: var(--ca-header-safe-offset);
 }
@@ -7215,6 +7215,29 @@ input[type="checkbox"] {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--ca-space-3);
 }
+
+.start-here-known {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ca-space-3);
+  border-bottom: 1px solid var(--ca-border);
+  padding-bottom: var(--ca-space-4);
+}
+
+.start-here-known p { margin: 0 var(--ca-space-2) 0 0; }
+.start-here-known a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ca-space-2);
+  min-height: 44px;
+  padding: var(--ca-space-2) var(--ca-space-3);
+  border: 1px solid var(--ca-border-strong);
+  color: var(--ca-text);
+}
+.start-here-known a:hover,
+.start-here-known a:focus-visible { border-color: var(--ca-primary); }
 
 /* Seven goals in two columns left the last one alone on the fourth row, which
    reads as a lesser option purely by position. An odd final item spans both

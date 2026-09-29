@@ -48,7 +48,7 @@ export const SITE_COPY = Object.freeze({
     }),
     start: Object.freeze({
       prompt: "Not sure where to begin?",
-      action: "Answer two questions",
+      action: "Find a starting point",
       view: "start-here",
       href: "#/start",
     }),
@@ -108,7 +108,7 @@ export const SITE_COPY = Object.freeze({
     guides: Object.freeze({
       title: "Guides",
       purpose:
-        "Read practitioner context for each stage of the federal cybersecurity lifecycle.",
+        "Plan authorization, assessment, remediation, and monitoring with cited steps and clear handoffs.",
     }),
     compare: Object.freeze({
       title: "Compare",
@@ -124,11 +124,11 @@ export const SITE_COPY = Object.freeze({
     }),
     about: Object.freeze({
       title: "About",
-      purpose: "See why Control Atlas exists, what it brings together, and where its limits are.",
+      purpose: "Find the federal sources behind your cybersecurity work and a clear path from research to action.",
     }),
     start: Object.freeze({
       title: "Start here",
-      purpose: "Not sure where to begin? Start here.",
+      purpose: "Find a publication and next step for the federal cybersecurity work in front of you.",
     }),
   }),
 });

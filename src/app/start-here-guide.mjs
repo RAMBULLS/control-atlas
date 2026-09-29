@@ -50,7 +50,6 @@ const CONTEXT_PRIMARY = {
   dod: "nist-800-53",
   cui: "nist-800-171-rev2",
   fedramp: "fedramp-rev5",
-  unsure: "nist-800-53",
 };
 
 const CONTEXT_SECONDARY = {
@@ -58,14 +57,13 @@ const CONTEXT_SECONDARY = {
   dod: "disa-srg",
   cui: "cmmc-2",
   fedramp: "nist-800-53b",
-  unsure: "nist-800-37",
 };
 
 // Goal -> what the plan leads with, after the context's own requirement source.
 const GOAL_STEPS = {
   understand: {
     thenReview: "nist-800-37",
-    action: { label: "Read the Guides", view: "patterns" },
+    action: { label: "Explore the topic in Atlas", view: "atlas-map" },
   },
   implement: {
     thenReview: "disa-stig",
@@ -89,7 +87,7 @@ const GOAL_STEPS = {
   },
   tools: {
     thenReview: "nist-800-37",
-    action: { label: "Browse tools and communities", view: "search", patch: { kind: "tools-communities" } },
+    action: { label: "Browse tools and communities", view: "commons" },
   },
 };
 
@@ -110,11 +108,11 @@ export function labelForContext(id) {
 }
 
 /**
- * Returns null unless both answers are known, so a half-finished flow never
- * renders a plan. Every returned catalogId is a publication in the register.
+ * Returns null unless both answers identify a context with a source to
+ * investigate. An unknown context must not produce a guessed publication.
  */
 export function startingPlanFor(goalId, contextId) {
-  if (!isKnownGoal(goalId) || !isKnownContext(contextId)) {
+  if (!isKnownGoal(goalId) || !isKnownContext(contextId) || contextId === "unsure") {
     return null;
   }
   const goal = GOAL_STEPS[goalId];
@@ -137,6 +135,7 @@ export function startingPlanFor(goalId, contextId) {
 export function validateStartHereGuide() {
   const errors = [];
   for (const context of START_HERE_CONTEXTS) {
+    if (context.id === "unsure") continue;
     if (!CONTEXT_PRIMARY[context.id]) errors.push(`context ${context.id} has no primary publication`);
     if (!CONTEXT_SECONDARY[context.id]) errors.push(`context ${context.id} has no secondary publication`);
   }
@@ -151,6 +150,7 @@ export function validateStartHereGuide() {
   }
   for (const goal of START_HERE_GOALS) {
     for (const context of START_HERE_CONTEXTS) {
+      if (context.id === "unsure") continue;
       const plan = startingPlanFor(goal.id, context.id);
       if (!plan) {
         errors.push(`no plan for ${goal.id}/${context.id}`);

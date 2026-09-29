@@ -312,8 +312,8 @@ test("Compare modes are accessible tabs and About is a navigable article", () =>
   assert.match(comparePage, /role="tab"/);
   assert.doesNotMatch(comparePage, /className="intent-card intent-card-button"/);
   assert.match(aboutPage, /<article className="learn-article">/);
-  assert.match(aboutPage, /<h2>Why Control Atlas exists<\/h2>/);
-  assert.match(aboutPage, /<h2>About the project<\/h2>/);
+  assert.match(aboutPage, /<h2>Make sense of the material behind the work<\/h2>/);
+  assert.match(aboutPage, /<h2>Built in the open<\/h2>/);
   assert.match(aboutPage, /aria-label="On this page"/);
   assert.match(aboutPage, /PageJumpNav ariaLabel="Jump to About section"/);
   assert.match(primitives, /aria-labelledby=\{props\.headingLevel \? titleId : undefined\}/);

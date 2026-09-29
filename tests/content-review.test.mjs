@@ -138,6 +138,7 @@ test('Start here plans are traceable to real publications and routes', async () 
 
   for (const goal of guide.START_HERE_GOALS) {
     for (const context of guide.START_HERE_CONTEXTS) {
+      if (context.id === 'unsure') continue;
       const plan = guide.startingPlanFor(goal.id, context.id);
       assert.ok(plan, `no plan for ${goal.id}/${context.id}`);
       for (const step of [plan.startWith, plan.thenReview]) {
@@ -175,6 +176,7 @@ test('Start here plans are traceable to real publications and routes', async () 
   assert.equal(guide.startingPlanFor('understand', ''), null);
   assert.equal(guide.startingPlanFor('', 'federal'), null);
   assert.equal(guide.startingPlanFor('not-a-goal', 'federal'), null);
+  assert.equal(guide.startingPlanFor('assess', 'unsure'), null);
 });
 
 test('navigation exposes Templates directly and keeps Guides in overflow', () => {
@@ -410,20 +412,22 @@ test('starter documents use the same direct decision boundary as the public prod
   assert.doesNotMatch(disclaimer, /owns any .* conclusions/i);
 });
 
-test('about page states the exact product definition and decision boundary without architecture narration', () => {
+test('about page explains the work, source limits, and ways to contribute', () => {
   const aboutPage = readFileSync('src/ui/pages/AboutPage.tsx', 'utf8');
   assert.match(appShell, /AboutPage/);
-  assert.match(aboutPage, /PRODUCT_DEFINITION/);
-  assert.match(aboutPage, /PRODUCT_DECISION_BOUNDARY/);
   for (const heading of [
-    'Why Control Atlas exists',
-    "What's in here",
-    'Built for the people doing the work',
-    'Follow it back to the source',
-    'About the project',
+    'Make sense of the material behind the work',
+    'Find your way through the work',
+    'Check the source before you act',
+    'Built in the open',
   ]) {
     assert.match(aboutPage, new RegExp(`<h2>${heading}</h2>`));
   }
+  for (const destination of ['#/atlas', '#/library', '#/compare', '#/build', '#/resources', '#/sources']) {
+    assert.ok(aboutPage.includes(destination), `About links to ${destination}`);
+  }
+  assert.match(aboutPage, /does not decide what/);
+  assert.match(aboutPage, /report a broken link or source problem/);
   assert.doesNotMatch(aboutPage, /SummaryCard|about-card-grid/);
   assert.doesNotMatch(aboutPage, /organizing spine|Control Atlas overlay|publisher hierarchy|provenance|confidence|trust register|ontology|taxonomy architecture/i);
   assert.doesNotMatch(aboutPage, /Path shows|Map and List show|graph parenting|not as parents|focus semantics/i);

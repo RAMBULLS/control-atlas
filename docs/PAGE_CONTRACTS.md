@@ -17,7 +17,7 @@ Home presents the product purpose, one primary search action, and concise entran
 
 The owner-approved composition (#283) is the specification. Three full-width regions on one 12-column grid:
 
-1. **Hero** — headline, one-sentence lead, search, and two real counts (records and source publications) beside a static drawing of the Atlas overview (the Atlas MiniMap geometry, built from `data/curated/atlas-territory-geography.json`). Under the map: "See how federal cybersecurity fits together.", **Open the Atlas**, and a closed-by-default list of the #282 journeys whose trigger names the first three and how many more there are; the list has no visible heading and the accessible name "Atlas topics". A quiet "Not sure where to begin? Answer two questions" leads to Start here.
+1. **Hero** — headline, one-sentence lead, search, and two real counts (records and source publications) beside a static drawing of the Atlas overview (the Atlas MiniMap geometry, built from `data/curated/atlas-territory-geography.json`). Under the map: "See how federal cybersecurity fits together.", **Open the Atlas**, and a closed-by-default list of the #282 journeys whose trigger names the first three and how many more there are; the list has no visible heading and the accessible name "Atlas topics". A quiet "Not sure where to begin? Find a starting point" leads to Start here.
 2. **Tools** — Compare, Templates and Resources, one band, three equal columns.
 3. **Library** — the five practitioner collections with their real counts, and source changes as a narrow sidecar: at most the two newest source changes (publications only, one per publication), then **All sources**. On a phone the sidecar is one row linking to Sources.
 
@@ -93,7 +93,7 @@ Publisher-native identifiers remain identity-led in record headings and browse r
 
 ## E. Directory
 
-Guides and other small curated directories use typed entries, a clear sequence or grouping, and direct destinations. They do not invent another search-workspace pattern.
+Guides and other small curated directories use typed entries, a clear sequence or grouping, and direct destinations. They do not invent another search-workspace pattern. Guides retain task procedures with goals, cited source basis, output checks and a direct next action. Older explanatory guide links and the RMF overview guide resolve to the Atlas, Library, Compare, Templates or Sources page that now owns that job.
 
 ## F. Focused workbench
 
@@ -131,7 +131,7 @@ Public copy is written for the practitioner doing the work, not for the people w
 | --- | --- |
 | Explore by what you're working on. | See how federal cybersecurity fits together. |
 | Records grouped by the question they answer. | Find controls, baselines, assessment procedures, STIGs, threats, and more. |
-| Not sure where to start? Start guided setup. | Not sure where to begin? Answer two questions. |
+| Not sure where to start? Start guided setup. | Not sure where to begin? Find a starting point. |
 | Ways to work · This page lets you… · Use this to… · Control Atlas organized… | Follow published crosswalks · Build the working files · See what changed · Open the official source |
 
 Ordinary verbs are fine when the object is concrete: "Explore the Atlas", "Browse controls and requirements" and "Open the official source" all name a real thing. The test is the whole phrase, subject plus job plus outcome, not whether it starts with "Explore", "Browse", "Start" or "Use".

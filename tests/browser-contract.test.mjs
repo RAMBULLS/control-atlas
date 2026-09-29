@@ -621,7 +621,8 @@ test('Guides remain source-bounded procedures while product help stays in About'
   const glossary = readFileSync('src/ui/components/GlossaryDrawer.tsx', 'utf8');
   const about = readFileSync('src/ui/pages/AboutPage.tsx', 'utf8');
   assert.doesNotMatch(glossary, /learnArticles\.map|<Dialog\.Title>Help|>Help</);
-  assert.match(about, /PRODUCT_DEFINITION/);
-  assert.match(about, /PRODUCT_DECISION_BOUNDARY/);
+  assert.match(about, /Control Atlas is a free research tool/);
+  assert.match(about, /Control Atlas is not a government system/);
+  assert.match(about, /It does not decide what/);
   assert.doesNotMatch(playbooksPage, /Recommended for new users|No public playbooks are available yet/);
 });

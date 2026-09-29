@@ -7,6 +7,7 @@ import {
 } from "./buildRouteState";
 import { TAXONOMY_TAG_BY_ID } from "../../shared/taxonomy-contract.mjs";
 import { normalizeJourneyId } from "./atlasJourneyIds";
+import { GUIDE_REDIRECTS } from "./guideRedirects";
 
 export type RouteIdentity = {
   path: string;
@@ -298,6 +299,20 @@ export function canonicalizeHashLocation(input: string): CanonicalRoute {
   let params = incoming;
   let discarded = false;
   let recoveredRetiredCompare = false;
+
+  // Keep bookmarked guide URLs useful after their jobs moved to existing pages.
+  if (path === "/guides") {
+    const guideId = params.get("pattern") || "";
+    const destination = GUIDE_REDIRECTS[guideId as keyof typeof GUIDE_REDIRECTS];
+    if (destination) {
+      const canonicalPath = destination.path;
+      return {
+        canonicalPath,
+        requiresReplace: canonicalPath !== input.replace(/^#/, ""),
+        recoveryMessage: "",
+      };
+    }
+  }
 
   if (path === "/catalog") {
     path = "/library";

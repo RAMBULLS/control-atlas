@@ -65,6 +65,12 @@ export function StartHerePage(props: {
     >
       <PageHeader primary summary={SITE_COPY.routes.start.purpose} title={SITE_COPY.routes.start.title} />
 
+      <nav aria-label="Known starting topics" className="start-here-known">
+        <p>Already know the work?</p>
+        <AppLink onNavigate={onNavigate} patch={{ atlasJourney: "rmf" } as Partial<ViewState>} view="atlas-map">Explore RMF &amp; ATO <IconArrowRight aria-hidden="true" size={17} /></AppLink>
+        <AppLink onNavigate={onNavigate} patch={{ atlasJourney: "stig" } as Partial<ViewState>} view="atlas-map">Explore STIGs &amp; SRGs <IconArrowRight aria-hidden="true" size={17} /></AppLink>
+      </nav>
+
       <StepIndicator currentStep={step} steps={START_HERE_STEPS} />
 
       <section className="compare-flow-grid">
@@ -84,7 +90,7 @@ export function StartHerePage(props: {
             <div aria-labelledby="start-here-context" className="stack">
               <span className="label">{stepEyebrow(START_HERE_STEPS, "context")}</span>
               <h2 id="start-here-context">What kind of system are you working with?</h2>
-              <p>This opens the right publication first.</p>
+              <p>This helps you choose a source to investigate. It does not decide what applies.</p>
               <div className="start-here-choice-grid">
                 {START_HERE_CONTEXTS.map((context: { id: string; label: string }) => <button key={context.id} onClick={() => update({ context: context.id })} type="button"><span>{context.label}</span><IconArrowRight aria-hidden="true" size={17} /></button>)}
               </div>
@@ -94,11 +100,27 @@ export function StartHerePage(props: {
             </div>
           ) : null}
 
-          {step === 3 && plan ? (
+          {step === 3 && state.context === "unsure" ? (
+            <div aria-labelledby="start-here-plan" className="stack start-here-plan">
+              <span className="label">{stepEyebrow(START_HERE_STEPS, "plan")}</span>
+              <h2 id="start-here-plan">Find the topic before choosing a publication</h2>
+              <p>Without a system or program context, a single publication would be a guess. Start with the topic that matches your work, then check the official source.</p>
+              <div className="start-here-primary-action">
+                <AppLink onNavigate={onNavigate} variant="primary" view="atlas-map">Explore Atlas topics <IconArrowRight aria-hidden="true" size={17} /></AppLink>
+              </div>
+              <p className="notice-inline">{SITE_COPY.product.boundary}</p>
+              <div className="actions compare-step-actions">
+                <Button onClick={() => update({ context: "" })} type="button" variant="secondary"><IconArrowLeft aria-hidden="true" size={17} />Back to context</Button>
+                <Button onClick={() => update({ goal: "", context: "" })} type="button" variant="secondary">Start over</Button>
+              </div>
+            </div>
+          ) : null}
+
+          {step === 3 && state.context !== "unsure" && plan ? (
             <div aria-labelledby="start-here-plan" className="stack start-here-plan">
               <span className="label">{stepEyebrow(START_HERE_STEPS, "plan")}</span>
               <h2 id="start-here-plan">Start with {publicationName(bundle, plan.startWith.catalogId)}</h2>
-              <p>Based on your answers, begin with this publication.</p>
+              <p>Based on your answers, investigate this publication first. Confirm its fit with the official source and your responsible authority.</p>
               {/* The plan's own first move lives in the plan. It used to exist
                   only in the side rail, which on phones sits below Back and
                   Start over, so the one action the plan recommends came last. */}

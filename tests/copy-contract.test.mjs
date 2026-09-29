@@ -78,7 +78,7 @@ test("site copy keeps every approved anchor exact", () => {
   assert.equal(SITE_COPY.home.searchPlaceholder, "Search by topic, title, or ID");
   assert.equal(SITE_COPY.home.atlas.heading, "See how federal cybersecurity fits together.");
   assert.equal(SITE_COPY.home.atlas.topicsLabel, "Atlas topics");
-  assert.deepEqual([SITE_COPY.home.start.prompt, SITE_COPY.home.start.action], ["Not sure where to begin?", "Answer two questions"]);
+  assert.deepEqual([SITE_COPY.home.start.prompt, SITE_COPY.home.start.action], ["Not sure where to begin?", "Find a starting point"]);
   assert.deepEqual(
     SITE_COPY.home.tools.map(({ label, description, action }) => [label, description, action]),
     [

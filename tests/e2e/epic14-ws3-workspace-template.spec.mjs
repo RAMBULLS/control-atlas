@@ -180,7 +180,7 @@ test("WS3 Resource detail uses a knowledge-base reading sequence", async ({ page
   await waitForAppReady(page, { allowPartial: true });
 
   const article = page.locator("article.resource-detail-main");
-  await expect(page.getByText("Resource", { exact: true })).toBeVisible();
+  await expect(page.getByText("Open-source project", { exact: true })).toBeVisible();
   await expect(page.getByText("Publisher Anchore", { exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: "Open resource" })).toBeVisible();
   await expect(article.getByRole("heading", { level: 2 })).toHaveText([

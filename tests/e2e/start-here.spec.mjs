@@ -43,6 +43,28 @@ test("Start here asks two questions without making a determination", async ({
   await expect(page.getByLabel("Operational environment")).toHaveCount(0);
 });
 
+test("known RMF and STIG work opens the matching Atlas journey directly", async ({ page }) => {
+  await page.goto("/#/start");
+  await waitForAppReady(page);
+  await dismissOnboarding(page);
+  await page.getByRole("link", { name: "Explore RMF & ATO" }).click();
+  await expect(page).toHaveURL(/#\/atlas\?atlasJourney=rmf/);
+  await page.goBack();
+  await expect(page.getByRole("link", { name: "Explore STIGs & SRGs" })).toBeVisible();
+  await page.getByRole("link", { name: "Explore STIGs & SRGs" }).click();
+  await expect(page).toHaveURL(/#\/atlas\?atlasJourney=stig/);
+});
+
+test("unknown system context does not guess a publication", async ({ page }) => {
+  await page.goto("/#/start?goal=assess&context=unsure");
+  await waitForAppReady(page);
+  await dismissOnboarding(page);
+  await expect(page.getByRole("heading", { name: "Find the topic before choosing a publication" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /^Start with/ })).toHaveCount(0);
+  await page.getByRole("link", { name: "Explore Atlas topics" }).click();
+  await expect(page).toHaveURL(/#\/atlas$/);
+});
+
 test("Start here produces a plan traceable to real publications", async ({
   page,
 }) => {

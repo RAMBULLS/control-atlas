@@ -43,7 +43,7 @@ const ROUTES = [
   },
   { label: "resources", path: "/#/resources" },
   // Deep card grid (opened via a lane) is where badge/tag contrast lives.
-  { label: "resources directory", path: "/#/resources?collection=official-portals" },
+  { label: "resources directory", path: "/#/resources?collection=dod-cybersecurity-portals" },
   {
     label: "resource detail",
     path: "/#/resources/official-nist-oscal?q=OSCAL&resourceType=specification&owner=NIST%20OSCAL%20Team&showAll=true&viewMode=map",
@@ -117,6 +117,7 @@ const ROUTES = [
   },
   { label: "learn hub", path: "/#/learn" },
   { label: "learn detail", path: "/#/learn?pattern=rmf-lifecycle" },
+  { label: "control implementation guide", path: "/#/learn?pattern=implementing-controls" },
   { label: "about", path: "/#/about" },
 ];
 

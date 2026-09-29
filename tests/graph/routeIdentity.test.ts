@@ -87,6 +87,11 @@ test("Phase 3 durable paths and old bookmarks resolve to one canonical IA", () =
     ["/resources/official-nist-sp800-53-r5?from=templates", "/resources/official-nist-sp800-53-r5"],
     ["/library?kind=tools-communities&q=oscal", "/resources?q=oscal"],
     ["/learn", "/guides"],
+    ["/guides?pattern=understanding-rmf", "/atlas?atlasJourney=rmf"],
+    ["/learn?pattern=read-a-record", "/library"],
+    ["/guides?pattern=source-truth-and-notes", "/sources"],
+    ["/guides?pattern=published-mappings-in-compare", "/compare"],
+    ["/guides?pattern=starter-documents-and-judgment", "/build"],
     ["/help", "/about"],
   ] as const;
 
@@ -94,6 +99,21 @@ test("Phase 3 durable paths and old bookmarks resolve to one canonical IA", () =
     const resolved = canonicalizeHashLocation(input);
     assert.equal(resolved.canonicalPath, canonical, input);
     assert.equal(resolved.requiresReplace, input !== canonical, input);
+  }
+});
+
+test("retired guide links land on the owning page after reload", () => {
+  for (const [oldPath, view] of [
+    ["/guides?pattern=understanding-rmf", "atlas-map"],
+    ["/guides?pattern=hierarchy-and-relationships", "atlas-map"],
+    ["/guides?pattern=source-truth-and-notes", "sources"],
+    ["/guides?pattern=search-eligibility-and-ranking", "search"],
+    ["/guides?pattern=read-a-record", "search"],
+    ["/guides?pattern=published-mappings-in-compare", "matrix"],
+    ["/guides?pattern=starter-documents-and-judgment", "templates"],
+  ] as const) {
+    const [path, query = ""] = oldPath.split("?");
+    assert.equal(parseHashLocation(path, query ? `?${query}` : "").view, view);
   }
 });
 

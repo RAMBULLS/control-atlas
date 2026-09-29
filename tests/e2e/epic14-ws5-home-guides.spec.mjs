@@ -125,31 +125,25 @@ test("WS5 Library discovery remains bounded and usable at all supported widths",
   }
 });
 
-test("WS6 About is a five-section knowledge-base article with the exact research boundary", async ({ page }) => {
+test("WS6 About tells the product story with its source boundary", async ({ page }) => {
   await gotoApp(page, "/#/about");
   await waitForAppReady(page);
   const article = page.getByRole("article");
   await expect(page.locator('[data-page-template="knowledge-base"]')).toBeVisible();
   await expect(page.locator(".about-card-grid, .summary-card")).toHaveCount(0);
-  await expect(page.locator("main").getByText(
-    "Control Atlas is a public research tool for federal cybersecurity requirements, controls, techniques, and guidance.",
-    { exact: true },
-  )).toBeVisible();
-  await expect(page.locator("main").getByText(
-    "Use Control Atlas for research, not compliance or authorization decisions.",
-    { exact: true },
-  )).toBeVisible();
+  await expect(article).toContainText("Control Atlas is a free research tool for people working with federal cybersecurity requirements.");
+  await expect(article).toContainText("Publisher text and published connections stay separate from Control Atlas explanations and navigation.");
+  await expect(article).toContainText("It does not decide what applies to your system");
   for (const title of [
-    "Why Control Atlas exists",
-    "What's in here",
-    "Built for the people doing the work",
-    "Follow it back to the source",
-    "About the project",
+    "Make sense of the material behind the work",
+    "Find your way through the work",
+    "Check the source before you act",
+    "Built in the open",
   ]) {
     const heading = article.getByRole("heading", { level: 2, name: title });
     await expect(heading).toBeVisible();
   }
-  await expect(article.locator(":scope > section")).toHaveCount(5);
+  await expect(article.locator(":scope > section")).toHaveCount(4);
   await expect(page.getByRole("complementary", { name: "On this page" })).toBeVisible();
 });
 
@@ -163,17 +157,17 @@ test("WS5 Guides implements a numbered, icon-bearing, whole-card Template F dire
   await expect(template.getByRole("heading", { name: "Guides", level: 1 })).toBeVisible();
 
   const cards = template.locator("a.guide-card");
-  await expect(cards).toHaveCount(12);
-  await expect(cards.locator(".guide-card__icon svg")).toHaveCount(12);
-  await expect(cards.locator(".bucket-tag")).toHaveCount(12);
+  await expect(cards).toHaveCount(11);
+  await expect(cards.locator(".guide-card__icon svg")).toHaveCount(11);
+  await expect(cards.locator(".bucket-tag")).toHaveCount(11);
   await expect(cards.locator(".guide-card__number")).toHaveText(
-    Array.from({ length: 12 }, (_, index) => `Guide ${String(index + 1).padStart(2, "0")}`),
+    Array.from({ length: 11 }, (_, index) => `Guide ${String(index + 1).padStart(2, "0")}`),
   );
 
   const iconShapes = await cards.locator(".guide-card__icon svg").evaluateAll((icons) => (
     icons.map((icon) => icon.innerHTML)
   ));
-  expect(new Set(iconShapes).size).toBe(12);
+  expect(new Set(iconShapes).size).toBe(11);
 
   const firstCard = cards.first();
   const firstTitle = await firstCard.locator("strong").innerText();
@@ -181,7 +175,7 @@ test("WS5 Guides implements a numbered, icon-bearing, whole-card Template F dire
   await expect(page).toHaveURL(/#\/guides\?pattern=starting-an-authorization/);
   await expect(page.getByRole("heading", { name: firstTitle, level: 1 })).toBeVisible();
   await expect(page.locator('[data-page-template="knowledge-base"]')).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "Guide context" })).toContainText("Guide 01 of 12");
+  await expect(page.getByRole("navigation", { name: "Guide context" })).toContainText("Guide 01 of 11");
   const article = page.getByRole("article");
   for (const title of ["When it matters", "What this means", "Limitations", "Official references"]) {
     await expect(article.getByRole("heading", { name: title, level: 2 })).toBeVisible();
@@ -202,7 +196,7 @@ test("WS5 Home and Guides stack without horizontal overflow below 640 pixels", a
   }
 
   const cards = page.locator("a.guide-card");
-  await expect(cards).toHaveCount(12);
+  await expect(cards).toHaveCount(11);
   const firstLeft = await cards.first().evaluate((card) => card.getBoundingClientRect().left);
   const secondLeft = await cards.nth(1).evaluate((card) => card.getBoundingClientRect().left);
   expect(Math.abs(firstLeft - secondLeft)).toBeLessThanOrEqual(1);

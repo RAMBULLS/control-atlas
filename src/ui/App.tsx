@@ -678,24 +678,23 @@ export function App() {
   const routeContext = orbitalRouteContext(viewState, routeEntityName);
 
   useEffect(() => {
+    if (!pushNavigationRef.current) restoreScrollPosition();
     let completionFrame = 0;
     const frame = window.requestAnimationFrame(() => {
-      completionFrame = window.requestAnimationFrame(completeRouteTransition);
+      completionFrame = window.requestAnimationFrame(() => {
+        completeRouteTransition();
+        // The workspace is inert during the transition. Focus only after it
+        // becomes interactive again, or the heading focus is discarded.
+        if (pushNavigationRef.current) {
+          pushNavigationRef.current = false;
+          focusRouteHeading();
+        }
+      });
     });
     return () => {
       window.cancelAnimationFrame(frame);
       window.cancelAnimationFrame(completionFrame);
     };
-  }, [viewState]);
-
-  useEffect(() => {
-    if (!pushNavigationRef.current) {
-      restoreScrollPosition();
-      return;
-    }
-    pushNavigationRef.current = false;
-    const frame = focusRouteHeading();
-    return () => window.cancelAnimationFrame(frame);
   }, [viewState]);
 
   return (

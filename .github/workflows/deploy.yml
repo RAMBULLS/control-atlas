@@ -118,9 +118,41 @@ jobs:
       - id: deployment
         uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5
 
+  edge-ready:
+    name: Wait for exact published SHA
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Verify the public edge serves this release
+        env:
+          EXPECTED_SHA: ${{ needs.deploy.outputs.sha }}
+          SITE_URL: ${{ needs.deploy.outputs.page_url }}
+        shell: bash
+        run: |
+          deadline=$((SECONDS + 600))
+          attempt=0
+          actual_sha=''
+          until (( SECONDS >= deadline )); do
+            attempt=$((attempt + 1))
+            actual_sha="$(
+              curl --fail --silent --show-error --max-time 8 \
+                --header 'Cache-Control: no-cache' \
+                "${SITE_URL}release.json?attempt=${attempt}" 2>/dev/null |
+                jq -r '.commit_sha // empty' 2>/dev/null || true
+            )"
+            if [[ "$actual_sha" == "$EXPECTED_SHA" ]]; then
+              echo "The public edge serves $EXPECTED_SHA after $attempt checks."
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::The public edge did not serve $EXPECTED_SHA within ten minutes (last observed: ${actual_sha:-unavailable})."
+          exit 1
+
   live-smoke:
     name: Production smoke
-    needs: deploy
+    needs: [deploy, edge-ready]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -141,7 +173,7 @@ jobs:
 
   lighthouse:
     name: Production Lighthouse
-    needs: deploy
+    needs: [deploy, edge-ready]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -153,24 +185,6 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci
-      - name: Wait for the exact release at the public edge
-        env:
-          EXPECTED_SHA: ${{ needs.deploy.outputs.sha }}
-          SITE_URL: ${{ needs.deploy.outputs.page_url }}
-        shell: bash
-        run: |
-          for attempt in {1..20}; do
-            actual_sha="$(
-              curl --fail --silent --show-error "${SITE_URL}release.json?attempt=${attempt}" 2>/dev/null |
-                jq -r '.commit_sha // empty' 2>/dev/null || true
-            )"
-            if [[ "$actual_sha" == "$EXPECTED_SHA" ]]; then
-              exit 0
-            fi
-            sleep 6
-          done
-          echo "Production did not converge to $EXPECTED_SHA within two minutes."
-          exit 1
       - name: Warm the runner and measure three production Lighthouse passes
         env:
           TARGET_URL: ${{ needs.deploy.outputs.page_url }}

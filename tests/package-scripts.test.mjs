@@ -119,6 +119,11 @@ test('deployment consumes the successful main CI artifact and never rebuilds it'
   assert.match(deploy, /actions\/deploy-pages@[0-9a-f]{40}/);
   assert.match(deploy, /name: Production smoke/);
   assert.match(deploy, /name: Production Lighthouse/);
+  assert.match(deploy, /edge-ready:\n\s+name: Wait for exact published SHA\n\s+needs: deploy/);
+  assert.match(deploy, /deadline=\$\(\(SECONDS \+ 600\)\)/);
+  assert.match(deploy, /if \[\[ "\$actual_sha" == "\$EXPECTED_SHA" \]\]/);
+  assert.match(deploy, /live-smoke:\n\s+name: Production smoke\n\s+needs: \[deploy, edge-ready\]/);
+  assert.match(deploy, /lighthouse:\n\s+name: Production Lighthouse\n\s+needs: \[deploy, edge-ready\]/);
   assert.match(deploy, /cancel-in-progress: false/);
   assert.doesNotMatch(deploy, /npm run build:site/);
 });

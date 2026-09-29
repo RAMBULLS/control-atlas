@@ -2,8 +2,8 @@
 
 - **Owner:** Nexus and Pixel
 - **Status:** Canonical
-- **Last reviewed:** 2026-09-09
-- **Supersession:** Update this contract and the corresponding workflows or package scripts in the same approved change.
+- **Last reviewed:** 2026-09-29
+- **Supersession:** Update this contract and the corresponding workflows or package scripts in the same change.
 
 Control Atlas separates validation, source-refresh merging and deployment while
 sharing one immutable site artifact.
@@ -12,7 +12,7 @@ sharing one immutable site artifact.
 
 - `ci.yml` classifies changes once, runs independent quality gates, builds the site once, and publishes `site-build` for the exact commit SHA.
 - `security.yml` runs dependency review, CodeQL, secret scanning, and repository hygiene without rebuilding the site.
-- `deploy.yml` accepts only a successful `main` push CI run, verifies `release.json`, deploys that exact artifact, then runs production smoke and Lighthouse checks.
+- `deploy.yml` accepts only a successful `main` push CI run, verifies `release.json`, deploys that exact artifact, waits for the same SHA at the public edge, then runs production smoke and Lighthouse checks.
 - `automerge-refresh.yml` runs after successful refresh PR CI or security
   completion. It loads merge tooling from `main`, requires both workflows to
   succeed for the current PR SHA, and merges only the admitted App-authored
@@ -81,4 +81,4 @@ prevents publication; routine successful refreshes require no human approval.
 
 ## Deployment guarantees
 
-Production deployment never rebuilds routine releases. The deploy workflow downloads `site-build`, verifies that `release.json` matches the successful CI run SHA, publishes through native GitHub Pages permissions, then verifies the same SHA at the public edge.
+Production deployment never rebuilds routine releases. The deploy workflow downloads `site-build`, verifies that `release.json` matches the successful CI run SHA, and publishes through native GitHub Pages permissions. One bounded readiness job waits for that exact SHA at the public edge before production smoke and Lighthouse begin. It fails if the SHA does not appear within ten minutes, the publication window documented by [GitHub Pages](https://docs.github.com/en/pages/quickstart). Both production checks then test the verified release.

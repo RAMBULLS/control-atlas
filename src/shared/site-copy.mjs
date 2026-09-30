@@ -46,12 +46,6 @@ export const SITE_COPY = Object.freeze({
       topicsLabel: "Atlas topics",
       shownTopics: 3,
     }),
-    start: Object.freeze({
-      prompt: "Not sure where to begin?",
-      action: "Find a starting point",
-      view: "start-here",
-      href: "#/start",
-    }),
     tools: Object.freeze([
       Object.freeze({
         id: "compare",
@@ -128,7 +122,7 @@ export const SITE_COPY = Object.freeze({
     }),
     start: Object.freeze({
       title: "Start here",
-      purpose: "Find a publication and next step for the federal cybersecurity work in front of you.",
+      purpose: "Find the federal cybersecurity topic and publisher source that match your question.",
     }),
   }),
 });

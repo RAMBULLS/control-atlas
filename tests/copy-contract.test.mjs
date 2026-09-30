@@ -20,7 +20,7 @@ const PUBLIC_COPY_FILES = [
   "src/shared/disclaimer.mjs",
   "src/app/help-data.mjs",
   "src/app/learn-content.mjs",
-  "src/app/start-here-guide.mjs",
+  "src/app/start-here-compatibility.mjs",
   "src/app/template-engine.mjs",
   "src/index.html",
   "src/main.tsx",
@@ -42,7 +42,6 @@ const PUBLIC_COPY_FILES = [
   "src/ui/pages/ObjectDetailPage.tsx",
   "src/ui/pages/PlaybooksPage.tsx",
   "src/ui/pages/SourcesPage.tsx",
-  "src/ui/pages/StartHerePage.tsx",
   "src/ui/pages/TemplatesPage.tsx",
   // The trust layer writes the most process-flavoured copy in the product —
   // freshness, limitations, lifecycle, coverage notes — and none of it was
@@ -78,7 +77,7 @@ test("site copy keeps every approved anchor exact", () => {
   assert.equal(SITE_COPY.home.searchPlaceholder, "Search by topic, title, or ID");
   assert.equal(SITE_COPY.home.atlas.heading, "See how federal cybersecurity fits together.");
   assert.equal(SITE_COPY.home.atlas.topicsLabel, "Atlas topics");
-  assert.deepEqual([SITE_COPY.home.start.prompt, SITE_COPY.home.start.action], ["Not sure where to begin?", "Find a starting point"]);
+  assert.equal(SITE_COPY.home.start, undefined);
   assert.deepEqual(
     SITE_COPY.home.tools.map(({ label, description, action }) => [label, description, action]),
     [

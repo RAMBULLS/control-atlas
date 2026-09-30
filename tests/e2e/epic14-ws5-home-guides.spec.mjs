@@ -23,7 +23,7 @@ test("WS5 Home implements Template B with one search, the Atlas, three tools, an
   await expect(template.locator(".home-tools .home-tool")).toHaveCount(3);
   await expect(template.locator(".home-tool__label")).toHaveText(["Compare", "Templates", "Resources"]);
   await expect(template.getByRole("link", { name: "Open the Atlas", exact: true })).toHaveAttribute("href", "#/atlas");
-  await expect(template.locator(".home-start__link")).toHaveAttribute("href", "#/start");
+  await expect(template.locator(".home-start__link")).toHaveCount(0);
   await expect(template.getByRole("heading", { name: "Make federal cybersecurity make sense.", level: 1 })).toBeVisible();
   await expect(template.locator(".home-lead")).toContainText("trace where requirements come from, see how they relate, and know what to do next.");
   await expect(template.getByText(/publisher|provenance|mapping/i)).toHaveCount(0);
@@ -135,8 +135,8 @@ test("WS6 About tells the product story with its source boundary", async ({ page
   await expect(article).toContainText("Publisher text and published connections stay separate from Control Atlas explanations and navigation.");
   await expect(article).toContainText("It does not decide what applies to your system");
   for (const title of [
-    "Make sense of the material behind the work",
-    "Find your way through the work",
+    "Trace federal cybersecurity requirements to their sources",
+    "From publication to next action",
     "Check the source before you act",
     "Built in the open",
   ]) {

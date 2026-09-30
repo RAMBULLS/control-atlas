@@ -9,7 +9,7 @@ const CONTRIBUTE_URL = `${PROJECT_URL}/blob/main/CONTRIBUTING.md`;
 
 const ABOUT_SECTIONS = [
   { id: "about-purpose", label: "Why it exists" },
-  { id: "about-work", label: "Find your way through the work" },
+  { id: "about-work", label: "From publication to next action" },
   { id: "about-sources", label: "Sources and limits" },
   { id: "about-project", label: "Open source and community" },
 ];
@@ -22,7 +22,7 @@ export function AboutPage() {
       <div className="about-layout">
         <article className="learn-article">
           <section id="about-purpose">
-            <h2>Make sense of the material behind the work</h2>
+            <h2>Trace federal cybersecurity requirements to their sources</h2>
             <p>
               Control Atlas is a free research tool for people working with federal
               cybersecurity requirements. It brings public controls, STIGs,
@@ -34,7 +34,7 @@ export function AboutPage() {
               who needs to find a source, understand where it fits, and decide
               what to examine next. You can use it without an account.
             </p>
-            <p><a href="#/atlas">Explore work in Atlas</a> or <a href="#/library">search the Library</a>.</p>
+            <p><a href="#/atlas">Explore cybersecurity topics in Atlas</a> or <a href="#/library">search the Library</a>.</p>
             {ATLAS_SCOPE_METRICS ? (
               <p>
                 The Library currently holds {ATLAS_SCOPE_METRICS.records.toLocaleString("en-US")}
@@ -45,7 +45,7 @@ export function AboutPage() {
           </section>
 
           <section id="about-work">
-            <h2>Find your way through the work</h2>
+            <h2>From publication to next action</h2>
             <p>
               <a href="#/atlas">Atlas</a> starts with practitioner topics such as RMF,
               STIGs, and FedRAMP and leads to the relevant publications and records.

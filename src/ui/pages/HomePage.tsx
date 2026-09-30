@@ -45,7 +45,7 @@ export function HomePage({ onNavigate, onOpenSearch }: HomePageProps) {
   const topicsRef = useRef<HTMLDetailsElement>(null);
   useEffect(() => (topicsRef.current ? connectHomeDisclosure(topicsRef.current) : undefined), []);
 
-  const { atlas, library, pulse: pulseCopy, start } = HOME_CONTENT;
+  const { atlas, library, pulse: pulseCopy } = HOME_CONTENT;
   const { changes, recent } = HOME_SURFACE.pulse;
   const metrics = ATLAS_SCOPE_METRICS
     ? `${ATLAS_SCOPE_METRICS.compact.records} records · ${ATLAS_SCOPE_METRICS.compact.publications} source publications`
@@ -109,12 +109,6 @@ export function HomePage({ onNavigate, onOpenSearch }: HomePageProps) {
               </div>
             </div>
           </div>
-          <p className="home-start">
-            {start.prompt}{" "}
-            <AppLink className="home-start__link" onNavigate={onNavigate} view="start-here">
-              {start.action} <Arrow />
-            </AppLink>
-          </p>
         </div>
       </div>
 

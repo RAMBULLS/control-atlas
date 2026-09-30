@@ -8,6 +8,7 @@ import {
 import { TAXONOMY_TAG_BY_ID } from "../../shared/taxonomy-contract.mjs";
 import { normalizeJourneyId } from "./atlasJourneyIds";
 import { GUIDE_REDIRECTS } from "./guideRedirects";
+import { startHereDestinationFor } from "../../app/start-here-compatibility.mjs";
 
 export type RouteIdentity = {
   path: string;
@@ -41,7 +42,7 @@ const ROUTE_IDENTITIES: Record<AppView, RouteIdentity> = {
 
 const SELECTED_NAV_BY_VIEW: Record<AppView, AppView | null> = {
   home: null,
-  "start-here": "start-here",
+  "start-here": "atlas-map",
   "atlas-map": "atlas-map",
   // Search results are a state of Library, not a separate destination, so the
   // Library tab stays selected while a query is open.
@@ -64,7 +65,7 @@ const SELECTED_NAV_BY_VIEW: Record<AppView, AppView | null> = {
 
 const RECOVERY_VIEW_BY_VIEW: Record<AppView, AppView> = {
   home: "home",
-  "start-here": "start-here",
+  "start-here": "atlas-map",
   "atlas-map": "atlas-map",
   search: "search",
   "catalog-detail": "catalog-detail",
@@ -82,7 +83,6 @@ const RECOVERY_VIEW_BY_VIEW: Record<AppView, AppView> = {
 
 export const CANONICAL_DESTINATION_VIEWS = Object.freeze([
   "home",
-  "start-here",
   "search",
   "atlas-map",
   "catalog-detail",
@@ -299,6 +299,13 @@ export function canonicalizeHashLocation(input: string): CanonicalRoute {
   let params = incoming;
   let discarded = false;
   let recoveredRetiredCompare = false;
+
+  // Preserve old questionnaire bookmarks at the product area that now owns the
+  // task. A goal or context never becomes a publication recommendation here.
+  if (path === "/start") {
+    const canonicalPath = startHereDestinationFor(params.get("goal") || "", params.get("context") || "");
+    return { canonicalPath, requiresReplace: true, recoveryMessage: "" };
+  }
 
   // Keep bookmarked guide URLs useful after their jobs moved to existing pages.
   if (path === "/guides") {

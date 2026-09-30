@@ -17,7 +17,6 @@ const ROUTES = [
   "/#/build",
   "/#/sources",
   "/#/about",
-  "/#/start",
 ];
 
 const VIEWPORTS = [

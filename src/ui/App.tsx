@@ -122,11 +122,6 @@ const SourcesPage = lazyRoute(() =>
     default: module.SourcesPage,
   })),
 );
-const StartHerePage = lazyRoute(() =>
-  import("./pages/StartHerePage").then((module) => ({
-    default: module.StartHerePage,
-  })),
-);
 const TemplatesPage = lazyRoute(() =>
   import("./pages/TemplatesPage").then((module) => ({
     default: module.TemplatesPage,
@@ -917,7 +912,7 @@ function AppContent(props: {
           <details>
             <summary>Try another path</summary>
             <div className="card-actions disclosure-actions">
-              <AppLink onNavigate={onNavigate} variant="secondary" view="start-here">Start here</AppLink>
+              <AppLink onNavigate={onNavigate} variant="secondary" view="atlas-map">Explore Atlas topics</AppLink>
               <AppLink onNavigate={onNavigate} variant="secondary" view="search">Search records</AppLink>
             </div>
           </details>
@@ -1022,9 +1017,8 @@ function AppContent(props: {
   }
 
   if (state.view === "start-here") {
-    return (
-      <StartHerePage bundle={bundle} onNavigate={onNavigate} state={state} />
-    );
+    // The route effect replaces old /start URLs before this transient state paints.
+    return null;
   }
 
   if (state.view === "about") {
@@ -1043,8 +1037,8 @@ function AppContent(props: {
           <AppLink onNavigate={onNavigate} patch={{ query: state.query }} variant="primary" view="search">
             Search records
           </AppLink>
-          <AppLink onNavigate={onNavigate} variant="secondary" view="start-here">
-            Start guided path
+          <AppLink onNavigate={onNavigate} variant="secondary" view="atlas-map">
+            Explore Atlas topics
           </AppLink>
         </div>
       </section>

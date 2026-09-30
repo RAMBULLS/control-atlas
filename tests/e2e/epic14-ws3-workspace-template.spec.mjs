@@ -121,10 +121,10 @@ test("WS3 Resources shares Template C with real list, map, and comparison modes"
   const companionLinks = companions.getByRole("link");
   await expect(companionLinks).toHaveText([
     "Looking for a starter document? Browse Templates →",
-    "Want framework context? Browse Guides →",
+    "Need framework context? Explore Atlas →",
   ]);
   await expect(companionLinks.nth(0)).toHaveAttribute("href", "#/build");
-  await expect(companionLinks.nth(1)).toHaveAttribute("href", "#/guides");
+  await expect(companionLinks.nth(1)).toHaveAttribute("href", "#/atlas");
   await expect(workspace.locator('[data-browse-state="resources"]')).toBeVisible();
   const rail = workspace.getByRole("complementary", { name: "Resource filters" });
   await expect(rail).toBeVisible();

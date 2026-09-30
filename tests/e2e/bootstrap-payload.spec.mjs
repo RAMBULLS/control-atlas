@@ -47,7 +47,7 @@ test("home bootstrap avoids graph JSON artifacts", async ({ page }) => {
   expect(scripts.length, `Home loaded ${scripts.length} scripts: ${scripts.join(", ")}`).toBeLessThanOrEqual(4);
   for (const script of scripts) {
     expect(script, "Home must not load a route chunk").not.toMatch(
-      /\/assets\/(?:AtlasTerritoryPage|ExplorePage|ComparePage|TemplatesPage|SourcesPage|CatalogDetailPage|ObjectDetailPage|CommonsPage|PlaybooksPage|AboutPage|StartHerePage)-/,
+      /\/assets\/(?:AtlasTerritoryPage|ExplorePage|ComparePage|TemplatesPage|SourcesPage|CatalogDetailPage|ObjectDetailPage|CommonsPage|PlaybooksPage|AboutPage)-/,
     );
   }
 

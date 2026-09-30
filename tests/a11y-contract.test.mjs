@@ -288,7 +288,6 @@ test("Template B Home exposes one search, governed destinations, and labelled go
 test("high-density task surfaces expose bounded results and name complete download actions", () => {
   const comparePage = readFileSync("src/ui/pages/ComparePage.tsx", "utf8");
   const templatesPage = readFileSync("src/ui/pages/TemplatesPage.tsx", "utf8");
-  const startHere = readFileSync("src/ui/pages/StartHerePage.tsx", "utf8");
   assert.match(comparePage, /data-continuous-results/);
   assert.match(comparePage, /Search results by ID or title/);
   assert.match(comparePage, /Evidence for \{targets\.length\.toLocaleString\(\)\} mapping/);
@@ -298,8 +297,6 @@ test("high-density task surfaces expose bounded results and name complete downlo
   assert.match(comparePage, /Counts and exports cover all/);
   assert.match(templatesPage, /Download \$\{selectedTemplate\.display_name\}/);
   assert.match(templatesPage, /template-essential-options/);
-  assert.match(startHere, /What are you trying to do\?/);
-  assert.match(startHere, /Search the Library/);
 });
 
 test("Compare modes are accessible tabs and About is a navigable article", () => {
@@ -312,7 +309,7 @@ test("Compare modes are accessible tabs and About is a navigable article", () =>
   assert.match(comparePage, /role="tab"/);
   assert.doesNotMatch(comparePage, /className="intent-card intent-card-button"/);
   assert.match(aboutPage, /<article className="learn-article">/);
-  assert.match(aboutPage, /<h2>Make sense of the material behind the work<\/h2>/);
+  assert.match(aboutPage, /<h2>Trace federal cybersecurity requirements to their sources<\/h2>/);
   assert.match(aboutPage, /<h2>Built in the open<\/h2>/);
   assert.match(aboutPage, /aria-label="On this page"/);
   assert.match(aboutPage, /PageJumpNav ariaLabel="Jump to About section"/);

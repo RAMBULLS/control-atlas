@@ -518,7 +518,7 @@ test("Resource routes follow the Orbital catalog and knowledge-base compositions
   assert.match(directory, /resource-compare-toggle/);
   assert.match(directory, /aria-label="Resource companions"/);
   assert.match(directory, /view="templates">[\s\S]*Browse Templates →[\s\S]*<\/AppLink>/);
-  assert.match(directory, /view="patterns">[\s\S]*Browse Guides →[\s\S]*<\/AppLink>/);
+  assert.match(directory, /view="atlas-map">[\s\S]*Need framework context\? Explore Atlas →[\s\S]*<\/AppLink>/);
 
   for (const heading of [
     "What it is",

@@ -87,10 +87,11 @@ test('shell exposes Templates directly and keeps reference pages in overflow', (
   assert.match(routeIdentity, /Sources/);
   assert.match(routeIdentity, /About/);
   const staticPrimaryNav = html.match(/<nav aria-label="Primary navigation"[\s\S]*?<\/nav>/)?.[0] || "";
-  assert.match(staticPrimaryNav, /#\/start[\s\S]*#\/atlas[\s\S]*#\/library[\s\S]*#\/compare[\s\S]*#\/resources[\s\S]*#\/build/);
+  assert.match(staticPrimaryNav, /#\/atlas[\s\S]*#\/library[\s\S]*#\/compare[\s\S]*#\/resources[\s\S]*#\/build/);
+  assert.doesNotMatch(staticPrimaryNav, /#\/start/);
   assert.match(navigation, /PRIMARY_SECTION_LABEL = "Explore"/);
   assert.match(navigation, /UTILITY_SECTION_LABEL = "Reference"/);
-  assert.match(navigation, /PRIMARY_NAV_ITEMS[\s\S]*view: "start-here"[\s\S]*view: "atlas-map"[\s\S]*view: "search"[\s\S]*view: "matrix"[\s\S]*view: "commons"[\s\S]*TEMPLATES_NAV_ITEM/);
+  assert.match(navigation, /PRIMARY_NAV_ITEMS[\s\S]*view: "atlas-map"[\s\S]*view: "search"[\s\S]*view: "matrix"[\s\S]*view: "commons"[\s\S]*TEMPLATES_NAV_ITEM/);
   assert.doesNotMatch(
     navigation.match(/PRIMARY_NAV_ITEMS:[\s\S]*?\n\];/)?.[0] || "",
     /view: "patterns"/,

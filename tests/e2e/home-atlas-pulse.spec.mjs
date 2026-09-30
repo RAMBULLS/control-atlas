@@ -75,7 +75,7 @@ test("Home holds the approved composition: hero with search and the Atlas, tools
   await expect(home.locator(".home-map__area")).toHaveCount(9);
   await expect(home.getByRole("heading", { name: "See how federal cybersecurity fits together.", level: 2 })).toBeVisible();
   await expect(home.getByRole("link", { name: "Open the Atlas", exact: true })).toHaveAttribute("href", "#/atlas");
-  await expect(home.locator(".home-start__link")).toHaveAttribute("href", "#/start");
+  await expect(home.locator(".home-start__link")).toHaveCount(0);
   await expect(home.getByRole("navigation", { name: "Tools" }).getByRole("link")).toHaveCount(3);
   await expect(home.getByRole("region", { name: "Browse the Library" }).locator(".home-library__item")).toHaveCount(5);
   for (const copy of REJECTED_COPY) await expect(home).not.toContainText(copy);

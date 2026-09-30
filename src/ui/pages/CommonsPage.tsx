@@ -211,8 +211,8 @@ export function CommonsPage(props: {
           <AppLink onNavigate={onNavigate} view="templates">
             Looking for a starter document? Browse Templates →
           </AppLink>
-          <AppLink onNavigate={onNavigate} view="patterns">
-            Want framework context? Browse Guides →
+          <AppLink onNavigate={onNavigate} view="atlas-map">
+            Need framework context? Explore Atlas →
           </AppLink>
         </nav>
       )}

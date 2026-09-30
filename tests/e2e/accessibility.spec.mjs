@@ -31,7 +31,7 @@ test.beforeEach(async ({ page }) => {
 
 const ROUTES = [
   { label: "home", path: "/#/" },
-  { label: "start here", path: "/#/start" },
+  { label: "former Start Here bookmark", path: "/#/start" },
   { label: "catalog inventory", path: "/#/catalog" },
   { label: "catalog", path: "/#/catalog/nist-800-53" },
   // Publication pages (#284): a dense implementation standard and a sparse standard.

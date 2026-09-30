@@ -2,14 +2,16 @@
 
 - **Owner:** Product owner and Muse
 - **Status:** Canonical
-- **Last reviewed:** 2026-09-17
+- **Last reviewed:** 2026-09-29
 - **Supersession:** New owner-approved page direction replaces the affected section here and its tests in the same change.
 
 Every route uses one of six shared jobs. A route renders one `<main>` and must not mount another page beneath it.
 
 ## Shared shell
 
-The desktop header provides Start Here, Atlas, Library, Compare, Resources, Templates, and Search. Guides, Sources, and About remain available in the overflow menu. Compact navigation preserves every destination, with Compare before editorial links. Body content uses the shared spacing and width tokens. Interactive targets are at least 44 pixels, focus is visible, color is never the only signal, and layouts must reflow without page-level horizontal overflow.
+The desktop header provides Atlas, Library, Compare, Resources, Templates, and Search. Guides, Sources, and About remain available in the overflow menu. Compact navigation preserves every destination, with Compare before editorial links. Body content uses the shared spacing and width tokens. Interactive targets are at least 44 pixels, focus is visible, color is never the only signal, and layouts must reflow without page-level horizontal overflow.
+
+Start Here is consolidated into those destinations. Old `/#/start` bookmarks replace to Atlas by default. Saved goal and context answers translate according to the 28-row acceptance matrix in `src/app/start-here-compatibility.mjs`; the mapping can lead to Atlas, Library, Templates, or Resources and never names a publication. Unknown context cannot imply an applicable source. The compatibility route has no separate page or navigation entry.
 
 ## A. Landing
 
@@ -17,7 +19,7 @@ Home presents the product purpose, one primary search action, and concise entran
 
 The owner-approved composition (#283) is the specification. Three full-width regions on one 12-column grid:
 
-1. **Hero** — headline, one-sentence lead, search, and two real counts (records and source publications) beside a static drawing of the Atlas overview (the Atlas MiniMap geometry, built from `data/curated/atlas-territory-geography.json`). Under the map: "See how federal cybersecurity fits together.", **Open the Atlas**, and a closed-by-default list of the #282 journeys whose trigger names the first three and how many more there are; the list has no visible heading and the accessible name "Atlas topics". A quiet "Not sure where to begin? Find a starting point" leads to Start here.
+1. **Hero** — headline, one-sentence lead, search, and two real counts (records and source publications) beside a static drawing of the Atlas overview (the Atlas MiniMap geometry, built from `data/curated/atlas-territory-geography.json`). Under the map: "See how federal cybersecurity fits together.", **Open the Atlas**, and a closed-by-default list of the #282 journeys whose trigger names the first three and how many more there are; the list has no visible heading and the accessible name "Atlas topics".
 2. **Tools** — Compare, Templates and Resources, one band, three equal columns.
 3. **Library** — the five practitioner collections with their real counts, and source changes as a narrow sidecar: at most the two newest source changes (publications only, one per publication), then **All sources**. On a phone the sidecar is one row linking to Sources.
 

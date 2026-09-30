@@ -11,6 +11,19 @@ import {
 import { parseHashLocation, serializeHashLocation } from "../../src/ui/lib/hashRoutes";
 import { normalizeViewState } from "../../src/ui/lib/viewState";
 import { orbitalRouteContext } from "../../src/ui/components/OrbitalContextBar";
+import { START_HERE_ACCEPTANCE_MATRIX } from "../../src/app/start-here-compatibility.mjs";
+
+test("all 28 old Start Here answer links replace with their safe product destination", () => {
+  for (const row of START_HERE_ACCEPTANCE_MATRIX) {
+    const original = `/start?goal=${row.goalId}&context=${row.contextId}`;
+    const result = canonicalizeHashLocation(original);
+    assert.equal(result.canonicalPath, row.firstDestination, original);
+    assert.equal(result.requiresReplace, true, original);
+    assert.equal(result.recoveryMessage, "", original);
+  }
+  assert.equal(canonicalizeHashLocation("/start?goal=assess&context=unsure").canonicalPath, "/atlas?atlasJourney=assessment");
+  assert.equal(canonicalizeHashLocation("/start").canonicalPath, "/atlas");
+});
 
 test("Source detail keeps recovery beside the inspector instead of duplicating a global return bar", () => {
   const state = normalizeViewState("sources", {
@@ -261,7 +274,7 @@ test("every app state has one approved display identity", () => {
 });
 
 test("direct task destinations and overflow pages own consistent active navigation", () => {
-  assert.equal(selectedNavFor("start-here"), "start-here");
+  assert.equal(selectedNavFor("start-here"), "atlas-map");
   for (const view of ["search", "catalog-detail"] as const) {
     assert.equal(selectedNavFor(view), "search", view);
   }
@@ -277,7 +290,7 @@ test("direct task destinations and overflow pages own consistent active navigati
   assert.equal(selectedNavFor("about"), "about");
 
   const destinations = new Map(CANONICAL_DESTINATIONS.map((entry) => [entry.view, entry]));
-  assert.equal(destinations.get("start-here")?.label, "Start here");
+  assert.equal(destinations.has("start-here"), false);
   assert.equal(destinations.get("search")?.label, "Library");
   assert.equal(destinations.get("matrix")?.label, "Compare");
   assert.equal(destinations.get("atlas-map")?.label, "Atlas");
@@ -339,7 +352,6 @@ test("durable Phase 3 view fields survive canonicalization", () => {
       view: "map",
     }],
     ["/library/publication/nist-800-53", { q: "AC", family: "AC", page: "2", area: "Compliance" }],
-    ["/start", { goal: "assess", context: "fedramp" }],
   ] as const;
 
   for (const [path, params] of samples) {

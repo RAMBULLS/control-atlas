@@ -34,9 +34,9 @@ test("policy documents stay available but secondary, and are described without i
 });
 
 test("the practitioner story preserves publisher authority in plain language", () => {
-  assert.match(aboutPage, /Follow it back to the source/);
-  assert.match(aboutPage, /does not replace NIST, DISA, DoD, FedRAMP, MITRE/);
-  assert.match(aboutPage, /get back to the official source/);
+  assert.match(aboutPage, /with links back to the publishers/);
+  assert.match(aboutPage, /Publisher text and published connections stay separate/);
+  assert.match(aboutPage, /Use the\s+official source and your responsible authority/);
   assert.doesNotMatch(aboutPage, /organizing spine|Control Atlas overlay|publisher hierarchy|provenance|confidence|trust register/i);
   assert.doesNotMatch(aboutPage, /Not a publisher source|never a publisher/i);
   assert.doesNotMatch(sourcesPage, /Not a publisher source|never a publisher/i);

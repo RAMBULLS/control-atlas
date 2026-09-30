@@ -102,7 +102,7 @@ for (const zoom of [
       scrollWidth: globalThis.document.documentElement.scrollWidth,
     }));
     expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth + 1);
-    await expect(page.getByRole("heading", { name: "Start here", level: 1 })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Atlas", level: 1 })).toBeVisible();
   });
 }
 
@@ -207,31 +207,20 @@ test("ranked search exposes desktop filters, sort, active chips, and mobile draw
   await page.getByRole("button", { name: "Close filters" }).click();
 });
 
-test("Start Here preserves answers across URL history and names its destination", async ({ page }) => {
-  await page.goto("/#/start");
+test("Start Here bookmarks preserve the chosen CUI topic after reload", async ({ page }) => {
+  await page.goto("/#/start?goal=implement&context=cui");
   await waitForReady(page);
-  await page.getByRole("button", { name: "Secure or build a system" }).click();
-  await expect(page).toHaveURL(/goal=implement/);
-  await page.getByRole("button", { name: "CUI contractor environment" }).click();
-  await expect(page).toHaveURL(/goal=implement.*context=cui|context=cui.*goal=implement/);
-  await expect(page.getByRole("heading", { name: "Start with SP 800-171 Rev. 2" })).toBeVisible();
-  await page.goBack();
-  await expect(page).toHaveURL(/goal=implement/);
-  await expect(page).not.toHaveURL(/context=/);
-  await page.goForward();
-  await expect(page).toHaveURL(/context=cui/);
+  await expect.poll(() => new URL(page.url()).hash).toBe("#/atlas?atlasJourney=cmmc-cui");
   await page.reload();
   await waitForReady(page);
-  await expect(page.getByRole("heading", { name: /Start with SP 800-171/ })).toBeVisible();
-  await page.getByRole("link", { name: /Open SP 800-171/ }).click();
-  await expect(page).toHaveURL(/#\/library\/publication\/nist-800-171-rev2/);
+  await expect.poll(() => new URL(page.url()).hash).toBe("#/atlas?atlasJourney=cmmc-cui");
 });
 
 test("desktop primary navigation remains visible and retired mode parameters canonicalize away", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/?mode=novice#");
   await expect(page).not.toHaveURL(/mode=novice/);
-  for (const label of ["Start here", "Atlas", "Library", "Compare", "Resources", "Templates"]) {
+  for (const label of ["Atlas", "Library", "Compare", "Resources", "Templates"]) {
     await expect(page.locator(".site-header .primary-nav:visible").getByRole("link", { name: label, exact: true })).toBeVisible();
   }
 });

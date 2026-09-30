@@ -121,10 +121,10 @@ test("WS3 Resources shares Template C with real list, map, and comparison modes"
   const companionLinks = companions.getByRole("link");
   await expect(companionLinks).toHaveText([
     "Looking for a starter document? Browse Templates →",
-    "Want framework context? Browse Guides →",
+    "Need framework context? Explore Atlas →",
   ]);
   await expect(companionLinks.nth(0)).toHaveAttribute("href", "#/build");
-  await expect(companionLinks.nth(1)).toHaveAttribute("href", "#/guides");
+  await expect(companionLinks.nth(1)).toHaveAttribute("href", "#/atlas");
   await expect(workspace.locator('[data-browse-state="resources"]')).toBeVisible();
   const rail = workspace.getByRole("complementary", { name: "Resource filters" });
   await expect(rail).toBeVisible();
@@ -180,7 +180,7 @@ test("WS3 Resource detail uses a knowledge-base reading sequence", async ({ page
   await waitForAppReady(page, { allowPartial: true });
 
   const article = page.locator("article.resource-detail-main");
-  await expect(page.getByText("Resource", { exact: true })).toBeVisible();
+  await expect(page.getByText("Open-source project", { exact: true })).toBeVisible();
   await expect(page.getByText("Publisher Anchore", { exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: "Open resource" })).toBeVisible();
   await expect(article.getByRole("heading", { level: 2 })).toHaveText([

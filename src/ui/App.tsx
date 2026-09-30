@@ -122,11 +122,6 @@ const SourcesPage = lazyRoute(() =>
     default: module.SourcesPage,
   })),
 );
-const StartHerePage = lazyRoute(() =>
-  import("./pages/StartHerePage").then((module) => ({
-    default: module.StartHerePage,
-  })),
-);
 const TemplatesPage = lazyRoute(() =>
   import("./pages/TemplatesPage").then((module) => ({
     default: module.TemplatesPage,
@@ -678,24 +673,23 @@ export function App() {
   const routeContext = orbitalRouteContext(viewState, routeEntityName);
 
   useEffect(() => {
+    if (!pushNavigationRef.current) restoreScrollPosition();
     let completionFrame = 0;
     const frame = window.requestAnimationFrame(() => {
-      completionFrame = window.requestAnimationFrame(completeRouteTransition);
+      completionFrame = window.requestAnimationFrame(() => {
+        completeRouteTransition();
+        // The workspace is inert during the transition. Focus only after it
+        // becomes interactive again, or the heading focus is discarded.
+        if (pushNavigationRef.current) {
+          pushNavigationRef.current = false;
+          focusRouteHeading();
+        }
+      });
     });
     return () => {
       window.cancelAnimationFrame(frame);
       window.cancelAnimationFrame(completionFrame);
     };
-  }, [viewState]);
-
-  useEffect(() => {
-    if (!pushNavigationRef.current) {
-      restoreScrollPosition();
-      return;
-    }
-    pushNavigationRef.current = false;
-    const frame = focusRouteHeading();
-    return () => window.cancelAnimationFrame(frame);
   }, [viewState]);
 
   return (
@@ -918,7 +912,7 @@ function AppContent(props: {
           <details>
             <summary>Try another path</summary>
             <div className="card-actions disclosure-actions">
-              <AppLink onNavigate={onNavigate} variant="secondary" view="start-here">Start here</AppLink>
+              <AppLink onNavigate={onNavigate} variant="secondary" view="atlas-map">Explore Atlas topics</AppLink>
               <AppLink onNavigate={onNavigate} variant="secondary" view="search">Search records</AppLink>
             </div>
           </details>
@@ -1023,9 +1017,8 @@ function AppContent(props: {
   }
 
   if (state.view === "start-here") {
-    return (
-      <StartHerePage bundle={bundle} onNavigate={onNavigate} state={state} />
-    );
+    // The route effect replaces old /start URLs before this transient state paints.
+    return null;
   }
 
   if (state.view === "about") {
@@ -1044,8 +1037,8 @@ function AppContent(props: {
           <AppLink onNavigate={onNavigate} patch={{ query: state.query }} variant="primary" view="search">
             Search records
           </AppLink>
-          <AppLink onNavigate={onNavigate} variant="secondary" view="start-here">
-            Start guided path
+          <AppLink onNavigate={onNavigate} variant="secondary" view="atlas-map">
+            Explore Atlas topics
           </AppLink>
         </div>
       </section>

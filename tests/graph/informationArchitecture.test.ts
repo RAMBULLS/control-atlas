@@ -18,7 +18,6 @@ test("primary navigation exposes Templates while reference pages remain in overf
   assert.deepEqual(
     PRIMARY_NAV_ITEMS.map(({ label, path }) => [label, path]),
     [
-      ["Start here", "/start"],
       ["Atlas", "/atlas"],
       ["Library", "/library"],
       ["Compare", "/compare"],
@@ -37,7 +36,7 @@ test("primary navigation exposes Templates while reference pages remain in overf
   assert.deepEqual(UTILITY_NAV_ITEMS.map(({ label }) => label), ["Sources", "About"]);
   assert.equal(
     new Set([...PRIMARY_NAV_ITEMS, ...OVERFLOW_NAV_ITEMS].map(({ path }) => path)).size,
-    9,
+    8,
   );
 });
 

@@ -483,7 +483,7 @@
 }
 
 .resource-detail-section {
-  padding-block: var(--ca-space-7);
+  padding-block: var(--ca-space-8);
   border-bottom: 1px solid var(--ca-border);
   scroll-margin-top: var(--ca-header-safe-offset);
 }

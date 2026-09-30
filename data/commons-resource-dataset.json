@@ -1,6 +1,6 @@
 {
   "schemaVersion": "4.0",
-  "lastUpdated": "2026-09-23",
+  "lastUpdated": "2026-09-29",
   "collections": [
     {
       "id": "dod-cybersecurity-portals",
@@ -20163,7 +20163,7 @@
       "slug": "directory-nist-cavp",
       "summary": "Search cryptographic algorithm validation records by vendor, implementation, algorithm, and date.",
       "whyIncluded": "It validates algorithm implementations, a different job from CMVP module validation.",
-      "canonicalUrl": "https://csrc.nist.gov/Projects/Cryptographic-Algorithm-Validation-Program",
+      "canonicalUrl": "https://csrc.nist.gov/projects/cryptographic-algorithm-validation-program/validation-search",
       "alternateUrls": [],
       "publisher": "National Institute of Standards and Technology",
       "maintainer": "National Institute of Standards and Technology",
@@ -20197,7 +20197,7 @@
       "openSource": false,
       "redistributionPolicy": "Link only; verify current publisher terms before redistribution.",
       "maturity": "established",
-      "lastCheckedAt": "2026-08-03",
+      "lastCheckedAt": "2026-09-29",
       "nextCheckAt": "2026-11-03",
       "updateMethod": "manual_primary_source_review",
       "updateCadence": "quarterly",
@@ -20220,7 +20220,7 @@
       ],
       "childResourceIds": [],
       "brandKey": "nist",
-      "sourceEvidence": "https://csrc.nist.gov/Projects/Cryptographic-Algorithm-Validation-Program",
+      "sourceEvidence": "https://csrc.nist.gov/projects/cryptographic-algorithm-validation-program/validation-search",
       "verificationMethod": "public_url",
       "automatedFields": [],
       "manualFields": [
@@ -33401,10 +33401,10 @@
     },
     {
       "id": "resource:directory-nist-cavp:publisher-destination",
-      "sourceUrl": "https://csrc.nist.gov/Projects/Cryptographic-Algorithm-Validation-Program",
+      "sourceUrl": "https://csrc.nist.gov/projects/cryptographic-algorithm-validation-program/validation-search",
       "locatorType": "canonical_url",
-      "locator": "https://csrc.nist.gov/Projects/Cryptographic-Algorithm-Validation-Program",
-      "retrievedAt": "2026-08-03",
+      "locator": "https://csrc.nist.gov/projects/cryptographic-algorithm-validation-program/validation-search",
+      "retrievedAt": "2026-09-29",
       "reviewStatus": "reviewed"
     },
     {

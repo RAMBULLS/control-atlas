@@ -4,30 +4,30 @@
   "compilation_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip",
   "artifact_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip",
   "byte_length": 368971055,
-  "retrieval_timestamp": "2026-09-23T12:47:18.817Z",
+  "retrieval_timestamp": "2026-09-30T13:47:19.699Z",
   "checksum": "sha256:df371dc0ebb163e1a0434b141bc2f16b56c97b2062622d6811191fbe4f093c01",
   "publications": {
-    "total_discovered_archives": 1010,
-    "expected_canonical_publications": 293,
+    "total_discovered_archives": 1012,
+    "expected_canonical_publications": 295,
     "represented_in_compilation": 175,
-    "standalone_ingested": 118,
+    "standalone_ingested": 120,
     "excluded_archives": 717,
     "failed_publications": 0,
     "missing_publications": 0
   },
   "reconciliation": {
-    "discovered_urls": 1010,
+    "discovered_urls": 1012,
     "compilation_entries": 2616,
-    "ingested_files": 497,
+    "ingested_files": 499,
     "excluded_files": 84,
     "failed_files": 0,
     "ignored_files": 2153,
-    "stig_records_parsed": 26988,
+    "stig_records_parsed": 27064,
     "srg_records_parsed": 2550,
-    "cci_relationships": 41576,
+    "cci_relationships": 41729,
     "compilation_stig_records": 17021,
     "compilation_srg_records": 2516,
-    "standalone_stig_records": 11031,
+    "standalone_stig_records": 11107,
     "standalone_srg_records": 34,
     "standalone_packages": [
       {
@@ -155,6 +155,24 @@
         "stigRecords": 58,
         "srgRecords": 0,
         "checksum": "sha256:b1e87ac50fc8a9abd3f0f948056f1ecbfc4fbc53d54c3dbbacee21c6c4d6387d"
+      },
+      {
+        "filename": "U_Aviat_Networks_WTM_Y26M08_STIG.zip",
+        "family": "Aviat_Networks_WTM",
+        "kind": "stig",
+        "versionStr": "Y26M08",
+        "stigRecords": 38,
+        "srgRecords": 0,
+        "checksum": "sha256:6840dee4607fbdb45dc444afc74a939700dc172b013fd76c55595276406a13b5"
+      },
+      {
+        "filename": "U_Broadcom_CAS_V1R1_STIG.zip",
+        "family": "Broadcom_CAS",
+        "kind": "stig",
+        "versionStr": "V1R1",
+        "stigRecords": 38,
+        "srgRecords": 0,
+        "checksum": "sha256:94273727610d05284e1bd3230aa831e30555e232779f3bf573e2bbc2702e0371"
       },
       {
         "filename": "U_CA_API_Gateway_Y24M07_STIG.zip",

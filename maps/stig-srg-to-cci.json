@@ -404299,6 +404299,906 @@
     },
     {
       "source_catalog": "disa-stig",
+      "source_id": "V-285606",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285606",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285606",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000537",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285606",
+      "why": "The official DISA STIG content references CCI-000537.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285606",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000539",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285606",
+      "why": "The official DISA STIG content references CCI-000539.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285607",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285607",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285607",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002605",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285607",
+      "why": "The official DISA STIG content references CCI-002605.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285607",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003376",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285607",
+      "why": "The official DISA STIG content references CCI-003376.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285608",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285608",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285609",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000382",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285609",
+      "why": "The official DISA STIG content references CCI-000382.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285609",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000803",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285609",
+      "why": "The official DISA STIG content references CCI-000803.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285609",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001188",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285609",
+      "why": "The official DISA STIG content references CCI-001188.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285609",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002890",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285609",
+      "why": "The official DISA STIG content references CCI-002890.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285609",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003123",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285609",
+      "why": "The official DISA STIG content references CCI-003123.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285610",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000054",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285610",
+      "why": "The official DISA STIG content references CCI-000054.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285611",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000163",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285611",
+      "why": "The official DISA STIG content references CCI-000163.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285611",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000164",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285611",
+      "why": "The official DISA STIG content references CCI-000164.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285611",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000213",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285611",
+      "why": "The official DISA STIG content references CCI-000213.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285611",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000345",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285611",
+      "why": "The official DISA STIG content references CCI-000345.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285611",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285611",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285611",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001199",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285611",
+      "why": "The official DISA STIG content references CCI-001199.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285611",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001493",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285611",
+      "why": "The official DISA STIG content references CCI-001493.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285611",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001494",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285611",
+      "why": "The official DISA STIG content references CCI-001494.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285611",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001495",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285611",
+      "why": "The official DISA STIG content references CCI-001495.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285611",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001499",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285611",
+      "why": "The official DISA STIG content references CCI-001499.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285611",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001813",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285611",
+      "why": "The official DISA STIG content references CCI-001813.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285611",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002169",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285611",
+      "why": "The official DISA STIG content references CCI-002169.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285611",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002235",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285611",
+      "why": "The official DISA STIG content references CCI-002235.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285611",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002883",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285611",
+      "why": "The official DISA STIG content references CCI-002883.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285611",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003980",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285611",
+      "why": "The official DISA STIG content references CCI-003980.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285612",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000044",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285612",
+      "why": "The official DISA STIG content references CCI-000044.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285613",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000048",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285613",
+      "why": "The official DISA STIG content references CCI-000048.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285613",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000050",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285613",
+      "why": "The official DISA STIG content references CCI-000050.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285614",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000166",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285614",
+      "why": "The official DISA STIG content references CCI-000166.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285618",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000382",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285618",
+      "why": "The official DISA STIG content references CCI-000382.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285619",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001358",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285619",
+      "why": "The official DISA STIG content references CCI-001358.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285619",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002111",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285619",
+      "why": "The official DISA STIG content references CCI-002111.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285620",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000382",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285620",
+      "why": "The official DISA STIG content references CCI-000382.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285621",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000765",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285621",
+      "why": "The official DISA STIG content references CCI-000765.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285621",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004047",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285621",
+      "why": "The official DISA STIG content references CCI-004047.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285623",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004066",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285623",
+      "why": "The official DISA STIG content references CCI-004066.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285624",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004066",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285624",
+      "why": "The official DISA STIG content references CCI-004066.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285625",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004066",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285625",
+      "why": "The official DISA STIG content references CCI-004066.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285626",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004066",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285626",
+      "why": "The official DISA STIG content references CCI-004066.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285627",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004066",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285627",
+      "why": "The official DISA STIG content references CCI-004066.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285628",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004066",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285628",
+      "why": "The official DISA STIG content references CCI-004066.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285631",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000185",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285631",
+      "why": "The official DISA STIG content references CCI-000185.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285632",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000166",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285632",
+      "why": "The official DISA STIG content references CCI-000166.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285632",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000187",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285632",
+      "why": "The official DISA STIG content references CCI-000187.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285632",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000370",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285632",
+      "why": "The official DISA STIG content references CCI-000370.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285632",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000764",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285632",
+      "why": "The official DISA STIG content references CCI-000764.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285634",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001133",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285634",
+      "why": "The official DISA STIG content references CCI-001133.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285641",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001858",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285641",
+      "why": "The official DISA STIG content references CCI-001858.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285641",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003831",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285641",
+      "why": "The official DISA STIG content references CCI-003831.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285642",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001890",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285642",
+      "why": "The official DISA STIG content references CCI-001890.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285644",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001967",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285644",
+      "why": "The official DISA STIG content references CCI-001967.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285645",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001967",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285645",
+      "why": "The official DISA STIG content references CCI-001967.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285646",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001368",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285646",
+      "why": "The official DISA STIG content references CCI-001368.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285646",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002385",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285646",
+      "why": "The official DISA STIG content references CCI-002385.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285649",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285649",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285650",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000018",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285650",
+      "why": "The official DISA STIG content references CCI-000018.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285650",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000130",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285650",
+      "why": "The official DISA STIG content references CCI-000130.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285650",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000131",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285650",
+      "why": "The official DISA STIG content references CCI-000131.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285650",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000132",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285650",
+      "why": "The official DISA STIG content references CCI-000132.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285650",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000133",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285650",
+      "why": "The official DISA STIG content references CCI-000133.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285650",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000134",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285650",
+      "why": "The official DISA STIG content references CCI-000134.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285650",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000135",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285650",
+      "why": "The official DISA STIG content references CCI-000135.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285650",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000169",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285650",
+      "why": "The official DISA STIG content references CCI-000169.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285650",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000172",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285650",
+      "why": "The official DISA STIG content references CCI-000172.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285650",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285650",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285650",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001403",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285650",
+      "why": "The official DISA STIG content references CCI-001403.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285650",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001404",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285650",
+      "why": "The official DISA STIG content references CCI-001404.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285650",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001405",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285650",
+      "why": "The official DISA STIG content references CCI-001405.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285650",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001487",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285650",
+      "why": "The official DISA STIG content references CCI-001487.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285650",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002130",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285650",
+      "why": "The official DISA STIG content references CCI-002130.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285650",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002234",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285650",
+      "why": "The official DISA STIG content references CCI-002234.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285650",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003938",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285650",
+      "why": "The official DISA STIG content references CCI-003938.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285651",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000370",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285651",
+      "why": "The official DISA STIG content references CCI-000370.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285651",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001941",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285651",
+      "why": "The official DISA STIG content references CCI-001941.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285651",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002007",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285651",
+      "why": "The official DISA STIG content references CCI-002007.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285651",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004046",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285651",
+      "why": "The official DISA STIG content references CCI-004046.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285652",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285652",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285652",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001159",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285652",
+      "why": "The official DISA STIG content references CCI-001159.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285653",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001849",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285653",
+      "why": "The official DISA STIG content references CCI-001849.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285653",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001851",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285653",
+      "why": "The official DISA STIG content references CCI-001851.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285654",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004061",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285654",
+      "why": "The official DISA STIG content references CCI-004061.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285655",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004064",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285655",
+      "why": "The official DISA STIG content references CCI-004064.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285656",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004068",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285656",
+      "why": "The official DISA STIG content references CCI-004068.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285657",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004192",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285657",
+      "why": "The official DISA STIG content references CCI-004192.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285658",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004909",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285658",
+      "why": "The official DISA STIG content references CCI-004909.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285659",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004922",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285659",
+      "why": "The official DISA STIG content references CCI-004922.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-285659",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004923",
+      "relationship_type": "references",
+      "source_locator": "U_Broadcom_CAS_V1R1_Manual_STIG/U_Broadcom_CAS_STIG_V1R1_Manual-xccdf.xml#V-285659",
+      "why": "The official DISA STIG content references CCI-004923.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
       "source_id": "V-285660",
       "target_catalog": "disa-cci",
       "target_id": "CCI-000018",
@@ -407014,6 +407914,636 @@
       "target_id": "CCI-000366",
       "relationship_type": "references",
       "source_locator": "U_SS_Android_OS_17_KPE_3-x_COPE_V1R1_Manual_STIG/U_SS_Android_OS_17_KPE_3-x_COPE_V1R1_Manual-xccdf.xml#V-286470",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286471",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000345",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286471",
+      "why": "The official DISA STIG content references CCI-000345.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286471",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001368",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286471",
+      "why": "The official DISA STIG content references CCI-001368.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286471",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002385",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286471",
+      "why": "The official DISA STIG content references CCI-002385.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286473",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001967",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286473",
+      "why": "The official DISA STIG content references CCI-001967.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286474",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004066",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286474",
+      "why": "The official DISA STIG content references CCI-004066.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286475",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004066",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286475",
+      "why": "The official DISA STIG content references CCI-004066.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286476",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004066",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286476",
+      "why": "The official DISA STIG content references CCI-004066.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286477",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004066",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286477",
+      "why": "The official DISA STIG content references CCI-004066.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286478",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002607",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286478",
+      "why": "The official DISA STIG content references CCI-002607.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286478",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003376",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286478",
+      "why": "The official DISA STIG content references CCI-003376.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286479",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000197",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286479",
+      "why": "The official DISA STIG content references CCI-000197.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286479",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000382",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286479",
+      "why": "The official DISA STIG content references CCI-000382.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286479",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000803",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286479",
+      "why": "The official DISA STIG content references CCI-000803.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286479",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001188",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286479",
+      "why": "The official DISA STIG content references CCI-001188.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286479",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002890",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286479",
+      "why": "The official DISA STIG content references CCI-002890.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286479",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-003123",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286479",
+      "why": "The official DISA STIG content references CCI-003123.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286480",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000163",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286480",
+      "why": "The official DISA STIG content references CCI-000163.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286480",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000166",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286480",
+      "why": "The official DISA STIG content references CCI-000166.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286480",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000213",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286480",
+      "why": "The official DISA STIG content references CCI-000213.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286480",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000370",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286480",
+      "why": "The official DISA STIG content references CCI-000370.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286480",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000765",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286480",
+      "why": "The official DISA STIG content references CCI-000765.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286480",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001199",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286480",
+      "why": "The official DISA STIG content references CCI-001199.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286480",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001493",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286480",
+      "why": "The official DISA STIG content references CCI-001493.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286480",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001494",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286480",
+      "why": "The official DISA STIG content references CCI-001494.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286480",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001941",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286480",
+      "why": "The official DISA STIG content references CCI-001941.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286480",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004045",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286480",
+      "why": "The official DISA STIG content references CCI-004045.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286480",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004046",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286480",
+      "why": "The official DISA STIG content references CCI-004046.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286480",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004047",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286480",
+      "why": "The official DISA STIG content references CCI-004047.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286481",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000050",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286481",
+      "why": "The official DISA STIG content references CCI-000050.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286482",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001851",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286482",
+      "why": "The official DISA STIG content references CCI-001851.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286483",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001133",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286483",
+      "why": "The official DISA STIG content references CCI-001133.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286485",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004062",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286485",
+      "why": "The official DISA STIG content references CCI-004062.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286486",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004066",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286486",
+      "why": "The official DISA STIG content references CCI-004066.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286487",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004192",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286487",
+      "why": "The official DISA STIG content references CCI-004192.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286488",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001159",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286488",
+      "why": "The official DISA STIG content references CCI-001159.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286488",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004909",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286488",
+      "why": "The official DISA STIG content references CCI-004909.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286489",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001890",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286489",
+      "why": "The official DISA STIG content references CCI-001890.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286490",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004066",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286490",
+      "why": "The official DISA STIG content references CCI-004066.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286491",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001967",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286491",
+      "why": "The official DISA STIG content references CCI-001967.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286491",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004923",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286491",
+      "why": "The official DISA STIG content references CCI-004923.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286492",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000048",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286492",
+      "why": "The official DISA STIG content references CCI-000048.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286493",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000054",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286493",
+      "why": "The official DISA STIG content references CCI-000054.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286495",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000044",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286495",
+      "why": "The official DISA STIG content references CCI-000044.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286496",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001358",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286496",
+      "why": "The official DISA STIG content references CCI-001358.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286496",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002111",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_NDM_V1R1_Manual_STIG/U_Aviat_Networks_WTM_NDM_STIG_V1R1_Manual-xccdf.xml#V-286496",
+      "why": "The official DISA STIG content references CCI-002111.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286549",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001095",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_L2S_V1R1_Manual_STIG/U_Aviat_Networks_WTM_L2S_STIG_V1R1_Manual-xccdf.xml#V-286549",
+      "why": "The official DISA STIG content references CCI-001095.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286549",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-001424",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_L2S_V1R1_Manual_STIG/U_Aviat_Networks_WTM_L2S_STIG_V1R1_Manual-xccdf.xml#V-286549",
+      "why": "The official DISA STIG content references CCI-001424.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286549",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002272",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_L2S_V1R1_Manual_STIG/U_Aviat_Networks_WTM_L2S_STIG_V1R1_Manual-xccdf.xml#V-286549",
+      "why": "The official DISA STIG content references CCI-002272.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286550",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002385",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_L2S_V1R1_Manual_STIG/U_Aviat_Networks_WTM_L2S_STIG_V1R1_Manual-xccdf.xml#V-286550",
+      "why": "The official DISA STIG content references CCI-002385.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286551",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002385",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_L2S_V1R1_Manual_STIG/U_Aviat_Networks_WTM_L2S_STIG_V1R1_Manual-xccdf.xml#V-286551",
+      "why": "The official DISA STIG content references CCI-002385.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286552",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002385",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_L2S_V1R1_Manual_STIG/U_Aviat_Networks_WTM_L2S_STIG_V1R1_Manual-xccdf.xml#V-286552",
+      "why": "The official DISA STIG content references CCI-002385.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286553",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_L2S_V1R1_Manual_STIG/U_Aviat_Networks_WTM_L2S_STIG_V1R1_Manual-xccdf.xml#V-286553",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286554",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_L2S_V1R1_Manual_STIG/U_Aviat_Networks_WTM_L2S_STIG_V1R1_Manual-xccdf.xml#V-286554",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286555",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_L2S_V1R1_Manual_STIG/U_Aviat_Networks_WTM_L2S_STIG_V1R1_Manual-xccdf.xml#V-286555",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286556",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_L2S_V1R1_Manual_STIG/U_Aviat_Networks_WTM_L2S_STIG_V1R1_Manual-xccdf.xml#V-286556",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286557",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_L2S_V1R1_Manual_STIG/U_Aviat_Networks_WTM_L2S_STIG_V1R1_Manual-xccdf.xml#V-286557",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286558",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_L2S_V1R1_Manual_STIG/U_Aviat_Networks_WTM_L2S_STIG_V1R1_Manual-xccdf.xml#V-286558",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286559",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_L2S_V1R1_Manual_STIG/U_Aviat_Networks_WTM_L2S_STIG_V1R1_Manual-xccdf.xml#V-286559",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286561",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-004891",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_L2S_V1R1_Manual_STIG/U_Aviat_Networks_WTM_L2S_STIG_V1R1_Manual-xccdf.xml#V-286561",
+      "why": "The official DISA STIG content references CCI-004891.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286562",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_L2S_V1R1_Manual_STIG/U_Aviat_Networks_WTM_L2S_STIG_V1R1_Manual-xccdf.xml#V-286562",
+      "why": "The official DISA STIG content references CCI-000366.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286562",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002190",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_L2S_V1R1_Manual_STIG/U_Aviat_Networks_WTM_L2S_STIG_V1R1_Manual-xccdf.xml#V-286562",
+      "why": "The official DISA STIG content references CCI-002190.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286565",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-002385",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_L2S_V1R1_Manual_STIG/U_Aviat_Networks_WTM_L2S_STIG_V1R1_Manual-xccdf.xml#V-286565",
+      "why": "The official DISA STIG content references CCI-002385.",
+      "evidence_source": "disa-stig-srg-cci-references"
+    },
+    {
+      "source_catalog": "disa-stig",
+      "source_id": "V-286570",
+      "target_catalog": "disa-cci",
+      "target_id": "CCI-000366",
+      "relationship_type": "references",
+      "source_locator": "U_Aviat_Networks_WTM_L2S_V1R1_Manual_STIG/U_Aviat_Networks_WTM_L2S_STIG_V1R1_Manual-xccdf.xml#V-286570",
       "why": "The official DISA STIG content references CCI-000366.",
       "evidence_source": "disa-stig-srg-cci-references"
     },

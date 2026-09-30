@@ -1,13 +1,13 @@
 {
   "schema_version": "1.0",
   "source_inventory": "data/nist-pages-discovery.json",
-  "source_inventory_sha256": "sha256:266513baf459a3098695b7d454eca4fb11b4aa9d6eae16c8537f7f24608ca9f6",
+  "source_inventory_sha256": "sha256:df004d290454f4b6615689650f68e9737a79f5fc85de65a2fd779194e58d147c",
   "reconciliation": {
-    "projects_discovered": 264,
-    "project_landing_pages_attempted": 264,
-    "pages_attempted": 346,
-    "pages_fetched": 340,
-    "pages_failed": 5,
+    "projects_discovered": 256,
+    "project_landing_pages_attempted": 256,
+    "pages_attempted": 341,
+    "pages_fetched": 336,
+    "pages_failed": 4,
     "structured_assets_discovered": 28,
     "spreadsheets_discovered": 8,
     "csv_files_discovered": 4,
@@ -330,22 +330,6 @@
       "requested_url": "https://pages.nist.gov/2024-07-12-SURF/",
       "url": "https://pages.nist.gov/2024-07-12-SURF/",
       "project": "2024-07-12-SURF",
-      "depth": 0,
-      "status": "fetched",
-      "structured_assets": 0
-    },
-    {
-      "requested_url": "https://pages.nist.gov/2025-01-15-blackbird/",
-      "url": "https://pages.nist.gov/2025-01-15-blackbird/",
-      "project": "2025-01-15-blackbird",
-      "depth": 0,
-      "status": "fetched",
-      "structured_assets": 0
-    },
-    {
-      "requested_url": "https://pages.nist.gov/2025-04-16-blackbird/",
-      "url": "https://pages.nist.gov/2025-04-16-blackbird/",
-      "project": "2025-04-16-blackbird",
       "depth": 0,
       "status": "fetched",
       "structured_assets": 0
@@ -761,14 +745,6 @@
       "structured_assets": 0
     },
     {
-      "requested_url": "https://pages.nist.gov/digital-traceability-home/",
-      "url": "https://pages.nist.gov/digital-traceability-home/",
-      "project": "digital-traceability-home",
-      "depth": 0,
-      "status": "fetched",
-      "structured_assets": 0
-    },
-    {
       "requested_url": "https://pages.nist.gov/dimspec/",
       "url": "https://pages.nist.gov/dimspec/",
       "project": "dimspec",
@@ -970,14 +946,6 @@
       "structured_assets": 0
     },
     {
-      "requested_url": "https://pages.nist.gov/frif/",
-      "url": "https://pages.nist.gov/frif/",
-      "project": "frif",
-      "depth": 0,
-      "status": "fetched",
-      "structured_assets": 0
-    },
-    {
       "requested_url": "https://pages.nist.gov/frifte/",
       "url": "https://pages.nist.gov/frifte/",
       "project": "frifte",
@@ -1021,14 +989,6 @@
       "requested_url": "https://pages.nist.gov/git-novice-MSE/",
       "url": "https://pages.nist.gov/git-novice-MSE/",
       "project": "git-novice-MSE",
-      "depth": 0,
-      "status": "fetched",
-      "structured_assets": 0
-    },
-    {
-      "requested_url": "https://pages.nist.gov/Golden-Datasets-for-AI-in-AM/",
-      "url": "https://pages.nist.gov/Golden-Datasets-for-AI-in-AM/",
-      "project": "Golden-Datasets-for-AI-in-AM",
       "depth": 0,
       "status": "fetched",
       "structured_assets": 0
@@ -1747,6 +1707,22 @@
       "structured_assets": 0
     },
     {
+      "requested_url": "https://pages.nist.gov/nccoe-ai-identity/",
+      "url": "https://pages.nist.gov/nccoe-ai-identity/",
+      "project": "nccoe-ai-identity",
+      "depth": 0,
+      "status": "fetched",
+      "structured_assets": 0
+    },
+    {
+      "requested_url": "https://pages.nist.gov/nccoe-ai-identity/",
+      "url": "https://pages.nist.gov/nccoe-ai-identity/",
+      "project": "nccoe-ai-identity",
+      "depth": 1,
+      "status": "fetched",
+      "structured_assets": 0
+    },
+    {
       "requested_url": "https://pages.nist.gov/nccoe-devsecops/",
       "url": "https://pages.nist.gov/nccoe-devsecops/",
       "project": "nccoe-devsecops",
@@ -1755,8 +1731,24 @@
       "structured_assets": 0
     },
     {
-      "requested_url": "https://pages.nist.gov/nccoe-devsecops/appendix-c.html",
-      "url": "https://pages.nist.gov/nccoe-devsecops/appendix-c.html",
+      "requested_url": "https://pages.nist.gov/nccoe-devsecops/appendix-d.html",
+      "url": "https://pages.nist.gov/nccoe-devsecops/appendix-d.html",
+      "project": "nccoe-devsecops",
+      "depth": 1,
+      "status": "fetched",
+      "structured_assets": 0
+    },
+    {
+      "requested_url": "https://pages.nist.gov/nccoe-devsecops/functional-demonstration-scenarios.html",
+      "url": "https://pages.nist.gov/nccoe-devsecops/functional-demonstration-scenarios.html",
+      "project": "nccoe-devsecops",
+      "depth": 1,
+      "status": "fetched",
+      "structured_assets": 0
+    },
+    {
+      "requested_url": "https://pages.nist.gov/nccoe-devsecops/mapping-ssdf.html",
+      "url": "https://pages.nist.gov/nccoe-devsecops/mapping-ssdf.html",
       "project": "nccoe-devsecops",
       "depth": 1,
       "status": "fetched",
@@ -2124,14 +2116,6 @@
       "structured_assets": 0
     },
     {
-      "requested_url": "https://pages.nist.gov/pf-recommended-practices/",
-      "url": "https://pages.nist.gov/pf-recommended-practices/",
-      "project": "pf-recommended-practices",
-      "depth": 0,
-      "status": "fetched",
-      "structured_assets": 0
-    },
-    {
       "requested_url": "https://pages.nist.gov/pfhub/",
       "url": "https://pages.nist.gov/pfhub/",
       "project": "pfhub",
@@ -2268,14 +2252,6 @@
       "structured_assets": 0
     },
     {
-      "requested_url": "https://pages.nist.gov/refprop/",
-      "url": "https://pages.nist.gov/refprop/",
-      "project": "refprop",
-      "depth": 0,
-      "status": "fetched",
-      "structured_assets": 0
-    },
-    {
       "requested_url": "https://pages.nist.gov/REFPROP-docs/",
       "url": "https://pages.nist.gov/REFPROP-docs/",
       "project": "REFPROP-docs",
@@ -2287,14 +2263,6 @@
       "requested_url": "https://pages.nist.gov/remi/",
       "url": "https://pages.nist.gov/remi/",
       "project": "remi",
-      "depth": 0,
-      "status": "fetched",
-      "structured_assets": 0
-    },
-    {
-      "requested_url": "https://pages.nist.gov/REPO/",
-      "url": "https://pages.nist.gov/REPO/",
-      "project": "REPO",
       "depth": 0,
       "status": "fetched",
       "structured_assets": 0
@@ -2617,15 +2585,6 @@
       "project": "v2plusDemo",
       "depth": 0,
       "status": "fetched",
-      "structured_assets": 0
-    },
-    {
-      "requested_url": "https://pages.nist.gov/vlincs/",
-      "url": "https://pages.nist.gov/vlincs/",
-      "project": "vlincs",
-      "depth": 0,
-      "status": "failed",
-      "reason": "HTTP 403",
       "structured_assets": 0
     },
     {

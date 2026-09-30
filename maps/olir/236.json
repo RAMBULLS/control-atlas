@@ -1,0 +1,301 @@
+{
+  "schema_version": "1.0",
+  "olir_id": 236,
+  "source_artifact": "https://drive.usercontent.google.com/download?id=18UTb7Qzgt_hnNag9ijLX5-hQ9gfAUVkw&export=download",
+  "sha256": "sha256:cff884ec2744d5f37d09877ac5fb528a224135c94e0b29bf4c5ed4922e22d699",
+  "byte_length": 22584,
+  "parser": "olir-xlsx",
+  "extraction_scope": "structured_artifact",
+  "relationships": [
+    {
+      "focal_id": "GOVERN 1.5",
+      "reference_id": "EP-RET - RETENTION",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "7",
+      "relationship_explanation": "EP-RET supports ongoing monitoring and periodic review by maintaining the availability of relevant Governance Evidence across review periods, enabling prior risk-management activities and outcomes to remain available for subsequent evaluation.",
+      "rationale": null,
+      "source_locator": "Relationships#row-8"
+    },
+    {
+      "focal_id": "MANAGE 1.1",
+      "reference_id": "EP-RECON - RECONSTRUCTION",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "9",
+      "relationship_explanation": "EP-RECON supports MANAGE 1.1 by preserving sufficient contextual Governance Evidence to reconstruct the proceed/not-proceed determination, including the decision made, its basis, the actors involved, and the relevant conditions at the time.",
+      "rationale": null,
+      "source_locator": "Relationships#row-30"
+    },
+    {
+      "focal_id": "MANAGE 1.1",
+      "reference_id": "EP-COMP - COMPLETENESS",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "9",
+      "relationship_explanation": "EP-COMP supports MANAGE 1.1 by ensuring the Evidence Package for a proceed/not-proceed determination contains the material Governance Evidence necessary to evaluate that determination, including evidence that supports, qualifies, or contradicts the associated Governance Assertion.",
+      "rationale": null,
+      "source_locator": "Relationships#row-31"
+    },
+    {
+      "focal_id": "MANAGE 1.1",
+      "reference_id": "GO-VER - VERIFIABILITY",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "8",
+      "relationship_explanation": "GO-VER supports MANAGE 1.1 by enabling an independent party to evaluate whether a Governance Assertion concerning a proceed/not-proceed determination is supported by an Evidence Package exhibiting the applicable Evidence Properties, without relying on the original decision-maker's interpretation.",
+      "rationale": null,
+      "source_locator": "Relationships#row-32"
+    },
+    {
+      "focal_id": "MANAGE 1.3",
+      "reference_id": "EP-LINK - LINKAGE",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "9",
+      "relationship_explanation": "EP-LINK supports documented risk responses by maintaining traceable relationships between high-priority risks identified during MAP, resulting response decisions and actions, responsible actors, and associated Governance Evidence.",
+      "rationale": null,
+      "source_locator": "Relationships#row-34"
+    },
+    {
+      "focal_id": "MANAGE 1.3",
+      "reference_id": "EP-RECON - RECONSTRUCTION",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "8",
+      "relationship_explanation": "EP-RECON supports MANAGE 1.3 by preserving sufficient contextual Governance Evidence to reconstruct how responses to high-priority risks were developed, planned, and documented, including the response selected, its basis, the actors involved, and relevant conditions at the time.",
+      "rationale": null,
+      "source_locator": "Relationships#row-35"
+    },
+    {
+      "focal_id": "MANAGE 3.1",
+      "reference_id": "EP-LINK - LINKAGE",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "7",
+      "relationship_explanation": "EP-LINK supports monitoring and control of third-party risks by maintaining traceable relationships among third-party resources, identified risks and benefits, applicable risk controls, resulting actions, and associated Governance Evidence.",
+      "rationale": null,
+      "source_locator": "Relationships#row-43"
+    },
+    {
+      "focal_id": "MANAGE 4.3",
+      "reference_id": "EP-RET - RETENTION",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "8",
+      "relationship_explanation": "EP-RET supports MANAGE 4.3 by maintaining the availability of Governance Evidence associated with AI system incidents and errors for applicable periods, enabling that evidence to remain available for incident tracking, response, recovery, and subsequent review.",
+      "rationale": null,
+      "source_locator": "Relationships#row-48"
+    },
+    {
+      "focal_id": "MANAGE 4.3",
+      "reference_id": "EP-INT - INTEGRITY",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "7",
+      "relationship_explanation": "EP-INT supports documented incident and error management by maintaining assurance that Governance Evidence used to track incidents, responses, and recovery activities remains trustworthy and protected against unauthorized or undetectable alteration.",
+      "rationale": null,
+      "source_locator": "Relationships#row-49"
+    },
+    {
+      "focal_id": "MANAGE 4.3",
+      "reference_id": "EP-RECON - RECONSTRUCTION",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "9",
+      "relationship_explanation": "EP-RECON supports MANAGE 4.3 by preserving sufficient contextual Governance Evidence to reconstruct an AI system incident or error, including what occurred, the response and recovery actions taken, the actors involved, and relevant conditions at the time.",
+      "rationale": null,
+      "source_locator": "Relationships#row-50"
+    },
+    {
+      "focal_id": "MANAGE 4.3",
+      "reference_id": "GO-VER - VERIFIABILITY",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "7",
+      "relationship_explanation": "GO-VER supports MANAGE 4.3 by enabling an independent party to evaluate whether a Governance Assertion concerning the tracking, response to, and recovery from an AI system incident or error is supported by an Evidence Package exhibiting the applicable Evidence Properties.",
+      "rationale": null,
+      "source_locator": "Relationships#row-51"
+    },
+    {
+      "focal_id": "MAP 1.1",
+      "reference_id": "EP-PROV - PROVENANCE",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "6",
+      "relationship_explanation": "EP-PROV supports the documented context required by MAP 1.1 by maintaining provenance information for Governance Evidence used to substantiate intended purposes, uses, assumptions, impacts, limitations, TEVV considerations, and related system metrics.",
+      "rationale": null,
+      "source_locator": "Relationships#row-54"
+    },
+    {
+      "focal_id": "MAP 1.1",
+      "reference_id": "EP-RECON - RECONSTRUCTION",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "7",
+      "relationship_explanation": "EP-RECON supports MAP 1.1 by preserving sufficient contextual Governance Evidence to reconstruct the documented context in which intended purposes, potentially beneficial uses, applicable laws and norms, and prospective settings of deployment were identified and analyzed, including the relevant conditions and basis for that analysis.",
+      "rationale": null,
+      "source_locator": "Relationships#row-55"
+    },
+    {
+      "focal_id": "MAP 1.1",
+      "reference_id": "EP-COMP - COMPLETENESS",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "8",
+      "relationship_explanation": "EP-COMP supports documented AI system context by helping ensure that material Governance Evidence concerning intended purposes, uses, expectations, impacts, assumptions, limitations, TEVV considerations, and related system metrics is available for evaluation.",
+      "rationale": null,
+      "source_locator": "Relationships#row-56"
+    },
+    {
+      "focal_id": "MAP 2.3",
+      "reference_id": "EP-PROV - PROVENANCE",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "7",
+      "relationship_explanation": "EP-PROV supports documented scientific-integrity and TEVV considerations by maintaining provenance information for Governance Evidence concerning experimental design, data collection and selection, system trustworthiness, and construct validation.",
+      "rationale": null,
+      "source_locator": "Relationships#row-65"
+    },
+    {
+      "focal_id": "MAP 2.3",
+      "reference_id": "EP-INT - INTEGRITY",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "7",
+      "relationship_explanation": "EP-INT supports documented scientific-integrity and TEVV considerations by maintaining assurance that relevant Governance Evidence concerning experimental design, data collection and selection, system trustworthiness, and construct validation remains trustworthy and protected against unauthorized or undetectable alteration.",
+      "rationale": null,
+      "source_locator": "Relationships#row-66"
+    },
+    {
+      "focal_id": "MAP 3.5",
+      "reference_id": "EP-LINK - LINKAGE",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "9",
+      "relationship_explanation": "EP-LINK supports documented human-oversight processes by maintaining traceable relationships between those processes and the applicable organizational policies, actors, systems, decisions, actions, and resulting Governance Evidence.",
+      "rationale": null,
+      "source_locator": "Relationships#row-72"
+    },
+    {
+      "focal_id": "MAP 4.2",
+      "reference_id": "EP-LINK - LINKAGE",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "8",
+      "relationship_explanation": "EP-LINK supports documented internal risk controls by maintaining traceable relationships among identified risks, applicable controls, AI system components, including relevant third-party technologies, and the Governance Evidence associated with those relationships.",
+      "rationale": null,
+      "source_locator": "Relationships#row-75"
+    },
+    {
+      "focal_id": "MAP 5.1",
+      "reference_id": "EP-COMP - COMPLETENESS",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "8",
+      "relationship_explanation": "EP-COMP supports documented impact characterization by helping ensure that material Governance Evidence from expected use, prior uses, incident information, external feedback, and other relevant sources—including evidence that supports, qualifies, or contradicts an assessment—is available for evaluation.",
+      "rationale": null,
+      "source_locator": "Relationships#row-77"
+    },
+    {
+      "focal_id": "MEASURE 1.1",
+      "reference_id": "EP-LINK - LINKAGE",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "8",
+      "relationship_explanation": "EP-LINK supports selection and documentation of measurement approaches by maintaining traceable relationships between risks identified during MAP and the approaches, metrics, decisions, and Governance Evidence used to measure or document those risks.",
+      "rationale": null,
+      "source_locator": "Relationships#row-81"
+    },
+    {
+      "focal_id": "MEASURE 1.2",
+      "reference_id": "EP-RET - RETENTION",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "7",
+      "relationship_explanation": "EP-RET supports recurring assessment of AI metrics and controls by maintaining relevant Governance Evidence across assessment periods, enabling prior metrics, controls, errors, and impacts to remain available for longitudinal evaluation.",
+      "rationale": null,
+      "source_locator": "Relationships#row-82"
+    },
+    {
+      "focal_id": "MEASURE 1.3",
+      "reference_id": "GO-VER - VERIFIABILITY",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "9",
+      "relationship_explanation": "GO-VER supports assessments by internal experts outside the development team and independent assessors by enabling an independent party to evaluate whether Governance Assertions are supported by Governance Evidence without relying on the original decision-maker's interpretation.",
+      "rationale": null,
+      "source_locator": "Relationships#row-83"
+    },
+    {
+      "focal_id": "MEASURE 2.1",
+      "reference_id": "EP-PROV - PROVENANCE",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "7",
+      "relationship_explanation": "EP-PROV supports documentation of TEVV test sets, metrics, and tools by maintaining information regarding the origin, source, authorship, creation context, and subsequent evolution of the Governance Evidence associated with those artifacts and activities.",
+      "rationale": null,
+      "source_locator": "Relationships#row-85"
+    },
+    {
+      "focal_id": "MEASURE 2.1",
+      "reference_id": "EP-INT - INTEGRITY",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "8",
+      "relationship_explanation": "EP-INT supports documentation of TEVV test sets, metrics, and tools by maintaining assurance that the Governance Evidence associated with those artifacts and activities remains trustworthy and protected against unauthorized or undetectable alteration.",
+      "rationale": null,
+      "source_locator": "Relationships#row-86"
+    },
+    {
+      "focal_id": "MEASURE 2.1",
+      "reference_id": "EP-RECON - RECONSTRUCTION",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "8",
+      "relationship_explanation": "EP-RECON supports MEASURE 2.1 by preserving sufficient contextual Governance Evidence to reconstruct relevant TEVV activities, including the test sets, metrics, tools, evaluation conditions, and other contextual information applicable when the evaluation was performed.",
+      "rationale": null,
+      "source_locator": "Relationships#row-87"
+    },
+    {
+      "focal_id": "MEASURE 2.5",
+      "reference_id": "EP-COMP - COMPLETENESS",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "9",
+      "relationship_explanation": "EP-COMP supports evaluation of validity and reliability by helping ensure that material Governance Evidence, including documented limitations, qualifying information, and evidence that may contradict the asserted performance of the AI system, is available for evaluation.",
+      "rationale": null,
+      "source_locator": "Relationships#row-91"
+    },
+    {
+      "focal_id": "MEASURE 2.6",
+      "reference_id": "EP-LINK - LINKAGE",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "8",
+      "relationship_explanation": "EP-LINK supports safety evaluation by maintaining traceable relationships between safety risks identified during MAP, subsequent evaluation activities and metrics, residual-risk determinations, and the Governance Evidence supporting those determinations.",
+      "rationale": null,
+      "source_locator": "Relationships#row-92"
+    },
+    {
+      "focal_id": "MEASURE 3.1",
+      "reference_id": "EP-RET - RETENTION",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "7",
+      "relationship_explanation": "EP-RET supports regular identification and tracking of AI risks by maintaining relevant Governance Evidence across monitoring periods, enabling changes in existing, unanticipated, and emergent risks to be evaluated over time.",
+      "rationale": null,
+      "source_locator": "Relationships#row-101"
+    },
+    {
+      "focal_id": "MEASURE 4.3",
+      "reference_id": "EP-COMP - COMPLETENESS",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "is supported by",
+      "relationship_strength": "8",
+      "relationship_explanation": "EP-COMP supports documented evaluation of performance changes by helping ensure that material Governance Evidence concerning improvements, declines, relevant AI-actor input, affected-community perspectives, and context-specific risks and trustworthiness characteristics is available for evaluation.",
+      "rationale": null,
+      "source_locator": "Relationships#row-107"
+    }
+  ]
+}

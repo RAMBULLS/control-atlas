@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 import { UI_REVIEW_ROUTES } from "../../tools/ui-review-routes.mjs";
-import { dismissOnboarding, gotoApp, waitForAppReady } from "./support.mjs";
+import { dismissOnboarding, gotoApp, roundCssPixels, waitForAppReady } from "./support.mjs";
 
 /* global document, window, getComputedStyle */
 
@@ -152,7 +152,7 @@ for (const route of UI_REVIEW_ROUTES) {
       const box = await action.boundingBox();
       if (!box || box.height === 0) continue;
       const name = (await action.textContent() || "").trim().slice(0, 40);
-      expect(box.height, `${route.id}: "${name}" is ${Math.round(box.height)}px tall`).toBeGreaterThanOrEqual(44);
+      expect(roundCssPixels(box.height), `${route.id}: "${name}" is ${box.height}px tall`).toBeGreaterThanOrEqual(44);
     }
   });
 }

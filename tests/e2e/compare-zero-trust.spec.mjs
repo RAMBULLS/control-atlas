@@ -53,6 +53,12 @@ for (const width of [320, 390, 1440]) {
     expect(paths.every((path) => path.includes("/csf-2--nist-zt-"))).toBe(true);
     expect(await results(page).count()).toBeLessThanOrEqual(25);
     await expect(page.locator(".compare-results-table").getByText("Supported by", { exact: true }).first()).toBeVisible();
+    // Measure the link's content box; inline strong elements have clientWidth 0.
+    const overflowingLabels = await page.locator(".target-mapping-line a, .compare-answer button").evaluateAll(
+      (elements) => elements.filter((element) => element.scrollWidth > element.clientWidth + 1)
+        .map((element) => element.textContent),
+    );
+    expect(overflowingLabels, "component IDs and export labels fit their controls").toEqual([]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
     await page.reload();
     await expect(results(page).first()).toBeVisible({ timeout: 30_000 });

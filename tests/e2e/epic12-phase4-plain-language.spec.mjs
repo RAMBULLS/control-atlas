@@ -96,6 +96,7 @@ test("Phase 4 keeps rendered filters useful, sorted, and consistently cased", as
       elements.map((element) => {
         const select = /** @type {HTMLSelectElement} */ (element);
         return {
+          id: select.id,
           label: select.closest("label")?.querySelector("span")?.textContent
             || select.getAttribute("aria-label")
             || select.id,
@@ -105,14 +106,24 @@ test("Phase 4 keeps rendered filters useful, sorted, and consistently cased", as
         };
       }),
     );
-    for (const { label, meaningful } of selects) {
+    for (const { id, label, meaningful } of selects) {
       expect(meaningful.length, `${route}: ${label}`).toBeGreaterThanOrEqual(2);
       const values = meaningful.map((value) => value.replace(/ \([\d,]+\)$/, "").trim());
       for (const value of values) {
         const firstLetter = value.match(/[A-Za-z]/)?.[0] || "";
         expect(firstLetter, `${route}: ${label}: ${value}`).toBe(firstLetter.toUpperCase());
       }
-      if (label !== "Sort") {
+      if (id === "source-publisher-filter") {
+        // The register presents publishers with the most sources first.
+        const publishers = meaningful.map((value, index) => ({
+          name: values[index],
+          count: Number(value.match(/\(([\d,]+)\)$/)?.[1].replaceAll(",", "")),
+        }));
+        expect(publishers.every(({ count }) => Number.isInteger(count) && count > 0)).toBe(true);
+        expect(publishers, `${route}: ${label}`).toEqual(
+          [...publishers].sort((left, right) => right.count - left.count || left.name.localeCompare(right.name)),
+        );
+      } else if (label !== "Sort") {
         expect(values, `${route}: ${label}`).toEqual(
           [...values].sort((left, right) => left.localeCompare(right, undefined, { sensitivity: "base" })),
         );
@@ -127,8 +138,8 @@ test("Phase 4 places comparison limits with results and removes menu methodology
   await waitForRenderedRoute(page, "/#/compare");
 
   const modes = page.getByRole("tablist", { name: "Comparison mode" }).getByRole("tab");
-  await expect(modes).toHaveCount(2);
-  await expect(modes).toHaveText(["Frameworks", "Specific item"]);
+  await expect(modes).toHaveCount(3);
+  await expect(modes).toHaveText(["Frameworks", "Implementation", "Specific item"]);
   await expect(page.locator(".compare-decision-boundary")).toHaveCount(0);
 
   await gotoApp(

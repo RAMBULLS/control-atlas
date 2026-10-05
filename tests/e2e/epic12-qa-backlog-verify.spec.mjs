@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { waitForAppReady } from './support.mjs';
+import { roundCssPixels, waitForAppReady } from './support.mjs';
 
 // Regression guard for the epic-12 QA backlog fixes (2026-08-10):
 // B1/B2 Template-C browse + map, B3 tools reachability, B5/B6 landing,
@@ -141,13 +141,13 @@ test('B14: every Library select exposes a non-empty accessible name', async ({ p
   expect(unnamed).toBe(0);
 });
 
-test('B16: Compare exposes only the two supported modes', async ({ page }) => {
+test('B16: Compare exposes all three supported modes', async ({ page }) => {
   await page.goto('/#/compare');
   const modes = page.getByRole('tablist', { name: 'Comparison mode' });
   await expect(modes).toBeVisible({ timeout: 15000 });
   const choices = modes.getByRole('tab');
-  await expect(choices).toHaveCount(2);
-  await expect(choices).toHaveText(['Frameworks', 'Specific item']);
+  await expect(choices).toHaveCount(3);
+  await expect(choices).toHaveText(['Frameworks', 'Implementation', 'Specific item']);
   await expect(choices.first()).toHaveAttribute('aria-selected', 'true');
 });
 
@@ -165,8 +165,11 @@ test('route semantic polish holds at all required viewport widths', async ({ pag
 
     await page.goto('/#/compare');
     const choices = page.getByRole('tablist', { name: 'Comparison mode' }).getByRole('tab');
-    await expect(choices).toHaveCount(2);
-    expect(await choices.first().evaluate((element) => element.getBoundingClientRect().height)).toBeGreaterThanOrEqual(44);
+    await expect(choices).toHaveCount(3);
+    await expect(choices).toHaveText(['Frameworks', 'Implementation', 'Specific item']);
+    for (const choice of await choices.all()) {
+      expect(roundCssPixels(await choice.evaluate((element) => element.getBoundingClientRect().height))).toBeGreaterThanOrEqual(44);
+    }
     expect(await page.evaluate(() => globalThis.document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
 
     await page.goto('/#/about');
@@ -189,7 +192,7 @@ test('route semantic polish holds at all required viewport widths', async ({ pag
       expect(footerOverflow).toBe(false);
       const links = page.locator('footer a');
       for (const link of await links.all()) {
-        expect(await link.evaluate((element) => element.getBoundingClientRect().height)).toBeGreaterThanOrEqual(44);
+        expect(roundCssPixels(await link.evaluate((element) => element.getBoundingClientRect().height))).toBeGreaterThanOrEqual(44);
       }
     }
     if (width >= 1024) {

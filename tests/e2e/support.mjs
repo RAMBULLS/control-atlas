@@ -1,5 +1,11 @@
 import { expect } from '@playwright/test';
 
+// Firefox DOMRects can report 44px as 43.999969482421875. Keep millipixel
+// precision so floating-point noise passes while genuinely undersized targets fail.
+export function roundCssPixels(value) {
+  return Math.round(value * 1000) / 1000;
+}
+
 function emitDiagnostic(event, detail) {
   console.log(`[pw-diag] ${event}: ${detail}`);
 }

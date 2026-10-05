@@ -93,7 +93,7 @@ import {
 } from "../src/shared/data-trust-contracts.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const GENERATED = join(ROOT, "data", "generated");
+const DEFAULT_GENERATED = join(ROOT, "data", "generated");
 const RUNTIME_COLLECTIONS = [
   "sources",
   "nodes",
@@ -139,7 +139,6 @@ const GOVERNANCE_FILES = [
   "publication-identity-index.json",
   "publication-audit-report.json",
 ];
-const ATLAS_NEIGHBORHOOD_DIR = join(GENERATED, "atlas-neighborhood");
 
 const NON_RECORD_NODE_TYPES = new Set([
   "benchmark",
@@ -3758,7 +3757,9 @@ function applyOrganizingSpine(nodeState, edgeState, registry) {
   );
 }
 
-export function buildFrameworkData() {
+export function buildFrameworkData({ generatedDirectory = DEFAULT_GENERATED } = {}) {
+  const GENERATED = generatedDirectory;
+  const ATLAS_NEIGHBORHOOD_DIR = join(GENERATED, "atlas-neighborhood");
   const registry = loadSourceRegistry(
     readJson(join(ROOT, "data", "source-registry.json")),
   );

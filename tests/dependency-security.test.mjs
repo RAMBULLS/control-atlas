@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { once } from 'node:events';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, join, resolve } from 'node:path';
@@ -15,6 +16,42 @@ const Policy = require('http-cache-semantics');
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 const request = { url: 'https://cache.example/resource', method: 'GET', headers: { host: 'cache.example' } };
 const staleRequest = { ...request, headers: { ...request.headers, 'cache-control': 'max-stale=86400' } };
+
+const bracePackages = Object.entries(JSON.parse(readFileSync('package-lock.json', 'utf8')).packages)
+  .filter(([path]) => path.endsWith('node_modules/brace-expansion'));
+assert.ok(bracePackages.length, 'Brace expansion regression requires the installed dependency families');
+
+for (const [path, record] of bracePackages) {
+  test(`brace-expansion ${record.version} at ${path} preserves patterns and bounds the advisory rewrite`, { timeout: 10000 }, async t => {
+    // GHSA-q2hr-2g5m-vwhr consumes CPU before output-size limits apply.
+    // A separate child gives the test runner an enforceable wall-clock bound.
+    const code = `const assert=require('node:assert/strict');
+      const entry=${JSON.stringify(resolve(path))};
+      assert.equal(require(entry+'/package.json').version,${JSON.stringify(record.version)});
+      const loaded=require(entry); const expand=typeof loaded==='function'?loaded:loaded.expand;
+      assert.deepEqual(expand('file{a,b}.txt'),['filea.txt','fileb.txt']);
+      assert.deepEqual(expand('item{1..3}'),['item1','item2','item3']);
+      assert.deepEqual(expand('plain.txt'),['plain.txt']);
+      const result=expand('{a}'+'}'.repeat(128000)+',z}');
+      assert.ok(Array.isArray(result)&&result.length>0&&result.length<=2);
+      console.log('ordinary patterns and bounded rewrite passed');`;
+    const child = spawn(process.execPath, ['-e', code], { stdio: ['ignore', 'pipe', 'pipe'] });
+    t.after(() => { if (child.exitCode === null) child.kill(); });
+    let stdout = '';
+    let stderr = '';
+    child.stdout.on('data', chunk => { stdout += chunk; });
+    child.stderr.on('data', chunk => { stderr += chunk; });
+    const deadline = setTimeout(() => child.kill(), 3000);
+    try {
+      const [exitCode, signal] = await once(child, 'close');
+      assert.equal(signal, null, 'advisory rewrite exceeded the bounded child deadline');
+      assert.equal(exitCode, 0, stderr);
+      assert.match(stdout, /ordinary patterns and bounded rewrite passed/);
+    } finally {
+      clearTimeout(deadline);
+    }
+  });
+}
 
 test('scanner errors and incomplete audit reports cannot become a passing security gate', () => {
   const complete = { vulnerabilities: {}, metadata: { vulnerabilities: {} } };

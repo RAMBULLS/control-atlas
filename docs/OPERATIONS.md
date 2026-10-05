@@ -295,6 +295,36 @@ regressions. A failed median still fails deployment verification and must be
 investigated from the saved reports. Express's transitive `qs` override retains
 the compatible security-fixed version until Express updates its own dependency.
 
+### Temporary dependency security fixes
+
+Owner: repository maintainer (RAMBULLS). Review by 2026-11-04 and whenever either
+upstream package or parent dependency changes.
+
+`basic-ftp` is pinned to the official 6.2.1 security release across both `get-uri`
+families used by Lighthouse and browser-download proxy tooling. This deliberately
+overrides their 5.x ranges. FTP metadata, LIST fallback, download, error and
+separate-transfer-host restrictions must pass `npm run test:dependency-security`.
+Do not enable separate transfer hosts to make an incompatible server pass.
+
+`http-cache-semantics` 4.3.0 receives a repository-owned downstream patch for
+GHSA-ch52-4w7c-c8xp; 4.3.0 alone is not considered a verified upstream fix.
+Both `make-fetch-happen` parent ranges accept 4.3.0. The patch keeps response
+revalidation prohibitions separate from ordinary expiry, including after cache
+policy serialization. Source refresh continues to use private caching and
+mandatory revalidation.
+
+`npm ci` applies the patch through `postinstall`. The exact original and patched
+SHA-256 values are enforced by `scripts/security/dependency-patches.mjs`.
+`npm run verify:dependency-patches` and `npm run audit:deps` reject missing,
+unpatched or changed implementations. Ignoring installation scripts cannot yield
+a passing security gate. No audit exceptions authorize these changes.
+
+Remove the downstream patch only after a verified upstream fix passes the same
+negative and positive cache regressions. For rollback, restore the preceding
+manifest, lockfile and security tooling together and leave release blocked on
+the restored advisories. Never remove only the integrity check. Retain the
+security regression tests when adopting an upstream fix.
+
 ### Recover a validated refresh PR
 
 If a refresh passes ingestion, repository verification and SBOM generation but

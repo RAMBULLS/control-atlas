@@ -116,7 +116,10 @@ test("WS3 Resources shares Template C with real list, map, and comparison modes"
   await waitForAppReady(page, { allowPartial: true });
 
   const workspace = page.locator('[data-page-template="workspace"]');
-  await expect(workspace.getByRole("heading", { name: "Resources", level: 1 })).toBeVisible();
+  const title = page.getByRole("heading", { name: "Resources", level: 1 });
+  await expect(title).toHaveCount(1);
+  await expect(title).toBeVisible();
+  await expect(page.getByRole("main", { name: "Resources" })).toBeVisible();
   const companions = workspace.getByRole("navigation", { name: "Resource companions" });
   const companionLinks = companions.getByRole("link");
   await expect(companionLinks).toHaveText([

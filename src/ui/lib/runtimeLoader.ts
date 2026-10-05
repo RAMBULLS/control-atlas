@@ -1,7 +1,7 @@
 import { comparisonPairKey, comparisonScopeAllowed } from "../../shared/compare-scope.mjs";
 import { isComparisonCapableEdge, mappingSourceIdsForEdge } from "../../shared/compare-capability.mjs";
 import { createFederalGraphRuntime } from "../../app/runtime.mjs";
-import { atlasNeighborhoodShardId } from "../../app/atlas-neighborhood.mjs";
+import { ATLAS_NEIGHBORHOOD_SHARD_COUNT, atlasNeighborhoodShardId } from "../../app/atlas-neighborhood.mjs";
 import { RUNTIME_CACHE_VERSION } from "../../shared/runtime-cache-version.mjs";
 import type {
   CommonsResourceDataset,
@@ -401,7 +401,10 @@ export function runtimeArtifactPlan(
  * loader consumes these exact requests instead of starting a second fetch.
  */
 export async function preloadRuntimeArtifacts(state: ViewState) {
-  const plan = runtimeArtifactPlan(state);
+  const completePlan = runtimeArtifactPlan(state);
+  const plan = state.view === "library-detail"
+    ? { ...completePlan, atlasSpine: false, commons: false }
+    : completePlan;
   const requests: Array<Promise<unknown>> = [];
   const add = (path: string) => requests.push(fetchArtifact(path));
   if (plan.librarySearch || plan.fullGraph) {
@@ -634,7 +637,7 @@ export async function loadAtlasNeighborhood(
     artifactPath("atlas-neighborhood-manifest.json"),
   )) as { atlas_neighborhood_manifest?: { shard_count?: number } };
   const shardCount =
-    manifestArtifact.atlas_neighborhood_manifest?.shard_count || 128;
+    manifestArtifact.atlas_neighborhood_manifest?.shard_count || ATLAS_NEIGHBORHOOD_SHARD_COUNT;
   const shardId = atlasNeighborhoodShardId(nodeId, shardCount);
   const shardArtifact = (await fetchArtifact(
     artifactPath(`atlas-neighborhood/${shardId}.json`),
@@ -1269,10 +1272,12 @@ export async function loadRuntimeDatasetStaged(handlers: {
     if (handlers.state.view === "library-detail" && plan.commons) {
       const officialPhase = await loadRouteScopedPhase({
         ...plan,
+        atlasSpine: false,
         commons: false,
       });
       if (handlers.signal?.aborted) return;
       handlers.onSearchReady(officialPhase.bundle);
+      if (handlers.signal?.aborted) return;
       const contextualPhase = await loadRouteScopedPhase(plan);
       if (handlers.signal?.aborted) return;
       handlers.onFullReady(contextualPhase.bundle);

@@ -5,12 +5,175 @@ import {
   clearRuntimeArtifactCache,
   compressedArtifactPath,
   fetchArtifact,
+  loadRuntimeDatasetStaged,
+  loadAtlasNeighborhood,
+  preloadRuntimeArtifacts,
   loadIndexedLibrarySearchColumns,
   parseJsonResponseOffThread,
   runtimeArtifactPlan,
 } from "../../src/ui/lib/runtimeLoader";
+import type { RuntimeBundle } from "../../src/ui/lib/runtimeLoader";
+import { atlasNeighborhoodShardId, buildAtlasNeighborhoodShards } from "../../src/app/atlas-neighborhood.mjs";
+import { RUNTIME_CACHE_VERSION } from "../../src/shared/runtime-cache-version.mjs";
 import { requiresFullGraph } from "../../src/ui/lib/navigationState";
 import { normalizeViewState } from "../../src/ui/lib/viewState";
+
+// Synthetic publisher fixtures exercise staging without network or generated data.
+function recordStageFixture(context: () => Promise<unknown>) {
+  const id = "nist-800-53:AC-2";
+  const source = { id: "fixture-source", owner: "Fixture publisher", title: "Fixture publication" };
+  const nodes = [
+    { id, node_type: "control", source_id: source.id, metadata: { catalog_id: "nist-800-53", item_id: "AC-2", title: "Account management", description: "Complete fixture publisher text." } },
+    { id: "fixture:baseline", node_type: "baseline", source_id: source.id, metadata: { item_id: "Fixture baseline" } },
+  ];
+  const edge = { id: "fixture:selection", source_node_id: nodes[1].id, target_node_id: id,
+    relationship_type: "selects", relationship_class: "applicability", publication_status: "published",
+    provenance_class: "federal_published", confidence: "direct",
+    source_refs: [{ source_id: source.id, ref_type: "primary", locator: "Fixture row 1" }] };
+  const shards = buildAtlasNeighborhoodShards({ nodes, edges: [edge] }, 8);
+  const requests: string[] = [];
+  const fetchFixture = (async (input: Parameters<typeof fetch>[0]) => {
+    const url = String(input);
+    requests.push(url);
+    if (url.includes(".json.gz")) return new Response("", { status: 404 });
+    let body: unknown;
+    if (url.includes("atlas-spine.json")) body = await context();
+    else if (url.includes("atlas-neighborhood-manifest")) body = { atlas_neighborhood_manifest: { shard_count: 8 } };
+    else if (url.includes("atlas-neighborhood/")) {
+      assert.ok(url.includes(`atlas-neighborhood/${atlasNeighborhoodShardId(id, 8)}.json`), "manifest count controls the requested path");
+      body = { atlas_neighborhood_shard: shards.find(shard => shard.shard_id === atlasNeighborhoodShardId(id, 8)) };
+    }
+    else if (url.includes("catalog-bootstrap")) body = { catalog_bootstrap: { catalogs: [{ id: "nist-800-53", name: "Fixture publication" }] } };
+    else if (url.includes("sources.json")) body = { sources: [source] };
+    else if (url.includes("commons-search-index")) body = { resources: [] };
+    else if (url.includes("commons-resource-dataset")) body = { resources: [] };
+    else throw new Error(`Unexpected fixture request: ${url}`);
+    return new Response(JSON.stringify(body), { status: 200 });
+  }) as typeof fetch;
+  return { id, edge, source, requests, fetchFixture, state: normalizeViewState("library-detail", { node: id }) };
+}
+
+test("new record cohorts bypass a cached manifest from the previous deployment", async () => {
+  const originalFetch = globalThis.fetch;
+  const oldVersion = "20260928-compare-scope-1";
+  const id = "nist-800-53:AC-2";
+  const node = { id, node_type: "control", source_id: "fixture-source", metadata: {
+    catalog_id: "nist-800-53", item_id: "AC-2", title: "Fixture account management",
+    description: "Complete fixture publisher text.",
+  } };
+  const shards = buildAtlasNeighborhoodShards({ nodes: [node], edges: [] }, 512);
+  const currentShardId = atlasNeighborhoodShardId(id, 512);
+  assert.notEqual(currentShardId, atlasNeighborhoodShardId(id, 128));
+  const manifestPath = "./data/generated/atlas-neighborhood-manifest.json";
+  const staleCache = new Map([[`${manifestPath}?v=${oldVersion}`,
+    { atlas_neighborhood_manifest: { shard_count: 128 } }]]);
+  const requests: string[] = [];
+  globalThis.fetch = (async input => {
+    const url = String(input);
+    requests.push(url);
+    if (url.includes(".json.gz")) return new Response("", { status: 404 });
+    const body = staleCache.get(url) ?? (url.includes("atlas-neighborhood-manifest")
+      ? { atlas_neighborhood_manifest: { shard_count: 512 } }
+      : { atlas_neighborhood_shard: shards.find(shard => url.includes(`/${shard.shard_id}.json`)) });
+    return new Response(JSON.stringify(body), { status: 200 });
+  }) as typeof fetch;
+  clearRuntimeArtifactCache();
+  try {
+    const cached = await fetchArtifact(`${manifestPath}?v=${oldVersion}`);
+    assert.equal(cached.atlas_neighborhood_manifest.shard_count, 128);
+    const record = await loadAtlasNeighborhood(id);
+    assert.equal(record?.center_node.metadata.description, node.metadata.description);
+    assert.ok(requests.includes(`${manifestPath}?v=${RUNTIME_CACHE_VERSION}`));
+    assert.ok(requests.includes(`./data/generated/atlas-neighborhood/${currentShardId}.json?v=${RUNTIME_CACHE_VERSION}`));
+  } finally {
+    globalThis.fetch = originalFetch;
+    clearRuntimeArtifactCache();
+  }
+});
+
+test("record first delivery preserves publisher content and edges before authority context", async () => {
+  const originalFetch = globalThis.fetch;
+  let releaseContext = (_value: unknown) => {};
+  const context = new Promise(resolve => { releaseContext = resolve; });
+  const fixture = recordStageFixture(() => context);
+  clearRuntimeArtifactCache();
+  globalThis.fetch = fixture.fetchFixture;
+  const first: RuntimeBundle[] = [];
+  const final: RuntimeBundle[] = [];
+  const errors: unknown[] = [];
+  try {
+    await preloadRuntimeArtifacts(fixture.state);
+    assert.ok(!fixture.requests.some(url => /atlas-spine|commons/.test(url)));
+    const staged = loadRuntimeDatasetStaged({ state: fixture.state, onSearchReady: bundle => first.push(bundle),
+      onFullReady: bundle => final.push(bundle), onError: error => errors.push(error) });
+    await new Promise(resolve => setTimeout(resolve, 0));
+    assert.equal(first.length, 1);
+    assert.equal(final.length, 0);
+    assert.equal(first[0].atlasSpine, undefined);
+    assert.equal(first[0].runtime.getNode(fixture.id).metadata.description, "Complete fixture publisher text.");
+    assert.equal(first[0].runtime.getSource(fixture.source.id).owner, fixture.source.owner);
+    assert.equal(first[0].runtime.getEdgesForNode(fixture.id)[0].id, fixture.edge.id);
+    releaseContext({ atlas_spine: { entries: [{ id: fixture.id }] } });
+    await staged;
+    assert.equal(final.length, 1);
+    assert.ok(final[0].atlasSpine);
+    assert.deepEqual(final[0].runtime.getNode(fixture.id), first[0].runtime.getNode(fixture.id));
+    assert.deepEqual(final[0].runtime.getEdgesForNode(fixture.id), first[0].runtime.getEdgesForNode(fixture.id));
+    assert.deepEqual(errors, []);
+  } finally {
+    releaseContext({});
+    globalThis.fetch = originalFetch;
+    clearRuntimeArtifactCache();
+  }
+});
+
+test("failed required record context retains first content and a fresh retry recovers", async () => {
+  const originalFetch = globalThis.fetch;
+  let validSpine = false;
+  const fixture = recordStageFixture(async () => validSpine ? { atlas_spine: { entries: [{ id: "fixture" }] } } : {});
+  clearRuntimeArtifactCache();
+  globalThis.fetch = fixture.fetchFixture;
+  const first: RuntimeBundle[] = [];
+  const final: RuntimeBundle[] = [];
+  const errors: unknown[] = [];
+  const handlers = { state: fixture.state, onSearchReady: (bundle: RuntimeBundle) => first.push(bundle),
+    onFullReady: (bundle: RuntimeBundle) => final.push(bundle), onError: (error: unknown) => errors.push(error) };
+  try {
+    await loadRuntimeDatasetStaged(handlers);
+    assert.equal(first.length, 1);
+    assert.equal(final.length, 0);
+    assert.equal(errors.length, 1);
+    assert.match(String(errors[0]), /Atlas spine artifact has no entries/);
+    validSpine = true;
+    clearRuntimeArtifactCache();
+    await loadRuntimeDatasetStaged(handlers);
+    assert.equal(first.length, 2);
+    assert.equal(final.length, 1);
+  } finally {
+    globalThis.fetch = originalFetch;
+    clearRuntimeArtifactCache();
+  }
+});
+
+test("aborted record context emits no stale completion or recovery", async () => {
+  const originalFetch = globalThis.fetch;
+  const fixture = recordStageFixture(async () => ({ atlas_spine: { entries: [{ id: "fixture" }] } }));
+  clearRuntimeArtifactCache();
+  globalThis.fetch = fixture.fetchFixture;
+  const controller = new AbortController();
+  const final: unknown[] = [];
+  const errors: unknown[] = [];
+  try {
+    await loadRuntimeDatasetStaged({ state: fixture.state, signal: controller.signal,
+      onSearchReady: () => controller.abort(), onFullReady: bundle => final.push(bundle), onError: error => errors.push(error) });
+    assert.deepEqual(final, []);
+    assert.deepEqual(errors, []);
+    assert.ok(!fixture.requests.some(url => /atlas-spine|commons/.test(url)));
+  } finally {
+    globalThis.fetch = originalFetch;
+    clearRuntimeArtifactCache();
+  }
+});
 
 test("compressed artifacts keep cache-busting parameters after the gzip extension", () => {
   assert.equal(

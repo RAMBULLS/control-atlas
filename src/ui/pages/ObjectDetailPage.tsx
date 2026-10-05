@@ -70,6 +70,8 @@ function RecordNotFound(props: {
 
 export function ObjectDetailPage(props: {
   bundle: RuntimeBundle;
+  contextUnavailable?: boolean;
+  onRetryContext?: () => void;
   state: Extract<ViewState, { view: "library-detail" }>;
   onNavigate: (view: ViewState["view"], patch?: Partial<ViewState>, reset?: boolean, replace?: boolean) => void;
   onOpenGlossary: (termId?: string) => void;
@@ -308,6 +310,12 @@ export function ObjectDetailPage(props: {
 
         <article className="record-template-main">
           <RecordSectionNavigation items={sectionNavItems} />
+          {props.contextUnavailable ? (
+            <section className="notice" data-record-context-error role="status">
+              <p>Some supporting information did not load. This record is still available.</p>
+              <Button onClick={props.onRetryContext} type="button" variant="secondary">Try loading again</Button>
+            </section>
+          ) : null}
           {document.catalog_id === "disa-cci" ? (
             <section className="record-context-note" aria-labelledby="cci-context-heading">
               <h2 id="cci-context-heading">Start here</h2>

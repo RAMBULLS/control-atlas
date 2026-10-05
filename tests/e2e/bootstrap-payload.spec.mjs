@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { atlasNeighborhoodShardId } from "../../src/app/atlas-neighborhood.mjs";
 
 import {
   attachPageDiagnostics,
@@ -15,6 +16,106 @@ function graphArtifactUrls(urls) {
 
 test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
+});
+
+test("Resources keeps its identity until the lazy directory is usable", async ({ page }) => {
+  await page.setViewportSize({ width: 412, height: 823 });
+  await page.clock.install();
+  let releaseDirectory = () => {};
+  const directoryReleased = new Promise(resolve => { releaseDirectory = () => resolve(undefined); });
+  await page.route(/\/assets\/CommonsPage-[^/]+\.js$/, async route => {
+    await directoryReleased;
+    await route.continue();
+  });
+  try {
+    await page.goto("/#/resources");
+    const shell = page.locator("[data-static-route]");
+    await expect(shell).toBeVisible();
+    await expect(shell.getByRole("heading", { level: 1 })).toHaveText("Resources");
+    await expect(page.locator('[data-route-suspense-pending="true"]')).toHaveCount(1);
+    await expect(page.locator('[data-route-suspense-pending="true"]')).not.toBeVisible();
+    await page.clock.fastForward(16_000);
+    await expect(page.locator("#root")).not.toHaveAttribute("data-route-hydrated", "true");
+    releaseDirectory();
+    await expect(page.locator("#root")).toHaveAttribute("data-route-hydrated", "true");
+    await expect(page.getByRole("heading", { name: "Resources", exact: true, level: 1 })).toHaveCount(1);
+    await expect(shell).not.toHaveAttribute("role", "status");
+    await expect(page.getByRole("searchbox", { name: "Find resources" })).toBeVisible();
+    await expect(page.getByRole("main", { name: "Resources" })).toBeVisible();
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.getByRole("searchbox", { name: "Find resources" }).fill("zero trust");
+    await page.getByRole("searchbox", { name: "Find resources" }).press("Enter");
+    await expect(page).toHaveURL(/q=zero\+trust/);
+    await expect(page.getByRole("heading", { name: "Resources", exact: true, level: 1 })).toHaveCount(1);
+    await expect(page.getByRole("searchbox", { name: "Find resources" })).toBeFocused();
+    await page.locator('#workspace a[href="#/guides"]').first().click();
+    await expect(shell).not.toBeVisible();
+    await expect(page.getByRole("heading", { name: "Guides", exact: true })).toBeVisible();
+    await expect(page.locator("#workspace")).not.toHaveAttribute("aria-labelledby", "static-route-title");
+    await page.locator('.site-header a[href="#/resources"]').click();
+    await expect(shell.getByRole("heading", { level: 1 })).toBeFocused();
+    await page.goBack();
+    await expect(shell).not.toBeVisible();
+    await page.goBack();
+    await expect(shell).toBeVisible();
+    await expect(page.getByRole("searchbox", { name: "Find resources" })).toHaveValue("zero trust");
+    await expect(page.getByRole("heading", { name: "Resources", exact: true, level: 1 })).toHaveCount(1);
+  } finally {
+    releaseDirectory();
+  }
+});
+
+test("Resources exposes recovery when a delayed page module fails", async ({ page }) => {
+  await page.clock.install();
+  let releaseDirectory = () => {};
+  const directoryReleased = new Promise(resolve => { releaseDirectory = () => resolve(undefined); });
+  await page.route(/\/assets\/CommonsPage-[^/]+\.js$/, async route => {
+    await directoryReleased;
+    await route.abort();
+  });
+  try {
+    await page.goto("/#/resources");
+    await expect(page.locator('[data-route-suspense-pending="true"]')).toHaveCount(1);
+    await page.clock.fastForward(16_000);
+    releaseDirectory();
+    await expect(page.getByText("This workspace stopped unexpectedly. The rest of Control Atlas is still available.")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Try loading again" })).toBeVisible();
+    await expect(page.locator("#root")).toHaveAttribute("data-route-hydrated", "true");
+  } finally {
+    releaseDirectory();
+  }
+});
+
+test("record supporting information can retry while preserving usable source text", async ({ page }) => {
+  let failContext = true;
+  let releaseRetry = () => {};
+  const retryReleased = new Promise(resolve => { releaseRetry = () => resolve(undefined); });
+  let observeRetry = () => {};
+  const retryRequested = new Promise(resolve => { observeRetry = () => resolve(undefined); });
+  await page.route("**/data/generated/atlas-spine.json*", async route => {
+    if (failContext) await route.fulfill({ status: 200, contentType: "application/json", body: "{}" });
+    else {
+      observeRetry();
+      await retryReleased;
+      await route.continue();
+    }
+  });
+  await page.goto("/#/record/nist-800-53/AC-2");
+  const published = page.locator('[data-record-section="official-text"]');
+  await expect(published).toBeVisible();
+  const originalText = await published.innerText();
+  expect(originalText).toContain("Define and document the types of accounts allowed");
+  await expect(page.locator("[data-record-context-error]")).toBeVisible();
+  failContext = false;
+  const recoveredSpine = page.waitForResponse(response => response.url().includes("atlas-spine.json.gz") && response.status() === 200);
+  await page.locator("[data-record-context-error]").getByRole("button", { name: "Try loading again" }).click();
+  await retryRequested;
+  await expect(published).toBeVisible();
+  await expect(published).toHaveText(originalText, { useInnerText: true });
+  releaseRetry();
+  await recoveredSpine;
+  await expect(page.locator("[data-record-context-error]")).toHaveCount(0);
+  await expect(published).toHaveText(originalText, { useInnerText: true });
 });
 
 test("home bootstrap avoids graph JSON artifacts", async ({ page }) => {
@@ -153,7 +254,7 @@ test("focused Atlas loads one neighborhood without monolithic graph JSON", async
 
   expect(graphArtifactUrls(requested)).toEqual([]);
   expect(
-    requested.some((url) => url.includes("atlas-neighborhood/32.json")),
+    requested.some((url) => url.includes(`atlas-neighborhood/${atlasNeighborhoodShardId("nist-800-53:AC-2")}.json`)),
   ).toBeTruthy();
 });
 
@@ -166,7 +267,7 @@ test("focused Atlas loading state avoids a content-agnostic mobile minimum heigh
     releaseNeighborhood = () => resolve();
   });
 
-  await page.route("**/data/generated/atlas-neighborhood/32.json*", async (route) => {
+  await page.route(`**/data/generated/atlas-neighborhood/${atlasNeighborhoodShardId("nist-800-53:AC-2")}.json*`, async (route) => {
     await neighborhoodGate;
     await route.continue();
   });

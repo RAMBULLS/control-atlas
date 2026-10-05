@@ -72,9 +72,15 @@ test("a route's far end keeps its name when a context dims other publications", 
 test("a tall inspector never covers the Other publications control", async ({ page }) => {
   await open(page, "/#/atlas?atlasLimb=atlas:LIMB-COMPLIANCE&atlasFramework=nist-800-53");
   await page.getByText("Filter by relationship type").click();
-  const inspector = await page.locator(".atl-inspector").boundingBox();
-  const pill = await page.locator(".atl-pill--other").boundingBox();
-  expect(inspector.y + inspector.height).toBeLessThanOrEqual(pill.y);
+  // Sheet fitting can resize the map between separate browser reads. Compare
+  // both elements in the same rendered frame so the gap is meaningful.
+  const bounds = await page.evaluate(() => ({
+    inspectorBottom: document.querySelector(".atl-inspector").getBoundingClientRect().bottom,
+    pillTop: document.querySelector(".atl-pill--other").getBoundingClientRect().top,
+  }));
+  expect(bounds.inspectorBottom).toBeLessThanOrEqual(bounds.pillTop);
+  await page.getByRole("button", { name: /^Other publications/ }).click();
+  await expect(page.getByRole("dialog", { name: "Other publications" })).toBeVisible();
 });
 
 test("a negative shared-ground answer says what was checked, not that nothing exists", async ({ page }) => {

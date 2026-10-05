@@ -47,6 +47,15 @@ test("Atlas neighborhood sharding is deterministic and preserves canonical edges
   const first = buildAtlasNeighborhoodShards(graph, 8);
   const second = buildAtlasNeighborhoodShards(graph, 8);
   assert.deepEqual(first, second);
+  const finer = buildAtlasNeighborhoodShards(graph, 512);
+  const records = (shards) => Object.fromEntries(shards.flatMap(shard => Object.entries(shard.records)));
+  assert.deepEqual(records(finer), records(first), "finer shards preserve every complete record and edge");
+  assert.equal(finer.reduce((count, shard) => count + shard.record_count, 0), graph.nodes.length);
+  for (const shard of finer) {
+    for (const id of Object.keys(shard.records)) {
+      assert.equal(shard.shard_id, atlasNeighborhoodShardId(id, 512));
+    }
+  }
   const record = first
     .find((shard) => shard.shard_id === atlasNeighborhoodShardId("a", 8))
     .records.a;

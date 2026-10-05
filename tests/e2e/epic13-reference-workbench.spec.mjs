@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { attachPageDiagnostics, gotoApp, waitForAppReady } from "./support.mjs";
+import { attachPageDiagnostics, clickAtlasPublication, gotoApp, waitForAppReady } from "./support.mjs";
 
 test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
@@ -45,7 +45,7 @@ test("Atlas overview shows every territory and drills directly to a publication"
   await page.screenshot({ path: testInfo.outputPath("epic13-atlas-graph-first.png"), fullPage: true });
 
   // Opening a publication stays on the map and shows what it connects to.
-  await map.locator('[data-landmark="nist-800-53"]').click();
+  await clickAtlasPublication(page, "nist-800-53");
   await expect(page).toHaveURL(/atlasFramework=nist-800-53/);
   await expect(page.locator(".atl-inspector")).toContainText("SP 800-53 Rev. 5");
   await page.screenshot({ path: testInfo.outputPath("epic13-atlas-workbench.png"), fullPage: true });

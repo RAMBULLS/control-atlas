@@ -1,7 +1,7 @@
 import { gzipSync } from "node:zlib";
 import { AxeBuilder } from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
-import { attachPageDiagnostics, dismissOnboarding, gotoApp, waitForAppReady } from "./support.mjs";
+import { attachPageDiagnostics, clickAtlasPublication, dismissOnboarding, gotoApp, waitForAppReady } from "./support.mjs";
 /* global document, getComputedStyle */
 
 const START = "disa-stig:V-205646";
@@ -56,7 +56,7 @@ test("a hub shows a bounded set first, then the complete set on request", async 
   await open(page);
   await page.locator('[data-district="atlas:LIMB-COMPLIANCE"] .district__shape').click();
   await expect(page).toHaveURL(/atlasLimb=atlas(%3A|:)LIMB-COMPLIANCE/);
-  await page.locator('[data-landmark="nist-800-53"]').click();
+  await clickAtlasPublication(page, "nist-800-53");
   await expect(page.locator(".atl-inspector")).toContainText("SP 800-53 Rev. 5");
   await expect(page.locator(".route--sel")).toHaveCount(4);
   await page.getByRole("button", { name: /Show all \d+/ }).click();
@@ -163,6 +163,24 @@ test("reduced motion removes decorative animation", async ({ page }) => {
   await open(page);
   const animated = await page.locator(".district").first().evaluate((el) => getComputedStyle(el).animationName);
   expect(animated).toBe("none");
+  await page.locator('[data-district="atlas:LIMB-COMPLIANCE"] .district__shape').focus();
+  await page.keyboard.press("Enter");
+  await clickAtlasPublication(page, "nist-800-53");
+  await expect(page).toHaveURL(/atlasFramework=nist-800-53/);
+});
+
+test("rapid territory changes settle before a publication pointer action", async ({ page }) => {
+  await open(page, "/#/atlas", 768);
+  for (const area of ["COMPLIANCE", "ARCHITECTURE", "COMPLIANCE"]) {
+    const district = page.locator(`[data-district="atlas:LIMB-${area}"] .district__shape`);
+    await district.press("Enter");
+    await expect(page).toHaveURL(new RegExp(`atlasLimb=atlas(%3A|:)LIMB-${area}(?:&|$)`));
+    await expect(district).toBeFocused();
+    await expect(page.locator("#workspace")).not.toHaveAttribute("inert", "");
+  }
+  await clickAtlasPublication(page, "nist-800-53");
+  await expect(page).toHaveURL(/atlasFramework=nist-800-53/);
+  await expect(page.locator(".atl-inspector")).toContainText("SP 800-53 Rev. 5");
 });
 
 test("the territory sheet has no serious accessibility violations", async ({ page }) => {
@@ -206,7 +224,7 @@ test("record pins share ground through the CCI, and mixing pin kinds is refused 
   await goHash(page, `#/atlas?atlasResearch=shared&atlasPins=${encodeURIComponent(JSON.stringify([START, end.id]))}`);
   await expect(page.locator(".atl-inspector")).toContainText("CCI-000185", { timeout: 90000 });
   await expect(page.locator(".atl").getByRole("link", { name: /^Compare/ })).toHaveCount(0);
-  await page.locator('[data-landmark="csf-2"]').click();
+  await clickAtlasPublication(page, "csf-2");
   await page.getByRole("button", { name: "Pin CSF 2.0" }).click();
   await expect(page.getByText(/Pin publications together or records together/).first()).toBeVisible();
 });

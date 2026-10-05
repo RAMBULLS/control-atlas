@@ -75,7 +75,7 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
     const from = viewRef.current; const t0 = performance.now(); let raf = 0;
     const step = (t: number) => {
       const k = Math.min(1, (t - t0) / 460); const e = 1 - (1 - k) ** 3;
-      const v = { x: from.x + (target.x - from.x) * e, y: from.y + (target.y - from.y) * e, w: from.w + (target.w - from.w) * e, h: from.h + (target.h - from.h) * e };
+      const v = k === 1 ? target : { x: from.x + (target.x - from.x) * e, y: from.y + (target.y - from.y) * e, w: from.w + (target.w - from.w) * e, h: from.h + (target.h - from.h) * e };
       viewRef.current = v; setView(v);
       if (k < 1) raf = requestAnimationFrame(step);
     };
@@ -83,6 +83,7 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
     return () => cancelAnimationFrame(raf);
   }, [target.x, target.y, target.w, target.h]);
 
+  const cameraMoving = view.x !== target.x || view.y !== target.y || view.w !== target.w || view.h !== target.h;
   const u = view.w / Math.max(1, size.w);
   // Text is screen-constant, so on a narrow map it is scaled down to keep names inside their territories.
   const ut = u * Math.min(1, Math.max(0.72, size.w / 1100));
@@ -144,7 +145,7 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
   const isHoverDistrict = (id: string) => (hover?.kind === "district" && hover.id === id) || (hoverPublication && model.areaOf(hoverPublication).id === id);
 
   return (
-    <svg aria-label="Control Atlas territory map. Territories organize the material for navigation; they do not imply authority, applicability or equivalence." className={`terr${dimming ? " is-dimming" : ""}`} role="group" viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}>
+    <svg aria-busy={cameraMoving} aria-label="Control Atlas territory map. Territories organize the material for navigation; they do not imply authority, applicability or equivalence." className={`terr${dimming ? " is-dimming" : ""}`} role="group" viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}>
       <defs>
         <filter height="120%" id="terr-lift" width="120%" x="-10%" y="-10%"><feDropShadow dx="0" dy={5 * u} floodOpacity="0.55" style={{ floodColor: "var(--ca-surface-deep)" }} stdDeviation={9 * u} /></filter>
         <filter height="110%" id="terr-glow" width="110%" x="-5%" y="-5%"><feGaussianBlur stdDeviation={16 * u} /></filter>

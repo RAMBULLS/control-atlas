@@ -15,6 +15,7 @@ import {
   LoadingStatusPanel,
   OfflineFallbackActions,
 } from "./components/LoadStatusPanel";
+import { waitForRecordPaint } from "./lib/waitForRecordPaint";
 import {
   CompareSkeleton,
   DetailConnectionsSkeleton,
@@ -378,6 +379,9 @@ export function App() {
           searchOverlayOpen,
           librarySearchRequested: searchRequested,
           signal: loadController.signal,
+          onRecordRendered: runtimeState.view === "library-detail"
+            ? (result) => waitForRecordPaint(runtimeState.node, result.runtime, loadController.signal)
+            : undefined,
           onSearchReady: (result) => {
             if (!cancelled) {
               // A delivered stage proves the connection works: cancel the hard
@@ -386,14 +390,14 @@ export function App() {
               window.clearTimeout(slowTimer);
               window.clearTimeout(timeoutTimer);
               setLoadSlow(false);
-              startTransition(() => {
+              const commitBundle = () => {
                 setBundle((current) => {
                   // Only retain a graphReady bundle from the same scope. A
                   // graphReady bundle from a prior route (e.g. Compare) may be
                   // missing data this route needs (e.g. templateRegistry), so
                   // crossing scopes must always commit the fresh result.
                   const sameScopeGraphReady =
-                    current?.graphReady && bundleScopeKeyRef.current === scopeKey;
+                    runtimeState.view !== "library-detail" && current?.graphReady && bundleScopeKeyRef.current === scopeKey;
                   const next = runtimeState.view === "catalog-detail"
                     ? result
                     : sameScopeGraphReady
@@ -404,7 +408,9 @@ export function App() {
                     ? { ...next, atlasSpine: current.atlasSpine }
                     : next;
                 });
-              });
+              };
+              if (runtimeState.view === "library-detail") commitBundle();
+              else startTransition(commitBundle);
               setLoadError("");
             }
           },

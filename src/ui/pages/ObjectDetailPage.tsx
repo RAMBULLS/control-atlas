@@ -36,6 +36,7 @@ import { extractGovernedRecordTaxonomy, buildExploreRelatedPivots } from "../lib
 import type { RuntimeBundle } from "../lib/runtimeLoader";
 import { runtimeRecordIdentityFor } from "../lib/runtimeRecordIdentity";
 import { normalizeViewState, type ViewState } from "../lib/viewState";
+import { recordCommitToken } from "../lib/waitForRecordPaint";
 import { formatSourceDate, sourceFreshnessPresentation, sourceLifecycleDisplayName, sourcePublicationTitle } from "../lib/sourcePresentation";
 
 function sentenceCaseKind(kind: string): string {
@@ -44,13 +45,14 @@ function sentenceCaseKind(kind: string): string {
 
 function RecordNotFound(props: {
   attemptedId: string;
+  commitToken: string;
   onNavigate: (view: ViewState["view"], patch?: Partial<ViewState>) => void;
 }) {
   const attempted = String(props.attemptedId || "");
   const seed = attempted.includes(":") ? attempted.split(":").slice(1).join(":") : attempted;
   const [query, setQuery] = useState(seed);
   return (
-    <section className="notice">
+    <section className="notice" data-record-content={props.attemptedId} data-record-commit={props.commitToken}>
       <h1>Record not found</h1>
       <p>{seed
         ? `Nothing in the Library matches "${seed}". Search for it, or browse from the Library.`
@@ -100,7 +102,7 @@ export function ObjectDetailPage(props: {
     if (retirement) onNavigate(retirement.view as ViewState["view"], retirement.patch as Partial<ViewState>, true, true);
   }, [retirementKey]);
 
-  if (!node || !document) return <RecordNotFound attemptedId={state.node} onNavigate={onNavigate} />;
+  if (!node || !document) return <RecordNotFound attemptedId={state.node} commitToken={recordCommitToken(bundle.runtime)} onNavigate={onNavigate} />;
   if (retirement) {
     return (
       <section className="notice" data-record-retired="true" role="status">
@@ -274,7 +276,7 @@ export function ObjectDetailPage(props: {
   };
 
   return (
-    <section className="detail-page record-template ca-record-page" data-page-role={presentation.page_role} data-template="E">
+    <section className="detail-page record-template ca-record-page" data-page-role={presentation.page_role} data-record-content={state.node} data-record-commit={recordCommitToken(bundle.runtime)} data-record-context-ready={bundle.recordContextReady ? "true" : "false"} data-template="E">
       <CanonicalBreadcrumb bundle={bundle} nodeId={node.id} recordLabel={recordHeading} />
       <div className="record-template-grid ca-record-layout">
         <header className={`record-title-block${identityPresentation.stableIdIsGenerated ? " record-title-block--generated" : ""}`}

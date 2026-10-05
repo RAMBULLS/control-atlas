@@ -34,11 +34,12 @@ export function LoadingStatusPanel(props: {
 
 export function LoadErrorPanel(props: {
   message: string;
+  renderFailed?: boolean;
   onRetry: () => void;
   children?: ReactNode;
 }) {
   return (
-    <Panel className="max-w-[800px] mx-auto mt-[40px] border-[var(--ca-danger)]" title="Unable to load data">
+    <Panel className="max-w-[800px] mx-auto mt-[40px] border-[var(--ca-danger)]" data-route-render-error={props.renderFailed ? "true" : undefined} title="Unable to load data">
       <p className="mb-[16px] font-bold text-[var(--ca-danger)]">{props.message}</p>
       <p className="mb-[24px]">
         Check your connection, then try loading the data again. Guides,

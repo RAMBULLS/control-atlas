@@ -156,6 +156,7 @@ export type ComparisonPair = {
 
 export type RuntimeBundle = {
   runtime: ReturnType<typeof createFederalGraphRuntime>;
+  recordContextReady?: boolean;
   templateRegistry: TemplateRegistry;
   atlasSpine?: AtlasSpine;
   catalogSummaries?: Array<Record<string, any>>;
@@ -1246,6 +1247,7 @@ async function loadCatalogShellPhase(
 
 export async function loadRuntimeDatasetStaged(handlers: {
   onSearchReady: (bundle: RuntimeBundle) => void;
+  onRecordRendered?: (bundle: RuntimeBundle) => Promise<void>;
   onFullReady: (bundle: RuntimeBundle) => void;
   onError: (error: unknown) => void;
   state: ViewState;
@@ -1278,9 +1280,27 @@ export async function loadRuntimeDatasetStaged(handlers: {
       if (handlers.signal?.aborted) return;
       handlers.onSearchReady(officialPhase.bundle);
       if (handlers.signal?.aborted) return;
-      const contextualPhase = await loadRouteScopedPhase(plan);
+      // setState does not prove the lazy record committed. Let its renderer
+      // acknowledge the matching content before competing supporting requests.
+      await handlers.onRecordRendered?.(officialPhase.bundle);
       if (handlers.signal?.aborted) return;
-      handlers.onFullReady(contextualPhase.bundle);
+      const [spineArtifact, commonsIndex, commonsDataset] = await Promise.all([
+        plan.atlasSpine ? fetchArtifact(artifactPath("atlas-spine.json")) : Promise.resolve(null),
+        optionalArtifact<CommonsSearchIndex | null>("./data/generated/commons-search-index.json", null),
+        optionalArtifact<CommonsResourceDataset | null>("./data/commons-resource-dataset.json", null),
+      ]);
+      if (handlers.signal?.aborted) return;
+      const atlasSpine = (spineArtifact as AtlasSpineArtifact | null)?.atlas_spine;
+      if (plan.atlasSpine && !atlasSpine?.entries?.length) {
+        throw new Error("Atlas spine artifact has no entries.");
+      }
+      handlers.onFullReady({
+        ...officialPhase.bundle,
+        recordContextReady: true,
+        atlasSpine,
+        commonsSearchIndex: commonsIndex || undefined,
+        commonsDataset: commonsDataset || undefined,
+      });
       return;
     }
     const routePhase = await loadRouteScopedPhase(plan);

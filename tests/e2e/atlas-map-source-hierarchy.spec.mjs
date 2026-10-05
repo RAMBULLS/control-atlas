@@ -41,7 +41,8 @@ for (const viewport of VIEWPORTS) {
       // Keyboard activation: at tablet widths a landmark's hit area covers the district's centre.
       await page.locator('[data-district="atlas:LIMB-COMPLIANCE"] .district__shape').focus();
       await page.keyboard.press("Enter");
-      await page.locator('[data-landmark="nist-800-53"]').click();
+      // The SVG group includes labels and empty space; click its actual 48px target.
+      await page.locator('[data-landmark="nist-800-53"] .lm__hit').click();
     }
     await expect(page).toHaveURL(/atlasFramework=nist-800-53/);
     await expect(page.locator(".atl-inspector, #atl-focus").first()).toContainText("SP 800-53 Rev. 5");

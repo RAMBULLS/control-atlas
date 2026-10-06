@@ -236,4 +236,22 @@
   window.controlAtlasProgressiveRouteIdentity = routeIdentity;
   window.controlAtlasSyncFirstPaintShell = syncFirstPaintShell;
   syncFirstPaintShell();
+
+  // Hint only the initial record bytes. The runtime remains responsible for
+  // fetching, parsing, validation, retries, and the uncompressed fallback.
+  if (routeIdentity()?.kind === "record") {
+    var cacheVersion = document.querySelector('meta[name="control-atlas-runtime-cache-version"]')?.content;
+    if (cacheVersion) {
+      ["sources.json", "catalog-bootstrap.json", "atlas-neighborhood-manifest.json"].forEach(function (name) {
+        var hint = document.createElement("link");
+        hint.rel = "preload";
+        hint.as = "fetch";
+        hint.crossOrigin = "anonymous";
+        var url = new URL("./data/generated/" + name + ".gz", document.baseURI);
+        url.searchParams.set("v", cacheVersion);
+        hint.href = url.href;
+        document.head.appendChild(hint);
+      });
+    }
+  }
 })();

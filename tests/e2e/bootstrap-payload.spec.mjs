@@ -93,6 +93,51 @@ test("explore bootstrap avoids graph JSON until record open", async ({
   expect(graphArtifactUrls(requested)).toEqual([]);
 });
 
+test("record source hints reuse the initial transfers before page code loads", async ({ page }) => {
+  const names = ["sources.json", "catalog-bootstrap.json", "atlas-neighborhood-manifest.json"];
+  const responses = [];
+  page.on("response", (response) => {
+    if (names.some((name) => response.url().includes(`/data/generated/${name}.gz?`))) {
+      responses.push(response.url());
+    }
+  });
+  await page.goto("/#/record/nist-800-53/AC-2");
+  await expect(page.locator(".source-text-blocks p").first()).toBeVisible();
+  const evidence = await page.evaluate((initialNames) => {
+    const version = globalThis.document.querySelector('meta[name="control-atlas-runtime-cache-version"]').content;
+    const entries = globalThis.performance.getEntriesByType("resource");
+    const pageCode = entries.find((entry) => /\/assets\/ObjectDetailPage-/.test(entry.name));
+    return initialNames.map((name) => {
+      const url = new URL(`./data/generated/${name}.gz`, globalThis.document.baseURI);
+      url.searchParams.set("v", version);
+      return {
+        url: url.href,
+        hinted: !!globalThis.document.querySelector(`link[rel="preload"][as="fetch"][href="${url.href}"]`),
+        early: entries.some((entry) => entry.name === url.href && entry.startTime < pageCode.startTime),
+      };
+    });
+  }, names);
+  for (const artifact of evidence) {
+    expect(artifact.hinted).toBe(true);
+    expect(artifact.early).toBe(true);
+    expect(responses.filter((url) => url === artifact.url), artifact.url).toHaveLength(1);
+  }
+});
+
+test("a failed hinted compressed source retains the plain source fallback", async ({ page }) => {
+  const plain = [];
+  page.on("response", (response) => {
+    if (/\/data\/generated\/sources\.json\?/.test(response.url()) && response.ok()) {
+      plain.push(response.url());
+    }
+  });
+  await page.route("**/data/generated/sources.json.gz*", (route) => route.fulfill({ status: 503, body: "Unavailable" }));
+  await page.goto("/#/record/nist-800-53/AC-2");
+  await expect(page.locator(".source-text-blocks p").first()).toContainText("Define and document");
+  await expect(page.locator("[data-route-render-error]")).toHaveCount(0);
+  expect(plain).toHaveLength(1);
+});
+
 test("the Atlas territory sheet uses its own small index without monolithic graph JSON", async ({
   page,
 }) => {

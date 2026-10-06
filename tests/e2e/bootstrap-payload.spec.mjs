@@ -104,7 +104,7 @@ test("record source hints reuse the initial transfers before page code loads", a
   await page.goto("/#/record/nist-800-53/AC-2");
   await expect(page.locator(".source-text-blocks p").first()).toBeVisible();
   const evidence = await page.evaluate((initialNames) => {
-    const version = globalThis.document.querySelector('meta[name="control-atlas-runtime-cache-version"]').content;
+    const version = globalThis.document.querySelector('meta[name="control-atlas-runtime-cache-version"]').getAttribute("content");
     const entries = globalThis.performance.getEntriesByType("resource");
     const pageCode = entries.find((entry) => /\/assets\/ObjectDetailPage-/.test(entry.name));
     return initialNames.map((name) => {
@@ -136,6 +136,26 @@ test("a failed hinted compressed source retains the plain source fallback", asyn
   await expect(page.locator(".source-text-blocks p").first()).toContainText("Define and document");
   await expect(page.locator("[data-route-render-error]")).toHaveCount(0);
   expect(plain).toHaveLength(1);
+});
+
+test("record code hints reuse emitted modules and styles without other route chunks", async ({ page }) => {
+  const responses = [];
+  page.on("response", (response) => {
+    if (response.url().includes("/assets/")) responses.push(response.url());
+  });
+  await page.goto("/#/record/nist-800-53/AC-2");
+  await expect(page.locator(".source-text-blocks p").first()).toBeVisible();
+  const hints = await page.evaluate(() => {
+    const manifest = JSON.parse(globalThis.document.getElementById("control-atlas-record-modules").textContent);
+    return [...manifest.modules, ...manifest.styles].map((href) => new URL(href, globalThis.document.baseURI).href);
+  });
+  expect(hints.length).toBeGreaterThan(0);
+  for (const href of hints) {
+    expect(href).not.toMatch(/\/assets\/(?!ObjectDetailPage-)[\w]+Page-/);
+    expect(responses.filter((url) => url === href), href).toHaveLength(1);
+  }
+  for (const url of responses) expect(url).not.toMatch(/\/assets\/(?!ObjectDetailPage-)[\w]+Page-/);
+  await expect(page.locator('link[rel="modulepreload"][href*="ObjectDetailPage-"]')).toHaveCount(1);
 });
 
 test("the Atlas territory sheet uses its own small index without monolithic graph JSON", async ({

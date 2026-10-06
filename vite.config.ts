@@ -21,6 +21,7 @@ import { serializeHashUrl } from './src/ui/lib/hashRoutes.ts';
 import { normalizeViewState } from './src/ui/lib/viewState.ts';
 import { buildHomeSurface } from './src/shared/home-surface-build.ts';
 import type { HomeSurface } from './src/shared/home-surface.ts';
+import { recordStartupHints } from './tools/record-startup-hints.mjs';
 
 const rootDir = fileURLToPath(new URL('.', import.meta.url));
 
@@ -215,6 +216,21 @@ export default defineConfig({
     'globalThis.__HOME_SURFACE__': JSON.stringify(homeSurface),
   },
   plugins: [
+    {
+      name: 'control-atlas-record-startup-hints',
+      transformIndexHtml: {
+        order: 'post',
+        handler(_html, context) {
+          if (!context.bundle) return;
+          return [{
+            tag: 'script',
+            attrs: { id: 'control-atlas-record-modules', type: 'application/json' },
+            children: JSON.stringify(recordStartupHints(context.bundle)),
+            injectTo: 'head',
+          }];
+        },
+      },
+    },
     {
       name: 'control-atlas-runtime-cache-version',
       transformIndexHtml(html) {

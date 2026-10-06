@@ -253,5 +253,24 @@
         document.head.appendChild(hint);
       });
     }
+    var moduleHints = document.getElementById("control-atlas-record-modules");
+    if (moduleHints) {
+      var recordCode = JSON.parse(moduleHints.textContent);
+      recordCode.modules.forEach(function (href) {
+        var moduleHint = document.createElement("link");
+        moduleHint.rel = "modulepreload";
+        moduleHint.crossOrigin = "anonymous";
+        moduleHint.href = new URL(href, document.baseURI).href;
+        document.head.appendChild(moduleHint);
+      });
+      recordCode.styles.forEach(function (href) {
+        var styleHint = document.createElement("link");
+        styleHint.rel = "preload";
+        styleHint.as = "style";
+        styleHint.crossOrigin = "anonymous";
+        styleHint.href = new URL(href, document.baseURI).href;
+        document.head.appendChild(styleHint);
+      });
+    }
   }
 })();

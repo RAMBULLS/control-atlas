@@ -17,7 +17,10 @@ on:
         required: true
         default: standard
         type: choice
-        options: [standard, nightly, refresh, recover-refresh-pr, oscal, lighthouse-ab]
+        options: [standard, nightly, refresh, recover-refresh-pr, oscal, lighthouse-ab, performance-diagnostic]
+      diagnostic_run_id:
+        description: Completed exact-head CI run with its immutable site-build artifact
+        required: false
       refresh_run_id:
         description: Completed refresh run whose data and repository gates passed
         required: false
@@ -982,6 +985,43 @@ jobs:
           path: |
             artifacts/oscal-cli/cross-check.json
             artifacts/oscal-cli/upstream-check.json
+
+  performance-diagnostic:
+    name: Three immutable-build diagnostic collections
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.task == 'performance-diagnostic' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Admit a completed exact-head build without overlapping workflows
+        id: candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DIAGNOSTIC_RUN_ID: ${{ inputs.diagnostic_run_id }}
+        run: node tools/run-performance-diagnostic.mjs --select-input
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          artifact-ids: ${{ steps.candidate.outputs.artifact_id }}
+          run-id: ${{ inputs.diagnostic_run_id }}
+          github-token: ${{ github.token }}
+          path: dist/site
+          merge-multiple: true
+      - run: npm run verify:site-artifact -- --sha "$GITHUB_SHA"
+      - run: npm run diagnose:performance
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: always()
+        with:
+          name: performance-diagnostic
+          path: artifacts/performance-diagnostic
+          if-no-files-found: warn
+          retention-days: 7
 
   lighthouse-ab:
     name: Lighthouse A/B diagnostic

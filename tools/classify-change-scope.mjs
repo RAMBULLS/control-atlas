@@ -24,6 +24,8 @@ const DEPENDENCY_FILES = new Set([
   'package-lock.json',
 ]);
 const AUTOMATION_FILES = new Set([
+  'tools/run-performance-diagnostic.mjs',
+  'tests/performance-diagnostic.test.mjs',
   'tools/automerge-source-refresh.mjs',
   'tools/report-refresh-alerts.mjs',
   'tools/verify-refresh-admission.mjs',

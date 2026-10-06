@@ -44,6 +44,8 @@ concurrency:
 
 env:
   NODE_VERSION: '22'
+  ATLAS_RUNNER_TOKEN: ${{ github.token }}
+  ATLAS_RUNNER_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
   changes:
@@ -139,6 +141,32 @@ jobs:
       - run: npm ci
       - run: node --test tests/change-scope.test.mjs tests/release-evidence.test.mjs
 
+  prepush:
+    name: Fresh checkout and push audit
+    needs: [changes, generated]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run validate:checkout
+      - run: npm run verify:local
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: generated-data
+          path: data/generated
+      - run: npm run prepush:audit
+      - name: Record hosted acceptance
+        run: |
+          echo "Fresh checkout and protected push audit passed for $GITHUB_SHA." >> "$GITHUB_STEP_SUMMARY"
+          echo "Runner: $RUNNER_NAME; image: $ImageOS; run: $GITHUB_RUN_ID." >> "$GITHUB_STEP_SUMMARY"
+
   automation:
     name: Automation contracts
     needs: changes
@@ -213,9 +241,8 @@ jobs:
   generated:
     name: Prepare reproducible generated data
     needs: changes
-    if: >-
-      ${{ needs.changes.outputs.build_required == 'true' ||
-          needs.changes.outputs.unit_required == 'true' }}
+    # The required push audit checks corpus-wide brand metrics for every standard
+    # run. Prepare its shared data even when no product rebuild is selected.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -617,7 +644,7 @@ jobs:
   required:
     name: Required CI
     if: ${{ always() && needs.changes.result != 'skipped' }}
-    needs: [changes, evidence, automation, content, fast, generated, windows-process, unit, build, contracts, browser, accessibility, visual, lighthouse, workflow-lint, ui-review]
+    needs: [changes, prepush, evidence, automation, content, fast, generated, windows-process, unit, build, contracts, browser, accessibility, visual, lighthouse, workflow-lint, ui-review]
     runs-on: ubuntu-latest
     steps:
       - name: Require every selected gate

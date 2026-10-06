@@ -15,6 +15,9 @@ permissions:
   actions: read
   contents: read
 
+env:
+  ATLAS_RUNNER_TOKEN: ${{ github.token }}
+
 concurrency:
   group: control-atlas-production
   cancel-in-progress: false

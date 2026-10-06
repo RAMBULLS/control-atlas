@@ -697,9 +697,8 @@ export function EmptyState(props: {
 }
 
 /**
- * One step of a staged flow. `outcome: true` marks the step that is the result
- * rather than another thing to answer: Start here promises "answer two
- * questions", so its third step must not read as a third question.
+ * One step of a staged flow. `outcome: true` marks the result step rather
+ * than another question to answer.
  */
 export type FlowStep = {
   id: string;
@@ -721,8 +720,8 @@ export function stepEyebrow(steps: readonly FlowStep[], stepId: string): string 
 }
 
 /**
- * The staged-flow progress indicator shared by Compare, Start here and
- * Templates. Steps are status, not controls: returning to an earlier step is
+ * The staged-flow progress indicator shared by Compare and Templates.
+ * Steps are status, not controls: returning to an earlier step is
  * each flow's own Back/Change action, so nothing here is clickable. State is
  * carried by marker shape (check, ring, hollow), label weight and hidden text,
  * never by color alone, and the progress line is drawn from the real position.

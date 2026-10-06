@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
@@ -21,13 +21,6 @@ const PROHIBITED_CLAIMS = [
 const ADVISORY_FIELDS = ['title', 'summary', 'explanation', 'limitations'];
 const RAW_SCHEMA_SLUGS = /\b(includePlaceholders|artifact_type|templateType|security_plan_starter|implementation_statement_worksheet)\b/;
 const ABSTRACT_SUMMARY_LEADS = /^(understand|leverage|utilize|establish|centralize|facilitate|use task-focused)\b/i;
-const DETERMINATION_BOUNDARY = [
-  /controls?\s+you\s+can\s+inherit/i,
-  /claim\s+the\s+controls?/i,
-  /reuse\s+another\s+team['’]s\s+authorization/i,
-  /before\s+you\s+inherit/i,
-  /assessors?\s+expect/i,
-];
 const BANNED_SITE_COPY = [
   /the public map for federal cyber compliance/i,
   /like a family tree/i,
@@ -110,77 +103,19 @@ test('Learn explanation copy avoids prohibited compliance or authorization claim
   }
 });
 
-// 2026-08-03: the owner asked for a two-step guided flow, superseding the
-// session-15 "no questions at all" rule. The boundary it was protecting is
-// unchanged and still enforced: the flow may route, never determine.
-test('Start here guides in two steps without making a determination', () => {
-  const startHere = readFileSync('src/ui/pages/StartHerePage.tsx', 'utf8');
-  assert.match(startHere, /What are you trying to do\?/);
-  assert.match(startHere, /What kind of system are you working with\?/);
-  assert.match(startHere, /SITE_COPY\.product\.boundary/);
-  assert.doesNotMatch(startHere, /applicability recommendation|not a framework or baseline/i);
-  assert.doesNotMatch(startHere, /System type|Data sensitivity|Operational environment/);
-  for (const claim of DETERMINATION_BOUNDARY) {
-    assert.doesNotMatch(startHere, claim, `Start Here contains a determination-like claim: ${claim}`);
-  }
-});
-
-test('Start here plans are traceable to real publications and routes', async () => {
-  const guide = await import('../src/app/start-here-guide.mjs');
-  assert.deepEqual(guide.validateStartHereGuide(), []);
-
-  const catalogIds = new Set(
-    JSON.parse(
-      readFileSync('data/generated/catalog-bootstrap.json', 'utf8'),
-    ).catalog_bootstrap.catalogs.map((catalog) => catalog.id),
-  );
-  const routeIdentity = readFileSync('src/ui/lib/routeIdentity.ts', 'utf8');
-
-  for (const goal of guide.START_HERE_GOALS) {
-    for (const context of guide.START_HERE_CONTEXTS) {
-      const plan = guide.startingPlanFor(goal.id, context.id);
-      assert.ok(plan, `no plan for ${goal.id}/${context.id}`);
-      for (const step of [plan.startWith, plan.thenReview]) {
-        assert.ok(
-          catalogIds.has(step.catalogId),
-          `${goal.id}/${context.id} names an unknown publication: ${step.catalogId}`,
-        );
-      }
-      assert.match(
-        routeIdentity,
-        new RegExp(`"?${plan.action.view}"?:`),
-        `${goal.id} next action targets an unknown route: ${plan.action.view}`,
-      );
-    }
-  }
-
-  // Start here renders without the runtime bundle, so every publication it can
-  // name needs a static display name — otherwise the plan prints a raw catalog
-  // id, which is exactly what the live browser showed on 2026-08-03.
-  const catalogNames = new Map(
-    JSON.parse(
-      readFileSync('data/generated/catalog-bootstrap.json', 'utf8'),
-    ).catalog_bootstrap.catalogs.map((catalog) => [catalog.id, catalog.name]),
-  );
-  for (const [catalogId, name] of Object.entries(guide.PUBLICATION_NAMES)) {
-    assert.equal(
-      name,
-      catalogNames.get(catalogId),
-      `${catalogId} display name has drifted from the generated catalog data`,
-    );
-    assert.doesNotMatch(name, /^[a-z0-9-]+$/, `${catalogId} renders a raw id`);
-  }
-
-  // A half-answered flow must never render a plan.
-  assert.equal(guide.startingPlanFor('understand', ''), null);
-  assert.equal(guide.startingPlanFor('', 'federal'), null);
-  assert.equal(guide.startingPlanFor('not-a-goal', 'federal'), null);
+test('Start Here bookmarks hand off without inventing a publication', async () => {
+  const { START_HERE_ACCEPTANCE_MATRIX, startHereDestinationFor } = await import('../src/app/start-here-compatibility.mjs');
+  assert.equal(START_HERE_ACCEPTANCE_MATRIX.length, 28);
+  assert.ok(START_HERE_ACCEPTANCE_MATRIX.every((row) => row.secondDestination === null && row.rationale));
+  assert.equal(startHereDestinationFor('assess', 'unsure'), '/atlas?atlasJourney=assessment');
+  assert.equal(startHereDestinationFor('tools', 'fedramp'), '/resources');
+  assert.equal(startHereDestinationFor('', ''), '/atlas');
+  assert.equal(existsSync('src/ui/pages/StartHerePage.tsx'), false);
 });
 
 test('navigation exposes Templates directly and keeps Guides in overflow', () => {
   const routeIdentity = readFileSync('src/ui/lib/routeIdentity.ts', 'utf8');
   for (const [view, label] of [
-    ['start-here', 'Start here'],
     ['search', 'Library'],
     ['templates', 'Templates'],
     ['patterns', 'Guides'],
@@ -203,7 +138,7 @@ test('navigation exposes Templates directly and keeps Guides in overflow', () =>
   const primaryViews = [...primaryItems[1].matchAll(/view: "([a-z-]+)"/g)].map(
     (match) => match[1],
   );
-  assert.deepEqual(primaryViews, ['start-here', 'atlas-map', 'search', 'matrix', 'commons']);
+  assert.deepEqual(primaryViews, ['atlas-map', 'search', 'matrix', 'commons']);
   assert.match(primaryItems[1], /view: "commons"[\s\S]*TEMPLATES_NAV_ITEM/);
 
   const overflowItems = navigation.match(
@@ -410,20 +345,22 @@ test('starter documents use the same direct decision boundary as the public prod
   assert.doesNotMatch(disclaimer, /owns any .* conclusions/i);
 });
 
-test('about page states the exact product definition and decision boundary without architecture narration', () => {
+test('about page explains the work, source limits, and ways to contribute', () => {
   const aboutPage = readFileSync('src/ui/pages/AboutPage.tsx', 'utf8');
   assert.match(appShell, /AboutPage/);
-  assert.match(aboutPage, /PRODUCT_DEFINITION/);
-  assert.match(aboutPage, /PRODUCT_DECISION_BOUNDARY/);
   for (const heading of [
-    'Why Control Atlas exists',
-    "What's in here",
-    'Built for the people doing the work',
-    'Follow it back to the source',
-    'About the project',
+    'Trace federal cybersecurity requirements to their sources',
+    'From publication to next action',
+    'Check the source before you act',
+    'Built in the open',
   ]) {
     assert.match(aboutPage, new RegExp(`<h2>${heading}</h2>`));
   }
+  for (const destination of ['#/atlas', '#/library', '#/compare', '#/build', '#/resources', '#/sources']) {
+    assert.ok(aboutPage.includes(destination), `About links to ${destination}`);
+  }
+  assert.match(aboutPage, /does not decide what/);
+  assert.match(aboutPage, /report a broken link or source problem/);
   assert.doesNotMatch(aboutPage, /SummaryCard|about-card-grid/);
   assert.doesNotMatch(aboutPage, /organizing spine|Control Atlas overlay|publisher hierarchy|provenance|confidence|trust register|ontology|taxonomy architecture/i);
   assert.doesNotMatch(aboutPage, /Path shows|Map and List show|graph parenting|not as parents|focus semantics/i);

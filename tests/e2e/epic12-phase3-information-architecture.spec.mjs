@@ -3,7 +3,6 @@ import { expect, test } from "@playwright/test";
 import { attachPageDiagnostics, clickAtlasPublication, gotoApp, waitForAppReady } from "./support.mjs";
 
 const NAV = [
-  { label: "Start here", path: "/start", placement: "primary" },
   { label: "Atlas", path: "/atlas", placement: "primary" },
   { label: "Library", path: "/library", placement: "primary" },
   { label: "Compare", path: "/compare", placement: "primary" },
@@ -27,8 +26,8 @@ test("header exposes task destinations directly from 1200px", async ({ page }) =
     await waitForAppReady(page, { allowPartial: true });
 
     const primary = page.locator('header.site-header nav[aria-label="Primary navigation"]');
-    await expect(primary.locator("a[href]")).toHaveCount(6);
-    await expect(primary.locator("a[href]")).toHaveText(["Start here", "Atlas", "Library", "Compare", "Resources", "Templates"]);
+    await expect(primary.locator("a[href]")).toHaveCount(5);
+    await expect(primary.locator("a[href]")).toHaveText(["Atlas", "Library", "Compare", "Resources", "Templates"]);
     await expect(page.locator('header.site-header nav[aria-label="Utility navigation"]')).toHaveCount(0);
     await page.getByRole("button", { name: "Open more pages" }).click();
     await expect(page.getByRole("navigation", { name: "More pages" }).getByRole("link")).toHaveText([
@@ -216,7 +215,7 @@ test("Phase 3 List and Map preserve Library state and never drop non-empty resul
 test("Template B offers guided setup beside the Atlas and retires the legacy work-map card", async ({ page }) => {
   await gotoApp(page, "/#/");
   await waitForAppReady(page, { allowPartial: true });
-  await expect(page.locator(".home-start__link")).toHaveAttribute("href", "#/start");
+  await expect(page.locator(".home-start__link")).toHaveCount(0);
   const homeTools = await page.locator(".home-tool__label").allTextContents();
   expect(homeTools).toEqual(["Compare", "Templates", "Resources"]);
   await expect(page.locator(".home-work-map span")).toHaveCount(0);
@@ -286,7 +285,6 @@ test("Phase 3 record actions and global footer expose the required hierarchy", a
 
   for (const route of [
     "/#/",
-    "/#/start",
     "/#/library",
     "/#/guides",
     "/#/atlas",

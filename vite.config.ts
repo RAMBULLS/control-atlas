@@ -175,7 +175,6 @@ function renderStaticHome() {
             </div>
           </div>
         </div>
-        <p class="home-start">${escapeHtml(HOME_CONTENT.start.prompt)} ${link(HOME_CONTENT.start.href, 'home-start__link', `${escapeHtml(HOME_CONTENT.start.action)} ${arrow}`)}</p>
       </div>
     </div>
     <nav aria-label="Tools" class="home-tools"><ul class="home-wrap">${tools}</ul></nav>

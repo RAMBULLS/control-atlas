@@ -17,7 +17,6 @@ const SUPPORTED_ROUTES = [
   "/#/resources",
   "/#/sources",
   "/#/about",
-  "/#/start",
 ];
 
 const REPRESENTATIVE_RECORD = "/#/record/nist-800-53/AC-2";
@@ -177,8 +176,8 @@ test("Phase 4 renders each default record connection once with its meaning and s
 
 test("Phase 4 keeps the product boundary contextual and reports freshness from verified data", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await gotoApp(page, "/#/start");
-  await waitForRenderedRoute(page, "/#/start");
+  await gotoApp(page, "/#/atlas");
+  await waitForRenderedRoute(page, "/#/atlas");
   await expect(page.locator("main")).not.toContainText(
     "Control Atlas does not decide what applies to your system",
   );

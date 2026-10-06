@@ -17,6 +17,7 @@ import {
   resourceAccessLabel,
   resourceFieldLabel,
   resourceBrandIdentity,
+  resourceOriginLabel,
   resourceTypeLabel,
 } from "../src/ui/lib/resourceBrands.mjs";
 import { resolveIdentityByKey } from "../src/shared/identity-registry.mjs";
@@ -25,6 +26,15 @@ const dataset = JSON.parse(
   readFileSync(resolve("data/commons-resource-dataset.json"), "utf8"),
 );
 const resources = dataset.resources;
+
+test("Resource origin labels distinguish official, community, vendor, and historical entries", () => {
+  assert.equal(resourceOriginLabel("official"), "Official publisher");
+  assert.equal(resourceOriginLabel("open_source"), "Open-source project");
+  assert.equal(resourceOriginLabel("practitioner"), "Practitioner resource");
+  assert.equal(resourceOriginLabel("commercial"), "Vendor resource");
+  assert.equal(resourceOriginLabel("legacy"), "Historical resource");
+  assert.ok(resources.every((resource) => resourceOriginLabel(resource.resourceLane) !== "Resource"));
+});
 const sourceRegistry = JSON.parse(
   readFileSync(resolve("data/source-registry.json"), "utf8"),
 );
@@ -508,7 +518,7 @@ test("Resource routes follow the Orbital catalog and knowledge-base compositions
   assert.match(directory, /resource-compare-toggle/);
   assert.match(directory, /aria-label="Resource companions"/);
   assert.match(directory, /view="templates">[\s\S]*Browse Templates →[\s\S]*<\/AppLink>/);
-  assert.match(directory, /view="patterns">[\s\S]*Browse Guides →[\s\S]*<\/AppLink>/);
+  assert.match(directory, /view="atlas-map">[\s\S]*Need framework context\? Explore Atlas →[\s\S]*<\/AppLink>/);
 
   for (const heading of [
     "What it is",

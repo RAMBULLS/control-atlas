@@ -218,7 +218,7 @@ test("critical path: keyboard focus reaches primary nav and search", async ({
   page,
 }) => {
   // 2026-08-03: utility navigation grew from 3 items to 5 (Resources/About
-  // joined Sources/Help/Start here), which needs more header width before
+  // joined Sources/Help/Atlas), which needs more header width before
   // the full desktop chrome fits — see styles/orbital.css's compactNavigation
   // breakpoint comment. Playwright's bare default viewport (1280x720) is
   // below it now, so the primary nav this test exercises would otherwise be
@@ -237,17 +237,15 @@ test("critical path: keyboard focus reaches primary nav and search", async ({
   });
   await library.focus();
   await expect(library).toBeFocused();
-  // Scoped to the banner: the static search shell's own "Start here" button
-  // can also be present in the DOM while its route is loading.
-  const startHere = page.getByRole("banner").getByRole("link", {
-    name: "Start here",
+  const atlas = page.getByRole("banner").getByRole("link", {
+    name: "Atlas",
     exact: true,
   });
-  await startHere.focus();
-  await expect(startHere).toBeFocused();
+  await atlas.focus();
+  await expect(atlas).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(
-    page.getByRole("heading", { name: "Start here", exact: true }),
+    page.getByRole("heading", { name: "Atlas", exact: true }),
   ).toBeVisible();
 
   const search = page.getByRole("button", { name: "Open search" });

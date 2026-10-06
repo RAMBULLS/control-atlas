@@ -14,7 +14,6 @@ const SUPPORTED_ROUTES = [
   "/#/library?kind=tools-communities",
   "/#/sources",
   "/#/about",
-  "/#/start",
 ];
 
 const REPRESENTATIVE_RECORD = "/#/record/nist-800-53/AC-2";
@@ -68,8 +67,8 @@ test("Phase 5 renders canonical destinations as native links with working modifi
   await expect(publicationRecordLinks.first()).toHaveAttribute("href", /^#\/record\//);
 
   await openReady(page, "/#/start?goal=understand&context=federal");
-  const publicationLinks = page.locator('a[href^="#/library/publication/"]');
-  expect(await publicationLinks.count()).toBeGreaterThan(0);
+  await expect.poll(() => new URL(page.url()).hash).toBe("#/atlas?atlasJourney=controls");
+  await expect(page.getByRole("link", { name: "Explore RMF & ATO" })).toHaveCount(0);
 
   await openReady(page, REPRESENTATIVE_RECORD);
   const officialSourceLinks = page.getByRole("link", { name: "View official source", exact: true });
@@ -88,7 +87,6 @@ test("Phase 5 renders canonical destinations as native links with working modifi
     "button.catalog-index-row",
     "button.relationship-card",
     "button.resource-context-link",
-    "button.start-here-publication",
     "button.home-tool",
     "button.learn-article-grid",
   ].join(","));
@@ -212,7 +210,7 @@ test("Phase 5 closes overlays on route changes and never stacks them", async ({ 
 test("Phase 5 applies aria-current only to the canonical active destination", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   const cases = [
-    ["/#/start", "Start here"],
+    ["/#/start", "Atlas"],
     ["/#/library", "Library"],
     ["/#/library/publication/nist-800-53", "Library"],
     ["/#/build", "Templates"],

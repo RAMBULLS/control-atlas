@@ -22,7 +22,7 @@ import {
 } from "../components/WorkspaceTemplate";
 import { Button } from "../components/lsm";
 import type { CommonsCollection, CommonsResource } from "../lib/commonsTypes";
-import { resourceAccessLabel, resourceFieldLabel, resourceTypeLabel } from "../lib/resourceBrands.mjs";
+import { resourceAccessLabel, resourceFieldLabel, resourceOriginLabel, resourceTypeLabel } from "../lib/resourceBrands.mjs";
 import { resourceSummaryPresentation } from "../lib/commonsPresentation.mjs";
 import {
   filterDirectoryResources,
@@ -211,8 +211,8 @@ export function CommonsPage(props: {
           <AppLink onNavigate={onNavigate} view="templates">
             Looking for a starter document? Browse Templates →
           </AppLink>
-          <AppLink onNavigate={onNavigate} view="patterns">
-            Want framework context? Browse Guides →
+          <AppLink onNavigate={onNavigate} view="atlas-map">
+            Need framework context? Explore Atlas →
           </AppLink>
         </nav>
       )}
@@ -346,7 +346,7 @@ export function CommonsPage(props: {
                       <div className="workspace-result-row__content">
                         <div className="workspace-result-row__meta">
                           <span className="workspace-kind-tag">{resourceTypeLabel(resource.resourceType)}</span>
-                          <span>{resource.publisher}</span>
+                          <span>{resourceOriginLabel(resource.resourceLane)} · {resource.publisher}</span>
                         </div>
                         <h3>{resource.name}</h3>
                         <div className="resource-summary-copy resource-summary-copy--row">

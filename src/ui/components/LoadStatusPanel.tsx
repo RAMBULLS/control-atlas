@@ -42,7 +42,7 @@ export function LoadErrorPanel(props: {
       <p className="mb-[16px] font-bold text-[var(--ca-danger)]">{props.message}</p>
       <p className="mb-[24px]">
         Check your connection, then try loading the data again. Guides,
-        Templates, Start here, and About still work without it.
+        Templates, Atlas topics, and About still work without it.
       </p>
       <div className="flex gap-[8px] mb-[24px]">
         <Button variant="destructive" onClick={props.onRetry}>
@@ -55,7 +55,7 @@ export function LoadErrorPanel(props: {
 }
 
 export function OfflineFallbackActions(props: {
-  onNavigate: (view: "patterns" | "templates" | "about" | "start-here") => void;
+  onNavigate: (view: "patterns" | "templates" | "about" | "atlas-map") => void;
 }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-[16px]">
@@ -78,10 +78,10 @@ export function OfflineFallbackActions(props: {
       <AppLink
         className="flex flex-col items-start p-[16px] text-left border border-[var(--ca-border-strong)] rounded-[3px] bg-[var(--ca-surface-raised)] hover:border-[var(--ca-secondary)] transition-colors"
         onNavigate={props.onNavigate}
-        view="start-here"
+        view="atlas-map"
       >
-        <strong className="text-[var(--ca-text)] font-mono uppercase tracking-wider text-[11px] mb-[4px]">Start here</strong>
-        <span className="text-[var(--ca-text-muted)] text-[13px]">Answer two questions to find where to begin.</span>
+        <strong className="text-[var(--ca-text)] font-mono uppercase tracking-wider text-[11px] mb-[4px]">Explore Atlas topics</strong>
+        <span className="text-[var(--ca-text-muted)] text-[13px]">Find the topic and publisher source for your question.</span>
       </AppLink>
       <AppLink
         className="flex flex-col items-start p-[16px] text-left border border-[var(--ca-border-strong)] rounded-[3px] bg-[var(--ca-surface-raised)] hover:border-[var(--ca-secondary)] transition-colors"

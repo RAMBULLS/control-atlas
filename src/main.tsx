@@ -613,7 +613,8 @@ function warmInteractiveRoute() {
       void import('./ui/pages/CatalogDetailPage').catch(() => undefined);
       break;
     case 'record':
-      void import('./ui/pages/ObjectDetailPage').catch(() => undefined);
+      void import('./ui/lib/recordPageLoader')
+        .then(({ loadRecordPage }) => loadRecordPage()).catch(() => undefined);
       break;
     case 'resources':
       void import('./ui/pages/CommonsPage').catch(() => undefined);

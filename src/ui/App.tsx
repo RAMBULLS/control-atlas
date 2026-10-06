@@ -1,5 +1,6 @@
 import {
   type ComponentType,
+  type ComponentProps,
   lazy,
   startTransition,
   Suspense,
@@ -31,6 +32,7 @@ import {
 import { userFacingLoadError } from "../app/display-names.mjs";
 import type { RuntimeBundle } from "./lib/runtimeLoader";
 import { waitForRecordPaint } from "./lib/waitForRecordPaint";
+import { loadRecordPage, readyRecordPage } from "./lib/recordPageLoader";
 import { HomePage } from "./pages/HomePage";
 import {
   browserReloadClock,
@@ -108,11 +110,13 @@ const ExplorePage = lazyRoute(() =>
     default: module.ExplorePage,
   })),
 );
-const ObjectDetailPage = lazyRoute(() =>
-  import("./pages/ObjectDetailPage").then((module) => ({
-    default: module.ObjectDetailPage,
-  })),
-);
+const LazyRecordPage = lazyRoute(loadRecordPage);
+function ObjectDetailPage(props: ComponentProps<typeof LazyRecordPage>) {
+  // Keep the selected renderer for this mount: enriching the same record must
+  // not replace its component and reset focus or local interaction state.
+  const [RecordPage] = useState(() => readyRecordPage() ?? LazyRecordPage);
+  return <RecordPage {...props} />;
+}
 const PlaybooksPage = lazyRoute(() =>
   import("./pages/PlaybooksPage").then((module) => ({
     default: module.PlaybooksPage,

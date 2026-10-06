@@ -224,7 +224,7 @@ const correctionContracts = [
     message: "Shared navigation must expose immediate visible transition feedback and double-navigation protection.",
   },
   {
-    file: "src/ui/lib/recordTitle.ts",
+    file: "src/ui/lib/publisherRecordIdentity.ts",
     rule: "duplicate-record-identifiers",
     pattern: /formatRecordTitle[\s\S]*leadingIdentifier/,
     message: "Record titles must use the shared duplicate-identifier formatter.",

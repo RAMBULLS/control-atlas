@@ -974,10 +974,14 @@ jobs:
           java-version: '17'
       - run: npm ci
       - run: npm run test:oscal:independent
+      - run: npm run check:normalized
+      - run: npm run check:oscal
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: oscal-cli-cross-check
-          path: artifacts/oscal-cli/cross-check.json
+          path: |
+            artifacts/oscal-cli/cross-check.json
+            artifacts/oscal-cli/upstream-check.json
 
   lighthouse-ab:
     name: Lighthouse A/B diagnostic

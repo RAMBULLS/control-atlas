@@ -95,6 +95,9 @@ test('nightly validation retains full cross-browser and data automation', () => 
   assert.match(ci, /npm run resources:health/);
   assert.match(ci, /peter-evans\/create-pull-request@[0-9a-f]{40}/);
   assert.match(ci, /npm run test:oscal:independent/);
+  assert.match(ci, /npm run check:normalized/);
+  assert.match(ci, /npm run check:oscal/);
+  assert.match(ci, /artifacts\/oscal-cli\/upstream-check\.json/);
   assert.match(ci, /node tools\/run-lighthouse-ab\.mjs/);
 });
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-23T12:48:08.642Z",
+  "generated_at": "2026-10-06T05:34:10.232Z",
   "hydrated": 1,
   "removed_orphans": [],
   "results": [
@@ -539,16 +539,6 @@
       "retrieved_at": "2026-09-21"
     },
     {
-      "id": "artifact-nist-800-53b-baselines",
-      "status": "OK",
-      "http": "local",
-      "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/v1.5.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json",
-      "sha256": "sha256:5f09b188abc60e0b993fdf17bb268c359f35bfd3a3354f92b7dcabd6a7fbaff8",
-      "byte_length": 1865,
-      "record_count": null,
-      "retrieved_at": "2026-09-23"
-    },
-    {
       "id": "artifact-control-atlas-structure",
       "status": "OK",
       "http": "local",
@@ -937,6 +927,21 @@
       "byte_length": 47594,
       "record_count": null,
       "retrieved_at": "2026-08-12"
+    },
+    {
+      "id": "artifact-nist-800-53b-baselines",
+      "status": "OK",
+      "http": "local",
+      "url": "https://github.com/RAMBULLS/control-atlas/blob/main/data/800-53b-baselines.json",
+      "sha256": "sha256:5f09b188abc60e0b993fdf17bb268c359f35bfd3a3354f92b7dcabd6a7fbaff8",
+      "byte_length": 1865,
+      "record_count": 4,
+      "retrieved_at": "2026-09-23",
+      "evidence_scope": "local_normalized",
+      "local_path": "data/800-53b-baselines.json",
+      "format": "json",
+      "relationship_count": 0,
+      "upstream_reference_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/v1.5.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json"
     }
   ]
 }

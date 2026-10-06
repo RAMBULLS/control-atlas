@@ -285,12 +285,14 @@ export function validateOscalDocumentBoundary(document, expectedModel = null) {
   return model;
 }
 
-function validatedNormalizedOutput(output) {
+export function validateNormalizedRecords(output) {
   if (!validateNormalizedOscal(output)) {
-    throw new Error(`Invalid normalized OSCAL output: ${validationMessage(validateNormalizedOscal.errors)}`);
+    throw new Error(`Invalid internal normalized records: ${validationMessage(validateNormalizedOscal.errors)}`);
   }
   return output;
 }
+
+const validatedNormalizedOutput = validateNormalizedRecords;
 
 export function normalize80053Id(oscalId) {
   return String(oscalId || '').toUpperCase();

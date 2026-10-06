@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import test from 'node:test';
+import { parse } from 'yaml';
 
 const workflow = readFileSync('.github/workflows/ci.yml', 'utf8');
 const refreshScript = readFileSync('scripts/refresh-data.mjs', 'utf8');
@@ -16,18 +17,18 @@ test('source refresh runs weekly and remains manually dispatchable', () => {
   assert.match(workflow, /github\.event\.schedule \|\| inputs\.task \|\| github\.ref/);
 });
 
-test('nightly browser shards keep parallelism visible and disable retry masking', () => {
+test('nightly browser shards keep parallelism visible and allow exactly one retry', () => {
   assert.match(workflow, /PLAYWRIGHT_FULLY_PARALLEL: '1'/);
   assert.match(workflow, /PLAYWRIGHT_WORKERS: '2'/);
   assert.match(
     workflow,
-    /npm run test:e2e:run -- --shard=\$\{\{ matrix\.shard \}\}\/2 --retries=0 --reporter=blob,github/,
+    /npm run test:e2e:run -- --shard=\$\{\{ matrix\.shard \}\}\/2 --retries=1 --reporter=blob,github/,
   );
 });
 
-test('source refresh opens one human-reviewed draft PR after the full gate', () => {
-  assert.match(workflow, /contents: write/);
-  assert.match(workflow, /pull-requests: write/);
+test('source refresh opens one App PR after the full gate and requires independent admission', () => {
+  assert.match(workflow, /permission-contents: write/);
+  assert.match(workflow, /permission-pull-requests: write/);
   assert.match(workflow, /npm run refresh:data/);
   assert.match(workflow, /name: Restore strict conditional source cache/);
   assert.match(workflow, /path: \.local\/http-cache-v1/);
@@ -38,12 +39,46 @@ test('source refresh opens one human-reviewed draft PR after the full gate', () 
   assert.match(workflow, /npx playwright install --with-deps chromium/);
   assert.match(workflow, /npm run precommit:incremental/);
   assert.match(workflow, /npm run sbom:generate/);
+  assert.match(workflow, /name: Restore tracked SBOM before source admission\s+run: git restore --worktree -- artifacts\/sbom\.cdx\.json/);
   assert.match(workflow, /peter-evans\/create-pull-request@[0-9a-f]{40}/);
   assert.match(workflow, /branch: automation\/source-refresh/);
-  assert.match(workflow, /draft: true/);
+  assert.match(workflow, /draft: false/);
+  assert.match(workflow, /token: \$\{\{ steps.refresh-app.outputs.token \}\}/);
+  assert.match(workflow, /node tools\/verify-refresh-admission.mjs/);
+  assert.match(workflow, /node tools\/report-refresh-alerts.mjs/);
+  assert.ok(workflow.indexOf('name: Create repository-scoped publisher token') > workflow.indexOf('name: Verify refreshed repository'));
+  assert.ok(workflow.indexOf('Restore tracked SBOM before source admission') > workflow.indexOf('name: source-refresh-sbom-cdx-json'));
+  assert.ok(workflow.indexOf('node scripts/report-refresh-diff.mjs') > workflow.indexOf('Restore tracked SBOM before source admission'));
   assert.match(workflow, /data\/\*\*/);
   assert.match(workflow, /maps\/\*\*/);
   assert.doesNotMatch(workflow, /git push|\[skip ci\]|auto-merge/i);
+});
+
+test('refresh stops before the expensive steps when nothing changed materially', () => {
+  const steps = parse(workflow).jobs.refresh.steps;
+  const text = (step) => JSON.stringify(step);
+  const decide = steps.findIndex((step) => step.id === 'outcome');
+  assert.ok(decide > steps.findIndex((step) => /Refresh validated build-time data/.test(step.name || '')));
+  assert.equal(steps[decide].run, 'node tools/classify-refresh-outcome.mjs');
+  for (const marker of ['playwright install', 'precommit:incremental', 'sbom:generate', 'create-pull-request', 'report-refresh-diff', 'create-github-app-token']) {
+    const index = steps.findIndex((step) => text(step).includes(marker));
+    assert.ok(index > decide, `${marker} runs after the decision`);
+    assert.equal(steps[index].if, "${{ steps.outcome.outputs.publish == 'true' }}", marker);
+  }
+  // The refresh itself and its alerting must never be skipped by the shortcut.
+  for (const marker of ['npm run refresh:data', 'report-refresh-alerts']) {
+    const step = steps.find((entry) => text(entry).includes(marker));
+    assert.ok(!String(step.if || '').includes('outcome'), marker);
+  }
+});
+
+test('scheduled sweep alerts come from one tested tool, not inline shell', () => {
+  const job = parse(workflow).jobs['sweep-alert'];
+  assert.ok(job.steps.some((step) => step.run === 'node tools/report-sweep-alert.mjs'));
+  assert.ok(!job.steps.some((step) => /gh issue (create|close)/.test(step.run || '')));
+  const env = job.steps.find((step) => step.run === 'node tools/report-sweep-alert.mjs').env;
+  assert.match(env.SWEEP_KIND, /inputs\.task == 'refresh'.*'refresh' \|\| 'nightly'/);
+  for (const key of ['RESULT_BUILD', 'RESULT_BROWSER', 'RESULT_ACCESSIBILITY', 'RESULT_REFRESH']) assert.ok(env[key], key);
 });
 
 test('obsolete Tenable refresh cannot run outside the current registry pipeline', () => {

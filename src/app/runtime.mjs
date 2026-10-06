@@ -1,7 +1,9 @@
+import { orientedRelationshipType } from "../shared/compare-scope.mjs";
 import {
   isComparisonCapableEdge,
   mappingSourceIdsForEdge,
 } from "../shared/compare-capability.mjs";
+import { RETIRED_RECORD_TYPES } from "../shared/record-acceptance.mjs";
 
 function normalize(value) {
   return String(value || "")
@@ -116,6 +118,33 @@ function normalizeLibrarySearchQuery(value) {
     .join(" ");
 }
 
+// Library search matching semantics:
+// 1. Identifier notation ("ac 2", "wn19 dc 000290") is tried first. It may rewrite
+//    the query into hyphenated tokens, and every token must appear in a record's text.
+// 2. If that finds nothing, the query's own words are used instead (all words must
+//    appear; a bare number must appear as a whole number, so "8" does not match "18").
+//    Notation rewriting is an aid for identifiers and must never turn a query about
+//    "red hat 8" or "windows server 2019" into a zero-result search.
+function literalLibrarySearchTerms(value) {
+  const terms = expandLibrarySearchIntent(value).toLowerCase().match(/[a-z0-9][a-z0-9.()-]*/g) || [];
+  return terms.filter(
+    (term) => (term.length > 1 || /^\d$/.test(term)) && !SEARCH_STOP_WORDS.has(term),
+  );
+}
+
+// Compiled once per term; the caller applies it to every record.
+function libraryTermMatcher(term, wholeNumbers) {
+  if (!wholeNumbers || !/^\d+$/.test(term)) return (text) => text.includes(term);
+  const whole = new RegExp(`(^|[^a-z0-9])${term}([^a-z0-9]|$)`);
+  return (text) => whole.test(text);
+}
+
+// A record from the publication the query names (its governed source name contains the
+// typed phrase, e.g. "DISA STIG", "SP 800-53") outranks incidental text matches.
+function librarySourceNamesQuery(sourceName, phrase) {
+  return phrase.length >= 3 && normalize(sourceName).includes(phrase);
+}
+
 function librarySearchRankBoost(document, query) {
   const normalizedQuery = normalize(query);
   const title = document?.search_title || normalize(document?.title);
@@ -192,15 +221,6 @@ export function resolveControlAliases(rawNeedle) {
       continue;
     }
 
-    // Base control IDs: "ac-02", "ac-2", "ac02", "ac2", "ac 02", "ac 2"
-    const baseMatch = input.match(/^([a-z]{2,4})[-\s]?0*(\d+)$/i);
-    if (baseMatch) {
-      const family = baseMatch[1].toLowerCase();
-      const controlNum = Number.parseInt(baseMatch[2], 10);
-      aliases.add(`${family}-${controlNum}`);
-      continue;
-    }
-
     // 4. CSF style: e.g. "pr.ac-01", "pr.ac-1", "pr ac 1", "pr-ac-1"
     const csfMatch = input.match(/^([a-z]{2})[.\-\s]([a-z]{2})[-\s]?0*(\d+)$/i);
     if (csfMatch) {
@@ -208,6 +228,43 @@ export function resolveControlAliases(rawNeedle) {
       const cat = csfMatch[2].toLowerCase();
       const num = Number.parseInt(csfMatch[3], 10);
       aliases.add(`${func}.${cat}-${num}`);
+      continue;
+    }
+
+    // 5. DISA STIG Vuln ID: "v-205646", "v205646", "v 205646", or bare 5-7 digit number "205646"
+    const stigVulnMatch = input.match(/^v[-\s]?(\d{4,7})$/i);
+    if (stigVulnMatch) {
+      aliases.add(`v-${stigVulnMatch[1]}`);
+      continue;
+    }
+    const bareVulnMatch = input.match(/^(\d{5,7})$/);
+    if (bareVulnMatch) {
+      aliases.add(`v-${bareVulnMatch[1]}`);
+      continue;
+    }
+
+    // 6. DISA STIG Rule ID: "sv-205646", "sv205646", "sv-205646r1153437_rule"
+    const svMatch = input.match(/^sv[-\s]?(\d{4,7})/i);
+    if (svMatch) {
+      aliases.add(`v-${svMatch[1]}`);
+      continue;
+    }
+
+    // 7. DISA STIG ID with spaces or alternate delimiters: "wn19 dc 000290" -> "wn19-dc-000290"
+    if (/\d/.test(input)) {
+      const stigIdMatch = input.match(/^([a-z0-9]{2,8})[-\s_]+([a-z0-9]{2,8})[-\s_]+([a-z0-9]{4,10})$/i);
+      if (stigIdMatch) {
+        aliases.add(`${stigIdMatch[1]}-${stigIdMatch[2]}-${stigIdMatch[3]}`.toLowerCase());
+        continue;
+      }
+    }
+
+    // 8. Base control IDs: "ac-02", "ac-2", "ac02", "ac2", "ac 02", "ac 2"
+    const baseMatch = input.match(/^([a-z]{2,4})[-\s]?0*(\d+)$/i);
+    if (baseMatch) {
+      const family = baseMatch[1].toLowerCase();
+      const controlNum = Number.parseInt(baseMatch[2], 10);
+      aliases.add(`${family}-${controlNum}`);
       continue;
     }
   }
@@ -547,8 +604,10 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
       const tierLabels = tierType
         ? CATALOG_TIER_LABEL_OVERRIDES[id] || TIER_TYPE_LABELS[tierType]
         : null;
+      // Retired record types stay in the graph but are not public records, so the
+      // count a reader sees matches what they can browse (issue 279).
       const leafRecordCount = catalogNodes.filter(
-        (node) => !NON_LEAF_NODE_TYPES.has(node.node_type),
+        (node) => !NON_LEAF_NODE_TYPES.has(node.node_type) && !RETIRED_RECORD_TYPES.has(node.node_type),
       ).length;
       const tierCount = tierType
         ? catalogNodes.filter((node) => node.node_type === tierType).length
@@ -665,7 +724,12 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
     to_title: itemTitleFor(toNode),
     to_catalog_id: toNode.metadata?.catalog_id || "",
     to_taxonomy_tags: toNode.metadata?.taxonomy_tags || [],
-    relationship_type: edge.relationship_type,
+    relationship_type: orientedRelationshipType(edge.relationship_type, fromNode.id !== edge.source_node_id),
+    published_source_id: edge.source_node_id,
+    published_target_id: edge.target_node_id,
+    published_relationship_type: edge.relationship_type,
+    raw_relationship_type: edge.raw_relationship_type || edge.relationship_type,
+    publisher_assertions: edge.publisher_assertions || [],
     provenance_class: edge.provenance_class,
     confidence: edge.confidence,
     publication_status: edge.publication_status,
@@ -679,6 +743,7 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
     const requestedNodeIds = new Set(request.node_ids || []);
     const matchedEdges = dataset.edges
       .map((edge) => {
+        if (request.comparisons_only && (!isComparisonCapableEdge(edge) || !mappingSourceIdsForEdge(edge).length)) return null;
         const orientation = relationshipOrientation(
           edge,
           request.source_catalog,
@@ -692,7 +757,7 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
           return null;
         if (
           request.relationship_type &&
-          edge.relationship_type !== request.relationship_type
+          orientedRelationshipType(edge.relationship_type, orientation.fromNode.id !== edge.source_node_id) !== request.relationship_type
         )
           return null;
         if (
@@ -753,6 +818,11 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
         to_catalog_id: row.to_catalog_id,
         to_taxonomy_tags: row.to_taxonomy_tags || [],
         relationship_type: row.relationship_type,
+        published_source_id: row.published_source_id,
+        published_target_id: row.published_target_id,
+        published_relationship_type: row.published_relationship_type,
+        raw_relationship_type: row.raw_relationship_type,
+        publisher_assertions: row.publisher_assertions || [],
         provenance_class: row.provenance_class,
         confidence: row.confidence,
         publication_status: row.publication_status,
@@ -1217,16 +1287,23 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
       primaryAlias && primaryAlias !== needle ? primaryAlias : query,
     ).toLowerCase();
     const searchTerms = searchNeedle.split(/\s+/).filter(Boolean);
+    const literalTerms = literalLibrarySearchTerms(query);
+    const literalNeedle = literalTerms.join(" ");
+    const literalMatchers = literalTerms.map((term) => libraryTermMatcher(term, true));
+    const typedPhrase = needle.replace(/\s+/g, " ");
     const exactMatches = [];
     const matches = [];
     for (let index = 0; index < indexedLibraryDocumentCount; index += 1) {
       if (!indexedLibraryFacetMatches(index, filters)) continue;
       const normalizedItemId = normalize(indexedLibraryValue(index, "item_id"));
       const normalizedId = normalize(indexedLibraryValue(index, "id"));
+      const officialPreview = normalize(indexedLibraryValue(index, "official_text_preview"));
+      const isStigNeedle = aliases.some((a) => /\d/.test(a) && /^[a-z0-9]{2,8}-[a-z0-9]{2,8}-[a-z0-9]{4,10}$/i.test(a));
       if (
         needle && (
           aliases.includes(normalizedItemId) ||
-          aliases.includes(normalizedId)
+          aliases.includes(normalizedId) ||
+          (isStigNeedle && aliases.some((a) => officialPreview.startsWith(a + " -") || officialPreview.startsWith(a + ":")))
         )
       ) {
         exactMatches.push({ index, rankBoost: 0, score: 0 });
@@ -1252,12 +1329,39 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
         rankBoost: indexedLibraryRankBoost(index, searchNeedle),
         score: aliases.some((a) => normalizedItemId.startsWith(a))
           ? 1
-          : title.includes(searchNeedle)
+          : librarySourceNamesQuery(indexedLibraryValue(index, "source_name"), typedPhrase)
+            ? 1.5
+            : title.includes(searchNeedle)
+              ? 2
+              : 3,
+      });
+    }
+    if (exactMatches.length) return exactMatches;
+    if (matches.length || !searchTerms.length) return matches.sort(compareLibraryMatches);
+    // Nothing matched the identifier-style rewrite; retry with the words the user typed.
+    for (let index = 0; index < indexedLibraryDocumentCount; index += 1) {
+      if (!indexedLibraryFacetMatches(index, filters)) continue;
+      const title = normalize(indexedLibraryValue(index, "title"));
+      const searchableText = [
+        normalize(indexedLibraryValue(index, "item_id")),
+        title,
+        normalize(indexedLibraryValue(index, "control_family")),
+        normalize(indexedLibraryValue(index, "source_name")),
+        normalize(indexedLibraryValue(index, "publisher_name")),
+        normalize(indexedLibraryValue(index, "official_text_preview")),
+      ].join(" ");
+      if (!literalMatchers.every((matches) => matches(searchableText))) continue;
+      matches.push({
+        index,
+        rankBoost: indexedLibraryRankBoost(index, literalNeedle),
+        score: librarySourceNamesQuery(indexedLibraryValue(index, "source_name"), typedPhrase)
+          ? 1.5
+          : title.includes(literalNeedle)
             ? 2
             : 3,
       });
     }
-    return exactMatches.length ? exactMatches : matches.sort(compareLibraryMatches);
+    return matches.sort(compareLibraryMatches);
   }
 
   function documentLibraryMatches(query, filters = {}) {
@@ -1267,10 +1371,16 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
     if (!needle) {
       return candidates.map((document) => ({ document, rankBoost: 0, score: 0 }));
     }
+    const isStigNeedle = aliases.some((a) => /\d/.test(a) && /^[a-z0-9]{2,8}-[a-z0-9]{2,8}-[a-z0-9]{4,10}$/i.test(a));
     const exactMatches = candidates.filter((document) => {
       const itemId = document.search_item_id || normalize(document.item_id);
       const id = document.search_id || normalize(document.id);
-      return aliases.includes(itemId) || aliases.includes(id);
+      const officialPreview = normalize(document.official_text_preview);
+      return (
+        aliases.includes(itemId) ||
+        aliases.includes(id) ||
+        (isStigNeedle && aliases.some((a) => officialPreview.startsWith(a + " -") || officialPreview.startsWith(a + ":")))
+      );
     });
     if (exactMatches.length) {
       return exactMatches.map((document) => ({ document, rankBoost: 0, score: 0 }));
@@ -1281,36 +1391,54 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
     ).toLowerCase();
     const searchTerms = searchNeedle.split(/\s+/).filter(Boolean);
     if (!searchTerms.length) return [];
-    const matches = [];
-    for (const document of candidates) {
-      const itemId = document.search_item_id || normalize(document.item_id);
-      const title = document.search_title || normalize(document.title);
-      const searchableText = document.search_text || [
-        itemId,
-        title,
-        normalize(document.control_family),
-        normalize(document.source_name),
-        normalize(document.publisher_name),
-        normalize(document.official_text_preview),
-      ].join(" ");
-      if (!searchTerms.every((term) => searchableText.includes(term))) continue;
-      matches.push({
-        document,
-        rankBoost: librarySearchRankBoost(document, searchNeedle),
-        score: aliases.some((a) => itemId.startsWith(a))
-          ? 1
-          : title.includes(searchNeedle)
-            ? 2
-            : 3,
-      });
-    }
+    const literalTerms = literalLibrarySearchTerms(query);
+    const literalNeedle = literalTerms.join(" ");
+    const typedPhrase = needle.replace(/\s+/g, " ");
+    const collect = (needle, terms, wholeNumbers) => {
+      const found = [];
+      const matchers = terms.map((term) => libraryTermMatcher(term, wholeNumbers));
+      for (const document of candidates) {
+        const itemId = document.search_item_id || normalize(document.item_id);
+        const title = document.search_title || normalize(document.title);
+        const searchableText = document.search_text || [
+          itemId,
+          title,
+          normalize(document.control_family),
+          normalize(document.source_name),
+          normalize(document.publisher_name),
+          normalize(document.official_text_preview),
+        ].join(" ");
+        if (!matchers.every((matches) => matches(searchableText))) continue;
+        found.push({
+          document,
+          rankBoost: librarySearchRankBoost(document, needle),
+          score: aliases.some((a) => itemId.startsWith(a))
+            ? 1
+            : librarySourceNamesQuery(document.source_name, typedPhrase)
+              ? 1.5
+              : title.includes(needle)
+                ? 2
+                : 3,
+        });
+      }
+      return found;
+    };
+    let matches = collect(searchNeedle, searchTerms, false);
+    if (!matches.length && literalTerms.length) matches = collect(literalNeedle, literalTerms, true);
     return matches.sort(compareLibraryMatches);
   }
 
+  // The Library asks for the same query several times per render (results, tag counts,
+  // kind counts). The dataset never changes for a runtime, so the last answer is reused.
+  let lastLibraryMatches = null;
   function libraryMatches(query, filters = {}) {
-    return indexedLibraryDocumentCount
+    const key = JSON.stringify([query, filters]);
+    if (lastLibraryMatches?.key === key) return lastLibraryMatches.matches;
+    const matches = indexedLibraryDocumentCount
       ? indexedLibraryMatches(query, filters)
       : documentLibraryMatches(query, filters);
+    lastLibraryMatches = { key, matches };
+    return matches;
   }
 
   function matchTaxonomyTags(match) {
@@ -1334,7 +1462,8 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
         if (!nodeMatchesFilter(node)) return false;
         const itemId = normalize(node.metadata?.item_id);
         const id = normalize(node.id);
-        return aliases.includes(itemId) || aliases.includes(id);
+        const stigId = normalize(node.metadata?.stig_id);
+        return aliases.includes(itemId) || aliases.includes(id) || (stigId && aliases.includes(stigId));
       });
       if (exactMatches.length > 0) {
         return exactMatches;
@@ -1344,12 +1473,13 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
         .filter(nodeMatchesFilter)
         .map((node) => {
           const itemId = normalize(node.metadata?.item_id);
+          const stigId = normalize(node.metadata?.stig_id);
           const label = normalize(node.label);
           const description = normalize(node.metadata?.description);
           const score =
-            aliases.includes(itemId)
+            aliases.includes(itemId) || (stigId && aliases.includes(stigId))
               ? 0
-              : aliases.some((a) => itemId.startsWith(a))
+              : aliases.some((a) => itemId.startsWith(a)) || (stigId && aliases.some((a) => stigId.startsWith(a)))
                 ? 1
                 : label.includes(needle)
                   ? 2
@@ -2361,6 +2491,11 @@ export function aggregateRelationshipRows(rows = []) {
       to_catalog_id: row.to_catalog_id,
       to_taxonomy_tags: row.to_taxonomy_tags || [],
       relationship_type: row.relationship_type,
+      published_source_id: row.published_source_id,
+      published_target_id: row.published_target_id,
+      published_relationship_type: row.published_relationship_type,
+      raw_relationship_type: row.raw_relationship_type,
+      publisher_assertions: row.publisher_assertions || [],
       provenance_class: row.provenance_class,
       confidence: row.confidence,
       publication_status: row.publication_status,

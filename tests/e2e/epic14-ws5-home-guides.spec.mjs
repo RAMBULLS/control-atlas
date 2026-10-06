@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
 });
 
-test("WS5 Home implements Template B with one search, four destinations, and Library discovery", async ({ page }) => {
+test("WS5 Home implements Template B with one search, the Atlas, three tools, and Library discovery", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await gotoApp(page, "/");
   await waitForAppReady(page, { allowPartial: true });
@@ -20,43 +20,40 @@ test("WS5 Home implements Template B with one search, four destinations, and Lib
   await expect(template).toBeVisible();
   await expect(template.locator(".home-hero")).toHaveCount(1);
   await expect(template.locator(".home-search")).toHaveCount(1);
-  await expect(template.locator(".home-secondary-action")).toHaveCount(4);
-  await expect(template.locator(".home-secondary-action strong")).toHaveText([
-    "Start guided setup",
-    "Browse the Atlas",
-    "Search the Library",
-    "Browse Resources",
-  ]);
+  await expect(template.locator(".home-tools .home-tool")).toHaveCount(3);
+  await expect(template.locator(".home-tool__label")).toHaveText(["Compare", "Templates", "Resources"]);
+  await expect(template.getByRole("link", { name: "Open the Atlas", exact: true })).toHaveAttribute("href", "#/atlas");
+  await expect(template.locator(".home-start__link")).toHaveCount(0);
   await expect(template.getByRole("heading", { name: "Make federal cybersecurity make sense.", level: 1 })).toBeVisible();
-  await expect(template.getByText("Understand what applies, what it means, and what to do next.", { exact: true })).toBeVisible();
+  await expect(template.locator(".home-lead")).toContainText("trace where requirements come from, see how they relate, and know what to do next.");
   await expect(template.getByText(/publisher|provenance|mapping/i)).toHaveCount(0);
   await expect(template.locator(".home-ecosystem, .home-primary-actions")).toHaveCount(0);
   await expect(template.getByText("Start with your work", { exact: true })).toHaveCount(0);
 
-  const libraryDiscovery = template.getByRole("navigation", { name: "Start with what you came to find." });
-  const discoveryLinks = libraryDiscovery.locator(".home-library-kpi");
-  await expect(template.getByText("BROWSE THE LIBRARY", { exact: true })).toBeVisible();
+  const libraryDiscovery = template.getByRole("region", { name: "Browse the Library" });
+  const discoveryLinks = libraryDiscovery.locator(".home-library__item");
+  await expect(libraryDiscovery.getByRole("heading", { name: "Browse the Library", level: 2 })).toBeVisible();
   await expect(discoveryLinks).toHaveCount(5);
   // The practitioner question leads and the collection name is the headline;
   // the record count is footer metadata, never the reason to look.
-  await expect(discoveryLinks.locator(".home-library-kpi__question")).toHaveText([
+  await expect(discoveryLinks.locator(".home-library__question")).toHaveText([
     "What you have to do",
     "What applies to your system",
     "How it gets checked",
     "How systems get hardened",
     "What it defends against",
   ]);
-  await expect(discoveryLinks.locator(".home-library-kpi__label")).toHaveText([
+  await expect(discoveryLinks.locator(".home-library__label")).toHaveText([
     "Controls & requirements",
     "Baselines & profiles",
     "Assessment & process",
     "Configuration rules",
     "Threats & defenses",
   ]);
-  const discoveryCounts = await discoveryLinks.locator(".home-library-kpi__count").allTextContents();
+  const discoveryCounts = await discoveryLinks.locator(".home-library__count").allTextContents();
   expect(discoveryCounts).toHaveLength(5);
-  expect(discoveryCounts.every((count) => /^\d[\d,]* records$/.test(count))).toBe(true);
-  await expect(libraryDiscovery.getByRole("link", { name: "Browse everything" })).toBeVisible();
+  expect(discoveryCounts.every((count) => /^\d[\d,]* records\s*→?$/.test(count))).toBe(true);
+  await expect(libraryDiscovery.getByRole("link", { name: "All records", exact: true })).toBeVisible();
   await expect(template.getByText(/more records|bigger tag/i)).toHaveCount(0);
   await expect(template.locator("[data-tag-count-scale]")).toHaveCount(0);
   await expect(template.locator(".home-area-browse, .home-ecosystem-areas, .home-area-link")).toHaveCount(0);
@@ -69,13 +66,19 @@ test("WS5 Home implements Template B with one search, four destinations, and Lib
     "#/library?kind=threats-defenses",
   ]);
 
-  const accentColors = await template.locator(".home-secondary-action").evaluateAll((cards) => (
-    cards.map((card) => globalThis.getComputedStyle(card, "::before").backgroundColor)
+  const accentColors = await template.locator(".home-tool__action").evaluateAll((actions) => (
+    actions.map((action) => globalThis.getComputedStyle(action).color)
   ));
   expect(new Set(accentColors).size).toBe(1);
 });
 
 test("WS5 Library discovery cards open the counted canonical filter states", async ({ page }) => {
+  // Five full app loads and five Library data loads in one test. That fits the
+  // 30s default alone but not beside three other workers, and the filter chip
+  // is the first thing rendered after the Library's own data lands — so the
+  // assertion below was racing that load on a 5s default rather than testing
+  // the product.
+  test.setTimeout(120_000);
   const discoveries = [
     ["Controls & requirements", "Requirements"],
     ["Baselines & profiles", "Baselines & profiles"],
@@ -87,13 +90,15 @@ test("WS5 Library discovery cards open the counted canonical filter states", asy
   for (const [label, filterLabel] of discoveries) {
     await gotoApp(page, "/");
     await waitForAppReady(page, { allowPartial: true });
-    const discovery = page.locator(".home-library-kpi").filter({ hasText: label });
-    const count = (await discovery.locator(".home-library-kpi__count").innerText()).replace(/\s+records$/i, "");
+    const discovery = page.locator(".home-library__item").filter({ hasText: label });
+    const count = (await discovery.locator(".home-library__count").innerText()).replace(/\s+records\s*→?$/i, "");
     expect(count).toMatch(/^\d[\d,]*$/);
     await discovery.click();
 
     await expect(page).toHaveURL(/#\/library\?kind=/);
-    await expect(page.getByLabel("Active filters").getByRole("button", { name: filterLabel })).toBeVisible();
+    await expect(
+      page.getByLabel("Active filters").getByRole("button", { name: filterLabel }),
+    ).toBeVisible({ timeout: 30_000 });
     await expect(page.getByRole("status")).toContainText(count);
     await expect(page.getByRole("list", { name: "Search results" }).getByRole("listitem").first()).toBeVisible();
   }
@@ -106,13 +111,13 @@ test("WS5 Library discovery remains bounded and usable at all supported widths",
     await gotoApp(page, "/");
     await waitForAppReady(page, { allowPartial: true });
 
-    const navigation = page.getByRole("navigation", { name: "Start with what you came to find." });
-    await expect(navigation.locator(".home-library-kpi")).toHaveCount(5);
+    const navigation = page.getByRole("region", { name: "Browse the Library" });
+    await expect(navigation.locator(".home-library__item")).toHaveCount(5);
     expect(
       await page.locator("html").evaluate((element) => element.scrollWidth - element.clientWidth),
       `${width}px Home overflow`,
     ).toBeLessThanOrEqual(1);
-    const targets = await navigation.locator(".home-library-kpi").evaluateAll((links) => links.map((link) => {
+    const targets = await navigation.locator(".home-library__item").evaluateAll((links) => links.map((link) => {
       const box = link.getBoundingClientRect();
       return { height: box.height, width: box.width };
     }));
@@ -120,31 +125,25 @@ test("WS5 Library discovery remains bounded and usable at all supported widths",
   }
 });
 
-test("WS6 About is a five-section knowledge-base article with the exact research boundary", async ({ page }) => {
+test("WS6 About tells the product story with its source boundary", async ({ page }) => {
   await gotoApp(page, "/#/about");
   await waitForAppReady(page);
   const article = page.getByRole("article");
   await expect(page.locator('[data-page-template="knowledge-base"]')).toBeVisible();
   await expect(page.locator(".about-card-grid, .summary-card")).toHaveCount(0);
-  await expect(page.locator("main").getByText(
-    "Control Atlas is a public research tool for federal cybersecurity requirements, controls, techniques, and guidance.",
-    { exact: true },
-  )).toBeVisible();
-  await expect(page.locator("main").getByText(
-    "Use Control Atlas for research, not compliance or authorization decisions.",
-    { exact: true },
-  )).toBeVisible();
+  await expect(article).toContainText("Control Atlas is a free research tool for people working with federal cybersecurity requirements.");
+  await expect(article).toContainText("Publisher text and published connections stay separate from Control Atlas explanations and navigation.");
+  await expect(article).toContainText("It does not decide what applies to your system");
   for (const title of [
-    "Why Control Atlas exists",
-    "What's in here",
-    "Built for the people doing the work",
-    "Follow it back to the source",
-    "About the project",
+    "Trace federal cybersecurity requirements to their sources",
+    "From publication to next action",
+    "Check the source before you act",
+    "Built in the open",
   ]) {
     const heading = article.getByRole("heading", { level: 2, name: title });
     await expect(heading).toBeVisible();
   }
-  await expect(article.locator(":scope > section")).toHaveCount(5);
+  await expect(article.locator(":scope > section")).toHaveCount(4);
   await expect(page.getByRole("complementary", { name: "On this page" })).toBeVisible();
 });
 
@@ -158,17 +157,17 @@ test("WS5 Guides implements a numbered, icon-bearing, whole-card Template F dire
   await expect(template.getByRole("heading", { name: "Guides", level: 1 })).toBeVisible();
 
   const cards = template.locator("a.guide-card");
-  await expect(cards).toHaveCount(12);
-  await expect(cards.locator(".guide-card__icon svg")).toHaveCount(12);
-  await expect(cards.locator(".bucket-tag")).toHaveCount(12);
+  await expect(cards).toHaveCount(11);
+  await expect(cards.locator(".guide-card__icon svg")).toHaveCount(11);
+  await expect(cards.locator(".bucket-tag")).toHaveCount(11);
   await expect(cards.locator(".guide-card__number")).toHaveText(
-    Array.from({ length: 12 }, (_, index) => `Guide ${String(index + 1).padStart(2, "0")}`),
+    Array.from({ length: 11 }, (_, index) => `Guide ${String(index + 1).padStart(2, "0")}`),
   );
 
   const iconShapes = await cards.locator(".guide-card__icon svg").evaluateAll((icons) => (
     icons.map((icon) => icon.innerHTML)
   ));
-  expect(new Set(iconShapes).size).toBe(12);
+  expect(new Set(iconShapes).size).toBe(11);
 
   const firstCard = cards.first();
   const firstTitle = await firstCard.locator("strong").innerText();
@@ -176,7 +175,7 @@ test("WS5 Guides implements a numbered, icon-bearing, whole-card Template F dire
   await expect(page).toHaveURL(/#\/guides\?pattern=starting-an-authorization/);
   await expect(page.getByRole("heading", { name: firstTitle, level: 1 })).toBeVisible();
   await expect(page.locator('[data-page-template="knowledge-base"]')).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "Guide context" })).toContainText("Guide 01 of 12");
+  await expect(page.getByRole("navigation", { name: "Guide context" })).toContainText("Guide 01 of 11");
   const article = page.getByRole("article");
   for (const title of ["When it matters", "What this means", "Limitations", "Official references"]) {
     await expect(article.getByRole("heading", { name: title, level: 2 })).toBeVisible();
@@ -197,7 +196,7 @@ test("WS5 Home and Guides stack without horizontal overflow below 640 pixels", a
   }
 
   const cards = page.locator("a.guide-card");
-  await expect(cards).toHaveCount(12);
+  await expect(cards).toHaveCount(11);
   const firstLeft = await cards.first().evaluate((card) => card.getBoundingClientRect().left);
   const secondLeft = await cards.nth(1).evaluate((card) => card.getBoundingClientRect().left);
   expect(Math.abs(firstLeft - secondLeft)).toBeLessThanOrEqual(1);

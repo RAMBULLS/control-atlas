@@ -10,10 +10,9 @@
 // Nothing here is fabricated: an artifact is hydrated only if its exact URL
 // returns bytes we hash ourselves. Anything that cannot be retrieved is left
 // untouched and reported so the caller can quarantine it with a reason.
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, mkdtempSync, rmSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { tmpdir } from 'node:os';
-import { join, dirname } from 'node:path';
+import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { unzipSync } from 'fflate';
 import { strictConditionalFetch } from './lib/strict-conditional-fetch.mjs';
@@ -21,8 +20,6 @@ import { writeJsonAtomically } from './lib/write-json-atomically.mjs';
 import readXlsxFile from 'read-excel-file/node';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const REGISTRY = join(ROOT, 'data/source-registry.json');
-const OUT = join(ROOT, 'data/artifact-hydration-manifest.json');
 
 // ---- Deterministic record counters keyed by counting method. ----
 function countOscalControls(json) {
@@ -87,14 +84,21 @@ const OSCAL = 'https://raw.githubusercontent.com/usnistgov/oscal-content/v1.5.0/
 // Only artifacts whose URL is a real downloadable FILE belong here.
 // `local` resolutions hash a file already in the repo (Control Atlas's own
 // editorial spine) rather than fetching over the network.
-const RESOLUTIONS = [
+export const BASE_RESOLUTIONS = Object.freeze([
   { id: 'artifact-nist-800-171-rev2', url: 'https://csrc.nist.gov/files/pubs/sp/800/171/r2/upd1/final/docs/sp800-171r2-security-reqs.csv', format: 'csv', parser: 'csv', parser_version: '1.0.0', count: 'csv' },
   { id: 'artifact-nist-ai-rmf-playbook', url: 'https://airc.nist.gov/docs/playbook.json', format: 'json', parser: 'ai-rmf-playbook-json', parser_version: '1.0.0', count: 'jsonld' },
   { id: 'artifact-fedramp-2026-rules', url: 'https://raw.githubusercontent.com/FedRAMP/rules/main/fedramp-consolidated-rules.json', format: 'json', parser: 'fedramp-consolidated-rules-json', parser_version: '1.0.0', count: 'jsonld' },
-  { id: 'artifact-mitre-attack-enterprise', url: 'https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack.json', format: 'stix', parser: 'stix-json', parser_version: '1.0.0', count: 'stix' },
-  { id: 'artifact-mitre-attack-ics', url: 'https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/ics-attack/ics-attack.json', format: 'stix', parser: 'stix-json', parser_version: '1.0.0', count: 'stix' },
-  { id: 'artifact-mitre-d3fend-ontology', url: 'https://d3fend.mitre.org/api/technique/all.json', format: 'json_ld', parser: 'd3fend-json-ld', parser_version: '1.0.0', count: 'jsonld' },
-  { id: 'artifact-mitre-d3fend-mappings', url: 'https://d3fend.mitre.org/api/ontology/inference/d3fend-full-mappings.json', format: 'json_ld', parser: 'd3fend-json-ld', parser_version: '1.0.0', count: 'jsonld' },
+  // The four MITRE artifacts are deliberately absent. fetch-mitre-data.mjs owns
+  // them: it fetches ATT&CK at a pinned release commit rather than master, takes
+  // D3FEND from the ontology URL the registry actually declares, and
+  // migrate-source-truth-profiles.mjs syncs the registry's sha256, artifact_url,
+  // byte_length and record_count from the catalogs it writes.
+  //
+  // Hydrating them here as well meant two tasks claiming the same artifact ids
+  // from different URLs -- master versus a pinned commit, and
+  // /api/technique/all.json versus /ontologies/d3fend.json -- so the registry
+  // and the execution manifest recorded checksums of genuinely different bytes
+  // and verify-manifests rejected all three. One artifact, one hydrator.
   { id: 'artifact-disa-cci-list', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_CCI_List.zip', format: 'oscal_xml', parser: 'cci-xml', parser_version: '1.0.0', count: 'cci' },
   // NIST OSCAL catalog family (pinned v1.5.0). These target the graph-cited
   // artifact ids (artifact-<catalogId>) so node/edge provenance resolves to
@@ -167,19 +171,19 @@ const RESOLUTIONS = [
   // not WAF-blocked) plus the extracted STIG/SRG/CCI-map data files
   // (generated-from-download, hashed from their committed copies).
   { id: 'artifact-disa-compilation-zip', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'other', parser: 'disa-compilation', parser_version: '1.0.0' },
-  { id: 'artifact-disa-stig-library', local: 'data/stig-rules.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0' },
-  { id: 'artifact-disa-srg-library', local: 'data/srg-requirements.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0' },
-  { id: 'artifact-disa-stig-srg-cci-references', local: 'maps/stig-srg-to-cci.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0' },
+  { id: 'artifact-disa-stig-library', local: 'data/stig-rules.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0', count: 'json_records' },
+  { id: 'artifact-disa-srg-library', local: 'data/srg-requirements.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0', count: 'json_records' },
+  { id: 'artifact-disa-stig-srg-cci-references', local: 'maps/stig-srg-to-cci.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0', count: 'json_relationships' },
   // 800-53B baselines: the generated baseline data (generated-from-download of
   // the OSCAL rev5 baseline profiles), hashed from its committed copy.
   { id: 'artifact-nist-800-53b-baselines', local: 'data/800-53b-baselines.json', url: `${OSCAL}/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json`, format: 'oscal_json', parser: 'oscal-profile', parser_version: '1.5.0' },
   // Control Atlas's own editorial structure spine (hashed from the repo file).
   { id: 'artifact-control-atlas-structure', local: 'data/curated/tree-spine.json', url: 'https://github.com/rambulls/control-atlas/blob/main/data/curated/tree-spine.json', format: 'json', parser: 'control-atlas-spine', parser_version: '1.0.0', count: 'jsonld' },
-];
+].map((entry) => Object.freeze(entry)));
 
-const nistZeroTrustManifestPath = join(ROOT, 'data', 'curated', 'nist-zt', 'nist-source-manifest.json');
-if (existsSync(nistZeroTrustManifestPath)) {
-  const nistZeroTrustManifest = JSON.parse(readFileSync(nistZeroTrustManifestPath, 'utf8'));
+export function hydrationResolutions(nistZeroTrustManifest = null) {
+  const RESOLUTIONS = BASE_RESOLUTIONS.map((entry) => ({ ...entry }));
+  if (nistZeroTrustManifest) {
   const nistRootSource = (nistZeroTrustManifest.sources || []).find((source) => source.source_key === 'nist-sp-1800-35');
   const nistRootResolution = RESOLUTIONS.find((resolution) => resolution.id === 'artifact-nist-sp-1800-35');
   if (nistRootSource?.artifact_url && nistRootResolution) nistRootResolution.url = nistRootSource.artifact_url;
@@ -195,6 +199,13 @@ if (existsSync(nistZeroTrustManifestPath)) {
       parser_version: '1.0.0',
     });
   }
+  }
+  return RESOLUTIONS;
+}
+
+export function loadHydrationResolutions(root = ROOT) {
+  const path = join(root, 'data', 'curated', 'nist-zt', 'nist-source-manifest.json');
+  return hydrationResolutions(existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : null);
 }
 
 const COUNTERS = {
@@ -204,18 +215,26 @@ const COUNTERS = {
   jsonld: (bytes) => countJsonLdEntries(JSON.parse(Buffer.from(bytes).toString('utf8'))),
   csv: (bytes) => countCsvRows(Buffer.from(bytes).toString('utf8')),
   cci: (bytes) => countCciItems(bytes),
+  json_records: (bytes) => JSON.parse(Buffer.from(bytes).toString('utf8')).records?.length || 0,
 };
 
 // XLSX row count is async (read-excel-file/node reads a file/stream).
-async function countXlsxRows(buf) {
-  const tmp = join(tmpdir(), `ca-hydrate-${createHash('sha1').update(buf).digest('hex').slice(0, 12)}.xlsx`);
-  writeFileSync(tmp, buf);
-  const rows = await readXlsxFile(tmp);
-  return Math.max(0, rows.length - 1); // minus header row
+export async function countXlsxRows(buf, { root = ROOT, readWorkbook = readXlsxFile } = {}) {
+  const storage = join(root, '.local');
+  mkdirSync(storage, { recursive: true });
+  const work = mkdtempSync(join(storage, 'hydrate-workbook-'));
+  try {
+    const path = join(work, 'source.xlsx');
+    writeFileSync(path, buf);
+    const rows = await readWorkbook(path);
+    return Math.max(0, rows.length - 1);
+  } finally {
+    rmSync(work, { recursive: true, force: true });
+  }
 }
 
-async function countRecords(method, buf) {
-  if (method === 'xlsx') return countXlsxRows(buf);
+async function countRecords(method, buf, root = ROOT) {
+  if (method === 'xlsx') return countXlsxRows(buf, { root });
   if (method && COUNTERS[method]) return COUNTERS[method](buf);
   return null;
 }
@@ -250,7 +269,10 @@ async function fetchBytes(url, options = {}) {
   throw lastError;
 }
 
-async function main() {
+export async function hydrateArtifacts({ root = ROOT, only = null, onlyPrefix = null, resolutions = loadHydrationResolutions(root), fetchImpl = fetchBytes } = {}) {
+  if (only && onlyPrefix) throw new Error('Choose --only or --only-prefix');
+  const REGISTRY = join(root, 'data/source-registry.json');
+  const OUT = join(root, 'data/artifact-hydration-manifest.json');
   const registry = JSON.parse(readFileSync(REGISTRY, 'utf8'));
   const byId = new Map(registry.artifacts.map((a) => [a.id, a]));
   const today = new Date().toISOString().slice(0, 10);
@@ -263,25 +285,23 @@ async function main() {
   // genuine execution rather than only this run's network luck.
   const priorManifest = existsSync(OUT) ? JSON.parse(readFileSync(OUT, 'utf8')) : null;
   const priorById = new Map((priorManifest?.results || []).map((r) => [r.id, r]));
-  const onlyPrefixIndex = process.argv.indexOf('--only-prefix');
-  const onlyPrefix = onlyPrefixIndex >= 0 ? process.argv[onlyPrefixIndex + 1] : null;
-  if (onlyPrefixIndex >= 0 && !onlyPrefix) throw new Error('--only-prefix requires an artifact ID prefix');
-  const selectedResolutions = onlyPrefix
-    ? RESOLUTIONS.filter((resolution) => resolution.id.startsWith(onlyPrefix))
-    : RESOLUTIONS;
-  if (onlyPrefix && !selectedResolutions.length) throw new Error(`No artifact resolutions match prefix: ${onlyPrefix}`);
+  const selectedResolutions = resolutions.filter((entry) => only ? entry.id === only : onlyPrefix ? entry.id.startsWith(onlyPrefix) : true);
+  if ((only || onlyPrefix) && !selectedResolutions.length) throw new Error(`No artifact resolutions match selection: ${only || onlyPrefix}`);
   const selectedIds = new Set(selectedResolutions.map((resolution) => resolution.id));
   const log = (priorManifest?.results || []).filter((result) => !selectedIds.has(result.id));
-  const disaCompilation = existsSync(join(ROOT, 'data', 'disa-artifact-manifest.json'))
-    ? JSON.parse(readFileSync(join(ROOT, 'data', 'disa-artifact-manifest.json'), 'utf8'))
+  const disaCompilation = existsSync(join(root, 'data', 'disa-artifact-manifest.json'))
+    ? JSON.parse(readFileSync(join(root, 'data', 'disa-artifact-manifest.json'), 'utf8'))
     : null;
 
   for (const r of selectedResolutions) {
     const art = byId.get(r.id);
-    if (!art) { log.push({ id: r.id, status: 'ERROR', reason: 'artifact id not in registry' }); continue; }
+    if (!art) {
+      if (only) throw new Error(`Artifact ${r.id} not in registry`);
+      log.push({ id: r.id, status: 'ERROR', reason: 'artifact id not in registry' }); continue;
+    }
     try {
       if (r.fragmentManifest) {
-        const extraction = JSON.parse(readFileSync(join(ROOT, r.fragmentManifest), 'utf8'));
+        const extraction = JSON.parse(readFileSync(join(root, r.fragmentManifest), 'utf8'));
         const extractedSource = extraction?.source || {};
         const checksum = extractedSource.sha256;
         const byteLength = extractedSource.byte_length;
@@ -353,11 +373,11 @@ async function main() {
         continue;
       }
       const { buf, status } = r.local
-        ? { buf: readFileSync(join(ROOT, r.local)), status: 'local' }
-        : await fetchBytes(r.url, { noBotUa: r.noBotUa, userAgent: r.userAgent });
+        ? { buf: readFileSync(join(root, r.local)), status: 'local' }
+        : await fetchImpl(r.url, { noBotUa: r.noBotUa, userAgent: r.userAgent });
       const sha256 = 'sha256:' + createHash('sha256').update(buf).digest('hex');
       const byteLength = buf.length;
-      const recordCount = await countRecords(r.count, buf);
+      const recordCount = await countRecords(r.count, buf, root);
       const contentChanged = art.sha256 !== sha256;
       // Preserve retrieved_at when bytes are unchanged (stable re-runs).
       const retrievedAt = contentChanged ? today : (art.retrieved_at && !/placeholder/i.test(art.retrieved_at) ? art.retrieved_at : today);
@@ -367,15 +387,19 @@ async function main() {
       art.parser = r.parser;
       art.parser_version = r.parser_version;
       art.sha256 = sha256;
-      art.byte_length = byteLength;
-      art.retrieved_at = retrievedAt;
-      if (recordCount !== null) art.record_count = recordCount;
+      if (r.count === 'json_relationships') {
+        art.relationship_count = JSON.parse(buf.toString('utf8')).relationships?.length || 0;
+        art.record_count = 0;
+      } else if (recordCount !== null) {
+        art.record_count = recordCount;
+      }
       if (typeof art.relationship_count !== 'number') art.relationship_count = 0;
 
       changed += 1;
       log.push({ id: r.id, status: 'OK', http: status, url: r.url, sha256, byte_length: byteLength, record_count: recordCount, retrieved_at: retrievedAt });
       console.log(`OK  ${r.id}  ${byteLength}B  records=${recordCount}  ${sha256.slice(0, 22)}…`);
     } catch (e) {
+      if (only) throw new Error(`Hydration ${r.id} failed: ${e.message || e}`, { cause: e });
       const prior = priorById.get(r.id);
       if (prior?.status === 'OK' && prior.sha256 === art.sha256) {
         log.push({ ...prior, carried_forward_from: priorManifest.generated_at, carried_forward_reason: String(e.message || e) });
@@ -394,7 +418,7 @@ async function main() {
     { id: 'artifact-nist-ssdf-oscal', reason: 'duplicate of artifact-nist-ssdf (same SSDF OSCAL catalog); not graph-cited' },
   ];
   const removed = [];
-  for (const { id, reason } of REMOVE_ORPHANS) {
+  for (const { id, reason } of only ? [] : REMOVE_ORPHANS) {
     const idx = registry.artifacts.findIndex((a) => a.id === id);
     if (idx !== -1) { registry.artifacts.splice(idx, 1); removed.push({ id, reason }); }
     for (const b of registry.catalog_source_bundles || []) {
@@ -409,7 +433,15 @@ async function main() {
   if (!existsSync(dirname(OUT))) mkdirSync(dirname(OUT), { recursive: true });
   writeFileSync(OUT, JSON.stringify({ generated_at: new Date().toISOString(), hydrated: changed, removed_orphans: removed, results: log }, null, 2) + '\n', 'utf8');
   writeJsonAtomically(REGISTRY, registry);
-  console.log(`\nHydrated ${changed}/${selectedResolutions.length} selected artifacts (${RESOLUTIONS.length} registered resolutions). Execution log: data/artifact-hydration-manifest.json`);
+  console.log(`\nHydrated ${changed}/${selectedResolutions.length} selected artifacts (${resolutions.length} registered resolutions). Execution log: data/artifact-hydration-manifest.json`);
+  return { results: log, hydrated: changed };
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
+  const args = process.argv.slice(2);
+  if (args.length && (args.length !== 2 || !['--only', '--only-prefix'].includes(args[0]) || !args[1])) {
+    throw new Error('Use --only <artifact ID> or --only-prefix <prefix>');
+  }
+  hydrateArtifacts(args[0] === '--only' ? { only: args[1] } : { onlyPrefix: args[1] })
+    .catch((e) => { console.error(e); process.exitCode = 1; });
+}

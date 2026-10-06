@@ -4,6 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
+import { validateMitreReleaseAdmission } from "./fetch-mitre-data.mjs";
 import {
   assertionEnvelopeForEdge,
   assertionProfileId,
@@ -108,8 +109,23 @@ for (const resource of dataset.resources || []) {
   for (const [field, value] of Object.entries(resource)) {
     if (value === null || value === "unknown") fail(`${resource.id}.${field} serializes an unknown optional value`);
   }
-  if (resource.compatibility && resource.compatibility.status !== "documented") fail(`${resource.id} serializes unsupported compatibility disposition`);
-  if (resource.media && resource.media.status !== "available") fail(`${resource.id} serializes unsupported media disposition`);
+  // Presence of the key is not the claim. compatibility and media are recorded
+  // on every enriched resource, including the explicit negative dispositions
+  // (not_stated, not_applicable, not_available), which the schema permits and
+  // verify-resource-ingestion accepts. What must not be serialized is a
+  // disposition outside that vocabulary, or a negative one that fails to say why.
+  if (resource.compatibility && !["documented", "not_stated", "not_applicable"].includes(resource.compatibility.status)) {
+    fail(`${resource.id} serializes unsupported compatibility disposition`);
+  }
+  if (resource.compatibility && resource.compatibility.status !== "documented" && !resource.compatibility.note) {
+    fail(`${resource.id} serializes an undocumented compatibility without a reason`);
+  }
+  if (resource.media && !["available", "not_available"].includes(resource.media.status)) {
+    fail(`${resource.id} serializes unsupported media disposition`);
+  }
+  if (resource.media && resource.media.status === "not_available" && !resource.media.reason) {
+    fail(`${resource.id} serializes unavailable media without a reason`);
+  }
   for (const field of ["presentationProfile", "toolProfile"]) {
     for (const entry of displayStrings(resource[field], [field])) {
       if (absencePattern.test(entry.value)) fail(`${resource.id}.${entry.trail.join(".")} contains visible absence prose`);
@@ -305,14 +321,19 @@ for (const entry of evidence) {
   if (entry.checksum && !sha256Pattern.test(entry.checksum)) fail(`${entry.id} has invalid checksum`);
 }
 
-for (const id of ["mitre-attack-enterprise", "mitre-attack-ics"]) {
-  const source = sourceRegistry.sources.find((entry) => entry.id === id);
-  if (!source || /\/master\//.test(source.artifact_url || "") || !/6cda5ad8462c79e14fbb872f4e09059b18e0cfc4/.test(source.artifact_url || "")) {
-    fail(`${id} is not pinned to the reviewed ATT&CK 19.2 commit`);
-  }
+const mitreBaselines = readJson("data/source-baselines.json").catalogs;
+for (const [id, domain, path, baselineId] of [
+  ["mitre-attack-enterprise", "enterprise", "data/attack-techniques-enterprise.json", "mitre-attack"],
+  ["mitre-attack-ics", "ics", "data/attack-techniques-ics.json", "mitre-attack-ics"],
+  ["mitre-d3fend-ontology", "d3fend", "data/d3fend-countermeasures.json", "mitre-d3fend"],
+]) {
+  const bytes = readFileSync(join(ROOT, path));
+  const errors = validateMitreReleaseAdmission({
+    source: sourceRegistry.sources.find((entry) => entry.id === id),
+    domain, bytes, document: JSON.parse(bytes.toString("utf8")), accepted: mitreBaselines[baselineId]?.accepted,
+  });
+  for (const error of errors) fail(`${id}: ${error}`);
 }
-const d3fend = sourceRegistry.sources.find((entry) => entry.id === "mitre-d3fend-ontology");
-if (d3fend?.artifact_url !== "https://d3fend.mitre.org/ontologies/d3fend.json" || d3fend.version !== "1.5.0") fail("D3FEND is not sourced from the reviewed 1.5.0 ontology JSON-LD artifact");
 const fedrampLegacy = sourceRegistry.sources.find((entry) => entry.id === "fedramp-rev5");
 const fedrampCurrent = sourceRegistry.sources.find((entry) => entry.id === "fedramp-2026-rules");
 if (fedrampLegacy?.lifecycle_status !== "historical" || fedrampCurrent?.lifecycle_status !== "active") fail("FedRAMP current and historical source roles are not explicit");

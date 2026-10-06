@@ -50,7 +50,19 @@ export function canonicalBreadcrumbForNode(
     clean(catalog?.name) || clean(document.catalog_name),
   );
   const record = clean(recordLabel) || clean(document.item_id) || clean(node.label) || node.id;
-  const items = [clean(area?.label), publisher, publication, clean(section?.label), record]
+  const isTechnicalRule = ["stig_rule", "srg_requirement"].includes(node.node_type || document.object_type);
+  // A finding's benchmark is the useful publication scope. Do not repeat the
+  // umbrella DISA catalog as an extra hop; the full benchmark remains a fact.
+  const benchmark = clean(node.metadata?.benchmark_short_title)
+    || clean(node.metadata?.benchmark_title)
+    || (clean(section?.node_type) === "benchmark" ? clean(section?.label) : "");
+  const compactBenchmark = benchmark
+    .replace(/Security Technical Implementation Guide\b/g, "STIG")
+    .replace(/Security Requirements Guide\b/g, "SRG");
+  const labels = isTechnicalRule && compactBenchmark
+    ? [clean(area?.label), publisher, compactBenchmark, record]
+    : [clean(area?.label), publisher, publication, clean(section?.label), record];
+  const items = labels
     .filter(Boolean)
     .filter((value, index, values) => index === 0 || value !== values[index - 1]);
   return { items, text: items.join(" › ") };

@@ -33,10 +33,21 @@ export const INGESTION_TASKS = Object.freeze([
   { id: 'extract-dod-zero-trust', script: 'extract-dod-zt.mjs', stages: ['parse'], scope: ['dod-zt'], retries: 1 },
   { id: 'sync-zero-trust-registry', script: 'sync-zero-trust-source-registry.mjs', stages: ['attest'], scope: ['dod-zt', 'nist-zt', 'microsoft-zt-maturity', 'nist-iot-cybersecurity', 'nist-mobile-threats'], retries: 1 },
   { id: 'sync-source-bundles', script: 'sync-catalog-source-bundles.mjs', stages: ['attest'], scope: ['all-catalogs'], retries: 1 },
-  { id: 'build-source-inventory', script: 'build-catalog-source-inventory.mjs', stages: ['discover', 'normalize', 'reconcile'], scope: ['all-catalogs'], retries: 1 },
+  // build:data migrates and synchronizes the tracked registry before graph
+  // construction. Match that order so the refresh-generated source manifests
+  // are built from the same registry state as a clean follow-up build.
+  { id: 'migrate-source-truth-before-build', script: 'migrate-source-truth-profiles.mjs', stages: ['normalize', 'presentation'], scope: ['all-resources', 'all-sources'], retries: 1 },
   { id: 'sync-inventory-contracts', script: 'sync-catalog-inventory-contracts.mjs', stages: ['attest', 'reconcile'], scope: ['all-catalogs'], retries: 1 },
   { id: 'hydrate-artifacts', script: 'hydrate-artifacts.mjs', stages: ['acquire', 'attest'], scope: ['all-artifacts'], remote_fetch: true, retries: 2 },
   { id: 'reconcile-freshness', script: 'reconcile-source-freshness.mjs', stages: ['attest', 'reconcile'], scope: ['all-sources'], retries: 1 },
+  // Must precede build-framework-data, which reaches src/shared/taxonomy-contract.mjs
+  // and that module statically imports data/generated/taxonomy-registry.json. A
+  // static JSON import cannot be guarded at runtime, so the file has to exist
+  // before the task runs. build:data already orders these two this way; the
+  // refresh pipeline was simply missing the prerequisite, so build-framework-data
+  // could never run on a clean runner. Inputs are all curated and tracked, so
+  // this task has no upstream dependency of its own.
+  { id: 'build-taxonomy-registry', script: 'build-taxonomy-registry.mjs', stages: ['normalize', 'structure'], scope: ['all-catalogs'], retries: 1 },
   {
     id: 'build-framework-data', script: 'build-framework-data.mjs',
     stages: ['normalize', 'structure', 'relationships', 'presentation', 'publish'],
@@ -47,6 +58,23 @@ export const INGESTION_TASKS = Object.freeze([
     stages: ['acquire', 'attest', 'parse', 'presentation'],
     scope: ['all-resources'], args: ['--refresh'], remote_fetch: true, retries: 2,
   },
+  // The normalization pass the presentation verifiers assume has already run.
+  // enrich-commons-resources deliberately writes fields that are only correct
+  // before normalization: whatItDoes and overview default to resource.summary,
+  // and repositoryEvidence is null for anything that is not a repository. This
+  // script removes exactly those -- a duplicate cardPurpose (:196), a duplicate
+  // overview (:197), a duplicate whatItDoes (:200) and any null or "unknown"
+  // optional (:193) -- which is why verify-source-truth rejects all of them.
+  //
+  // It runs immediately after the enrichment that produces those fields, and
+  // before build-commons-index, so the search index is built from the
+  // normalized dataset rather than the raw one. In build:data it sits earlier
+  // because there it normalizes the committed dataset; here it has to follow
+  // the task that rewrites it.
+  { id: 'migrate-source-truth-profiles', script: 'migrate-source-truth-profiles.mjs', stages: ['normalize', 'presentation'], scope: ['all-resources', 'all-sources'], retries: 1 },
+  // build-framework-data clears generated governance artifacts. Rebuild the
+  // independent catalog inventory afterward, matching build:data.
+  { id: 'build-source-inventory', script: 'build-catalog-source-inventory.mjs', stages: ['discover', 'normalize', 'reconcile'], scope: ['all-catalogs'], retries: 1 },
   {
     id: 'build-commons-index', script: 'build-commons-index.mjs',
     stages: ['normalize', 'structure', 'relationships', 'publish'],
@@ -57,10 +85,29 @@ export const INGESTION_TASKS = Object.freeze([
   { id: 'audit-coverage', script: 'audit-coverage.mjs', stages: ['reconcile'], scope: ['all-catalogs'], retries: 1 },
   { id: 'verify-discovery', script: 'verify-discovery.mjs', stages: ['discover'], scope: ['all-sources'], retries: 1 },
   { id: 'verify-manifests', script: 'verify-manifests.mjs', stages: ['attest', 'reconcile'], scope: ['all-sources', 'all-catalogs'], retries: 1 },
+  // These four write into data/generated, which is gitignored, so they are the
+  // difference between what `generate:data` produces and what a refresh produced.
+  // The refresh then runs build:site with --reuse-generated, which reuses that
+  // directory rather than rebuilding it, so anything missing here is simply
+  // absent at build time -- vite.config.ts reads publication-identity-index.json
+  // while loading its own config, and the site build died there.
+  //
+  // Placed after verify-manifests to mirror build:data's order, and necessarily
+  // after build-framework-data: that task wipes data/generated and exempts only
+  // commons-search-index, source-semantic-audit, taxonomy-registry and
+  // discovery-index, so the two publication artifacts would be erased if they
+  // were produced any earlier.
+  { id: 'build-publication-identity-index', script: 'build-publication-identity-index.mjs', stages: ['structure', 'publish'], scope: ['all-sources'], retries: 1 },
+  { id: 'build-publication-audit-report', script: 'build-publication-audit-report.mjs', stages: ['reconcile', 'publish'], scope: ['all-sources'], retries: 1 },
+  { id: 'build-source-semantic-audit', script: 'build-source-semantic-audit.mjs', stages: ['reconcile', 'publish'], scope: ['all-catalogs'], retries: 1 },
+  { id: 'build-discovery-index', script: 'build-discovery-index.mjs', stages: ['discover', 'publish'], scope: ['all-sources'], retries: 1 },
   { id: 'verify-completeness', script: 'verify-completeness.mjs', stages: ['reconcile'], scope: ['all-catalogs'], retries: 1 },
   { id: 'verify-ingestion-contract', script: 'verify-ingestion-pipeline.mjs', stages: ['presentation', 'reconcile'], scope: ['all-sources', 'all-catalogs'], retries: 1 },
   { id: 'verify-resource-ingestion', script: 'verify-resource-ingestion.mjs', stages: ['discover', 'attest', 'presentation', 'reconcile'], scope: ['all-resources'], retries: 1 },
-]);
+].map((task) => Object.freeze({
+  ...task,
+  isolation: task.remote_fetch === true ? 'quarantinable' : 'fail_fast',
+})));
 
 export function validateIngestionPipelineDefinition(tasks = INGESTION_TASKS) {
   const errors = [];
@@ -69,6 +116,9 @@ export function validateIngestionPipelineDefinition(tasks = INGESTION_TASKS) {
   for (const task of tasks) {
     if (!task.id || ids.has(task.id)) errors.push(`duplicate or missing task id: ${task.id || '(missing)'}`);
     ids.add(task.id);
+    if (task.isolation !== (task.remote_fetch === true ? 'quarantinable' : 'fail_fast')) {
+      errors.push(`task ${task.id} has invalid isolation policy`);
+    }
     if (!task.script || !Array.isArray(task.stages) || !task.stages.length) errors.push(`invalid task: ${task.id}`);
     for (const stage of task.stages || []) {
       if (!INGESTION_STAGES.includes(stage)) errors.push(`task ${task.id} uses unknown stage: ${stage}`);

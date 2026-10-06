@@ -1,9 +1,8 @@
 import { expect, test } from "@playwright/test";
 
-import { attachPageDiagnostics, gotoApp, waitForAppReady } from "./support.mjs";
+import { attachPageDiagnostics, clickAtlasPublication, gotoApp, waitForAppReady } from "./support.mjs";
 
 const NAV = [
-  { label: "Start here", path: "/start", placement: "primary" },
   { label: "Atlas", path: "/atlas", placement: "primary" },
   { label: "Library", path: "/library", placement: "primary" },
   { label: "Compare", path: "/compare", placement: "primary" },
@@ -27,8 +26,8 @@ test("header exposes task destinations directly from 1200px", async ({ page }) =
     await waitForAppReady(page, { allowPartial: true });
 
     const primary = page.locator('header.site-header nav[aria-label="Primary navigation"]');
-    await expect(primary.locator("a[href]")).toHaveCount(6);
-    await expect(primary.locator("a[href]")).toHaveText(["Start here", "Atlas", "Library", "Compare", "Resources", "Templates"]);
+    await expect(primary.locator("a[href]")).toHaveCount(5);
+    await expect(primary.locator("a[href]")).toHaveText(["Atlas", "Library", "Compare", "Resources", "Templates"]);
     await expect(page.locator('header.site-header nav[aria-label="Utility navigation"]')).toHaveCount(0);
     await page.getByRole("button", { name: "Open more pages" }).click();
     await expect(page.getByRole("navigation", { name: "More pages" }).getByRole("link")).toHaveText([
@@ -162,16 +161,16 @@ test("Phase 3 record identity is canonical across Library, Atlas, and direct pat
   await expect(page.locator('header.site-header nav a[aria-current="page"]')).toHaveCount(0);
   await expect(page.getByRole("link", { name: "See connections", exact: true })).toBeVisible();
 
-  await gotoApp(page, "/#/atlas?node=nist-800-53%3AAC-2");
+  await gotoApp(page, "/#/atlas?node=nist-800-53%3AAC-2&relationshipView=map");
   await waitForAppReady(page, { allowPartial: true });
-  const focusedRecord = page.getByRole("region", { name: "NIST AC-2" });
-  await expect(focusedRecord.getByRole("heading", { name: "NIST AC-2" })).toBeVisible();
+  await expect(page).toHaveURL(/#\/atlas\/nist-800-53:AC-2$/);
+  const focusedRecord = page.locator(".atl-inspector");
+  await expect(focusedRecord.getByRole("heading", { name: "AC-2" })).toBeVisible({ timeout: 20000 });
   await expect(focusedRecord).toContainText("Account Management");
-  await page.getByRole("button", { name: "Hierarchy", exact: true }).click();
-  const atlasPath = page.getByRole("navigation", { name: "Where this sits" });
-  await expect(atlasPath).toContainText("SP 800-53 Rev. 5 Catalog");
-  await expect(atlasPath).toContainText("Access Control");
-  await expect(atlasPath).toContainText("Account Management");
+  const atlasPath = page.getByRole("navigation", { name: "Where you are" });
+  await expect(atlasPath).toContainText("Compliance");
+  await expect(atlasPath).toContainText("SP 800-53 Rev. 5");
+  await expect(atlasPath).toContainText("AC-2");
   await expect(page.locator('header.site-header nav[aria-label="Primary navigation"] a[aria-current="page"]')).toHaveText("Atlas");
 
   await gotoApp(page, "/#/record/nist-800-53/AC-2?from=search&returnTo=%2Flibrary");
@@ -213,11 +212,12 @@ test("Phase 3 List and Map preserve Library state and never drop non-empty resul
   await expect(page.getByRole("group", { name: "Library view" })).toBeVisible();
 });
 
-test("Template B leads with guided setup and retires the legacy work-map card", async ({ page }) => {
+test("Template B offers guided setup beside the Atlas and retires the legacy work-map card", async ({ page }) => {
   await gotoApp(page, "/#/");
   await waitForAppReady(page, { allowPartial: true });
-  const homeTaxonomy = await page.locator(".home-secondary-action strong").allTextContents();
-  expect(homeTaxonomy).toEqual(["Start guided setup", "Browse the Atlas", "Search the Library", "Browse Resources"]);
+  await expect(page.locator(".home-start__link")).toHaveCount(0);
+  const homeTools = await page.locator(".home-tool__label").allTextContents();
+  expect(homeTools).toEqual(["Compare", "Templates", "Resources"]);
   await expect(page.locator(".home-work-map span")).toHaveCount(0);
   await expect(page.getByText("Start with your work", { exact: true })).toHaveCount(0);
 });
@@ -231,16 +231,17 @@ test("DISA STIG publication entry points preserve the benchmark layer above V-ID
   const publication = page.locator(".catalog-detail-page");
   await expect(publication).toBeVisible();
   await expect(publication).not.toHaveClass(/\bpanel\b/);
-  await expect(publication.getByText("PUBLICATION", { exact: true })).toBeVisible();
-  await expect(publication.getByRole("heading", { name: "DISA Public STIG Library", level: 1 })).toBeVisible();
-  await expect(publication.locator(".catalog-publisher")).toHaveText("DISA");
-  await expect(publication.getByRole("link", { name: "Open official publication", exact: true })).toBeVisible();
+  await expect(publication.locator(".catalog-detail-hero .eyebrow")).toHaveText("Publication · Implementation standard");
+  await expect(publication.getByRole("heading", { name: "DISA STIG", level: 1 })).toBeVisible();
+  await expect(publication.locator(".catalog-official-title")).toHaveText("Official title DISA Public STIG Library");
+  await expect(publication.locator(".catalog-publisher")).toHaveText("Published by Defense Information Systems Agency (DISA)");
+  await expect(publication.getByRole("link", { name: /^Open official publication for DISA Public STIG Library/ })).toBeVisible();
   const benchmarks = page.locator('[data-published-tier="benchmark"]');
   const benchmarkCount = await benchmarks.count();
   expect(benchmarkCount).toBeGreaterThan(0);
   await expect(page.getByText(`${benchmarkCount} benchmarks`, { exact: true })).toBeVisible();
   await expect(page.locator(".catalog-record-title")).toHaveCount(0);
-  const benchmarkSearch = publication.getByRole("searchbox", { name: "Search DISA Public STIG Library benchmarks" });
+  const benchmarkSearch = publication.getByRole("searchbox", { name: "Search DISA STIG benchmarks" });
   await expect(benchmarkSearch).toBeVisible();
   await benchmarkSearch.fill("zzzz-no-benchmark");
   await publication.getByRole("button", { name: "Search benchmarks", exact: true }).click();
@@ -284,7 +285,6 @@ test("Phase 3 record actions and global footer expose the required hierarchy", a
 
   for (const route of [
     "/#/",
-    "/#/start",
     "/#/library",
     "/#/guides",
     "/#/atlas",
@@ -314,23 +314,12 @@ test("Phase 3 Atlas shows honest integer counts and no obsolete work-surface lab
   await page.setViewportSize({ width: 1440, height: 900 });
   await gotoApp(page, "/#/atlas");
   await waitForAppReady(page);
-  const atlas = page.getByTestId("atlas-map");
-  await expect(atlas).toBeVisible();
-  await expect(atlas).toHaveAttribute("data-scope-level", "root");
+  await expect(page.locator(".terr")).toBeVisible();
   await expect(page.locator("body")).not.toContainText("Connected work surface");
-
-  // The landmarks are rows in the map itself, not a disclosure beside it, and
-  // each one states what it holds without being hovered.
-  const areas = atlas.locator('.atlas-decomp__column[data-column="area"]');
-  await expect(areas).toHaveAttribute("data-row-count", "11");
-  const rows = areas.locator(".atlas-decomp__node");
-  await expect(rows).toHaveCount(11);
-  for (const row of await rows.all()) {
-    // Three honest forms: a count, a route to the surface that holds the area,
-    // or an admission that nothing is modelled yet. Never a bare label.
-    await expect(row).toContainText(/\d[\d,]* records|Open the \w+|Not yet modeled/);
-  }
-  for (const ecosystem of ["NIST", "DISA", "MITRE", "FedRAMP", "DoD CIO", "CDAO", "ISOO"]) {
-    await expect(rows.filter({ hasText: ecosystem }).first()).toBeVisible();
-  }
+  // Counts are whole numbers stated in the publisher's own words, never estimates.
+  await expect(page.getByRole("button", { name: "Policy & directives" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Other publications · \d+$/ })).toBeVisible();
+  await clickAtlasPublication(page, "nist-800-53");
+  await expect(page.locator(".atl-inspector")).toContainText(/\d[\d,]* other publications? share published connections/);
+  await expect(page.locator(".atl-inspector")).toContainText(/Records\s*1,196/);
 });

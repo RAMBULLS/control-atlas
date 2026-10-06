@@ -1,0 +1,1284 @@
+{
+ "_doc": "Control Atlas territory geography. Hand-authored navigation geography, versioned; never generated from data. Adjacency and proximity mean NOTHING about published relationships, authority, applicability, equivalence, dependency, mapping or legal precedence. Territories are polygons over one shared vertex mesh so neighbouring borders are identical. A landmark is placed by an explicit slot id in `assignments`, never by array index; a new publication takes a free reserved slot and existing coordinates change only when this version is deliberately revised. Presentation aliases and the major flag are reviewed presentation metadata, not facts.",
+ "version": "territory-1",
+ "world": {
+  "w": 1600,
+  "h": 1000
+ },
+ "overview": {
+  "x": 30,
+  "y": 4,
+  "w": 1540,
+  "h": 992
+ },
+ "vertices": {
+  "c01": [
+   110,
+   170
+  ],
+  "c02": [
+   320,
+   95
+  ],
+  "c03": [
+   560,
+   125
+  ],
+  "c04": [
+   790,
+   80
+  ],
+  "c05": [
+   1050,
+   115
+  ],
+  "c06": [
+   1290,
+   85
+  ],
+  "c07": [
+   1490,
+   170
+  ],
+  "c08": [
+   1545,
+   340
+  ],
+  "c09": [
+   1490,
+   520
+  ],
+  "c10": [
+   1545,
+   700
+  ],
+  "c11": [
+   1400,
+   880
+  ],
+  "c12": [
+   1170,
+   925
+  ],
+  "c13": [
+   930,
+   880
+  ],
+  "c14": [
+   700,
+   935
+  ],
+  "c15": [
+   450,
+   895
+  ],
+  "c16": [
+   240,
+   925
+  ],
+  "c17": [
+   105,
+   790
+  ],
+  "c18": [
+   155,
+   600
+  ],
+  "c19": [
+   75,
+   430
+  ],
+  "n1": [
+   310,
+   335
+  ],
+  "n2": [
+   540,
+   300
+  ],
+  "n3": [
+   720,
+   340
+  ],
+  "n4": [
+   910,
+   295
+  ],
+  "n5": [
+   1110,
+   345
+  ],
+  "n6": [
+   1300,
+   305
+  ],
+  "q1": [
+   430,
+   470
+  ],
+  "q2": [
+   390,
+   640
+  ],
+  "q3": [
+   470,
+   790
+  ],
+  "r1": [
+   1170,
+   480
+  ],
+  "r2": [
+   1060,
+   640
+  ],
+  "r3": [
+   820,
+   700
+  ],
+  "r4": [
+   600,
+   720
+  ],
+  "r6": [
+   1300,
+   610
+  ],
+  "i1": [
+   880,
+   790
+  ]
+ },
+ "jogs": {
+  "n1|n2": [
+   [
+    400,
+    345
+   ],
+   [
+    450,
+    322
+   ]
+  ],
+  "n2|n3": [
+   [
+    610,
+    330
+   ],
+   [
+    650,
+    316
+   ]
+  ],
+  "n3|n4": [
+   [
+    790,
+    335
+   ],
+   [
+    830,
+    310
+   ]
+  ],
+  "n4|n5": [
+   [
+    980,
+    332
+   ],
+   [
+    1030,
+    320
+   ]
+  ],
+  "n5|n6": [
+   [
+    1170,
+    335
+   ],
+   [
+    1220,
+    320
+   ]
+  ],
+  "n1|q1": [
+   [
+    350,
+    400
+   ],
+   [
+    392,
+    418
+   ]
+  ],
+  "q1|q2": [
+   [
+    420,
+    540
+   ],
+   [
+    405,
+    590
+   ]
+  ],
+  "q2|r4": [
+   [
+    470,
+    655
+   ],
+   [
+    520,
+    702
+   ]
+  ],
+  "r3|r4": [
+   [
+    760,
+    716
+   ],
+   [
+    680,
+    702
+   ]
+  ],
+  "r2|r3": [
+   [
+    980,
+    676
+   ],
+   [
+    900,
+    690
+   ]
+  ],
+  "r1|r2": [
+   [
+    1150,
+    540
+   ],
+   [
+    1108,
+    572
+   ]
+  ],
+  "n5|r1": [
+   [
+    1150,
+    392
+   ],
+   [
+    1132,
+    432
+   ]
+  ],
+  "r1|r6": [
+   [
+    1222,
+    520
+   ],
+   [
+    1262,
+    562
+   ]
+  ],
+  "c09|r6": [
+   [
+    1420,
+    566
+   ],
+   [
+    1360,
+    582
+   ]
+  ],
+  "i1|r3": [
+   [
+    870,
+    752
+   ],
+   [
+    846,
+    730
+   ]
+  ],
+  "c13|i1": [
+   [
+    915,
+    850
+   ],
+   [
+    895,
+    820
+   ]
+  ],
+  "q2|q3": [
+   [
+    420,
+    702
+   ],
+   [
+    452,
+    752
+   ]
+  ],
+  "c18|q2": [
+   [
+    240,
+    630
+   ],
+   [
+    320,
+    652
+   ]
+  ],
+  "c19|n1": [
+   [
+    150,
+    415
+   ],
+   [
+    230,
+    385
+   ]
+  ],
+  "c03|n2": [
+   [
+    555,
+    190
+   ],
+   [
+    546,
+    242
+   ]
+  ],
+  "c05|n4": [
+   [
+    1000,
+    182
+   ],
+   [
+    952,
+    240
+   ]
+  ],
+  "c08|n6": [
+   [
+    1452,
+    332
+   ],
+   [
+    1380,
+    322
+   ]
+  ],
+  "c01|c02": [
+   [
+    200,
+    140
+   ],
+   [
+    262,
+    124
+   ]
+  ],
+  "c02|c03": [
+   [
+    430,
+    96
+   ],
+   [
+    500,
+    118
+   ]
+  ],
+  "c04|c05": [
+   [
+    900,
+    96
+   ],
+   [
+    972,
+    84
+   ]
+  ],
+  "c06|c07": [
+   [
+    1390,
+    100
+   ],
+   [
+    1452,
+    140
+   ]
+  ],
+  "c07|c08": [
+   [
+    1522,
+    232
+   ],
+   [
+    1536,
+    292
+   ]
+  ],
+  "c09|c10": [
+   [
+    1500,
+    590
+   ],
+   [
+    1522,
+    650
+   ]
+  ],
+  "c10|c11": [
+   [
+    1500,
+    782
+   ],
+   [
+    1452,
+    832
+   ]
+  ],
+  "c11|c12": [
+   [
+    1300,
+    892
+   ],
+   [
+    1242,
+    916
+   ]
+  ],
+  "c12|c13": [
+   [
+    1080,
+    906
+   ],
+   [
+    1002,
+    900
+   ]
+  ],
+  "c13|c14": [
+   [
+    862,
+    892
+   ],
+   [
+    782,
+    916
+   ]
+  ],
+  "c14|c15": [
+   [
+    612,
+    916
+   ],
+   [
+    522,
+    906
+   ]
+  ],
+  "c15|c16": [
+   [
+    382,
+    916
+   ],
+   [
+    302,
+    906
+   ]
+  ],
+  "c16|c17": [
+   [
+    172,
+    882
+   ],
+   [
+    122,
+    842
+   ]
+  ],
+  "c17|c18": [
+   [
+    122,
+    722
+   ],
+   [
+    132,
+    652
+   ]
+  ],
+  "c18|c19": [
+   [
+    112,
+    532
+   ],
+   [
+    92,
+    482
+   ]
+  ]
+ },
+ "coast": [
+  "c01",
+  "c02",
+  "c03",
+  "c04",
+  "c05",
+  "c06",
+  "c07",
+  "c08",
+  "c09",
+  "c10",
+  "c11",
+  "c12",
+  "c13",
+  "c14",
+  "c15",
+  "c16",
+  "c17",
+  "c18",
+  "c19"
+ ],
+ "territories": [
+  {
+   "id": "atlas:LIMB-GOVERNANCE",
+   "key": "governance",
+   "ring": [
+    "c01",
+    "c02",
+    "c03",
+    "n2",
+    "n1",
+    "c19"
+   ],
+   "name": {
+    "x": 150,
+    "y": 205,
+    "lines": [
+     "GOVERNANCE"
+    ]
+   },
+   "slots": [
+    {
+     "id": "territory.governance.slot.01",
+     "at": [
+      190,
+      300
+     ]
+    },
+    {
+     "id": "territory.governance.slot.02",
+     "at": [
+      318,
+      296
+     ]
+    },
+    {
+     "id": "territory.governance.slot.03",
+     "at": [
+      430,
+      258
+     ]
+    },
+    {
+     "id": "territory.governance.slot.04",
+     "at": [
+      150,
+      350
+     ]
+    },
+    {
+     "id": "territory.governance.slot.05",
+     "at": [
+      270,
+      240
+     ]
+    },
+    {
+     "id": "territory.governance.slot.06",
+     "at": [
+      470,
+      215
+     ]
+    }
+   ]
+  },
+  {
+   "id": "atlas:LIMB-RISK",
+   "key": "risk",
+   "ring": [
+    "c03",
+    "c04",
+    "c05",
+    "n4",
+    "n3",
+    "n2"
+   ],
+   "name": {
+    "x": 612,
+    "y": 185,
+    "lines": [
+     "RISK"
+    ]
+   },
+   "slots": [
+    {
+     "id": "territory.risk.slot.01",
+     "at": [
+      770,
+      250
+     ]
+    },
+    {
+     "id": "territory.risk.slot.02",
+     "at": [
+      650,
+      262
+     ]
+    },
+    {
+     "id": "territory.risk.slot.03",
+     "at": [
+      880,
+      196
+     ]
+    },
+    {
+     "id": "territory.risk.slot.04",
+     "at": [
+      690,
+      300
+     ]
+    }
+   ]
+  },
+  {
+   "id": "atlas:LIMB-COMPLIANCE",
+   "key": "compliance",
+   "ring": [
+    "n1",
+    "n2",
+    "n3",
+    "n4",
+    "n5",
+    "r1",
+    "r2",
+    "r3",
+    "r4",
+    "q2",
+    "q1"
+   ],
+   "name": {
+    "x": 452,
+    "y": 388,
+    "lines": [
+     "COMPLIANCE"
+    ]
+   },
+   "slots": [
+    {
+     "id": "territory.compliance.slot.01",
+     "at": [
+      560,
+      450
+     ]
+    },
+    {
+     "id": "territory.compliance.slot.02",
+     "at": [
+      850,
+      412
+     ]
+    },
+    {
+     "id": "territory.compliance.slot.03",
+     "at": [
+      1000,
+      470
+     ]
+    },
+    {
+     "id": "territory.compliance.slot.04",
+     "at": [
+      700,
+      540
+     ]
+    },
+    {
+     "id": "territory.compliance.slot.05",
+     "at": [
+      612,
+      592
+     ]
+    },
+    {
+     "id": "territory.compliance.slot.06",
+     "at": [
+      520,
+      546
+     ]
+    },
+    {
+     "id": "territory.compliance.slot.07",
+     "at": [
+      900,
+      542
+     ]
+    },
+    {
+     "id": "territory.compliance.slot.08",
+     "at": [
+      792,
+      600
+     ]
+    },
+    {
+     "id": "territory.compliance.slot.09",
+     "at": [
+      962,
+      592
+     ]
+    },
+    {
+     "id": "territory.compliance.slot.10",
+     "at": [
+      1060,
+      522
+     ]
+    },
+    {
+     "id": "territory.compliance.slot.11",
+     "at": [
+      700,
+      645
+     ]
+    },
+    {
+     "id": "territory.compliance.slot.12",
+     "at": [
+      1010,
+      630
+     ]
+    },
+    {
+     "id": "territory.compliance.slot.13",
+     "at": [
+      450,
+      500
+     ]
+    },
+    {
+     "id": "territory.compliance.slot.14",
+     "at": [
+      820,
+      500
+     ]
+    },
+    {
+     "id": "territory.compliance.slot.15",
+     "at": [
+      1090,
+      440
+     ]
+    },
+    {
+     "id": "territory.compliance.slot.16",
+     "at": [
+      520,
+      650
+     ]
+    }
+   ]
+  },
+  {
+   "id": "atlas:LIMB-ARCHITECTURE",
+   "key": "architecture",
+   "ring": [
+    "n5",
+    "n6",
+    "c08",
+    "c09",
+    "r6",
+    "r1"
+   ],
+   "name": {
+    "x": 1180,
+    "y": 402,
+    "lines": [
+     "ARCHITECTURE"
+    ]
+   },
+   "slots": [
+    {
+     "id": "territory.architecture.slot.01",
+     "at": [
+      1240,
+      470
+     ]
+    },
+    {
+     "id": "territory.architecture.slot.02",
+     "at": [
+      1400,
+      462
+     ]
+    },
+    {
+     "id": "territory.architecture.slot.03",
+     "at": [
+      1300,
+      545
+     ]
+    },
+    {
+     "id": "territory.architecture.slot.04",
+     "at": [
+      1440,
+      400
+     ]
+    },
+    {
+     "id": "territory.architecture.slot.05",
+     "at": [
+      1350,
+      400
+     ]
+    }
+   ]
+  },
+  {
+   "id": "atlas:LIMB-IMPLEMENTATION",
+   "key": "implementation",
+   "ring": [
+    "q2",
+    "r4",
+    "r3",
+    "i1",
+    "c13",
+    "c14",
+    "c15",
+    "q3"
+   ],
+   "name": {
+    "x": 470,
+    "y": 748,
+    "lines": [
+     "IMPLEMENTATION"
+    ]
+   },
+   "slots": [
+    {
+     "id": "territory.implementation.slot.01",
+     "at": [
+      560,
+      832
+     ]
+    },
+    {
+     "id": "territory.implementation.slot.02",
+     "at": [
+      680,
+      842
+     ]
+    },
+    {
+     "id": "territory.implementation.slot.03",
+     "at": [
+      800,
+      832
+     ]
+    },
+    {
+     "id": "territory.implementation.slot.04",
+     "at": [
+      620,
+      890
+     ]
+    },
+    {
+     "id": "territory.implementation.slot.05",
+     "at": [
+      760,
+      890
+     ]
+    },
+    {
+     "id": "territory.implementation.slot.06",
+     "at": [
+      540,
+      885
+     ]
+    }
+   ]
+  },
+  {
+   "id": "atlas:LIMB-ASSESSMENT",
+   "key": "assessment",
+   "ring": [
+    "r1",
+    "r6",
+    "c09",
+    "c10",
+    "c11",
+    "c12",
+    "c13",
+    "i1",
+    "r3",
+    "r2"
+   ],
+   "name": {
+    "x": 1060,
+    "y": 712,
+    "lines": [
+     "ASSESSMENT"
+    ]
+   },
+   "slots": [
+    {
+     "id": "territory.assessment.slot.01",
+     "at": [
+      1180,
+      800
+     ]
+    },
+    {
+     "id": "territory.assessment.slot.02",
+     "at": [
+      1330,
+      762
+     ]
+    },
+    {
+     "id": "territory.assessment.slot.03",
+     "at": [
+      1250,
+      862
+     ]
+    },
+    {
+     "id": "territory.assessment.slot.04",
+     "at": [
+      1400,
+      660
+     ]
+    },
+    {
+     "id": "territory.assessment.slot.05",
+     "at": [
+      1060,
+      790
+     ]
+    }
+   ]
+  },
+  {
+   "id": "atlas:LIMB-OPERATIONS",
+   "key": "operations",
+   "ring": [
+    "c18",
+    "q2",
+    "q3",
+    "c15",
+    "c16",
+    "c17"
+   ],
+   "name": {
+    "x": 150,
+    "y": 750,
+    "lines": [
+     "OPERATIONS"
+    ]
+   },
+   "slots": [
+    {
+     "id": "territory.operations.slot.01",
+     "at": [
+      240,
+      815
+     ]
+    },
+    {
+     "id": "territory.operations.slot.02",
+     "at": [
+      340,
+      830
+     ]
+    },
+    {
+     "id": "territory.operations.slot.03",
+     "at": [
+      250,
+      880
+     ]
+    },
+    {
+     "id": "territory.operations.slot.04",
+     "at": [
+      330,
+      700
+     ]
+    }
+   ]
+  },
+  {
+   "id": "atlas:LIMB-THREAT",
+   "key": "threat",
+   "ring": [
+    "c19",
+    "n1",
+    "q1",
+    "q2",
+    "c18"
+   ],
+   "name": {
+    "x": 110,
+    "y": 452,
+    "lines": [
+     "THREATS &",
+     "DEFENSE"
+    ]
+   },
+   "slots": [
+    {
+     "id": "territory.threat.slot.01",
+     "at": [
+      255,
+      548
+     ]
+    },
+    {
+     "id": "territory.threat.slot.02",
+     "at": [
+      170,
+      548
+     ]
+    },
+    {
+     "id": "territory.threat.slot.03",
+     "at": [
+      325,
+      590
+     ]
+    },
+    {
+     "id": "territory.threat.slot.04",
+     "at": [
+      215,
+      594
+     ]
+    },
+    {
+     "id": "territory.threat.slot.05",
+     "at": [
+      335,
+      505
+     ]
+    },
+    {
+     "id": "territory.threat.slot.06",
+     "at": [
+      330,
+      442
+     ]
+    }
+   ]
+  },
+  {
+   "id": "atlas:LIMB-KNOWLEDGE",
+   "key": "knowledge",
+   "ring": [
+    "c05",
+    "c06",
+    "c07",
+    "c08",
+    "n6",
+    "n5",
+    "n4"
+   ],
+   "name": {
+    "x": 1150,
+    "y": 196,
+    "lines": [
+     "KNOWLEDGE"
+    ]
+   },
+   "slots": [
+    {
+     "id": "territory.knowledge.slot.01",
+     "at": [
+      1180,
+      262
+     ]
+    },
+    {
+     "id": "territory.knowledge.slot.02",
+     "at": [
+      1320,
+      262
+     ]
+    },
+    {
+     "id": "territory.knowledge.slot.03",
+     "at": [
+      1430,
+      262
+     ]
+    },
+    {
+     "id": "territory.knowledge.slot.04",
+     "at": [
+      1450,
+      200
+     ]
+    }
+   ]
+  }
+ ],
+ "assignments": {
+  "nist-800-53": "territory.compliance.slot.01",
+  "csf-2": "territory.compliance.slot.02",
+  "cmmc-2": "territory.compliance.slot.03",
+  "nist-800-171": "territory.compliance.slot.04",
+  "nist-800-171-rev2": "territory.compliance.slot.05",
+  "nist-800-172": "territory.compliance.slot.06",
+  "cui-policy": "territory.compliance.slot.07",
+  "nist-ssdf": "territory.compliance.slot.08",
+  "nist-ai-rmf": "territory.compliance.slot.09",
+  "dod-rai": "territory.governance.slot.01",
+  "nist-zt": "territory.architecture.slot.01",
+  "nist-iot-cybersecurity": "territory.architecture.slot.02",
+  "dod-zt": "territory.architecture.slot.03",
+  "microsoft-zt-maturity": "territory.assessment.slot.01",
+  "disa-srg": "territory.implementation.slot.01",
+  "disa-stig": "territory.implementation.slot.02",
+  "mitre-attack": "territory.threat.slot.01",
+  "mitre-attack-ics": "territory.threat.slot.02",
+  "mitre-d3fend": "territory.threat.slot.03",
+  "nist-mobile-threats": "territory.threat.slot.04",
+  "fedramp-2026": "territory.compliance.slot.10",
+  "fips-200": "territory.governance.slot.02",
+  "nist-800-37": "territory.governance.slot.03",
+  "fips-199": "territory.risk.slot.01",
+  "nist-800-53a": "territory.assessment.slot.02",
+  "fedramp-rev5": "territory.compliance.slot.11",
+  "nist-800-53b": "territory.compliance.slot.12",
+  "disa-cci": "territory.implementation.slot.03"
+ },
+ "presentation": {
+  "nist-800-53": {
+   "alias": "SP 800-53 Rev. 5",
+   "major": true
+  },
+  "csf-2": {
+   "alias": "CSF 2.0",
+   "major": true
+  },
+  "cmmc-2": {
+   "alias": "CMMC 2.0",
+   "major": true
+  },
+  "nist-800-171": {
+   "alias": "SP 800-171 Rev. 3",
+   "major": false
+  },
+  "nist-800-171-rev2": {
+   "alias": "800-171 Rev. 2",
+   "major": false
+  },
+  "nist-800-172": {
+   "alias": "SP 800-172",
+   "major": false
+  },
+  "cui-policy": {
+   "alias": "CUI Program",
+   "major": false
+  },
+  "nist-ssdf": {
+   "alias": "SSDF",
+   "major": false
+  },
+  "nist-ai-rmf": {
+   "alias": "AI RMF",
+   "major": false
+  },
+  "dod-rai": {
+   "alias": "DoD AI Assurance",
+   "major": false
+  },
+  "nist-zt": {
+   "alias": "SP 800-207",
+   "major": true
+  },
+  "nist-iot-cybersecurity": {
+   "alias": "NIST IoT",
+   "major": false
+  },
+  "dod-zt": {
+   "alias": "DoD Zero Trust",
+   "major": false
+  },
+  "microsoft-zt-maturity": {
+   "alias": "Microsoft ZT Maturity",
+   "major": false
+  },
+  "disa-srg": {
+   "alias": "DISA SRG",
+   "major": false
+  },
+  "disa-stig": {
+   "alias": "DISA STIG",
+   "major": true
+  },
+  "mitre-attack": {
+   "alias": "ATT&CK Enterprise",
+   "major": true
+  },
+  "mitre-attack-ics": {
+   "alias": "ATT&CK for ICS",
+   "major": false
+  },
+  "mitre-d3fend": {
+   "alias": "D3FEND",
+   "major": false
+  },
+  "nist-mobile-threats": {
+   "alias": "Mobile Threats",
+   "major": false
+  },
+  "fedramp-2026": {
+   "alias": "FedRAMP 2026",
+   "major": false
+  },
+  "fips-200": {
+   "alias": "FIPS 200",
+   "major": false
+  },
+  "nist-800-37": {
+   "alias": "SP 800-37",
+   "major": true
+  },
+  "fips-199": {
+   "alias": "FIPS 199",
+   "major": true
+  },
+  "nist-800-53a": {
+   "alias": "800-53A",
+   "major": true
+  },
+  "fedramp-rev5": {
+   "alias": "FedRAMP Rev. 5",
+   "major": true
+  },
+  "nist-800-53b": {
+   "alias": "800-53B",
+   "major": false
+  },
+  "disa-cci": {
+   "alias": "DISA CCI",
+   "major": false
+  }
+ }
+}

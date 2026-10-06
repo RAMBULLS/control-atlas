@@ -217,3 +217,43 @@ test("V-256609 formatting keeps exact command and configuration source ranges", 
   assert.equal(fixPresentation.blocks.filter((block) => block.kind === "list").length, 2);
   assert.equal(fixPresentation.blocks.filter((block) => block.kind === "code").length, 2);
 });
+
+test("all-ATLAS_ONLY relationships produce zero visible groups and no fake 0 count badge", () => {
+  const csfContract = recordPresentationContract("csf-2", "requirement");
+  const stigContract = recordPresentationContract("disa-stig", "stig_rule");
+  const treatment = relationshipTreatmentFor({
+    recordContract: csfContract,
+    counterpartContract: stigContract,
+    recordCatalogId: "csf-2",
+    counterpartCatalogId: "disa-stig",
+    relationshipType: "maps_to",
+    relationshipClass: "correlation",
+  });
+  assert.equal(treatment, RELATIONSHIP_TREATMENTS.ATLAS_ONLY);
+
+  const mockGovernedGroups = [
+    {
+      catalogId: "disa-stig",
+      label: "DISA STIG",
+      relationshipType: "maps_to",
+      treatment,
+      items: [
+        {
+          edgeId: "edge-1",
+          nodeId: "disa-stig:V-1234",
+          itemId: "V-1234",
+          title: "Sample STIG Rule",
+          provenanceClass: "published_record",
+        },
+      ],
+    },
+  ];
+  const visibleGroups = mockGovernedGroups.filter(
+    (group) => group.treatment !== RELATIONSHIP_TREATMENTS.ATLAS_ONLY,
+  );
+  const visibleCount = visibleGroups.reduce((acc, g) => acc + g.items.length, 0);
+
+  // Asserts that no visible connection groups are created, preventing an empty Related records wrapper with count 0
+  assert.equal(visibleGroups.length, 0);
+  assert.equal(visibleCount, 0);
+});

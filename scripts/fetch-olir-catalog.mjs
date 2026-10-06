@@ -3,10 +3,11 @@
 // NIST detail, then download and parse every deterministically reachable
 // structured submission. Entries without an obtainable structured artifact
 // remain quarantined with their exact retrieval evidence.
-import { mkdirSync, rmSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parseOlirStructuredArtifact, retrieveStructuredOlirArtifact } from '../tools/relationship-builders/olir-retrieval.mjs';
+import { createRegisteredOlirFetch, olirAvailability, parseOlirStructuredArtifact, retrieveStructuredOlirArtifact } from '../tools/relationship-builders/olir-retrieval.mjs';
+import { classifyFailure, isTransientStatus } from './lib/retry-policy.mjs';
 import { strictConditionalFetch } from './lib/strict-conditional-fetch.mjs';
 import { writeJsonAtomically } from './lib/write-json-atomically.mjs';
 
@@ -55,7 +56,7 @@ function quarantineReason(entry, catalogId) {
   if (entry.statusDescription !== 'Final') {
     return `OLIR status is "${entry.statusDescription}", not Final — held out of the published graph pending NIST finalization`;
   }
-  return 'no downloadable structured relationship artifact at this submission — the OLIR catalog list API exposes only a pointer to the referenced publication (referenceUrl), not a machine-parseable crosswalk file; NIST\'s per-entry submission-artifact endpoint (/details/{id}, /reference-detail/{id}) returns 404 from this environment for every id tried';
+  return 'no public relationship mapping discovered at the registered submission locations; see retrieval evidence';
 }
 
 async function mapWithConcurrency(items, limit, work) {
@@ -78,6 +79,7 @@ async function retrieveDetail(id) {
     const response = await strictConditionalFetch(url, { signal: AbortSignal.timeout(15_000) });
     const body = response.ok ? await response.json() : null;
     const detail = body?.response?.[0] || null;
+    if (!detail) throw new Error(`OLIR detail ${id} missing (${response.status})`);
     return {
       kind: 'NIST catalog detail endpoint',
       url,
@@ -95,45 +97,109 @@ async function retrieveDetail(id) {
   }
 }
 
-async function retrieveEntry(entry) {
+export async function retrieveOlirEntry(entry, options = {}) {
   const id = entry.informativeReferenceFrameworkVersionId;
-  const detail = await retrieveDetail(id);
-  const candidates = [detail.json_file_url, detail.submission_url, detail.reference_url, entry.referenceUrl];
-  const retrieved = await retrieveStructuredOlirArtifact(candidates);
+  const detail = await (options.retrieveDetail || retrieveDetail)(id);
+  // Reference URLs describe the publication being mapped. They are not
+  // submission artifacts, even when that publication offers other workbooks.
+  const candidates = [detail.json_file_url, detail.submission_url];
+  const retrieved = await retrieveStructuredOlirArtifact(candidates, {
+    focalCatalogId: FOCAL_CATALOG_MAP.get(entry.focusDocName),
+    sourceIdentifier: entry.frameworkVersionIdentifier,
+    fetchImpl: options.fetchImpl || createRegisteredOlirFetch(candidates),
+  });
   const attempts = [detail, ...retrieved.attempted];
-  if (!retrieved.artifact) return { attempts, mapping: null, unavailable_reason: 'no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL' };
+  if (!retrieved.artifact) return {
+    attempts, mapping: null,
+    unsupported: !detail.json_file_url && attempts.every((attempt) => !attempt.error && attempt.status >= 200 && attempt.status < 300),
+    unavailable_reason: 'no public relationship mapping could be downloaded from the registered NIST submission locations',
+  };
   try {
-    const parsed = await parseOlirStructuredArtifact(retrieved.artifact);
+    const parsed = await parseOlirStructuredArtifact(retrieved.artifact, { focalCatalogId: FOCAL_CATALOG_MAP.get(entry.focusDocName) });
     if (!parsed.relationships.length) {
-      return { attempts, mapping: null, unavailable_reason: `downloaded structured artifact contains no parseable OLIR relationships (${parsed.parser})` };
+      return { attempts, mapping: null, parse_failed: true, unavailable_reason: `downloaded structured artifact contains no parseable OLIR relationships (${parsed.parser})` };
     }
     const mapFile = `maps/olir/${id}.json`;
-    mkdirSync(join(ROOT, 'maps', 'olir'), { recursive: true });
-    writeJsonAtomically(join(ROOT, mapFile), {
+    const document = {
       schema_version: '1.0',
       olir_id: id,
       source_artifact: retrieved.artifact.url,
       sha256: retrieved.artifact.sha256,
       byte_length: retrieved.artifact.bytes.length,
       parser: parsed.parser,
+      extraction_scope: parsed.parser === 'olir-html' ? 'published_html_relationships' : 'structured_artifact',
       relationships: parsed.relationships,
-    });
+    };
     return {
       attempts,
+      document,
       mapping: {
         map_file: mapFile,
         artifact_url: retrieved.artifact.url,
         checksum: retrieved.artifact.sha256,
         byte_length: retrieved.artifact.bytes.length,
         parser: parsed.parser,
+        extraction_scope: parsed.parser === 'olir-html' ? 'published_html_relationships' : 'structured_artifact',
         relationship_count: parsed.relationships.length,
         relationship_semantics: [...new Set(parsed.relationships.map((relationship) => relationship.relationship_type))].sort(),
       },
       unavailable_reason: null,
     };
   } catch (error) {
-    return { attempts, mapping: null, unavailable_reason: `downloaded artifact could not be parsed as an OLIR relationship mapping: ${error instanceof Error ? error.message : String(error)}` };
+    return { attempts, mapping: null, parse_failed: true, unavailable_reason: `downloaded artifact could not be parsed as an OLIR relationship mapping: ${error instanceof Error ? error.message : String(error)}` };
   }
+}
+
+/**
+ * Why a previously accepted submission could not be refreshed. Transient means
+ * a later run may well succeed; publisher_unavailable means NIST answered and
+ * no importable mapping is published there now.
+ */
+export function classifyOlirRetention(retrieval) {
+  const transient = (retrieval?.attempts || []).some((attempt) =>
+    (attempt.error && classifyFailure({ message: String(attempt.error) }) === 'transient') || isTransientStatus(attempt.status));
+  return transient ? 'transient' : 'publisher_unavailable';
+}
+
+export function validateOlirCandidate(retrievalById, previousItems = []) {
+  const previouslyIngested = new Set(previousItems.filter((item) => item.ingested).map((item) => item.id));
+  for (const [id, retrieval] of retrievalById) {
+    const detail = retrieval.attempts?.[0];
+    const successful = (attempt) => !attempt.error && Number.isInteger(attempt.status) && attempt.status >= 200 && attempt.status < 300;
+    // The catalog includes publisher pointers that never supplied an importable
+    // mapping. Keep those entries and their failure evidence as quarantined;
+    // they must not prevent unrelated mappings from refreshing. Existing
+    // published mappings still cannot disappear or silently regress.
+    if (!detail || !successful(detail)
+      || (previouslyIngested.has(id) && (!retrieval.mapping || retrieval.parse_failed))) {
+      throw new Error(`OLIR refresh incomplete for ${id}: ${retrieval.unavailable_reason || detail?.error || 'missing expected detail or artifact'}`);
+    }
+  }
+}
+
+export function retainOlirSubmissions(retrievalById, previousItems, readMap) {
+  const result = new Map(retrievalById);
+  for (const previous of previousItems.filter((item) => item.ingested)) {
+    const retrieval = result.get(previous.id);
+    if (!retrieval || (retrieval.mapping && !retrieval.parse_failed)) continue;
+    const expectedPath = `maps/olir/${previous.id}.json`;
+    if (!Number.isSafeInteger(previous.id) || previous.map_file !== expectedPath || previous.artifact?.map_file !== expectedPath) {
+      throw new Error(`OLIR ${previous.id}: invalid retained mapping path`);
+    }
+    const bytes = readMap(expectedPath);
+    const document = JSON.parse(bytes.toString('utf8'));
+    if (document.olir_id !== previous.id || document.sha256 !== previous.artifact.checksum ||
+      document.byte_length !== previous.artifact.byte_length ||
+      !Array.isArray(document.relationships) || !document.relationships.length ||
+      document.relationships.length !== previous.artifact.relationship_count) {
+      throw new Error(`OLIR ${previous.id}: retained mapping evidence mismatch`);
+    }
+    result.set(previous.id, {
+      ...retrieval, mapping: structuredClone(previous.artifact), parse_failed: false,
+      retainedBytes: bytes, retainedItem: structuredClone(previous),
+    });
+  }
+  return result;
 }
 
 export async function fetchOlirCatalog() {
@@ -150,16 +216,19 @@ export async function fetchOlirCatalog() {
       entry.statusDescription === 'Final' &&
       FOCAL_CATALOG_MAP.has(entry.focusDocName),
   );
-  // The per-entry maps are a fresh snapshot of the live OLIR inventory. A
-  // previously retrieved map must not survive if its publisher artifact is no
-  // longer reachable in this required-fresh run.
-  rmSync(join(ROOT, 'maps', 'olir'), { recursive: true, force: true });
-  const retrievalById = new Map(
+  const generatedAt = new Date().toISOString();
+  const manifestPath = join(ROOT, 'data', 'olir-catalog-manifest.json');
+  const previousItems = existsSync(manifestPath)
+    ? JSON.parse(readFileSync(manifestPath, 'utf8')).processed_items || [] : [];
+  const retrievedById = new Map(
     (await mapWithConcurrency(applicableFinalEntries, 6, async (entry) => [
       entry.informativeReferenceFrameworkVersionId,
-      await retrieveEntry(entry),
+      await retrieveOlirEntry(entry),
     ])).map(([id, retrieval]) => [id, retrieval]),
   );
+  const retrievalById = retainOlirSubmissions(retrievedById, previousItems,
+    (path) => readFileSync(join(ROOT, path)));
+  validateOlirCandidate(retrievalById, previousItems);
 
   const processed_items = entries.map((entry) => {
     const id = entry.informativeReferenceFrameworkVersionId;
@@ -171,6 +240,22 @@ export async function fetchOlirCatalog() {
     const attemptSummary = retrieval_attempts
       .map((attempt) => `${attempt.kind} ${attempt.status ?? attempt.error ?? 'not reached'}`)
       .join('; ');
+
+    if (retrieval?.retainedItem) {
+      const prior = retrieval.retainedItem.retention;
+      return {
+        ...retrieval.retainedItem,
+        refresh_status: 'retained_last_good',
+        availability: olirAvailability(retrievedById.get(id)),
+        refresh_error: retrieval.unavailable_reason || 'Mapping could not be refreshed',
+        latest_retrieval_attempts: retrieval_attempts,
+        retention: {
+          cause: classifyOlirRetention(retrievedById.get(id)),
+          first_retained_at: prior?.first_retained_at || generatedAt,
+          consecutive_refreshes: (prior?.consecutive_refreshes || 0) + 1,
+        },
+      };
+    }
 
     return {
       id,
@@ -191,6 +276,7 @@ export async function fetchOlirCatalog() {
       authority_tier_label: authority.label,
       mapping_model: ingested?.relationship_semantics?.join(', ') || null,
       ingested: Boolean(ingested),
+      availability: !catalogId ? 'outside_catalog_scope' : entry.statusDescription !== 'Final' ? 'not_final' : olirAvailability(retrieval),
       map_file: ingested?.map_file || null,
       artifact_id: null,
       artifact: ingested,
@@ -204,7 +290,7 @@ export async function fetchOlirCatalog() {
   });
 
   const manifest = {
-    generated_at: new Date().toISOString(),
+    generated_at: generatedAt,
     source: 'https://csrc.nist.gov/projects/olir/informative-reference-catalog',
     api_endpoint: CATALOG_URL,
     total_entries: entries.length,
@@ -217,10 +303,19 @@ export async function fetchOlirCatalog() {
     unresolved_count: processed_items.filter(
       (item) => item.status === 'Final' && item.resolved_catalog_id && !item.ingested,
     ).length,
+    retained_count: processed_items.filter((item) => item.refresh_status === 'retained_last_good').length,
     processed_items,
   };
 
-  writeJsonAtomically(join(ROOT, 'data', 'olir-catalog-manifest.json'), manifest);
+  // The complete candidate is validated before replacing any last-good map.
+  // The outer source transaction owns rollback if a filesystem write fails.
+  rmSync(join(ROOT, 'maps', 'olir'), { recursive: true, force: true });
+  mkdirSync(join(ROOT, 'maps', 'olir'), { recursive: true });
+  for (const retrieval of retrievalById.values()) {
+    if (retrieval.retainedBytes) writeFileSync(join(ROOT, retrieval.mapping.map_file), retrieval.retainedBytes);
+    else if (retrieval.mapping) writeJsonAtomically(join(ROOT, retrieval.mapping.map_file), retrieval.document);
+  }
+  writeJsonAtomically(manifestPath, manifest);
 
   return manifest;
 }

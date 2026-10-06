@@ -17,6 +17,14 @@ export default defineConfig({
     diff: false,
   },
   testDir: './tests/e2e',
+  // The screenshot suite is not a default-config test. It needs disabled
+  // animations, a hidden caret, a diff tolerance and a single worker, all of
+  // which live in playwright.visual.config.mjs — run it with `npm run
+  // test:visual`, which is what CI does. Running it here as well compared
+  // screenshots with animations playing and zero tolerance, and on any
+  // platform without a committed baseline it wrote one and reported a
+  // failure. Two of the five failures in a full local run were exactly that.
+  testIgnore: '**/visual-regression.spec.mjs',
   globalTeardown: './tools/playwright-global-teardown.mjs',
   fullyParallel: process.env.PLAYWRIGHT_FULLY_PARALLEL === '1',
   timeout: process.env.CI ? 45000 : 30000,

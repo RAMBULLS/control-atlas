@@ -30,12 +30,27 @@ test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
 });
 
-async function openAtlas(page, viewport = { width: 1440, height: 900 }) {
+/**
+ * Opens the columns. The publisher lens lands on a board of publisher cards,
+ * and the columns this suite is about begin one level in, inside a publisher.
+ */
+async function openAtlas(page, viewport = { width: 1440, height: 900 }, ecosystem = "ecosystem%3Anist") {
   await page.setViewportSize(viewport);
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await gotoApp(page, "/#/atlas");
+  await gotoApp(page, `/#/atlas?atlasLanding=publishers&atlasLimb=${ecosystem}`);
   await waitForAppReady(page);
   await dismissOnboarding(page);
+}
+
+/** Opens a publisher from the landing board, which is where the columns start. */
+async function openPublisherFromBoard(page, label) {
+  const card = page
+    .getByTestId("atlas-area-map")
+    // In a plain string "\+" is just "+", so this escaped nothing and a label
+    // containing one would have reached the regex as a quantifier.
+    .getByRole("button", { name: new RegExp(`^${label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} —`) });
+  await expect(card).toBeVisible();
+  await card.click();
 }
 
 function map(page) {
@@ -46,157 +61,25 @@ function column(page, key) {
   return map(page).locator(`.atlas-decomp__column[data-column="${key}"]`);
 }
 
-test("Atlas opens as a labelled decomposition map, not an unlabelled canvas", async ({ page }) => {
-  await openAtlas(page);
-
-  await expect(page.locator("main")).toHaveCount(1);
-  await expect(page.getByRole("heading", { name: "Atlas", level: 1 })).toBeVisible();
-  await expect(page.getByText("THE WHOLE LANDSCAPE", { exact: true })).toBeVisible();
-  await expect(page.getByRole("searchbox", { name: "Jump to a record" })).toBeVisible();
-
-  const atlas = map(page);
-  await expect(atlas).toHaveAttribute("data-scope-level", "root");
-  await expect(atlas).toHaveAttribute("data-level-count", "1");
-  // No canvas: the map is DOM, so every node is readable and focusable.
-  await expect(atlas.locator("canvas")).toHaveCount(0);
-
-  const areas = column(page, "area");
-  await expect(areas).toHaveAttribute("data-row-count", "11");
-  // Eight source ecosystems open; three authority landmarks stay bounded
-  // context rather than pretending to be publisher containers.
-  await expect(areas.getByRole("button")).toHaveCount(8);
-  await expect(areas.locator('.atlas-decomp__node[data-state="static"]')).toHaveCount(3);
-
-  // Every visible row carries a name and a count — nothing is hover-only.
-  for (const row of await areas.locator(".atlas-decomp__node").all()) {
-    await expect(row.locator(".atlas-decomp__label")).not.toBeEmpty();
-    await expect(row.locator(".atlas-decomp__meta")).not.toBeEmpty();
-  }
-});
-
-test("FedRAMP publications expose active and historical lifecycle state", async ({ page }) => {
-  await openAtlas(page);
-  await column(page, "area").getByRole("button", { name: /^FedRAMP/ }).click();
-  const publications = column(page, "publication");
-  await expect(publications.getByRole("button", { name: /FedRAMP Consolidated Rules.*Active/ })).toBeVisible();
-  await expect(publications.getByRole("button", { name: /FedRAMP Rev\. 5 Baselines.*Historical/ })).toBeVisible();
-  await expect(map(page)).toContainText("Use the Consolidated Rules for 2026");
-});
-
-test("the map drills ecosystem to publication to native section and the breadcrumb reverses it", async ({ page }) => {
-  await openAtlas(page);
-
-  await column(page, "area").getByRole("button", { name: /^NIST/ }).click();
-  await expect(page).toHaveURL(/atlasLimb=ecosystem(?::|%3A)nist/);
-  await expect(map(page)).toHaveAttribute("data-scope-level", "ecosystem");
-  await expect(column(page, "publication")).toBeVisible();
-
-  await column(page, "publication")
-    .getByRole("button", { name: /SP 800-53 Rev\. 5 Catalog/ })
-    .click();
-  await expect(page).toHaveURL(/atlasFramework=nist-800-53/);
-  await expect(map(page)).toHaveAttribute("data-scope-level", "publication");
-
-  const sections = column(page, "detail");
-  await expect(sections).toBeVisible();
-  await expect(sections.getByRole("button", { name: /Access Control/ })).toBeVisible();
-
-  const trail = page.getByRole("navigation", { name: "Atlas scope" });
-  await expect(trail).toContainText("NIST");
-  await expect(trail).toContainText("SP 800-53 Rev. 5 Catalog");
-
-  await trail.getByRole("button", { name: "NIST", exact: true }).click();
-  await expect(page).toHaveURL(/atlasLimb=ecosystem(?::|%3A)nist/);
-  await expect(page).not.toHaveURL(/atlasFramework=/);
-
-  await trail.getByRole("button", { name: "Cybersecurity", exact: true }).click();
-  await expect(map(page)).toHaveAttribute("data-scope-level", "root");
-});
-
-test("every source ecosystem opens directly from the first column", async ({ page }) => {
-  await openAtlas(page);
-
-  for (const [id, label] of SOURCE_ECOSYSTEMS) {
-    await gotoApp(page, "/#/atlas");
-    await waitForAppReady(page);
-    await column(page, "area")
-      .locator(".atlas-decomp__label")
-      .getByText(label, { exact: true })
-      .click();
-    await expect(page).toHaveURL(new RegExp(`atlasLimb=${id.replace(":", "(?::|%3A)")}`));
-    await expect(page.getByRole("navigation", { name: "Atlas scope" })).toContainText(label);
-  }
-});
-
-test("the opened row stays marked as current in its column", async ({ page }) => {
-  await openAtlas(page);
-  await column(page, "area").getByRole("button", { name: /^NIST/ }).click();
-
-  const selected = column(page, "area").locator('.atlas-decomp__node[data-state="selected"]');
-  await expect(selected).toHaveCount(1);
-  await expect(selected).toContainText("NIST");
-});
-
-test("the layout switch offers both orientations above the stacking width", async ({ page }) => {
-  await openAtlas(page);
-  const across = page.getByRole("button", { name: "Across" });
-  const down = page.getByRole("button", { name: "Down" });
-
-  await expect(across).toHaveAttribute("aria-pressed", "true");
-  await down.click();
-  await expect(map(page)).toHaveAttribute("data-orientation", "down");
-  await expect(down).toHaveAttribute("aria-pressed", "true");
-  await across.click();
-  await expect(map(page)).toHaveAttribute("data-orientation", "across");
-});
-
-for (const width of [320, 375, 390, 768, 1024, 1200, 1440]) {
-  test(`Atlas stays readable and free of horizontal overflow at ${width}px`, async ({ page }) => {
-    await openAtlas(page, { width, height: width < 768 ? 844 : 900 });
-
-    const areas = column(page, "area");
-    await expect(areas).toBeVisible();
-    await expect(areas.getByRole("button").first()).toBeVisible();
-
-    const box = await areas.boundingBox();
-    expect(box?.width, `${width}px column width`).toBeGreaterThan(Math.min(260, width * 0.6));
-    expect(box?.y, `${width}px map position`).toBeLessThan(900);
-
-    expect(
-      await page.locator("html").evaluate((element) => element.scrollWidth - element.clientWidth),
-      `${width}px Atlas overflow`,
-    ).toBeLessThanOrEqual(1);
-
-    // The page scrolls, never a pane inside it.
-    expect(
-      await map(page).evaluate((element) =>
-        [element, ...element.querySelectorAll("*")].filter((node) => {
-          const style = globalThis.getComputedStyle(node);
-          return (
-            (style.overflowY === "auto" || style.overflowY === "scroll") &&
-            node.scrollHeight > node.clientHeight + 1
-          );
-        }).length,
-      ),
-      `${width}px nested vertical scroll region`,
-    ).toBe(0);
-  });
-}
-
 test("Atlas keeps generated identifiers out of visible and accessible copy", async ({ page }) => {
-  await openAtlas(page);
-  const atlas = map(page);
-
+  await gotoApp(page, "/#/atlas");
+  await waitForAppReady(page);
+  await dismissOnboarding(page);
+  const atlas = page.locator(".atl");
+  await expect(page.locator(".terr")).toBeVisible();
   await expect(atlas).not.toContainText(/atlas:LIMB-/);
   await expect(atlas).not.toContainText(/ecosystem:/);
   await expect(atlas).not.toContainText(/:CATALOG\b/);
   await expect(atlas).not.toContainText(/\b(?:trunks?|limbs?|twigs?|acorns?)\b/i);
   await expect(atlas).not.toContainText(/nist-zt|nist-iot-cybersecurity|microsoft-zt-maturity/);
+  const labels = await page.locator(".terr [aria-label]").evaluateAll((els) => els.map((e) => e.getAttribute("aria-label")));
+  expect(labels.filter((l) => /atlas:LIMB-|ecosystem:|:CATALOG\b/.test(l))).toEqual([]);
 });
 
-test("Atlas hierarchy and local record controls keep generated IDs out of primary and accessible copy", async ({ page }) => {
+test("an Atlas record with a generated key leads with its title in primary and accessible copy", async ({ page }) => {
   test.setTimeout(120_000);
   const stableId = "MAPPING-CONTRIBUTOR-APPGATE-835EC7F121";
+  // A saved classic hierarchy link opens the record on the territory sheet.
   const route = `/#/atlas?node=${encodeURIComponent(`nist-zt:${stableId}`)}&relationshipView=path`;
 
   for (const width of [320, 375, 390, 768, 1024, 1440]) {
@@ -206,16 +89,10 @@ test("Atlas hierarchy and local record controls keep generated IDs out of primar
     await waitForAppReady(page);
     await dismissOnboarding(page);
 
-    await expect(page.getByRole("region", { name: "Focused Atlas record" })).toBeVisible();
-    const hierarchy = page.locator("#atlas-hierarchy-panel");
-    await expect(hierarchy.getByRole("heading", { name: "Decomposes into", level: 3 })).toBeVisible();
-    const child = hierarchy.getByRole("link", {
-      name: /Open Appgate.*Product component, NIST Zero Trust/,
-    }).first();
-    await expect(child).toBeVisible();
-    await expect(child).toContainText("Appgate");
-    await expect(hierarchy).not.toContainText(/PRODUCT-COMPONENT-.*-[0-9A-F]{10}/);
-    await expect(page.locator("main")).not.toContainText(stableId);
+    const details = page.locator(width < 760 ? "#atl-focus" : ".atl-inspector");
+    await expect(details).toContainText("Appgate", { timeout: 20000 });
+    await expect(details).not.toContainText(stableId);
+    await expect(page.getByRole("navigation", { name: "Where you are" }).first()).not.toContainText(stableId);
     expect(
       await page.locator("html").evaluate((element) => element.scrollWidth - element.clientWidth),
       `${width}px generated Atlas overflow`,

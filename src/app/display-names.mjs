@@ -32,6 +32,12 @@ const DISPLAY_NAMES = {
     restricted: 'Restricted access',
     private: 'Private access',
   },
+  zt_mapping_kind: {
+    csf_2: 'NIST CSF 2.0',
+    csf_1_1: 'NIST CSF 1.1',
+    sp_800_53: 'NIST SP 800-53',
+    critical_software: 'NIST critical software measures',
+  },
   relationship_type: {
     maps_to: 'Maps to',
     supports: 'Supports',
@@ -152,7 +158,6 @@ const DISPLAY_NAMES = {
     security_plan_starter: 'Security Plan Starter',
     implementation_statement_worksheet: 'Implementation Statement Worksheet',
     evidence_expectation_matrix: 'Evidence Expectation Matrix',
-    stig_evidence_checklist: 'STIG Viewer CSV Preparation Worksheet',
     inheritance_worksheet: 'Inheritance Worksheet',
     reciprocity_checklist: 'Reciprocity Package Review',
     poam_starter: 'POA&M Working Register',
@@ -160,7 +165,6 @@ const DISPLAY_NAMES = {
     conmon_calendar: 'Continuous Monitoring Delivery Calendar',
     hardware_baseline: 'Hardware Baseline',
     software_baseline: 'Software Baseline',
-    ppsm_preparation_worksheet: 'PPSM Preparation Worksheet',
   },
   node_type: {
     control: 'Control',

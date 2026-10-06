@@ -5,12 +5,15 @@
   "sha256": "sha256:56b537d0be238b928e6c309a6a7bb40472a5289713a5401627c81722db1c14da",
   "byte_length": 19720,
   "parser": "olir-xlsx",
+  "extraction_scope": "structured_artifact",
   "relationships": [
     {
       "focal_id": "03.01.01",
       "reference_id": "3.1.1",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for account management Added new ODP: time period to notify personnel/roles when accounts are no longer required Added new ODP: time period to notify personnel/roles when users terminated/transferred Added new ODP: time period to notify personnel/roles when system usage or need-to-know changes for an indivdual Added new ODP: time period of inactivity or circumstances in which users are required to log out Updated discussion differentiating 03.01.01 with 03.01.10",
       "source_locator": "Relationships#row-2"
     },
@@ -19,6 +22,8 @@
       "reference_id": "3.1.2",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 Rephrased for clarity; outcome remains unchanged",
       "source_locator": "Relationships#row-3"
     },
@@ -27,6 +32,8 @@
       "reference_id": "3.1.3",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 Rephrased for clarity; outcome remains unchanged Discussion updated to include additional guidance on the relationship between 03.01.03 and 03.12.05",
       "source_locator": "Relationships#row-4"
     },
@@ -35,6 +42,8 @@
       "reference_id": "3.1.4",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 Separated into two parts (a, b) needed for achieve outcome, rephrased for clarity; outcome remains unchanged",
       "source_locator": "Relationships#row-5"
     },
@@ -43,6 +52,8 @@
       "reference_id": "3.1.5",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks to implement least privilege Added new ODP: security functions in which to authorize access Added new ODP: security-relevant informationin which to authorize access Added new ODP: frequency to review privileges assigned to roles/classes of users",
       "source_locator": "Relationships#row-6"
     },
@@ -51,6 +62,8 @@
       "reference_id": "3.1.6",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks to implement least privilege for privileged accounts Added new ODP: personnel or roles to restrict privileged accounts to Updated discussion for improved flow with requirement and clarity",
       "source_locator": "Relationships#row-7"
     },
@@ -59,6 +72,8 @@
       "reference_id": "3.1.7",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 Separated into two parts (a, b) needed for achieve outcome, rephrased for clarity; outcome remains unchanged",
       "source_locator": "Relationships#row-8"
     },
@@ -67,6 +82,8 @@
       "reference_id": "3.1.8",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 Added new ODP: number of consecutive invalid login attempts  Added new ODP: selection of one or more options (lock account/note for time period, lock account/note until released by administrator, delay next logon prompt, notify system administrator, take other action) when maximum number of unsuccesfful login attempts is exceeded Discussion updated to clarify and provide guidance on other organizaiton-defined actions",
       "source_locator": "Relationships#row-9"
     },
@@ -75,6 +92,8 @@
       "reference_id": "3.1.9",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 Rephrased for clarity; outcome remains unchanged Discussion updated with minor clarifications, including scope/applicability",
       "source_locator": "Relationships#row-10"
     },
@@ -83,6 +102,8 @@
       "reference_id": "3.1.10",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks to implement device lock Terminology changed from \"session lock\" to \"device lock\" Added new ODP: select one or more ways to initiate device lock Added new ODP: time period to initiate device lock (if selected)",
       "source_locator": "Relationships#row-11"
     },
@@ -91,6 +112,8 @@
       "reference_id": "3.1.11",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 Added new ODP: conditions or trigger events for session termination",
       "source_locator": "Relationships#row-12"
     },
@@ -99,6 +122,8 @@
       "reference_id": "3.1.12",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks to monitor and control remote access Includes withdrawn requirements: 03.01.13, 03.01.14, 03.01.15 Updated discussion for clarity and flow of guidance",
       "source_locator": "Relationships#row-13"
     },
@@ -107,6 +132,8 @@
       "reference_id": "3.1.16",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks to secure wireless access, including protecting wireless access using authentication and encryption Includes withdrawn requirement: 03.01.17",
       "source_locator": "Relationships#row-14"
     },
@@ -115,6 +142,8 @@
       "reference_id": "3.1.18",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks to implement access control for mobile devices Includes withdrawn requirement: 03.01.19  Updated discussion to clarify \"container-based encryption\"",
       "source_locator": "Relationships#row-15"
     },
@@ -123,6 +152,8 @@
       "reference_id": "3.1.20",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks on use of external systems Added new ODP: terms, conditions, and requirements to be satisfied on external systems Includes withdrawn requirement: 03.01.21",
       "source_locator": "Relationships#row-16"
     },
@@ -131,6 +162,8 @@
       "reference_id": "3.1.22",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks to manage publicly accessible content",
       "source_locator": "Relationships#row-17"
     },
@@ -139,6 +172,8 @@
       "reference_id": "3.2.1",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for literacy training and awareness Added new ODP: frequency after intial training to provide security literacy training to users Added new ODP: events that necessitate re-taking training Added new ODP: frequency to update training content Added new ODP: events that necessitate updating training Includes withdrawn requirement: 03.02.01",
       "source_locator": "Relationships#row-18"
     },
@@ -147,6 +182,8 @@
       "reference_id": "3.2.2",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for role based training Added new ODP: frequency to provide role-based training after initial training Added new ODP: events that require providing role-based training Added new ODP: frequency to update training Added new ODP: events that necessitate updating training",
       "source_locator": "Relationships#row-19"
     },
@@ -155,6 +192,8 @@
       "reference_id": "3.3.1",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for event logging Added new ODP: events types to log Added new ODP: frequency to review and update event types selected for logging",
       "source_locator": "Relationships#row-20"
     },
@@ -163,6 +202,8 @@
       "reference_id": "3.3.2",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for audit record content",
       "source_locator": "Relationships#row-21"
     },
@@ -171,6 +212,8 @@
       "reference_id": "3.3.3",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for audit records generation and retention",
       "source_locator": "Relationships#row-22"
     },
@@ -179,6 +222,8 @@
       "reference_id": "3.3.4",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks to respond to audit logging failures Added new ODP: time period to alert personnel/roles Added new ODP: additional action(s) to take in the event of audit logging failure",
       "source_locator": "Relationships#row-23"
     },
@@ -187,6 +232,8 @@
       "reference_id": "3.3.5",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for audit record review, analysis and reporting Added new ODP: frequency to review and analyze system audit records",
       "source_locator": "Relationships#row-24"
     },
@@ -195,6 +242,8 @@
       "reference_id": "3.3.6",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for audit record reduction and report generation",
       "source_locator": "Relationships#row-25"
     },
@@ -203,6 +252,8 @@
       "reference_id": "3.3.7",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for time stamps Added new ODP: granularity of time measurement",
       "source_locator": "Relationships#row-26"
     },
@@ -211,6 +262,8 @@
       "reference_id": "3.3.8",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Includes withdrawn requirement: 03.03.09",
       "source_locator": "Relationships#row-27"
     },
@@ -219,6 +272,8 @@
       "reference_id": "3.4.1",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for implementing a baseline configuration Added new ODP: frequency to review and update baseline configuration",
       "source_locator": "Relationships#row-28"
     },
@@ -227,6 +282,8 @@
       "reference_id": "3.4.2",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for implementing configuration settings Added new ODP: configuration settings",
       "source_locator": "Relationships#row-29"
     },
@@ -235,6 +292,8 @@
       "reference_id": "3.4.3",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for implementing configuration change control Updated discussion to show relationship to 03.04.04",
       "source_locator": "Relationships#row-30"
     },
@@ -243,6 +302,8 @@
       "reference_id": "3.4.4",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Added part b. to verify the security requirements continue to be satisfied. Updated discussion to show relationship to 03.04.03",
       "source_locator": "Relationships#row-31"
     },
@@ -251,6 +312,8 @@
       "reference_id": "3.4.5",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title",
       "source_locator": "Relationships#row-32"
     },
@@ -259,6 +322,8 @@
       "reference_id": "3.4.6",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for implementing least functionality Added new ODP: prohibited or restricted functions, system ports, protocols, software, and/or services Added new ODP: frequency to review system for unneccesary or nonsecure functions, ports, protocols, connections, and services Includes withdrawn requirement: 03.04.07",
       "source_locator": "Relationships#row-33"
     },
@@ -267,6 +332,8 @@
       "reference_id": "3.4.8",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for implementing allow by exception policy for authorized software Added new ODP: frequency to review and update authorized software programs",
       "source_locator": "Relationships#row-34"
     },
@@ -275,6 +342,8 @@
       "reference_id": "3.5.1",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for user identification, authentication, and re-authentication Added new ODP: circumstances or situations requiring re-authentication",
       "source_locator": "Relationships#row-38"
     },
@@ -283,6 +352,8 @@
       "reference_id": "3.5.2",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks device identification and authentication Added new ODP: devices or types of devices to uniquely identify and authenticate",
       "source_locator": "Relationships#row-39"
     },
@@ -291,6 +362,8 @@
       "reference_id": "3.5.3",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 Change in applicability to all system accounts",
       "source_locator": "Relationships#row-40"
     },
@@ -299,6 +372,8 @@
       "reference_id": "3.5.4",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5",
       "source_locator": "Relationships#row-41"
     },
@@ -307,6 +382,8 @@
       "reference_id": "3.5.5",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for identifier management Added new ODP: time period to prevent reuse of identifiers Added new ODP: characteristic identifying individual status",
       "source_locator": "Relationships#row-42"
     },
@@ -315,6 +392,8 @@
       "reference_id": "3.5.7",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for password management Incorporates withdrawn requirements: 03.05.07, 03.05.09, 03.05.10 Added new ODP: frequency to update list of commonly-used, expected, or compromised passwords Added new ODP: composition and complexity rules",
       "source_locator": "Relationships#row-43"
     },
@@ -323,6 +402,8 @@
       "reference_id": "3.5.11",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title",
       "source_locator": "Relationships#row-44"
     },
@@ -331,6 +412,8 @@
       "reference_id": "3.6.1",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for an incident response plan and handling Addresses implementation of incident handling capability and development/update of the incident response plan",
       "source_locator": "Relationships#row-46"
     },
@@ -339,6 +422,8 @@
       "reference_id": "3.6.2",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for incident monitoring, reporting and response assistance Added new ODP: authorities to report incident information to Added requirement item for incident response support resource (part d)",
       "source_locator": "Relationships#row-47"
     },
@@ -347,6 +432,8 @@
       "reference_id": "3.6.3",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Added new ODP: frequency to test effectiveness of incident response capability",
       "source_locator": "Relationships#row-48"
     },
@@ -355,6 +442,8 @@
       "reference_id": "3.7.4",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for maintenance tools Includes withdrawn requirement: 03.07.02",
       "source_locator": "Relationships#row-51"
     },
@@ -363,6 +452,8 @@
       "reference_id": "3.7.5",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for nonlocal maintenance",
       "source_locator": "Relationships#row-52"
     },
@@ -371,6 +462,8 @@
       "reference_id": "3.7.6",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for security related to maintenance personnel Includes withdrawn requirement: 03.07.02",
       "source_locator": "Relationships#row-53"
     },
@@ -379,6 +472,8 @@
       "reference_id": "3.8.1",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title",
       "source_locator": "Relationships#row-54"
     },
@@ -387,6 +482,8 @@
       "reference_id": "3.8.2",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title",
       "source_locator": "Relationships#row-55"
     },
@@ -395,6 +492,8 @@
       "reference_id": "3.8.3",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for media access, but outcome and implementation  unchanged Incorporates withdrawn requirement: 03.07.03",
       "source_locator": "Relationships#row-56"
     },
@@ -403,6 +502,8 @@
       "reference_id": "3.8.4",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for media marking",
       "source_locator": "Relationships#row-57"
     },
@@ -411,6 +512,8 @@
       "reference_id": "3.8.5",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for media transport; adds new requirement item to document activities associated with the transport of system media that contains CUI",
       "source_locator": "Relationships#row-58"
     },
@@ -419,6 +522,8 @@
       "reference_id": "3.8.7",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for media use Added new ODP: removeable system media that are restricted or prohibited",
       "source_locator": "Relationships#row-59"
     },
@@ -427,6 +532,8 @@
       "reference_id": "3.8.9",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 Added new foundational part of requirement to protect confidentiality of backup information (part a)",
       "source_locator": "Relationships#row-60"
     },
@@ -435,6 +542,8 @@
       "reference_id": "3.9.1",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to address rescreening individuals Added new ODP: conditions requiring rescreening",
       "source_locator": "Relationships#row-61"
     },
@@ -443,6 +552,8 @@
       "reference_id": "3.9.2",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for personnel termination and transfer Added new ODP: time period to disable system access",
       "source_locator": "Relationships#row-62"
     },
@@ -451,6 +562,8 @@
       "reference_id": "3.10.1",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for implementing physical access authorizations Added new ODP: frequency to review facility access list",
       "source_locator": "Relationships#row-63"
     },
@@ -459,6 +572,8 @@
       "reference_id": "3.10.2",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for monitoring physical access Added new ODP: frequency to review physical access logs Added new ODP: events or potential indications of events to review physical access logs",
       "source_locator": "Relationships#row-64"
     },
@@ -467,6 +582,8 @@
       "reference_id": "3.10.6",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for alternate work site Added new ODP: security requirements employed at alternate work sites",
       "source_locator": "Relationships#row-65"
     },
@@ -475,6 +592,8 @@
       "reference_id": "3.11.1",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for risk assessment; explicitly identifies supply chain risk as part of the risk assessment Added new ODP: frequency to update risk assessments",
       "source_locator": "Relationships#row-68"
     },
@@ -483,6 +602,8 @@
       "reference_id": "3.11.2",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for vulnerability monitoring and scanning Added new ODP: frequency to monitor and scan system for vulnerabilities Added new ODP: response time to remediate vulnerabilities Added new ODP: frequency to update vulnerabilities to be scanned Incorporates withdrawn requirement: 03.11.03",
       "source_locator": "Relationships#row-69"
     },
@@ -491,6 +612,8 @@
       "reference_id": "3.12.1",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 Added new ODP: frequency to determine if requirements have been satisfied",
       "source_locator": "Relationships#row-71"
     },
@@ -499,6 +622,8 @@
       "reference_id": "3.12.2",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for developing and maintaining a plan of action and milestones",
       "source_locator": "Relationships#row-72"
     },
@@ -507,6 +632,8 @@
       "reference_id": "3.12.3",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5; rephrased to provide more comprehensive detail on and foundational tasks for continuous monitoring; outcome unchanged",
       "source_locator": "Relationships#row-73"
     },
@@ -515,6 +642,8 @@
       "reference_id": "3.13.1",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for boundary protection",
       "source_locator": "Relationships#row-75"
     },
@@ -523,6 +652,8 @@
       "reference_id": "3.13.4",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title",
       "source_locator": "Relationships#row-76"
     },
@@ -531,6 +662,8 @@
       "reference_id": "3.13.6",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title",
       "source_locator": "Relationships#row-77"
     },
@@ -539,6 +672,8 @@
       "reference_id": "3.13.8",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Incorporate withdrawn requirement: 3.13.16",
       "source_locator": "Relationships#row-78"
     },
@@ -547,6 +682,8 @@
       "reference_id": "3.13.9",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Added new ODP: time period of inactivity to terminate the network connection",
       "source_locator": "Relationships#row-79"
     },
@@ -555,6 +692,8 @@
       "reference_id": "3.13.10",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for cryptographic key establishment and management Added new ODP: requirements for key generation, distribution, storage, access and destruction",
       "source_locator": "Relationships#row-80"
     },
@@ -563,6 +702,8 @@
       "reference_id": "3.13.11",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 Added new ODP: types of cryptography used to protect confidentiality of CUI",
       "source_locator": "Relationships#row-81"
     },
@@ -571,6 +712,8 @@
       "reference_id": "3.13.12",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 Added new ODP: exceptions where remote activation is allowed",
       "source_locator": "Relationships#row-82"
     },
@@ -579,6 +722,8 @@
       "reference_id": "3.13.13",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for use of mobile code",
       "source_locator": "Relationships#row-83"
     },
@@ -587,6 +732,8 @@
       "reference_id": "3.13.15",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title",
       "source_locator": "Relationships#row-84"
     },
@@ -595,6 +742,8 @@
       "reference_id": "3.14.1",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for flaw remediation Added new ODP: time period to install security-relevant software and firmware updates",
       "source_locator": "Relationships#row-85"
     },
@@ -603,6 +752,8 @@
       "reference_id": "3.14.2",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for malicious code protection Incorporates withdrawn requirements: 03.14.04, 03.14.05 Added new ODP: frequency to perform system scans Updated discussion to provide additional guidance on malicious code protection mechanisms.",
       "source_locator": "Relationships#row-86"
     },
@@ -611,6 +762,8 @@
       "reference_id": "3.14.3",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for security alerts, advisories and directives",
       "source_locator": "Relationships#row-87"
     },
@@ -619,6 +772,8 @@
       "reference_id": "3.14.6",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "New security requirement title Aligned with SP 800-53, Rev 5 to provide more comprehensive detail on and foundational tasks for system monitoring Incorporates withdrawn requirement: 03.14.07",
       "source_locator": "Relationships#row-88"
     },
@@ -627,6 +782,8 @@
       "reference_id": "3.12.4",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": "Revised security requirement based on PL-02 (SP 800-53, Revision 5) to provide more comprehensive detail on and foundational tasks for system security plan Added new ODP: frequency to review and update system security plan Incorporates withdrawn requirement: 03.12.04",
       "source_locator": "Relationships#row-91"
     }

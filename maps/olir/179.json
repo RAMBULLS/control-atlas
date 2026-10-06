@@ -5,12 +5,15 @@
   "sha256": "sha256:08e50ecfe201417d1b7e257d5b68ee8a69686c8a31d1521c722892732809f0a0",
   "byte_length": 28991,
   "parser": "olir-xlsx",
+  "extraction_scope": "structured_artifact",
   "relationships": [
     {
       "focal_id": "GV.OC-02",
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-5"
     },
@@ -19,6 +22,8 @@
       "reference_id": "03.17.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-6"
     },
@@ -27,6 +32,8 @@
       "reference_id": "03.17.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-7"
     },
@@ -35,6 +42,8 @@
       "reference_id": "03.15.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-8"
     },
@@ -43,6 +52,8 @@
       "reference_id": "03.11.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-10"
     },
@@ -51,6 +62,8 @@
       "reference_id": "03.16.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-11"
     },
@@ -59,6 +72,8 @@
       "reference_id": "03.17.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-12"
     },
@@ -67,6 +82,8 @@
       "reference_id": "03.11.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-14"
     },
@@ -75,6 +92,8 @@
       "reference_id": "03.17.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-15"
     },
@@ -83,6 +102,8 @@
       "reference_id": "03.11.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-17"
     },
@@ -91,6 +112,8 @@
       "reference_id": "03.17.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-18"
     },
@@ -99,6 +122,8 @@
       "reference_id": "03.17.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-19"
     },
@@ -107,6 +132,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-21"
     },
@@ -115,6 +142,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-22"
     },
@@ -123,6 +152,8 @@
       "reference_id": "03.15.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-27"
     },
@@ -131,6 +162,8 @@
       "reference_id": "03.15.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-29"
     },
@@ -139,6 +172,8 @@
       "reference_id": "03.15.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-30"
     },
@@ -147,6 +182,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-32"
     },
@@ -155,6 +192,8 @@
       "reference_id": "03.11.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-33"
     },
@@ -163,6 +202,8 @@
       "reference_id": "03.15.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-34"
     },
@@ -171,6 +212,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-35"
     },
@@ -179,6 +222,8 @@
       "reference_id": "03.11.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-36"
     },
@@ -187,6 +232,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-37"
     },
@@ -195,6 +242,8 @@
       "reference_id": "03.11.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-38"
     },
@@ -203,6 +252,8 @@
       "reference_id": "03.17.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-40"
     },
@@ -211,6 +262,8 @@
       "reference_id": "03.17.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-41"
     },
@@ -219,6 +272,8 @@
       "reference_id": "03.17.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-42"
     },
@@ -227,6 +282,8 @@
       "reference_id": "03.17.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-43"
     },
@@ -235,6 +292,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-44"
     },
@@ -243,6 +302,8 @@
       "reference_id": "03.11.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-45"
     },
@@ -251,6 +312,8 @@
       "reference_id": "03.15.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-46"
     },
@@ -259,6 +322,8 @@
       "reference_id": "03.17.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-47"
     },
@@ -267,6 +332,8 @@
       "reference_id": "03.17.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-48"
     },
@@ -275,6 +342,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-49"
     },
@@ -283,6 +352,8 @@
       "reference_id": "03.16.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-50"
     },
@@ -291,6 +362,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-51"
     },
@@ -299,6 +372,8 @@
       "reference_id": "03.16.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-52"
     },
@@ -307,6 +382,8 @@
       "reference_id": "03.17.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-53"
     },
@@ -315,6 +392,8 @@
       "reference_id": "03.17.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-54"
     },
@@ -323,6 +402,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-55"
     },
@@ -331,6 +412,8 @@
       "reference_id": "03.16.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-56"
     },
@@ -339,6 +422,8 @@
       "reference_id": "03.17.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-57"
     },
@@ -347,6 +432,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-58"
     },
@@ -355,6 +442,8 @@
       "reference_id": "03.16.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-59"
     },
@@ -363,6 +452,8 @@
       "reference_id": "03.17.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-60"
     },
@@ -371,6 +462,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-61"
     },
@@ -379,6 +472,8 @@
       "reference_id": "03.06.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-62"
     },
@@ -387,6 +482,8 @@
       "reference_id": "03.06.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-63"
     },
@@ -395,6 +492,8 @@
       "reference_id": "03.15.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-64"
     },
@@ -403,6 +502,8 @@
       "reference_id": "03.16.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-65"
     },
@@ -411,6 +512,8 @@
       "reference_id": "03.17.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-66"
     },
@@ -419,6 +522,8 @@
       "reference_id": "03.17.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-67"
     },
@@ -427,6 +532,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-68"
     },
@@ -435,6 +542,8 @@
       "reference_id": "03.11.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-69"
     },
@@ -443,6 +552,8 @@
       "reference_id": "03.16.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-70"
     },
@@ -451,6 +562,8 @@
       "reference_id": "03.17.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-71"
     },
@@ -459,6 +572,8 @@
       "reference_id": "03.17.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-72"
     },
@@ -467,6 +582,8 @@
       "reference_id": "03.17.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-73"
     },
@@ -475,6 +592,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-74"
     },
@@ -483,6 +602,8 @@
       "reference_id": "03.11.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-75"
     },
@@ -491,6 +612,8 @@
       "reference_id": "03.11.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-76"
     },
@@ -499,6 +622,8 @@
       "reference_id": "03.14.08",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-77"
     },
@@ -507,6 +632,8 @@
       "reference_id": "03.16.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-78"
     },
@@ -515,6 +642,8 @@
       "reference_id": "03.17.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-79"
     },
@@ -523,6 +652,8 @@
       "reference_id": "03.17.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-80"
     },
@@ -531,6 +662,8 @@
       "reference_id": "03.17.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-81"
     },
@@ -539,6 +672,8 @@
       "reference_id": "03.04.10",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-85"
     },
@@ -547,6 +682,8 @@
       "reference_id": "03.16.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-86"
     },
@@ -555,6 +692,8 @@
       "reference_id": "03.12.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-87"
     },
@@ -563,6 +702,8 @@
       "reference_id": "03.15.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-88"
     },
@@ -571,6 +712,8 @@
       "reference_id": "03.16.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-89"
     },
@@ -579,6 +722,8 @@
       "reference_id": "03.17.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-90"
     },
@@ -587,6 +732,8 @@
       "reference_id": "03.14.08",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-92"
     },
@@ -595,6 +742,8 @@
       "reference_id": "03.14.08",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-93"
     },
@@ -603,6 +752,8 @@
       "reference_id": "03.15.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-94"
     },
@@ -611,6 +762,8 @@
       "reference_id": "03.16.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-95"
     },
@@ -619,6 +772,8 @@
       "reference_id": "03.16.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-96"
     },
@@ -627,6 +782,8 @@
       "reference_id": "03.17.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-97"
     },
@@ -635,6 +792,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-99"
     },
@@ -643,6 +802,8 @@
       "reference_id": "03.11.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-100"
     },
@@ -651,6 +812,8 @@
       "reference_id": "03.12.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-101"
     },
@@ -659,6 +822,8 @@
       "reference_id": "03.12.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-102"
     },
@@ -667,6 +832,8 @@
       "reference_id": "03.14.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-103"
     },
@@ -675,6 +842,8 @@
       "reference_id": "03.14.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-104"
     },
@@ -683,6 +852,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-105"
     },
@@ -691,6 +862,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-106"
     },
@@ -699,6 +872,8 @@
       "reference_id": "03.14.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-107"
     },
@@ -707,6 +882,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-108"
     },
@@ -715,6 +892,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-109"
     },
@@ -723,6 +902,8 @@
       "reference_id": "03.11.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-110"
     },
@@ -731,6 +912,8 @@
       "reference_id": "03.11.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-111"
     },
@@ -739,6 +922,8 @@
       "reference_id": "03.04.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-112"
     },
@@ -747,6 +932,8 @@
       "reference_id": "03.04.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-113"
     },
@@ -755,6 +942,8 @@
       "reference_id": "03.11.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-114"
     },
@@ -763,6 +952,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-115"
     },
@@ -771,6 +962,8 @@
       "reference_id": "03.17.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-116"
     },
@@ -779,6 +972,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-117"
     },
@@ -787,6 +982,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-119"
     },
@@ -795,6 +992,8 @@
       "reference_id": "03.06.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-120"
     },
@@ -803,6 +1002,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-121"
     },
@@ -811,6 +1012,8 @@
       "reference_id": "03.11.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-122"
     },
@@ -819,6 +1022,8 @@
       "reference_id": "03.11.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-123"
     },
@@ -827,6 +1032,8 @@
       "reference_id": "03.12.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-124"
     },
@@ -835,6 +1042,8 @@
       "reference_id": "03.12.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-125"
     },
@@ -843,6 +1052,8 @@
       "reference_id": "03.12.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-126"
     },
@@ -851,6 +1062,8 @@
       "reference_id": "03.14.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-127"
     },
@@ -859,6 +1072,8 @@
       "reference_id": "03.14.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-128"
     },
@@ -867,6 +1082,8 @@
       "reference_id": "03.15.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-129"
     },
@@ -875,6 +1092,8 @@
       "reference_id": "03.15.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-130"
     },
@@ -883,6 +1102,8 @@
       "reference_id": "03.16.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-131"
     },
@@ -891,6 +1112,8 @@
       "reference_id": "03.17.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-132"
     },
@@ -899,6 +1122,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-133"
     },
@@ -907,6 +1132,8 @@
       "reference_id": "03.06.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-134"
     },
@@ -915,6 +1142,8 @@
       "reference_id": "03.06.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-135"
     },
@@ -923,6 +1152,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-136"
     },
@@ -931,6 +1162,8 @@
       "reference_id": "03.11.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-137"
     },
@@ -939,6 +1172,8 @@
       "reference_id": "03.11.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-138"
     },
@@ -947,6 +1182,8 @@
       "reference_id": "03.12.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-139"
     },
@@ -955,6 +1192,8 @@
       "reference_id": "03.12.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-140"
     },
@@ -963,6 +1202,8 @@
       "reference_id": "03.12.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-141"
     },
@@ -971,6 +1212,8 @@
       "reference_id": "03.14.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-142"
     },
@@ -979,6 +1222,8 @@
       "reference_id": "03.14.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-143"
     },
@@ -987,6 +1232,8 @@
       "reference_id": "03.15.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-144"
     },
@@ -995,6 +1242,8 @@
       "reference_id": "03.15.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-145"
     },
@@ -1003,6 +1252,8 @@
       "reference_id": "03.16.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-146"
     },
@@ -1011,6 +1262,8 @@
       "reference_id": "03.17.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-147"
     },
@@ -1019,6 +1272,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-148"
     },
@@ -1027,6 +1282,8 @@
       "reference_id": "03.06.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-149"
     },
@@ -1035,6 +1292,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-150"
     },
@@ -1043,6 +1302,8 @@
       "reference_id": "03.11.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-151"
     },
@@ -1051,6 +1312,8 @@
       "reference_id": "03.11.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-152"
     },
@@ -1059,6 +1322,8 @@
       "reference_id": "03.12.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-153"
     },
@@ -1067,6 +1332,8 @@
       "reference_id": "03.12.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-154"
     },
@@ -1075,6 +1342,8 @@
       "reference_id": "03.12.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-155"
     },
@@ -1083,6 +1352,8 @@
       "reference_id": "03.14.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-156"
     },
@@ -1091,6 +1362,8 @@
       "reference_id": "03.14.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-157"
     },
@@ -1099,6 +1372,8 @@
       "reference_id": "03.15.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-158"
     },
@@ -1107,6 +1382,8 @@
       "reference_id": "03.15.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-159"
     },
@@ -1115,6 +1392,8 @@
       "reference_id": "03.16.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-160"
     },
@@ -1123,6 +1402,8 @@
       "reference_id": "03.17.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-161"
     },
@@ -1131,6 +1412,8 @@
       "reference_id": "03.06.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-162"
     },
@@ -1139,6 +1422,8 @@
       "reference_id": "03.15.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-163"
     },
@@ -1147,6 +1432,8 @@
       "reference_id": "03.17.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-164"
     },
@@ -1155,6 +1442,8 @@
       "reference_id": "03.01.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-167"
     },
@@ -1163,6 +1452,8 @@
       "reference_id": "03.05.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-168"
     },
@@ -1171,6 +1462,8 @@
       "reference_id": "03.05.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-169"
     },
@@ -1179,6 +1472,8 @@
       "reference_id": "03.05.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-170"
     },
@@ -1187,6 +1482,8 @@
       "reference_id": "03.05.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-171"
     },
@@ -1195,6 +1492,8 @@
       "reference_id": "03.05.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-172"
     },
@@ -1203,6 +1502,8 @@
       "reference_id": "03.05.07",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-173"
     },
@@ -1211,6 +1512,8 @@
       "reference_id": "03.05.11",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-174"
     },
@@ -1219,6 +1522,8 @@
       "reference_id": "03.05.12",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-175"
     },
@@ -1227,6 +1532,8 @@
       "reference_id": "03.15.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-176"
     },
@@ -1235,6 +1542,8 @@
       "reference_id": "03.01.11",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-178"
     },
@@ -1243,6 +1552,8 @@
       "reference_id": "03.05.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-179"
     },
@@ -1251,6 +1562,8 @@
       "reference_id": "03.05.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-180"
     },
@@ -1259,6 +1572,8 @@
       "reference_id": "03.05.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-181"
     },
@@ -1267,6 +1582,8 @@
       "reference_id": "03.05.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-182"
     },
@@ -1275,6 +1592,8 @@
       "reference_id": "03.05.07",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-183"
     },
@@ -1283,6 +1602,8 @@
       "reference_id": "03.05.12",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-184"
     },
@@ -1291,6 +1612,8 @@
       "reference_id": "03.01.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-186"
     },
@@ -1299,6 +1622,8 @@
       "reference_id": "03.01.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-187"
     },
@@ -1307,6 +1632,8 @@
       "reference_id": "03.01.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-188"
     },
@@ -1315,6 +1642,8 @@
       "reference_id": "03.01.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-189"
     },
@@ -1323,6 +1652,8 @@
       "reference_id": "03.01.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-190"
     },
@@ -1331,6 +1662,8 @@
       "reference_id": "03.01.07",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-191"
     },
@@ -1339,6 +1672,8 @@
       "reference_id": "03.01.12",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-192"
     },
@@ -1347,6 +1682,8 @@
       "reference_id": "03.01.16",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-193"
     },
@@ -1355,6 +1692,8 @@
       "reference_id": "03.01.18",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-194"
     },
@@ -1363,6 +1702,8 @@
       "reference_id": "03.13.08",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-195"
     },
@@ -1371,6 +1712,8 @@
       "reference_id": "03.15.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-196"
     },
@@ -1379,6 +1722,8 @@
       "reference_id": "03.10.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-197"
     },
@@ -1387,6 +1732,8 @@
       "reference_id": "03.10.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-198"
     },
@@ -1395,6 +1742,8 @@
       "reference_id": "03.10.07",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-199"
     },
@@ -1403,6 +1752,8 @@
       "reference_id": "03.10.08",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-200"
     },
@@ -1411,6 +1762,8 @@
       "reference_id": "03.02.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-202"
     },
@@ -1419,6 +1772,8 @@
       "reference_id": "03.02.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-203"
     },
@@ -1427,6 +1782,8 @@
       "reference_id": "03.08.09",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-205"
     },
@@ -1435,6 +1792,8 @@
       "reference_id": "03.12.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-206"
     },
@@ -1443,6 +1802,8 @@
       "reference_id": "03.13.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-207"
     },
@@ -1451,6 +1812,8 @@
       "reference_id": "03.13.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-208"
     },
@@ -1459,6 +1822,8 @@
       "reference_id": "03.13.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-209"
     },
@@ -1467,6 +1832,8 @@
       "reference_id": "03.13.08",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-210"
     },
@@ -1475,6 +1842,8 @@
       "reference_id": "03.13.10",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-211"
     },
@@ -1483,6 +1852,8 @@
       "reference_id": "03.13.11",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-212"
     },
@@ -1491,6 +1862,8 @@
       "reference_id": "03.14.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-213"
     },
@@ -1499,6 +1872,8 @@
       "reference_id": "03.14.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-214"
     },
@@ -1507,6 +1882,8 @@
       "reference_id": "03.12.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-215"
     },
@@ -1515,6 +1892,8 @@
       "reference_id": "03.13.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-216"
     },
@@ -1523,6 +1902,8 @@
       "reference_id": "03.13.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-217"
     },
@@ -1531,6 +1912,8 @@
       "reference_id": "03.13.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-218"
     },
@@ -1539,6 +1922,8 @@
       "reference_id": "03.13.08",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-219"
     },
@@ -1547,6 +1932,8 @@
       "reference_id": "03.13.10",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-220"
     },
@@ -1555,6 +1942,8 @@
       "reference_id": "03.13.11",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-221"
     },
@@ -1563,6 +1952,8 @@
       "reference_id": "03.14.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-222"
     },
@@ -1571,6 +1962,8 @@
       "reference_id": "03.14.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-223"
     },
@@ -1579,6 +1972,8 @@
       "reference_id": "03.01.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-224"
     },
@@ -1587,6 +1982,8 @@
       "reference_id": "03.01.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-225"
     },
@@ -1595,6 +1992,8 @@
       "reference_id": "03.01.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-226"
     },
@@ -1603,6 +2002,8 @@
       "reference_id": "03.03.08",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-227"
     },
@@ -1611,6 +2012,8 @@
       "reference_id": "03.08.09",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-228"
     },
@@ -1619,6 +2022,8 @@
       "reference_id": "03.12.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-229"
     },
@@ -1627,6 +2032,8 @@
       "reference_id": "03.13.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-230"
     },
@@ -1635,6 +2042,8 @@
       "reference_id": "03.13.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-231"
     },
@@ -1643,6 +2052,8 @@
       "reference_id": "03.13.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-232"
     },
@@ -1651,6 +2062,8 @@
       "reference_id": "03.13.11",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-233"
     },
@@ -1659,6 +2072,8 @@
       "reference_id": "03.14.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-234"
     },
@@ -1667,6 +2082,8 @@
       "reference_id": "03.14.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-235"
     },
@@ -1675,6 +2092,8 @@
       "reference_id": "03.16.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-236"
     },
@@ -1683,6 +2102,8 @@
       "reference_id": "03.08.09",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-237"
     },
@@ -1691,6 +2112,8 @@
       "reference_id": "03.04.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-239"
     },
@@ -1699,6 +2122,8 @@
       "reference_id": "03.04.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-240"
     },
@@ -1707,6 +2132,8 @@
       "reference_id": "03.04.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-241"
     },
@@ -1715,6 +2142,8 @@
       "reference_id": "03.04.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-242"
     },
@@ -1723,6 +2152,8 @@
       "reference_id": "03.04.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-243"
     },
@@ -1731,6 +2162,8 @@
       "reference_id": "03.04.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-244"
     },
@@ -1739,6 +2172,8 @@
       "reference_id": "03.04.08",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-245"
     },
@@ -1747,6 +2182,8 @@
       "reference_id": "03.04.10",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-246"
     },
@@ -1755,6 +2192,8 @@
       "reference_id": "03.04.12",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-247"
     },
@@ -1763,6 +2202,8 @@
       "reference_id": "03.15.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-248"
     },
@@ -1771,6 +2212,8 @@
       "reference_id": "03.14.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-249"
     },
@@ -1779,6 +2222,8 @@
       "reference_id": "03.03.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-251"
     },
@@ -1787,6 +2232,8 @@
       "reference_id": "03.03.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-252"
     },
@@ -1795,6 +2242,8 @@
       "reference_id": "03.03.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-253"
     },
@@ -1803,6 +2252,8 @@
       "reference_id": "03.03.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-254"
     },
@@ -1811,6 +2262,8 @@
       "reference_id": "03.16.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-256"
     },
@@ -1819,6 +2272,8 @@
       "reference_id": "03.01.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-258"
     },
@@ -1827,6 +2282,8 @@
       "reference_id": "03.01.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-259"
     },
@@ -1835,6 +2292,8 @@
       "reference_id": "03.13.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-260"
     },
@@ -1843,6 +2302,8 @@
       "reference_id": "03.13.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-261"
     },
@@ -1851,6 +2312,8 @@
       "reference_id": "03.13.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-262"
     },
@@ -1859,6 +2322,8 @@
       "reference_id": "03.16.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-264"
     },
@@ -1867,6 +2332,8 @@
       "reference_id": "03.03.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-268"
     },
@@ -1875,6 +2342,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-269"
     },
@@ -1883,6 +2352,8 @@
       "reference_id": "03.12.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-270"
     },
@@ -1891,6 +2362,8 @@
       "reference_id": "03.14.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-271"
     },
@@ -1899,6 +2372,8 @@
       "reference_id": "03.03.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-272"
     },
@@ -1907,6 +2382,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-273"
     },
@@ -1915,6 +2392,8 @@
       "reference_id": "03.06.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-274"
     },
@@ -1923,6 +2402,8 @@
       "reference_id": "03.06.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-275"
     },
@@ -1931,6 +2412,8 @@
       "reference_id": "03.12.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-276"
     },
@@ -1939,6 +2422,8 @@
       "reference_id": "03.14.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-277"
     },
@@ -1947,6 +2432,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-279"
     },
@@ -1955,6 +2442,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-280"
     },
@@ -1963,6 +2452,8 @@
       "reference_id": "03.06.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-281"
     },
@@ -1971,6 +2462,8 @@
       "reference_id": "03.01.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-283"
     },
@@ -1979,6 +2472,8 @@
       "reference_id": "03.03.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-284"
     },
@@ -1987,6 +2482,8 @@
       "reference_id": "03.04.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-285"
     },
@@ -1995,6 +2492,8 @@
       "reference_id": "03.12.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-286"
     },
@@ -2003,6 +2502,8 @@
       "reference_id": "03.13.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-287"
     },
@@ -2011,6 +2512,8 @@
       "reference_id": "03.13.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-288"
     },
@@ -2019,6 +2522,8 @@
       "reference_id": "03.14.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-289"
     },
@@ -2027,6 +2532,8 @@
       "reference_id": "03.10.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-290"
     },
@@ -2035,6 +2542,8 @@
       "reference_id": "03.10.07",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-291"
     },
@@ -2043,6 +2552,8 @@
       "reference_id": "03.12.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-292"
     },
@@ -2051,6 +2562,8 @@
       "reference_id": "03.01.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-293"
     },
@@ -2059,6 +2572,8 @@
       "reference_id": "03.03.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-294"
     },
@@ -2067,6 +2582,8 @@
       "reference_id": "03.12.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-295"
     },
@@ -2075,6 +2592,8 @@
       "reference_id": "03.12.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-296"
     },
@@ -2083,6 +2602,8 @@
       "reference_id": "03.14.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-297"
     },
@@ -2091,6 +2612,8 @@
       "reference_id": "03.16.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-298"
     },
@@ -2099,6 +2622,8 @@
       "reference_id": "03.01.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-299"
     },
@@ -2107,6 +2632,8 @@
       "reference_id": "03.03.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-300"
     },
@@ -2115,6 +2642,8 @@
       "reference_id": "03.04.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-301"
     },
@@ -2123,6 +2652,8 @@
       "reference_id": "03.04.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-302"
     },
@@ -2131,6 +2662,8 @@
       "reference_id": "03.12.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-303"
     },
@@ -2139,6 +2672,8 @@
       "reference_id": "03.14.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-304"
     },
@@ -2147,6 +2682,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-306"
     },
@@ -2155,6 +2692,8 @@
       "reference_id": "03.06.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-307"
     },
@@ -2163,6 +2702,8 @@
       "reference_id": "03.06.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-308"
     },
@@ -2171,6 +2712,8 @@
       "reference_id": "03.06.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-309"
     },
@@ -2179,6 +2722,8 @@
       "reference_id": "03.06.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-310"
     },
@@ -2187,6 +2732,8 @@
       "reference_id": "03.17.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-311"
     },
@@ -2195,6 +2742,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-312"
     },
@@ -2203,6 +2752,8 @@
       "reference_id": "03.06.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-313"
     },
@@ -2211,6 +2762,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-314"
     },
@@ -2219,6 +2772,8 @@
       "reference_id": "03.06.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-315"
     },
@@ -2227,6 +2782,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-316"
     },
@@ -2235,6 +2792,8 @@
       "reference_id": "03.06.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-317"
     },
@@ -2243,6 +2802,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-318"
     },
@@ -2251,6 +2812,8 @@
       "reference_id": "03.06.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-319"
     },
@@ -2259,6 +2822,8 @@
       "reference_id": "03.03.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-321"
     },
@@ -2267,6 +2832,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-322"
     },
@@ -2275,6 +2842,8 @@
       "reference_id": "03.03.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-323"
     },
@@ -2283,6 +2852,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-324"
     },
@@ -2291,6 +2862,8 @@
       "reference_id": "03.06.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-325"
     },
@@ -2299,6 +2872,8 @@
       "reference_id": "03.03.06",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-326"
     },
@@ -2307,6 +2882,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-327"
     },
@@ -2315,6 +2892,8 @@
       "reference_id": "03.06.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-328"
     },
@@ -2323,6 +2902,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-329"
     },
@@ -2331,6 +2912,8 @@
       "reference_id": "03.06.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-330"
     },
@@ -2339,6 +2922,8 @@
       "reference_id": "03.11.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-331"
     },
@@ -2347,6 +2932,8 @@
       "reference_id": "03.11.04",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-332"
     },
@@ -2355,6 +2942,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-334"
     },
@@ -2363,6 +2952,8 @@
       "reference_id": "03.06.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-335"
     },
@@ -2371,6 +2962,8 @@
       "reference_id": "03.17.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-336"
     },
@@ -2379,6 +2972,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-337"
     },
@@ -2387,6 +2982,8 @@
       "reference_id": "03.06.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-338"
     },
@@ -2395,6 +2992,8 @@
       "reference_id": "03.17.03",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-339"
     },
@@ -2403,6 +3002,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-341"
     },
@@ -2411,6 +3012,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-342"
     },
@@ -2419,6 +3022,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-345"
     },
@@ -2427,6 +3032,8 @@
       "reference_id": "03.06.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-346"
     },
@@ -2435,6 +3042,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-347"
     },
@@ -2443,6 +3052,8 @@
       "reference_id": "03.06.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-348"
     },
@@ -2451,6 +3062,8 @@
       "reference_id": "03.08.09",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-349"
     },
@@ -2459,6 +3072,8 @@
       "reference_id": "03.06.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-350"
     },
@@ -2467,6 +3082,8 @@
       "reference_id": "03.15.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-351"
     },
@@ -2475,6 +3092,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-353"
     },
@@ -2483,6 +3102,8 @@
       "reference_id": "03.06.05",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-354"
     },
@@ -2491,6 +3112,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-356"
     },
@@ -2499,6 +3122,8 @@
       "reference_id": "03.06.02",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-357"
     },
@@ -2507,6 +3132,8 @@
       "reference_id": "03.06.01",
       "relationship_type": "Concept Crosswalk",
       "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
       "rationale": null,
       "source_locator": "Relationships#row-358"
     }

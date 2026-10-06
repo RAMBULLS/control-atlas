@@ -1,6 +1,10 @@
-import { Fragment, useCallback, useState, type ReactNode } from "react";
-
+import { displayNameFor } from "../../app/display-names.mjs";
+import { createContext, Fragment, useCallback, useContext, useState, type ReactNode } from "react";
+import { RECORD_FACT_LABELS } from "../../shared/record-fact-labels.mjs";
+import { translateMicrosoftZtCategory } from "../../shared/microsoft-zt-category-labels.mjs";
+import { parseControlContext } from "../../shared/record-control-context.mjs";
 import { isValidSourceTextPresentation } from "../../shared/source-text-presentation.mjs";
+import { formatSourceDate } from "../lib/sourcePresentation";
 import { Button } from "./lsm";
 import { copyText, formatRelationshipLabel } from "../lib/pagePrimitives";
 
@@ -14,29 +18,62 @@ import { copyText, formatRelationshipLabel } from "../lib/pagePrimitives";
  * the same presentation contract through the same components, so a record says
  * the same thing wherever you meet it.
  */
-const RECORD_FACT_LABELS: Record<string, string> = {
-  activity_type: "Activity type",
-  architecture_component: "Architecture component",
-  benchmark_status_date: "Published status date",
-  benchmark_title: "Benchmark",
-  benchmark_version: "Version / release",
-  child_count: "Contained records",
-  collaborator: "Collaborator",
-  component_class: "Component class",
-  duration: "Duration",
-  is_subtechnique: "Sub-technique",
-  mapping_count: "Published mappings",
-  operational_technology: "Operational technology",
-  pillar: "Pillar",
-  product: "Product",
-  responsibility: "Responsibility",
-  rule_id: "Rule ID",
-  severity: "Severity",
-  severity_distribution: "Severity distribution",
-  stig_id: "STIG ID",
-  tactic_title: "Tactic",
-  vuln_id: "Finding / Vuln ID",
-};
+
+export type PublisherCitationEntry = { title: string; url: string };
+
+/**
+ * Publisher citations for the record currently being rendered.
+ *
+ * MITRE writes `(Citation: <key>)` into technique prose, where the key is an
+ * internal `source_name`. It used to be printed verbatim - 3,272 times across
+ * 789 of 874 ATT&CK records - producing text like "...and remote
+ * desktop.Source: volexity_0day_sophos_FW Compromised credentials...": a raw
+ * identifier in user-facing copy, no link, and a sentence broken by a missing
+ * separator.
+ *
+ * The ingestion now carries each record's own resolved references, so the
+ * marker becomes a numbered link the way ATT&CK's own site presents it. A key
+ * MITRE never published a reference for renders as nothing at all rather than
+ * as a key no reader can follow.
+ */
+const PublisherCitationContext = createContext<Record<string, PublisherCitationEntry>>({});
+
+function PublisherCitation(props: { citationKey: string }) {
+  const citations = useContext(PublisherCitationContext);
+  const resolved = citations[props.citationKey];
+  const position = Object.keys(citations).indexOf(props.citationKey) + 1;
+
+  // The publisher cited something here. Until the corpus carries the resolved
+  // reference the marker stays, unnumbered and unlinked, rather than vanishing:
+  // erasing it would quietly drop a fact the publisher wrote. What never
+  // appears either way is the internal source_name key.
+  if (!resolved) {
+    return (
+      <cite className="publisher-citation">
+        <span aria-label="Publisher cited a source here">[ref]</span>
+      </cite>
+    );
+  }
+
+  const marker = position > 0 ? `[${position}]` : "[ref]";
+  return (
+    <cite className="publisher-citation">
+      {resolved.url ? (
+        <a
+          aria-label={`Publisher reference: ${resolved.title}`}
+          href={resolved.url}
+          rel="noopener noreferrer"
+          target="_blank"
+          title={resolved.title}
+        >
+          {marker}
+        </a>
+      ) : (
+        <span title={resolved.title}>{marker}</span>
+      )}
+    </cite>
+  );
+}
 
 const ODP_PATTERN = /\[(?:Assignment|Selection)[^\]]*\]/g;
 
@@ -78,7 +115,7 @@ function renderPublisherInlineText(text: string): ReactNode {
     }
     const citation = part.match(/^\(Citation:\s*([^)]+)\)$/);
     if (citation) {
-      return <cite className="publisher-citation" key={`citation-${index}`}>Source: {citation[1]}</cite>;
+      return <PublisherCitation citationKey={citation[1].trim()} key={`citation-${index}`} />;
     }
     return <Fragment key={`text-${index}`}>{part}</Fragment>;
   });
@@ -195,7 +232,33 @@ function StructuredPublisherSections(props: { value: any[] }) {
   );
 }
 
+function ControlContextContent(props: { value: string; presentation?: any }) {
+  const entries = parseControlContext(props.value);
+  // Text with no parameter notation keeps the publisher's own text blocks.
+  if (!entries.some((entry) => entry.kind === "parameter")) return <SourceTextBlocks presentation={props.presentation} value={props.value} />;
+  const groups: Array<typeof entries> = [];
+  for (const entry of entries) {
+    const last = groups[groups.length - 1];
+    if (last && last[0].kind === entry.kind && entry.kind === "parameter") last.push(entry);
+    else groups.push([entry]);
+  }
+  return (
+    <>
+      {groups.map((group, index) => group[0].kind === "parameter" ? (
+        <ul className="source-structured-list" key={index}>
+          {group.map((entry) => entry.kind === "parameter" ? (
+            <li key={entry.id}><strong>{entry.label}</strong> — {entry.value} <code aria-label={`Publisher identifier ${entry.id}`}>{entry.id}</code></li>
+          ) : null)}
+        </ul>
+      ) : group.map((entry, position) => entry.kind === "guidance" ? <p key={`${index}:${position}`}>{entry.text}</p> : null))}
+    </>
+  );
+}
+
 export function SourceSectionContent(props: { kind: string; value: any; presentation?: any }) {
+  if (props.kind === "control_parameters") {
+    return <ControlContextContent presentation={props.presentation} value={String(props.value || "")} />;
+  }
   if (props.kind === "structured") {
     return <StructuredPublisherSections value={props.value} />;
   }
@@ -237,7 +300,14 @@ export function SourceSectionContent(props: { kind: string; value: any; presenta
       <ul className="source-structured-list">
         {props.value.map((mapping: any, index: number) => (
           <li key={`${mapping.kind}:${mapping.target_id}:${index}`}>
-            <strong>{mapping.kind}</strong>{mapping.target_id ? ` · ${mapping.target_id}` : ""}
+            <strong>{displayNameFor("zt_mapping_kind", mapping.kind)}</strong>{mapping.target_id ? ` · ${mapping.target_id}` : ""}
+            {mapping.relationship_clauses?.length ? (
+              <span>{" · "}{mapping.relationship_clauses.map((clause: any) =>
+                `${formatRelationshipLabel({ relationship_type: clause.relationship_type })}${clause.property ? ` (${clause.property})` : ""}`,
+              ).join("; ")}</span>
+            ) : mapping.relationship_parse_status === "unresolved" ? (
+              <span> · Relationship not specified in the source cell.</span>
+            ) : null}
           </li>
         ))}
       </ul>
@@ -286,16 +356,48 @@ export function SourceSectionContent(props: { kind: string; value: any; presenta
   return <SourceTextBlocks value={String(props.value)} presentation={props.presentation} />;
 }
 
+/**
+ * A published fact is rendered in the reader's language, never as a raw
+ * internal value. `String(false)` used to reach the page as the literal text
+ * "false" under a heading reading "Published facts", and a list of publisher
+ * objects came out as "0: [object Object]".
+ */
+function formatFactValue(value: unknown): string {
+  if (typeof value === "boolean") return value ? "Yes" : "No";
+  if (Array.isArray(value)) {
+    return value
+      .map((entry) => {
+        if (entry && typeof entry === "object") {
+          const record = entry as Record<string, unknown>;
+          return String(record.title || record.label || record.name || record.id || "");
+        }
+        return String(entry ?? "");
+      })
+      .filter(Boolean)
+      .join(" · ");
+  }
+  if (value && typeof value === "object") {
+    return Object.entries(value).map(([key, count]) => `${key}: ${count}`).join(" · ");
+  }
+  return String(value);
+}
+
 export function RecordNativeFacts(props: { fields: string[]; metadata: Record<string, any>; title: string }) {
   const rows = props.fields.flatMap((field) => {
     const value = props.metadata[field];
     const absenceReason = props.metadata.field_absence_reasons?.[field];
     if ((value == null || value === "" || (Array.isArray(value) && value.length === 0)) && !absenceReason) return [];
+    // Microsoft's own workbook writes this tag in French for one pillar and
+    // English for another (no header, no formal taxonomy); translate rather
+    // than mix languages on an English-labeled page.
     const displayValue = absenceReason
       ? `Not published — ${absenceReason}`
-      : typeof value === "object"
-      ? Object.entries(value).map(([key, count]) => `${key}: ${count}`).join(" · ")
-      : String(value);
+      : field === "category" && props.metadata.catalog_id === "microsoft-zt-maturity"
+        ? translateMicrosoftZtCategory(value)
+        : field === "benchmark_status_date"
+          ? formatSourceDate(value)
+          : formatFactValue(value);
+    if (!displayValue) return [];
     return [{ field, displayValue }];
   });
   if (!rows.length) return null;
@@ -353,6 +455,7 @@ export function RecordPublishedText(props: {
   if (!shown.length) return null;
   const Heading = (props.headingLevel === 3 ? "h3" : "h2") as "h2" | "h3";
   return (
+    <PublisherCitationContext.Provider value={props.metadata.citations || {}}>
     <div
       className="record-official-text"
       data-claim-origin={props.claimOrigin}
@@ -360,7 +463,7 @@ export function RecordPublishedText(props: {
       data-source-text="published"
     >
       {shown.map((section) => (
-        <section data-source-field={section.field} key={section.field}>
+        <section data-source-field={section.field} id={`section-${section.field}`} key={section.field}>
           <Heading>{section.heading}</Heading>
           <SourceSectionContent
             kind={section.kind}
@@ -370,6 +473,7 @@ export function RecordPublishedText(props: {
         </section>
       ))}
     </div>
+    </PublisherCitationContext.Provider>
   );
 }
 

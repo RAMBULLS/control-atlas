@@ -1,0 +1,211 @@
+{
+  "$comment": [
+    "Three ways to group the same 28 publications for the Atlas landing.",
+    "",
+    "The landing used to open on all 28 frameworks at once, arranged by the",
+    "dependency spine. That put SP 800-53 at the top of everything, which is",
+    "not true: the top row of that picture was five unlike documents \u2014 a",
+    "control catalog, a threat knowledge base, an outcome framework, a federal",
+    "policy and a process \u2014 and the only thing they shared was that nothing",
+    "else in this corpus builds on them. That is a fact about our crosswalk",
+    "coverage, not a statement about the field, and drawn as a top layer it",
+    "read as a ranking.",
+    "",
+    "So the landing groups first and drills second. Each lens answers a",
+    "different question about the same corpus, and none of them claims one",
+    "framework outranks another. The dependency spine still runs the level",
+    "below, where it is honest: 800-53 is the root of its own branch.",
+    "",
+    "'kind' is a collapse of the publicationKind already recorded for every",
+    "catalog in src/ui/lib/catalogProfiles.ts, so membership is traceable to",
+    "an existing field rather than re-asserted here. tests/graph asserts every",
+    "publicationKind value maps to a family, so adding a new kind fails loudly",
+    "instead of silently dropping a catalog off the landing.",
+    "",
+    "'job' is authored and reviewed placement by placement. No field in the",
+    "corpus records what a reader is trying to do, so these are a claim about",
+    "practice and each carries its reasoning. The review moved one thing: SSDF",
+    "sat under a group named for configuring a product, but SP 800-218 is about",
+    "how software is written. The job is the same — making the thing itself",
+    "secure — so the group is named for building as well as hardening rather",
+    "than the publication being moved somewhere it does not belong.",
+    "",
+    "'publisher' takes its membership from the artifact's own ecosystems \u2014 the",
+    "publisher of a document is a fact, not a judgement \u2014 and only supplies a",
+    "one-line description of who each publisher is, because the generated one",
+    "is the same sentence for all eight."
+  ],
+  "kind": {
+    "label": "By kind",
+    "blurb": "What each document is",
+    "prompt": "Choose a kind of document",
+    "families": [
+      {
+        "id": "control-catalogs",
+        "label": "Control catalogs",
+        "blurb": "The requirements themselves, and the baselines that select from them",
+        "publicationKinds": [
+          "Control catalog",
+          "Control-selection method"
+        ]
+      },
+      {
+        "id": "risk-frameworks",
+        "label": "Risk and outcome frameworks",
+        "blurb": "How to run the process and what good looks like when you do",
+        "publicationKinds": [
+          "Risk framework",
+          "Outcome framework"
+        ]
+      },
+      {
+        "id": "implementation",
+        "label": "Implementation and configuration",
+        "blurb": "What to actually set, build, and check on a real system",
+        "publicationKinds": [
+          "Implementation standard",
+          "Architecture and implementation guide",
+          "Capability catalog",
+          "Assessment tool"
+        ]
+      },
+      {
+        "id": "threat-knowledge",
+        "label": "Threat and defense knowledge",
+        "blurb": "What attackers do, and what stops it",
+        "publicationKinds": [
+          "Threat knowledge base",
+          "Defensive knowledge base"
+        ]
+      },
+      {
+        "id": "programs-policy",
+        "label": "Programs and policy",
+        "blurb": "The rules you are held to, and the programs that certify you meet them",
+        "publicationKinds": [
+          "Authorization program",
+          "Certification program",
+          "Policy and regulation"
+        ]
+      }
+    ]
+  },
+  "job": {
+    "label": "By job",
+    "blurb": "What you are trying to get done",
+    "prompt": "Choose a job",
+    "$comment": "Authored, not derived, and reviewed placement by placement. The corpus records no field for what a reader is trying to do, so each grouping carries its reasoning.",
+    "families": [
+      {
+        "id": "pick-controls",
+        "label": "Pick the controls",
+        "blurb": "Decide what protections a system has to have",
+        "rationale": "Everything that either states a requirement or decides which requirements apply. FIPS 199 categorises the system and FIPS 200 sets the floor, 800-53B selects the baseline, and the CUI policy is the obligation that makes the 800-171 line apply to you at all \u2014 so it belongs with choosing, not with the certification programs.",
+        "catalogIds": [
+          "nist-800-53",
+          "nist-800-53b",
+          "nist-800-171",
+          "nist-800-171-rev2",
+          "nist-800-172",
+          "fips-199",
+          "fips-200",
+          "cui-policy"
+        ]
+      },
+      {
+        "id": "assess-authorize",
+        "label": "Assess and authorize",
+        "blurb": "Prove the protections are there and get a decision",
+        "rationale": "The procedures you are assessed against and the programs that issue the authorization or certification at the end.",
+        "catalogIds": [
+          "nist-800-53a",
+          "nist-800-37",
+          "fedramp-rev5",
+          "fedramp-2026",
+          "cmmc-2"
+        ]
+      },
+      {
+        "id": "harden-technology",
+        "label": "Build and harden",
+        "blurb": "Make the thing itself secure, as it is written and as it is configured",
+        "rationale": "Guidance written against real technology rather than against a control number: how software is built (SSDF), how a product or platform is configured (STIGs, SRGs), what a device has to be able to do (IoT), and the identifiers tying those settings back to controls (CCIs). Named for building as well as configuring because SSDF is about how code is written, not how a deployed product is set.",
+        "catalogIds": [
+          "disa-stig",
+          "disa-srg",
+          "disa-cci",
+          "nist-iot-cybersecurity",
+          "nist-ssdf"
+        ]
+      },
+      {
+        "id": "understand-threats",
+        "label": "Understand the threat",
+        "blurb": "Know what adversaries do before deciding what to build",
+        "rationale": "Catalogs of observed adversary behaviour and the defensive techniques mapped against it.",
+        "catalogIds": [
+          "mitre-attack",
+          "mitre-attack-ics",
+          "mitre-d3fend",
+          "nist-mobile-threats"
+        ]
+      },
+      {
+        "id": "design-architecture",
+        "label": "Design the architecture",
+        "blurb": "Decide how the system should be shaped",
+        "rationale": "Zero trust is an architecture decision made before control selection, not a control set \u2014 these three are read while designing, not while assessing.",
+        "catalogIds": [
+          "nist-zt",
+          "dod-zt",
+          "microsoft-zt-maturity"
+        ]
+      },
+      {
+        "id": "govern-program",
+        "label": "Govern the program",
+        "blurb": "Set direction and report on it across a whole organization",
+        "rationale": "Written for the people accountable for a programme rather than for a single system: outcomes to steer by, and the governance frameworks for AI.",
+        "catalogIds": [
+          "csf-2",
+          "nist-ai-rmf",
+          "dod-rai"
+        ]
+      }
+    ]
+  },
+  "publisher": {
+    "label": "By publisher",
+    "blurb": "Who issues each document",
+    "prompt": "Choose a publisher",
+    "$comment": "Membership is read from the artifact. Only the blurbs are authored.",
+    "ecosystems": {
+      "ecosystem:nist": "The civilian standards body. Most of what the others build on starts here.",
+      "ecosystem:disa": "Turns controls into settings for named products and platforms.",
+      "ecosystem:mitre": "Adversary behaviour and defensive technique, catalogued from what has been seen.",
+      "ecosystem:fedramp": "Authorizes cloud services for federal buyers.",
+      "ecosystem:dod-cio": "Department-wide direction for defense IT.",
+      "ecosystem:dod": "Defense-wide programs contractors are held to.",
+      "ecosystem:isoo": "Government-wide oversight of how sensitive information is handled.",
+      "ecosystem:cdao": "Defense oversight of how AI is built and fielded."
+    },
+    "strips": [
+      {
+        "id": "authority",
+        "heading": "Law and policy",
+        "note": "Statutes, regulations, and directives set the obligations these frameworks implement. Nobody publishes a crosswalk to them, so they are named and counted here rather than drawn as a publisher.",
+        "landmarkIds": [
+          "authority:statutes",
+          "authority:regulations",
+          "authority:directives"
+        ]
+      },
+      {
+        "id": "no-publisher",
+        "heading": "Published outside these ecosystems",
+        "note": "Not issued by a federal publisher, so there is no ecosystem for it to sit in. It is still fully browsable.",
+        "landmarkIds": []
+      }
+    ]
+  }
+}

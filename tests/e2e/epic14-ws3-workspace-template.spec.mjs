@@ -1,6 +1,25 @@
 import { expect, test } from "@playwright/test";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import commonsDataset from "../../data/commons-resource-dataset.json" with { type: "json" };
 
 import { attachPageDiagnostics, gotoApp, waitForAppReady } from "./support.mjs";
+
+function supplyChainMatchCount() {
+  const root = existsSync(join(process.cwd(), "dist", "site", "data", "generated"))
+    ? join(process.cwd(), "dist", "site", "data", "generated")
+    : join(process.cwd(), "data", "generated");
+  const manifest = JSON.parse(readFileSync(join(root, "library-search-index.json"), "utf8"));
+  const fields = manifest.library_search_index.fields;
+  const searchable = ["item_id", "title", "control_family", "source_name", "publisher_name", "official_text_preview"];
+  return manifest.sharded_collection.shards.reduce((count, shard) => {
+    const { columns } = JSON.parse(readFileSync(join(root, shard.path), "utf8")).library_search_index;
+    return count + columns[0].filter((_, index) => {
+      const text = searchable.map((field) => String(columns[fields.indexOf(field)][index] || "").toLowerCase()).join(" ");
+      return text.includes("supply") && text.includes("chain");
+    }).length;
+  }, 0);
+}
 
 test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
@@ -61,19 +80,23 @@ test("WS3 Library uses Template C browse, facets, and fully linked record rows",
 });
 
 test("WS3 Library communicates visible, loaded, and total search scope", async ({ page }) => {
+  const total = supplyChainMatchCount();
+  expect(total, "query must exercise the 100-result relevance cap").toBeGreaterThan(100);
   await page.setViewportSize({ width: 1440, height: 1000 });
   await gotoApp(page, "/#/library?q=supply%20chain");
   await waitForAppReady(page, { allowPartial: true });
 
+  // The header names the way to the matches past the cap, so a reader who never
+  // scrolls 100 rows still learns the list is not all of them.
   await expect(page.locator(".workspace-result-count")).toHaveText(
-    "206 matches · showing 25 of the 100 most relevant",
+    `${total.toLocaleString("en-US")} matches · showing 25 of the 100 most relevant · narrow with filters to reach the rest`,
   );
   const rows = page.locator('[data-result-class="published-record"]');
   await expect(rows).toHaveCount(25);
   await page.getByRole("button", { name: "Show 25 more" }).click();
   await expect(rows).toHaveCount(50);
   await expect(page.locator(".workspace-result-count")).toHaveText(
-    "206 matches · showing 50 of the 100 most relevant",
+    `${total.toLocaleString("en-US")} matches · showing 50 of the 100 most relevant · narrow with filters to reach the rest`,
   );
 
   await page.getByRole("button", { name: "Map", exact: true }).click();
@@ -86,6 +109,8 @@ test("WS3 Library communicates visible, loaded, and total search scope", async (
 });
 
 test("WS3 Resources shares Template C with real list, map, and comparison modes", async ({ page }) => {
+  const resourceCount = commonsDataset.resources.length;
+  expect(resourceCount).toBeGreaterThan(75);
   await page.setViewportSize({ width: 1440, height: 1000 });
   await gotoApp(page, "/#/resources");
   await waitForAppReady(page, { allowPartial: true });
@@ -96,10 +121,10 @@ test("WS3 Resources shares Template C with real list, map, and comparison modes"
   const companionLinks = companions.getByRole("link");
   await expect(companionLinks).toHaveText([
     "Looking for a starter document? Browse Templates →",
-    "Want framework context? Browse Guides →",
+    "Need framework context? Explore Atlas →",
   ]);
   await expect(companionLinks.nth(0)).toHaveAttribute("href", "#/build");
-  await expect(companionLinks.nth(1)).toHaveAttribute("href", "#/guides");
+  await expect(companionLinks.nth(1)).toHaveAttribute("href", "#/atlas");
   await expect(workspace.locator('[data-browse-state="resources"]')).toBeVisible();
   const rail = workspace.getByRole("complementary", { name: "Resource filters" });
   await expect(rail).toBeVisible();
@@ -115,7 +140,7 @@ test("WS3 Resources shares Template C with real list, map, and comparison modes"
 
   await workspace.getByRole("button", { name: /Browse all \d+ resources/ }).click();
   await expect(page.locator('[data-result-bar-order="count,sort,view,compare"]')).toBeVisible();
-  await expect(page.locator(".workspace-result-count")).toHaveText("202 results · showing 25");
+  await expect(page.locator(".workspace-result-count")).toHaveText(`${resourceCount.toLocaleString("en-US")} results · showing 25`);
   await expect(page.locator('[data-result-class="resource"]')).toHaveCount(25);
   const firstRow = page.locator('[data-result-class="resource"]').first();
   await expect(firstRow).toBeVisible();
@@ -127,9 +152,9 @@ test("WS3 Resources shares Template C with real list, map, and comparison modes"
   await workspace.getByRole("button", { name: "Map", exact: true }).click();
   const map = page.getByRole("region", { name: "Map of Resource results" });
   await expect(map).toBeVisible();
-  await expect(map.getByRole("heading", { name: "75 of 202 resources mapped" })).toBeVisible();
+  await expect(map.getByRole("heading", { name: `75 of ${resourceCount.toLocaleString("en-US")} resources mapped` })).toBeVisible();
   await expect(map.locator('[data-map-node-id]')).toHaveCount(75);
-  await expect(page.locator(".workspace-result-count")).toHaveText("202 results · mapping 75");
+  await expect(page.locator(".workspace-result-count")).toHaveText(`${resourceCount.toLocaleString("en-US")} results · mapping 75`);
   await workspace.getByRole("button", { name: "List", exact: true }).click();
   const compare = workspace.getByRole("button", { name: "Compare", exact: true });
   await expect(compare).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
@@ -145,18 +170,23 @@ test("WS3 Resources shares Template C with real list, map, and comparison modes"
 });
 
 test("WS3 Resource detail uses a knowledge-base reading sequence", async ({ page }) => {
+  const resource = commonsDataset.resources.find((item) => item.id === "tool-grype-vulnerability-scanner");
+  expect(resource).toBeDefined();
+  // Publisher media is optional. Assert against the input dataset, never the
+  // rendered section, so both a missing image and an invented section fail.
+  const media = resource.media?.status === "available" ? resource.media.items : [];
   await page.setViewportSize({ width: 1440, height: 1000 });
   await gotoApp(page, "/#/resources/tool-grype-vulnerability-scanner");
   await waitForAppReady(page, { allowPartial: true });
 
   const article = page.locator("article.resource-detail-main");
-  await expect(page.getByText("Resource", { exact: true })).toBeVisible();
+  await expect(page.getByText("Open-source project", { exact: true })).toBeVisible();
   await expect(page.getByText("Publisher Anchore", { exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: "Open resource" })).toBeVisible();
   await expect(article.getByRole("heading", { level: 2 })).toHaveText([
     "What it is",
     "How to use or access",
-    "Screenshots",
+    ...(media.length ? ["Screenshots"] : []),
     "Filed under",
   ]);
   await expect(page.getByRole("heading", { name: "Governed discovery tags" })).toHaveCount(0);
@@ -164,7 +194,13 @@ test("WS3 Resource detail uses a knowledge-base reading sequence", async ({ page
   await expect(details).not.toHaveAttribute("open", "");
   await details.locator("summary").click();
   await expect(details.getByText("Verification method", { exact: true })).toBeVisible();
-  await expect(page.locator(".resource-detail-media figcaption")).not.toContainText(/commit\s+[0-9a-f]/i);
+  const images = page.locator(".resource-detail-media img");
+  await expect(images).toHaveCount(media.length);
+  for (const [index, item] of media.entries()) {
+    await expect(images.nth(index)).toHaveAttribute("src", item.url);
+    await expect(images.nth(index)).toHaveAttribute("alt", item.alt);
+    await expect(page.locator(".resource-detail-media figcaption").nth(index)).not.toContainText(/commit\s+[0-9a-f]/i);
+  }
 });
 
 test("WS3 facets move to a modal sheet below the desktop breakpoint", async ({ page }) => {
@@ -217,17 +253,13 @@ test("WS3 compact Library rows preserve a readable vertical information hierarch
 
 test("WS3 Library presents generated records with human identity at every governed width", async ({ page }) => {
   test.setTimeout(120_000);
+  // The collaborator and mapping-contributor entries are retired helper records
+  // (issue 279): the vendor's product components are what a search should show.
+  const retiredIds = [
+    "nist-zt:COLLABORATOR-APPGATE-835EC7F121",
+    "nist-zt:MAPPING-CONTRIBUTOR-APPGATE-835EC7F121",
+  ];
   const records = [
-    {
-      id: "nist-zt:COLLABORATOR-APPGATE-835EC7F121",
-      primary: "Appgate",
-      type: "Technology collaborator",
-    },
-    {
-      id: "nist-zt:MAPPING-CONTRIBUTOR-APPGATE-835EC7F121",
-      primary: "Appgate",
-      type: "Mapping workbook contributor",
-    },
     {
       id: "nist-zt:PRODUCT-COMPONENT-APPGATE-APPGATE-HEADLESS-CLIENT-RESOURCE-PROTECTION-CL-E65DEBF0E8",
       primary: "Appgate Headless Client — Resource Protection – Cloud Workload Protection",
@@ -239,6 +271,9 @@ test("WS3 Library presents generated records with human identity at every govern
     await page.setViewportSize({ width, height: width < 768 ? 844 : 1024 });
     await gotoApp(page, "/#/library?q=Appgate");
     await waitForAppReady(page, { allowPartial: true });
+    for (const retiredId of retiredIds) {
+      await expect(page.locator(`[data-record-id="${retiredId}"]`), retiredId).toHaveCount(0);
+    }
     for (const record of records) {
       const row = page.locator(`[data-record-id="${record.id}"]`);
       await expect(row).toBeVisible();
@@ -274,22 +309,26 @@ test("WS3 global search and publication rows use the same generated identity con
     const dialog = page.getByRole("dialog", { name: "Search Control Atlas" });
     const search = dialog.getByRole("searchbox", { name: "Search Control Atlas" });
     await search.fill("Appgate");
-    const collaborator = dialog.getByRole("link", {
-      name: "Open Appgate, Technology collaborator, NIST Zero Trust",
+    const product = "Appgate Headless Client — Resource Protection – Cloud Workload Protection";
+    const component = dialog.getByRole("link", {
+      name: `Open ${product}, Product component, NIST Zero Trust`,
     });
-    await expect(collaborator).toBeVisible();
-    await expect(collaborator.getByRole("heading", { name: "Appgate", level: 3 })).toBeVisible();
-    await expect(collaborator).toContainText("Technology collaborator · NIST Zero Trust");
+    await expect(component).toBeVisible();
+    await expect(component.getByRole("heading", { name: product, level: 3 })).toBeVisible();
+    await expect(component).toContainText("Product component · NIST Zero Trust");
+    // Retired helper entities are not search results.
+    await expect(dialog.getByRole("link", { name: /Technology collaborator|Mapping workbook contributor/ })).toHaveCount(0);
 
     await gotoApp(page, "/#/library/publication/nist-zt?browseAll=true&q=Appgate");
     await waitForAppReady(page, { allowPartial: true });
     const row = page.getByRole("link", {
-      name: "Open Appgate, Technology collaborator, NIST Zero Trust",
+      name: `Open ${product}, Product component, NIST Zero Trust`,
     });
     await expect(row).toBeVisible();
     await expect(row).toContainText("Appgate");
-    await expect(row).toContainText("Technology collaborator · NIST Zero Trust");
-    await expect(row).not.toContainText("COLLABORATOR-APPGATE-835EC7F121");
+    await expect(row).toContainText("Product component · NIST Zero Trust");
+    await expect(row).not.toContainText("PRODUCT-COMPONENT-APPGATE");
+    await expect(page.getByRole("link", { name: /Technology collaborator|Mapping workbook contributor/ })).toHaveCount(0);
     expect(
       await page.evaluate(
         () => globalThis.document.documentElement.scrollWidth - globalThis.document.documentElement.clientWidth,

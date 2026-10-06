@@ -1,4 +1,5 @@
 import { displayNameFor } from "../../app/display-names.mjs";
+import { publisherDisplayName } from "./publisherName";
 
 export type SourceFreshnessPresentation = {
   label: "Source last checked" | "Source retrieved" | "Source freshness";
@@ -7,23 +8,19 @@ export type SourceFreshnessPresentation = {
   state: "checked" | "retrieved" | "missing";
 };
 
-const PUBLISHER_DISPLAY_NAMES: Record<string, string> = {
-  dod: "Department of Defense",
-};
-
-export function sourcePublisherDisplayName(value: unknown): string {
-  const recorded = String(value || "").trim();
-  if (!recorded) return "";
-  return PUBLISHER_DISPLAY_NAMES[recorded.toLocaleLowerCase()] || recorded;
-}
+/** One publisher rule for every surface; see publicationIdentity.ts. */
+export const sourcePublisherDisplayName = publisherDisplayName;
 
 export function sourcePublicationTitle(source: any, fallback = ""): string {
   return String(source?.name || source?.display_name || fallback || "").trim();
 }
 
 export function formatSourceDate(value: unknown): string {
-  const recorded = String(value || "").trim();
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(recorded)) return recorded;
+  const raw = String(value || "").trim();
+  // Accepts a plain date ("2024-06-04") or a full instant ("...T15:12:34.922Z");
+  // only the date part is ever shown, since a page renders no time-of-day facts.
+  const recorded = raw.slice(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(recorded)) return raw;
   const [year, month, day] = recorded.split("-").map(Number);
   return new Intl.DateTimeFormat("en-US", {
     day: "numeric",

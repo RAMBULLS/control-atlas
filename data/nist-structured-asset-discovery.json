@@ -1,16 +1,17 @@
 {
   "schema_version": "1.0",
   "source_inventory": "data/nist-pages-discovery.json",
-  "source_inventory_sha256": "sha256:c326e8abdc8d31e9bd46e07af58c2d19a1bd5e8080accaac2795bacb52664066",
+  "source_inventory_sha256": "sha256:266513baf459a3098695b7d454eca4fb11b4aa9d6eae16c8537f7f24608ca9f6",
   "reconciliation": {
-    "projects_discovered": 262,
-    "project_landing_pages_attempted": 262,
-    "pages_attempted": 342,
-    "pages_fetched": 338,
-    "pages_failed": 4,
+    "projects_discovered": 264,
+    "project_landing_pages_attempted": 264,
+    "pages_attempted": 346,
+    "pages_fetched": 340,
+    "pages_failed": 5,
     "structured_assets_discovered": 28,
     "spreadsheets_discovered": 8,
-    "csv_files_discovered": 4
+    "csv_files_discovered": 4,
+    "assets_retained": 0
   },
   "pages": [
     {
@@ -454,6 +455,14 @@
       "structured_assets": 0
     },
     {
+      "requested_url": "https://pages.nist.gov/ACMVPDocs/te-tables/te-table9.html",
+      "url": "https://pages.nist.gov/ACMVPDocs/te-tables/te-table9.html",
+      "project": "ACMVPDocs",
+      "depth": 1,
+      "status": "fetched",
+      "structured_assets": 0
+    },
+    {
       "requested_url": "https://pages.nist.gov/ACVP/",
       "url": "https://pages.nist.gov/ACVP/",
       "project": "ACVP",
@@ -578,8 +587,17 @@
       "url": "https://pages.nist.gov/biometrics-edu/",
       "project": "biometrics-edu",
       "depth": 0,
+      "status": "parse_failed",
+      "reason": "Maximum call stack size exceeded",
+      "structured_assets": 0
+    },
+    {
+      "requested_url": "https://pages.nist.gov/biometrics-edu/",
+      "url": "https://pages.nist.gov/biometrics-edu/",
+      "project": "biometrics-edu",
+      "depth": 0,
       "status": "failed",
-      "reason": "The operation was aborted due to timeout",
+      "reason": "Maximum call stack size exceeded",
       "structured_assets": 0
     },
     {
@@ -1721,6 +1739,14 @@
       "structured_assets": 0
     },
     {
+      "requested_url": "https://pages.nist.gov/nasctn-sea-visualization/",
+      "url": "https://pages.nist.gov/nasctn-sea-visualization/",
+      "project": "nasctn-sea-visualization",
+      "depth": 0,
+      "status": "fetched",
+      "structured_assets": 0
+    },
+    {
       "requested_url": "https://pages.nist.gov/nccoe-devsecops/",
       "url": "https://pages.nist.gov/nccoe-devsecops/",
       "project": "nccoe-devsecops",
@@ -2029,7 +2055,8 @@
       "url": "https://pages.nist.gov/OSCAL-Pages/",
       "project": "OSCAL-Pages",
       "depth": 0,
-      "status": "fetched",
+      "status": "failed",
+      "reason": "Invalid response body while trying to fetch https://pages.nist.gov/OSCAL-Pages/: Cache input stream was empty",
       "structured_assets": 0
     },
     {
@@ -2236,6 +2263,14 @@
       "requested_url": "https://pages.nist.gov/reflectometry-calculators/",
       "url": "https://pages.nist.gov/reflectometry-calculators/",
       "project": "reflectometry-calculators",
+      "depth": 0,
+      "status": "fetched",
+      "structured_assets": 0
+    },
+    {
+      "requested_url": "https://pages.nist.gov/refprop/",
+      "url": "https://pages.nist.gov/refprop/",
+      "project": "refprop",
       "depth": 0,
       "status": "fetched",
       "structured_assets": 0

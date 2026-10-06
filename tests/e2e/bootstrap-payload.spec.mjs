@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 
 import {
   attachPageDiagnostics,
+  clickAtlasPublication,
   dismissOnboarding,
   waitForAppReady,
 } from "./support.mjs";
@@ -33,12 +34,25 @@ test("home bootstrap avoids graph JSON artifacts", async ({ page }) => {
 
   expect(graphArtifactUrls(requested)).toEqual([]);
   expect(requested).toEqual([]);
-  // The tiny classic shell sets route identity before first paint; the only
-  // other script is the deferred interactive entry. Home still requests no
-  // route or graph payload until the user leaves the static front door.
-  expect(scripts).toHaveLength(2);
+  // Home requests no route or graph payload until the reader leaves the static
+  // front door, and its script graph stays small: the shell that sets route
+  // identity before first paint, the deferred interactive entry, and the
+  // shared chunks that entry pulls in.
+  //
+  // This asserted exactly two scripts. The bundler now emits its runtime and
+  // the shared header data as their own chunks, so main has been loading four
+  // for some time and this test has been red on main without anyone seeing it
+  // — it is not in test:e2e:smoke, so CI never runs it on a pull request. A
+  // fixed count tracks the bundler's chunking, not the thing worth protecting.
+  // The budget is what protects Home: no route chunk, no page code.
+  expect(scripts.length, `Home loaded ${scripts.length} scripts: ${scripts.join(", ")}`).toBeLessThanOrEqual(4);
+  for (const script of scripts) {
+    expect(script, "Home must not load a route chunk").not.toMatch(
+      /\/assets\/(?:AtlasTerritoryPage|ExplorePage|ComparePage|TemplatesPage|SourcesPage|CatalogDetailPage|ObjectDetailPage|CommonsPage|PlaybooksPage|AboutPage)-/,
+    );
+  }
 
-  await page.getByRole("link", { name: "Search the Library" }).click();
+  await page.getByRole("link", { name: "All records", exact: true }).click();
   await waitForAppReady(page);
   await expect(page).toHaveURL(/#\/library/);
   expect(scripts.length).toBeGreaterThan(1);
@@ -79,7 +93,7 @@ test("explore bootstrap avoids graph JSON until record open", async ({
   expect(graphArtifactUrls(requested)).toEqual([]);
 });
 
-test("expanding an Atlas area uses the semantic network without monolithic graph JSON", async ({
+test("the Atlas territory sheet uses its own small index without monolithic graph JSON", async ({
   page,
 }) => {
   const requested = [];
@@ -91,16 +105,18 @@ test("expanding an Atlas area uses the semantic network without monolithic graph
   await page.goto("/#/atlas");
   await waitForAppReady(page);
   await dismissOnboarding(page);
-  const atlas = page.getByTestId("atlas-map");
-  await expect(atlas).toBeVisible();
-  expect(
-    requested.some((url) => url.includes("atlas-network.json")),
-  ).toBeTruthy();
+  const sheet = page.locator(".terr");
+  await expect(sheet).toBeVisible();
+  expect(requested.some((url) => url.includes("atlas-territory"))).toBeTruthy();
+  expect(requested.some((url) => /atlas-network|atlas-spine|atlas-research\//.test(url))).toBe(false);
   expect(graphArtifactUrls(requested)).toEqual([]);
 
-  await atlas.locator('.atlas-decomp__column[data-column="area"]').getByRole("button", { name: /^NIST/ }).click();
-  await expect(page).toHaveURL(/atlasLimb=ecosystem(?::|%3A)nist/);
-  await expect(page.getByTestId("atlas-map")).toHaveAttribute("data-scope-level", "ecosystem");
+  // Opening a territory and then a publication inside it needs no further artifact.
+  await sheet.locator('[data-district="atlas:LIMB-COMPLIANCE"] .district__shape').focus();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/atlasLimb=/);
+  await clickAtlasPublication(page, "nist-800-53");
+  await expect(page).toHaveURL(/atlasFramework=nist-800-53/);
   expect(graphArtifactUrls(requested)).toEqual([]);
 });
 
@@ -109,7 +125,7 @@ test("Atlas reaches its first usable source map within the local render budget",
 }) => {
   await page.goto("/#/atlas");
   await waitForAppReady(page);
-  await expect(page.getByTestId("atlas-map")).toBeVisible();
+  await expect(page.locator(".terr")).toBeVisible();
 
   const firstUsableMs = await page.evaluate(() =>
     Math.round(globalThis.performance.now()),
@@ -132,8 +148,8 @@ test("focused Atlas loads one neighborhood without monolithic graph JSON", async
   );
   await waitForAppReady(page);
   await dismissOnboarding(page);
-  await expect(page.getByRole("region", { name: "Focused Atlas record" })).toBeVisible();
-  await expect(page.getByRole("region", { name: "Relationship map" })).toBeVisible();
+  await expect(page.locator(".atl-inspector")).toContainText("AC-2", { timeout: 20000 });
+  await expect(page.locator(".terr")).toBeVisible();
 
   expect(graphArtifactUrls(requested)).toEqual([]);
   expect(
@@ -176,7 +192,7 @@ test("focused Atlas loading state avoids a content-agnostic mobile minimum heigh
   );
 
   releaseNeighborhood();
-  await expect(page.getByRole("region", { name: "Focused Atlas record" })).toBeVisible({
+  await expect(page.locator("#atl-focus")).toContainText("AC-2", {
     timeout: 30000,
   });
   const loadedHeight = await page.locator("#app").evaluate(
@@ -213,7 +229,7 @@ test("catalog identity renders before its full record payload arrives", async ({
   await expect(page.getByText("Loading this publication's records…")).toBeHidden({
     timeout: 15000,
   });
-  await expect(page.getByRole("heading", { level: 2 })).toContainText(
+  await expect(page.locator("#catalog-records-title")).toContainText(
     "SP 800-53 Rev. 5",
   );
 });

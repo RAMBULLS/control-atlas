@@ -13,6 +13,8 @@ import {
 import { execFileSync } from "node:child_process";
 import { dirname, join, extname } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+
+import { generatedDataIsIdentical } from "./lib/generated-data-digest.mjs";
 import { gzipSync } from "node:zlib";
 import { runNodeSync } from "./lib/process-runner.mjs";
 
@@ -76,14 +78,21 @@ function assertGeneratedDataComplete() {
   }
 }
 
-function stagedGeneratedDataMatches() {
-  const sourceManifest = join(ROOT, "data/generated/build-manifest.json");
-  const stagedManifest = join(DIST, "data/generated/build-manifest.json");
-  if (!existsSync(sourceManifest) || !existsSync(stagedManifest)) return false;
-  if (!readFileSync(sourceManifest).equals(readFileSync(stagedManifest))) return false;
-  return REQUIRED_GENERATED_FILES.every((path) =>
-    existsSync(join(DIST, path)),
+/**
+ * May the build reuse the generated data already staged in dist?
+ *
+ * Only when the bytes are the same. See tools/lib/generated-data-digest.mjs
+ * for why a manifest comparison, and then a size-and-mtime comparison, were
+ * both wrong.
+ */
+async function stagedGeneratedDataMatches() {
+  if (!REQUIRED_GENERATED_FILES.every((path) => existsSync(join(DIST, path)))) return false;
+  const verdict = await generatedDataIsIdentical(
+    join(ROOT, "data/generated"),
+    join(DIST, "data/generated"),
   );
+  if (!verdict.identical) console.log(`Staged data is not reusable: ${verdict.reason}.`);
+  return verdict.identical;
 }
 
 if (reuseGenerated) {
@@ -104,7 +113,7 @@ if (reuseGenerated) {
 }
 
 assertGeneratedDataComplete();
-const reuseStagedData = reuseGenerated && stagedGeneratedDataMatches();
+const reuseStagedData = reuseGenerated && await stagedGeneratedDataMatches();
 if (reuseStagedData) {
   rmSync(join(DIST, "assets"), { force: true, recursive: true });
   console.log("Reusing unchanged staged data and rebuilding application assets only.");
@@ -130,6 +139,11 @@ if (!/^\d{4}-\d{2}-\d{2}T/.test(releaseDate)) {
 if (!/^\d{4}-\d{2}-\d{2}T/.test(sourceDataGeneratedAt || "")) {
   throw new Error("Generated sources are missing a valid generated_at timestamp");
 }
+
+// Pulse is derived from accepted lifecycle evidence before the app build: Home
+// renders its bounded slice statically, so Home never fetches it.
+runNodeSync(["--import", "tsx", join(ROOT, "scripts/build-pulse-artifact.mjs"),
+  "--output", join(ROOT, "data/generated")], { cwd: ROOT, stdio: "inherit" });
 
 runNodeSync([join(ROOT, "node_modules/vite/bin/vite.js"), "build"], {
   cwd: ROOT,
@@ -159,12 +173,21 @@ if (reuseStagedData) {
   for (const [sourceRelativePath, destRelativePath] of COPY_PATHS) {
     copyIntoDist(sourceRelativePath, destRelativePath);
   }
-
-  runNodeSync(
-    ["--import", "tsx", join(ROOT, "scripts/build-atlas-network-artifact.ts"), "--output", "dist/site/data/generated/atlas-network.json"],
-    { cwd: ROOT, stdio: "inherit" },
-  );
 }
+
+// The full Pulse artifact (every event with its evidence, and what was withheld)
+// is published beside the site for audit, even when staged data is reused.
+mkdirSync(join(DIST, "data/generated"), { recursive: true });
+cpSync(join(ROOT, "data/generated/pulse.json"), join(DIST, "data/generated/pulse.json"));
+
+// Research data is requested only when a visitor opens the research view.
+// Build against the same accepted corpus even when application assets are reused.
+runNodeSync(["--import", "tsx", join(ROOT, "scripts/build-atlas-research-artifact.mjs"),
+  "--output", join(DIST, "data/generated")], { cwd: ROOT, stdio: "inherit" });
+
+// The territory index is small (publication routes only); rebuilt with the corpus like research data.
+runNodeSync(["--import", "tsx", join(ROOT, "scripts/build-atlas-territory-artifact.mjs"),
+  "--output", join(DIST, "data/generated")], { cwd: ROOT, stdio: "inherit" });
 
 console.log(reuseStagedData ? "Compressing changed JSON files with gzip..." : "Compressing JSON files with gzip...");
 function getFiles(dir) {

@@ -1,5 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { readFileSync } from 'node:fs';
+
+import { INGESTION_TASKS } from '../scripts/lib/ingestion-pipeline.mjs';
+import { syncCatalogSourceBundles } from '../scripts/sync-catalog-source-bundles.mjs';
+import { fetchCatalogWithFallback } from '../scripts/fetch-framework-catalogs.mjs';
 
 import { artifactHash, reconcileFreshness } from '../scripts/reconcile-source-freshness.mjs';
 
@@ -47,4 +52,70 @@ test('reconciliation keeps publication, source, and primary-artifact versions al
   assert.equal(registry.sources[0].version, '2');
   assert.equal(registry.artifacts[0].version, '2');
   assert.equal(registry.publications[0].retrieved_at, '2026-07-16');
+});
+
+test('bundle sync runs before the generator that creates its input, so it must tolerate absence', () => {
+  // Regression guard for the 2026-09-09 refresh outage (run 34371450147):
+  // sync-catalog-source-bundles read data/generated/catalog-records with a bare
+  // readdirSync and aborted the refresh with ENOENT. data/generated is
+  // gitignored, and the directory is produced by build-framework-data, which
+  // runs LATER in the pipeline -- so on a clean runner the input cannot exist
+  // and "none yet" is the correct answer.
+  const ids = INGESTION_TASKS.map((task) => task.id);
+  const sync = ids.indexOf('sync-source-bundles');
+  const generator = ids.indexOf('build-framework-data');
+  assert.ok(sync >= 0 && generator >= 0, 'both tasks must exist in the pipeline');
+  assert.ok(
+    sync < generator,
+    'sync-source-bundles still precedes build-framework-data; if this ever flips, the '
+      + 'absent-directory guard in catalogIds() can be revisited',
+  );
+
+  // The guard must never prune: `known` is seeded from the committed registry,
+  // so a run that finds no generated records leaves every existing bundle in place.
+  const registry = JSON.parse(readFileSync(new URL('../data/source-registry.json', import.meta.url), 'utf8'));
+  const before = registry.catalog_source_bundles.length;
+  assert.equal(syncCatalogSourceBundles(registry).catalog_source_bundles.length, before);
+});
+
+test('a catalog falls back to its backup source only when the primary is unavailable', async () => {
+  const target = {
+    id: 'nist-800-53-rev5',
+    url: 'https://primary.example/catalog.json',
+    backupUrls: ['https://backup.example/catalog.json'],
+  };
+  const ok = (url) => ({ ok: true, status: 200, url });
+
+  // Healthy primary wins and the backup is never contacted.
+  const seen = [];
+  const healthy = await fetchCatalogWithFallback(target, async (url) => {
+    seen.push(url);
+    return ok(url);
+  });
+  assert.equal(healthy.url, target.url);
+  assert.equal(healthy.usedBackup, false);
+  assert.deepEqual(seen, [target.url]);
+
+  // A non-OK primary falls through to the backup and reports that it did.
+  const viaStatus = await fetchCatalogWithFallback(target, async (url) => (
+    url === target.url ? { ok: false, status: 404 } : ok(url)
+  ));
+  assert.equal(viaStatus.url, target.backupUrls[0]);
+  assert.equal(viaStatus.usedBackup, true);
+  assert.match(viaStatus.failures[0], /HTTP 404/);
+
+  // A throwing primary (DNS, TLS, a thrown 304) falls through the same way.
+  const viaThrow = await fetchCatalogWithFallback(target, async (url) => {
+    if (url === target.url) throw new Error('getaddrinfo ENOTFOUND');
+    return ok(url);
+  });
+  assert.equal(viaThrow.usedBackup, true);
+
+  // Every candidate failing is still an error, and names each one.
+  await assert.rejects(
+    () => fetchCatalogWithFallback(target, async () => { throw new Error('boom'); }),
+    (error) => error.message.includes('primary.example')
+      && error.message.includes('backup.example')
+      && error.message.includes('all 2 candidate'),
+  );
 });

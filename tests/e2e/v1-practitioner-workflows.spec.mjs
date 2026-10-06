@@ -78,36 +78,29 @@ test("V1 workflow 05 — follow a record and return without losing search state"
   await expect(page.getByLabel("Filter results by ID, title, or topic")).toHaveValue("AC-2");
 });
 
-test("V1 workflow 06 — explore one record through Connections, Hierarchy, and the full list", async ({
+test("V1 workflow 06 — explore one record on the map, through its full connection list, to its record page", async ({
   page,
 }) => {
+  // A saved classic hierarchy link still opens the record, now on the territory sheet.
   await open(page, "/#/atlas?node=nist-800-53%3AAC-2&relationshipView=path");
+  await expect(page).toHaveURL(/#\/atlas\/nist-800-53:AC-2$/);
 
-  // The focused record remains the workspace while the hierarchy panel is open.
-  await expect(page.getByRole("region", { name: "Focused Atlas record" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Connections", level: 2 })).toBeVisible();
+  const details = page.locator(".atl-inspector");
+  await expect(details).toContainText("AC-2", { timeout: 20000 });
   // Orientation stays on screen without opening anything.
-  await expect(page.getByRole("navigation", { name: "Where this sits" })).toContainText(
-    "SP 800-53 Rev. 5",
-  );
+  await expect(page.getByRole("navigation", { name: "Where you are" })).toContainText("SP 800-53 Rev. 5");
 
-  // The explicit Path deep link opens publisher hierarchy with real structural substance.
-  await expect(page).toHaveURL(/relationshipView=path/);
-  const hierarchy = page.locator("#atlas-hierarchy-panel");
-  await expect(hierarchy).toContainText("Control Atlas structure");
-  await expect(hierarchy).toContainText("Publisher hierarchy");
-  await expect(hierarchy).toContainText("Decomposes into");
-  await expect(
-    hierarchy.getByRole("link", { name: "AC-2.1", exact: true }),
-  ).toBeVisible();
-
-  // The complete list supports the Atlas map instead of replacing it.
-  await page.getByRole("button", { name: "View all", exact: true }).click();
+  // The complete list sits over the map it came from and returns to it.
+  await details.getByRole("link", { name: "Full connection list" }).click();
   await expect(page).toHaveURL(/relationshipView=list/);
-  await expect(
-    page.getByRole("table", { name: "Relationship table" }),
-  ).toBeVisible();
-  await expect(page.getByRole("region", { name: "Focused Atlas record" })).toBeVisible();
+  await expect(page.getByRole("table", { name: "Relationship table" })).toBeVisible({ timeout: 20000 });
+  await page.getByRole("button", { name: "Back to the map" }).click();
+  await expect(page).not.toHaveURL(/relationshipView=/);
+
+  // The record page carries the publisher's structure and full text.
+  await details.getByRole("link", { name: "Open the full record" }).click();
+  await expect(page).toHaveURL(/#\/record\/nist-800-53\/AC-2/);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("AC-2");
 });
 
 test("V1 workflow 07 — compare with a shareable explicit configuration", async ({
@@ -144,7 +137,9 @@ test("V1 workflow 07 — compare with a shareable explicit configuration", async
   await page.goBack();
   await waitForAppReady(page);
   await expect(page.locator("#compare-results")).toHaveCount(0);
-  await expect(page.getByLabel("Target publication")).toHaveValue("csf-2");
+  // The target field is a searchable publication picker like step 1, so it
+  // shows the publication's name rather than its catalog id.
+  await expect(page.getByRole("combobox", { name: /^Compare with/ })).toHaveValue("NIST CSF 2.0");
   await page.goForward();
   await waitForAppReady(page);
   await expect(
@@ -180,17 +175,20 @@ test("V1 workflow 08 — inspect a source and how it is used", async ({ page }) 
   await open(page, "/#/sources?source=nist-800-53a-assessment-procedures");
   const assessmentDetail = page.getByRole("region", { name: "Source status summary" });
   await expect(assessmentDetail).toContainText("Revision 5, Release 5.2.0");
-  await expect(assessmentDetail).toContainText("Aug 13, 2026");
-  await expect(assessmentDetail).toContainText("1,014 normalized records");
+  // Shape, not a frozen value: this date advances with every source refresh.
+  await expect(assessmentDetail).toContainText(/\w{3} \d{1,2}, \d{4}/);
+  await expect(assessmentDetail).toContainText("1,014 records indexed");
 });
 
 test("source detail routes use specific identity at every governed width", async ({ page, context, browserName }) => {
   test.setTimeout(120_000);
   const sources = [
-    { id: "nist-800-53", name: "NIST SP 800-53 Rev. 5" },
+    // The inspector leads with the practitioner name; the page title keeps the exact official title.
+    { id: "nist-800-53", name: "NIST SP 800-53 Rev. 5", heading: "SP 800-53 Rev. 5" },
     {
       id: "nist-iot-device-cybersecurity-requirement-catalogs",
       name: "NIST IoT Device Cybersecurity Requirement Catalogs",
+      heading: "NIST IoT",
     },
   ];
   if (browserName === "chromium") {
@@ -204,7 +202,8 @@ test("source detail routes use specific identity at every governed width", async
       await waitForAppReady(page);
       await dismissOnboarding(page);
       const inspector = page.locator(".source-inspector");
-      await expect(inspector.getByRole("heading", { name: source.name, level: 2 })).toBeVisible();
+      await expect(inspector.getByRole("heading", { name: source.heading, level: 2 })).toBeVisible();
+      await expect(inspector.locator("[data-official-title]")).toContainText(source.name);
       await expect(page).toHaveTitle(`${source.name} — Control Atlas`);
       const technicalDetails = inspector.locator("details.source-inspector-provenance");
       if ((await technicalDetails.getAttribute("open")) === null) {
@@ -225,11 +224,11 @@ test("source detail routes use specific identity at every governed width", async
   await waitForAppReady(page);
   await page.goBack();
   await waitForAppReady(page);
-  await expect(page.getByRole("heading", { name: sources[0].name, level: 2 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: sources[0].heading, level: 2 })).toBeVisible();
   await expect(page).toHaveTitle(`${sources[0].name} — Control Atlas`);
   await page.goForward();
   await waitForAppReady(page);
-  await expect(page.getByRole("heading", { name: sources[1].name, level: 2 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: sources[1].heading, level: 2 })).toBeVisible();
   await expect(page).toHaveTitle(`${sources[1].name} — Control Atlas`);
 
   const inspector = page.locator(".source-inspector");
@@ -257,7 +256,7 @@ test("a supplemental source material resolves to its parent publication's identi
   for (const materialId of ["cyber-mil-stig-downloads", "cyber-mil-stig-compilations"]) {
     await open(page, `/#/sources?source=${materialId}`);
     await expect(
-      page.getByRole("heading", { name: "DISA Public STIG Library", level: 2 }),
+      page.getByRole("heading", { name: "DISA STIG", level: 2 }),
     ).toBeVisible();
     const inspector = page.locator(".source-inspector");
     const technicalDetails = inspector.locator("details.source-inspector-provenance");
@@ -287,25 +286,29 @@ test("source detail has one return action and preserves the Sources workspace", 
     ).toBeLessThanOrEqual(1);
 
     const dialog = page.getByRole("dialog");
-    if (width < 1200) {
-      await expect(dialog).toBeVisible();
-      await dialog.getByRole("button", { name: "Close inspector" }).click();
-    } else {
-      const closeDetails = page.getByRole("button", { name: "Close publication details" });
-      await expect(closeDetails).toBeVisible();
-      await closeDetails.click();
-    }
-    await expect.poll(() =>
-      page.evaluate(() =>
+    if (width < 1200) await expect(dialog).toBeVisible();
+    else await expect(page.getByRole("button", { name: "Close publication details" })).toBeVisible();
+    // A click that lands before the page has attached its handlers is lost on a slow runner.
+    // Close again while the control is still there, then assert the state.
+    await expect(async () => {
+      const closer = width < 1200
+        ? dialog.getByRole("button", { name: "Close inspector" })
+        : page.getByRole("button", { name: "Close publication details" });
+      if (await closer.count()) await closer.click();
+      expect(await page.evaluate(() =>
         new URLSearchParams(globalThis.location.hash.split("?")[1]).has("source"),
-      ),
-    ).toBe(false);
+      )).toBe(false);
+    }).toPass({ timeout: 30_000 });
     await expect(dialog).toHaveCount(0);
     await expect(page.locator("#app")).not.toHaveAttribute("inert", "");
     await waitForAppReady(page);
     await expect(page.getByRole("heading", { name: "Sources", level: 1 })).toBeVisible();
     await expect(page.locator("#source-search")).toHaveValue("DISA");
-    await expect(page.getByLabel("Publisher", { exact: true })).toHaveValue("DISA");
+    // Phones filter with one labelled selector; wider screens with the bands.
+    if (width < 768) await expect(page.getByLabel("Publisher", { exact: true })).toHaveValue("DISA");
+    else await expect(
+      page.getByRole("navigation", { name: "Publishers" }).getByRole("button", { name: /^DISA/ }),
+    ).toHaveAttribute("aria-pressed", "true");
     expect(
       await page.evaluate(() =>
         new URLSearchParams(globalThis.location.hash.split("?")[1]).has("source"),
@@ -315,7 +318,7 @@ test("source detail has one return action and preserves the Sources workspace", 
     await page.goBack();
     await waitForAppReady(page);
     await expect(
-      page.getByRole("heading", { name: "DISA Public STIG Library", level: 2 }),
+      page.getByRole("heading", { name: "DISA STIG", level: 2 }),
     ).toBeVisible();
 
     await page.goForward();
@@ -369,7 +372,11 @@ test("unknown Source detail links fail closed and preserve recovery state", asyn
     await waitForAppReady(page);
     await expect(page.getByRole("heading", { name: "Sources", level: 1 })).toBeVisible();
     await expect(page.locator("#source-search")).toHaveValue("DISA");
-    await expect(page.getByLabel("Publisher", { exact: true })).toHaveValue("DISA");
+    // Phones filter with one labelled selector; wider screens with the bands.
+    if (width < 768) await expect(page.getByLabel("Publisher", { exact: true })).toHaveValue("DISA");
+    else await expect(
+      page.getByRole("navigation", { name: "Publishers" }).getByRole("button", { name: /^DISA/ }),
+    ).toHaveAttribute("aria-pressed", "true");
 
     await page.goBack();
     await waitForAppReady(page);
@@ -433,7 +440,9 @@ test("source review presents lifecycle and version disposition honestly", async 
     "Version / current through2021-01",
   );
   await expect(page.getByRole("region", { name: "Source status summary" })).toContainText(
-    /Source freshnessChecked\s+Aug 13, 2026/,
+    // nist-800-53a-assessment-procedures is auto_synced, so its checked date
+    // advances with every refresh. Assert the rendered shape, not a frozen day.
+    /Source freshnessChecked\s+\w{3} \d{1,2}, \d{4}/,
   );
 
   await open(page, "/#/record/nist-800-171-rev2/3.1.1");
@@ -447,7 +456,7 @@ test("source review presents lifecycle and version disposition honestly", async 
     );
     const facts = page.getByRole("region", { name: "Source status summary" });
     await expect(facts).toContainText("Revision 5, Release 5.2.0");
-    await expect(facts).toContainText("Aug 13, 2026");
+    await expect(facts).toContainText(/\w{3} \d{1,2}, \d{4}/);
     expect(
       await page.evaluate(
         () =>

@@ -12,20 +12,20 @@ test("WS1 Home discovery cards lead with the question, not the record count", as
   await gotoApp(page, "/#/");
   await waitForAppReady(page, { allowPartial: true });
 
-  const discoveryLinks = page.locator(".home-library-kpis .home-library-kpi");
+  const discoveryLinks = page.locator(".home-library__list .home-library__item");
   await expect(discoveryLinks).toHaveCount(5);
   await expect(page.locator(".home-ecosystem-authorities, .home-ecosystem")).toHaveCount(0);
 
   const metrics = await discoveryLinks.evaluateAll((links) => links.map((link) => {
     return {
       href: link.getAttribute("href") || "",
-      question: link.querySelector(".home-library-kpi__question")?.textContent?.trim() || "",
-      label: link.querySelector(".home-library-kpi__label")?.textContent?.trim() || "",
-      count: link.querySelector(".home-library-kpi__count")?.textContent?.trim() || "",
+      question: link.querySelector(".home-library__question")?.textContent?.trim() || "",
+      label: link.querySelector(".home-library__label")?.textContent?.trim() || "",
+      count: link.querySelector(".home-library__count")?.textContent?.trim() || "",
     };
   }));
 
-  expect(metrics.every((entry) => /^\d[\d,]* records$/.test(entry.count))).toBe(true);
+  expect(metrics.every((entry) => /^\d[\d,]* records\s*→?$/.test(entry.count))).toBe(true);
   expect(metrics.every((entry) => entry.question.length > 0)).toBe(true);
   expect(metrics.every((entry) => entry.href.startsWith("#/library?kind=") && entry.label.length > 0)).toBe(true);
 
@@ -34,7 +34,7 @@ test("WS1 Home discovery cards lead with the question, not the record count", as
     const read = (selector) => Number.parseFloat(
       globalThis.getComputedStyle(link.querySelector(selector)).fontSize,
     );
-    return { label: read(".home-library-kpi__label"), count: read(".home-library-kpi__count") };
+    return { label: read(".home-library__label"), count: read(".home-library__count") };
   });
   expect(sizes.label).toBeGreaterThan(sizes.count);
 });
@@ -61,45 +61,41 @@ test("WS1 decorative surfaces resolve to one teal accent", async ({ page }) => {
   );
   expect(editorial).not.toBe(aliases[0]);
 
-  const cardAccentColors = await page.locator(".home-secondary-action").evaluateAll(
-    (cards) => cards.map((card) => globalThis.getComputedStyle(card, "::before").backgroundColor),
+  // The Home tool actions are the one accent, not a color per destination.
+  const cardAccentColors = await page.locator(".home-tool__action").evaluateAll(
+    (actions) => actions.map((action) => globalThis.getComputedStyle(action).color),
   );
   expect(cardAccentColors.length).toBeGreaterThan(0);
   expect(new Set(cardAccentColors).size).toBe(1);
 });
 
-test("WS1 Atlas exposes publisher ecosystems and authorities as named, counted rows", async ({ page }) => {
+test("WS1 Atlas names every publication with its publisher and counts its authorities", async ({ page }) => {
   test.setTimeout(120_000);
   await gotoApp(page, "/#/atlas");
   await waitForAppReady(page, { allowPartial: true });
 
-  const areas = page.getByTestId("atlas-map").locator('.atlas-decomp__column[data-column="area"]');
-  await expect(areas).toBeVisible({ timeout: 60_000 });
+  const map = page.locator(".terr");
+  await expect(map).toBeVisible({ timeout: 60_000 });
 
-  const rows = await areas.locator(".atlas-decomp__node").evaluateAll((nodes) => nodes.map((node) => ({
-    label: node.querySelector(".atlas-decomp__label")?.textContent?.trim() || "",
-    meta: node.querySelector(".atlas-decomp__meta")?.textContent?.trim() || "",
-  })));
+  // Every publication is a landmark that states its name, publisher and territory
+  // to assistive technology and never depends on hover.
+  const labels = await map.locator(".lm").evaluateAll((els) => els.map((el) => el.getAttribute("aria-label") || ""));
+  expect(labels).toHaveLength(28);
+  for (const label of labels) expect(label).toMatch(/, .+, .+, .+ territory/);
+  for (const publisher of ["NIST", "DISA", "MITRE", "FedRAMP"]) {
+    expect(labels.some((label) => label.includes(`, ${publisher}`)) || labels.some((label) => label.includes(publisher)), `${publisher} landmark`).toBe(true);
+  }
 
-  expect(rows.map((row) => row.label)).toEqual([
-    "DISA",
-    "NIST",
-    "MITRE",
-    "FedRAMP",
-    "DoD CIO",
-    "ISOO",
-    "CDAO",
-    "DoD",
-    "Policy & directives",
-    "Statutes",
-    "Regulations & clauses",
-  ]);
-  await expect(areas.getByRole("button")).toHaveCount(8);
-  await expect(areas.locator('.atlas-decomp__node[data-state="static"]')).toHaveCount(3);
-
-  // Magnitude and interaction state carry the meaning; no landmark depends on
-  // hue alone, which Orbital forbids.
-  expect(rows.every((row) => row.meta.length > 0)).toBe(true);
+  // Policy documents are obligations, not publishers: counted and listed under a secondary
+  // control, never drawn or openable as a place on the map.
+  await expect(map.locator('[data-landmark^="authority-"], .shore')).toHaveCount(0);
+  const policy = page.getByRole("button", { name: "Policy & directives" });
+  await expect(policy).toBeVisible();
+  await policy.click();
+  const list = page.getByRole("region", { name: /^Policy & directives · \d+$/ });
+  await expect(list).toContainText("DoDI 8510.01");
+  // The only buttons inside open the publications that cite a document, not the document as a place.
+  for (const name of await list.locator("button").allTextContents()) expect(labels.some((label) => label.startsWith(`${name},`))).toBe(true);
 });
 
 test("WS1 no palette token lands in the purple range Orbital forbids", async ({ page }) => {

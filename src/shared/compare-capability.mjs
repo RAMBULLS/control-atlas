@@ -3,6 +3,15 @@ import {
   RELATIONSHIP_CLASSES,
 } from "../app/structural-hierarchy.mjs";
 
+// Unknown relation names must not inherit comparison eligibility just because
+// the generic hierarchy classifier falls back to "correlation". All admitted
+// verbs remain publisher relationships, not claims of equivalence.
+export const COMPARISON_RELATIONSHIP_TYPES = new Set([
+  "maps_to", "concept_crosswalk", "references", "supports", "supported_by",
+  "mitigates", "assesses", "requires", "uses", "applies_to", "describes",
+  "depends_on", "protects", "equivalent", "subset_of", "superset_of",
+]);
+
 // --- Comparison capability predicate (Phase 3: Comparison Capability Engine)
 // A cross-catalog edge only counts as evidence that two publications have a
 // supported comparison when it is a published, correlation-class content
@@ -19,7 +28,7 @@ import {
 // the other. This is the single source of truth for that predicate.
 export function isComparisonCapableEdge(edge) {
   if (!edge || edge.publication_status !== "published") return false;
-  if (edge.relationship_type === "issued_under") return false;
+  if (!COMPARISON_RELATIONSHIP_TYPES.has(edge.relationship_type)) return false;
   const relationshipClass =
     edge.relationship_class || defaultRelationshipClass(edge.relationship_type);
   return relationshipClass === RELATIONSHIP_CLASSES.correlation;

@@ -72,3 +72,12 @@ The platform gate considered OSCAL assessment-results for this register, but rej
 ## Reconciliation gates
 
 Builds fail on invalid or abbreviated checksums, byte or record-count disagreement, missing discovery artifacts, duplicate releases or canonical IDs, missing containment parents, undeclared duplicate parents, cycles, undeclared levels, foreign-catalog ancestors, invalid structured-content offsets, or relationship edges appearing in ancestry. `verify:discovery`, `verify:manifests`, AJV internal-schema validation, and the independent NIST OSCAL check remain separate scopes.
+
+
+## Zero Trust mapping scope and source preservation
+
+Zero Trust is not one interchangeable framework. DoD activities and overlays, NIST architectural tenets and example builds, collaborator product functions, and Microsoft's maturity questionnaire retain their own publishers, record types, versions and hierarchy. DoD enterprise and operational-technology activities remain distinct. NIST CSF 1.1 mappings must not be relabelled as CSF 2.0. A product in an official example is not an endorsement or a compliance determination.
+
+For the NIST SP 1800-35 workbooks, parse the leading relationship clause(s), including `Supports`, `Is supported by` / `Supported by`, and `Equivalent`. Preserve the publisher's `example of`, `integral to`, and `precedes` properties and all original cells/locators. Compound assertions remain compound. Shorthand without an explicit resolved predicate stays in the retained source data as unresolved; do not default it to `supports` or fabricate an edge. Regeneration changes derived semantics, not publisher text or retrieval dates.
+
+The generated `compare-data/` files are disposable projections of eligible graph edges, not a second source of mapping truth. Their manifest records endpoint scope. Compare validates scope before payload loading and preserves native direction when presenting a reversed view. Tests reconcile every pair's edges and source evidence to the generated graph.

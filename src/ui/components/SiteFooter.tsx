@@ -23,6 +23,12 @@ const SOURCE_DATA_DATE = formatBuildDate(
 
 export function SiteFooter(props: {
   onNavigate: (view: ViewState["view"], patch?: Partial<ViewState>) => void;
+  /**
+   * Error states suppress the donation ask. Everything else in the footer
+   * still helps on a failed lookup - "Report a problem" especially - but
+   * asking for money at the moment something did not work reads badly.
+   */
+  suppressSupportAsk?: boolean;
 }) {
   return (
     <footer className="site-footer mt-[64px] border-t border-[var(--ca-border-strong)] bg-[var(--ca-surface-raised)] py-[48px] px-[24px]">
@@ -53,7 +59,9 @@ export function SiteFooter(props: {
           <p className="text-[var(--ca-text-muted)] text-[13px] mb-[12px]">Open source under the MIT license.</p>
           <a className="footer-link block mt-[12px] text-[var(--ca-text-muted)] hover:text-[var(--ca-secondary)] text-[13px]" href="https://github.com/rambulls/control-atlas/issues/new?template=submit-resource.yml" rel="noopener noreferrer" target="_blank">Submit resource</a>
           <a className="footer-link block mt-[12px] text-[var(--ca-text-muted)] hover:text-[var(--ca-secondary)] text-[13px]" href="https://github.com/rambulls/control-atlas/issues/new?template=report-broken-link.yml" rel="noopener noreferrer" target="_blank">Report a problem</a>
-          <a className="footer-link block mt-[12px] text-[var(--ca-text-muted)] hover:text-[var(--ca-secondary)] text-[13px]" href="https://buymeacoffee.com/ram.bulls" rel="noopener noreferrer" target="_blank">Support Control Atlas</a>
+          {props.suppressSupportAsk ? null : (
+            <a className="footer-link block mt-[12px] text-[var(--ca-text-muted)] hover:text-[var(--ca-secondary)] text-[13px]" href="https://buymeacoffee.com/ram.bulls" rel="noopener noreferrer" target="_blank">Support Control Atlas</a>
+          )}
         </div>
       </div>
       <div className="site-footer-release max-w-[1280px] mx-auto border-t border-[var(--ca-border)] pt-[24px] flex flex-wrap gap-x-[24px] gap-y-[8px]">
@@ -61,6 +69,7 @@ export function SiteFooter(props: {
         <p className="text-[var(--ca-text-subtle)] text-[12px]">Product release {PRODUCT_RELEASE_DATE}.</p>
         <p className="text-[var(--ca-text-subtle)] text-[12px]">Source data built {SOURCE_DATA_DATE}.</p>
         <AppLink className="footer-link text-[var(--ca-text-subtle)] hover:text-[var(--ca-secondary)] text-[12px]" onNavigate={props.onNavigate} view="sources">Source attribution</AppLink>
+        <a className="footer-link text-[var(--ca-text-subtle)] hover:text-[var(--ca-secondary)] text-[12px]" href="https://rambulls.pages.dev/" rel="noopener noreferrer">A RAM.BULLS project</a>
       </div>
     </footer>
   );

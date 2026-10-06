@@ -4,6 +4,29 @@ import test from 'node:test';
 import { classifyChangedPaths } from '../tools/classify-change-scope.mjs';
 import { createVerificationPlan } from '../tools/verify-affected.mjs';
 
+test('refresh safety maps affected contracts without a build and rejects unknown modules', () => {
+  const paths = ['scripts/lib/source-baseline.mjs'];
+  const plan = createVerificationPlan(paths, classifyChangedPaths(paths));
+  assert.equal(plan.blocked, false);
+  assert.deepEqual(plan.steps.map((step) => step.id), ['refresh-safety-lint', 'refresh-safety-contracts']);
+  assert.deepEqual(plan.steps[1].command, ['node', '--test', 'tests/source-baseline.test.mjs', 'tests/refresh-candidate-gate.test.mjs', 'tests/mitre-release-admission.test.mjs', 'tests/source-health-harness.test.mjs']);
+  assert.equal(plan.steps[1].workers, 4);
+  assert.ok(plan.totalBudgetSeconds <= 40);
+  const unknown = [...paths, 'scripts/lib/new-unmapped-refresh.mjs'];
+  assert.equal(createVerificationPlan(unknown, classifyChangedPaths(unknown)).blocked, true);
+});
+
+test('refresh probe and cache changes use offline fixtures and unknown inputs fail closed', () => {
+  const paths = ['scripts/check-commons-health.mjs', 'tools/generated-data-cache-key.mjs'];
+  const plan = createVerificationPlan(paths, classifyChangedPaths(paths));
+  assert.equal(plan.blocked, false);
+  assert.deepEqual(plan.steps.map((step) => step.id), ['refresh-runtime-contracts']);
+  assert.equal(plan.totalExpectedTests, 12);
+  assert.equal(plan.steps[0].workers, 2);
+  const unknown = [...paths, 'scripts/unknown-refresh-operation.mjs'];
+  assert.equal(createVerificationPlan(unknown, classifyChangedPaths(unknown)).blocked, true);
+});
+
 test('automation-only changes stay on the automation contract path', () => {
   const paths = [
     '.gitignore',
@@ -32,6 +55,8 @@ test('trust and workbench changes select bounded route families and the incremen
     'source-truth-contract',
     'source-trust-browser',
     'source-identity-compatibility-browser',
+    // A public surface changed, so the rendered copy is checked too.
+    'public-copy-browser',
   ]);
   assert.equal(plan.steps.find((step) => step.id === 'source-trust-browser').expectedTests, 21);
   assert.equal(plan.steps.find((step) => step.id === 'source-trust-browser').workers, 2);
@@ -71,6 +96,7 @@ test('trust and workbench changes select bounded route families and the incremen
   assert.deepEqual(comparePlan.steps.map((step) => step.id), [
     'typecheck',
     'incremental-site-build',
+    'public-copy-browser',
     'compare-workbench-browser',
   ]);
     assert.equal(comparePlan.steps.at(-1).expectedTests, 4);
@@ -78,11 +104,11 @@ test('trust and workbench changes select bounded route families and the incremen
     assert.equal(comparePlan.steps.at(-1).budgetSeconds, 45);
 
   const boundedPlan = createVerificationPlan([
-    'src/ui/pages/AtlasMapPage.tsx',
+    'src/ui/pages/AtlasTerritoryPage.tsx',
     'src/ui/pages/ExplorePage.tsx',
     'src/ui/pages/CommonsPage.tsx',
   ], classifyChangedPaths([
-    'src/ui/pages/AtlasMapPage.tsx',
+    'src/ui/pages/AtlasTerritoryPage.tsx',
     'src/ui/pages/ExplorePage.tsx',
     'src/ui/pages/CommonsPage.tsx',
   ]));
@@ -133,6 +159,18 @@ test('unmapped runtime and data changes fail before an expensive fallback', () =
     assert.equal(plan.blocked, true, paths[0]);
     assert.ok(plan.reasons.length > 0, paths[0]);
   }
+});
+
+test('public shell metadata and static assets use the focused browser contract', () => {
+  const paths = ['src/index.html', 'src/public/robots.txt', 'src/public/og-image.png'];
+  const plan = createVerificationPlan(paths, classifyChangedPaths(paths));
+  assert.equal(plan.blocked, false);
+  assert.ok(plan.steps.some((step) => step.id === 'incremental-site-build'));
+  const shell = plan.steps.find((step) => step.id === 'public-shell-contract');
+  assert.ok(shell);
+  assert.deepEqual(shell.command, ['node', '--test', 'tests/browser-contract.test.mjs']);
+  assert.equal(shell.expectedTests, 28);
+  assert.equal(shell.workers, 1);
 });
 
 test('known STIG observation changes use the source-specific refresh contract', () => {

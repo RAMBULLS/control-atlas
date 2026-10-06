@@ -50,12 +50,39 @@ function mappingTargetIds(value, kind) {
     .replace(/^([A-Z]{2})-([A-Z]{2}(?:-\d+)?)/, '$1.$2')))];
 }
 
-function relationDetails(value) {
+/** Parse only the publisher's leading relationship clause, never prose or IDs.
+ * NIST SP 1800-35 uses supportive concept mappings (IR 8477), including
+ * "Supported by" without "Is", and explicit compound relationships.
+ * Unrecognized shorthand stays unresolved instead of defaulting to Supports.
+ */
+export function relationDetails(value) {
   const prefix = text(value).split(':', 1)[0];
+  const clauses = [];
+  let rest = prefix;
+  const clause = /^(supports|(?:is\s+)?supported\s+by|equivalent)\b\s*(?:\(([^)]+)\))?/i;
+  while (true) {
+    const match = clause.exec(rest);
+    if (!match) break;
+    const relationshipType = /^supports$/i.test(match[1]) ? 'supports'
+      : /supported/i.test(match[1]) ? 'supported_by' : 'equivalent';
+    const property = text(match[2]).toLowerCase();
+    const strength = /^integral(?: to)?$/.test(property) ? 'integral'
+      : /^example(?: of)?$/.test(property) ? 'example'
+        : property === 'precedes' ? 'precedes' : 'unspecified';
+    clauses.push({ relationship_type: relationshipType, property: property || null, strength });
+    rest = rest.slice(match[0].length).trimStart();
+    if (!/^and\s+(?:supports|(?:is\s+)?supported\s+by|equivalent)\b/i.test(rest)) break;
+    rest = rest.replace(/^and\s+/i, '');
+  }
   return {
     raw_relationship_type: prefix,
-    direction: /^is supported by/i.test(prefix) ? 'component_supported_by_target' : 'component_supports_target',
-    strength: /integral/i.test(prefix) ? 'integral' : /example/i.test(prefix) ? 'example' : 'unspecified',
+    direction: clauses.length > 1 ? 'compound'
+      : clauses[0]?.relationship_type === 'supported_by' ? 'component_supported_by_target'
+        : clauses[0]?.relationship_type === 'supports' ? 'component_supports_target'
+          : clauses[0]?.relationship_type === 'equivalent' ? 'equivalent' : 'unresolved',
+    strength: clauses.length === 1 ? clauses[0].strength : 'unspecified',
+    relationship_clauses: clauses,
+    relationship_parse_status: clauses.length ? 'explicit' : 'unresolved',
   };
 }
 

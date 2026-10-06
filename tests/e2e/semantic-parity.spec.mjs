@@ -19,8 +19,11 @@ test("record identity and displayed authority trace stay canonical", async ({ pa
     .toHaveAttribute("data-canonical-breadcrumb", /Compliance.*SP 800-53.*Access Control.*AC-2/);
   const sidebar = page.locator(".record-template-sidebar");
   await expect(sidebar).toHaveAttribute("data-displayed-trace", /.+>.+/);
-  await expect(sidebar.getByText("Compliance", { exact: true })).toBeVisible();
-  await expect(sidebar.getByText("Access Control", { exact: true })).toBeVisible();
+  // The accepted record page shows the path as its breadcrumb; the rail keeps the trace as data only.
+  const breadcrumb = page.locator("[data-canonical-breadcrumb]");
+  await expect(breadcrumb).toBeVisible();
+  await expect(breadcrumb).toContainText("Compliance");
+  await expect(breadcrumb).toContainText("Access Control");
 });
 
 test("record connections retain distinct published assertions and citations", async ({ page }) => {

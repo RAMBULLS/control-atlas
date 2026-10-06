@@ -12,7 +12,6 @@ const ROUTE_GROUPS = [
     label: "entry and guidance",
     routes: [
       "/#/",
-      "/#/start",
       "/#/search?q=AC-2",
       "/#/explore",
       "/#/explore?node=nist-800-53%3AAC-2&relationshipView=path",

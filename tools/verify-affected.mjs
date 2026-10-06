@@ -5,8 +5,10 @@ import process from 'node:process';
 import { pathToFileURL } from 'node:url';
 
 import { classifyNameStatus } from './classify-change-scope.mjs';
+import { reviewSelection } from './ui-review-routes.mjs';
 
 const AUTOMATION_TESTS = new Set([
+  'tests/recover-refresh-pr.test.mjs',
   'tests/build-layout-contract.test.mjs',
   'tests/change-scope.test.mjs',
   'tests/experience-guardian.test.mjs',
@@ -17,6 +19,35 @@ const AUTOMATION_TESTS = new Set([
   'tests/verify-affected.test.mjs',
   'tests/vale-extraction.test.mjs',
   'tests/wait-for-checks.test.mjs',
+]);
+
+const RECORD_ACCEPTANCE_PATHS = new Set([
+  'src/shared/record-acceptance.mjs',
+  'src/shared/record-control-context.mjs',
+  'src/shared/record-fact-labels.mjs',
+  'src/shared/record-presentation.mjs',
+  'src/shared/microsoft-zt-category-labels.mjs',
+  'src/ui/lib/sourcePresentation.ts',
+  'scripts/build-framework-data.mjs',
+  'tests/graph/recordActionPolicy.test.ts',
+  'tests/record-acceptance.test.mjs',
+  'tests/record-control-context.test.mjs',
+  'tests/microsoft-zt-category-labels.test.mjs',
+  'tools/record-acceptance-matrix.mjs',
+]);
+
+// Files that change what a record page renders. Their behavior is proven in a
+// browser, not only by contract tests.
+const RECORD_PAGE_PATHS = new Set([
+  'src/ui/pages/ObjectDetailPage.tsx',
+  'src/ui/components/RecordPublishedText.tsx',
+  'src/ui/lib/recordTitle.ts',
+  'src/ui/App.tsx',
+  'src/shared/record-acceptance.mjs',
+  'src/shared/record-control-context.mjs',
+  'src/shared/microsoft-zt-category-labels.mjs',
+  'src/ui/lib/sourcePresentation.ts',
+  'tests/e2e/record-acceptance-actions.spec.mjs',
 ]);
 
 const SOURCE_REFRESH_PATHS = new Set([
@@ -44,6 +75,7 @@ const SOURCE_REFRESH_PATHS = new Set([
   'tools/relationship-builders/800-171-mapping-adapter.mjs',
   'tools/relationship-builders/olir-adapter.mjs',
   'tools/relationship-builders/olir-retrieval.mjs',
+  'tools/relationship-builders/olir-html.mjs',
 ]);
 
 function addStep(steps, step) {
@@ -52,6 +84,102 @@ function addStep(steps, step) {
 
 export function createVerificationPlan(paths, changeMap) {
   const steps = [];
+  const pipelinePaths = new Set([
+    'tools/collect-production-lighthouse.mjs', 'tools/lighthouse-metrics.mjs',
+    'tools/summarize-lighthouse.mjs', 'tools/report-refresh-alerts.mjs',
+    'tools/relationship-builders/olir-html.mjs', 'tools/relationship-builders/olir-retrieval.mjs',
+    'scripts/fetch-olir-catalog.mjs', 'tests/pipeline-reliability.test.mjs',
+    'tests/olir-retrieval.test.mjs', 'tests/refresh-alerts.test.mjs',
+  ]);
+  if (paths.length && paths.every((path) => pipelinePaths.has(path))) {
+    return {
+      blocked: false, reasons: [], paths, changeMap,
+      steps: [
+        { id: 'pipeline-lint', command: ['npm', 'run', 'lint:pipeline-reliability'], expectedTests: 0, workers: 1, budgetSeconds: 10 },
+        { id: 'pipeline-source-lint', command: ['npm', 'run', 'lint:source-refresh'], expectedTests: 0, workers: 1, budgetSeconds: 10 },
+        { id: 'pipeline-contracts', command: ['node', '--test', 'tests/pipeline-reliability.test.mjs', 'tests/olir-retrieval.test.mjs', 'tests/refresh-alerts.test.mjs'], expectedTests: 25, workers: 3, budgetSeconds: 40 },
+      ], totalExpectedTests: 25, totalBudgetSeconds: 60,
+    };
+  }
+  const refreshSafetyPaths = new Set([
+    'scripts/lib/catalog-refresh-profiles.mjs', 'scripts/lib/publisher-inventory.mjs', 'scripts/lib/cci-inventory.mjs',
+    'scripts/lib/refresh-candidate-gate.mjs', 'scripts/lib/refresh-source-outputs.mjs',
+    'scripts/lib/source-baseline.mjs', 'scripts/lib/source-transaction.mjs', 'scripts/lib/source-url-policy.mjs',
+    'data/source-baselines.json', 'data/source-refresh-policy.json',
+    'data/schemas/source-baselines.schema.json', 'data/schemas/source-refresh-policy.schema.json',
+    'tools/automerge-source-refresh.mjs', 'tools/report-refresh-alerts.mjs', 'tools/verify-refresh-admission.mjs',
+    'scripts/lib/retry-policy.mjs', 'scripts/lib/source-change-evidence.mjs', 'scripts/lib/pulse.mjs', 'scripts/lib/product-history.mjs',
+    'tools/classify-refresh-outcome.mjs', 'tools/report-sweep-alert.mjs', 'tools/sweep-due.mjs',
+    'tests/helpers/publisher-volume.mjs',
+    ...['automerge-source-refresh', 'catalog-source-inventory', 'catalog-baseline-fetch', 'cci-inventory',
+      'publisher-inventory', 'publisher-inventory-integration', 'publisher-volume', 'refresh-alerts',
+      'refresh-candidate-gate', 'refresh-isolation', 'source-baseline', 'source-freshness-ownership',
+      'source-partial-failure', 'source-transaction', 'source-unit-selection', 'source-url-policy',
+      'mitre-release-admission', 'source-health-harness', 'retry-policy', 'sweep-alert', 'refresh-outcome',
+      'source-change-evidence', 'pulse', 'sweep-due'].map((name) => `tests/${name}.test.mjs`),
+  ]);
+  if (paths.length && paths.every((path) => refreshSafetyPaths.has(path))) {
+    const suites = new Set();
+    const byModule = {
+      'publisher-inventory': ['publisher-inventory', 'publisher-inventory-integration'],
+      'cci-inventory': ['cci-inventory'],
+      'catalog-refresh-profiles': ['refresh-candidate-gate', 'catalog-source-inventory', 'pulse'],
+      'refresh-candidate-gate': ['refresh-candidate-gate', 'source-health-harness'],
+      'retry-policy': ['retry-policy', 'source-transaction', 'source-health-harness'],
+      'source-change-evidence': ['source-change-evidence', 'refresh-candidate-gate', 'source-health-harness', 'pulse'],
+      pulse: ['pulse', 'source-health-harness'],
+      'product-history': ['pulse'],
+      'classify-refresh-outcome': ['refresh-outcome'],
+      'report-sweep-alert': ['sweep-alert'],
+      'sweep-due': ['sweep-due'],
+      'refresh-source-outputs': ['refresh-isolation', 'source-unit-selection'],
+      'source-baseline': ['source-baseline', 'refresh-candidate-gate', 'mitre-release-admission', 'source-health-harness'],
+      'source-transaction': ['source-transaction'],
+      'source-url-policy': ['source-url-policy', 'strict-conditional-fetch'],
+      'automerge-source-refresh': ['automerge-source-refresh'],
+      'report-refresh-alerts': ['refresh-alerts'],
+      'verify-refresh-admission': ['refresh-candidate-gate', 'automerge-source-refresh'],
+      'publisher-volume': ['publisher-volume'],
+    };
+    for (const path of paths) {
+      if (path.endsWith('.test.mjs')) suites.add(path);
+      else if (path.startsWith('data/')) {
+        for (const name of ['source-baseline', 'refresh-candidate-gate', 'catalog-source-inventory']) suites.add(`tests/${name}.test.mjs`);
+      } else {
+        const name = path.split('/').at(-1).replace('.mjs', '');
+        for (const suite of byModule[name] || []) suites.add(`tests/${suite}.test.mjs`);
+      }
+    }
+    if (!suites.size) return { blocked: true, reasons: ['Missing refresh safety test mapping'], paths, changeMap, steps: [], totalExpectedTests: 0, totalBudgetSeconds: 0 };
+    const expectedTests = suites.size * 7;
+    return {
+      blocked: false, reasons: [], paths, changeMap,
+      steps: [
+        { id: 'refresh-safety-lint', command: ['npm', 'run', 'lint:refresh-safety'], expectedTests: 0, workers: 1, budgetSeconds: 10 },
+        { id: 'refresh-safety-contracts', command: ['node', '--test', ...suites], expectedTests, workers: suites.size, budgetSeconds: 30 },
+      ],
+      totalExpectedTests: expectedTests, totalBudgetSeconds: 40,
+    };
+  }
+  const refreshRuntimePaths = new Set([
+    'scripts/check-commons-health.mjs',
+    'tools/generated-data-cache-key.mjs',
+    'tests/generated-data-cache.test.mjs',
+    'tests/resource-ecosystem-contract.test.mjs',
+  ]);
+  // These input/probe contracts have deterministic fixtures and need neither
+  // publisher requests nor a regenerated site to exercise their behavior.
+  if (paths.length > 0 && paths.every((path) => refreshRuntimePaths.has(path))) {
+    return {
+      blocked: false, reasons: [], paths, changeMap,
+      steps: [{
+        id: 'refresh-runtime-contracts',
+        command: ['node', '--test', 'tests/generated-data-cache.test.mjs', 'tests/resource-ecosystem-contract.test.mjs'],
+        expectedTests: 12, workers: 2, budgetSeconds: 10,
+      }],
+      totalExpectedTests: 12, totalBudgetSeconds: 10,
+    };
+  }
   const e2ePaths = paths.filter((path) => path.startsWith('tests/e2e/') && path.endsWith('.mjs'));
   const nodeTests = paths.filter((path) =>
     path.startsWith('tests/') && path.endsWith('.test.mjs') &&
@@ -71,6 +199,10 @@ export function createVerificationPlan(paths, changeMap) {
     path === 'src/shared/source-text-presentation.mjs' ||
     path.includes('source-truth') ||
     path === 'tests/e2e/source-trust-surfaces.spec.mjs');
+  // Any change that can move a public layout or rewrite a visible string
+  // re-runs the product-level guardrails. This is the same question the CI
+  // ui-review gate asks, answered by the same module so the two cannot drift.
+  const publicUiChanged = reviewSelection(paths).material;
   const compareWorkbenchChanged = paths.some((path) =>
     path === 'src/ui/pages/ComparePage.tsx' ||
     path === 'src/ui/lib/comparePagination.ts' ||
@@ -79,7 +211,7 @@ export function createVerificationPlan(paths, changeMap) {
     path === 'tests/e2e/compare-pagination.spec.mjs' ||
     path === 'tests/e2e/compare-cross-route-corruption.spec.mjs');
   const boundedWorkbenchesChanged = paths.some((path) =>
-    path === 'src/ui/pages/AtlasMapPage.tsx' ||
+    path === 'src/ui/pages/AtlasTerritoryPage.tsx' ||
     path === 'src/ui/pages/ExplorePage.tsx' ||
     path === 'src/ui/pages/CommonsPage.tsx' ||
     path === 'src/ui/components/LibraryAtlasMap.tsx' ||
@@ -96,6 +228,13 @@ export function createVerificationPlan(paths, changeMap) {
     path === 'src/ui/pages/PlaybooksPage.tsx' ||
     path === 'src/ui/pages/TemplatesPage.tsx' ||
     path === 'tests/e2e/phase4-content-coherence.spec.mjs');
+  const publicShellChanged = paths.some((path) =>
+    path === 'src/index.html' ||
+    path === 'src/public/404.html' ||
+    path === 'src/public/apple-touch-icon.png' ||
+    path === 'src/public/og-image.png' ||
+    path === 'src/public/robots.txt' ||
+    path === 'src/public/sitemap.xml');
   const stigObservationChanged = paths.some((path) =>
     path === 'scripts/fetch-stig-source-observations.mjs' ||
     path === 'tests/stig-source-observer.test.mjs');
@@ -111,8 +250,11 @@ export function createVerificationPlan(paths, changeMap) {
     path === 'scripts/lib/url-classification.mjs' ||
     path === 'tests/commons-operator-ecosystem.test.mjs');
   const phase4DataChanged = paths.some((path) => path === 'data/template-registry.json');
-  const mappedData = stigObservationChanged || incrementalDataChanged || sourceRefreshChanged || operatorEcosystemChanged || phase4DataChanged;
-  const mappedRuntime = changeMap.dependenciesChanged || sourceTrustChanged || compareWorkbenchChanged || boundedWorkbenchesChanged || phase4SurfacesChanged || mappedData || eolPolicyChanged || e2ePaths.length > 0;
+  // The record acceptance gate (issue #279): registry, labels, dispositions and
+  // the generator. Deterministic contract tests need no publisher requests.
+  const recordAcceptanceChanged = paths.some((path) => RECORD_ACCEPTANCE_PATHS.has(path));
+  const mappedData = stigObservationChanged || incrementalDataChanged || sourceRefreshChanged || operatorEcosystemChanged || phase4DataChanged || recordAcceptanceChanged;
+  const mappedRuntime = changeMap.dependenciesChanged || sourceTrustChanged || compareWorkbenchChanged || boundedWorkbenchesChanged || phase4SurfacesChanged || publicShellChanged || mappedData || eolPolicyChanged || e2ePaths.length > 0;
 
   if (changeMap.evidenceOnly) {
     addStep(steps, {
@@ -125,6 +267,9 @@ export function createVerificationPlan(paths, changeMap) {
   }
 
   if (changeMap.automationChanged) {
+    if (paths.includes('tools/recover-refresh-pr.mjs') || paths.includes('tests/recover-refresh-pr.test.mjs')) {
+      addStep(steps, { id: 'refresh-recovery-contracts', command: ['node', '--test', 'tests/recover-refresh-pr.test.mjs'], expectedTests: 2, workers: 1, budgetSeconds: 5 });
+    }
     addStep(steps, {
       id: 'automation-lint', command: ['npm', 'run', 'lint:automation'],
       expectedTests: 0, workers: 1, budgetSeconds: 5,
@@ -293,6 +438,17 @@ export function createVerificationPlan(paths, changeMap) {
       expectedTests: 3, workers: 2, budgetSeconds: 30,
     });
   }
+  if (publicUiChanged) {
+    // The rendered-copy check is the cheap half and catches the class of
+    // failure we actually shipped, so it belongs in the inner loop. The full
+    // layout sweep walks every route at six widths and costs minutes; it runs
+    // in the CI browser gate via test:e2e:smoke, not on every local edit.
+    addStep(steps, {
+      id: 'public-copy-browser',
+      command: ['npm', 'run', 'test:e2e:run', '--', 'tests/e2e/public-copy.spec.mjs'],
+      expectedTests: 23, workers: 2, budgetSeconds: 60,
+    });
+  }
   if (compareWorkbenchChanged) {
     addStep(steps, {
       id: 'compare-workbench-browser',
@@ -317,6 +473,26 @@ export function createVerificationPlan(paths, changeMap) {
       expectedTests: 4, workers: 2, budgetSeconds: 45,
     });
   }
+  if (recordAcceptanceChanged) {
+    addStep(steps, {
+      id: 'record-acceptance-contracts', command: ['npm', 'run', 'test:record-presentation'],
+      expectedTests: 24, workers: 2, budgetSeconds: 30,
+    });
+  }
+  if (paths.includes('scripts/build-framework-data.mjs')) {
+    addStep(steps, {
+      id: 'search-document-contracts',
+      command: ['node', '--test', 'tests/framework-data.test.mjs', 'tests/library-search-index.test.mjs'],
+      expectedTests: 20, workers: 2, budgetSeconds: 60,
+    });
+  }
+  if (paths.some((path) => RECORD_PAGE_PATHS.has(path))) {
+    addStep(steps, {
+      id: 'record-page-browser',
+      command: ['npm', 'run', 'test:e2e:run', '--', 'tests/e2e/record-acceptance-actions.spec.mjs'],
+      expectedTests: 6, workers: 2, budgetSeconds: 30,
+    });
+  }
   if (phase4SurfacesChanged) {
     addStep(steps, {
       id: 'phase4-surface-browser',
@@ -329,6 +505,15 @@ export function createVerificationPlan(paths, changeMap) {
       expectedTests: 7,
       workers: 2,
       budgetSeconds: 60,
+    });
+  }
+  if (publicShellChanged && !nodeTests.includes('tests/browser-contract.test.mjs')) {
+    addStep(steps, {
+      id: 'public-shell-contract',
+      command: ['node', '--test', 'tests/browser-contract.test.mjs'],
+      expectedTests: 28,
+      workers: 1,
+      budgetSeconds: 10,
     });
   }
   if (!sourceTrustChanged && !compareWorkbenchChanged && !boundedWorkbenchesChanged && !phase4SurfacesChanged && e2ePaths.length > 0) {

@@ -16,6 +16,7 @@ import {
   OfflineFallbackActions,
 } from "./components/LoadStatusPanel";
 import {
+  CompareSkeleton,
   DetailConnectionsSkeleton,
   LibrarySkeleton,
 } from "./components/LibrarySkeleton";
@@ -88,10 +89,8 @@ const AboutPage = lazyRoute(() =>
     default: module.AboutPage,
   })),
 );
-const AtlasMapPage = lazyRoute(() =>
-  import("./pages/AtlasMapPage").then((module) => ({
-    default: module.AtlasMapPage,
-  })),
+const AtlasTerritoryPage = lazyRoute(() =>
+  import("./pages/AtlasTerritoryPage").then((module) => ({ default: module.AtlasTerritoryPage })),
 );
 const ComparePage = lazyRoute(() =>
   import("./pages/ComparePage").then((module) => ({
@@ -121,11 +120,6 @@ const PlaybooksPage = lazyRoute(() =>
 const SourcesPage = lazyRoute(() =>
   import("./pages/SourcesPage").then((module) => ({
     default: module.SourcesPage,
-  })),
-);
-const StartHerePage = lazyRoute(() =>
-  import("./pages/StartHerePage").then((module) => ({
-    default: module.StartHerePage,
   })),
 );
 const TemplatesPage = lazyRoute(() =>
@@ -197,17 +191,13 @@ function readHashLocation() {
 function routeTransitionScope(state: ViewState): string {
   switch (state.view) {
     case "atlas-map":
+      // Territory zoom updates the existing map. Keep its controls active and
+      // focused; record, publication and research changes still orient the workspace.
       return [
         state.view,
         state.node,
-        state.atlasAxis,
-        state.atlasLimb,
         state.atlasFramework,
-        state.atlasBenchmark,
-        state.atlasBaseline,
-        state.atlasFamily,
-        state.atlasRmfStep,
-        state.atlasStage,
+        state.atlasResearch,
       ].join(":");
     case "catalog-detail":
       return `${state.view}:${state.catalog}`;
@@ -269,8 +259,16 @@ export function App() {
   const [glossaryFocusTermId, setGlossaryFocusTermId] = useState("");
   const [searchOverlayOpen, setSearchOverlayOpen] = useState(false);
   const [graphRequested, setGraphRequested] = useState(false);
+  const [searchRequested, setSearchRequested] = useState(false);
   const [routeRecovery, setRouteRecovery] = useState("");
   const [chromeReady, setChromeReady] = useState(false);
+
+  // The territory sheet asks for record search only when the reader reaches for the search box.
+  useEffect(() => {
+    const request = () => setSearchRequested(true);
+    window.addEventListener("control-atlas:request-search-index", request);
+    return () => window.removeEventListener("control-atlas:request-search-index", request);
+  }, []);
 
   const closeOverlays = useCallback(() => {
     window.dispatchEvent(new Event(CLOSE_OVERLAYS_EVENT));
@@ -325,7 +323,7 @@ export function App() {
     viewState.view === "library-detail"
       ? `${viewState.view}:${viewState.node}`
       : viewState.view === "atlas-map"
-        ? `${viewState.view}:${viewState.atlasAxis || "landing"}:${viewState.atlasFramework || "none"}:${viewState.atlasBenchmark || "none"}`
+        ? `${viewState.view}:territory:${viewState.node || "none"}:${viewState.atlasResearch ? "research" : ""}:${viewState.atlasFramework || "none"}`
       : viewState.view === "catalog-detail"
         ? `${viewState.view}:${viewState.catalog}:${viewState.family || "all"}`
       : viewState.view === "matrix"
@@ -371,6 +369,7 @@ export function App() {
           state: runtimeState,
           graphRequested,
           searchOverlayOpen,
+          librarySearchRequested: searchRequested,
           signal: loadController.signal,
           onSearchReady: (result) => {
             if (!cancelled) {
@@ -447,6 +446,7 @@ export function App() {
     loadAttempt,
     runtimeScopeKey,
     searchOverlayOpen,
+    searchRequested,
   ]);
 
   function retryLoad() {
@@ -599,6 +599,7 @@ export function App() {
     nextView: ViewState["view"],
     patch: Partial<ViewState> = {},
     reset = false,
+    replace = false,
   ) {
     closeOverlays();
     const current = latestNavStateRef.current;
@@ -618,7 +619,7 @@ export function App() {
     }
     if (changesWorkspace) pushNavigationRef.current = true;
     latestNavStateRef.current = nextState;
-    routerNavigate(nextLocation);
+    routerNavigate(nextLocation, replace ? { replace: true } : undefined);
     if (changesWorkspace) scrollToTop();
   }
 
@@ -656,45 +657,40 @@ export function App() {
   }
 
   const canRenderWithoutBundle = isStaticViewWithoutBundle(viewState.view);
-  const hasRequiredRouteArtifacts =
-    viewState.view !== "atlas-map" || Boolean(bundle?.atlasSpine);
-  const hasRequiredSearchArtifacts =
-    viewState.view !== "atlas-map" || Boolean(bundle?.librarySearchReady);
   const readyState = loadError
     ? "error"
     : canRenderWithoutBundle && viewState.view !== "search"
       ? "true"
-    : bundle?.routeReady && hasRequiredRouteArtifacts && hasRequiredSearchArtifacts &&
+    : bundle?.routeReady &&
         (!requiresFullGraph(viewState) || bundle.graphReady)
       ? "true"
       : bundle
         ? "partial"
         : "false";
   const showWorkspaceContent =
-    (Boolean(bundle) && hasRequiredRouteArtifacts) ||
+    Boolean(bundle) ||
     canRenderWithoutBundle ||
     viewState.view === "search";
   const routeContext = orbitalRouteContext(viewState, routeEntityName);
 
   useEffect(() => {
+    if (!pushNavigationRef.current) restoreScrollPosition();
     let completionFrame = 0;
     const frame = window.requestAnimationFrame(() => {
-      completionFrame = window.requestAnimationFrame(completeRouteTransition);
+      completionFrame = window.requestAnimationFrame(() => {
+        completeRouteTransition();
+        // The workspace is inert during the transition. Focus only after it
+        // becomes interactive again, or the heading focus is discarded.
+        if (pushNavigationRef.current) {
+          pushNavigationRef.current = false;
+          focusRouteHeading();
+        }
+      });
     });
     return () => {
       window.cancelAnimationFrame(frame);
       window.cancelAnimationFrame(completionFrame);
     };
-  }, [viewState]);
-
-  useEffect(() => {
-    if (!pushNavigationRef.current) {
-      restoreScrollPosition();
-      return;
-    }
-    pushNavigationRef.current = false;
-    const frame = focusRouteHeading();
-    return () => window.cancelAnimationFrame(frame);
   }, [viewState]);
 
   return (
@@ -714,7 +710,7 @@ export function App() {
         onOpenSearch={openSearchOverlay}
         viewState={viewState}
       /> : null}
-      {chromeReady ? <OrbitalContextBar entityName={routeEntityName} onNavigate={navigate} state={viewState} /> : null}
+      {chromeReady ? <OrbitalContextBar entityName={viewState.view === "atlas-map" ? "" : routeEntityName} onNavigate={navigate} state={viewState} /> : null}
 
       <main id="workspace" tabIndex={-1}>
         {routeRecovery ? (
@@ -768,7 +764,22 @@ export function App() {
         </section>
       </main>
 
-      {chromeReady ? <SiteFooter onNavigate={navigate} /> : null}
+      {chromeReady ? (
+        <SiteFooter
+          onNavigate={navigate}
+          suppressSupportAsk={
+            viewState.view === "not-found"
+            || viewState.view === "retired"
+            // A record id that resolves to nothing renders the not-found view
+            // inside the library-detail route, so gating on the route alone
+            // left the donation ask on the failed lookup - the one place the
+            // review named it as poorly timed.
+            || (viewState.view === "library-detail"
+              && Boolean(bundle)
+              && !bundle?.runtime.getNode(viewState.node))
+          }
+        />
+      ) : null}
 
       {searchOverlayOpen ? (
         <RouteErrorBoundary onNavigate={navigate} resetKey={`search:${runtimeScopeKey}:${loadAttempt}`}>
@@ -870,6 +881,9 @@ function AppContent(props: {
     if (state.view === "library-detail") {
       return <DetailConnectionsSkeleton />;
     }
+    if (state.view === "matrix") {
+      return <CompareSkeleton />;
+    }
     return (
       <DataPendingNotice
         description={loadingCopy.description}
@@ -899,7 +913,7 @@ function AppContent(props: {
           <details>
             <summary>Try another path</summary>
             <div className="card-actions disclosure-actions">
-              <AppLink onNavigate={onNavigate} variant="secondary" view="start-here">Start here</AppLink>
+              <AppLink onNavigate={onNavigate} variant="secondary" view="atlas-map">Explore Atlas topics</AppLink>
               <AppLink onNavigate={onNavigate} variant="secondary" view="search">Search records</AppLink>
             </div>
           </details>
@@ -914,14 +928,7 @@ function AppContent(props: {
         <DataPendingNotice onRetry={onRetryLoad} slow={loadSlow} title="Loading the Atlas" />
       );
     }
-    return (
-      <AtlasMapPage
-        bundle={bundle}
-        onNavigate={onNavigate}
-        onOpenNode={onOpenNode}
-        state={state}
-      />
-    );
+    return <AtlasTerritoryPage bundle={bundle} onNavigate={onNavigate} onOpenNode={onOpenNode} state={state} />;
   }
 
   if (state.view === "library-detail") {
@@ -962,6 +969,7 @@ function AppContent(props: {
         bundle={bundle}
         onNavigate={onNavigate}
         onOpenNode={onOpenNode}
+        onRetry={onRetryLoad}
         state={state}
       />
     );
@@ -1010,9 +1018,8 @@ function AppContent(props: {
   }
 
   if (state.view === "start-here") {
-    return (
-      <StartHerePage bundle={bundle} onNavigate={onNavigate} state={state} />
-    );
+    // The route effect replaces old /start URLs before this transient state paints.
+    return null;
   }
 
   if (state.view === "about") {
@@ -1031,8 +1038,8 @@ function AppContent(props: {
           <AppLink onNavigate={onNavigate} patch={{ query: state.query }} variant="primary" view="search">
             Search records
           </AppLink>
-          <AppLink onNavigate={onNavigate} variant="secondary" view="start-here">
-            Start guided path
+          <AppLink onNavigate={onNavigate} variant="secondary" view="atlas-map">
+            Explore Atlas topics
           </AppLink>
         </div>
       </section>

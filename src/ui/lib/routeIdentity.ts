@@ -6,6 +6,9 @@ import {
   isValidBuildSourceContext,
 } from "./buildRouteState";
 import { TAXONOMY_TAG_BY_ID } from "../../shared/taxonomy-contract.mjs";
+import { normalizeJourneyId } from "./atlasJourneyIds";
+import { GUIDE_REDIRECTS } from "./guideRedirects";
+import { startHereDestinationFor } from "../../app/start-here-compatibility.mjs";
 
 export type RouteIdentity = {
   path: string;
@@ -39,7 +42,7 @@ const ROUTE_IDENTITIES: Record<AppView, RouteIdentity> = {
 
 const SELECTED_NAV_BY_VIEW: Record<AppView, AppView | null> = {
   home: null,
-  "start-here": "start-here",
+  "start-here": "atlas-map",
   "atlas-map": "atlas-map",
   // Search results are a state of Library, not a separate destination, so the
   // Library tab stays selected while a query is open.
@@ -62,7 +65,7 @@ const SELECTED_NAV_BY_VIEW: Record<AppView, AppView | null> = {
 
 const RECOVERY_VIEW_BY_VIEW: Record<AppView, AppView> = {
   home: "home",
-  "start-here": "start-here",
+  "start-here": "atlas-map",
   "atlas-map": "atlas-map",
   search: "search",
   "catalog-detail": "catalog-detail",
@@ -80,7 +83,6 @@ const RECOVERY_VIEW_BY_VIEW: Record<AppView, AppView> = {
 
 export const CANONICAL_DESTINATION_VIEWS = Object.freeze([
   "home",
-  "start-here",
   "search",
   "atlas-map",
   "catalog-detail",
@@ -119,12 +121,52 @@ export type CanonicalRoute = {
 };
 
 const ATLAS_PARAMS = new Set([
-  "node", "atlasAxis", "atlasLimb", "atlasFramework", "atlasBenchmark", "atlasBaseline", "atlasFamily",
-  "atlasRmfStep", "atlasParent", "relationshipView", "relationshipType", "provenance",
-  "confidence", "type", "nodeType", "includeCandidates", "relationshipSearch",
-  "atlasStage", "relationshipGroup", "sourceView", "showSupportingReferences",
-  "showDraftOrLegacy", "showRegistryOnly",
+  "node", "atlasLimb", "atlasFramework", "atlasJourney",
+  "atlasResearch", "atlasPins", "atlasFrom", "atlasTo", "atlasDirection", "atlasHops",
+  "atlasLayer", "atlasContext", "atlasDataset", "relationshipView", "relationshipType",
 ]);
+/**
+ * Scope parameters from the retired classic Atlas. Old and shared links still open: each is
+ * translated into the territory state that answers the same question, or dropped when it only
+ * described how the old board was drawn.
+ */
+const RETIRED_ATLAS_PARAMS = [
+  "atlasAxis", "atlasParent", "atlasBenchmark", "atlasBaseline", "atlasFamily", "atlasRmfStep", "atlasPivotTrail",
+  "atlasLanding", "atlasLensFamily", "atlasStage", "relationshipGroup", "sourceView", "provenance", "confidence",
+  "type", "nodeType", "includeCandidates", "relationshipSearch", "showSupportingReferences", "showDraftOrLegacy", "showRegistryOnly",
+] as const;
+const RMF_STEP = /^(?:nist-800-37:)?(RMF-[A-Z]+)$/i;
+
+function translateLegacyAtlas(path: string, params: URLSearchParams): string {
+  const segment = path.match(/^\/atlas\/([^/]+)$/);
+  let node = segment ? decodeURIComponent(segment[1]) : params.get("node") || "";
+  const take = (key: string) => { const value = params.get(key) || ""; params.delete(key); return value; };
+  const benchmark = take("atlasBenchmark");
+  const baseline = take("atlasBaseline");
+  const family = take("atlasFamily");
+  const rmfStep = take("atlasRmfStep");
+  if (!node && benchmark.includes(":")) node = benchmark;
+  if (!node && baseline.includes(":")) node = baseline;
+  const group = family.match(/^group:([^:]+):/);
+  if (group && !params.get("atlasFramework")) params.set("atlasFramework", group[1]);
+  else if (!group && !node && family.includes(":")) node = family;
+  // The RMF step list and the RMF lens both answered "I'm working the RMF".
+  if (params.get("sourceView") === "rmf" || params.get("relationshipView") === "rmf") {
+    if (!params.get("atlasJourney")) params.set("atlasJourney", "rmf");
+  }
+  if (rmfStep) {
+    if (!params.get("atlasJourney")) params.set("atlasJourney", "rmf");
+    const step = rmfStep.match(RMF_STEP);
+    if (step && !node) node = `nist-800-37:${step[1].toUpperCase()}`;
+  }
+  for (const key of RETIRED_ATLAS_PARAMS) params.delete(key);
+  const view = params.get("relationshipView") || "";
+  if (node && (view === "list" || view === "table")) params.set("relationshipView", "list");
+  else { params.delete("relationshipView"); params.delete("relationshipType"); }
+  params.delete("node");
+  return node ? `/atlas/${routeSegment(node)}` : "/atlas";
+}
+
 const SEARCH_PARAMS = new Set(["q", "filter", "publisher", "kind", "connectedOnly", "sort", "view", "area", "tag"]);
 const CATALOG_PARAMS = new Set(["q", "family", "browseAll", "type", "area", "publisher", "lifecycle", "page"]);
 const DETAIL_PARAMS = new Set<string>();
@@ -141,7 +183,7 @@ const OBSOLETE_COMPARE_PARAMS = [
 const LEARN_PARAMS = new Set(["pattern"]);
 const BUILD_PARAMS = new Set(["templateType", "framework", "format", "environment", "baseline", "controlFamily", "category", "q"]);
 const SOURCE_PARAMS = new Set(["layer", "q", "source", "publisher", "provenance", "eligibility", "lifecycle", "access"]);
-const SOURCE_LAYERS = new Set(["publication", "connection", "ingestion", "organization"]);
+const SOURCE_LAYERS = new Set(["publication", "policy", "connection", "ingestion", "organization"]);
 const RESOURCE_PARAMS = new Set(["q", "resourceType", "collection", "owner", "sort", "showAll", "viewMode"]);
 const RETIRED_PARAMS = new Set(["q"]);
 
@@ -156,15 +198,15 @@ function permittedParams(params: URLSearchParams, permitted: Set<string>): { par
   const tags = new Set<string>();
   let discarded = false;
   for (const [key, value] of params) {
-    if (!permitted.has(key) || value.length > 240) {
+    if (!permitted.has(key) || value.length > (key === "atlasPins" ? 1800 : 240)) {
       discarded = true;
       continue;
     }
-    if (key === "relationshipView" && !["path", "map", "list", "purpose", "rmf"].includes(value)) {
+    if (key === "atlasJourney" && !normalizeJourneyId(value)) {
       discarded = true;
       continue;
     }
-    if (key === "sourceView" && !["purpose", "rmf"].includes(value)) {
+    if (key === "relationshipView" && value !== "list") {
       discarded = true;
       continue;
     }
@@ -182,7 +224,7 @@ function permittedParams(params: URLSearchParams, permitted: Set<string>): { par
       discarded = true;
       continue;
     }
-    if (key === "intent" && !["frameworks", "item-mapping"].includes(value)) {
+    if (key === "intent" && !["frameworks", "implementation", "item-mapping"].includes(value)) {
       discarded = true;
       continue;
     }
@@ -258,6 +300,29 @@ export function canonicalizeHashLocation(input: string): CanonicalRoute {
   let discarded = false;
   let recoveredRetiredCompare = false;
 
+  // Preserve old questionnaire bookmarks at the product area that now owns the
+  // task. A goal or context never becomes a publication recommendation here.
+  if (path === "/start") {
+    const canonicalPath = startHereDestinationFor(params.get("goal") || "", params.get("context") || "");
+    return { canonicalPath, requiresReplace: true, recoveryMessage: "" };
+  }
+
+  // Keep bookmarked guide URLs useful after their jobs moved to existing pages.
+  if (path === "/guides") {
+    const guideId = params.get("pattern") || "";
+    const destination = Object.hasOwn(GUIDE_REDIRECTS, guideId)
+      ? GUIDE_REDIRECTS[guideId as keyof typeof GUIDE_REDIRECTS]
+      : undefined;
+    if (destination) {
+      const canonicalPath = destination.path;
+      return {
+        canonicalPath,
+        requiresReplace: canonicalPath !== input.replace(/^#/, ""),
+        recoveryMessage: "",
+      };
+    }
+  }
+
   if (path === "/catalog") {
     path = "/library";
   } else if (/^\/catalog\/[^/]+$/.test(path)) {
@@ -298,14 +363,10 @@ export function canonicalizeHashLocation(input: string): CanonicalRoute {
   }
 
   // Public links keep identity in the path, not an encoded query value. The
-  // old query shape remains a supported input and is rewritten on arrival.
-  if (path === "/atlas" && params.get("node")) {
-    path = `/atlas/${routeSegment(params.get("node") || "")}`;
-    params.delete("node");
-  }
-  const atlasPath = path.match(/^\/atlas\/([^/]+)$/);
-  if (atlasPath) {
-    path = `/atlas/${routeSegment(decodeURIComponent(atlasPath[1]))}`;
+  // old query shape, and every scope the classic Atlas used, remains a
+  // supported input and is rewritten on arrival.
+  if (path === "/atlas" || /^\/atlas\/[^/]+$/.test(path)) {
+    path = translateLegacyAtlas(path, params);
   }
 
   if (path === "/compare") {

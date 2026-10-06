@@ -250,15 +250,13 @@ Control Atlas connects the work a practitioner needs to do with the authoritativ
 1. Security Plan Starter
 2. Control Implementation Statement Worksheet
 3. Evidence Expectation Matrix
-4. STIG Evidence Checklist
-5. Inheritance Worksheet
-6. Reciprocity Checklist
-7. POA&M Starter
-8. Assessment Planning Worksheet
-9. Continuous Monitoring Calendar
-10. Hardware Baseline
-11. Software Baseline
-12. PPSM Preparation Worksheet
+4. Inheritance Worksheet
+5. Reciprocity Checklist
+6. POA&M Working Register
+7. Assessment Planning Worksheet
+8. Continuous Monitoring Calendar
+9. Hardware Baseline
+10. Software Baseline
 
 **Output formats:** Word and Excel as supported by each artifact. Every starter document is visible in an in-browser preview before download.
 
@@ -454,9 +452,9 @@ control_atlas_template:
   template_id: string
   name: string
   display_name: string
-  artifact_type: security_plan_starter | implementation_statement_worksheet | evidence_expectation_matrix | stig_evidence_checklist | inheritance_worksheet | reciprocity_checklist | poam_starter | assessment_planning_worksheet | conmon_calendar | hardware_baseline | software_baseline | ppsm_preparation_worksheet
+  artifact_type: security_plan_starter | implementation_statement_worksheet | evidence_expectation_matrix | inheritance_worksheet | reciprocity_checklist | poam_starter | assessment_planning_worksheet | conmon_calendar | hardware_baseline | software_baseline
   supported_formats: [xlsx | docx]
-  input_options: [framework | baseline | control_family | selected_controls | selected_stigs | environment_archetype]
+  input_options: [framework | baseline | control_family | selected_controls | environment_archetype]
   source_refs: [source_id]
   official_resource_ids: [official_artifact_id]
   compatibility:
@@ -568,7 +566,7 @@ The complete canonical values and semantic provenance/status mappings live in `s
 | Layer | Decision | Rationale |
 |---|---|---|
 | Base | Vite + React + TypeScript static app | Keeps full app control while preserving static public-data deployment |
-| Atlas | React Flow + ELK for bounded area/publication overview; semantic DOM Adaptive Explorer below publication level | Preserves a useful spatial overview while respecting every publisher's native containment and mobile navigation |
+| Atlas | Semantic DOM throughout: one area map at every depth — fixed-width columns of cells whose height is what they hold, absolutely positioned buttons rather than SVG shapes, sized to the viewport with a detail panel beside it | One way of seeing from the landing to a record, every cell focusable and readable by a screen reader, area only ever encoding a quantity whose units are the same across the cells being compared, and every count named in its publisher's own word rather than in "records" |
 | Other relationship diagrams | React Flow + ELK.js, lazy | Retained for existing bounded detail and Compare surfaces pending separate review |
 | Search | MiniSearch | Field-weighted, static-bundle-friendly, handles mixed ID/keyword queries |
 | Validation | Zod (runtime) + JSON Schema export | TypeScript-native with schema portability |
@@ -775,12 +773,10 @@ Complete before any new feature work.
 **Story 4.4 — POA&M Starter**
 **Story 4.5 — Inheritance Worksheet**
 **Story 4.6 — Reciprocity Checklist**
-**Story 4.7 — STIG Evidence Checklist**
 **Story 4.8 — Assessment Planning Worksheet**
 **Story 4.9 — Continuous Monitoring Calendar**
 **Story 4.10 — Hardware Baseline**
 **Story 4.11 — Software Baseline**
-**Story 4.12 — PPSM Preparation Worksheet**
 **Story 4.13 — Official artifact, workflow, and tool catalogs**
 - Official resources precede Control Atlas companions
 - Every compatibility claim carries an evidence level and limitation
@@ -864,7 +860,7 @@ The MVP is done when:
 5. Library is searchable by ID, title, and official description from any page.
 6. STIG → CCI → NIST trace is reachable in three clicks.
 7. Baseline comparator works for NIST and FedRAMP baselines.
-8. Template Factory generates all twelve artifact companions with plain-language field prompts and links each family to authoritative resources.
+8. Template Factory generates all ten artifact companions with plain-language field prompts and links each family to authoritative resources.
 9. Generated templates include disclaimer and source metadata. Nothing leaves the browser.
 10. Glossary covers all minimum terms with plain-language definitions.
 11. Provenance registry is live. Every mapping traces to a source or is labeled inferred.

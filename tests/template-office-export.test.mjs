@@ -7,7 +7,7 @@ import { strFromU8, unzipSync } from 'fflate';
 import readXlsxFile from 'read-excel-file/node';
 import { buildTemplateDocument } from '../src/app/template-engine.mjs';
 import { docToDocx, docToXlsx, officeDocumentToSheets, renderOfficeDocument } from '../src/app/office-export.mjs';
-import { PRODUCT_DISCLAIMER } from '../src/shared/disclaimer.mjs';
+import { GENERATED_FILE_NOTICE } from '../src/shared/disclaimer.mjs';
 
 const dataset = {
   nodes: [
@@ -49,7 +49,6 @@ function isZip(bytes) {
 const spreadsheetTemplateTypes = [
   'implementation_statement_worksheet',
   'evidence_expectation_matrix',
-  'stig_evidence_checklist',
   'inheritance_worksheet',
   'reciprocity_checklist',
   'poam_starter',
@@ -57,7 +56,6 @@ const spreadsheetTemplateTypes = [
   'conmon_calendar',
   'hardware_baseline',
   'software_baseline',
-  'ppsm_preparation_worksheet',
 ];
 
 test('every spreadsheet template has one authoritative sheet per logical table and blank working cells', () => {
@@ -85,7 +83,7 @@ test('every spreadsheet template has one authoritative sheet per logical table a
         assert.equal(row.length, sheet.headers.length, `${templateType}/${sheet.name}: row width`);
         for (const cell of row) {
           assert.doesNotMatch(
-            String(cell),
+            String(cell?.formula ?? cell),
             /^\[[\s\S]*\]$/,
             `${templateType}/${sheet.name}: placeholders belong in the field guide, not working rows`,
           );
@@ -119,8 +117,8 @@ test('xlsx export is a valid zip with instructions, one authoritative register, 
     .map((n) => strFromU8(entries[n]))
     .join('\n');
   assert.ok(
-    allSheets.includes(PRODUCT_DISCLAIMER),
-    'shared disclaimer must be present in the workbook',
+    allSheets.includes(GENERATED_FILE_NOTICE),
+    'the one short notice must be present in the workbook',
   );
   assert.match(allSheets, /inlineStr/, 'cells should be written as inline strings');
 });
@@ -150,8 +148,8 @@ test('docx export is a valid zip with a document body, a table, and the disclaim
   assert.match(document, /<w:tbl>/, 'SSP docx must contain a table');
   assert.match(document, /Account Management|AC-2/, 'control content must be present');
   assert.ok(
-    document.includes(PRODUCT_DISCLAIMER),
-    'shared disclaimer must be present',
+    document.includes(GENERATED_FILE_NOTICE),
+    'the one short notice must be present',
   );
   assert.match(document, /<w:sectPr>/, 'body must end with section properties');
 });
@@ -209,16 +207,17 @@ test('xlsx working registers set bounded widths, freeze row and key column, and 
   // Frozen top row.
   assert.match(
     sheet1,
-    /<pane xSplit="1" ySplit="1" topLeftCell="B2" activePane="bottomRight" state="frozen"\/>/,
-    'header row and identity column must be frozen',
+    /<pane xSplit="2" ySplit="1" topLeftCell="C2" activePane="bottomRight" state="frozen"\/>/,
+    'header row and the ID and status columns must be frozen',
   );
 
   // Header cells reference the bold + wrapped cellXf (s="1").
-  assert.match(sheet1, /<c r="A1" s="1" t="inlineStr">/, 'header cells must use the header style');
-  assert.match(sheet1, /<c r="A2" s="4" t="inlineStr">/, 'blank user-entry cells must use the input style');
-  assert.doesNotMatch(sheet1, /\[Stable external tracking ID\]/, 'instructional placeholders must not masquerade as entered records');
-  const fieldGuide = strFromU8(entries['xl/worksheets/sheet3.xml']);
-  assert.match(fieldGuide, /\[Stable external tracking ID\]/, 'placeholder guidance must remain available once in the field guide');
+  assert.match(sheet1, /<c r="A1" s="[0-9]+" t="inlineStr">/, 'header cells must use a header style');
+  assert.match(sheet1, /<c r="A2" s="5"\/>/, 'blank required cells are empty cells with the required-entry style');
+  assert.doesNotMatch(sheet1, /\[Scanner severity\]/, 'instructional placeholders must not masquerade as entered records');
+  const fieldGuide = strFromU8(entries['xl/worksheets/sheet4.xml']);
+  assert.match(fieldGuide, /\[Scanner severity\]/, "placeholder guidance must remain available once in the field guide");
+  assert.match(fieldGuide, /Your stable tracking ID/, "a column help text replaces its placeholder in the field guide");
 
   // Styles part wired through content types and workbook rels.
   const styles = strFromU8(entries['xl/styles.xml']);
@@ -229,7 +228,7 @@ test('xlsx working registers set bounded widths, freeze row and key column, and 
   assert.match(sheet1, /<showGridLines val="0"\/>/, 'explicit workbook styling should replace default gridlines');
   assert.match(sheet1, /<autoFilter ref=/, 'tracker sheets must expose header filters');
   assert.match(sheet1, /<dataValidations count=/, 'controlled tracker fields must expose dropdown validation');
-  assert.match(sheet1, /Controlled value/, 'POA&M controlled fields must explain their dropdown');
+  assert.match(sheet1, /Use one of the values in the dropdown/, 'POA&M controlled fields must explain a rejected value');
   assert.match(styles, /17365D/, 'header style must use the restrained navy palette');
   assert.match(sheet1, /<pageSetUpPr fitToPage="1"\/>/, 'print scaling must explicitly enable fit-to-page');
   assert.match(sheet1, /<pageSetup paperSize="1" orientation="landscape" fitToWidth="1" fitToHeight="0"\/>/, 'worksheets must print one landscape Letter page wide');
@@ -246,17 +245,17 @@ test('wide XLSX registers stay on one source-of-truth sheet', () => {
   const sheetNames = [...workbook.matchAll(/<sheet name="([^"]+)"/g)].map((match) => match[1]);
   assert.deepEqual(
     sheetNames,
-    ['Read Me', 'POA&amp;M Working Register', 'Field Guide'],
-    'POA&M must not duplicate records across synchronized slice sheets',
+    ['Read Me', 'POA&amp;M Working Register', 'Milestones', 'Field Guide'],
+    'POA&M keeps one register plus one milestones sheet, with no duplicated slices',
   );
   const register = strFromU8(entries['xl/worksheets/sheet2.xml']);
   const firstRow = register.match(/<row r="1".*?<\/row>/)?.[0] || '';
   assert.equal(
     [...firstRow.matchAll(/<c r="([A-Z]+)1"/g)].length,
-    27,
-    'all 27 POA&M fields must remain in the canonical working register',
+    30,
+    'all 30 POA&M fields must remain in the canonical working register',
   );
-  assert.match(register, /<c r="AA1" s="1"/, 'the final POA&M field must remain present');
+  assert.match(register, /<c r="AD1" s="\d+"/, 'the final POA&M field must remain present');
 });
 
 test('docx tables declare a fixed-width grid and a repeating header row', () => {

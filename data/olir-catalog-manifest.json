@@ -1,14 +1,250 @@
 {
-  "generated_at": "2026-08-09T01:19:49.800Z",
+  "generated_at": "2026-09-23T12:46:42.843Z",
   "source": "https://csrc.nist.gov/projects/olir/informative-reference-catalog",
   "api_endpoint": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog",
-  "total_entries": 101,
-  "final_count": 88,
-  "applicable_final_count": 48,
-  "ingested_count": 26,
-  "quarantined_count": 75,
-  "unresolved_count": 22,
+  "total_entries": 102,
+  "final_count": 92,
+  "applicable_final_count": 51,
+  "ingested_count": 41,
+  "quarantined_count": 61,
+  "unresolved_count": 10,
+  "retained_count": 1,
   "processed_items": [
+    {
+      "id": 232,
+      "framework_version_identifier": "NIST-SP800-53r5.2-to-NERC-CIP-OLIR-Mapping",
+      "name": "NERC Critical Infrastructure Protection (CIP) Reliability Standards.",
+      "focal_document": "Security and Privacy Controls for Information Systems and Organizations",
+      "resolved_catalog_id": "nist-800-53",
+      "reference_document_version": "SP 800-53 Rev 5.2.0",
+      "version": "1.0.0",
+      "status": "Final",
+      "authority_description": "Owner",
+      "submission_category": "Private Sector",
+      "developer": "NIST; North American Electric Reliability Corporation, Security Working Group",
+      "posted_date": "2026-09-08",
+      "reference_date": "2026-09-08",
+      "submission_artifact_url": "https://www.nerc.com/standards/reliability-standards/cip",
+      "authority_tier": 1,
+      "authority_tier_label": "NIST owner-authority Final",
+      "mapping_model": "Concept Crosswalk",
+      "ingested": true,
+      "availability": "structured_artifact",
+      "map_file": "maps/olir/232.json",
+      "artifact_id": null,
+      "artifact": {
+        "map_file": "maps/olir/232.json",
+        "artifact_url": "https://www.nerc.com/globalassets/who-we-are/standing-committees/rstc/swg/nist-sp800-53r5.2-to-nerc-cip-olir-mapping.xlsx",
+        "checksum": "sha256:c73b9736a139b5f833a1930a01987ee23d0068b7d4dffc20ebba22a65fe82323",
+        "byte_length": 3012257,
+        "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
+        "relationship_count": 1185,
+        "relationship_semantics": [
+          "Concept Crosswalk"
+        ]
+      },
+      "quarantine_reason": null,
+      "retrieval_attempts": [
+        {
+          "kind": "NIST catalog detail endpoint",
+          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/232",
+          "status": 200,
+          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/232",
+          "json_file_url": null,
+          "publisher_sha256": null,
+          "submission_url": "https://www.nerc.com/globalassets/who-we-are/standing-committees/rstc/swg/nist-sp800-53r5.2-to-nerc-cip-olir-mapping.xlsx",
+          "reference_url": "https://www.nerc.com/standards/reliability-standards/cip",
+          "mapping_summary": "<p>The purpose of this OLIR is to provide the relationship between NIST SP800-53 r5.2.0 and the NERC Critical Infrastructure Protection (CIP) Standards.</p>",
+          "mapping_comment": "<p>Once you access NERC's US Reliability Standards - CIP web page, select one of two links entitled, All Standards or Subject to Enforcement</p>\n<p>All Standards</p>\n<p>Subject to Enforcement</p>"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://www.nerc.com/globalassets/who-we-are/standing-committees/rstc/swg/nist-sp800-53r5.2-to-nerc-cip-olir-mapping.xlsx",
+          "status": 200,
+          "final_url": "https://www.nerc.com/globalassets/who-we-are/standing-committees/rstc/swg/nist-sp800-53r5.2-to-nerc-cip-olir-mapping.xlsx",
+          "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "byte_length": 3012257
+        }
+      ]
+    },
+    {
+      "id": 234,
+      "framework_version_identifier": "NICE-Framework-DCWF-v1.0.0",
+      "name": "Department of Defense Cyber Workforce Framework",
+      "focal_document": "Workforce Framework for Cybersecurity (NICE Framework) (NIST SP 800-181 Rev 1)",
+      "resolved_catalog_id": null,
+      "reference_document_version": "NICE Components v2.2.0",
+      "version": "1.0.0",
+      "status": "Final",
+      "authority_description": "Non-Owner",
+      "submission_category": "Public Sector",
+      "developer": "NICE Program Office (NIST)",
+      "posted_date": "2026-09-08",
+      "reference_date": "2026-09-08",
+      "submission_artifact_url": "https://www.cyber.mil/dod-workforce-innovation-directorate/dod-cyber-workforce-framework",
+      "authority_tier": 3,
+      "authority_tier_label": "Other government Final",
+      "mapping_model": null,
+      "ingested": false,
+      "availability": "outside_catalog_scope",
+      "map_file": null,
+      "artifact_id": null,
+      "artifact": null,
+      "quarantine_reason": "focal document \"Workforce Framework for Cybersecurity (NICE Framework) (NIST SP 800-181 Rev 1)\" is not a Control Atlas catalog (current-publication scope only)",
+      "retrieval_attempts": []
+    },
+    {
+      "id": 230,
+      "framework_version_identifier": "GuardianSDK-to-800-53-r5.2.0 ",
+      "name": "Ethicore Engine™ — Guardian SDK",
+      "focal_document": "Security and Privacy Controls for Information Systems and Organizations",
+      "resolved_catalog_id": "nist-800-53",
+      "reference_document_version": "SP 800-53 Rev 5.2.0",
+      "version": "1.0.0",
+      "status": "Final",
+      "authority_description": "Owner",
+      "submission_category": "Private Sector",
+      "developer": "Oracles Technologies LLC",
+      "posted_date": "2026-09-03",
+      "reference_date": "2026-09-03",
+      "submission_artifact_url": "https://github.com/OraclesTech/guardian-sdk",
+      "authority_tier": 4,
+      "authority_tier_label": "Validated third-party Final",
+      "mapping_model": "intersects with",
+      "ingested": true,
+      "availability": "structured_artifact",
+      "map_file": "maps/olir/230.json",
+      "artifact_id": null,
+      "artifact": {
+        "map_file": "maps/olir/230.json",
+        "artifact_url": "https://raw.githubusercontent.com/OraclesTech/guardian-sdk/main/docs/compliance/olir/SP%20800-53/GuardianSDK_800-53r5.2.0_OLIR_Submission.xlsx",
+        "checksum": "sha256:8cf5588ff068a6d942f7a5621ea7485bc4ed9189a81a5f2a865287f50682f899",
+        "byte_length": 154777,
+        "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
+        "relationship_count": 40,
+        "relationship_semantics": [
+          "intersects with"
+        ]
+      },
+      "quarantine_reason": null,
+      "retrieval_attempts": [
+        {
+          "kind": "NIST catalog detail endpoint",
+          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/230",
+          "status": 200,
+          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/230",
+          "json_file_url": null,
+          "publisher_sha256": null,
+          "submission_url": "https://github.com/OraclesTech/guardian-sdk/tree/main/docs/compliance/olir/SP%20800-53",
+          "reference_url": "https://github.com/OraclesTech/guardian-sdk",
+          "mapping_summary": "<p>Guardian SDK is a production-grade, real-time threat detection library for Python LLM and agentic applications. It operates as an eight-intercept pipeline &mdash; four pre-flight layers (Pattern, Semantic, Behavioral, ML), two post-flight layers (OutputAnalyzer, AdversarialLearner), and two agentic pipeline gates (ToolCallValidator, ToolOutputScanner) &mdash; detecting and blocking prompt injection, jailbreaks, role hijacking, system-prompt exfiltration, RAG/indirect injection, agentic tool hijacking, and multimodal threats (image-embedded payloads, cross-modal attacks, and video payload injection) introduced in v2.1.0. All inference runs on-device via ONNX Runtime with no input data leaving the deployment. This OLIR maps Guardian SDK's capabilities to NIST SP 800-53 Release 5.2.0.</p>",
+          "mapping_comment": "<p>Mapping covers Guardian SDK v2.7.0 against NIST SP 800-53 Release 5.2.0 (Set Theory). 40 relationship rows across SI, AU, AC, SC, SR, SA, RA, CM, IR, and CA. Reference elements GS-CF-04..07 (supply-chain integrity/SBOM, self-integrity verification, rate limiting/quota, and adversarial benchmark/red-team) extend the element catalog used in the CSF 2.0 and AI RMF submissions. Guardian is positioned as a software component operating within the customer authorization boundary; controls are related where Guardian implements the AI-layer portion. Inherited/customer-responsible controls (identity, boundary, crypto modules, contingency, physical, audit retention) are deliberately not claimed.</p>"
+        },
+        {
+          "kind": "GitHub Contents API",
+          "url": "https://github.com/OraclesTech/guardian-sdk/tree/main/docs/compliance/olir/SP%20800-53",
+          "status": 200,
+          "resolved_urls": [
+            "https://raw.githubusercontent.com/OraclesTech/guardian-sdk/main/docs/compliance/olir/SP%20800-53/GuardianSDK_800-53r5.2.0_OLIR_Submission.xlsx"
+          ]
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://raw.githubusercontent.com/OraclesTech/guardian-sdk/main/docs/compliance/olir/SP%20800-53/GuardianSDK_800-53r5.2.0_OLIR_Submission.xlsx",
+          "status": 200,
+          "final_url": "https://raw.githubusercontent.com/OraclesTech/guardian-sdk/main/docs/compliance/olir/SP%20800-53/GuardianSDK_800-53r5.2.0_OLIR_Submission.xlsx",
+          "content_type": "application/octet-stream",
+          "byte_length": 154777
+        }
+      ]
+    },
+    {
+      "id": 236,
+      "framework_version_identifier": "Evidence Continuity-AI-RMF-1.0",
+      "name": "Evidence Continuity for AI Governance: Normative Concept Specification",
+      "focal_document": "Artificial Intelligence Risk Management Framework (AI RMF 1.0)",
+      "resolved_catalog_id": "nist-ai-rmf",
+      "reference_document_version": "AI RMF 1.0",
+      "version": "1.0.0",
+      "status": "Draft",
+      "authority_description": "Owner",
+      "submission_category": "Private Sector",
+      "developer": "Yarion",
+      "posted_date": "2026-08-27",
+      "reference_date": "2026-08-27",
+      "submission_artifact_url": "https://drive.google.com/drive/folders/11qgNa4EavIN5YFh0gfTl9D-4VJISBe-p?usp=sharing",
+      "authority_tier": 5,
+      "authority_tier_label": "Draft",
+      "mapping_model": null,
+      "ingested": false,
+      "availability": "not_final",
+      "map_file": null,
+      "artifact_id": null,
+      "artifact": null,
+      "quarantine_reason": "OLIR status is \"Draft\", not Final — held out of the published graph pending NIST finalization",
+      "retrieval_attempts": []
+    },
+    {
+      "id": 229,
+      "framework_version_identifier": "AISVS-v1.0-to-SP-800-53-R5.2.0",
+      "name": "Artificial Intelligence Security Verification Standard (AISVS)",
+      "focal_document": "Security and Privacy Controls for Information Systems and Organizations",
+      "resolved_catalog_id": "nist-800-53",
+      "reference_document_version": "SP 800-53 Rev 5.2.0",
+      "version": "1.0.0",
+      "status": "Final",
+      "authority_description": "Non-Owner",
+      "submission_category": "Private Sector",
+      "developer": "Keystone Digital Holdings LLC",
+      "posted_date": "2026-08-14",
+      "reference_date": "2026-08-14",
+      "submission_artifact_url": "https://github.com/OWASP/AISVS/tree/main/1.0/en",
+      "authority_tier": 7,
+      "authority_tier_label": "Community candidate Final",
+      "mapping_model": "Set Theory: Subset, intersects with",
+      "ingested": true,
+      "availability": "structured_artifact",
+      "map_file": "maps/olir/229.json",
+      "artifact_id": null,
+      "artifact": {
+        "map_file": "maps/olir/229.json",
+        "artifact_url": "https://olir.keystonedigitalholdingsgroup.com/aisvs-v1.0-to-sp800-53r5.xlsx",
+        "checksum": "sha256:72164b0ad2c71428710324fea7e71f6888727b38a73e911542ddf1aff11b51db",
+        "byte_length": 165173,
+        "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
+        "relationship_count": 77,
+        "relationship_semantics": [
+          "Set Theory: Subset",
+          "intersects with"
+        ]
+      },
+      "quarantine_reason": null,
+      "retrieval_attempts": [
+        {
+          "kind": "NIST catalog detail endpoint",
+          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/229",
+          "status": 200,
+          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/229",
+          "json_file_url": null,
+          "publisher_sha256": null,
+          "submission_url": "https://olir.keystonedigitalholdingsgroup.com/aisvs-v1.0-to-sp800-53r5.xlsx",
+          "reference_url": "https://github.com/OWASP/AISVS/tree/main/1.0/en",
+          "mapping_summary": "<p>A Set Theory Relationship Mapping of OWASP Artificial Intelligence Security Verification Standard (AISVS) Version 1.0 requirements to NIST SP 800-53 Rev. 5 (Release 5.2.0) security controls and control enhancements. The mapping focuses on AISVS requirements with clean, defensible relationships to 800-53, concentrated in access control and identity (C5), orchestration and agentic security (C9), MCP security (C10), model lifecycle integrity (C3), supply chain (C6), and monitoring/logging (C12).</p>",
+          "mapping_comment": "<p>Reference Document is OWASP AISVS 1.0, published 06/24/2026 at OWASP Global AppSec Vienna; the 1.0 release folder is locked. Requirement identifiers use the canonical C{chapter}.{section}.{requirement} form (AISVS 1.0 has 12 requirement chapters, C1-C12). Mapping authored against SP 800-53 Rev. 5 Release 5.2.0 control text (control/enhancement titles common to 5.1.1). Set Theory Relationship Mapping per NIST IR 8278A Rev. 1 Section 3.2; Comprehensive = No because many 800-53 controls are unmapped and several relationships are \"intersects with.\" AISVS is explicitly not a governance framework and positions itself as the technical control layer complementary to NIST frameworks, so this is an informative control-to-control reference, not an equivalence claim.</p>"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://olir.keystonedigitalholdingsgroup.com/aisvs-v1.0-to-sp800-53r5.xlsx",
+          "status": 200,
+          "final_url": "https://olir.keystonedigitalholdingsgroup.com/aisvs-v1.0-to-sp800-53r5.xlsx",
+          "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "byte_length": 165173
+        }
+      ]
+    },
     {
       "id": 225,
       "framework_version_identifier": "IPACS-AI-to-AI-RMF-1.0",
@@ -26,8 +262,9 @@
       "submission_artifact_url": "https://github.com/greerfam2020-rgb/IPAC-AI-Framework-Review/blob/main/IPACS_AI_NIST_Submission_Final-1.pdf",
       "authority_tier": 4,
       "authority_tier_label": "Validated third-party Final",
-      "mapping_model": "10, 2, 5, 8",
+      "mapping_model": "Concept Crosswalk",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/225.json",
       "artifact_id": null,
       "artifact": {
@@ -36,12 +273,10 @@
         "checksum": "sha256:cfc6f33534b26e5e6ccc89481500a92eb79e708132f671a5ac50d85aa6c21da6",
         "byte_length": 33225,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 153,
         "relationship_semantics": [
-          "10",
-          "2",
-          "5",
-          "8"
+          "Concept Crosswalk"
         ]
       },
       "quarantine_reason": null,
@@ -93,12 +328,24 @@
       "submission_artifact_url": "https://drive.google.com/drive/folders/1uqUpwlj7NeP-TDSPR2sHaVXHOQlabCCG?usp=sharing",
       "authority_tier": 4,
       "authority_tier_label": "Validated third-party Final",
-      "mapping_model": null,
-      "ingested": false,
-      "map_file": null,
+      "mapping_model": "Supportive",
+      "ingested": true,
+      "availability": "structured_artifact",
+      "map_file": "maps/olir/227.json",
       "artifact_id": null,
-      "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200",
+      "artifact": {
+        "map_file": "maps/olir/227.json",
+        "artifact_url": "https://drive.usercontent.google.com/download?id=1a-3xmglxWm0LVW08_DT7S4778Ono_tl7&export=download",
+        "checksum": "sha256:236fd8deeb3be09755ff0fa2f7aee47dce12d639ce8de75dd9782a2558e2b49b",
+        "byte_length": 27755,
+        "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
+        "relationship_count": 68,
+        "relationship_semantics": [
+          "Supportive"
+        ]
+      },
+      "quarantine_reason": null,
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -118,109 +365,17 @@
           "status": 200,
           "final_url": "https://drive.google.com/drive/folders/1uqUpwlj7NeP-TDSPR2sHaVXHOQlabCCG?usp=sharing",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 308361
+          "byte_length": 315595
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://drive.google.com/uc?export=download&id=1a-3xmglxWm0LVW08_DT7S4778Ono_tl7",
+          "status": 200,
+          "final_url": "https://drive.usercontent.google.com/download?id=1a-3xmglxWm0LVW08_DT7S4778Ono_tl7&export=download",
+          "content_type": "application/octet-stream",
+          "byte_length": 27755
         }
       ]
-    },
-    {
-      "id": 232,
-      "framework_version_identifier": "NIST-SP800-53r5.2-to-NERC-CIP-OLIR-Mapping",
-      "name": "NERC Critical Infrastructure Protection (CIP) Reliability Standards.",
-      "focal_document": "Security and Privacy Controls for Information Systems and Organizations",
-      "resolved_catalog_id": "nist-800-53",
-      "reference_document_version": "SP 800-53 Rev 5.2.0",
-      "version": "1.0.0",
-      "status": "Draft",
-      "authority_description": "Owner",
-      "submission_category": "Private Sector",
-      "developer": "NIST; North American Electric Reliability Corporation, Security Working Group",
-      "posted_date": "2026-08-05",
-      "reference_date": "2026-08-05",
-      "submission_artifact_url": "https://www.nerc.com/standards/reliability-standards/cip",
-      "authority_tier": 5,
-      "authority_tier_label": "Draft",
-      "mapping_model": null,
-      "ingested": false,
-      "map_file": null,
-      "artifact_id": null,
-      "artifact": null,
-      "quarantine_reason": "OLIR status is \"Draft\", not Final — held out of the published graph pending NIST finalization",
-      "retrieval_attempts": []
-    },
-    {
-      "id": 234,
-      "framework_version_identifier": "NICE-Framework-DCWF-v1.0.0",
-      "name": "Department of Defense Cyber Workforce Framework",
-      "focal_document": "Workforce Framework for Cybersecurity (NICE Framework) (NIST SP 800-181 Rev 1)",
-      "resolved_catalog_id": null,
-      "reference_document_version": "NICE Components v2.2.0",
-      "version": "1.0.0",
-      "status": "Draft",
-      "authority_description": "Non-Owner",
-      "submission_category": "Public Sector",
-      "developer": "NICE Program Office (NIST)",
-      "posted_date": "2026-08-05",
-      "reference_date": "2026-08-05",
-      "submission_artifact_url": "https://www.cyber.mil/dod-workforce-innovation-directorate/dod-cyber-workforce-framework",
-      "authority_tier": 5,
-      "authority_tier_label": "Draft",
-      "mapping_model": null,
-      "ingested": false,
-      "map_file": null,
-      "artifact_id": null,
-      "artifact": null,
-      "quarantine_reason": "focal document \"Workforce Framework for Cybersecurity (NICE Framework) (NIST SP 800-181 Rev 1)\" is not a Control Atlas catalog (current-publication scope only)",
-      "retrieval_attempts": []
-    },
-    {
-      "id": 230,
-      "framework_version_identifier": "GuardianSDK-to-800-53-r5.2.0 ",
-      "name": "Ethicore Engine™ — Guardian SDK",
-      "focal_document": "Security and Privacy Controls for Information Systems and Organizations",
-      "resolved_catalog_id": "nist-800-53",
-      "reference_document_version": "SP 800-53 Rev 5.2.0",
-      "version": "1.0.0",
-      "status": "Draft",
-      "authority_description": "Owner",
-      "submission_category": "Private Sector",
-      "developer": "Oracles Technologies LLC",
-      "posted_date": "2026-08-03",
-      "reference_date": "2026-08-03",
-      "submission_artifact_url": "https://github.com/OraclesTech/guardian-sdk",
-      "authority_tier": 5,
-      "authority_tier_label": "Draft",
-      "mapping_model": null,
-      "ingested": false,
-      "map_file": null,
-      "artifact_id": null,
-      "artifact": null,
-      "quarantine_reason": "OLIR status is \"Draft\", not Final — held out of the published graph pending NIST finalization",
-      "retrieval_attempts": []
-    },
-    {
-      "id": 229,
-      "framework_version_identifier": "AISVS-v1.0-to-SP-800-53-R5.2.0",
-      "name": "Artificial Intelligence Security Verification Standard (AISVS)",
-      "focal_document": "Security and Privacy Controls for Information Systems and Organizations",
-      "resolved_catalog_id": "nist-800-53",
-      "reference_document_version": "SP 800-53 Rev 5.2.0",
-      "version": "1.0.0",
-      "status": "Draft",
-      "authority_description": "Non-Owner",
-      "submission_category": "Private Sector",
-      "developer": "Keystone Digital Holdings LLC",
-      "posted_date": "2026-07-14",
-      "reference_date": "2026-07-14",
-      "submission_artifact_url": "https://github.com/OWASP/AISVS/tree/main/1.0/en",
-      "authority_tier": 5,
-      "authority_tier_label": "Draft",
-      "mapping_model": null,
-      "ingested": false,
-      "map_file": null,
-      "artifact_id": null,
-      "artifact": null,
-      "quarantine_reason": "OLIR status is \"Draft\", not Final — held out of the published graph pending NIST finalization",
-      "retrieval_attempts": []
     },
     {
       "id": 218,
@@ -241,6 +396,7 @@
       "authority_tier_label": "Community candidate Final",
       "mapping_model": "Concept Crosswalk",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/218.json",
       "artifact_id": null,
       "artifact": {
@@ -249,6 +405,7 @@
         "checksum": "sha256:7ba6a8c3fa5207f84b1a72480fa5bfacc6326ab97bf6e28aab631bd3cf626848",
         "byte_length": 21824,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 93,
         "relationship_semantics": [
           "Concept Crosswalk"
@@ -303,12 +460,24 @@
       "submission_artifact_url": "https://aamcyber.com/sdos/reference/v1/",
       "authority_tier": 4,
       "authority_tier_label": "Validated third-party Final",
-      "mapping_model": null,
-      "ingested": false,
-      "map_file": null,
+      "mapping_model": "Concept Crosswalk",
+      "ingested": true,
+      "availability": "published_html_relationships",
+      "map_file": "maps/olir/215.json",
       "artifact_id": null,
-      "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 200",
+      "artifact": {
+        "map_file": "maps/olir/215.json",
+        "artifact_url": "https://aamcyber.com/sdos/reference/csf-2-0/",
+        "checksum": "sha256:1978caf386a3f2130c72c8dcab9e7b7a19df145a9520eddb04435b00619f83ff",
+        "byte_length": 120048,
+        "parser": "olir-html",
+        "extraction_scope": "published_html_relationships",
+        "relationship_count": 183,
+        "relationship_semantics": [
+          "Concept Crosswalk"
+        ]
+      },
+      "quarantine_reason": null,
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -328,15 +497,7 @@
           "status": 200,
           "final_url": "https://aamcyber.com/sdos/reference/csf-2-0/",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 119259
-        },
-        {
-          "kind": "artifact download",
-          "url": "https://aamcyber.com/sdos/reference/v1/",
-          "status": 200,
-          "final_url": "https://aamcyber.com/sdos/reference/v1/",
-          "content_type": "text/html; charset=utf-8",
-          "byte_length": 131955
+          "byte_length": 120048
         }
       ]
     },
@@ -357,12 +518,24 @@
       "submission_artifact_url": "https://aamcyber.com/sdos/reference/v1/",
       "authority_tier": 4,
       "authority_tier_label": "Validated third-party Final",
-      "mapping_model": null,
-      "ingested": false,
-      "map_file": null,
+      "mapping_model": "Concept Crosswalk",
+      "ingested": true,
+      "availability": "published_html_relationships",
+      "map_file": "maps/olir/217.json",
       "artifact_id": null,
-      "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 200",
+      "artifact": {
+        "map_file": "maps/olir/217.json",
+        "artifact_url": "https://aamcyber.com/sdos/reference/sp-800-53/",
+        "checksum": "sha256:ab45deead3da957a12be550ecea73ab8c4df07bb3cbc1755a9408df7c42c696d",
+        "byte_length": 125064,
+        "parser": "olir-html",
+        "extraction_scope": "published_html_relationships",
+        "relationship_count": 27,
+        "relationship_semantics": [
+          "Concept Crosswalk"
+        ]
+      },
+      "quarantine_reason": null,
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -382,15 +555,7 @@
           "status": 200,
           "final_url": "https://aamcyber.com/sdos/reference/sp-800-53/",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 124275
-        },
-        {
-          "kind": "artifact download",
-          "url": "https://aamcyber.com/sdos/reference/v1/",
-          "status": 200,
-          "final_url": "https://aamcyber.com/sdos/reference/v1/",
-          "content_type": "text/html; charset=utf-8",
-          "byte_length": 131955
+          "byte_length": 125064
         }
       ]
     },
@@ -413,6 +578,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": "Intersects with, Set Theory: Subset, Set Theory: Superset",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/209.json",
       "artifact_id": null,
       "artifact": {
@@ -421,6 +587,7 @@
         "checksum": "sha256:ac9cac551f90a3251c572a528b33a6c39e967877f6cf48c4fd70091a75068f02",
         "byte_length": 23832,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 40,
         "relationship_semantics": [
           "Intersects with",
@@ -477,12 +644,26 @@
       "submission_artifact_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/blob/main/docs/AI_SOC_Controls_Catalog_v1_0.pdf",
       "authority_tier": 4,
       "authority_tier_label": "Validated third-party Final",
-      "mapping_model": null,
-      "ingested": false,
-      "map_file": null,
+      "mapping_model": "Set Theory: Equal, Set Theory: Subset, intersects with",
+      "ingested": true,
+      "availability": "structured_artifact",
+      "map_file": "maps/olir/214.json",
       "artifact_id": null,
-      "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 200",
+      "artifact": {
+        "map_file": "maps/olir/214.json",
+        "artifact_url": "https://raw.githubusercontent.com/cyberoon/ai-soc-nist-csf-mapping/main/mappings/AI_SOC_to_NIST_CSF2_OLIR_Public_v1_0.csv",
+        "checksum": "sha256:9d393dfa2b3fd1ae858b5848ed72b3e0451d7df20f11865443f1ae22d1436c33",
+        "byte_length": 52610,
+        "parser": "olir-csv",
+        "extraction_scope": "structured_artifact",
+        "relationship_count": 82,
+        "relationship_semantics": [
+          "Set Theory: Equal",
+          "Set Theory: Subset",
+          "intersects with"
+        ]
+      },
+      "quarantine_reason": null,
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -502,7 +683,23 @@
           "status": 200,
           "final_url": "https://cyberoon.com/research/ai-soc-v10-to-nist-csf-20-informative-reference-mapping",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 2093622
+          "byte_length": 2093430
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping",
+          "status": 200,
+          "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 288766
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/releases/tag/v1.0.0",
+          "status": 200,
+          "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/releases/tag/v1.0.0",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 208015
         },
         {
           "kind": "artifact download",
@@ -510,7 +707,24 @@
           "status": 200,
           "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/blob/main/docs/AI_SOC_Controls_Catalog_v1_0.pdf",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 241624
+          "byte_length": 249169
+        },
+        {
+          "kind": "GitHub Contents API",
+          "url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/tree/main/mappings",
+          "status": 200,
+          "resolved_urls": [
+            "https://raw.githubusercontent.com/cyberoon/ai-soc-nist-csf-mapping/main/mappings/AI_SOC_to_NIST_CSF2_OLIR_Public_v1_0.csv",
+            "https://raw.githubusercontent.com/cyberoon/ai-soc-nist-csf-mapping/main/mappings/AI_SOC_to_NIST_CSF2_OLIR_Public_v1_0.xlsx"
+          ]
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://raw.githubusercontent.com/cyberoon/ai-soc-nist-csf-mapping/main/mappings/AI_SOC_to_NIST_CSF2_OLIR_Public_v1_0.csv",
+          "status": 200,
+          "final_url": "https://raw.githubusercontent.com/cyberoon/ai-soc-nist-csf-mapping/main/mappings/AI_SOC_to_NIST_CSF2_OLIR_Public_v1_0.csv",
+          "content_type": "text/plain; charset=utf-8",
+          "byte_length": 52610
         }
       ]
     },
@@ -531,12 +745,24 @@
       "submission_artifact_url": "https://aamcyber.com/sdos/reference/v1/",
       "authority_tier": 4,
       "authority_tier_label": "Validated third-party Final",
-      "mapping_model": null,
-      "ingested": false,
-      "map_file": null,
+      "mapping_model": "Concept Crosswalk",
+      "ingested": true,
+      "availability": "published_html_relationships",
+      "map_file": "maps/olir/220.json",
       "artifact_id": null,
-      "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200",
+      "artifact": {
+        "map_file": "maps/olir/220.json",
+        "artifact_url": "https://aamcyber.com/sdos/reference/v1/",
+        "checksum": "sha256:6040f6ac3836ff39256ff0570681897c93ac24433fb210e7327f3b314325ee12",
+        "byte_length": 132616,
+        "parser": "olir-html",
+        "extraction_scope": "published_html_relationships",
+        "relationship_count": 44,
+        "relationship_semantics": [
+          "Concept Crosswalk"
+        ]
+      },
+      "quarantine_reason": null,
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -556,7 +782,7 @@
           "status": 200,
           "final_url": "https://aamcyber.com/sdos/reference/v1/",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 131955
+          "byte_length": 132616
         }
       ]
     },
@@ -579,6 +805,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": "Intersects with, Set Theory: Superset",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/223.json",
       "artifact_id": null,
       "artifact": {
@@ -587,6 +814,7 @@
         "checksum": "sha256:0f90f37091e6296ecce00e0d07d97a46f9a00cc24c049487b2ccf232a5020848",
         "byte_length": 19302,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 19,
         "relationship_semantics": [
           "Intersects with",
@@ -642,21 +870,21 @@
       "submission_artifact_url": "https://drive.google.com/file/d/1tak27m9Un8RdwSkzqBqSyXhMcp2LnVJG/view",
       "authority_tier": 4,
       "authority_tier_label": "Validated third-party Final",
-      "mapping_model": "7, 8, 9",
+      "mapping_model": "Concept Crosswalk",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/221.json",
       "artifact_id": null,
       "artifact": {
         "map_file": "maps/olir/221.json",
-        "artifact_url": "https://doc-0c-98-sheets.googleusercontent.com/export/54bogvaave6cua4cdnls17ksc4/n9u28u4r8s32rg71g9pa2b1m80/1786238380000/100790643046296837536/*/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP?format=xlsx",
+        "artifact_url": "https://docs.google.com/spreadsheets/d/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP/export?format=xlsx",
         "checksum": "sha256:b05442d4a1ef91debc5673f3b3344ef94dc1e1381ddc33c300d0a6891aed3847",
         "byte_length": 21218,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 25,
         "relationship_semantics": [
-          "7",
-          "8",
-          "9"
+          "Concept Crosswalk"
         ]
       },
       "quarantine_reason": null,
@@ -685,7 +913,7 @@
           "kind": "artifact download",
           "url": "https://docs.google.com/spreadsheets/d/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP/export?format=xlsx",
           "status": 200,
-          "final_url": "https://doc-0c-98-sheets.googleusercontent.com/export/54bogvaave6cua4cdnls17ksc4/n9u28u4r8s32rg71g9pa2b1m80/1786238380000/100790643046296837536/*/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP?format=xlsx",
+          "final_url": "https://doc-0c-98-sheets.googleusercontent.com/export/f3kk9gtum31ktuqh54kn7i1e14/s1vk90lv59jb82v0o58eovkfa8/1790167605000/100790643046296837536/*/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP?format=xlsx",
           "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "byte_length": 21218
         }
@@ -708,12 +936,25 @@
       "submission_artifact_url": "https://www.amazon.com/dp/B0FWBSDMVR",
       "authority_tier": 4,
       "authority_tier_label": "Validated third-party Final",
-      "mapping_model": null,
-      "ingested": false,
-      "map_file": null,
+      "mapping_model": "Set Theory: Superset, Supportive",
+      "ingested": true,
+      "availability": "published_html_relationships",
+      "map_file": "maps/olir/222.json",
       "artifact_id": null,
-      "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 202; artifact download 200",
+      "artifact": {
+        "map_file": "maps/olir/222.json",
+        "artifact_url": "https://bxaios.com/nist-alignment/",
+        "checksum": "sha256:1f473525fe1df687746535bcffe9e20c0ebe7fad2cff1ef94f8dcc58dd0ffcde",
+        "byte_length": 143534,
+        "parser": "olir-html",
+        "extraction_scope": "published_html_relationships",
+        "relationship_count": 7,
+        "relationship_semantics": [
+          "Set Theory: Superset",
+          "Supportive"
+        ]
+      },
+      "quarantine_reason": null,
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -730,18 +971,10 @@
         {
           "kind": "artifact download",
           "url": "https://bxaios.com/nist-alignment/",
-          "status": 202,
-          "final_url": "https://bxaios.com/nist-alignment/",
-          "content_type": "text/html",
-          "byte_length": 186
-        },
-        {
-          "kind": "artifact download",
-          "url": "https://www.amazon.com/dp/B0FWBSDMVR",
           "status": 200,
-          "final_url": "https://www.amazon.com/dp/B0FWBSDMVR",
-          "content_type": "text/html;charset=UTF-8",
-          "byte_length": 1499811
+          "final_url": "https://bxaios.com/nist-alignment/",
+          "content_type": "text/html; charset=UTF-8",
+          "byte_length": 143534
         }
       ]
     },
@@ -762,12 +995,25 @@
       "submission_artifact_url": "https://www.amazon.com/dp/B0FWBSDMVR",
       "authority_tier": 4,
       "authority_tier_label": "Validated third-party Final",
-      "mapping_model": null,
-      "ingested": false,
-      "map_file": null,
+      "mapping_model": "Set Theory: Superset, Supportive",
+      "ingested": true,
+      "availability": "published_html_relationships",
+      "map_file": "maps/olir/203.json",
       "artifact_id": null,
-      "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 202; artifact download 200",
+      "artifact": {
+        "map_file": "maps/olir/203.json",
+        "artifact_url": "https://bxaios.com/nist-alignment/",
+        "checksum": "sha256:1f473525fe1df687746535bcffe9e20c0ebe7fad2cff1ef94f8dcc58dd0ffcde",
+        "byte_length": 143534,
+        "parser": "olir-html",
+        "extraction_scope": "published_html_relationships",
+        "relationship_count": 6,
+        "relationship_semantics": [
+          "Set Theory: Superset",
+          "Supportive"
+        ]
+      },
+      "quarantine_reason": null,
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -784,18 +1030,10 @@
         {
           "kind": "artifact download",
           "url": "https://bxaios.com/nist-alignment/",
-          "status": 202,
-          "final_url": "https://bxaios.com/nist-alignment/",
-          "content_type": "text/html",
-          "byte_length": 186
-        },
-        {
-          "kind": "artifact download",
-          "url": "https://www.amazon.com/dp/B0FWBSDMVR",
           "status": 200,
-          "final_url": "https://www.amazon.com/dp/B0FWBSDMVR",
-          "content_type": "text/html;charset=UTF-8",
-          "byte_length": 1494929
+          "final_url": "https://bxaios.com/nist-alignment/",
+          "content_type": "text/html; charset=UTF-8",
+          "byte_length": 143534
         }
       ]
     },
@@ -818,10 +1056,11 @@
       "authority_tier_label": "Community candidate Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "no_public_mapping_discovered",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 200",
+      "quarantine_reason": "no public relationship mapping could be downloaded from the registered NIST submission locations; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200",
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -841,15 +1080,7 @@
           "status": 200,
           "final_url": "https://www.infoblox.com/solutions/compliance/",
           "content_type": "text/html; charset=UTF-8",
-          "byte_length": 427632
-        },
-        {
-          "kind": "artifact download",
-          "url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-81r3.pdf",
-          "status": 200,
-          "final_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-81r3.pdf",
-          "content_type": "application/pdf",
-          "byte_length": 1057246
+          "byte_length": 423862
         }
       ]
     },
@@ -872,6 +1103,7 @@
       "authority_tier_label": "Community candidate Final",
       "mapping_model": "Set Theory: Superset, intersects with",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/198.json",
       "artifact_id": null,
       "artifact": {
@@ -880,6 +1112,7 @@
         "checksum": "sha256:bb9aba0749a3bbcec9e2f6ac46c3b4ee6d23f2e1d84e61c17ae6ffb148a83309",
         "byte_length": 35913,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 169,
         "relationship_semantics": [
           "Set Theory: Superset",
@@ -937,6 +1170,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": "Concept Crosswalk",
       "ingested": true,
+      "availability": "retrieval_failed",
       "map_file": "maps/olir/194.json",
       "artifact_id": null,
       "artifact": {
@@ -945,6 +1179,7 @@
         "checksum": "sha256:6cf6178d0e19c782c35bcf03ffae8cc41a06362a8c9ae5aef15ae94b473db898",
         "byte_length": 16571,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 43,
         "relationship_semantics": [
           "Concept Crosswalk"
@@ -972,7 +1207,33 @@
           "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "byte_length": 16571
         }
-      ]
+      ],
+      "refresh_status": "retained_last_good",
+      "refresh_error": "no public relationship mapping could be downloaded from the registered NIST submission locations",
+      "latest_retrieval_attempts": [
+        {
+          "kind": "NIST catalog detail endpoint",
+          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/194",
+          "status": 200,
+          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/194",
+          "json_file_url": null,
+          "publisher_sha256": null,
+          "submission_url": "https://p-sscrm.github.io/assets/data/P-SSCRM_to_SSDF_CROSSWALK_20260219.xlsx",
+          "reference_url": "https://p-sscrm.github.io/",
+          "mapping_summary": "<p>Crosswalk between P-SSCRM v2.0 and SSDF v1.1</p>",
+          "mapping_comment": "<p>N/A</p>"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://p-sscrm.github.io/assets/data/P-SSCRM_to_SSDF_CROSSWALK_20260219.xlsx",
+          "error": "OLIR source URL policy rejected destination outside registered submission"
+        }
+      ],
+      "retention": {
+        "cause": "publisher_unavailable",
+        "first_retained_at": "2026-09-21T15:12:54.460Z",
+        "consecutive_refreshes": 2
+      }
     },
     {
       "id": 189,
@@ -991,12 +1252,24 @@
       "submission_artifact_url": "https://zenodo.org/records/18363217",
       "authority_tier": 4,
       "authority_tier_label": "Validated third-party Final",
-      "mapping_model": null,
-      "ingested": false,
-      "map_file": null,
+      "mapping_model": "Set Theory: Superset",
+      "ingested": true,
+      "availability": "structured_artifact",
+      "map_file": "maps/olir/189.json",
       "artifact_id": null,
-      "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 200",
+      "artifact": {
+        "map_file": "maps/olir/189.json",
+        "artifact_url": "https://zenodo.org/records/18498447/files/NIST_OLIR_IRP_SetTheory_Mapping_20260205.xlsx?download=1",
+        "checksum": "sha256:ffb454b70c231a24234fd51b7648c53b477aa5a7004e6115fa2d8d176fe919a0",
+        "byte_length": 24838,
+        "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
+        "relationship_count": 16,
+        "relationship_semantics": [
+          "Set Theory: Superset"
+        ]
+      },
+      "quarantine_reason": null,
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -1016,15 +1289,15 @@
           "status": 200,
           "final_url": "https://zenodo.org/records/18498447",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 94597
+          "byte_length": 95106
         },
         {
           "kind": "artifact download",
-          "url": "https://zenodo.org/records/18363217",
+          "url": "https://zenodo.org/records/18498447/files/NIST_OLIR_IRP_SetTheory_Mapping_20260205.xlsx?download=1",
           "status": 200,
-          "final_url": "https://zenodo.org/records/18363217",
-          "content_type": "text/html; charset=utf-8",
-          "byte_length": 208784
+          "final_url": "https://zenodo.org/records/18498447/files/NIST_OLIR_IRP_SetTheory_Mapping_20260205.xlsx?download=1",
+          "content_type": "application/octet-stream",
+          "byte_length": 24838
         }
       ]
     },
@@ -1047,10 +1320,11 @@
       "authority_tier_label": "Community candidate Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "no_public_mapping_discovered",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 200",
+      "quarantine_reason": "no public relationship mapping could be downloaded from the registered NIST submission locations; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200",
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -1066,19 +1340,11 @@
         },
         {
           "kind": "artifact download",
-          "url": "http://43828014.hs-sites.com/171r2-to-53r5-mapping-download",
+          "url": "https://43828014.hs-sites.com/171r2-to-53r5-mapping-download",
           "status": 200,
           "final_url": "https://43828014.hs-sites.com/171r2-to-53r5-mapping-download",
           "content_type": "text/html; charset=UTF-8",
           "byte_length": 37697
-        },
-        {
-          "kind": "artifact download",
-          "url": "https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final",
-          "status": 200,
-          "final_url": "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final",
-          "content_type": "text/html; charset=utf-8",
-          "byte_length": 56888
         }
       ]
     },
@@ -1101,6 +1367,7 @@
       "authority_tier_label": "Community candidate Final",
       "mapping_model": "Supportive",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/183.json",
       "artifact_id": null,
       "artifact": {
@@ -1109,6 +1376,7 @@
         "checksum": "sha256:ffb436f3d36c6f311c39dbbe65793cacca99d499ceb8ff66020d08b7f14e38cf",
         "byte_length": 67547,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 551,
         "relationship_semantics": [
           "Supportive"
@@ -1165,10 +1433,11 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "no_public_mapping_discovered",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 200",
+      "quarantine_reason": "no public relationship mapping could be downloaded from the registered NIST submission locations; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200",
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -1188,15 +1457,7 @@
           "status": 200,
           "final_url": "https://www.cisecurity.org/insights/white-papers/cis-controls-v8-1-mapping-to-nist-csf-2-0",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 115794
-        },
-        {
-          "kind": "artifact download",
-          "url": "https://www.cisecurity.org/controls/v8-1",
-          "status": 200,
-          "final_url": "https://www.cisecurity.org/controls/v8-1",
-          "content_type": "text/html; charset=utf-8",
-          "byte_length": 262888
+          "byte_length": 115977
         }
       ]
     },
@@ -1219,6 +1480,7 @@
       "authority_tier_label": "Community candidate (Archive)",
       "mapping_model": null,
       "ingested": false,
+      "availability": "not_final",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -1244,6 +1506,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": "Concept Crosswalk",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/186.json",
       "artifact_id": null,
       "artifact": {
@@ -1252,6 +1515,7 @@
         "checksum": "sha256:5521fa73ace64d8a3014a7b1e971f0f20d32df5ff5e174632723bda09e7e908f",
         "byte_length": 38766,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 746,
         "relationship_semantics": [
           "Concept Crosswalk"
@@ -1300,6 +1564,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": "Concept Crosswalk",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/173.json",
       "artifact_id": null,
       "artifact": {
@@ -1308,6 +1573,7 @@
         "checksum": "sha256:05eef235778608cc3f3b0e8fcf5d6de51027752f5404c6ded6e248f7447f6a3c",
         "byte_length": 37056,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 850,
         "relationship_semantics": [
           "Concept Crosswalk"
@@ -1356,6 +1622,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": "Concept Crosswalk",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/174.json",
       "artifact_id": null,
       "artifact": {
@@ -1364,7 +1631,8 @@
         "checksum": "sha256:49119c1f3c859199dd78912ad65f188f79ef1b066e27a95355afb9b3519f83ee",
         "byte_length": 144345,
         "parser": "olir-xlsx",
-        "relationship_count": 49,
+        "extraction_scope": "structured_artifact",
+        "relationship_count": 390,
         "relationship_semantics": [
           "Concept Crosswalk"
         ]
@@ -1410,12 +1678,24 @@
       "submission_artifact_url": "https://www.gov.uk/government/publications/cyber-governance-code-of-practice",
       "authority_tier": 2,
       "authority_tier_label": "Other government owner-authority Final",
-      "mapping_model": null,
-      "ingested": false,
-      "map_file": null,
+      "mapping_model": "Concept Crosswalk",
+      "ingested": true,
+      "availability": "published_html_relationships",
+      "map_file": "maps/olir/176.json",
       "artifact_id": null,
-      "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 200",
+      "artifact": {
+        "map_file": "maps/olir/176.json",
+        "artifact_url": "https://www.gov.uk/government/publications/cyber-governance-mapping/mapping-cyber-governance-code-to-nist-cyber-security-framework",
+        "checksum": "sha256:1c4d1e6f449fc04daac065f788d6fbb9304841ca619f529853af74241569f3c2",
+        "byte_length": 88297,
+        "parser": "olir-html",
+        "extraction_scope": "published_html_relationships",
+        "relationship_count": 60,
+        "relationship_semantics": [
+          "Concept Crosswalk"
+        ]
+      },
+      "quarantine_reason": null,
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -1435,15 +1715,7 @@
           "status": 200,
           "final_url": "https://www.gov.uk/government/publications/cyber-governance-mapping/mapping-cyber-governance-code-to-nist-cyber-security-framework",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 88408
-        },
-        {
-          "kind": "artifact download",
-          "url": "https://www.gov.uk/government/publications/cyber-governance-code-of-practice",
-          "status": 200,
-          "final_url": "https://www.gov.uk/government/publications/cyber-governance-code-of-practice",
-          "content_type": "text/html; charset=utf-8",
-          "byte_length": 84619
+          "byte_length": 88297
         }
       ]
     },
@@ -1466,10 +1738,11 @@
       "authority_tier_label": "Community candidate Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "no_public_mapping_discovered",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 200",
+      "quarantine_reason": "no public relationship mapping could be downloaded from the registered NIST submission locations; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200",
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -1485,19 +1758,11 @@
         },
         {
           "kind": "artifact download",
-          "url": "http://43828014.hs-sites.com/171r2-cmmc-mapping",
+          "url": "https://43828014.hs-sites.com/171r2-cmmc-mapping",
           "status": 200,
           "final_url": "https://43828014.hs-sites.com/171r2-cmmc-mapping",
           "content_type": "text/html; charset=UTF-8",
           "byte_length": 37801
-        },
-        {
-          "kind": "artifact download",
-          "url": "https://dodcio.defense.gov/Portals/0/Documents/CMMC/ModelOverviewv2.pdf",
-          "status": 200,
-          "final_url": "https://dodcio.defense.gov/Portals/0/Documents/CMMC/ModelOverviewv2.pdf",
-          "content_type": "application/pdf",
-          "byte_length": 977491
         }
       ]
     },
@@ -1520,10 +1785,11 @@
       "authority_tier_label": "Community candidate Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "no_public_mapping_discovered",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 200",
+      "quarantine_reason": "no public relationship mapping could be downloaded from the registered NIST submission locations; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200",
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -1539,19 +1805,11 @@
         },
         {
           "kind": "artifact download",
-          "url": "http://43828014.hs-sites.com/171r2-cmmc-mapping",
+          "url": "https://43828014.hs-sites.com/171r2-cmmc-mapping",
           "status": 200,
           "final_url": "https://43828014.hs-sites.com/171r2-cmmc-mapping",
           "content_type": "text/html; charset=UTF-8",
           "byte_length": 37801
-        },
-        {
-          "kind": "artifact download",
-          "url": "https://dodcio.defense.gov/Portals/0/Documents/CMMC/ModelOverviewv2.pdf",
-          "status": 200,
-          "final_url": "https://dodcio.defense.gov/Portals/0/Documents/CMMC/ModelOverviewv2.pdf",
-          "content_type": "application/pdf",
-          "byte_length": 977491
         }
       ]
     },
@@ -1574,6 +1832,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": "Concept Crosswalk",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/179.json",
       "artifact_id": null,
       "artifact": {
@@ -1582,6 +1841,7 @@
         "checksum": "sha256:08e50ecfe201417d1b7e257d5b68ee8a69686c8a31d1521c722892732809f0a0",
         "byte_length": 28991,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 313,
         "relationship_semantics": [
           "Concept Crosswalk"
@@ -1630,10 +1890,11 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "no_public_mapping_discovered",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 200",
+      "quarantine_reason": "no public relationship mapping could be downloaded from the registered NIST submission locations; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200",
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -1653,15 +1914,7 @@
           "status": 200,
           "final_url": "https://cyberriskinstitute.org/the-profile/",
           "content_type": "text/html; charset=UTF-8",
-          "byte_length": 83131
-        },
-        {
-          "kind": "artifact download",
-          "url": "https://CyberRiskInstitute.org/The-Profile/",
-          "status": 200,
-          "final_url": "https://cyberriskinstitute.org/The-Profile/",
-          "content_type": "text/html; charset=UTF-8",
-          "byte_length": 83131
+          "byte_length": 83308
         }
       ]
     },
@@ -1682,12 +1935,24 @@
       "submission_artifact_url": "https://www.iso.org/obp/ui/#iso:std:iso-iec:27001:ed-3:v1:en",
       "authority_tier": 7,
       "authority_tier_label": "Community candidate Final",
-      "mapping_model": null,
-      "ingested": false,
-      "map_file": null,
+      "mapping_model": "Concept Crosswalk",
+      "ingested": true,
+      "availability": "structured_artifact",
+      "map_file": "maps/olir/154.json",
       "artifact_id": null,
-      "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 403",
+      "artifact": {
+        "map_file": "maps/olir/154.json",
+        "artifact_url": "https://irp.cdn-website.com/0bfa7e96/files/uploaded/Cybersecurity_Framework_v2.0_Concept_Crosswalk_Template_v1.0.xlsx",
+        "checksum": "sha256:46a309b73c065dacf9c6506b131a8a8353cab5ece2abdb7497f5dccadfd04e71",
+        "byte_length": 30417,
+        "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
+        "relationship_count": 493,
+        "relationship_semantics": [
+          "Concept Crosswalk"
+        ]
+      },
+      "quarantine_reason": null,
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -1707,15 +1972,15 @@
           "status": 200,
           "final_url": "https://www.razil.io/post/nist-csf-2-0-to-iso-27001-2022-annexure-a-mapping",
           "content_type": "text/html;charset=utf-8",
-          "byte_length": 87204
+          "byte_length": 88907
         },
         {
           "kind": "artifact download",
-          "url": "https://www.iso.org/obp/ui/#iso:std:iso-iec:27001:ed-3:v1:en",
-          "status": 403,
-          "final_url": "https://www.iso.org/obp/ui/",
-          "content_type": "text/html; charset=UTF-8",
-          "byte_length": 5486
+          "url": "https://irp.cdn-website.com/0bfa7e96/files/uploaded/Cybersecurity_Framework_v2.0_Concept_Crosswalk_Template_v1.0.xlsx",
+          "status": 200,
+          "final_url": "https://irp.cdn-website.com/0bfa7e96/files/uploaded/Cybersecurity_Framework_v2.0_Concept_Crosswalk_Template_v1.0.xlsx",
+          "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "byte_length": 30417
         }
       ]
     },
@@ -1738,6 +2003,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": "Set Theory: Equal, Set Theory: Subset, intersects with, not related to",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/152.json",
       "artifact_id": null,
       "artifact": {
@@ -1746,6 +2012,7 @@
         "checksum": "sha256:f72e928c9eea6a9f53caae758fcae80c6f8aad728c36d9f0a9a0c3cbd57d82f7",
         "byte_length": 97586,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 1014,
         "relationship_semantics": [
           "Set Theory: Equal",
@@ -1797,6 +2064,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": "Set Theory: Equal, Set Theory: Subset, Set Theory: Superset, intersects with",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/153.json",
       "artifact_id": null,
       "artifact": {
@@ -1805,6 +2073,7 @@
         "checksum": "sha256:e991ce8c73098fb317c3b0bf88da738ab4b0a8b012329ca76eb260323572e9ca",
         "byte_length": 67606,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 611,
         "relationship_semantics": [
           "Set Theory: Equal",
@@ -1856,6 +2125,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -1881,6 +2151,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": "Concept Crosswalk",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/149.json",
       "artifact_id": null,
       "artifact": {
@@ -1889,6 +2160,7 @@
         "checksum": "sha256:065547e1b58de527ea06a28db205f9b64e015244ab257bd97e23a306355c633d",
         "byte_length": 27256,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 217,
         "relationship_semantics": [
           "Concept Crosswalk"
@@ -1937,6 +2209,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -1962,6 +2235,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -1987,6 +2261,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": "Intersects With, Set Theory: Equal, Set Theory: Subset, not related to",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/144.json",
       "artifact_id": null,
       "artifact": {
@@ -1995,6 +2270,7 @@
         "checksum": "sha256:ee2f064bbcdf7a2a5dc2bf2de6dcdb9360d9b11c35da55ced6fb0a491717026c",
         "byte_length": 216482,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 1501,
         "relationship_semantics": [
           "Intersects With",
@@ -2046,6 +2322,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": "Set Theory: Equal, Set Theory: Subset, intersects with",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/145.json",
       "artifact_id": null,
       "artifact": {
@@ -2054,6 +2331,7 @@
         "checksum": "sha256:d9284810250516608b64803d30df4f82a84e391a8f6b4b0bd22d51e109c5dd8a",
         "byte_length": 43833,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 181,
         "relationship_semantics": [
           "Set Theory: Equal",
@@ -2104,10 +2382,11 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "access_restricted",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; Google Drive export 200; artifact download 401; artifact download 200",
+      "quarantine_reason": "no public relationship mapping could be downloaded from the registered NIST submission locations; retrieval evidence: NIST catalog detail endpoint 200; Google Drive export 200; artifact download 401",
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -2135,15 +2414,7 @@
           "status": 401,
           "final_url": "https://docs.google.com/spreadsheets/d/1UrlVUnmAvaaoddMntklZzHZhemLqn7l8/export?format=xlsx",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 8949
-        },
-        {
-          "kind": "artifact download",
-          "url": "https://cloudsecurityalliance.org/research/cloud-controls-matrix",
-          "status": 200,
-          "final_url": "https://cloudsecurityalliance.org/research/cloud-controls-matrix",
-          "content_type": "text/html; charset=utf-8",
-          "byte_length": 82708
+          "byte_length": 9122
         }
       ]
     },
@@ -2166,6 +2437,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -2191,6 +2463,7 @@
       "authority_tier_label": "Community candidate Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -2216,6 +2489,7 @@
       "authority_tier_label": "Community candidate Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -2241,6 +2515,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": "Concept Crosswalk",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/138.json",
       "artifact_id": null,
       "artifact": {
@@ -2249,6 +2524,7 @@
         "checksum": "sha256:56b537d0be238b928e6c309a6a7bb40472a5289713a5401627c81722db1c14da",
         "byte_length": 19720,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 78,
         "relationship_semantics": [
           "Concept Crosswalk"
@@ -2295,12 +2571,24 @@
       "submission_artifact_url": "https://csrc.nist.gov/publications/detail/sp/800-181/final",
       "authority_tier": 7,
       "authority_tier_label": "Community candidate Final",
-      "mapping_model": null,
-      "ingested": false,
-      "map_file": null,
+      "mapping_model": "Concept Crosswalk",
+      "ingested": true,
+      "availability": "structured_artifact",
+      "map_file": "maps/olir/120.json",
       "artifact_id": null,
-      "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 200",
+      "artifact": {
+        "map_file": "maps/olir/120.json",
+        "artifact_url": "https://workforce-builder.herokuapp.com/get-olir?olir_name=sp800181_to_ssdf_1_0_0",
+        "checksum": "sha256:d3feae5e2e9786ec9c229946ad25d0a9cf3e395dacfc9086b89e0ee5a1ac87dc",
+        "byte_length": 20264,
+        "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
+        "relationship_count": 363,
+        "relationship_semantics": [
+          "Concept Crosswalk"
+        ]
+      },
+      "quarantine_reason": null,
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -2324,11 +2612,11 @@
         },
         {
           "kind": "artifact download",
-          "url": "https://csrc.nist.gov/publications/detail/sp/800-181/final",
+          "url": "https://workforce-builder.herokuapp.com/get-olir?olir_name=sp800181_to_ssdf_1_0_0",
           "status": 200,
-          "final_url": "https://csrc.nist.gov/pubs/sp/800/181/final",
-          "content_type": "text/html; charset=utf-8",
-          "byte_length": 46272
+          "final_url": "https://workforce-builder.herokuapp.com/get-olir?olir_name=sp800181_to_ssdf_1_0_0",
+          "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "byte_length": 20264
         }
       ]
     },
@@ -2349,12 +2637,24 @@
       "submission_artifact_url": "https://csrc.nist.gov/publications/detail/white-paper/2018/04/16/cybersecurity-framework-v11/final",
       "authority_tier": 7,
       "authority_tier_label": "Community candidate Final",
-      "mapping_model": null,
-      "ingested": false,
-      "map_file": null,
+      "mapping_model": "Concept Crosswalk",
+      "ingested": true,
+      "availability": "structured_artifact",
+      "map_file": "maps/olir/121.json",
       "artifact_id": null,
-      "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 200",
+      "artifact": {
+        "map_file": "maps/olir/121.json",
+        "artifact_url": "https://workforce-builder.herokuapp.com/get-olir?olir_name=csf_1_1_0_to_ssdf_1_0_0",
+        "checksum": "sha256:b08a9ad64d6f51c090c4d92d5fdfbb99be6d5cf7aae729dd4c2f699dd85f2141",
+        "byte_length": 8041,
+        "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
+        "relationship_count": 27,
+        "relationship_semantics": [
+          "Concept Crosswalk"
+        ]
+      },
+      "quarantine_reason": null,
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -2378,11 +2678,11 @@
         },
         {
           "kind": "artifact download",
-          "url": "https://csrc.nist.gov/publications/detail/white-paper/2018/04/16/cybersecurity-framework-v11/final",
+          "url": "https://workforce-builder.herokuapp.com/get-olir?olir_name=csf_1_1_0_to_ssdf_1_0_0",
           "status": 200,
-          "final_url": "https://csrc.nist.gov/pubs/cswp/6/cybersecurity-framework-v11/final",
-          "content_type": "text/html; charset=utf-8",
-          "byte_length": 49252
+          "final_url": "https://workforce-builder.herokuapp.com/get-olir?olir_name=csf_1_1_0_to_ssdf_1_0_0",
+          "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "byte_length": 8041
         }
       ]
     },
@@ -2405,10 +2705,11 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "no_public_mapping_discovered",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200",
+      "quarantine_reason": "no public relationship mapping could be downloaded from the registered NIST submission locations; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200",
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -2428,7 +2729,7 @@
           "status": 200,
           "final_url": "https://cyberriskinstitute.org/The-Profile/",
           "content_type": "text/html; charset=UTF-8",
-          "byte_length": 83131
+          "byte_length": 83308
         }
       ]
     },
@@ -2451,10 +2752,11 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "no_public_mapping_discovered",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 200",
+      "quarantine_reason": "no public relationship mapping could be downloaded from the registered NIST submission locations; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200",
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -2474,15 +2776,7 @@
           "status": 200,
           "final_url": "https://www.cisecurity.org/controls",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 276022
-        },
-        {
-          "kind": "artifact download",
-          "url": "https://learn.cisecurity.org/cis-controls-download",
-          "status": 200,
-          "final_url": "https://learn.cisecurity.org/cis-controls-download",
-          "content_type": "text/html; charset=utf-8",
-          "byte_length": 61082
+          "byte_length": 279742
         }
       ]
     },
@@ -2505,6 +2799,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": "Concept Crosswalk",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/118.json",
       "artifact_id": null,
       "artifact": {
@@ -2513,6 +2808,7 @@
         "checksum": "sha256:ed5a7f8e99d9296eb0298e6ef63d48b3373378caee7a85cc3313a0885b66ed04",
         "byte_length": 45524,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 84,
         "relationship_semantics": [
           "Concept Crosswalk"
@@ -2561,6 +2857,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": "Concept Crosswalk",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/119.json",
       "artifact_id": null,
       "artifact": {
@@ -2569,6 +2866,7 @@
         "checksum": "sha256:232952c3c2429a8a97914c00f7ae81d4d995ab36bddbe37faf4fcb1074057342",
         "byte_length": 26404,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 185,
         "relationship_semantics": [
           "Concept Crosswalk"
@@ -2617,6 +2915,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": "Concept Crosswalk",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/196.json",
       "artifact_id": null,
       "artifact": {
@@ -2625,6 +2924,7 @@
         "checksum": "sha256:0866ced901f7aa600dff69fabb43eb32935e3658a4bed2539d33e80880fca283",
         "byte_length": 12695,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 35,
         "relationship_semantics": [
           "Concept Crosswalk"
@@ -2673,6 +2973,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -2698,6 +2999,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": "Concept Crosswalk",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/107.json",
       "artifact_id": null,
       "artifact": {
@@ -2706,7 +3008,8 @@
         "checksum": "sha256:80ee1b51d5b48f394e35311a9a93006d2f9e530e35266c6f1f00eb212b776b95",
         "byte_length": 179055,
         "parser": "olir-xlsx",
-        "relationship_count": 40,
+        "extraction_scope": "structured_artifact",
+        "relationship_count": 279,
         "relationship_semantics": [
           "Concept Crosswalk"
         ]
@@ -2754,6 +3057,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -2779,6 +3083,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": "Concept Crosswalk",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/110.json",
       "artifact_id": null,
       "artifact": {
@@ -2787,7 +3092,8 @@
         "checksum": "sha256:80ee1b51d5b48f394e35311a9a93006d2f9e530e35266c6f1f00eb212b776b95",
         "byte_length": 179055,
         "parser": "olir-xlsx",
-        "relationship_count": 40,
+        "extraction_scope": "structured_artifact",
+        "relationship_count": 279,
         "relationship_semantics": [
           "Concept Crosswalk"
         ]
@@ -2835,6 +3141,7 @@
       "authority_tier_label": "Draft",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -2860,6 +3167,7 @@
       "authority_tier_label": "Community candidate Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -2885,6 +3193,7 @@
       "authority_tier_label": "Community candidate Final",
       "mapping_model": "Concept Crosswalk",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/155.json",
       "artifact_id": null,
       "artifact": {
@@ -2893,7 +3202,8 @@
         "checksum": "sha256:e631de234a1fac057991773f015c221226940540f5602e1b70a3768eaff5cbd9",
         "byte_length": 155745,
         "parser": "olir-xlsx",
-        "relationship_count": 51,
+        "extraction_scope": "structured_artifact",
+        "relationship_count": 643,
         "relationship_semantics": [
           "Concept Crosswalk"
         ]
@@ -2941,6 +3251,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -2966,10 +3277,11 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "artifact_replaced_by_html",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
-      "quarantine_reason": "no structured artifact could be downloaded from the NIST detail JSON, submission, reference, or catalog URL; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 200",
+      "quarantine_reason": "no public relationship mapping could be downloaded from the registered NIST submission locations; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200",
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -2989,15 +3301,8 @@
           "status": 200,
           "final_url": "https://securecontrolsframework.com/free-content/scf-download",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 49472
-        },
-        {
-          "kind": "artifact download",
-          "url": "https://securecontrolsframework.com/scf-download/",
-          "status": 200,
-          "final_url": "https://securecontrolsframework.com/free-content/scf-download",
-          "content_type": "text/html; charset=utf-8",
-          "byte_length": 49472
+          "byte_length": 54182,
+          "availability": "artifact_replaced_by_html"
         }
       ]
     },
@@ -3020,6 +3325,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3045,6 +3351,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3070,6 +3377,7 @@
       "authority_tier_label": "Other government owner-authority Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3095,6 +3403,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3120,6 +3429,7 @@
       "authority_tier_label": "Other government owner-authority Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3145,6 +3455,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3170,6 +3481,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3195,6 +3507,7 @@
       "authority_tier_label": "Community candidate Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3220,6 +3533,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3245,6 +3559,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3270,6 +3585,7 @@
       "authority_tier_label": "Derived non-authoritative (work-in-progress)",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3295,6 +3611,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": "Concept Crosswalk",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/69.json",
       "artifact_id": null,
       "artifact": {
@@ -3303,6 +3620,7 @@
         "checksum": "sha256:8bbc85a3eeb2929b5706a960c05263c0c6258d30df30a2625dda082d851688a3",
         "byte_length": 178654,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 31,
         "relationship_semantics": [
           "Concept Crosswalk"
@@ -3351,6 +3669,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3376,6 +3695,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3401,6 +3721,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": "Set Theory: Subset, Set Theory: Superset, intersects with",
       "ingested": true,
+      "availability": "structured_artifact",
       "map_file": "maps/olir/74.json",
       "artifact_id": null,
       "artifact": {
@@ -3409,6 +3730,7 @@
         "checksum": "sha256:e8778484f8f1f141fcf64cee82435f7ede0a9725881b8f56e40c7cee27bb8e92",
         "byte_length": 206817,
         "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
         "relationship_count": 70,
         "relationship_semantics": [
           "Set Theory: Subset",
@@ -3459,6 +3781,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3484,6 +3807,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3509,6 +3833,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3534,6 +3859,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3559,6 +3885,7 @@
       "authority_tier_label": "Derived non-authoritative (work-in-progress)",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3584,6 +3911,7 @@
       "authority_tier_label": "Derived non-authoritative (work-in-progress)",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3609,6 +3937,7 @@
       "authority_tier_label": "Derived non-authoritative (work-in-progress)",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3634,6 +3963,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3659,6 +3989,7 @@
       "authority_tier_label": "Derived non-authoritative (work-in-progress)",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3684,6 +4015,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3709,6 +4041,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3734,6 +4067,7 @@
       "authority_tier_label": "Derived non-authoritative (work-in-progress)",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3759,6 +4093,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3784,6 +4119,7 @@
       "authority_tier_label": "Draft",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3809,6 +4145,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3834,6 +4171,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3859,6 +4197,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3884,6 +4223,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3909,6 +4249,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3934,6 +4275,7 @@
       "authority_tier_label": "Community candidate Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3959,6 +4301,7 @@
       "authority_tier_label": "Community candidate Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -3984,6 +4327,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -4009,6 +4353,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
@@ -4034,6 +4379,7 @@
       "authority_tier_label": "NIST owner-authority Final",
       "mapping_model": null,
       "ingested": false,
+      "availability": "outside_catalog_scope",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,

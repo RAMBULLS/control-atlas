@@ -109,6 +109,7 @@ const contract = ({
   facts = [],
   fields = {},
   hierarchy = ["parent_id", "family"],
+  selections = [],
 }) => {
   const sectionFields = Object.fromEntries(
     sections.map((entry) => [
@@ -125,6 +126,7 @@ const contract = ({
     hierarchy_fields: Object.freeze(hierarchy),
     sections: Object.freeze(sections),
     metadata_facts: Object.freeze(facts),
+    selections: Object.freeze(selections.map((entry) => Object.freeze({ ...entry }))),
     required_fields: Object.freeze(required),
     optional_fields: Object.freeze(optional),
     field_dispositions: Object.freeze({ ...commonFields, ...sectionFields, ...fields }),
@@ -182,16 +184,29 @@ const BASE_CONTRACTS = {
     },
   }),
   attack_technique: atomic([section("description", "Technique Description")], ["description"], [], {
-    facts: ["tactic_title", "is_subtechnique"],
+    // MITRE publishes every tactic a technique belongs to, and 195 of 874
+    // techniques carry more than one. Stating tactics[0] under a heading
+    // reading "Published facts" under-scopes threat coverage, so the panel
+    // renders the full membership list instead of the derived primary.
+    facts: ["tactic_memberships", "is_subtechnique"],
     fields: {
       tactic_id: { disposition: "rendered_secondary", origin: "publisher" },
       tactic_title: { disposition: "rendered_secondary", origin: "publisher" },
       tactic_memberships: { disposition: "rendered_secondary", origin: "publisher" },
       is_subtechnique: { disposition: "source_metadata", origin: "publisher" },
+      // Resolved publisher references, consumed inline by the description
+      // renderer rather than shown as a fact of their own.
+      citations: { disposition: "source_metadata", origin: "publisher" },
       parent_technique_id: { disposition: "rendered_secondary", origin: "publisher" },
     },
   }),
-  baseline: container([section("description", "Baseline")], ["description"]),
+  baseline: container([section("description", "Baseline")], ["description"], [], {
+    selections: [{
+      relationship_type: "selects",
+      heading: "Selected controls",
+      note: "The controls this baseline selects, as the publisher published them.",
+    }],
+  }),
   benchmark: container([section("description", "Benchmark Summary")], [], ["description"], {
     facts: ["benchmark_version", "benchmark_status_date", "child_count", "severity_distribution"],
     fields: {
@@ -220,7 +235,7 @@ const BASE_CONTRACTS = {
       },
     },
   ),
-  control_context: atomic([section("description", "Published Control Context")], ["description"]),
+  control_context: atomic([section("description", "Parameters and guidance", "control_parameters")], ["description"]),
   control_enhancement: atomic(
     [
       section("description", "Control Statement"),
@@ -248,7 +263,13 @@ const BASE_CONTRACTS = {
   family: container([section("description", "Family Summary")], [], ["description"]),
   function: container([section("description", "Function Summary")], [], ["description"]),
   group: container([section("description", "Group Summary")], [], ["description"]),
-  impact_category: container([section("description", "Impact Category")], ["description"]),
+  impact_category: container([section("description", "Impact Category")], ["description"], [], {
+    selections: [{
+      relationship_type: "selects",
+      heading: "Selected baseline",
+      note: "The baseline this impact level selects, as the publisher published it.",
+    }],
+  }),
   iot_capability: container([section("description", "Capability")], [], ["description"]),
   iot_capability_domain: container([section("description", "Capability Domain")], [], ["description"]),
   iot_capability_element: atomic(
@@ -289,7 +310,13 @@ const BASE_CONTRACTS = {
   mobile_threat_category: container([section("description", "Threat Category")], ["description"]),
   policy: atomic([section("description", "Policy Statement")], ["description"]),
   policy_directive: authorityPublication("Authority Summary"),
-  program: container([section("description", "Program Level")], ["description"]),
+  program: container([section("description", "Program Level")], ["description"], [], {
+    selections: [{
+      relationship_type: "requires",
+      heading: "Requirements",
+      note: "The requirements this level requires, as the publisher published them.",
+    }],
+  }),
   regulation: authorityPublication("Authority Summary"),
   requirement: atomic(
     [
@@ -452,7 +479,7 @@ BASE_CONTRACTS.srg_requirement = disaContract;
 BASE_CONTRACTS.stig_rule = disaContract;
 Object.freeze(BASE_CONTRACTS);
 
-const CATALOG_RECORD_TYPES = Object.freeze({
+export const CATALOG_RECORD_TYPES = Object.freeze({
   "atlas-authority-spine": ["policy_directive", "regulation", "statute"],
   "atlas-organizing-spine": ["limb", "trunk"],
   "cmmc-2": ["catalog", "program"],
@@ -484,6 +511,24 @@ const CATALOG_RECORD_TYPES = Object.freeze({
   "nist-ssdf": ["catalog", "group", "requirement"],
   "nist-zt": ["catalog", "zt_build", "zt_cloud_native_requirement", "zt_collaborator", "zt_logical_component", "zt_mapping_contributor", "zt_mapping_document", "zt_product_component", "zt_publication", "zt_reference_component", "zt_tenet"],
 });
+
+// Record types that never appear as ordinary Library search documents: they are
+// structure, navigation or source objects. Shared by the data build and the
+// record acceptance matrix so "is it searchable" has one answer.
+export const NON_RECORD_NODE_TYPES = Object.freeze(new Set([
+  "benchmark",
+  "catalog",
+  "category",
+  "family",
+  "function",
+  "group",
+  "limb",
+  "policy_directive",
+  "regulation",
+  "statute",
+  "tactic",
+  "trunk",
+]));
 
 const PRESENTATION_SCOPE_BY_TYPE = Object.freeze({
   limb: "atlas-organizing-spine",

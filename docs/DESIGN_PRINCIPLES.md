@@ -60,6 +60,7 @@ Before shipping UI copy or a new surface, confirm:
 - Is this the simplest workflow people will actually use (rule 7)?
 - Does it answer the task in front of the user without invented interpretation (rule 8)?
 - Can the user trace back to an authoritative source?
+- Does the copy describe the job, the subject and the payoff rather than the interface? (See "Public copy" in [`PAGE_CONTRACTS.md`](PAGE_CONTRACTS.md).)
 
 ## Related docs
 

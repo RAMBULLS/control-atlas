@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
-import test, { before } from "node:test";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
+import test, { after, before } from "node:test";
 import { gzipSync } from "node:zlib";
+import { RETIRED_RECORD_TYPES } from "../src/shared/record-acceptance.mjs";
 import { parseCciXml } from "../tools/importers/cci-adapter.mjs";
 import {
   parseOlirCsv,
@@ -18,12 +19,27 @@ import { readGeneratedCollection } from "../scripts/lib/generated-graph-artifact
 import { evaluateTrunkReachability } from "../scripts/hierarchy-derivation.mjs";
 import { atlasNeighborhoodShardId } from "../src/app/atlas-neighborhood.mjs";
 
-const generated = (name) => readGeneratedCollection(".", name);
+const fixtureParent = resolve(".local/framework-data-fixtures");
+mkdirSync(fixtureParent, { recursive: true });
+const fixtureRoot = mkdtempSync(join(fixtureParent, "run-"));
+assert.equal(dirname(fixtureRoot), fixtureParent);
+const generatedDirectory = join(fixtureRoot, "data", "generated");
+const sharedManifestPath = "data/generated/build-manifest.json";
+const sharedManifest = readFileSync(sharedManifestPath);
+const generated = (name) => readGeneratedCollection(fixtureRoot, name);
 const sourceRegistry = JSON.parse(readFileSync("data/source-registry.json", "utf8"));
 let buildResult;
 
 before(() => {
-  buildResult = buildFrameworkData();
+  buildResult = buildFrameworkData({ generatedDirectory });
+});
+
+after(() => {
+  try {
+    assert.deepEqual(readFileSync(sharedManifestPath), sharedManifest, "fixture rebuild must preserve the shared generated manifest");
+  } finally {
+    rmSync(fixtureRoot, { recursive: true, force: true });
+  }
 });
 
 test("CCI adapter preserves official bridge requirements and references", () => {
@@ -348,9 +364,9 @@ test("issue 11 graph build emits assessment context and governance artifacts for
     evidence.some((entry) => assessmentEvidenceIds.includes(entry.id)),
   );
 
-  assert.ok(existsSync("data/generated/build-manifest.json"));
-  assert.ok(existsSync("data/generated/source-manifests.json"));
-  assert.ok(existsSync("data/generated/graph-diff-summary.json"));
+  assert.ok(existsSync(join(generatedDirectory, "build-manifest.json")));
+  assert.ok(existsSync(join(generatedDirectory, "source-manifests.json")));
+  assert.ok(existsSync(join(generatedDirectory, "graph-diff-summary.json")));
   assert.ok(
     buildManifest.build_manifest.runtime_artifacts.includes(
       "graph-health.json",
@@ -548,14 +564,16 @@ test("epic 2 graph build emits a complete bounded library search artifact", () =
     "tactic",
     "trunk",
   ]);
-  const publicRecordCount = nodes.filter((node) => !structuralTypes.has(node.node_type)).length;
+  // Retired record types (issue 279) stay in the graph but are not search records.
+  const isSearchable = (type) => !structuralTypes.has(type) && !RETIRED_RECORD_TYPES.has(type);
+  const publicRecordCount = nodes.filter((node) => isSearchable(node.node_type)).length;
 
   assert.equal(artifact.schema_version, "1.0");
   assert.equal(artifact.library_search.document_count, publicRecordCount);
   assert.ok(Array.isArray(artifact.library_search.documents));
   assert.ok(
     artifact.library_search.documents.every(
-      (document) => !structuralTypes.has(document.object_type),
+      (document) => isSearchable(document.object_type),
     ),
     "Library search must contain publisher records, not synthetic grouping nodes",
   );
@@ -571,11 +589,11 @@ test("epic 2 graph build emits a complete bounded library search artifact", () =
     "the complete document register is the search owner; a duplicate serialized index must not block startup",
   );
   assert.equal(
-    existsSync(join("data", "generated", "library-search")),
+    existsSync(join(generatedDirectory, "library-search")),
     true,
     "full search records are delivered through bounded runtime shards",
   );
-  const indexedSearchPath = join("data", "generated", "library-search-index.json");
+  const indexedSearchPath = join(generatedDirectory, "library-search-index.json");
   assert.equal(
     existsSync(indexedSearchPath),
     true,
@@ -588,7 +606,7 @@ test("epic 2 graph build emits a complete bounded library search artifact", () =
   assert.equal(indexedSearch.columns.length, 0, "the manifest must not duplicate index columns");
   assert.equal(indexedSearchArtifact.sharded_collection.record_count, publicRecordCount);
   assert.equal(
-    existsSync(join("data", "generated", "library-search-manifest.json")),
+    existsSync(join(generatedDirectory, "library-search-manifest.json")),
     false,
     "the shard scheduler manifest must not survive the global-index migration",
   );
@@ -618,7 +636,7 @@ test("epic 2 graph build emits a complete bounded library search artifact", () =
     "the search artifact must preserve the neighborhood's total published connection count",
   );
   const ac2Neighborhood = JSON.parse(readFileSync(
-    join("data", "generated", "atlas-neighborhood", `${atlasNeighborhoodShardId(ac2.id)}.json`),
+    join(generatedDirectory, "atlas-neighborhood", `${atlasNeighborhoodShardId(ac2.id)}.json`),
     "utf8",
   )).atlas_neighborhood_shard.records[ac2.id];
   assert.equal(
@@ -759,7 +777,7 @@ test("zero-padded OLIR mapping endpoints resolve to catalog nodes", () => {
 });
 
 test("complete library search bootstrap stays within its compressed transfer budget", () => {
-  const artifactPath = join("data", "generated", "library-search.json");
+  const artifactPath = join(generatedDirectory, "library-search.json");
   const compressedBytes = gzipSync(readFileSync(artifactPath), {
     level: 9,
   }).byteLength;

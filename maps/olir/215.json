@@ -1,0 +1,1841 @@
+{
+  "schema_version": "1.0",
+  "olir_id": 215,
+  "source_artifact": "https://aamcyber.com/sdos/reference/csf-2-0/",
+  "sha256": "sha256:1978caf386a3f2130c72c8dcab9e7b7a19df145a9520eddb04435b00619f83ff",
+  "byte_length": 120048,
+  "parser": "olir-html",
+  "extraction_scope": "published_html_relationships",
+  "relationships": [
+    {
+      "focal_id": "GV.OC-03",
+      "reference_id": "SDOS-GV-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-2"
+    },
+    {
+      "focal_id": "GV.OC-03",
+      "reference_id": "SDOS-GV-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-2"
+    },
+    {
+      "focal_id": "GV.OC-03",
+      "reference_id": "SDOS-GV-05",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-2"
+    },
+    {
+      "focal_id": "GV.OV-01",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-3"
+    },
+    {
+      "focal_id": "GV.OV-01",
+      "reference_id": "SDOS-RS-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-3"
+    },
+    {
+      "focal_id": "GV.OV-02",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-4"
+    },
+    {
+      "focal_id": "GV.OV-02",
+      "reference_id": "SDOS-RS-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-4"
+    },
+    {
+      "focal_id": "GV.OV-03",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-5"
+    },
+    {
+      "focal_id": "GV.OV-03",
+      "reference_id": "SDOS-AU-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-5"
+    },
+    {
+      "focal_id": "GV.OV-03",
+      "reference_id": "SDOS-RS-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-5"
+    },
+    {
+      "focal_id": "GV.PO-01",
+      "reference_id": "SDOS-GV-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-6"
+    },
+    {
+      "focal_id": "GV.PO-01",
+      "reference_id": "SDOS-GV-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-6"
+    },
+    {
+      "focal_id": "GV.PO-01",
+      "reference_id": "SDOS-GV-04",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-6"
+    },
+    {
+      "focal_id": "GV.PO-01",
+      "reference_id": "SDOS-GV-05",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-6"
+    },
+    {
+      "focal_id": "GV.PO-02",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-7"
+    },
+    {
+      "focal_id": "GV.PO-02",
+      "reference_id": "SDOS-GV-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-7"
+    },
+    {
+      "focal_id": "GV.PO-02",
+      "reference_id": "SDOS-GV-04",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-7"
+    },
+    {
+      "focal_id": "GV.PO-02",
+      "reference_id": "SDOS-GV-05",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-7"
+    },
+    {
+      "focal_id": "GV.RM-02",
+      "reference_id": "SDOS-RM-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-8"
+    },
+    {
+      "focal_id": "GV.RM-02",
+      "reference_id": "SDOS-RM-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-8"
+    },
+    {
+      "focal_id": "GV.RM-02",
+      "reference_id": "SDOS-RM-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-8"
+    },
+    {
+      "focal_id": "GV.RM-04",
+      "reference_id": "SDOS-GV-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-9"
+    },
+    {
+      "focal_id": "GV.RM-04",
+      "reference_id": "SDOS-RM-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-9"
+    },
+    {
+      "focal_id": "GV.RM-06",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-10"
+    },
+    {
+      "focal_id": "GV.RM-06",
+      "reference_id": "SDOS-RM-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-10"
+    },
+    {
+      "focal_id": "GV.RM-06",
+      "reference_id": "SDOS-RM-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-10"
+    },
+    {
+      "focal_id": "GV.RM-07",
+      "reference_id": "SDOS-GV-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-11"
+    },
+    {
+      "focal_id": "GV.RM-07",
+      "reference_id": "SDOS-RM-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-11"
+    },
+    {
+      "focal_id": "GV.RR-02",
+      "reference_id": "SDOS-AD-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-12"
+    },
+    {
+      "focal_id": "GV.RR-02",
+      "reference_id": "SDOS-EN-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-12"
+    },
+    {
+      "focal_id": "GV.RR-02",
+      "reference_id": "SDOS-GV-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-12"
+    },
+    {
+      "focal_id": "GV.SC-04",
+      "reference_id": "SDOS-IA-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-13"
+    },
+    {
+      "focal_id": "GV.SC-04",
+      "reference_id": "SDOS-IN-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-13"
+    },
+    {
+      "focal_id": "GV.SC-05",
+      "reference_id": "SDOS-IA-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-14"
+    },
+    {
+      "focal_id": "GV.SC-05",
+      "reference_id": "SDOS-IN-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-14"
+    },
+    {
+      "focal_id": "GV.SC-07",
+      "reference_id": "SDOS-AU-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-15"
+    },
+    {
+      "focal_id": "GV.SC-07",
+      "reference_id": "SDOS-IA-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-15"
+    },
+    {
+      "focal_id": "GV.SC-07",
+      "reference_id": "SDOS-IN-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-15"
+    },
+    {
+      "focal_id": "GV.SC-08",
+      "reference_id": "SDOS-AU-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-16"
+    },
+    {
+      "focal_id": "GV.SC-08",
+      "reference_id": "SDOS-IA-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-16"
+    },
+    {
+      "focal_id": "GV.SC-08",
+      "reference_id": "SDOS-IN-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-16"
+    },
+    {
+      "focal_id": "GV.SC-09",
+      "reference_id": "SDOS-AU-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-17"
+    },
+    {
+      "focal_id": "GV.SC-09",
+      "reference_id": "SDOS-IA-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-17"
+    },
+    {
+      "focal_id": "GV.SC-09",
+      "reference_id": "SDOS-IN-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-5#row-17"
+    },
+    {
+      "focal_id": "ID.AM-02",
+      "reference_id": "SDOS-IA-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-2"
+    },
+    {
+      "focal_id": "ID.AM-02",
+      "reference_id": "SDOS-IN-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-2"
+    },
+    {
+      "focal_id": "ID.AM-03",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-3"
+    },
+    {
+      "focal_id": "ID.AM-03",
+      "reference_id": "SDOS-EN-04",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-3"
+    },
+    {
+      "focal_id": "ID.AM-03",
+      "reference_id": "SDOS-GV-04",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-3"
+    },
+    {
+      "focal_id": "ID.AM-04",
+      "reference_id": "SDOS-AU-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-4"
+    },
+    {
+      "focal_id": "ID.AM-04",
+      "reference_id": "SDOS-IA-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-4"
+    },
+    {
+      "focal_id": "ID.AM-04",
+      "reference_id": "SDOS-IN-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-4"
+    },
+    {
+      "focal_id": "ID.AM-08",
+      "reference_id": "SDOS-GV-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-5"
+    },
+    {
+      "focal_id": "ID.AM-08",
+      "reference_id": "SDOS-IA-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-5"
+    },
+    {
+      "focal_id": "ID.IM-01",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-6"
+    },
+    {
+      "focal_id": "ID.IM-01",
+      "reference_id": "SDOS-RS-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-6"
+    },
+    {
+      "focal_id": "ID.IM-02",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-7"
+    },
+    {
+      "focal_id": "ID.IM-02",
+      "reference_id": "SDOS-RS-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-7"
+    },
+    {
+      "focal_id": "ID.IM-03",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-8"
+    },
+    {
+      "focal_id": "ID.IM-03",
+      "reference_id": "SDOS-AU-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-8"
+    },
+    {
+      "focal_id": "ID.IM-03",
+      "reference_id": "SDOS-RS-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-8"
+    },
+    {
+      "focal_id": "ID.RA-01",
+      "reference_id": "SDOS-AU-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-9"
+    },
+    {
+      "focal_id": "ID.RA-01",
+      "reference_id": "SDOS-IN-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-9"
+    },
+    {
+      "focal_id": "ID.RA-02",
+      "reference_id": "SDOS-DE-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-10"
+    },
+    {
+      "focal_id": "ID.RA-03",
+      "reference_id": "SDOS-AD-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-11"
+    },
+    {
+      "focal_id": "ID.RA-03",
+      "reference_id": "SDOS-AU-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-11"
+    },
+    {
+      "focal_id": "ID.RA-04",
+      "reference_id": "SDOS-RM-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-12"
+    },
+    {
+      "focal_id": "ID.RA-04",
+      "reference_id": "SDOS-RM-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-12"
+    },
+    {
+      "focal_id": "ID.RA-05",
+      "reference_id": "SDOS-RM-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-13"
+    },
+    {
+      "focal_id": "ID.RA-05",
+      "reference_id": "SDOS-RM-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-13"
+    },
+    {
+      "focal_id": "ID.RA-06",
+      "reference_id": "SDOS-GV-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-14"
+    },
+    {
+      "focal_id": "ID.RA-06",
+      "reference_id": "SDOS-RM-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-14"
+    },
+    {
+      "focal_id": "ID.RA-07",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-15"
+    },
+    {
+      "focal_id": "ID.RA-07",
+      "reference_id": "SDOS-GV-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-15"
+    },
+    {
+      "focal_id": "ID.RA-07",
+      "reference_id": "SDOS-GV-04",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-15"
+    },
+    {
+      "focal_id": "ID.RA-07",
+      "reference_id": "SDOS-IN-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-15"
+    },
+    {
+      "focal_id": "ID.RA-08",
+      "reference_id": "SDOS-GV-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-16"
+    },
+    {
+      "focal_id": "ID.RA-09",
+      "reference_id": "SDOS-IA-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-17"
+    },
+    {
+      "focal_id": "ID.RA-09",
+      "reference_id": "SDOS-IN-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-17"
+    },
+    {
+      "focal_id": "ID.RA-10",
+      "reference_id": "SDOS-IA-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-18"
+    },
+    {
+      "focal_id": "ID.RA-10",
+      "reference_id": "SDOS-IN-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-6#row-18"
+    },
+    {
+      "focal_id": "PR.AA-01",
+      "reference_id": "SDOS-IA-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-2"
+    },
+    {
+      "focal_id": "PR.AA-01",
+      "reference_id": "SDOS-IA-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-2"
+    },
+    {
+      "focal_id": "PR.AA-02",
+      "reference_id": "SDOS-IA-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-3"
+    },
+    {
+      "focal_id": "PR.AA-02",
+      "reference_id": "SDOS-IA-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-3"
+    },
+    {
+      "focal_id": "PR.AA-03",
+      "reference_id": "SDOS-AD-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-4"
+    },
+    {
+      "focal_id": "PR.AA-03",
+      "reference_id": "SDOS-IA-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-4"
+    },
+    {
+      "focal_id": "PR.AA-04",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-5"
+    },
+    {
+      "focal_id": "PR.AA-04",
+      "reference_id": "SDOS-IA-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-5"
+    },
+    {
+      "focal_id": "PR.AA-05",
+      "reference_id": "SDOS-AD-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-6"
+    },
+    {
+      "focal_id": "PR.AA-05",
+      "reference_id": "SDOS-EN-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-6"
+    },
+    {
+      "focal_id": "PR.AA-05",
+      "reference_id": "SDOS-GV-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-6"
+    },
+    {
+      "focal_id": "PR.AA-05",
+      "reference_id": "SDOS-GV-05",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-6"
+    },
+    {
+      "focal_id": "PR.DS-01",
+      "reference_id": "SDOS-IN-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-7"
+    },
+    {
+      "focal_id": "PR.DS-01",
+      "reference_id": "SDOS-IN-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-7"
+    },
+    {
+      "focal_id": "PR.DS-02",
+      "reference_id": "SDOS-EN-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-8"
+    },
+    {
+      "focal_id": "PR.DS-02",
+      "reference_id": "SDOS-EN-04",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-8"
+    },
+    {
+      "focal_id": "PR.DS-10",
+      "reference_id": "SDOS-EN-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-9"
+    },
+    {
+      "focal_id": "PR.DS-10",
+      "reference_id": "SDOS-EN-04",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-9"
+    },
+    {
+      "focal_id": "PR.DS-10",
+      "reference_id": "SDOS-GV-05",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-9"
+    },
+    {
+      "focal_id": "PR.DS-11",
+      "reference_id": "SDOS-IN-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-10"
+    },
+    {
+      "focal_id": "PR.DS-11",
+      "reference_id": "SDOS-IN-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-10"
+    },
+    {
+      "focal_id": "PR.IR-01",
+      "reference_id": "SDOS-AD-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-11"
+    },
+    {
+      "focal_id": "PR.IR-01",
+      "reference_id": "SDOS-EN-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-11"
+    },
+    {
+      "focal_id": "PR.IR-03",
+      "reference_id": "SDOS-EN-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-12"
+    },
+    {
+      "focal_id": "PR.IR-03",
+      "reference_id": "SDOS-IN-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-12"
+    },
+    {
+      "focal_id": "PR.IR-03",
+      "reference_id": "SDOS-IN-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-12"
+    },
+    {
+      "focal_id": "PR.IR-04",
+      "reference_id": "SDOS-EN-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-13"
+    },
+    {
+      "focal_id": "PR.IR-04",
+      "reference_id": "SDOS-RM-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-13"
+    },
+    {
+      "focal_id": "PR.IR-04",
+      "reference_id": "SDOS-RM-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-13"
+    },
+    {
+      "focal_id": "PR.PS-01",
+      "reference_id": "SDOS-GV-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-14"
+    },
+    {
+      "focal_id": "PR.PS-01",
+      "reference_id": "SDOS-GV-04",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-14"
+    },
+    {
+      "focal_id": "PR.PS-01",
+      "reference_id": "SDOS-IN-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-14"
+    },
+    {
+      "focal_id": "PR.PS-02",
+      "reference_id": "SDOS-IA-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-15"
+    },
+    {
+      "focal_id": "PR.PS-02",
+      "reference_id": "SDOS-IN-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-15"
+    },
+    {
+      "focal_id": "PR.PS-04",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-16"
+    },
+    {
+      "focal_id": "PR.PS-04",
+      "reference_id": "SDOS-AU-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-16"
+    },
+    {
+      "focal_id": "PR.PS-04",
+      "reference_id": "SDOS-AU-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-16"
+    },
+    {
+      "focal_id": "PR.PS-04",
+      "reference_id": "SDOS-EN-04",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-16"
+    },
+    {
+      "focal_id": "PR.PS-05",
+      "reference_id": "SDOS-AD-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-17"
+    },
+    {
+      "focal_id": "PR.PS-05",
+      "reference_id": "SDOS-GV-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-17"
+    },
+    {
+      "focal_id": "PR.PS-05",
+      "reference_id": "SDOS-GV-05",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-17"
+    },
+    {
+      "focal_id": "PR.PS-05",
+      "reference_id": "SDOS-IN-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-7#row-17"
+    },
+    {
+      "focal_id": "DE.AE-02",
+      "reference_id": "SDOS-DE-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-2"
+    },
+    {
+      "focal_id": "DE.AE-02",
+      "reference_id": "SDOS-DE-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-2"
+    },
+    {
+      "focal_id": "DE.AE-03",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-3"
+    },
+    {
+      "focal_id": "DE.AE-03",
+      "reference_id": "SDOS-AU-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-3"
+    },
+    {
+      "focal_id": "DE.AE-04",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-4"
+    },
+    {
+      "focal_id": "DE.AE-04",
+      "reference_id": "SDOS-RM-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-4"
+    },
+    {
+      "focal_id": "DE.AE-06",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-5"
+    },
+    {
+      "focal_id": "DE.AE-06",
+      "reference_id": "SDOS-AU-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-5"
+    },
+    {
+      "focal_id": "DE.AE-07",
+      "reference_id": "SDOS-DE-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-6"
+    },
+    {
+      "focal_id": "DE.AE-07",
+      "reference_id": "SDOS-RM-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-6"
+    },
+    {
+      "focal_id": "DE.AE-08",
+      "reference_id": "SDOS-AU-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-7"
+    },
+    {
+      "focal_id": "DE.AE-08",
+      "reference_id": "SDOS-RS-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-7"
+    },
+    {
+      "focal_id": "DE.CM-01",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-8"
+    },
+    {
+      "focal_id": "DE.CM-01",
+      "reference_id": "SDOS-AU-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-8"
+    },
+    {
+      "focal_id": "DE.CM-01",
+      "reference_id": "SDOS-EN-04",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-8"
+    },
+    {
+      "focal_id": "DE.CM-03",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-9"
+    },
+    {
+      "focal_id": "DE.CM-03",
+      "reference_id": "SDOS-AU-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-9"
+    },
+    {
+      "focal_id": "DE.CM-06",
+      "reference_id": "SDOS-AU-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-10"
+    },
+    {
+      "focal_id": "DE.CM-06",
+      "reference_id": "SDOS-EN-04",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-10"
+    },
+    {
+      "focal_id": "DE.CM-09",
+      "reference_id": "SDOS-AU-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-11"
+    },
+    {
+      "focal_id": "DE.CM-09",
+      "reference_id": "SDOS-IN-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-11"
+    },
+    {
+      "focal_id": "DE.CM-09",
+      "reference_id": "SDOS-IN-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-8#row-11"
+    },
+    {
+      "focal_id": "RS.AN-03",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-2"
+    },
+    {
+      "focal_id": "RS.AN-03",
+      "reference_id": "SDOS-AU-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-2"
+    },
+    {
+      "focal_id": "RS.AN-03",
+      "reference_id": "SDOS-DE-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-2"
+    },
+    {
+      "focal_id": "RS.AN-03",
+      "reference_id": "SDOS-RS-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-2"
+    },
+    {
+      "focal_id": "RS.AN-06",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-3"
+    },
+    {
+      "focal_id": "RS.AN-06",
+      "reference_id": "SDOS-AU-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-3"
+    },
+    {
+      "focal_id": "RS.AN-07",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-4"
+    },
+    {
+      "focal_id": "RS.AN-07",
+      "reference_id": "SDOS-AU-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-4"
+    },
+    {
+      "focal_id": "RS.AN-08",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-5"
+    },
+    {
+      "focal_id": "RS.AN-08",
+      "reference_id": "SDOS-RM-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-5"
+    },
+    {
+      "focal_id": "RS.CO-02",
+      "reference_id": "SDOS-AU-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-6"
+    },
+    {
+      "focal_id": "RS.CO-03",
+      "reference_id": "SDOS-AU-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-7"
+    },
+    {
+      "focal_id": "RS.MA-02",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-8"
+    },
+    {
+      "focal_id": "RS.MA-02",
+      "reference_id": "SDOS-RS-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-8"
+    },
+    {
+      "focal_id": "RS.MA-03",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-9"
+    },
+    {
+      "focal_id": "RS.MA-03",
+      "reference_id": "SDOS-RM-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-9"
+    },
+    {
+      "focal_id": "RS.MA-04",
+      "reference_id": "SDOS-DE-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-10"
+    },
+    {
+      "focal_id": "RS.MA-04",
+      "reference_id": "SDOS-RM-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-10"
+    },
+    {
+      "focal_id": "RS.MA-05",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-11"
+    },
+    {
+      "focal_id": "RS.MA-05",
+      "reference_id": "SDOS-RM-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-11"
+    },
+    {
+      "focal_id": "RS.MA-05",
+      "reference_id": "SDOS-RS-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-11"
+    },
+    {
+      "focal_id": "RS.MI-01",
+      "reference_id": "SDOS-EN-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-12"
+    },
+    {
+      "focal_id": "RS.MI-01",
+      "reference_id": "SDOS-EN-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-12"
+    },
+    {
+      "focal_id": "RS.MI-01",
+      "reference_id": "SDOS-IN-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-12"
+    },
+    {
+      "focal_id": "RS.MI-02",
+      "reference_id": "SDOS-GV-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-13"
+    },
+    {
+      "focal_id": "RS.MI-02",
+      "reference_id": "SDOS-IA-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-9#row-13"
+    },
+    {
+      "focal_id": "RC.CO-03",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-10#row-2"
+    },
+    {
+      "focal_id": "RC.CO-03",
+      "reference_id": "SDOS-AU-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-10#row-2"
+    },
+    {
+      "focal_id": "RC.RP-02",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-10#row-3"
+    },
+    {
+      "focal_id": "RC.RP-02",
+      "reference_id": "SDOS-RM-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-10#row-3"
+    },
+    {
+      "focal_id": "RC.RP-03",
+      "reference_id": "SDOS-IN-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-10#row-4"
+    },
+    {
+      "focal_id": "RC.RP-03",
+      "reference_id": "SDOS-IN-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-10#row-4"
+    },
+    {
+      "focal_id": "RC.RP-05",
+      "reference_id": "SDOS-IA-02",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-10#row-5"
+    },
+    {
+      "focal_id": "RC.RP-05",
+      "reference_id": "SDOS-IN-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-10#row-5"
+    },
+    {
+      "focal_id": "RC.RP-05",
+      "reference_id": "SDOS-IN-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-10#row-5"
+    },
+    {
+      "focal_id": "RC.RP-06",
+      "reference_id": "SDOS-AU-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-10#row-6"
+    },
+    {
+      "focal_id": "RC.RP-06",
+      "reference_id": "SDOS-IN-01",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-10#row-6"
+    },
+    {
+      "focal_id": "RC.RP-06",
+      "reference_id": "SDOS-IN-03",
+      "relationship_type": "Concept Crosswalk",
+      "raw_relationship_type": "Concept Crosswalk",
+      "relationship_strength": null,
+      "relationship_explanation": null,
+      "rationale": null,
+      "source_locator": "table-10#row-6"
+    }
+  ]
+}

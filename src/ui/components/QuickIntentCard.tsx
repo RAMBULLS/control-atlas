@@ -52,40 +52,6 @@ export function QuickIntentCard(props: {
   );
 }
 
-export function CompareStepIndicator(props: { step: 1 | 2 | 3; label: string }) {
-  const steps = [
-    { n: 1, text: "Choose comparison" },
-    { n: 2, text: "Set inputs" },
-    { n: 3, text: "Use results" },
-  ] as const;
-
-  return (
-    <nav aria-label={props.label} className="mb-[24px]">
-      <ol className="flex gap-[8px] flex-wrap m-0 p-0 list-none">
-        {steps.map((entry) => (
-          <li
-            className={`flex items-center gap-[8px] px-[12px] py-[8px] text-[12px] rounded-[3px] border ${
-              entry.n === props.step
-                ? "border-[var(--ca-secondary)] bg-[color-mix(in_srgb,var(--ca-secondary)_10%,transparent)] text-[var(--ca-text)]"
-                : entry.n < props.step
-                  ? "border-[var(--ca-border-strong)] bg-[var(--ca-surface-raised)] text-[var(--ca-text)]"
-                  : "border-[var(--ca-border)] bg-[var(--ca-surface)] text-[var(--ca-text-muted)]"
-            }`}
-            key={entry.n}
-          >
-            <span className={`w-[20px] h-[20px] rounded flex items-center justify-center font-bold text-[10px] ${
-              entry.n === props.step || entry.n < props.step
-                ? "bg-[var(--ca-secondary)] text-[var(--ca-bg)]"
-                : "bg-[var(--ca-border-strong)] text-[var(--ca-text-muted)]"
-            }`}>{entry.n}</span>
-            <span>{entry.text}</span>
-          </li>
-        ))}
-      </ol>
-    </nav>
-  );
-}
-
 export function CatalogFilterBar(props: {
   category: string;
   categoryOptions: string[];
@@ -115,7 +81,7 @@ export function CatalogFilterBar(props: {
         role="group"
       >
         <button
-          className={`inline-flex items-center min-h-[26px] px-[12px] py-[4px] border rounded font-mono text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
+          className={`inline-flex items-center min-h-[44px] sm:min-h-[26px] px-[12px] py-[4px] border rounded font-mono text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
             props.category === ""
               ? "border-[var(--ca-info)] text-[var(--ca-text)] bg-[color-mix(in_srgb,var(--ca-info)_20%,transparent)]"
               : "border-[var(--ca-border-strong)] text-[var(--ca-text)] bg-[var(--ca-surface)] hover:bg-[var(--ca-surface-raised)]"
@@ -127,7 +93,7 @@ export function CatalogFilterBar(props: {
         {props.categoryOptions.map((option) => (
           <button
             key={option}
-            className={`inline-flex items-center min-h-[26px] px-[12px] py-[4px] border rounded font-mono text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
+            className={`inline-flex items-center min-h-[44px] sm:min-h-[26px] px-[12px] py-[4px] border rounded font-mono text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
               props.category === option
                 ? "border-[var(--ca-info)] text-[var(--ca-text)] bg-[color-mix(in_srgb,var(--ca-info)_20%,transparent)]"
                 : "border-[var(--ca-border-strong)] text-[var(--ca-text)] bg-[var(--ca-surface)] hover:bg-[var(--ca-surface-raised)]"

@@ -1,5 +1,19 @@
 import { expect } from '@playwright/test';
 
+// Firefox DOMRects can report 44px as 43.999969482421875. Keep millipixel
+// precision so floating-point noise passes while genuinely undersized targets fail.
+export function roundCssPixels(value) {
+  return Math.round(value * 1000) / 1000;
+}
+
+export async function clickAtlasPublication(page, publicationId) {
+  // The SVG group also bounds labels and empty space. Wait for the rendered
+  // camera to settle, then use the publication's actual 48px pointer target.
+  const map = page.locator('.terr');
+  await expect(map).toHaveAttribute('aria-busy', 'false');
+  await map.locator(`[data-landmark=${JSON.stringify(publicationId)}] .lm__hit`).click();
+}
+
 function emitDiagnostic(event, detail) {
   console.log(`[pw-diag] ${event}: ${detail}`);
 }
@@ -90,3 +104,11 @@ export async function waitForAppReady(page, options = {}) {
     throw error;
   }
 }
+
+/**
+ * The record page offers exactly one official-source action, but its label
+ * states what the link actually does: a publisher page opens, a raw artifact
+ * downloads. Matching the verb pair keeps the "exactly one" guarantee without
+ * re-asserting the promise that a .zip is something you can view.
+ */
+export const OFFICIAL_SOURCE_ACTION = /^(?:View|Download) official source(?: \([A-Z0-9]+\))?$/;

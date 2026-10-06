@@ -1,0 +1,104 @@
+{
+  "_doc": "Hand-authored dependency direction for the Atlas frameworks landscape, not publisher containment and not derived from crosswalk data. Every framework-pair edge in the canonical graph is relationship_class \"correlation\" or \"applicability\" — docs/DATA_POLICY.md is explicit that these classes cannot supply parent, ancestors, structural level, or depth. Confirmed directly against data/generated/atlas-network.json: NIST Zero Trust's own edge to both SP 800-53 and CSF 2.0 carries both \"supports\" and \"supported_by\" in the same aggregated bucket, so relationship_type cannot mechanically supply direction either. `parentCatalogId` here is an editorial call about which framework a reader should understand as depending on which, reviewed with the product owner (2026-09-04). It drives layout position only — it must never be presented as, or merged into, a published crosswalk. Any framework-pair edge in the canonical graph that does not match a catalog's declared parent here renders as a secondary cross-link, not a tree position.",
+  "roots": [
+    {
+      "catalogId": "nist-800-53",
+      "rationale": "The dataset's hub — twelve other frameworks select from, assess, correlate to, or baseline it, and it depends on nothing else here."
+    },
+    {
+      "catalogId": "mitre-attack",
+      "rationale": "Adversary technique taxonomy. D3FEND is MITRE's declared countermeasure-to-ATT&CK mapping, not the reverse."
+    },
+    {
+      "catalogId": "csf-2",
+      "rationale": "Used independently in practice — practitioners orient from CSF's functions and drill into 800-53 for control detail, not the reverse, even though the raw crosswalk data's own edge runs 800-53 -> CSF. Confirmed with product owner 2026-09-04."
+    },
+    {
+      "catalogId": "cui-policy",
+      "rationale": "A governmentwide information-handling policy (32 CFR Part 2002), independent of the 800-53 control catalog. Every edge it has is inbound (things that protect CUI reference it), never outbound."
+    },
+    {
+      "catalogId": "nist-800-37",
+      "rationale": "RMF. Used independently in practice, the same as CSF, even though it technically references 800-53/800-53B/FIPS-199/FIPS-200 as steps in its process. Confirmed with product owner 2026-09-04 — RMF and CSF are each their own door, not a child of 800-53."
+    }
+  ],
+  "children": {
+    "dod-zt": {
+      "parentCatalogId": "nist-800-53",
+      "rationale": "DoD Zero Trust's pillars select controls from SP 800-53."
+    },
+    "nist-zt": {
+      "parentCatalogId": "nist-800-53",
+      "rationale": "NIST Zero Trust selects SP 800-53 controls (1,114 shared records vs. 632 for its smaller CSF relationship, which renders as a secondary line)."
+    },
+    "fedramp-rev5": {
+      "parentCatalogId": "nist-800-53",
+      "rationale": "FedRAMP Rev. 5 baselines are literally SP 800-53 control selections."
+    },
+    "nist-800-53a": {
+      "parentCatalogId": "nist-800-53",
+      "rationale": "The assessment-procedures companion volume to 800-53 — exists to assess 800-53 controls."
+    },
+    "nist-800-53b": {
+      "parentCatalogId": "nist-800-53",
+      "rationale": "The Low/Moderate/High control-baseline companion volume to 800-53."
+    },
+    "nist-iot-cybersecurity": {
+      "parentCatalogId": "nist-800-53",
+      "rationale": "Maps its device requirements to SP 800-53 controls."
+    },
+    "fips-200": {
+      "parentCatalogId": "nist-800-53",
+      "rationale": "Judgment call: FIPS 200 predates and informed 800-53's development, so an argument exists the other way. Kept as a child of the dataset's hub for simplicity; its only real edge is directly to 800-53."
+    },
+    "disa-cci": {
+      "parentCatalogId": "nist-800-53",
+      "rationale": "CCIs exist specifically to correlate 800-53 control statements to assessable, implementable items."
+    },
+    "fips-199": {
+      "parentCatalogId": "nist-800-53b",
+      "rationale": "Impact categorization feeds directly into which 800-53B baseline (Low/Moderate/High) applies — its only real edge is to 800-53B, not to 800-53 or RMF directly."
+    },
+    "disa-stig": {
+      "parentCatalogId": "disa-cci",
+      "rationale": "STIGs implement via CCI correlation (25,771 shared records, the dataset's heaviest relationship)."
+    },
+    "disa-srg": {
+      "parentCatalogId": "disa-cci",
+      "rationale": "SRGs implement via CCI correlation, the same as STIGs."
+    },
+    "mitre-d3fend": {
+      "parentCatalogId": "mitre-attack",
+      "rationale": "MITRE's declared countermeasure-to-ATT&CK mapping. Its smaller direct edge to SP 800-53 renders as a secondary cross-link."
+    },
+    "mitre-attack-ics": {
+      "parentCatalogId": "mitre-attack",
+      "rationale": "MITRE's ICS-specific extension of the main ATT&CK Enterprise framework, not a thing D3FEND references. Its own edge to D3FEND renders as a secondary line between two children of the same root."
+    },
+    "nist-800-171-rev2": {
+      "parentCatalogId": "cui-policy",
+      "rationale": "Exists specifically to protect CUI per the program policy."
+    },
+    "nist-800-172": {
+      "parentCatalogId": "cui-policy",
+      "rationale": "Enhanced CUI protection requirements — same grounding as 800-171-rev2. Its edge from CMMC 2.0 renders as a secondary line."
+    },
+    "nist-800-171": {
+      "parentCatalogId": "cui-policy",
+      "rationale": "Rev. 3 of the same CUI-protection standard as 800-171-rev2 — kept consistent with its sibling revision rather than split across two different primary parents. Its larger data relationships to SP 800-53 (157 records) and CSF (313 records) render as secondary lines."
+    },
+    "cmmc-2": {
+      "parentCatalogId": "nist-800-171-rev2",
+      "rationale": "CMMC 2.0's foundational level incorporates 800-171-rev2; its edge to 800-172 (its higher maturity level) renders as a secondary line."
+    }
+  },
+  "_unconnectedDoc": "Catalogs with zero frameworks-level edges in the canonical graph as of 2026-09-04 get no entry here. They stay in the Atlas's existing honest 'no crosswalks mapped yet' treatment rather than being forced into the tree.",
+  "unconnected": [
+    "dod-rai",
+    "fedramp-2026",
+    "microsoft-zt-maturity",
+    "nist-ai-rmf",
+    "nist-mobile-threats",
+    "nist-ssdf"
+  ]
+}

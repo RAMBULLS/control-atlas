@@ -1,6 +1,6 @@
 import * as Accordion from "@radix-ui/react-accordion";
-import { IconArrowRight, IconX } from "@tabler/icons-react";
-import React, { useId, type ElementType, type ReactNode } from "react";
+import { IconArrowRight, IconCheck, IconX } from "@tabler/icons-react";
+import React, { useId, type CSSProperties, type ElementType, type ReactNode } from "react";
 
 import { displayNameFor } from "../../app/display-names.mjs";
 import {
@@ -11,6 +11,11 @@ import {
 import { AcronymText } from "../components/AccessibleTerm";
 import { ProvenanceTerm } from "../components/ProvenanceTerm";
 import { Button, ButtonLink } from "../components/lsm/Button";
+import {
+  officialSourceActionLabel,
+  officialSourceFor,
+  ORIGINAL_SOURCE_VERBS,
+} from "./officialSource";
 import type { ViewState } from "./viewState";
 import { sourceIdentityPresentationFor } from "./sourceIdentity";
 
@@ -571,11 +576,14 @@ export function SourceSummaryCard(props: { source: any; onOpen?: () => void; det
       <div className="card-actions">
         <ButtonLink
           variant="secondary"
-          href={source.catalog_browse_url || source.artifact_url}
+          href={officialSourceFor(source).url}
           rel="noopener noreferrer"
           target="_blank"
         >
-          Open the original source
+          {officialSourceActionLabel(
+            officialSourceFor(source),
+            ORIGINAL_SOURCE_VERBS,
+          )}
         </ButtonLink>
       </div>
     </article>
@@ -621,17 +629,24 @@ export function SelectField(props: {
   options: Array<{ value: string; label: string; disabled?: boolean }>;
   onChange: (value: string) => void;
   disabled?: boolean;
+  /** Marks the field as blocking, for assistive tech as well as sighted readers. */
+  required?: boolean;
 }) {
   const fieldId = `field-${props.label.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-")}`;
 
   return (
     <label className="field" htmlFor={fieldId}>
-      <span>{props.label}</span>
+      <span>
+        {props.label}
+        {props.required ? <span className="field-required"> (required)</span> : null}
+      </span>
       <select
         aria-label={props.label}
+        aria-required={props.required || undefined}
         disabled={props.disabled}
         id={fieldId}
         onChange={(event) => props.onChange(event.target.value)}
+        required={props.required}
         value={props.value}
       >
         <option value="">{props.emptyLabel || "All"}</option>
@@ -682,35 +697,74 @@ export function EmptyState(props: {
 }
 
 /**
- * Standardized Staged Flow StepIndicator (T5.8).
+ * One step of a staged flow. `outcome: true` marks the result step rather
+ * than another question to answer.
+ */
+export type FlowStep = {
+  id: string;
+  label: string;
+  description?: string;
+  outcome?: boolean;
+};
+
+/**
+ * The panel eyebrow for a step ("02 / Set up", or the bare label for an
+ * outcome), taken from the same definitions the indicator draws so the two can
+ * never disagree.
+ */
+export function stepEyebrow(steps: readonly FlowStep[], stepId: string): string {
+  const index = steps.findIndex((step) => step.id === stepId);
+  if (index < 0) return "";
+  const step = steps[index];
+  return step.outcome ? step.label : `${String(index + 1).padStart(2, "0")} / ${step.label}`;
+}
+
+/**
+ * The staged-flow progress indicator shared by Compare and Templates.
+ * Steps are status, not controls: returning to an earlier step is
+ * each flow's own Back/Change action, so nothing here is clickable. State is
+ * carried by marker shape (check, ring, hollow), label weight and hidden text,
+ * never by color alone, and the progress line is drawn from the real position.
  */
 export function StepIndicator(props: {
-  steps: Array<{ id: string; label: string; description?: string }>;
+  steps: readonly FlowStep[];
+  /** 1-based index of the current step. */
   currentStep: number;
-  onSelectStep?: (stepIndex: number) => void;
+  label?: string;
 }) {
+  const count = props.steps.length;
+  const current = Math.min(Math.max(props.currentStep, 1), count);
+  const progress = count > 1 ? (current - 1) / (count - 1) : 1;
   return (
-    <nav aria-label="Step progress" className="staged-flow-steps">
-      <ol className="step-list progress-trajectory">
+    <nav aria-label={props.label || "Step progress"} className="staged-flow-steps">
+      <ol
+        className="step-list"
+        style={{ "--step-count": count, "--step-progress": progress } as CSSProperties}
+      >
         {props.steps.map((step, idx) => {
           const stepNum = idx + 1;
-          const isActive = stepNum === props.currentStep;
-          const isComplete = stepNum < props.currentStep;
+          const status = stepNum < current ? "done" : stepNum === current ? "current" : "future";
           return (
             <li
-              aria-current={isActive ? "step" : undefined}
-              className={`step-item step ${isActive ? "step-active active" : isComplete ? "step-complete done" : "step-pending"}`}
+              aria-current={status === "current" ? "step" : undefined}
+              className={`step-item is-${status}${step.outcome ? " is-outcome" : ""}`}
               key={step.id}
             >
-              <strong className="step-label">
-                <span aria-hidden="true" className="step-number">
-                  {String(stepNum).padStart(2, "0")} /
-                </span>{" "}
-                {step.label}
-              </strong>
-              {step.description ? (
-                <small className="visually-hidden">{step.description}</small>
-              ) : null}
+              <span aria-hidden="true" className="step-marker">
+                {status === "done" ? <IconCheck size={12} stroke={3} /> : null}
+              </span>
+              <span className="step-text">
+                {step.outcome ? null : (
+                  <span aria-hidden="true" className="step-number">
+                    {String(stepNum).padStart(2, "0")}
+                  </span>
+                )}
+                <span className="step-label">{step.label}</span>
+                {status === "done" ? <span className="visually-hidden"> (done)</span> : null}
+                {step.description ? (
+                  <span className="visually-hidden">: {step.description}</span>
+                ) : null}
+              </span>
             </li>
           );
         })}

@@ -13,10 +13,13 @@ test.beforeEach(async ({ page }) => {
 
 test("selected publications expose their verified official destinations", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
+  // The official destination is the publication a practitioner can cite, which
+  // is not always the register's browse field: for SP 800-53 that field is the
+  // CPRT tool home while the publication page sits in artifact_url.
   const cases = [
     {
       source: "nist-800-53",
-      href: "https://csrc.nist.gov/projects/cprt/catalog#/cprt/home",
+      href: "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final",
     },
     {
       source: "mitre-d3fend-ontology",
@@ -33,10 +36,8 @@ test("selected publications expose their verified official destinations", async 
     );
     await expect(inspector).toBeVisible();
     await expect(
-      inspector.getByRole("link", {
-        name: "Open official publication",
-        exact: true,
-      }),
+      // The accessible name also says which publication opens, and that it opens in a new tab.
+      inspector.getByRole("link", { name: /^Open official publication for .+ \(opens in a new tab\)$/ }),
     ).toHaveAttribute("href", fixture.href);
   }
 });
@@ -88,7 +89,9 @@ test("Sources preserves useful search and publisher state without legacy layers"
   await expect(page.getByRole("searchbox", { name: "Search publications" })).toHaveValue(
     "DISA",
   );
-  await expect(page.getByLabel("Publisher", { exact: true })).toHaveValue("DISA");
+  await expect(
+    page.getByRole("navigation", { name: "Publishers" }).getByRole("button", { name: /^DISA/ }),
+  ).toHaveAttribute("aria-pressed", "true");
   await expect(
     page.getByRole("table", { name: "Control Atlas publication register" }),
   ).toBeVisible();
@@ -102,7 +105,7 @@ test("compact Sources opens a modal inspector without horizontal overflow", asyn
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
-  await page.getByRole("button", { name: "CDAO AI Assurance Toolkit" }).click();
+  await page.getByRole("button", { name: "DoD AI Assurance", exact: true }).click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
   await expect(dialog).toHaveAttribute("aria-modal", "true");

@@ -31,16 +31,19 @@ test.beforeEach(async ({ page }) => {
 
 const ROUTES = [
   { label: "home", path: "/#/" },
-  { label: "start here", path: "/#/start" },
+  { label: "former Start Here bookmark", path: "/#/start" },
   { label: "catalog inventory", path: "/#/catalog" },
   { label: "catalog", path: "/#/catalog/nist-800-53" },
+  // Publication pages (#284): a dense implementation standard and a sparse standard.
+  { label: "publication page STIG", path: "/#/library/publication/disa-stig" },
+  { label: "publication page sparse FIPS 199", path: "/#/library/publication/fips-199" },
   {
     label: "record detail",
     path: "/#/record/nist-800-53/AC-2",
   },
   { label: "resources", path: "/#/resources" },
   // Deep card grid (opened via a lane) is where badge/tag contrast lives.
-  { label: "resources directory", path: "/#/resources?collection=official-portals" },
+  { label: "resources directory", path: "/#/resources?collection=dod-cybersecurity-portals" },
   {
     label: "resource detail",
     path: "/#/resources/official-nist-oscal?q=OSCAL&resourceType=specification&owner=NIST%20OSCAL%20Team&showAll=true&viewMode=map",
@@ -48,6 +51,12 @@ const ROUTES = [
   { label: "retired recovery", path: "/#/retired?q=old-control" },
   { label: "not found recovery", path: "/#/does-not-exist" },
   { label: "explore", path: "/#/explore" },
+  // The territory sheet, a practitioner journey, and saved classic links that
+  // now translate into territory state (they must still land somewhere usable).
+  { label: "Atlas overview", path: "/#/atlas" },
+  { label: "Atlas RMF journey", path: "/#/atlas?atlasJourney=rmf" },
+  { label: "Atlas working files journey", path: "/#/atlas?atlasJourney=working-files" },
+  { label: "Atlas legacy publisher lens", path: "/#/atlas?atlasLanding=publishers" },
   {
     label: "focused Atlas Path",
     path: "/#/explore?node=nist-800-53%3AAC-2&relationshipView=path",
@@ -95,6 +104,8 @@ const ROUTES = [
     label: "source detail",
     path: "/#/sources?source=nist-iot-device-cybersecurity-requirement-catalogs",
   },
+  { label: "Sources policy & directives", path: "/#/sources?layer=policy" },
+  { label: "Sources policy document", path: "/#/sources?layer=policy&source=authority-dodi-8500-01" },
   {
     label: "source not found",
     path: "/#/sources?source=not-a-real-source",
@@ -106,6 +117,7 @@ const ROUTES = [
   },
   { label: "learn hub", path: "/#/learn" },
   { label: "learn detail", path: "/#/learn?pattern=rmf-lifecycle" },
+  { label: "control implementation guide", path: "/#/learn?pattern=implementing-controls" },
   { label: "about", path: "/#/about" },
 ];
 
@@ -128,7 +140,8 @@ for (const route of ROUTES) {
       ).toBeVisible();
       await expect(
         page.getByRole("heading", {
-          name: "NIST IoT Device Cybersecurity Requirement Catalogs",
+          name: "NIST IoT",
+          exact: true,
           level: 2,
         }),
       ).toBeVisible();
@@ -206,17 +219,19 @@ test("a11y: focused Atlas relationship table has no serious or critical violatio
     page.getByRole("table", { name: "Relationship table" }),
   ).toBeVisible();
   await assertNoBlockingViolations(page, "focused Atlas relationship table");
+});
 
-  await page.getByRole("button", { name: "Hierarchy" }).click();
-  await expect(page.locator(".route-transition")).toBeHidden();
-  const authorityRail = page.getByRole("navigation", { name: "Where this sits" });
-  await expect(authorityRail.getByText("Authority", { exact: true })).toBeVisible();
-  await expect(
-    authorityRail.getByRole("link", {
-      name: /40 U\.S\.C\. § 11331 — Official authority/,
-    }),
-  ).toBeVisible();
-  await assertNoBlockingViolations(page, "focused Atlas authority rail");
+test("a11y: Atlas Policy & directives has no serious or critical violations", async ({
+  page,
+}) => {
+  await gotoApp(page, "/#/atlas");
+  await waitForAppReady(page, { allowPartial: true });
+  await dismissOnboarding(page);
+  await page.getByRole("button", { name: "Policy & directives" }).click();
+  const policy = page.getByRole("region", { name: /Policy & directives · \d+/ });
+  await expect(policy).toBeVisible();
+  await expect(policy.getByRole("link", { name: /Official text for 40 U\.S\.C\. § 11331/ })).toBeVisible();
+  await assertNoBlockingViolations(page, "Atlas Policy & directives");
 });
 
 test("a11y: skip link moves keyboard focus to the workspace", async ({

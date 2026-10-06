@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { buildComparisonArtifacts } from "./lib/compare-artifacts.mjs";
 import {
   existsSync,
   mkdirSync,
@@ -49,6 +50,8 @@ import { validateAuthoritySpine } from "../src/app/authority-spine.mjs";
 import { referencedNistFamilies } from "../src/shared/nist-families.mjs";
 import { sourceNativeIdentityCategory } from "../src/shared/record-identity.mjs";
 import { isComparisonCapableEdge } from "../src/shared/compare-capability.mjs";
+import { RETIRED_RECORD_TYPES } from "../src/shared/record-acceptance.mjs";
+import { controlContextLabel, CONTROL_CONTEXT_RELATIONSHIP_TYPE } from "../src/shared/record-control-context.mjs";
 import {
   missingRequiredRecordFields,
   recordPresentationContract,
@@ -90,7 +93,7 @@ import {
 } from "../src/shared/data-trust-contracts.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const GENERATED = join(ROOT, "data", "generated");
+const DEFAULT_GENERATED = join(ROOT, "data", "generated");
 const RUNTIME_COLLECTIONS = [
   "sources",
   "nodes",
@@ -102,10 +105,9 @@ const RUNTIME_COLLECTIONS = [
 const SHARDED_RUNTIME_COLLECTIONS = new Set(["nodes", "edges", "evidence"]);
 const RUNTIME_COLLECTION_SHARD_COUNT = 64;
 // Search is intentionally a bounded, on-demand payload rather than an
-// initial-route payload. Ten chunks keep every compressed artifact under the
-// public 300 KB budget while avoiding the 64-request/worker fan-out that made
-// a cold Library deep link slow to become usable.
-const LIBRARY_SEARCH_SHARD_COUNT = 10;
+// initial-route payload. Sixteen chunks keep every compressed artifact under the
+// public 300 KB budget while avoiding excessive request fan-out.
+const LIBRARY_SEARCH_SHARD_COUNT = 16;
 const LIBRARY_SEARCH_INDEX_FIELDS = [
   "id",
   "item_id",
@@ -137,7 +139,6 @@ const GOVERNANCE_FILES = [
   "publication-identity-index.json",
   "publication-audit-report.json",
 ];
-const ATLAS_NEIGHBORHOOD_DIR = join(GENERATED, "atlas-neighborhood");
 
 const NON_RECORD_NODE_TYPES = new Set([
   "benchmark",
@@ -710,6 +711,39 @@ function relationshipId(prefix, sourceNodeId, targetNodeId, relationshipType) {
   );
 }
 
+/**
+ * Catalogs whose publisher states the requirement instead of naming it, so the
+ * statement *is* the title.
+ *
+ * NIST CSF 2.0 subcategories have no short name, which is why
+ * `tools/importers/csf-reference-tool-adapter.mjs` asserts that NIST's own
+ * Reference Tool title equals our description. The normalized snapshot stores
+ * the identifier in `title`, so 106 of 135 CSF records rendered their id twice
+ * ("GV.OC-03 GV.OC-03") wherever a title was shown - most visibly on every row
+ * of the 800-53-to-CSF crosswalk, one of the most-used mappings in federal
+ * practice.
+ *
+ * Deliberately narrow. DISA CCI records also carry their identifier as their
+ * title, but their bare-id label is an existing decision (see the label comment
+ * below), and 5,138 long labels would also fight the Atlas rule that a cell is
+ * never narrower than its own name.
+ */
+const STATEMENT_TITLED_CATALOGS = new Set(["csf-2"]);
+
+/**
+ * The publisher's title for a record, never its identifier repeated back.
+ * Falls back to the statement only where that is what the publisher titles the
+ * record with, and only when the stored title adds nothing over the id.
+ */
+function publisherTitleFor(record, catalogId) {
+  const title = String(record.title || "").trim();
+  const id = String(record.id || "").trim();
+  if (title && title !== id) return record.title;
+  if (!STATEMENT_TITLED_CATALOGS.has(catalogId)) return record.title || "";
+  const description = String(record.description || "").trim();
+  return description || record.title || "";
+}
+
 function nodeType(defaultType, recordId) {
   return defaultType === "control" && String(recordId).includes(".")
     ? "control_enhancement"
@@ -1153,6 +1187,7 @@ function buildNodes(registry) {
         catalog_id: catalogId,
         related_categories: relatedCategories,
       });
+      const publisherTitle = publisherTitleFor(record, catalogId);
       pushEligibleNode(
         state,
         registry,
@@ -1167,9 +1202,9 @@ function buildNodes(registry) {
           // naive "<id> <title>" join printed "CCI-000015 CCI-000015" on every
           // one of them (breadcrumbs, search results, Atlas labels).
           label:
-            record.title && !String(record.title).startsWith(String(record.id))
-              ? `${record.id} ${record.title}`
-              : String(record.title || record.id),
+            publisherTitle && !String(publisherTitle).startsWith(String(record.id))
+              ? `${record.id} ${publisherTitle}`
+              : String(publisherTitle || record.id),
           source_id: sourceId,
           lifecycle_status: lifecycleStatus(record),
           metadata: {
@@ -1177,7 +1212,7 @@ function buildNodes(registry) {
             ingestion_source_id: ingestionSourceId,
             source_locator: record.source?.locator || `${filename}#${record.id}`,
             item_id: record.id,
-            title: record.title || record.id,
+            title: publisherTitle || record.id,
             // The NIST Mobile Threat Catalogue publishes a title plus
             // structured origin/examples/countermeasures. Older normalized
             // snapshots used a generated sentence when ThreatOrigin was
@@ -1256,6 +1291,9 @@ function buildNodes(registry) {
             tactic_title: record.metadata?.tactic_title || null,
             tactic_memberships: record.metadata?.tactic_memberships || null,
             is_subtechnique: record.metadata?.is_subtechnique || false,
+            // Resolved "(Citation: <key>)" references, so the record can render
+            // the publisher's own source instead of MITRE's internal key.
+            citations: record.metadata?.citations || null,
             parent_technique_id: record.metadata?.parent_technique_id || null,
             implementation_examples: record.metadata?.implementation_examples || null,
             informative_references: record.metadata?.informative_references || null,
@@ -1456,6 +1494,7 @@ function addPublishedEdge(state, registry, nodeIds, payload) {
     target_node_id: payload.targetNodeId,
     relationship_type: relationshipType,
     raw_relationship_type: payload.rawRelationshipType || payload.relationshipType,
+    ...(payload.publisherAssertions?.length ? { publisher_assertions: payload.publisherAssertions } : {}),
     relationship_class:
       payload.relationshipClass ||
       defaultRelationshipClass(relationshipType),
@@ -1516,6 +1555,7 @@ function addDocumentRelationshipEdges(state, registry, nodeIds) {
           targetNodeId,
           relationshipType: relationship.relationship_type || "references",
           rawRelationshipType: relationship.raw_relationship_type,
+          publisherAssertions: relationship.publisher_assertions,
           locator: relationship.source_locator || `${record.source?.locator || `${filename}#${record.id}`}->${relationship.target_catalog}:${relationship.target_id}`,
           evidenceLocators: relationship.source_locators,
           retrievedAt: record.source?.snapshot_date,
@@ -1839,6 +1879,37 @@ function addBaselineMembershipEdges(state, registry, nodeIds) {
         rationale: `NIST SP 800-53B ${baselineId} baseline membership includes ${record.id}.`,
       });
     }
+  }
+}
+
+/**
+ * FedRAMP control context (issue 279) folds into the SP 800-53 control it
+ * annotates rather than staying a standalone page, so the control's own page
+ * needs a real edge to find it - a raw id lookup alone only works when the
+ * corpus is fully loaded, which a record page's own neighborhood is not.
+ */
+function addControlContextEdges(state, registry, nodeIds) {
+  const path = join(ROOT, "data", "fedramp-2026-catalog.json");
+  if (!existsSync(path)) return;
+  const document = readJson(path);
+  for (const record of document.records || []) {
+    if (record.type !== "control_context") continue;
+    const targetLabel = controlContextLabel(record.id);
+    if (!targetLabel) continue;
+    const sourceNodeId = nodeId("fedramp-2026", record.id);
+    const targetNodeId = nodeId("nist-800-53", targetLabel);
+    const subjectId = relationshipId("fedramp-2026-control-context", sourceNodeId, targetNodeId, CONTROL_CONTEXT_RELATIONSHIP_TYPE);
+    addPublishedEdge(state, registry, nodeIds, {
+      subjectId,
+      sourceId: record.source?.key || "fedramp-2026-rules",
+      sourceNodeId,
+      targetNodeId,
+      relationshipType: CONTROL_CONTEXT_RELATIONSHIP_TYPE,
+      relationshipClass: RELATIONSHIP_CLASSES.correlation,
+      locator: record.source?.locator || `fedramp-2026#${record.id}`,
+      retrievedAt: record.source?.snapshot_date,
+      rationale: `FedRAMP publishes ${record.id} as parameters and guidance for ${targetLabel}.`,
+    });
   }
 }
 
@@ -2285,6 +2356,7 @@ function buildEdges(registry, nodes) {
   addAttackSubtechniqueMembershipEdges(state, registry, nodeIds);
   addBaselineMembershipEdges(state, registry, nodeIds);
   addFedrampMembershipEdges(state, registry, nodeIds);
+  addControlContextEdges(state, registry, nodeIds);
   addAssessmentEdges(state, registry, nodeIds);
   addAssessmentHierarchyEdges(state, registry, nodeIds, nodes);
   addCmmcProgramEdges(state, registry, nodeIds, nodes);
@@ -2765,6 +2837,7 @@ function createBuildManifest(graph) {
       "atlas-neighborhood/",
       "catalog-bootstrap.json",
       "catalog-records/",
+      "compare-data/",
     ],
     governance_artifacts: GOVERNANCE_FILES,
     source_registry_path: "data/source-registry.json",
@@ -2823,16 +2896,21 @@ function buildLibraryDocuments(graph) {
       publishedConnectionCatalogs.set(nodeId, catalogs);
     }
   }
-  return graph.nodes.filter((node) => !NON_RECORD_NODE_TYPES.has(node.node_type)).map((node) => {
+  // Retired record types keep their nodes, edges and evidence in the graph; they
+  // are only left out of the Library search documents (issue 279).
+  return graph.nodes.filter((node) => !NON_RECORD_NODE_TYPES.has(node.node_type) && !RETIRED_RECORD_TYPES.has(node.node_type)).map((node) => {
     const source = sourceById.get(node.source_id);
     const itemId = node.metadata?.item_id || node.id;
     const title = node.metadata?.title || node.label;
+    const stigId = node.metadata?.stig_id;
+    const desc = node.metadata?.description || "";
+    const previewSource = stigId && desc ? `${stigId} - ${desc}` : (stigId || desc);
     return {
       id: node.id,
       item_id: itemId,
       title,
       description_available: Boolean(node.metadata?.description?.trim()),
-      official_text_preview: compactOfficialText(node.metadata?.description),
+      official_text_preview: compactOfficialText(previewSource),
       object_type: node.node_type,
       source_id: node.source_id,
       source_name: source?.display_name || source?.name || "",
@@ -3112,6 +3190,7 @@ export function buildAtlasSpine(graph, authoritySpine, treeSpine) {
     node.node_type !== "trunk" &&
     node.node_type !== "limb" &&
     !ATLAS_SUMMARY_NODE_TYPES.has(node.node_type) &&
+    !RETIRED_RECORD_TYPES.has(node.node_type) &&
     !node.id.startsWith("authority:");
   const descendantRecordCount = (rootId) => {
     let count = 0;
@@ -3678,7 +3757,9 @@ function applyOrganizingSpine(nodeState, edgeState, registry) {
   );
 }
 
-export function buildFrameworkData() {
+export function buildFrameworkData({ generatedDirectory = DEFAULT_GENERATED } = {}) {
+  const GENERATED = generatedDirectory;
+  const ATLAS_NEIGHBORHOOD_DIR = join(GENERATED, "atlas-neighborhood");
   const registry = loadSourceRegistry(
     readJson(join(ROOT, "data", "source-registry.json")),
   );
@@ -3868,8 +3949,11 @@ export function buildFrameworkData() {
       mappingSourcesByPair.set(key, values);
     }
   }
+  const comparisons = buildComparisonArtifacts(graph);
   const catalogBootstrap = {
     catalogs,
+    comparison_pairs: comparisons.manifest,
+    comparison_items: comparisons.itemManifest,
     mapping_sources: Object.fromEntries(
       [...mappingSourcesByPair.entries()].map(([key, sourceIds]) => [
         key,
@@ -3910,6 +3994,7 @@ const catalogRecords = new Map();
       entry === "library-search-index" ||
       entry === "atlas-neighborhood" ||
       entry === "catalog-records" ||
+      entry === "compare-data" ||
       entry === "graph-data"
     ) {
       rmSync(entryPath, { recursive: true, force: true });
@@ -4082,6 +4167,9 @@ const catalogRecords = new Map();
     `${JSON.stringify(librarySearchIndexManifest)}\n`,
     "utf8",
   );
+
+  mkdirSync(join(GENERATED, "compare-data"), { recursive: true });
+  for (const [path, text] of comparisons.files) writeFileSync(join(GENERATED, path), text, "utf8");
 
   writeFileSync(
     join(GENERATED, "catalog-bootstrap.json"),

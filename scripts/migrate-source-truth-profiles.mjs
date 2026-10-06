@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { writeJsonAtomically } from "./lib/write-json-atomically.mjs";
 import {
@@ -265,6 +265,10 @@ function migrateSourceRegistry() {
   const registry = JSON.parse(readFileSync(sourcePath, "utf8"));
   const fedramp2026 = JSON.parse(readFileSync(fedramp2026Path, "utf8"));
   const mitreCatalogs = new Map([...mitreCatalogPaths].map(([id, path]) => [id, JSON.parse(readFileSync(path, "utf8"))]));
+  writeJsonAtomically(sourcePath, migrateSourceRegistryDocument(registry, fedramp2026, mitreCatalogs));
+}
+
+export function migrateSourceRegistryDocument(registry, fedramp2026, mitreCatalogs) {
   const syncMitreIdentity = (entry, catalog, kind) => {
     entry.version = catalog.source_version;
     entry.retrieved_at = catalog.snapshot_date;
@@ -309,13 +313,13 @@ function migrateSourceRegistry() {
     if (publication.id === "nist-iot-device-cybersecurity-requirement-catalogs") {
       publication.metadata = {
         ...(publication.metadata || {}),
-        provenance_note: "The official catalog page establishes publication identity. Indexed records were normalized from NIST's two draft mapping workbooks; Control Atlas does not claim an independent catalog extraction.",
+        provenance_note: "These records come from NIST's two draft mapping workbooks, not from the catalog page itself. Read the official catalog page for the authoritative list.",
       };
     }
     if (publication.id === "mitre-d3fend-ontology") {
       publication.metadata = {
         ...(publication.metadata || {}),
-        provenance_note: "The official destination is mutable. Control Atlas binds version 1.5.0 to the committed ontology capture and its SHA-256 checksum.",
+        provenance_note: "MITRE updates the published ontology in place. Control Atlas indexes a dated copy of the recorded version, so it can fall behind the live site.",
       };
     }
     if (publication.id === "dod-rai-toolkit") {
@@ -323,7 +327,7 @@ function migrateSourceRegistry() {
       publication.catalog_browse_url = publication.artifact_url;
       publication.metadata = {
         ...(publication.metadata || {}),
-        provenance_note: "The official CDAO Responsible AI Toolkit article is canonical. Operational or secondary toolkit destinations are supporting links only.",
+        provenance_note: "The CDAO Responsible AI Toolkit article is the official source. Other toolkit links are supporting material.",
       };
     }
     const identityKind = publication.metadata?.identity_kind || "publication";
@@ -363,7 +367,7 @@ function migrateSourceRegistry() {
       artifact.source_role = "reference_only";
       artifact.metadata = {
         ...(artifact.metadata || {}),
-        provenance_note: "Supporting operational toolkit capture. The official ai.mil CDAO article is canonical for publication identity.",
+        provenance_note: "Supporting toolkit material. The official ai.mil CDAO article is the source of record.",
       };
     }
     artifact.entity_kind = "artifact";
@@ -391,7 +395,7 @@ function migrateSourceRegistry() {
       source.retrieved_at = officialArtifact?.retrieved_at || source.retrieved_at;
       source.metadata = {
         ...(source.metadata || {}),
-        provenance_note: "Catalog records are deterministic Atlas projections reconciled to the official CDAO Responsible AI Toolkit article; they are not verbatim publisher records.",
+        provenance_note: "These records restate the official CDAO Responsible AI Toolkit article in a comparable form. They are not the publisher's own wording.",
       };
     }
     source.entity_kind = "artifact";
@@ -412,16 +416,18 @@ function migrateSourceRegistry() {
         "artifact-nist-iot-requirements-80053-mapping-draft",
         "artifact-nist-iot-requirements-csf11-mapping-draft",
       ];
-      bundle.expected_inventory = {
-        basis: "Unique NIST IoT catalog records normalized from the two publisher mapping workbooks and reconciled by exact record path. The catalog page supplies publication identity; the draft workbooks supply mapping data.",
+      bundle.expected_inventory ||= {
+        basis: "Built from NIST's two draft mapping workbooks, matched by record path so each entry appears once. The official catalog page names the publication; the workbooks supply the mappings.",
         evidence_class: "publisher_mapping_inventory",
         primary_extraction_status: "not_performed",
         evidence_locator: "data/curated/nist-structured-catalogs/source-manifest.json#reconciliation.iot.records",
-        imported_evidence_locator: "data/curated/nist-structured-catalogs/source-manifest.json#reconciliation.iot.records",
+        imported_evidence_locator: "data/generated/catalog-source-inventory.json#catalogs.nist-iot-cybersecurity.normalized_records",
         exclusions: [],
       };
     }
   }
+  const existingFedrampBundle = (registry.catalog_source_bundles || [])
+    .find((bundle) => bundle.catalog_id === "fedramp-2026");
   const fedrampBundle = {
     catalog_id: "fedramp-2026",
     publication_source_id: "fedramp-2026-rules",
@@ -431,11 +437,11 @@ function migrateSourceRegistry() {
     assessment_source_ids: [],
     automation_source_ids: [],
     reconciliation_source_ids: [],
-    expected_inventory: {
-      basis: "Every native control-context, definition, rule, and key security indicator with publisher text in the official Consolidated Rules JSON.",
-      evidence_class: "native_json_inventory",
-      evidence_locator: "data/fedramp-2026-catalog.json#source_inventory.total",
-      imported_evidence_locator: "data/fedramp-2026-catalog.json#record_count",
+    expected_inventory: existingFedrampBundle?.expected_inventory || {
+      basis: "Eligible publisher identities from an independently reconciled raw inventory when present. Accepted older snapshots explicitly use tracked reviewed counts; the inventory entry declares which evidence applies.",
+      evidence_class: "publisher_inventory_or_reviewed_snapshot",
+      evidence_locator: "data/generated/catalog-source-inventory.json#catalogs.fedramp-2026.discovered_records",
+      imported_evidence_locator: "data/generated/catalog-source-inventory.json#catalogs.fedramp-2026.normalized_records",
       exclusions: [],
     },
     entity_kind: "assertion",
@@ -446,14 +452,9 @@ function migrateSourceRegistry() {
   if (fedrampBundleIndex >= 0) registry.catalog_source_bundles[fedrampBundleIndex] = fedrampBundle;
   else registry.catalog_source_bundles.push(fedrampBundle);
   registry.catalog_source_bundles.sort((left, right) => left.catalog_id.localeCompare(right.catalog_id));
-  for (const freshness of registry.freshness?.sources || []) {
-    const mitreCatalog = mitreCatalogs.get(freshness.source_id);
-    if (!mitreCatalog) continue;
-    freshness.hash = mitreCatalog.checksum;
-    freshness.last_imported = mitreCatalog.snapshot_date;
-    freshness.last_checked = mitreCatalog.snapshot_date;
-  }
-  writeJsonAtomically(sourcePath, registry);
+  // Reconciliation owns freshness hashes and check/import dates. Publisher
+  // checksums and snapshot dates above describe identity, not refresh execution.
+  return registry;
 }
 
 function removeCopiedDescriptions() {
@@ -687,10 +688,12 @@ function upgradeAdapterRegistry() {
   writeJsonAtomically(adapterPath, registry);
 }
 
-migrateResources();
-migrateSourceRegistry();
-removeCopiedDescriptions();
-upgradeProfileRegistry();
-buildOrganizations();
-upgradeAdapterRegistry();
-console.log("Migrated resource and source inventories to explicit entity profiles.");
+if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
+  migrateResources();
+  migrateSourceRegistry();
+  removeCopiedDescriptions();
+  upgradeProfileRegistry();
+  buildOrganizations();
+  upgradeAdapterRegistry();
+  console.log("Migrated resource and source inventories to explicit entity profiles.");
+}

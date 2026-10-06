@@ -9,16 +9,26 @@ const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
 const ci = readFileSync('.github/workflows/ci.yml', 'utf8');
 const security = readFileSync('.github/workflows/security.yml', 'utf8');
 const deploy = readFileSync('.github/workflows/deploy.yml', 'utf8');
-const workflows = { ci, security, deploy };
+const refreshMerge = readFileSync('.github/workflows/automerge-refresh.yml', 'utf8');
+const workflows = { ci, security, deploy, refreshMerge };
 
-test('the automation surface is three purpose-built workflows', () => {
+test('the automation surface contains the four admitted workflows', () => {
   assert.deepEqual(
     readdirSync('.github/workflows').filter((name) => /\.ya?ml$/.test(name)).sort(),
-    ['ci.yml', 'deploy.yml', 'security.yml'],
+    ['automerge-refresh.yml', 'ci.yml', 'deploy.yml', 'security.yml'],
   );
   assert.match(ci, /name: Control Atlas CI/);
   assert.match(security, /name: Control Atlas Security/);
   assert.match(deploy, /name: Control Atlas Deploy/);
+  assert.match(refreshMerge, /name: Merge validated source refresh/);
+  assert.match(refreshMerge, /ref: main/);
+  assert.doesNotMatch(refreshMerge, /pull_request_target:/);
+});
+
+test('no workflow uses the privileged pull_request_target trigger', () => {
+  for (const [name, contents] of Object.entries(workflows)) {
+    assert.doesNotMatch(contents, /pull_request_target:/, `${name} must not use pull_request_target`);
+  }
 });
 
 test('PR CI creates one change map from a shallow checkout and targeted base fetch', () => {
@@ -30,6 +40,12 @@ test('PR CI creates one change map from a shallow checkout and targeted base fet
   assert.match(ci, /automation_changed: \$\{\{ steps\.scope\.outputs\.automation_changed \}\}/);
   assert.match(ci, /name: Automation contracts[\s\S]*?if: \$\{\{ needs\.changes\.outputs\.automation_changed == 'true' \}\}/);
   assert.doesNotMatch(ci, /fetch-depth: 0/);
+});
+
+test('the site build reads Pulse shipping facts from full commit history, not an authored file', () => {
+  const build = ci.slice(ci.indexOf('name: Build immutable site artifact'), ci.indexOf('name: Build once'));
+  assert.match(build, /git fetch --no-recurse-submodules --filter=tree:0 --unshallow --tags origin "\$GITHUB_SHA"/);
+  assert.ok(!existsSync('data/product-release-log.json'), 'no hand-authored release feed');
 });
 
 test('PR CI is an independent gate DAG around one immutable artifact', () => {
@@ -72,8 +88,10 @@ test('nightly validation retains full cross-browser and data automation', () => 
   assert.match(ci, /PLAYWRIGHT_BLOB_OUTPUT_NAME: report-\$\{\{ matrix\.browser \}\}-\$\{\{ matrix\.shard \}\}\.zip/);
   assert.match(ci, /PLAYWRIGHT_BLOB_OUTPUT_NAME: report-accessibility\.zip/);
   assert.equal((ci.match(/--reporter=blob,github/g) ?? []).length, 2);
-  assert.match(ci, /issues_enabled="\$\(gh api "repos\/\$REPO" --jq '\.has_issues'\)"/);
-  assert.match(ci, /Repository Issues are disabled, so this workflow cannot open or resolve the persistent sweep alert/);
+  // Alert lifecycle now lives in tools/report-sweep-alert.mjs and is covered by tests/sweep-alert.test.mjs.
+  assert.match(ci, /run: node tools\/report-sweep-alert\.mjs/);
+  assert.match(ci, /SWEEP_KIND: .*inputs\.task == 'refresh'.*'refresh' \|\| 'nightly'/);
+  assert.doesNotMatch(ci, /gh issue (create|close)/);
   assert.match(ci, /npm run resources:health/);
   assert.match(ci, /peter-evans\/create-pull-request@[0-9a-f]{40}/);
   assert.match(ci, /npm run test:oscal:independent/);
@@ -101,6 +119,11 @@ test('deployment consumes the successful main CI artifact and never rebuilds it'
   assert.match(deploy, /actions\/deploy-pages@[0-9a-f]{40}/);
   assert.match(deploy, /name: Production smoke/);
   assert.match(deploy, /name: Production Lighthouse/);
+  assert.match(deploy, /edge-ready:\n\s+name: Wait for exact published SHA\n\s+needs: deploy/);
+  assert.match(deploy, /deadline=\$\(\(SECONDS \+ 600\)\)/);
+  assert.match(deploy, /if \[\[ "\$actual_sha" == "\$EXPECTED_SHA" \]\]/);
+  assert.match(deploy, /live-smoke:\n\s+name: Production smoke\n\s+needs: \[deploy, edge-ready\]/);
+  assert.match(deploy, /lighthouse:\n\s+name: Production Lighthouse\n\s+needs: \[deploy, edge-ready\]/);
   assert.match(deploy, /cancel-in-progress: false/);
   assert.doesNotMatch(deploy, /npm run build:site/);
 });
@@ -142,6 +165,12 @@ test('package scripts expose deterministic split gates and full local verificati
     'verify:contracts',
     'verify:quality',
   ]) assert.equal(typeof packageJson.scripts[script], 'string', script);
+
+  // The documented publication acceptance command. A merge dropped it once.
+  assert.equal(
+    packageJson.scripts['audit:publication-matrix'],
+    'node --import tsx ./tools/publication-acceptance-matrix.mjs',
+  );
 
   assert.match(packageJson.scripts['test:data'], /--test-concurrency=1/);
   assert.match(

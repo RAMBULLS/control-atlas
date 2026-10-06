@@ -15,6 +15,7 @@ import {
   recordDisplayTitle,
   recordPublisherName,
   routeDocumentTitle,
+  usesScaffoldStableId,
 } from "../../src/ui/lib/recordTitle";
 
 test("source detail document titles use the specific source name", () => {
@@ -116,10 +117,52 @@ test("record template never derives a record name from body text", () => {
 test("record identities use publisher, source-native category, and official identifier", () => {
   assert.equal(recordIdentityFor({ publisher: "NIST", catalogId: "nist-800-53", family: "Access Control", itemId: "AC-2" }), "NIST AC-2");
   assert.equal(recordIdentityFor({ publisher: "NIST", catalogId: "nist-800-171", family: "Access Control", itemId: "3.1.1" }), "NIST AC 3.1.1");
-  assert.equal(recordIdentityFor({ publisher: "MITRE", catalogId: "mitre-attack", family: "Initial Access", itemId: "T1195.002" }), "MITRE Initial Access T1195.002");
+  // ATT&CK techniques belong to every tactic MITRE lists, and `family` is only
+  // the first of them, so it must not reach the identity: T1078 would read
+  // "MITRE Stealth T1078" for a technique MITRE names "Valid Accounts" and
+  // files under four tactics. Identity stays publisher + official ID, and the
+  // full membership is a published fact on the record instead.
+  assert.equal(recordIdentityFor({ publisher: "MITRE", catalogId: "mitre-attack", family: "Initial Access", itemId: "T1195.002" }), "MITRE T1195.002");
+  assert.equal(recordIdentityFor({ publisher: "MITRE", catalogId: "mitre-attack-ics", family: "Impair Process Control", itemId: "T0806" }), "MITRE T0806");
   assert.equal(recordIdentityFor({ publisher: "MITRE", catalogId: "mitre-d3fend", family: "Harden", itemId: "D3-AA" }), "MITRE Harden D3-AA");
   assert.equal(recordIdentityFor({ publisher: "DISA", catalogId: "disa-cci", family: "Policy and Technical", itemId: "CCI-000001" }), "DISA Policy and Technical CCI-000001");
   assert.equal(recordIdentityFor({ publisher: "DISA", catalogId: "disa-stig", family: "IBM Hardware Management Console Security Technical Implementation Guide", itemId: "V-256876", metadata: { identity_category: "HMC" } }), "DISA HMC V-256876");
+});
+
+test("baseline headings keep the level word the scaffold key repeats", () => {
+  const heading = (catalogId: string, itemId: string, title: string) => recordIdentityPresentationFor({
+    publisher: "NIST", catalogId, publicationName: "Baselines", family: "Baselines", itemId, title, objectType: "baseline",
+  }).primary;
+  assert.equal(heading("nist-800-53b", "HIGH", "High Impact Baseline"), "High Impact Baseline");
+  assert.equal(heading("nist-800-53b", "PRIVACY", "Privacy Baseline"), "Privacy Baseline");
+  assert.equal(heading("fedramp-rev5", "LOW", "Low Baseline"), "Low Baseline");
+  assert.equal(heading("fedramp-rev5", "LI-SAAS", "LI-SaaS Baseline"), "LI-SaaS Baseline");
+});
+
+test("FedRAMP control context leads with the control and keeps the publisher title beneath", () => {
+  const identity = recordIdentityPresentationFor({
+    publisher: "FedRAMP", catalogId: "fedramp-2026", publicationName: "FedRAMP Consolidated Rules for 2026",
+    family: "Control parameters and guidance: AC", itemId: "CTL-AC-06-01", title: "AC-06-01 control context", objectType: "control_context",
+  });
+  assert.equal(identity.primary, "FedRAMP AC-6.1 parameters and guidance");
+  assert.equal(identity.secondary, "AC-06-01 control context");
+  assert.equal(identity.stableIdIsGenerated, false);
+  assert.equal(identity.browserTitle, "FedRAMP AC-6.1 parameters and guidance — AC-06-01 control context");
+});
+
+test("no scaffold-keyed record in the corpus loses words from its heading", () => {
+  const lost: string[] = [];
+  for (const node of readGeneratedCollection(".", "nodes").nodes as any[]) {
+    const metadata = node.metadata || {};
+    const itemId = String(metadata.item_id || "").trim();
+    const title = String(metadata.title || "").trim();
+    if (!title || metadata.publisher_item_id || !usesScaffoldStableId(node.node_type, itemId)) continue;
+    const primary = recordIdentityPresentationFor({
+      publisher: "P", catalogId: metadata.catalog_id, family: "", itemId, title, objectType: node.node_type, metadata,
+    }).primary;
+    if (primary !== title) lost.push(`${node.id}: "${title}" -> "${primary}"`);
+  }
+  assert.deepEqual(lost.slice(0, 5), []);
 });
 
 test("generated stable IDs yield publisher-authored primary identity and human context", () => {

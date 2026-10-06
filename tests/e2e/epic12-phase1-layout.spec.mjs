@@ -17,7 +17,6 @@ const ROUTES = [
   "/#/build",
   "/#/sources",
   "/#/about",
-  "/#/start",
 ];
 
 const VIEWPORTS = [
@@ -45,14 +44,12 @@ for (const viewport of VIEWPORTS) {
         await waitForAppReady(page, { allowPartial: true });
 
         if (route === "/#/explore") {
-          const atlas = page.getByTestId("atlas-map");
-          await expect(atlas).toHaveAttribute("data-scope-level", "root");
-          const areas = atlas.locator('.atlas-decomp__column[data-column="area"]');
-          await expect(areas).toHaveAttribute("data-row-count", "11");
-          // Labelled rows at every width; there is no canvas and no
-          // disclosure standing between the visitor and the map.
-          await expect(atlas.locator("canvas")).toHaveCount(0);
-          await expect(areas.locator(".atlas-decomp__label").first()).toBeVisible();
+          const sheet = page.locator(".atl");
+          await expect(sheet).toBeVisible();
+          // Labelled controls at every width, and no canvas or disclosure
+          // standing between the visitor and the corpus.
+          await expect(page.locator("canvas")).toHaveCount(0);
+          await expect(page.locator("#atlas-search")).toBeVisible();
         }
 
         await expect(page.locator(".static-route-shell")).toHaveCount(0);
@@ -75,6 +72,15 @@ for (const viewport of VIEWPORTS) {
           const firstHeading = globalThis.document.querySelector("#workspace h1");
           const appShell = globalThis.document.querySelector("#app");
           const appBox = appShell?.getBoundingClientRect();
+          // The phone overview intentionally enlarges its SVG inside a clipped
+          // map link. Its visible boundary must still fit the app; clipping
+          // never exempts headings, controls, or an unbounded map container.
+          const isClippedMapElement = (element) => {
+            const map = element.closest(".home-map");
+            if (!map || !appBox || globalThis.getComputedStyle(map).overflowX !== "hidden") return false;
+            const box = map.getBoundingClientRect();
+            return box.left >= appBox.left - 2 && box.right <= appBox.right + 2;
+          };
           const outOfBounds = appBox
             ? [...appShell.querySelectorAll("*")]
                 .filter((element) => {
@@ -83,6 +89,7 @@ for (const viewport of VIEWPORTS) {
                   return (
                     style.display !== "none" &&
                     style.visibility !== "hidden" &&
+                    !isClippedMapElement(element) &&
                     box.width > 0 &&
                     (box.right > appBox.right + 2 || box.left < appBox.left - 2)
                   );
@@ -107,6 +114,7 @@ for (const viewport of VIEWPORTS) {
                 element.clientWidth > 100 &&
                 style.display !== "none" &&
                 style.visibility !== "hidden" &&
+                !isClippedMapElement(element) &&
                 style.textOverflow !== "ellipsis" &&
                 overflowX !== "auto" &&
                 overflowX !== "scroll" &&
@@ -153,7 +161,10 @@ for (const viewport of VIEWPORTS) {
         expect(layout.firstHeadingY).toBeLessThan(viewport.width === 375 ? 480 : 400);
         if (route !== "/#/") {
           expect(pageHeaderHeight, `${route} primary pagehead`).not.toBeNull();
-          expect(pageHeaderHeight).toBeLessThanOrEqual(viewport.width === 375 ? 300 : 220);
+          // Record pages carry the accepted title, identity and status block, and long titles wrap
+          // at tablet width, so they get a taller budget than a plain page header.
+          const tabletBudget = route.startsWith("/#/record/") ? 260 : 220;
+          expect(pageHeaderHeight).toBeLessThanOrEqual(viewport.width === 375 ? 300 : tabletBudget);
         }
         expect(
           layout.overflows,

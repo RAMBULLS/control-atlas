@@ -56,13 +56,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-        if: ${{ github.event_name != 'schedule' }}
+        if: ${{ github.event_name != 'schedule' && github.event_name != 'workflow_dispatch' }}
         with:
           fetch-depth: 1
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-        if: ${{ github.event_name == 'schedule' }}
+        if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -79,15 +79,72 @@ jobs:
           tar --extract --gzip --file "$archive" --no-same-owner gitleaks
       - name: Scan the complete checked-out snapshot
         run: ./gitleaks dir . --redact --config=.gitleaks.toml --report-format=sarif --report-path=results.sarif
+      - name: Label snapshot secret-scan results
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = 'results.sarif';
+          if (!fs.existsSync(path)) process.exit(0);
+          const report = JSON.parse(fs.readFileSync(path, 'utf8'));
+          for (const run of report.runs || []) {
+            run.automationDetails = { ...(run.automationDetails || {}), id: '.github/workflows/security.yml:secrets-snapshot' };
+          }
+          fs.writeFileSync(path, JSON.stringify(report));
+          NODE
       - name: Scan complete history on the weekly schedule
-        if: ${{ always() && github.event_name == 'schedule' }}
+        if: ${{ always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
         run: ./gitleaks git . --redact --config=.gitleaks.toml --report-format=sarif --report-path=history-results.sarif
+      - name: Label historical secret-scan results
+        if: ${{ always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = 'history-results.sarif';
+          if (!fs.existsSync(path)) process.exit(0);
+          const report = JSON.parse(fs.readFileSync(path, 'utf8'));
+          for (const run of report.runs || []) {
+            run.automationDetails = { ...(run.automationDetails || {}), id: '.github/workflows/security.yml:secrets-history' };
+          }
+          fs.writeFileSync(path, JSON.stringify(report));
+          NODE
+      - name: Summarize historical findings without credential material
+        if: ${{ always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = 'history-results.sarif';
+          if (!fs.existsSync(path)) process.exit(0);
+          const report = JSON.parse(fs.readFileSync(path, 'utf8'));
+          const findings = new Map();
+          for (const run of report.runs || []) {
+            for (const result of run.results || []) {
+              const location = result.locations?.[0]?.physicalLocation;
+              const item = {
+                ruleId: result.ruleId || 'unknown-rule',
+                path: location?.artifactLocation?.uri || 'unknown-path',
+                startLine: location?.region?.startLine || null,
+                endLine: location?.region?.endLine || null,
+                commit: result.properties?.Commit || null,
+              };
+              const key = JSON.stringify(item);
+              findings.set(key, (findings.get(key) || 0) + 1);
+            }
+          }
+          const summary = [...findings.entries()]
+            .map(([key, count]) => ({ ...JSON.parse(key), count }))
+            .sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
+          console.log(JSON.stringify({ findingCount: summary.reduce((total, item) => total + item.count, 0), summary }));
+          NODE
       - uses: github/codeql-action/upload-sarif@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
         if: always()
         with:
           sarif_file: results.sarif
       - uses: github/codeql-action/upload-sarif@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
-        if: ${{ always() && github.event_name == 'schedule' }}
+        if: ${{ always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
         with:
           sarif_file: history-results.sarif
 

@@ -27,12 +27,12 @@ test("live smoke: current Home contract and AC-2 record path", async ({ page }) 
   ).toBeVisible();
   await expect(page.getByRole("searchbox", { name: "Search Control Atlas" })).toBeVisible();
   await expect(page.locator(".home-search").getByRole("button", { name: "Search" })).toBeVisible();
-  await expect(page.locator(".home-secondary-action")).toHaveCount(4);
+  await expect(page.locator(".home-tools .home-tool")).toHaveCount(3);
   await expect(page.locator(".site-header .brand-key-word")).toBeVisible();
-  await expect(page.locator(".home-product-identity")).toHaveText(
-    "Understand what applies, what it means, and what to do next.",
+  await expect(page.locator(".home-lead")).toContainText(
+    "trace where requirements come from, see how they relate, and know what to do next.",
   );
-  await expect(page.locator(".home-library-kpis .home-library-kpi")).toHaveCount(5);
+  await expect(page.locator(".home-library__list .home-library__item")).toHaveCount(5);
   await expect(page.locator(".home-trust-boundary")).toHaveCount(0);
 
   await gotoApp(page, "/#/library?q=AC-2");
@@ -65,18 +65,22 @@ test("live smoke: Resources and Atlas workbench are first-class routes", async (
   await expect(page.getByRole("searchbox", { name: "Find resources" })).toHaveValue("OSCAL");
   await expect(page.locator(".workspace-result-row--resource").first()).toBeVisible();
 
-  await gotoApp(page, "/#/atlas");
+  // An old bookmarked landing URL must still resolve into the Territory Edition.
+  await gotoApp(page, "/#/atlas?atlasLanding=publishers");
   await waitForAppReady(page);
-  const atlas = page.getByTestId("atlas-map");
-  await expect(atlas).toHaveAttribute("data-scope-level", "root");
-  const areas = atlas.locator('.atlas-decomp__column[data-column="area"]');
-  await expect(areas).toHaveAttribute("data-row-count", /^(?:[89]|1\d|2[0-5])$/);
-  // Every node is a labelled row, so the smoke check reads names rather than
-  // probing a canvas that carried none.
-  await expect(atlas.locator("canvas")).toHaveCount(0);
-  await areas.getByRole("button", { name: /^NIST/ }).click();
-  await expect(atlas).toHaveAttribute("data-scope-level", "ecosystem");
-  await expect(atlas.locator('.atlas-decomp__column[data-column="publication"]')).toBeVisible();
+  const territoryMap = page.getByRole("group", { name: /Control Atlas territory map/ });
+  await expect(territoryMap).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Atlas", level: 1 })).toBeVisible();
+  // Nine territories, each a labelled control, and a known major landmark by name.
+  await expect(territoryMap.getByRole("button", { name: /territory.*Zoom in/ })).toHaveCount(9);
+  await expect(territoryMap.getByRole("button", { name: /^SP 800-53 Rev\. 5, / })).toBeVisible();
+  await expect(page.getByText("The Atlas could not load")).toHaveCount(0);
+  await expect(page.getByText("Record not found")).toHaveCount(0);
+  await expect(page.locator("canvas")).toHaveCount(0);
+  expect(
+    await page.evaluate(() => globalThis.document.documentElement.scrollWidth - globalThis.document.documentElement.clientWidth),
+    "horizontal overflow",
+  ).toBeLessThanOrEqual(0);
 });
 
 test("live smoke: compare hub loads", async ({ page }) => {

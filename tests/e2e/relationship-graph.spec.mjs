@@ -9,35 +9,20 @@ test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
 });
 
-test("Atlas standalone route opens the focused canvas with Connections below", async ({ page }) => {
+// The Territory Edition replaced the focused canvas, the Connections section and the
+// area-map landing that earlier versions of these two tests asserted. Territory's own
+// landing and lenses are covered by atlas-territory.spec.mjs; these keep the record hand-off.
+test("Atlas opens a record on the territory sheet with its identity and a way to the full record", async ({ page }) => {
   await page.goto("/#/atlas?node=nist-800-53%3AAC-2");
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
   await expect(page.getByRole("heading", { name: "Atlas", level: 1 })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Connections", level: 2 })).toBeVisible();
-  const focused = page.getByRole("region", { name: "Focused Atlas record" });
-  await expect(focused).toBeVisible();
-  await expect(focused).toContainText("AC-2");
-  await expect(focused).toContainText("Account Management");
-  await page.getByRole("button", { name: "View all", exact: true }).click();
-  await expect(page.getByRole("table", { name: "Relationship table" })).toBeVisible();
-});
-
-test("Atlas default route is the semantic Atlas network, not an empty focused-record graph", async ({ page }) => {
-  await page.goto("/#/atlas");
-  await waitForAppReady(page);
-  await dismissOnboarding(page);
-
-  await expect(page.getByRole("heading", { name: "Atlas", level: 1 })).toBeVisible();
-  const atlas = page.getByTestId("atlas-map");
-  await expect(atlas).toBeVisible();
-  await expect(atlas).toHaveAttribute("data-scope-level", "root");
-  await expect(
-    atlas.locator('.atlas-decomp__column[data-column="area"]'),
-  ).toHaveAttribute("data-row-count", "11");
-  await expect(page.getByRole("region", { name: "Focused Atlas record" })).toHaveCount(0);
-  await expect(page.locator(".ca-flow-wrap")).toHaveCount(0);
+  const inspector = page.locator(".atl-inspector");
+  await expect(inspector).toContainText("AC-2");
+  await expect(inspector).toContainText("Account Management");
+  await expect(inspector.getByRole("link", { name: "Open the full record" })).toBeVisible();
+  await expect(inspector.getByRole("button", { name: "Trace upstream" })).toBeVisible();
 });
 
 test("record detail keeps published connections in an accessible list", async ({ page }) => {
@@ -75,5 +60,5 @@ test("record detail opens the same record in the new Atlas", async ({ page }) =>
   await page.getByRole("link", { name: "See connections", exact: true }).click();
   await expect(page).toHaveURL(/#\/atlas/);
   await expect(page.getByRole("heading", { name: "Atlas", level: 1 })).toBeVisible();
-  await expect(page.getByRole("region", { name: "Focused Atlas record" })).toContainText("Account Management");
+  await expect(page.locator(".atl-inspector")).toContainText("Account Management");
 });

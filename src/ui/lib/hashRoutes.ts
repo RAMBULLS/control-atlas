@@ -1,3 +1,4 @@
+import { recordIdFromPath } from "../../shared/record-route-identity";
 import {
   normalizeViewState,
   parseViewState,
@@ -109,7 +110,7 @@ function parseNodeIdFromPath(pathname: string): {
   if (recordMatch) {
     return {
       basePath: "/record",
-      nodeId: `${decodeURIComponent(recordMatch[1])}:${decodeURIComponent(recordMatch[2])}`,
+      nodeId: recordIdFromPath(pathname) || "",
       catalogId: "",
       resourceId: "",
       taskId: "",

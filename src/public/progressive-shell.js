@@ -256,17 +256,29 @@
     var moduleHints = document.getElementById("control-atlas-record-modules");
     if (moduleHints) {
       var recordCode = JSON.parse(moduleHints.textContent);
-      var recordHash = window.location.hash;
-      var recordRoute = new URL(recordHash.replace(/^#/, ""), window.location.origin);
-      Promise.all([
-        import(new URL(recordCode.artifacts, document.baseURI).href),
-        import(new URL(recordCode.routes, document.baseURI).href),
-      ]).then(function (modules) {
-        if (window.location.hash !== recordHash) return;
-        return modules[0].preloadRuntimeArtifacts(
-          modules[1].parseHashLocation(recordRoute.pathname, recordRoute.search),
-        );
-      }).catch(function () { /* Rendering retains the normal recovery path. */ });
-    }
+      (recordCode.styles || []).forEach(function (href) {
+        var style = document.createElement("link");
+        style.rel = "stylesheet";
+        style.href = new URL(href, document.baseURI).href;
+        document.head.appendChild(style);
+      });
+      function beginReading() {
+        if (root.dataset.progressiveShellReleased === "true") return;
+        var hash = window.location.hash;
+        var previous = window.controlAtlasRecordReader;
+        if (previous && previous.hash !== hash) {
+          var readerHost = root.querySelector('[data-publisher-reader]');
+          if (readerHost) { readerHost.replaceChildren(); readerHost.hidden = true; }
+          root.querySelector('[data-static-route] .page-header')?.removeAttribute('hidden');
+        }
+        window.controlAtlasRecordReader = {
+          hash: hash,
+          ready: import(new URL(recordCode.reader, document.baseURI).href)
+            .then(function (reader) { return reader.startPublisherRecordReader(); })
+            .catch(function () { /* The interactive route retains normal recovery. */ }),
+        };
+      }
+      beginReading();
+      window.addEventListener("hashchange", beginReading);    }
   }
 })();

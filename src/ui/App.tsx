@@ -9,6 +9,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
 import {
   DataPendingNotice,
@@ -32,6 +33,7 @@ import {
 import { userFacingLoadError } from "../app/display-names.mjs";
 import type { RuntimeBundle } from "./lib/runtimeLoader";
 import { waitForRecordPaint } from "./lib/waitForRecordPaint";
+import { publisherTextAwaitingAdoption, retireStalePublisherText, subscribePublisherOwner } from "./lib/publisherRecordOwner";
 import { loadRecordPage, readyRecordPage } from "./lib/recordPageLoader";
 import { HomePage } from "./pages/HomePage";
 import {
@@ -234,6 +236,7 @@ function routeTransitionScope(state: ViewState): string {
 }
 
 export function App() {
+  const publisherOwnsLandmark = useSyncExternalStore(subscribePublisherOwner, publisherTextAwaitingAdoption);
   const [location, setLocation] = useState(readHashLocation);
   const routerNavigate = useCallback(
     (to: string, options?: { replace?: boolean }) => {
@@ -253,6 +256,7 @@ export function App() {
           target,
         );
       }
+      retireStalePublisherText();
       notifyRouteCommitted();
       setLocation(readHashLocation());
     },
@@ -736,7 +740,7 @@ export function App() {
       /> : null}
       {chromeReady ? <OrbitalContextBar entityName={viewState.view === "atlas-map" ? "" : routeEntityName} onNavigate={navigate} state={viewState} /> : null}
 
-      <main id="workspace" tabIndex={-1}>
+      <main hidden={publisherOwnsLandmark} id="workspace" tabIndex={-1}>
         {routeRecovery ? (
           <p className="route-recovery" role="status">{routeRecovery}</p>
         ) : null}

@@ -13,9 +13,10 @@ export function recordCommitToken(runtime: object): string {
 }
 
 /** Release supporting downloads after this official runtime has committed. */
-export function waitForRecordPaint(nodeId: string, runtime: object, signal: AbortSignal): Promise<void> {
+export function waitForRecordPaint(nodeId: string, runtime: object, signal: AbortSignal, sourceElement?: HTMLElement): Promise<void> {
   if (signal.aborted) return Promise.resolve();
   const token = recordCommitToken(runtime);
+  const recordWorkspace = () => sourceElement?.closest<HTMLElement>('main') ?? document.getElementById('workspace');
   return new Promise((resolve, reject) => {
     let frame = 0;
     let paintTask: ReturnType<typeof setTimeout> | undefined;
@@ -44,7 +45,7 @@ export function waitForRecordPaint(nodeId: string, runtime: object, signal: Abor
     };
     const finish = () => { cleanup(); resolve(); };
     const matchingVisibleRecord = () => {
-      const workspace = document.getElementById("workspace");
+      const workspace = recordWorkspace();
       const content = workspace?.querySelector<HTMLElement>("[data-record-content]");
       return content?.dataset.recordContent === nodeId && content.dataset.recordCommit === token
         && content.getClientRects().length > 0 && getComputedStyle(content).visibility !== "hidden"
@@ -59,7 +60,7 @@ export function waitForRecordPaint(nodeId: string, runtime: object, signal: Abor
       if (nativeDecision) return;
       nativeDecision = true;
       if (typeof PerformanceObserver === "undefined" || !PerformanceObserver.supportedEntryTypes?.includes("element")) return;
-      const content = document.getElementById("workspace")?.querySelector<HTMLElement>("[data-record-content]");
+      const content = recordWorkspace()?.querySelector<HTMLElement>("[data-record-content]");
       const target = content?.querySelector<HTMLElement>(".source-text-blocks p");
       // Retained or offscreen text may never emit a fresh paint entry. Those
       // routes use the portable rendering opportunity instead.
@@ -72,7 +73,7 @@ export function waitForRecordPaint(nodeId: string, runtime: object, signal: Abor
             return text.name === "text-paint" && text.element === target && text.identifier === identifier && text.startTime > 0
               && Number(text.intersectionRect?.width) > 0 && Number(text.intersectionRect?.height) > 0;
           });
-          const workspace = document.getElementById("workspace");
+          const workspace = recordWorkspace();
           if (workspace?.querySelector("[data-route-render-error]")) check();
           else if (painted && target.isConnected && workspace?.querySelector("[data-record-content]")?.contains(target)
             && inViewport(target) && matchingVisibleRecord()) finish();
@@ -89,7 +90,7 @@ export function waitForRecordPaint(nodeId: string, runtime: object, signal: Abor
         nativeTimer = setTimeout(() => {
           nativeExpired = true;
           const recordVisible = matchingVisibleRecord();
-          if (document.getElementById("workspace")?.querySelector("[data-route-render-error]")) check();
+          if (recordWorkspace()?.querySelector("[data-route-render-error]")) check();
           else if (portableReady && recordVisible && document.fonts?.status !== "loading") finish();
           else check();
         }, PAINT_OBSERVATION_TIMEOUT_MS);
@@ -100,7 +101,7 @@ export function waitForRecordPaint(nodeId: string, runtime: object, signal: Abor
     };
     const check = () => {
       if (settled) return;
-      const workspace = document.getElementById("workspace");
+      const workspace = recordWorkspace();
       if (workspace?.querySelector("[data-route-render-error]")) {
         cleanup();
         reject(new Error("The record renderer could not load."));
@@ -124,7 +125,7 @@ export function waitForRecordPaint(nodeId: string, runtime: object, signal: Abor
               paintTask = setTimeout(() => {
                 paintTask = undefined;
                 const recordVisible = matchingVisibleRecord();
-                if (document.getElementById("workspace")?.querySelector("[data-route-render-error]")
+                if (recordWorkspace()?.querySelector("[data-route-render-error]")
                   || document.fonts?.status === "loading") check();
                 else if (recordVisible) {
                   portableReady = true;

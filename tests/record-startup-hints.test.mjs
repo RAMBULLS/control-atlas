@@ -14,12 +14,18 @@ function fixture() {
       facadeModuleId: '/project/src/ui/lib/hashRoutes.ts',
       exports: ['parseHashLocation'],
     },
+    'assets/record-reader.js': {
+      type: 'chunk', fileName: 'assets/record-reader.js',
+      facadeModuleId: '/project/src/ui/lib/publisherRecordReader.ts',
+      exports: ['startPublisherRecordReader'],
+    },
     'assets/other-page.js': { type: 'chunk', fileName: 'assets/other-page.js' },
   };
 }
-test('record startup uses the two actual emitted public facades', () => {
+test('record startup binds acquisition and reading to actual emitted public facades', () => {
   assert.deepEqual(recordStartupHints(fixture()), {
     artifacts: './assets/record-artifacts.js', routes: './assets/record-routes.js',
+    reader: './assets/record-reader.js', styles: [],
   });
 });
 test('record startup handles Windows module identifiers without storing machine paths', () => {
@@ -51,4 +57,24 @@ test('record startup rejects an emitted filename that does not bind to the facad
   const bundle = fixture();
   bundle['assets/record-routes.js'].fileName = 'assets/other-page.js';
   assert.throws(() => recordStartupHints(bundle), /invalid emitted chunk/);
+});
+
+test('reader static closure resolves every dependency and every emitted stylesheet', () => {
+  const bundle = fixture();
+  bundle['assets/record-reader.js'].imports = ['assets/reader-shared.js'];
+  bundle['assets/reader-shared.js'] = { type: 'chunk', fileName: 'assets/reader-shared.js', viteMetadata: { importedCss: new Set(['assets/record.css']) } };
+  bundle['assets/record.css'] = { type: 'asset', fileName: 'assets/record.css' };
+  assert.deepEqual(recordStartupHints(bundle).styles, ['./assets/record.css']);
+  delete bundle['assets/record.css'];
+  assert.throws(() => recordStartupHints(bundle), /invalid stylesheet/);
+  delete bundle['assets/reader-shared.js'];
+  assert.throws(() => recordStartupHints(bundle), /absent static dependency/);
+});
+
+test('reader static closure fails closed on framework, page or icon dependencies', () => {
+  for (const module of ['/project/node_modules/react/index.js', '/project/node_modules/react-dom/client.js', '/project/node_modules/@tabler/icons-react/dist/icon.js', '/project/src/ui/App.tsx', '/project/src/ui/pages/ObjectDetailPage.tsx']) {
+    const bundle = fixture();
+    bundle['assets/record-reader.js'].moduleIds = [module];
+    assert.throws(() => recordStartupHints(bundle), /requires the interactive framework/);
+  }
 });

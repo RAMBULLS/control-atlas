@@ -1,4 +1,4 @@
-import { ATLAS_NEIGHBORHOOD_SHARD_COUNT, atlasNeighborhoodShardId } from "../../app/atlas-neighborhood.mjs";
+import { ATLAS_NEIGHBORHOOD_SHARD_COUNT, atlasNeighborhoodShardId } from "../../shared/atlas-neighborhood-identity.mjs";
 import { RUNTIME_CACHE_VERSION } from "../../shared/runtime-cache-version.mjs";
 import { expandLibrarySearchTransport } from "./librarySearchTransport";
 import type { ViewState } from "./viewState";
@@ -80,6 +80,7 @@ export type AtlasNeighborhoodNode = {
   label?: string;
   parent_id?: string;
   source_id?: string;
+  lifecycle_status?: string;
   ancestor_path?: Array<{
     id: string;
     label: string;
@@ -93,6 +94,8 @@ export type AtlasNeighborhoodNode = {
     origin: "structural" | "organizing" | "authority";
   }>;
   metadata?: {
+    origin?: string;
+    taxonomy_tags?: unknown[];
     item_id?: string;
     publisher_item_id?: string;
     title?: string;

@@ -36,6 +36,7 @@ import { extractGovernedRecordTaxonomy, buildExploreRelatedPivots } from "../lib
 import type { RuntimeBundle } from "../lib/runtimeLoader";
 import { runtimeRecordIdentityFor } from "../lib/runtimeRecordIdentity";
 import { recordCommitToken } from "../lib/waitForRecordPaint";
+import { publisherReaderOwnsFields } from "../lib/publisherRecordOwner";
 import { normalizeViewState, type ViewState } from "../lib/viewState";
 import { formatSourceDate, sourceFreshnessPresentation, sourceLifecycleDisplayName, sourcePublicationTitle } from "../lib/sourcePresentation";
 
@@ -110,6 +111,7 @@ export function ObjectDetailPage(props: {
   }
 
   const source = bundle.runtime.getSource(document.source_id || node.source_id);
+  const retainedPublisherFields = publisherReaderOwnsFields(node.id);
   const catalogs = bundle.catalogSummaries?.length ? bundle.catalogSummaries : bundle.runtime.getCatalogs();
   const catalog = catalogs.find((entry: any) => entry.id === document.catalog_id);
   const catalogName = catalogDisplayNameFor(document.catalog_id, catalog?.name || document.catalog_name || "");
@@ -319,30 +321,30 @@ export function ObjectDetailPage(props: {
               </div>
             </section>
           ) : null}
-          {isTechnicalRule && overviewFields.length ? <div id="section-overview">
+          {!retainedPublisherFields && isTechnicalRule && overviewFields.length ? <div id="section-overview">
             <RecordNativeFacts fields={overviewFields} metadata={sourceMetadata} title="Overview" />
           </div> : null}
-          {source && claimOrigin !== "publisher_normalized" ? <p className="support-meta" data-record-source-identity>{sourceIdentityLabel} · {sourcePublicationName}</p> : null}
+          {!retainedPublisherFields && source && claimOrigin !== "publisher_normalized" ? <p className="support-meta" data-record-source-identity>{sourceIdentityLabel} · {sourcePublicationName}</p> : null}
           {!source ? <section className="notice" data-record-source-error role="alert">
             <h2>Source identity unavailable</h2><p>Can't confirm which publisher this came from, so it isn't shown as official yet.</p>
           </section> : missingSourceFields.length ? <section className="notice" data-record-source-error role="alert">
             <h2>Unable to load published text</h2><p>The published text for this record did not load.</p>
-          </section> : <RecordPublishedText claimOrigin={claimOrigin} metadata={sourceMetadata} sections={presentation.sections} />}
-          {!missingSourceFields.length && !hasPublishedSectionContent ? <section className="record-source-absence" data-record-section="publisher-absence">
+          </section> : <RecordPublishedText claimOrigin={claimOrigin} metadata={sourceMetadata} recordId={node.id} sections={presentation.sections} />}
+          {!retainedPublisherFields && !missingSourceFields.length && !hasPublishedSectionContent ? <section className="record-source-absence" data-record-section="publisher-absence">
             <h2>Publisher description</h2><p>The publisher did not publish a separate description for this {sentenceCaseKind(kind)}.</p>
           </section> : null}
-          {fedrampContextRecords.map((contextRecord: any) => (
+          {!retainedPublisherFields && fedrampContextRecords.map((contextRecord: any) => (
             <section className="record-fedramp-context" data-record-section="fedramp-context" id={`section-fedramp-context-${contextRecord.metadata.item_id}`} key={contextRecord.id}>
               <h2>FedRAMP 2026 parameters and guidance</h2>
               <p>FedRAMP publishes these parameters and guidance for this control.</p>
               <SourceSectionContent kind="control_parameters" presentation={contextRecord.metadata?.source_text_presentation?.description} value={contextRecord.metadata?.description || ""} />
             </section>
           ))}
-          {presentation.metadata_facts.length && !isTechnicalRule ? <RecordNativeFacts fields={presentation.metadata_facts} metadata={sourceMetadata} title="Published facts" /> : null}
-          {structuralTrace.length > 1 ? <section className="record-hierarchy" data-record-section="publisher-hierarchy">
+          {!retainedPublisherFields && presentation.metadata_facts.length && !isTechnicalRule ? <RecordNativeFacts fields={presentation.metadata_facts} metadata={sourceMetadata} title="Published facts" /> : null}
+          {!retainedPublisherFields && structuralTrace.length > 1 ? <section className="record-hierarchy" data-record-section="publisher-hierarchy">
             <h2>Publisher hierarchy</h2><ol>{structuralTrace.map((entry) => <li key={entry.id}>{entry.label}</li>)}</ol>
           </section> : null}
-          {selectionSections.map((entry: { relationship_type: string; heading: string; note: string; items: any[] }) => <section className="record-child-inventory record-selection" data-record-section="selection" data-selection-type={entry.relationship_type} id={`section-selection-${entry.relationship_type}`} key={entry.relationship_type}>
+          {!retainedPublisherFields && selectionSections.map((entry: { relationship_type: string; heading: string; note: string; items: any[] }) => <section className="record-child-inventory record-selection" data-record-section="selection" data-selection-type={entry.relationship_type} id={`section-selection-${entry.relationship_type}`} key={entry.relationship_type}>
             <div className="section-header"><div><h2>{entry.heading}</h2><p>{entry.note}</p></div>
               <Badge tone="info">{entry.items.length}</Badge>
             </div>
@@ -351,7 +353,7 @@ export function ObjectDetailPage(props: {
             </li>)}</ul>
             {entry.items.length > 25 ? <AppLink onNavigate={onNavigate} patch={{ node: node.id }} view="atlas-map">{`+${entry.items.length - 25} more — Explore in Atlas`}</AppLink> : null}
           </section>)}
-          {showChildInventory ? <section className="record-child-inventory" data-record-section="child-inventory" id="section-children">
+          {!retainedPublisherFields && showChildInventory ? <section className="record-child-inventory" data-record-section="child-inventory" id="section-children">
             <div className="section-header"><div><h2>{childHeading}</h2><p>Objects published directly beneath this record.</p></div>
               <Badge tone="info">{structuralChildren.length}</Badge>
             </div>

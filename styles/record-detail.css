@@ -1,4 +1,27 @@
 /* Record/detail components. Keep these rules scoped; do not change the site shell. */
+#root[data-static-route-kind="record"]:has([data-publisher-reader][data-reader-state="ready"])::before {
+  position: static;
+  inset: auto;
+}
+[data-static-route]:has([data-publisher-reader][data-reader-state="ready"]) {
+  padding-inline: 0;
+}
+[data-static-route] > .page-header[hidden] { display: none; }
+[data-publisher-reader] {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.record-publisher-reading { display: contents; }
+@media (max-width: 640px) {
+  [data-static-route]:has([data-publisher-reader][data-reader-state="ready"]) {
+    padding-top: var(--ca-space-6);
+  }
+  [data-publisher-reader] {
+    width: min(100% - 1.5rem, var(--ca-content-max));
+    margin-inline: auto;
+  }
+}
 .ca-record-page > .ca-record-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 300px);

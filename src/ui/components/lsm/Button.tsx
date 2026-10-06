@@ -1,6 +1,7 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';
+import { BUTTON_BASE, BUTTON_PRIMARY, BUTTON_SECONDARY } from '../../lib/buttonStyles';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'secondary-quiet' | 'destructive' | 'editorial';
 
@@ -11,12 +12,12 @@ export type ButtonVariant = 'primary' | 'secondary' | 'secondary-quiet' | 'destr
  * twMerge resolves any caller overrides without duplicate utilities.
  */
 const button = cva(
-  "ca-button inline-flex items-center justify-center gap-[8px] min-h-[44px] px-[16px] border rounded-[3px] font-bold uppercase tracking-[0.06em] cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-[var(--ca-primary)] focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed",
+  BUTTON_BASE,
   {
     variants: {
       variant: {
-        primary: "ca-button-primary",
-        secondary: "bg-transparent text-[var(--ca-text)] border-[var(--ca-border-strong)] hover:bg-[color-mix(in_srgb,var(--ca-primary)_13%,transparent)]",
+        primary: BUTTON_PRIMARY,
+        secondary: BUTTON_SECONDARY,
         // Muted twin of `secondary` for de-emphasized actions (e.g. "view source" beside a primary action).
         "secondary-quiet": "bg-transparent text-[var(--ca-text-muted)] border-[color-mix(in_srgb,var(--ca-border-strong)_60%,transparent)] hover:bg-[color-mix(in_srgb,var(--ca-primary)_10%,transparent)] hover:text-[var(--ca-text)]",
         destructive: "bg-[color-mix(in_srgb,var(--ca-danger)_14%,transparent)] text-[var(--ca-danger)] border-[color-mix(in_srgb,var(--ca-danger)_54%,transparent)] hover:bg-[color-mix(in_srgb,var(--ca-danger)_22%,transparent)]",

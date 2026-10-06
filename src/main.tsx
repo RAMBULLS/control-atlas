@@ -97,6 +97,7 @@ declare global {
   interface Window {
     controlAtlasProgressiveRouteIdentity?: () => StaticRouteIdentity | null;
     controlAtlasSyncFirstPaintShell?: () => void;
+    controlAtlasRecordReader?: { hash: string; ready: Promise<void> };
   }
 }
 
@@ -138,7 +139,8 @@ function syncStaticRouteShell() {
   rootElement.dataset.staticRouteActive = 'true';
   shell.removeAttribute('aria-hidden');
   shell.removeAttribute('inert');
-  shell.setAttribute('role', 'status');
+  if (shell.querySelector('[data-publisher-reader][data-reader-state="ready"]')) shell.removeAttribute('role');
+  else shell.setAttribute('role', 'status');
 }
 
 function observeRouteHydration() {
@@ -147,6 +149,20 @@ function observeRouteHydration() {
   const markHydrated = () => {
     const app = reactRootElement.querySelector<HTMLElement>('#app');
     if (!app || !reactRouteOwnsSurface(app)) return false;
+    // Valid native source survives a failed enhancer. Only adoption releases it.
+    if (rootElement.querySelector('[data-publisher-reader][data-reader-state="ready"] [data-source-text]')) {
+      if (app.dataset.appReady === 'error' || reactRootElement.querySelector('[data-route-render-error]')) {
+        const reader = rootElement.querySelector('[data-publisher-reader]');
+        if (reader && !reader.querySelector('[data-reader-enhancement-error]')) {
+          const status = document.createElement('p');
+          status.dataset.readerEnhancementError = 'true';
+          status.setAttribute('role', 'alert');
+          status.textContent = 'Interactive features did not load. Published text remains available. Reload the page to try again.';
+          reader.append(status);
+        }
+      }
+      return false;
+    }
     if (reactRootElement.querySelector('[data-route-suspense-pending="true"]')) return false;
     if (
       app.dataset.appReady !== 'error' &&
@@ -521,7 +537,10 @@ async function bootReactApp() {
   window.removeEventListener('hashchange', onLocationChange);
   window.removeEventListener('popstate', onLocationChange);
 
-  reactBoot = loadReactModules()
+  reactBoot = waitForInitialPublisherText().then(() => {
+    warmInteractiveRoute();
+    return loadReactModules();
+  })
     .then(([react, reactDom, appModule]) => {
       reactDom.createRoot(reactRootElement).render(
         react.createElement(
@@ -563,6 +582,13 @@ async function bootReactApp() {
         startBrandRotation();
       }
       rootElement.dataset.reactBootError = "true";
+      const publisherReader = rootElement.querySelector<HTMLElement>('[data-publisher-reader][data-reader-state="ready"]');
+      if (publisherReader) {
+        const status = document.createElement('p');
+        status.setAttribute('role', 'alert');
+        status.textContent = 'Interactive features did not load. Published text remains available. Reload the page to try again.';
+        publisherReader.append(status);
+      }
       const routeSummary = rootElement.querySelector<HTMLElement>(
         '[data-static-route-summary]',
       );
@@ -589,6 +615,20 @@ function loadReactModules() {
     throw error;
   });
   return reactModules;
+}
+
+async function waitForInitialPublisherText() {
+  while (window.controlAtlasRecordReader?.hash === window.location.hash) {
+    const reader = window.controlAtlasRecordReader;
+    let changed = () => {};
+    const navigation = new Promise<void>(resolve => {
+      changed = () => resolve();
+      window.addEventListener('hashchange', changed, { once: true });
+    });
+    await Promise.race([reader.ready.catch(() => undefined), navigation]);
+    window.removeEventListener('hashchange', changed);
+    if (reader === window.controlAtlasRecordReader) return;
+  }
 }
 
 function onLocationChange() {
@@ -682,7 +722,7 @@ async function start() {
   // Begin fetching the route and framework immediately so network time overlaps
   // that stable first paint and produces the interactive result without an
   // extra task boundary between framework readiness and the initial commit.
-  warmInteractiveRoute();
+  if (!window.location.hash.startsWith('#/record/')) warmInteractiveRoute();
   void bootReactApp();
 }
 

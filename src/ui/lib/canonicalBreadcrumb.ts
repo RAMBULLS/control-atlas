@@ -34,6 +34,11 @@ export function canonicalBreadcrumbForNode(
     .getCatalogs()
     .find((entry: any) => entry.id === document.catalog_id);
   const source = bundle.runtime.getSource(node.source_id);
+  return canonicalBreadcrumbFromRecord(node, document, catalog, source, recordLabel);
+}
+
+/** The reading boundary and interactive runtime use the same publisher path. */
+export function canonicalBreadcrumbFromRecord(node: any, document: any, catalog: any, source: any, recordLabel?: string): CanonicalBreadcrumb {
   const path = (node.ancestor_path || []) as Array<Record<string, unknown>>;
   const area = [...path].reverse().find((entry) => entry.node_type === "limb");
   const section = [...path]

@@ -5,6 +5,7 @@ import process from 'node:process';
 import { pathToFileURL } from 'node:url';
 
 import { classifyNameStatus } from './classify-change-scope.mjs';
+import { reviewSelection } from './ui-review-routes.mjs';
 
 const AUTOMATION_TESTS = new Set([
   'tests/recover-refresh-pr.test.mjs',
@@ -18,6 +19,35 @@ const AUTOMATION_TESTS = new Set([
   'tests/verify-affected.test.mjs',
   'tests/vale-extraction.test.mjs',
   'tests/wait-for-checks.test.mjs',
+]);
+
+const RECORD_ACCEPTANCE_PATHS = new Set([
+  'src/shared/record-acceptance.mjs',
+  'src/shared/record-control-context.mjs',
+  'src/shared/record-fact-labels.mjs',
+  'src/shared/record-presentation.mjs',
+  'src/shared/microsoft-zt-category-labels.mjs',
+  'src/ui/lib/sourcePresentation.ts',
+  'scripts/build-framework-data.mjs',
+  'tests/graph/recordActionPolicy.test.ts',
+  'tests/record-acceptance.test.mjs',
+  'tests/record-control-context.test.mjs',
+  'tests/microsoft-zt-category-labels.test.mjs',
+  'tools/record-acceptance-matrix.mjs',
+]);
+
+// Files that change what a record page renders. Their behavior is proven in a
+// browser, not only by contract tests.
+const RECORD_PAGE_PATHS = new Set([
+  'src/ui/pages/ObjectDetailPage.tsx',
+  'src/ui/components/RecordPublishedText.tsx',
+  'src/ui/lib/recordTitle.ts',
+  'src/ui/App.tsx',
+  'src/shared/record-acceptance.mjs',
+  'src/shared/record-control-context.mjs',
+  'src/shared/microsoft-zt-category-labels.mjs',
+  'src/ui/lib/sourcePresentation.ts',
+  'tests/e2e/record-acceptance-actions.spec.mjs',
 ]);
 
 const SOURCE_REFRESH_PATHS = new Set([
@@ -78,22 +108,32 @@ export function createVerificationPlan(paths, changeMap) {
     'data/source-baselines.json', 'data/source-refresh-policy.json',
     'data/schemas/source-baselines.schema.json', 'data/schemas/source-refresh-policy.schema.json',
     'tools/automerge-source-refresh.mjs', 'tools/report-refresh-alerts.mjs', 'tools/verify-refresh-admission.mjs',
+    'scripts/lib/retry-policy.mjs', 'scripts/lib/source-change-evidence.mjs', 'scripts/lib/pulse.mjs', 'scripts/lib/product-history.mjs',
+    'tools/classify-refresh-outcome.mjs', 'tools/report-sweep-alert.mjs', 'tools/sweep-due.mjs',
     'tests/helpers/publisher-volume.mjs',
     ...['automerge-source-refresh', 'catalog-source-inventory', 'catalog-baseline-fetch', 'cci-inventory',
       'publisher-inventory', 'publisher-inventory-integration', 'publisher-volume', 'refresh-alerts',
       'refresh-candidate-gate', 'refresh-isolation', 'source-baseline', 'source-freshness-ownership',
       'source-partial-failure', 'source-transaction', 'source-unit-selection', 'source-url-policy',
-      'mitre-release-admission'].map((name) => `tests/${name}.test.mjs`),
+      'mitre-release-admission', 'source-health-harness', 'retry-policy', 'sweep-alert', 'refresh-outcome',
+      'source-change-evidence', 'pulse', 'sweep-due'].map((name) => `tests/${name}.test.mjs`),
   ]);
   if (paths.length && paths.every((path) => refreshSafetyPaths.has(path))) {
     const suites = new Set();
     const byModule = {
       'publisher-inventory': ['publisher-inventory', 'publisher-inventory-integration'],
       'cci-inventory': ['cci-inventory'],
-      'catalog-refresh-profiles': ['refresh-candidate-gate', 'catalog-source-inventory'],
-      'refresh-candidate-gate': ['refresh-candidate-gate'],
+      'catalog-refresh-profiles': ['refresh-candidate-gate', 'catalog-source-inventory', 'pulse'],
+      'refresh-candidate-gate': ['refresh-candidate-gate', 'source-health-harness'],
+      'retry-policy': ['retry-policy', 'source-transaction', 'source-health-harness'],
+      'source-change-evidence': ['source-change-evidence', 'refresh-candidate-gate', 'source-health-harness', 'pulse'],
+      pulse: ['pulse', 'source-health-harness'],
+      'product-history': ['pulse'],
+      'classify-refresh-outcome': ['refresh-outcome'],
+      'report-sweep-alert': ['sweep-alert'],
+      'sweep-due': ['sweep-due'],
       'refresh-source-outputs': ['refresh-isolation', 'source-unit-selection'],
-      'source-baseline': ['source-baseline', 'refresh-candidate-gate', 'mitre-release-admission'],
+      'source-baseline': ['source-baseline', 'refresh-candidate-gate', 'mitre-release-admission', 'source-health-harness'],
       'source-transaction': ['source-transaction'],
       'source-url-policy': ['source-url-policy', 'strict-conditional-fetch'],
       'automerge-source-refresh': ['automerge-source-refresh'],
@@ -159,6 +199,10 @@ export function createVerificationPlan(paths, changeMap) {
     path === 'src/shared/source-text-presentation.mjs' ||
     path.includes('source-truth') ||
     path === 'tests/e2e/source-trust-surfaces.spec.mjs');
+  // Any change that can move a public layout or rewrite a visible string
+  // re-runs the product-level guardrails. This is the same question the CI
+  // ui-review gate asks, answered by the same module so the two cannot drift.
+  const publicUiChanged = reviewSelection(paths).material;
   const compareWorkbenchChanged = paths.some((path) =>
     path === 'src/ui/pages/ComparePage.tsx' ||
     path === 'src/ui/lib/comparePagination.ts' ||
@@ -167,7 +211,7 @@ export function createVerificationPlan(paths, changeMap) {
     path === 'tests/e2e/compare-pagination.spec.mjs' ||
     path === 'tests/e2e/compare-cross-route-corruption.spec.mjs');
   const boundedWorkbenchesChanged = paths.some((path) =>
-    path === 'src/ui/pages/AtlasMapPage.tsx' ||
+    path === 'src/ui/pages/AtlasTerritoryPage.tsx' ||
     path === 'src/ui/pages/ExplorePage.tsx' ||
     path === 'src/ui/pages/CommonsPage.tsx' ||
     path === 'src/ui/components/LibraryAtlasMap.tsx' ||
@@ -206,7 +250,10 @@ export function createVerificationPlan(paths, changeMap) {
     path === 'scripts/lib/url-classification.mjs' ||
     path === 'tests/commons-operator-ecosystem.test.mjs');
   const phase4DataChanged = paths.some((path) => path === 'data/template-registry.json');
-  const mappedData = stigObservationChanged || incrementalDataChanged || sourceRefreshChanged || operatorEcosystemChanged || phase4DataChanged;
+  // The record acceptance gate (issue #279): registry, labels, dispositions and
+  // the generator. Deterministic contract tests need no publisher requests.
+  const recordAcceptanceChanged = paths.some((path) => RECORD_ACCEPTANCE_PATHS.has(path));
+  const mappedData = stigObservationChanged || incrementalDataChanged || sourceRefreshChanged || operatorEcosystemChanged || phase4DataChanged || recordAcceptanceChanged;
   const mappedRuntime = changeMap.dependenciesChanged || sourceTrustChanged || compareWorkbenchChanged || boundedWorkbenchesChanged || phase4SurfacesChanged || publicShellChanged || mappedData || eolPolicyChanged || e2ePaths.length > 0;
 
   if (changeMap.evidenceOnly) {
@@ -391,6 +438,17 @@ export function createVerificationPlan(paths, changeMap) {
       expectedTests: 3, workers: 2, budgetSeconds: 30,
     });
   }
+  if (publicUiChanged) {
+    // The rendered-copy check is the cheap half and catches the class of
+    // failure we actually shipped, so it belongs in the inner loop. The full
+    // layout sweep walks every route at six widths and costs minutes; it runs
+    // in the CI browser gate via test:e2e:smoke, not on every local edit.
+    addStep(steps, {
+      id: 'public-copy-browser',
+      command: ['npm', 'run', 'test:e2e:run', '--', 'tests/e2e/public-copy.spec.mjs'],
+      expectedTests: 23, workers: 2, budgetSeconds: 60,
+    });
+  }
   if (compareWorkbenchChanged) {
     addStep(steps, {
       id: 'compare-workbench-browser',
@@ -413,6 +471,26 @@ export function createVerificationPlan(paths, changeMap) {
         '--grep',
         'focused Atlas opens straight|Atlas search waits|WS3 Library communicates|WS3 Resources shares'],
       expectedTests: 4, workers: 2, budgetSeconds: 45,
+    });
+  }
+  if (recordAcceptanceChanged) {
+    addStep(steps, {
+      id: 'record-acceptance-contracts', command: ['npm', 'run', 'test:record-presentation'],
+      expectedTests: 24, workers: 2, budgetSeconds: 30,
+    });
+  }
+  if (paths.includes('scripts/build-framework-data.mjs')) {
+    addStep(steps, {
+      id: 'search-document-contracts',
+      command: ['node', '--test', 'tests/framework-data.test.mjs', 'tests/library-search-index.test.mjs'],
+      expectedTests: 20, workers: 2, budgetSeconds: 60,
+    });
+  }
+  if (paths.some((path) => RECORD_PAGE_PATHS.has(path))) {
+    addStep(steps, {
+      id: 'record-page-browser',
+      command: ['npm', 'run', 'test:e2e:run', '--', 'tests/e2e/record-acceptance-actions.spec.mjs'],
+      expectedTests: 6, workers: 2, budgetSeconds: 30,
     });
   }
   if (phase4SurfacesChanged) {

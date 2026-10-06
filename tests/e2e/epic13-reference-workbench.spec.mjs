@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { attachPageDiagnostics, gotoApp, waitForAppReady } from "./support.mjs";
+import { attachPageDiagnostics, clickAtlasPublication, gotoApp, waitForAppReady } from "./support.mjs";
 
 test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
@@ -11,10 +11,10 @@ test("homepage reads as a connected federal cybersecurity reference system", asy
   await gotoApp(page, "/");
 
   await expect(page.getByRole("heading", { name: "Make federal cybersecurity make sense." })).toBeVisible();
-  await expect(page.getByText("Understand what applies, what it means, and what to do next.", { exact: true })).toBeVisible();
+  await expect(page.locator(".home-lead")).toContainText("trace where requirements come from");
   await expect(page.locator(".home-ecosystem")).toHaveCount(0);
-  await expect(page.getByRole("navigation", { name: "Choose a Control Atlas destination" }).getByRole("link")).toHaveCount(4);
-  await expect(page.getByRole("navigation", { name: "Start with what you came to find." }).locator(".home-library-kpi")).toHaveCount(5);
+  await expect(page.getByRole("navigation", { name: "Tools" }).getByRole("link")).toHaveCount(3);
+  await expect(page.getByRole("region", { name: "Browse the Library" }).locator(".home-library__item")).toHaveCount(5);
   await expect(page.getByRole("navigation", { name: "Primary navigation" }).getByRole("link", { name: "Resources", exact: true })).toBeVisible();
   await expect(page.evaluate(() => globalThis.document.documentElement.scrollWidth <= globalThis.document.documentElement.clientWidth)).resolves.toBe(true);
 
@@ -33,23 +33,21 @@ test("Resources is a first-class durable destination", async ({ page }) => {
   await expect(page.getByRole("navigation", { name: "Primary navigation" }).getByRole("link", { name: "Resources", exact: true })).toHaveAttribute("aria-current", "page");
 });
 
-test("Atlas overview aggregates the ecosystem and drills directly", async ({ page }, testInfo) => {
+test("Atlas overview shows every territory and drills directly to a publication", async ({ page }, testInfo) => {
   await page.setViewportSize({ width: 1600, height: 1000 });
-  await gotoApp(page, "/#/atlas?atlasLanding=publishers");
+  await gotoApp(page, "/#/atlas");
   await waitForAppReady(page);
 
   await expect(page.getByRole("heading", { name: "Atlas", level: 1 })).toBeVisible();
-  await expect(page.getByText("Grouped by what each document is, who issues it, or what you're trying to get done.", { exact: true })).toBeVisible();
-  const board = page.getByTestId("atlas-area-map");
-  await expect(board).toBeVisible();
-  await expect(board.locator("button.atlas-area__cell")).toHaveCount(8);
-  await expect(page.locator(".atlas-mapcol__aside em")).toHaveCount(4);
+  const map = page.locator(".terr");
+  await expect(map).toBeVisible();
+  await expect(map.locator(".district")).toHaveCount(9);
   await page.screenshot({ path: testInfo.outputPath("epic13-atlas-graph-first.png"), fullPage: true });
 
-  // Opening a publisher stays on the map and shows what it publishes.
-  await board.getByRole("button", { name: /^NIST / }).click();
-  await expect(page).toHaveURL(/atlasLensFamily=ecosystem(?::|%3A)nist/);
-  await expect(board.getByRole("button", { name: /^800-53 / }).first()).toBeVisible();
+  // Opening a publication stays on the map and shows what it connects to.
+  await clickAtlasPublication(page, "nist-800-53");
+  await expect(page).toHaveURL(/atlasFramework=nist-800-53/);
+  await expect(page.locator(".atl-inspector")).toContainText("SP 800-53 Rev. 5");
   await page.screenshot({ path: testInfo.outputPath("epic13-atlas-workbench.png"), fullPage: true });
 });
 
@@ -58,7 +56,7 @@ test("mobile homepage preserves the product story without horizontal overflow", 
   await gotoApp(page, "/");
 
   await expect(page.getByRole("heading", { name: "Make federal cybersecurity make sense." })).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "Start with what you came to find." }).locator(".home-library-kpi")).toHaveCount(5);
+  await expect(page.getByRole("region", { name: "Browse the Library" }).locator(".home-library__item")).toHaveCount(5);
   await expect(page.evaluate(() => globalThis.document.documentElement.scrollWidth <= globalThis.document.documentElement.clientWidth)).resolves.toBe(true);
   await page.screenshot({ path: testInfo.outputPath("epic13-home-mobile.png"), fullPage: true });
 });

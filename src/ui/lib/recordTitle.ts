@@ -9,6 +9,7 @@
 
 import { displayNameFor } from "../../app/display-names.mjs";
 import { nistFamilyCode } from "../../shared/nist-families.mjs";
+import { controlContextLabel } from "../../shared/record-control-context.mjs";
 import { sourceNativeIdentityCategory } from "../../shared/record-identity.mjs";
 import { routeIdentityFor } from "./routeIdentity";
 
@@ -171,14 +172,27 @@ export const SCAFFOLD_STABLE_ID_TYPES: ReadonlySet<string> = new Set([
   "zt_tenet",
 ]);
 
+/**
+ * `requirement` covers catalogs with a real short publisher code (NIST AI RMF's
+ * "GOVERN 1.1", SSDF's "PO.1.1", 800-171's "3.1.1") and catalogs where the
+ * ingestion adapter had to invent a key because the publisher only names the
+ * item ("Holistic", "Set Foundations") with no code of its own. DoD's
+ * Responsible AI Toolkit is the latter: "PRINCIPLE-ETHICS" and
+ * "SHIELD-DETECT" are Control Atlas keys, not DoD identifiers.
+ */
+const SCAFFOLD_STABLE_ID_CATALOG_TYPES: ReadonlySet<string> = new Set([
+  "dod-rai:requirement",
+]);
+
 /** True when the record's item_id is a Control Atlas key rather than a published ID. */
-export function usesScaffoldStableId(objectType: string, stableId = ""): boolean {
+export function usesScaffoldStableId(objectType: string, stableId = "", catalogId = ""): boolean {
   if (objectType === "tactic") {
     return !/^TA\d{4}$/i.test(stableId.trim());
   }
   return (
     SCAFFOLD_STABLE_ID_TYPES.has(objectType) ||
-    GENERATED_STABLE_ID_TYPES.has(objectType)
+    GENERATED_STABLE_ID_TYPES.has(objectType) ||
+    SCAFFOLD_STABLE_ID_CATALOG_TYPES.has(`${catalogId}:${objectType}`)
   );
 }
 
@@ -208,11 +222,28 @@ export function recordIdentityPresentationFor(input: {
   metadata?: TitledNode["metadata"];
 }): RecordIdentityPresentation {
   const stableId = input.itemId.trim();
-  const stableIdIsGenerated = usesScaffoldStableId(input.objectType, stableId);
+  const stableIdIsGenerated = usesScaffoldStableId(input.objectType, stableId, input.catalogId);
   const publisherItemId = input.metadata?.publisher_item_id?.trim() || "";
   const displayId = publisherItemId || stableId;
   const nativePrimary = recordIdentityFor({ ...input, itemId: displayId });
   const publishedName = officialRecordName(displayId, input.title);
+
+  // FedRAMP publishes control context under its own id (CTL-AC-06-01). Lead with
+  // the control practitioners know and keep the publisher's exact title beneath.
+  const contextLabel = input.objectType === "control_context" ? controlContextLabel(stableId) : null;
+  if (contextLabel) {
+    const primary = [input.publisher.trim(), contextLabel, "parameters and guidance"].filter(Boolean).join(" ");
+    const official = input.title.trim();
+    return {
+      primary,
+      secondary: official && official !== primary ? official : "",
+      context: "",
+      accessibleName: primary,
+      browserTitle: [primary, official].filter(Boolean).join(" — "),
+      stableId,
+      stableIdIsGenerated: false,
+    };
+  }
 
   if (!stableIdIsGenerated) {
     return {
@@ -226,9 +257,13 @@ export function recordIdentityPresentationFor(input: {
     };
   }
 
+  // A scaffold key is not a publisher designation, so it is never stripped from
+  // the publisher's title. Baselines are keyed HIGH / LOW / MODERATE and titled
+  // "High Impact Baseline"; stripping the key left every baseline as
+  // "Impact Baseline".
   const primary = publisherItemId
     ? formatRecordTitle(publisherItemId, input.title)
-    : publishedName || input.title.trim() || stableId;
+    : input.title.trim() || stableId;
   const recordType = displayNameFor("object_type", input.objectType);
   const publication = input.publicationName?.trim() || input.catalogId;
   const context = [recordType, publication].filter(Boolean).join(" · ");
@@ -297,7 +332,7 @@ export function recordDisplayTitle(node: TitledNode | null | undefined): string 
     const familyCode = itemId.replace(/^FAMILY-/, "");
     return `${title} (${familyCode}) family`;
   }
-  if (usesScaffoldStableId(node.node_type ?? "", itemId)) {
+  if (usesScaffoldStableId(node.node_type ?? "", itemId, node.metadata?.catalog_id ?? "")) {
     return title;
   }
   return formatRecordTitle(itemId, title);

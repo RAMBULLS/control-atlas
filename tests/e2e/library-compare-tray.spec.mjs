@@ -113,7 +113,7 @@ test("a single-publication selection stops at the target step instead of a broke
   expect(hash).not.toContain("compareRun=true");
   // sources.json is not cached from the Library page, so the Compare partial
   // load takes several seconds. Wait up to 30s for the target form to render.
-  await expect(page.getByLabel("Target publication")).toHaveValue("", { timeout: 30_000 });
+  await expect(page.getByRole("combobox", { name: /^Compare with/ })).toHaveValue("", { timeout: 30_000 });
 });
 
 test("the tray fits the small-screen contract without page overflow", async ({ page }) => {

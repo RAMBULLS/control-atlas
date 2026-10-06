@@ -26,13 +26,13 @@ test("critical path: Template B landing hero and four entry cards are visible", 
   await expect(page.getByRole("searchbox", { name: "Search Control Atlas" })).toBeVisible();
   await expect(page.locator(".home-search").getByRole("button", { name: "Search" })).toBeVisible();
   await expect(page.locator('[data-template="B"]')).toBeVisible();
-  await expect(page.locator(".home-secondary-action")).toHaveCount(4);
+  await expect(page.locator(".home-tools .home-tool")).toHaveCount(3);
   // Five practitioner questions, ordered the way the work runs. The sixth
   // card was a record-volume statistic, not a place to start.
-  await expect(page.locator(".home-library-kpis .home-library-kpi")).toHaveCount(5);
+  await expect(page.locator(".home-library__list .home-library__item")).toHaveCount(5);
 });
 
-test("critical path: the Atlas Path walks to a published connected record", async ({
+test("critical path: the Atlas connection list walks to a published connected record", async ({
   page,
 }) => {
   await gotoApp(
@@ -42,40 +42,27 @@ test("critical path: the Atlas Path walks to a published connected record", asyn
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
-  const connected = page
-    .getByRole("region", { name: "Relationship map" })
-    .getByRole("button", { name: "Preview" })
-    .first();
-  await connected.click();
-  const previousUrl = page.url();
-  await page
-    .getByRole("link", { name: "See this record's connections" })
-    .click();
-  await expect(page).not.toHaveURL(previousUrl);
-  await expect(page).not.toHaveURL(/node=nist-800-53%3AAC-2(?:&|$)/);
-  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-});
-
-test("critical path: Atlas selected title leaves the map for record detail", async ({
-  page,
-}) => {
-  await gotoApp(
-    page,
-    "/#/explore?node=nist-800-53%3AAC-2&relationshipView=list",
-  );
-  await waitForAppReady(page);
-  await dismissOnboarding(page);
-
-  await page
-    .getByRole("region", { name: "Relationship map" })
-    .getByRole("button", { name: "Preview" })
-    .first()
-    .click();
-  const brief = page.getByLabel(/record brief/);
-  await expect(brief.getByRole("button", { name: "Open full record" })).toHaveCount(0);
-  await brief.locator("h2 a").click();
-
+  const table = page.getByRole("table", { name: "Relationship table" });
+  await expect(table).toBeVisible({ timeout: 20000 });
+  await table.locator("tbody tr").first().getByRole("link").first().click();
   await expect(page).toHaveURL(/#\/record\//);
+  await expect(page).not.toHaveURL(/AC-2$/);
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  // …and back into Atlas for that record's own connections.
+  await page.getByRole("link", { name: "See connections", exact: true }).click();
+  await expect(page).toHaveURL(/#\/atlas\//);
+  await expect(page.getByRole("link", { name: "Full connection list" })).toBeVisible({ timeout: 20000 });
+});
+
+test("critical path: Atlas selected record leaves the map for record detail", async ({
+  page,
+}) => {
+  await gotoApp(page, "/#/explore?node=nist-800-53%3AAC-2");
+  await waitForAppReady(page);
+  await dismissOnboarding(page);
+
+  await page.locator(".atl-inspector").getByRole("link", { name: "Open the full record" }).click();
+  await expect(page).toHaveURL(/#\/record\/nist-800-53\/AC-2/);
   await expect(page.locator(".detail-page")).toBeVisible();
   await expect(page.getByRole("link", { name: "See connections", exact: true })).toBeVisible();
 });
@@ -231,7 +218,7 @@ test("critical path: keyboard focus reaches primary nav and search", async ({
   page,
 }) => {
   // 2026-08-03: utility navigation grew from 3 items to 5 (Resources/About
-  // joined Sources/Help/Start here), which needs more header width before
+  // joined Sources/Help/Atlas), which needs more header width before
   // the full desktop chrome fits — see styles/orbital.css's compactNavigation
   // breakpoint comment. Playwright's bare default viewport (1280x720) is
   // below it now, so the primary nav this test exercises would otherwise be
@@ -250,17 +237,15 @@ test("critical path: keyboard focus reaches primary nav and search", async ({
   });
   await library.focus();
   await expect(library).toBeFocused();
-  // Scoped to the banner: the static search shell's own "Start here" button
-  // can also be present in the DOM while its route is loading.
-  const startHere = page.getByRole("banner").getByRole("link", {
-    name: "Start here",
+  const atlas = page.getByRole("banner").getByRole("link", {
+    name: "Atlas",
     exact: true,
   });
-  await startHere.focus();
-  await expect(startHere).toBeFocused();
+  await atlas.focus();
+  await expect(atlas).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(
-    page.getByRole("heading", { name: "Start here", exact: true }),
+    page.getByRole("heading", { name: "Atlas", exact: true }),
   ).toBeVisible();
 
   const search = page.getByRole("button", { name: "Open search" });

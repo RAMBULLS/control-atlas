@@ -19,7 +19,7 @@ test("WS0 direct routes own exactly one main landmark without Home stacked above
 
   const routes = [
     { path: "/#/", view: "home", marker: page.locator(".home-entry") },
-    { path: "/#/atlas", view: "atlas-map", marker: page.getByTestId("atlas-area-map") },
+    { path: "/#/atlas", view: "atlas-map", marker: page.locator(".terr") },
     { path: "/#/library", view: "search", marker: page.getByRole("heading", { name: "Library", exact: true }) },
     { path: "/#/resources", view: "commons", marker: page.getByRole("heading", { name: "Resources", exact: true, level: 1 }) },
     { path: "/#/guides", view: "patterns", marker: page.getByRole("heading", { name: "Guides", exact: true }) },
@@ -28,7 +28,7 @@ test("WS0 direct routes own exactly one main landmark without Home stacked above
     { path: "/#/build", view: "templates" },
     { path: "/#/sources", view: "sources" },
     { path: "/#/about", view: "about" },
-    { path: "/#/start", view: "start-here" },
+    { path: "/#/start", view: "atlas-map" },
   ];
 
   for (const { path, view, marker } of routes) {
@@ -64,7 +64,6 @@ test("desktop header exposes task destinations, Search, and reference overflow",
 
   const primary = page.getByRole("navigation", { name: "Primary navigation" });
   await expect(primary.getByRole("link")).toHaveText([
-    "Start here",
     "Atlas",
     "Library",
     "Compare",
@@ -175,7 +174,6 @@ test("WS0 tablet and mobile use one navigation control with every destination", 
     const sheet = page.getByRole("navigation", { name: "Primary navigation (mobile)" });
     await expect(sheet).toBeVisible();
       await expect(sheet.getByRole("link")).toHaveText([
-        "Start here",
         "Atlas",
         "Library",
         "Compare",

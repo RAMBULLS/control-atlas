@@ -13,13 +13,13 @@ const REQUIRED_FIELDS = [
   'compatibility',
   'provenance',
   'disclaimer_required',
+  'usage',
 ];
 
 const ARTIFACT_TYPES = new Set([
   'security_plan_starter',
   'implementation_statement_worksheet',
   'evidence_expectation_matrix',
-  'stig_evidence_checklist',
   'inheritance_worksheet',
   'reciprocity_checklist',
   'poam_starter',
@@ -27,22 +27,17 @@ const ARTIFACT_TYPES = new Set([
   'conmon_calendar',
   'hardware_baseline',
   'software_baseline',
-  'ppsm_preparation_worksheet',
 ]);
 
+// The only interoperability labels a template may show publicly.
 const COMPATIBILITY_CLASSES = new Set([
-  'Officially specified',
-  'Verified by Control Atlas round trip',
-  'eMASS API v3.22 schema-aligned',
-  'Schema-aligned',
-  'Community implementation reference',
-  'Historical compatibility',
-  'Control Atlas companion',
-  'Unverified',
+  'Verified interchange',
+  'Field-aligned',
+  'Concept-aligned',
 ]);
 
 const FORMATS = new Set(['xlsx', 'docx']);
-const INPUT_OPTIONS = new Set(['framework', 'baseline', 'control_family', 'selected_controls', 'selected_stigs', 'environment_archetype']);
+const INPUT_OPTIONS = new Set(['framework', 'baseline', 'control_family', 'selected_controls', 'environment_archetype']);
 
 export function validateTemplateRegistry(registry) {
   const errors = [];
@@ -104,12 +99,26 @@ export function validateTemplateRegistry(registry) {
     }
     if (typeof template.disclaimer_required !== 'boolean') errors.push(`template ${template.template_id} disclaimer_required must be boolean`);
 
+    const usage = template.usage;
+    if (!usage || typeof usage !== 'object') {
+      errors.push(`template ${template.template_id} missing usage { use_for, not_for }`);
+    } else {
+      for (const key of ['use_for', 'not_for']) {
+        if (typeof usage[key] !== 'string' || usage[key].trim().length < 10) {
+          errors.push(`template ${template.template_id} usage.${key} must be a plain-language sentence`);
+        }
+      }
+    }
+
     const compatibility = template.compatibility;
     if (!compatibility || typeof compatibility !== 'object') {
       errors.push(`template ${template.template_id} missing compatibility metadata`);
     } else {
       if (!COMPATIBILITY_CLASSES.has(compatibility.classification)) {
         errors.push(`template ${template.template_id} has unsupported compatibility classification: ${compatibility.classification}`);
+      }
+      if ((compatibility.classification === 'Verified interchange') !== (template.provenance?.verified_interchange === true)) {
+        errors.push(`template ${template.template_id} may be "Verified interchange" only when provenance.verified_interchange is true, and the reverse`);
       }
       if (typeof compatibility.claim !== 'string' || compatibility.claim.trim() === '') {
         errors.push(`template ${template.template_id} compatibility.claim must be non-empty`);

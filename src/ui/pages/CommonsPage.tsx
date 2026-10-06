@@ -22,7 +22,7 @@ import {
 } from "../components/WorkspaceTemplate";
 import { Button } from "../components/lsm";
 import type { CommonsCollection, CommonsResource } from "../lib/commonsTypes";
-import { resourceAccessLabel, resourceFieldLabel, resourceTypeLabel } from "../lib/resourceBrands.mjs";
+import { resourceAccessLabel, resourceFieldLabel, resourceOriginLabel, resourceTypeLabel } from "../lib/resourceBrands.mjs";
 import { resourceSummaryPresentation } from "../lib/commonsPresentation.mjs";
 import {
   filterDirectoryResources,
@@ -211,8 +211,8 @@ export function CommonsPage(props: {
           <AppLink onNavigate={onNavigate} view="templates">
             Looking for a starter document? Browse Templates →
           </AppLink>
-          <AppLink onNavigate={onNavigate} view="patterns">
-            Want framework context? Browse Guides →
+          <AppLink onNavigate={onNavigate} view="atlas-map">
+            Need framework context? Explore Atlas →
           </AppLink>
         </nav>
       )}
@@ -299,7 +299,11 @@ export function CommonsPage(props: {
               </div>
             </section>
           ) : null}
-          <ul aria-label="Resource results" className="workspace-result-list resource-catalog-grid">
+          {/* The result cards are h3, so without a heading of their own they
+              hung straight off the page h1 and skipped a level for anyone
+              navigating by heading. */}
+          <h2 className="visually-hidden" id="resource-results-heading">Resources</h2>
+          <ul aria-labelledby="resource-results-heading" className="workspace-result-list resource-catalog-grid">
             {filtered.slice(0, visibleCount).map((resource) => {
               const selected = selectedResourceIds.includes(resource.id);
               const summary = resourceSummaryPresentation(resource);
@@ -342,7 +346,7 @@ export function CommonsPage(props: {
                       <div className="workspace-result-row__content">
                         <div className="workspace-result-row__meta">
                           <span className="workspace-kind-tag">{resourceTypeLabel(resource.resourceType)}</span>
-                          <span>{resource.publisher}</span>
+                          <span>{resourceOriginLabel(resource.resourceLane)} · {resource.publisher}</span>
                         </div>
                         <h3>{resource.name}</h3>
                         <div className="resource-summary-copy resource-summary-copy--row">

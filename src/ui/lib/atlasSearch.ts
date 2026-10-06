@@ -75,19 +75,36 @@ function resolveControlAliases(rawNeedle: string): string[] {
       aliases.add(`${family}-${controlNum}`);
     }
 
-    const baseMatch = input.match(/^([a-z]{2,4})[-\s]?0*(\d+)$/i);
-    if (baseMatch) {
-      const family = baseMatch[1].toUpperCase();
-      const controlNum = Number.parseInt(baseMatch[2], 10);
-      aliases.add(`${family}-${controlNum}`);
-    }
-
     const csfMatch = input.match(/^([a-z]{2})[.\-\s]([a-z]{2})[-\s]?0*(\d+)$/i);
     if (csfMatch) {
       const func = csfMatch[1].toUpperCase();
       const cat = csfMatch[2].toUpperCase();
       const num = Number.parseInt(csfMatch[3], 10);
       aliases.add(`${func}.${cat}-${num}`);
+    }
+
+    const stigVulnMatch = input.match(/^v[-\s]?(\d{4,7})$/i);
+    if (stigVulnMatch) {
+      aliases.add(`V-${stigVulnMatch[1]}`);
+    }
+    const bareVulnMatch = input.match(/^(\d{5,7})$/);
+    if (bareVulnMatch) {
+      aliases.add(`V-${bareVulnMatch[1]}`);
+    }
+    const svMatch = input.match(/^sv[-\s]?(\d{4,7})/i);
+    if (svMatch) {
+      aliases.add(`V-${svMatch[1]}`);
+    }
+    const stigIdMatch = input.match(/^([a-z0-9]{2,8})[-\s_]+([a-z0-9]{2,8})[-\s_]+([a-z0-9]{4,10})$/i);
+    if (stigIdMatch) {
+      aliases.add(`${stigIdMatch[1].toUpperCase()}-${stigIdMatch[2].toUpperCase()}-${stigIdMatch[3].toUpperCase()}`);
+    }
+
+    const baseMatch = input.match(/^([a-z]{2,4})[-\s]?0*(\d+)$/i);
+    if (baseMatch) {
+      const family = baseMatch[1].toUpperCase();
+      const controlNum = Number.parseInt(baseMatch[2], 10);
+      aliases.add(`${family}-${controlNum}`);
     }
   }
 

@@ -75,19 +75,25 @@ test("shared search URLs keep position; submitted searches move focus to results
   await expect(page.locator("#library-results")).toBeFocused();
 });
 
-test("a complete Library search uses a bounded number of runtime shards", async ({
+test("a complete Library search fetches each index shard exactly once", async ({
   page,
 }) => {
-  let shardRequests = 0;
+  // The corpus grows with every publisher refresh, so the shard count is data. What
+  // the runtime must guarantee is that it reads the published shard list once and
+  // never re-requests a shard.
+  const manifest = await (await page.request.get("/data/generated/library-search-index.json")).json();
+  const published = manifest.sharded_collection.shards.length;
+  expect(published).toBeGreaterThan(0);
+  const shardRequests = [];
   page.on("request", (request) => {
-    if (/\/data\/generated\/library-search-index\/[^/]+\.json(?:\.gz)?(?:\?|$)/.test(request.url())) {
-      shardRequests += 1;
-    }
+    const match = request.url().match(/\/data\/generated\/library-search-index\/([^/?]+?)\.json(?:\.gz)?(?:\?|$)/);
+    if (match) shardRequests.push(match[1]);
   });
 
   await gotoApp(page, "/#/search?q=access%20control");
   await expect(page.locator("#library-results .workspace-result-row").first()).toBeVisible({
     timeout: 15000,
   });
-  expect(shardRequests).toBeLessThanOrEqual(10);
+  expect(new Set(shardRequests).size, "no shard is requested twice").toBe(shardRequests.length);
+  expect(shardRequests.length).toBe(published);
 });

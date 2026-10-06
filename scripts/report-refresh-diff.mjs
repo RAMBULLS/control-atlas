@@ -31,6 +31,24 @@ const rows = current.freshness.sources
   })
   .filter(Boolean);
 
+const readHead = (path) => {
+  try { return JSON.parse(execFileSync('git', ['show', `HEAD:${path}`], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 64 * 1024 * 1024 })); } catch { return null; }
+};
+const readWorking = (path) => {
+  try { return JSON.parse(readFileSync(path, 'utf8')); } catch { return null; }
+};
+
+// Catalog changes the admission gate accepted in this run, with the evidence it used.
+const knownEntries = new Set(Object.values(readHead('data/source-change-log.json')?.catalogs || {})
+  .flat().map((entry) => `${entry.catalog_id}:${entry.current.normalized_sha256}`));
+const acceptedChanges = Object.values(readWorking('data/source-change-log.json')?.catalogs || {}).flat()
+  .filter((entry) => !knownEntries.has(`${entry.catalog_id}:${entry.current.normalized_sha256}`))
+  .map((entry) => `| \`${entry.catalog_id}\` | ${entry.decision} | ${entry.previous.record_count} → ${entry.current.record_count} | ${entry.added_count ?? 'n/a'} | ${entry.removed_count ?? 'n/a'} | ${entry.changed_count ?? 'n/a'} |`);
+
+const limitations = (readWorking('data/olir-catalog-manifest.json')?.processed_items || [])
+  .filter((item) => item.refresh_status === 'retained_last_good' && item.retention)
+  .map((item) => `- OLIR submission ${item.id}: last accepted mapping retained (${item.retention.cause}, since ${item.retention.first_retained_at}). ${item.refresh_error}`);
+
 const stat = execFileSync('git', ['diff', '--stat', '--', 'data', 'maps'], {
   encoding: 'utf8',
 }).trim();
@@ -51,6 +69,15 @@ const body = [
   '|---|---|---:|---|',
   ...(rows.length ? rows : ['| None | — | no | — |']),
   '',
+  ...(acceptedChanges.length ? [
+    '### Accepted catalog changes',
+    '',
+    '| Catalog | Decision | Records | Added | Removed | Changed |',
+    '|---|---|---|---:|---:|---:|',
+    ...acceptedChanges,
+    '',
+  ] : []),
+  ...(limitations.length ? ['### Recorded limitations', '', ...limitations, ''] : []),
   '### Artifact diff',
   '',
   '```text',

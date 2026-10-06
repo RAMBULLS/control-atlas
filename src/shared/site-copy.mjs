@@ -11,8 +11,11 @@ export const SITE_COPY = Object.freeze({
     headline: "Make federal cybersecurity make sense.",
     definition:
       "Understand what applies, what it means, and what to do next.",
-    breadth:
-      "Search requirements, controls, STIGs, assessments, Zero Trust, threats, defenses, and guidance to see how the pieces fit together.",
+    // The Home lead (issue 283). U+2060 keeps the dash on the line with "guidance",
+    // so a narrow screen never starts a line with it.
+    lead:
+      "Controls, STIGs, frameworks, and federal guidance⁠—connected so you can trace where requirements come from, see how they relate, and know what to do next.",
+    searchPlaceholder: "Search by topic, title, or ID",
     // Depth-0 Signal cover (first paint, before the Home surface). Composed as
     // the Orbital "editorial split, one invitation" landing recipe: eyebrow,
     // display headline with a signal word, lead, one action, and an archival
@@ -31,41 +34,61 @@ export const SITE_COPY = Object.freeze({
       railLeft: "Find what applies · understand it · act on it",
       prompt: "Press Enter or select Enter the Atlas to start",
     }),
-    destinations: Object.freeze([
+    // Home (issue 283, owner-approved layout and copy). Journeys come from
+    // src/ui/lib/atlasJourneys.ts and source changes from the Pulse artifact,
+    // both at build time; nothing here names a journey or a count.
+    atlas: Object.freeze({
+      eyebrow: "Atlas",
+      heading: "See how federal cybersecurity fits together.",
+      action: "Open the Atlas",
+      // Accessible name of the journey list. The trigger shows the first
+      // journeys, so there is no visible heading.
+      topicsLabel: "Atlas topics",
+      shownTopics: 3,
+    }),
+    tools: Object.freeze([
       Object.freeze({
-        id: "start-here",
-        label: "Start guided setup",
-        description: "Answer two questions to find where to begin.",
-        view: "start-here",
-        href: "#/start",
+        id: "compare",
+        label: "Compare",
+        description: "Follow published crosswalks between frameworks and controls.",
+        action: "Compare frameworks",
+        view: "matrix",
+        href: "#/compare",
       }),
       Object.freeze({
-        id: "atlas",
-        label: "Browse the Atlas",
-        description: "Start with a topic.",
-        view: "atlas-map",
-        href: "#/atlas",
-      }),
-      Object.freeze({
-        id: "library",
-        label: "Search the Library",
-        description: "Find a specific record.",
-        view: "search",
-        href: "#/library",
+        id: "templates",
+        label: "Templates",
+        description: "Working files for RMF, authorization, assessment, and DoD cyber work.",
+        action: "Find a template",
+        view: "templates",
+        href: "#/build",
       }),
       Object.freeze({
         id: "resources",
-        label: "Browse Resources",
-        description: "Find tools, training, and guidance.",
+        label: "Resources",
+        description: "Tools, training, references, and guidance worth keeping close.",
+        action: "Browse resources",
         view: "commons",
         href: "#/resources",
       }),
     ]),
+    library: Object.freeze({
+      eyebrow: "Library",
+      heading: "Browse the Library",
+      lead: "Find controls, baselines, assessment procedures, STIGs, threats, and more.",
+      all: "All records",
+    }),
+    pulse: Object.freeze({
+      heading: "Recent source changes",
+      all: "All sources",
+      compactLabel: "Source changes",
+      quiet: "No recent source changes.",
+    }),
   }),
   routes: Object.freeze({
     atlas: Object.freeze({
       title: "Atlas",
-      purpose: "Grouped by what each document is, who issues it, or what you're trying to get done.",
+      purpose: "See how federal cybersecurity fits together: the publications, who issues them, and the work they support.",
     }),
     library: Object.freeze({
       title: "Library",
@@ -79,7 +102,7 @@ export const SITE_COPY = Object.freeze({
     guides: Object.freeze({
       title: "Guides",
       purpose:
-        "Read practitioner context for each stage of the federal cybersecurity lifecycle.",
+        "Plan authorization, assessment, remediation, and monitoring with cited steps and clear handoffs.",
     }),
     compare: Object.freeze({
       title: "Compare",
@@ -87,7 +110,7 @@ export const SITE_COPY = Object.freeze({
     }),
     documents: Object.freeze({
       title: "Templates",
-      purpose: "Create starter cybersecurity documents from published sources.",
+      purpose: "Working files for RMF and DoD cybersecurity tasks. Pick the job, set up the file, download it.",
     }),
     sources: Object.freeze({
       title: "Sources",
@@ -95,11 +118,11 @@ export const SITE_COPY = Object.freeze({
     }),
     about: Object.freeze({
       title: "About",
-      purpose: "See why Control Atlas exists, what it brings together, and where its limits are.",
+      purpose: "Find the federal sources behind your cybersecurity work and a clear path from research to action.",
     }),
     start: Object.freeze({
       title: "Start here",
-      purpose: "Not sure where to begin? Start here.",
+      purpose: "Find the federal cybersecurity topic and publisher source that match your question.",
     }),
   }),
 });
@@ -154,6 +177,52 @@ export const PROHIBITED_PRIMARY_SURFACE_PATTERNS = Object.freeze([
   /move the work forward/i,
   /published structure/i,
   /source-backed/i,
+
+  // Process and meta narration. Public copy describes the publisher's material
+  // and the reader's next step; it never narrates our review, our releases or
+  // the page itself. See "Public copy" in docs/PAGE_CONTRACTS.md. This list
+  // grew out of the Home copy withdrawn in issue 283 and the publication and
+  // Sources pass in issue 284: a fence around copy we have shipped once,
+  // not a general prose grader.
+  /\b(?:until|unless) it passes review\b/i,
+  /\bpasses? (?:our|its|the) (?:own )?review\b/i,
+  /\bnothing appears here until\b/i,
+  /\bcontrol atlas has (?:accepted|approved|validated|verified|reviewed)\b/i,
+  /\b(?:home|this page|the page) (?:now )?shows\b/i,
+  /\bthis page now\b/i,
+  /\bnew in control atlas\b/i,
+  /\bwe (?:shipped|built|added|released|rebuilt)\b/i,
+  /\bthis feature\b/i,
+  /\bis being reviewed\b/i,
+  /\bheld for review\b/i,
+
+  // Interface narration. Copy names the subject, the practitioner's job and the
+  // payoff; it does not describe the interface, how a page is arranged, or the
+  // reader's "work" in the abstract. These match the phrasing, not the verb:
+  // "Explore the Atlas" and "Browse controls and requirements" stay legal.
+  // See "Public copy" in docs/PAGE_CONTRACTS.md.
+  /\bwhat you(?:'|’)?re (?:working on|trying to get done)/i,
+  /\bstart with what you\b/i,
+  /\bways to work\b/i,
+  /\bthis (?:page|section|panel|screen|view) (?:lets|helps|is where|lists|shows)\b/i,
+  /\buse this (?:page|section|panel|screen|view|tool|map) to\b/i,
+  /\b(?:grouped|organi[sz]ed|sorted) by the question/i,
+  /\bcontrol atlas (?:accepted|reviewed|organi[sz]ed|grouped|approved|validated)\b/i,
+
+  // Build and test machinery named on a public surface
+  /\b(?:ci|continuous integration) (?:run|job|check|pipeline)\b/i,
+  /\bbuild (?:artifact|pipeline|step)\b/i,
+  /\btest suite\b/i,
+  /\bworkflow run\b/i,
+  /\bquarantine[ds]?\b/i,
+
+  // Implementation vocabulary leaking out of technical-details views
+  /\bdataset identity\b/i,
+  /\bin this data ?set\b/i,
+  /\bnormalized (?:from|records|into)\b/i,
+  /\bvalidator\b/i,
+  /\bdeterministic (?:atlas )?projections?\b/i,
+  /\bcommitted .{0,24}capture\b/i,
 
   // Compliance claim overreach
   /\b(?:proves?|ensures?|guarantees?|achieves?) compliance\b/i,

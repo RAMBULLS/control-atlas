@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { clickAtlasPublication } from "./support.mjs";
 
 async function waitForReady(page) {
   await expect(page.locator('#app[data-app-ready="true"], #app[data-app-ready="partial"]')).toBeVisible({ timeout: 30000 });
@@ -51,7 +52,7 @@ test("primary clicks expose transition feedback before the route replaces stale 
   // The Atlas link lands on the unscoped landing, which is the board of
   // groups. The assertion is that the destination's own content replaced the
   // stale route, so it tracks whatever the landing actually renders.
-  await expect(page.getByTestId("atlas-area-map")).toBeVisible();
+  await expect(page.locator(".terr")).toBeVisible();
 });
 
 for (const viewport of [
@@ -66,18 +67,16 @@ for (const viewport of [
 ]) {
   test(`responsive Atlas shell is collision and overflow free at ${viewport.width}px`, async ({ page }) => {
     await page.setViewportSize(viewport);
-    // Scoped to a publisher: the toolbar this test measures belongs to the
-    // columns, which the board now sits above rather than replaces.
-    await page.goto("/#/atlas?atlasLanding=publishers&atlasLimb=ecosystem%3Anist");
+    await page.goto("/#/atlas?atlasLimb=atlas%3ALIMB-COMPLIANCE");
     await waitForReady(page);
     const dimensions = await page.evaluate(() => ({
       clientWidth: globalThis.document.documentElement.clientWidth,
       scrollWidth: globalThis.document.documentElement.scrollWidth,
     }));
     expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth + 1);
-    const atlas = page.getByTestId("atlas-map");
+    const atlas = page.locator(".atl");
     await expect(atlas).toBeVisible();
-    expect(await visibleCollisions(atlas.locator(".atlas-decomp__toolbar > *:visible"))).toEqual([]);
+    expect(await visibleCollisions(atlas.locator(".atl-top > *:visible, .atl-m-head > *:visible"))).toEqual([]);
     if (viewport.width < 1024) {
       const search = page.getByRole("button", { name: "Open search" });
       const menu = page.getByRole("button", { name: "Open navigation menu" });
@@ -104,44 +103,40 @@ for (const zoom of [
       scrollWidth: globalThis.document.documentElement.scrollWidth,
     }));
     expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth + 1);
-    await expect(page.getByRole("heading", { name: "Start here", level: 1 })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Atlas", level: 1 })).toBeVisible();
   });
 }
 
 test("reduced motion keeps the complete Atlas visible without animation", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/#/atlas?atlasLanding=publishers");
+  await page.goto("/#/atlas");
   await waitForReady(page);
-  const atlas = page.getByTestId("atlas-area-map");
+  const atlas = page.locator(".terr");
   await expect(atlas).toBeVisible();
   const animatedDescendants = await atlas.locator("*").evaluateAll((elements) =>
     elements
       .filter((element) => globalThis.getComputedStyle(element).animationName !== "none")
-      .map((element) => `${element.tagName.toLowerCase()}.${element.className}`),
+      .map((element) => `${element.tagName.toLowerCase()}.${element.className.baseVal ?? element.className}`),
   );
   expect(animatedDescendants).toEqual([]);
 });
 
 test("Atlas first paint is a semantic map with drill-down and history", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/#/atlas?atlasLanding=publishers");
+  await page.goto("/#/atlas");
   await waitForReady(page);
-  const atlas = page.getByTestId("atlas-area-map");
+  const atlas = page.locator(".terr");
   await expect(atlas).toBeVisible();
-  // Every landmark is on screen at first paint, labelled and counted: eight
-  // publishers drawn, and the four the grouping cannot place named beneath.
-  await expect(atlas.locator("button.atlas-area__cell")).toHaveCount(8);
-  await expect(page.locator(".atlas-mapcol__aside em")).toHaveCount(4);
+  // Every territory and landmark is on screen at first paint, labelled.
+  await expect(atlas.locator(".district")).toHaveCount(9);
+  await expect(atlas.locator(".lm")).toHaveCount(28);
 
-  await atlas.getByRole("button", { name: /^MITRE / }).click();
-  await expect(page).not.toHaveURL(/atlasAxis=/);
-  await expect(page).toHaveURL(/atlasLensFamily=ecosystem(?::|%3A)mitre/);
-  await expect(atlas.getByRole("button", { name: /^ATT&CK / }).first()).toBeVisible();
-
-  await atlas.getByRole("button", { name: /^ATT&CK / }).first().click();
-  await expect(page).toHaveURL(/atlasFramework=mitre-attack/);
-  await expect(page.getByTestId("atlas-detail").getByRole("heading", { level: 2 }))
-    .toContainText("ATT&CK");
+  // The map paints before its handlers are attached; WebKit on a shared runner can click in that gap. Retry the click, not the assertion.
+  await expect(async () => {
+    await clickAtlasPublication(page, "mitre-attack");
+    await expect(page).toHaveURL(/atlasFramework=mitre-attack/, { timeout: 4_000 });
+  }).toPass({ timeout: 45_000 });
+  await expect(page.locator(".atl-inspector")).toContainText("ATT&CK");
 
   // History still walks back out of the map one level at a time.
   await page.reload();
@@ -149,21 +144,21 @@ test("Atlas first paint is a semantic map with drill-down and history", async ({
   await expect(page).toHaveURL(/atlasFramework=mitre-attack/);
   await page.goBack();
   await expect(page).not.toHaveURL(/atlasFramework=/);
-  await expect(page).toHaveURL(/atlasLensFamily=ecosystem(?::|%3A)mitre/);
 });
 
 test("focused Atlas record stays collision and overflow free across desktop and compact layouts", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/#/atlas?node=nist-800-53%3AAC-2");
+  await page.goto("/#/atlas?node=nist-800-53%3AAC-2&relationshipView=map");
   await waitForReady(page);
-  const focused = page.getByRole("region", { name: "Focused Atlas record" });
-  await expect(focused).toBeVisible();
-  expect(await visibleCollisions(page.locator(".atlas-focused-layout > *:visible"), 8)).toEqual([]);
+  await expect(page.locator(".atl-inspector")).toContainText("AC-2", { timeout: 20000 });
+  // Header, journeys, actions and map are stacked blocks; the details panel sits inside the map.
+  expect(await visibleCollisions(page.locator(".atl > *:visible"), 0)).toEqual([]);
+  expect(await visibleCollisions(page.locator(".atl-inspector, .atl-pill--other"), 4)).toEqual([]);
   expect(await page.evaluate(() => globalThis.document.documentElement.scrollWidth - globalThis.document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await expect(focused).toBeVisible();
-  expect(await visibleCollisions(page.locator(".atlas-focused-layout > *:visible"), 4)).toEqual([]);
+  await expect(page.locator("#atl-focus")).toContainText("AC-2");
+  expect(await visibleCollisions(page.locator(".atl--mobile > *:visible"), 4)).toEqual([]);
   expect(await page.evaluate(() => globalThis.document.documentElement.scrollWidth - globalThis.document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
 });
 
@@ -213,31 +208,20 @@ test("ranked search exposes desktop filters, sort, active chips, and mobile draw
   await page.getByRole("button", { name: "Close filters" }).click();
 });
 
-test("Start Here preserves answers across URL history and names its destination", async ({ page }) => {
-  await page.goto("/#/start");
+test("Start Here bookmarks preserve the chosen CUI topic after reload", async ({ page }) => {
+  await page.goto("/#/start?goal=implement&context=cui");
   await waitForReady(page);
-  await page.getByRole("button", { name: "Secure or build a system" }).click();
-  await expect(page).toHaveURL(/goal=implement/);
-  await page.getByRole("button", { name: "CUI contractor environment" }).click();
-  await expect(page).toHaveURL(/goal=implement.*context=cui|context=cui.*goal=implement/);
-  await expect(page.getByRole("heading", { name: "Start with SP 800-171 Rev. 2" })).toBeVisible();
-  await page.goBack();
-  await expect(page).toHaveURL(/goal=implement/);
-  await expect(page).not.toHaveURL(/context=/);
-  await page.goForward();
-  await expect(page).toHaveURL(/context=cui/);
+  await expect.poll(() => new URL(page.url()).hash).toBe("#/atlas?atlasJourney=cmmc-cui");
   await page.reload();
   await waitForReady(page);
-  await expect(page.getByRole("heading", { name: /Start with SP 800-171/ })).toBeVisible();
-  await page.getByRole("link", { name: /Open SP 800-171/ }).click();
-  await expect(page).toHaveURL(/#\/library\/publication\/nist-800-171-rev2/);
+  await expect.poll(() => new URL(page.url()).hash).toBe("#/atlas?atlasJourney=cmmc-cui");
 });
 
 test("desktop primary navigation remains visible and retired mode parameters canonicalize away", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/?mode=novice#");
   await expect(page).not.toHaveURL(/mode=novice/);
-  for (const label of ["Start here", "Atlas", "Library", "Compare", "Resources", "Templates"]) {
+  for (const label of ["Atlas", "Library", "Compare", "Resources", "Templates"]) {
     await expect(page.locator(".site-header .primary-nav:visible").getByRole("link", { name: label, exact: true })).toBeVisible();
   }
 });

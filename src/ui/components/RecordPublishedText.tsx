@@ -1,6 +1,10 @@
+import { displayNameFor } from "../../app/display-names.mjs";
 import { createContext, Fragment, useCallback, useContext, useState, type ReactNode } from "react";
-
+import { RECORD_FACT_LABELS } from "../../shared/record-fact-labels.mjs";
+import { translateMicrosoftZtCategory } from "../../shared/microsoft-zt-category-labels.mjs";
+import { parseControlContext } from "../../shared/record-control-context.mjs";
 import { isValidSourceTextPresentation } from "../../shared/source-text-presentation.mjs";
+import { formatSourceDate } from "../lib/sourcePresentation";
 import { Button } from "./lsm";
 import { copyText, formatRelationshipLabel } from "../lib/pagePrimitives";
 
@@ -14,30 +18,6 @@ import { copyText, formatRelationshipLabel } from "../lib/pagePrimitives";
  * the same presentation contract through the same components, so a record says
  * the same thing wherever you meet it.
  */
-const RECORD_FACT_LABELS: Record<string, string> = {
-  activity_type: "Activity type",
-  architecture_component: "Architecture component",
-  benchmark_status_date: "Published status date",
-  benchmark_title: "Benchmark",
-  benchmark_version: "Version / release",
-  child_count: "Contained records",
-  collaborator: "Collaborator",
-  component_class: "Component class",
-  duration: "Duration",
-  is_subtechnique: "Sub-technique",
-  mapping_count: "Published mappings",
-  operational_technology: "Operational technology",
-  pillar: "Pillar",
-  product: "Product",
-  responsibility: "Responsibility",
-  rule_id: "Rule ID",
-  severity: "Severity",
-  severity_distribution: "Severity distribution",
-  stig_id: "STIG ID",
-  tactic_memberships: "Tactics",
-  tactic_title: "Tactic",
-  vuln_id: "Finding / Vuln ID",
-};
 
 export type PublisherCitationEntry = { title: string; url: string };
 
@@ -252,7 +232,33 @@ function StructuredPublisherSections(props: { value: any[] }) {
   );
 }
 
+function ControlContextContent(props: { value: string; presentation?: any }) {
+  const entries = parseControlContext(props.value);
+  // Text with no parameter notation keeps the publisher's own text blocks.
+  if (!entries.some((entry) => entry.kind === "parameter")) return <SourceTextBlocks presentation={props.presentation} value={props.value} />;
+  const groups: Array<typeof entries> = [];
+  for (const entry of entries) {
+    const last = groups[groups.length - 1];
+    if (last && last[0].kind === entry.kind && entry.kind === "parameter") last.push(entry);
+    else groups.push([entry]);
+  }
+  return (
+    <>
+      {groups.map((group, index) => group[0].kind === "parameter" ? (
+        <ul className="source-structured-list" key={index}>
+          {group.map((entry) => entry.kind === "parameter" ? (
+            <li key={entry.id}><strong>{entry.label}</strong> — {entry.value} <code aria-label={`Publisher identifier ${entry.id}`}>{entry.id}</code></li>
+          ) : null)}
+        </ul>
+      ) : group.map((entry, position) => entry.kind === "guidance" ? <p key={`${index}:${position}`}>{entry.text}</p> : null))}
+    </>
+  );
+}
+
 export function SourceSectionContent(props: { kind: string; value: any; presentation?: any }) {
+  if (props.kind === "control_parameters") {
+    return <ControlContextContent presentation={props.presentation} value={String(props.value || "")} />;
+  }
   if (props.kind === "structured") {
     return <StructuredPublisherSections value={props.value} />;
   }
@@ -294,7 +300,14 @@ export function SourceSectionContent(props: { kind: string; value: any; presenta
       <ul className="source-structured-list">
         {props.value.map((mapping: any, index: number) => (
           <li key={`${mapping.kind}:${mapping.target_id}:${index}`}>
-            <strong>{mapping.kind}</strong>{mapping.target_id ? ` · ${mapping.target_id}` : ""}
+            <strong>{displayNameFor("zt_mapping_kind", mapping.kind)}</strong>{mapping.target_id ? ` · ${mapping.target_id}` : ""}
+            {mapping.relationship_clauses?.length ? (
+              <span>{" · "}{mapping.relationship_clauses.map((clause: any) =>
+                `${formatRelationshipLabel({ relationship_type: clause.relationship_type })}${clause.property ? ` (${clause.property})` : ""}`,
+              ).join("; ")}</span>
+            ) : mapping.relationship_parse_status === "unresolved" ? (
+              <span> · Relationship not specified in the source cell.</span>
+            ) : null}
           </li>
         ))}
       </ul>
@@ -374,9 +387,16 @@ export function RecordNativeFacts(props: { fields: string[]; metadata: Record<st
     const value = props.metadata[field];
     const absenceReason = props.metadata.field_absence_reasons?.[field];
     if ((value == null || value === "" || (Array.isArray(value) && value.length === 0)) && !absenceReason) return [];
+    // Microsoft's own workbook writes this tag in French for one pillar and
+    // English for another (no header, no formal taxonomy); translate rather
+    // than mix languages on an English-labeled page.
     const displayValue = absenceReason
       ? `Not published — ${absenceReason}`
-      : formatFactValue(value);
+      : field === "category" && props.metadata.catalog_id === "microsoft-zt-maturity"
+        ? translateMicrosoftZtCategory(value)
+        : field === "benchmark_status_date"
+          ? formatSourceDate(value)
+          : formatFactValue(value);
     if (!displayValue) return [];
     return [{ field, displayValue }];
   });
@@ -443,7 +463,7 @@ export function RecordPublishedText(props: {
       data-source-text="published"
     >
       {shown.map((section) => (
-        <section data-source-field={section.field} key={section.field}>
+        <section data-source-field={section.field} id={`section-${section.field}`} key={section.field}>
           <Heading>{section.heading}</Heading>
           <SourceSectionContent
             kind={section.kind}

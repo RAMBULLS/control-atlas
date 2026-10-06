@@ -2,8 +2,8 @@
   "schema_version": "1.0",
   "olir_id": 176,
   "source_artifact": "https://www.gov.uk/government/publications/cyber-governance-mapping/mapping-cyber-governance-code-to-nist-cyber-security-framework",
-  "sha256": "sha256:1d46936ed146b43ab4080eaee9a675c52cc5a7eb9c3e1487be650844cc61289c",
-  "byte_length": 88237,
+  "sha256": "sha256:1c4d1e6f449fc04daac065f788d6fbb9304841ca619f529853af74241569f3c2",
+  "byte_length": 88297,
   "parser": "olir-html",
   "extraction_scope": "published_html_relationships",
   "relationships": [

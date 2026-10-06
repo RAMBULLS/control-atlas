@@ -138,7 +138,7 @@
       "outcomes": ["Applicable STIG selected", "Target identity preserved", "Manual and automated checks reconciled", "Checklist validated"],
       "artifact_ids": ["disa-stig-viewer-guide-v1r7", "disa-stig-viewer-csv-contract-v1r7", "disa-stig-viewer-cklb-emass-guidance-v1r7"],
       "tool_ids": ["disa-stig-viewer", "disa-evaluate-stig", "stig-manager-client-modules", "mitre-saf-cli", "openscap", "microsoft-powerstig", "complianceascode-content"],
-      "companion_template_ids": ["tpl-stig-chk"],
+      "companion_template_ids": [],
       "steps": [
         {
           "order": 1,
@@ -214,7 +214,7 @@
       "outcomes": ["Inventory scope fixed", "Assets uniquely identified", "Versions and ownership recorded", "Change process connected"],
       "artifact_ids": ["dcsa-hardware-list-2020", "dcsa-software-list-2020", "dcsa-maintenance-change-log-2020", "fedramp-legacy-integrated-inventory", "mitre-emass-api-openapi-v3-22"],
       "tool_ids": ["mitre-emass-client"],
-      "companion_template_ids": [],
+      "companion_template_ids": ["tpl-hw-baseline", "tpl-sw-baseline"],
       "steps": [
         {
           "order": 1,

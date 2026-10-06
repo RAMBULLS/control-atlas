@@ -15,7 +15,8 @@
           "anchor": { "$ref": "#/definitions/observation" },
           "accepted": { "$ref": "#/definitions/observation" },
           "accepted_at": { "type": "string", "minLength": 10 },
-          "history": { "type": "array", "maxItems": 8, "items": { "$ref": "#/definitions/observation" } }
+          "history": { "type": "array", "maxItems": 8, "items": { "$ref": "#/definitions/observation" } },
+          "adopted_from": { "const": "committed_data" }
         }
       }
     }

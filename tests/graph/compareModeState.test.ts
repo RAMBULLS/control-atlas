@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   activateCompareMode,
   compareConfigurationReady,
+  compareEmptyKind,
   COMPARE_MODES,
   getCompareCurrentStep,
   getCompareSteps,
@@ -20,7 +21,7 @@ import { readGeneratedCollection } from "../../scripts/lib/generated-graph-artif
 import { createFederalGraphRuntime } from "../../src/app/runtime.mjs";
 
 test("each Compare mode has distinct required input state after one activation", () => {
-  assert.equal(COMPARE_MODES.length, 2);
+  assert.deepEqual(COMPARE_MODES.map((mode) => mode.id), ["frameworks", "implementation", "item-mapping"]);
   for (const mode of COMPARE_MODES) {
     const state = normalizeViewState("matrix", {
       view: "matrix",
@@ -242,6 +243,21 @@ test("T3.12/T3.14: real-graph capability feeds the state machine end to end — 
   });
 });
 
+test("an empty result says whether the pair has no published mappings or a search or filter hides them", () => {
+  assert.equal(compareEmptyKind({ pairRows: 746, searching: false, visibleRows: 25 }), null);
+  assert.equal(compareEmptyKind({ pairRows: 0, searching: false, visibleRows: 0 }), "none");
+  assert.equal(compareEmptyKind({ pairRows: 0, searching: true, visibleRows: 0 }), "none");
+  assert.equal(compareEmptyKind({ pairRows: 746, searching: true, visibleRows: 0 }), "search");
+  assert.equal(compareEmptyKind({ pairRows: 746, searching: false, visibleRows: 0 }), "filter");
+});
+
+test("results need an explicit run: a source-and-target link alone stays at the target step", () => {
+  const fw = normalizeViewState("matrix", { view: "matrix", ...activateCompareMode("frameworks") });
+  const configured = { ...fw, source: "nist-800-53", target: "csf-2" };
+  assert.equal(getCompareCurrentStep("frameworks", configured), 2);
+  assert.equal(getCompareCurrentStep("frameworks", { ...configured, compareRun: "true" }), 3);
+});
+
 test("staged flow steps and current step index reflect progressive completion across framework crosswalk modes", () => {
   // 1. Frameworks mode
   const fwSteps = getCompareSteps("frameworks");
@@ -267,4 +283,10 @@ test("staged flow steps and current step index reflect progressive completion ac
   assert.equal(getCompareCurrentStep("item-mapping", { ...itemInit, source: "nist-800-53" }), 1);
   assert.equal(getCompareCurrentStep("item-mapping", { ...itemInit, source: "nist-800-53", items: "AC-2" }), 2);
   assert.equal(getCompareCurrentStep("item-mapping", { ...itemInit, source: "nist-800-53", items: "AC-2", target: "csf-2", compareRun: "true" }), 3);
+});
+
+
+test("a stale explicit mapping source cannot be replaced by the single available source", () => {
+  assert.deepEqual(resolveMappingSource(["real-source"], "missing-source"), { status: "invalid" });
+  assert.deepEqual(resolveMappingSource(["real-source"], "real-source"), { status: "auto", value: "real-source" });
 });

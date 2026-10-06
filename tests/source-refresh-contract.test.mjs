@@ -61,3 +61,39 @@ test('scheduled source and health fetches use the governed transport', () => {
   const disa = readFileSync('scripts/fetch-disa-stigs.mjs', 'utf8');
   assert.match(disa, /options\.fetchImpl \|\| strictConditionalFetch/);
 });
+
+test('the contract states the same retry, heartbeat and escalation numbers the code runs', async () => {
+  const { behavior } = loadSourceRefreshContract();
+  const { DEFAULT_REQUEST_RETRY } = await import('../scripts/lib/strict-conditional-fetch.mjs');
+  const { DEFAULT_UNIT_BACKOFF } = await import('../scripts/refresh-data.mjs');
+  const { HEARTBEAT_DAYS } = await import('../tools/classify-refresh-outcome.mjs');
+  const { OLIR_TRANSIENT_ESCALATION } = await import('../tools/report-refresh-alerts.mjs');
+  const request = behavior.transient_failure.request_retry;
+  assert.deepEqual(
+    [request.attempts, request.base_ms, request.max_ms, request.retry_after_cap_ms, request.timeout_ms],
+    [DEFAULT_REQUEST_RETRY.attempts, DEFAULT_REQUEST_RETRY.baseMs, DEFAULT_REQUEST_RETRY.maxMs, DEFAULT_REQUEST_RETRY.retryAfterCapMs, DEFAULT_REQUEST_RETRY.timeoutMs],
+  );
+  assert.deepEqual([behavior.transient_failure.source_retry.base_ms, behavior.transient_failure.source_retry.max_ms], [DEFAULT_UNIT_BACKOFF.baseMs, DEFAULT_UNIT_BACKOFF.maxMs]);
+  assert.equal(behavior.freshness_heartbeat_days, HEARTBEAT_DAYS);
+  const olir = loadSourceRefreshContract().tasks.find((task) => task.task_id === 'fetch-olir-catalog');
+  assert.match(olir.partial_rule, new RegExp(`${OLIR_TRANSIENT_ESCALATION} consecutive refreshes`));
+});
+
+test('each task declares required and optional artifacts, identity, change policy and downstream work', () => {
+  const contract = loadSourceRefreshContract();
+  const broken = structuredClone(contract);
+  const first = broken.tasks[0];
+  delete first.identity_key;
+  first.check_tier = 'invented';
+  first.partial_policy = 'retain_optional_last_good';
+  first.downstream = [];
+  const errors = validateSourceRefreshContract(broken, INGESTION_TASKS, workflow, sourceRegistry).join('\n');
+  for (const pattern of [/no stable identity key/, /unsupported check tier invented/, /downstream artifacts/, /does not name them and the rule/]) assert.match(errors, pattern);
+  const olir = contract.tasks.find((task) => task.task_id === 'fetch-olir-catalog');
+  assert.equal(olir.partial_policy, 'retain_optional_last_good');
+  assert.ok(olir.optional_artifacts.length > 0);
+  assert.ok(contract.tasks.filter((task) => task.partial_policy === 'retain_optional_last_good').length === 1, 'only a source proven to retain last-good contributions may claim it');
+  const noBehavior = structuredClone(contract);
+  delete noBehavior.behavior.large_change_policy;
+  assert.match(validateSourceRefreshContract(noBehavior, INGESTION_TASKS, workflow, sourceRegistry).join('\n'), /behavior is missing large_change_policy/);
+});

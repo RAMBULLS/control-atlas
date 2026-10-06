@@ -12,20 +12,20 @@ test("WS1 Home discovery cards lead with the question, not the record count", as
   await gotoApp(page, "/#/");
   await waitForAppReady(page, { allowPartial: true });
 
-  const discoveryLinks = page.locator(".home-library-kpis .home-library-kpi");
+  const discoveryLinks = page.locator(".home-library__list .home-library__item");
   await expect(discoveryLinks).toHaveCount(5);
   await expect(page.locator(".home-ecosystem-authorities, .home-ecosystem")).toHaveCount(0);
 
   const metrics = await discoveryLinks.evaluateAll((links) => links.map((link) => {
     return {
       href: link.getAttribute("href") || "",
-      question: link.querySelector(".home-library-kpi__question")?.textContent?.trim() || "",
-      label: link.querySelector(".home-library-kpi__label")?.textContent?.trim() || "",
-      count: link.querySelector(".home-library-kpi__count")?.textContent?.trim() || "",
+      question: link.querySelector(".home-library__question")?.textContent?.trim() || "",
+      label: link.querySelector(".home-library__label")?.textContent?.trim() || "",
+      count: link.querySelector(".home-library__count")?.textContent?.trim() || "",
     };
   }));
 
-  expect(metrics.every((entry) => /^\d[\d,]* records$/.test(entry.count))).toBe(true);
+  expect(metrics.every((entry) => /^\d[\d,]* records\s*→?$/.test(entry.count))).toBe(true);
   expect(metrics.every((entry) => entry.question.length > 0)).toBe(true);
   expect(metrics.every((entry) => entry.href.startsWith("#/library?kind=") && entry.label.length > 0)).toBe(true);
 
@@ -34,7 +34,7 @@ test("WS1 Home discovery cards lead with the question, not the record count", as
     const read = (selector) => Number.parseFloat(
       globalThis.getComputedStyle(link.querySelector(selector)).fontSize,
     );
-    return { label: read(".home-library-kpi__label"), count: read(".home-library-kpi__count") };
+    return { label: read(".home-library__label"), count: read(".home-library__count") };
   });
   expect(sizes.label).toBeGreaterThan(sizes.count);
 });
@@ -61,47 +61,41 @@ test("WS1 decorative surfaces resolve to one teal accent", async ({ page }) => {
   );
   expect(editorial).not.toBe(aliases[0]);
 
-  const cardAccentColors = await page.locator(".home-secondary-action").evaluateAll(
-    (cards) => cards.map((card) => globalThis.getComputedStyle(card, "::before").backgroundColor),
+  // The Home tool actions are the one accent, not a color per destination.
+  const cardAccentColors = await page.locator(".home-tool__action").evaluateAll(
+    (actions) => actions.map((action) => globalThis.getComputedStyle(action).color),
   );
   expect(cardAccentColors.length).toBeGreaterThan(0);
   expect(new Set(cardAccentColors).size).toBe(1);
 });
 
-test("WS1 Atlas exposes publisher ecosystems and authorities as named, counted cells", async ({ page }) => {
+test("WS1 Atlas names every publication with its publisher and counts its authorities", async ({ page }) => {
   test.setTimeout(120_000);
-  await gotoApp(page, "/#/atlas?atlasLanding=publishers");
+  await gotoApp(page, "/#/atlas");
   await waitForAppReady(page, { allowPartial: true });
 
-  const map = page.getByTestId("atlas-area-map");
+  const map = page.locator(".terr");
   await expect(map).toBeVisible({ timeout: 60_000 });
 
-  // Every publisher is a cell whose area is how many frameworks it issues —
-  // a count that is the same unit for all eight, unlike their record totals.
-  await expect(map.locator("button.atlas-area__cell")).toHaveCount(8);
-  const labels = await map.locator("button.atlas-area__cell").evaluateAll(
-    (cells) => cells.map((cell) => (cell.getAttribute("title") || "").trim()),
-  );
-  for (const publisher of ["NIST", "DISA", "MITRE", "FedRAMP", "CDAO", "DoD", "DoD CIO", "ISOO"]) {
-    expect(
-      labels.some((title) => title.startsWith(`${publisher} —`)),
-      `${publisher} cell`,
-    ).toBe(true);
+  // Every publication is a landmark that states its name, publisher and territory
+  // to assistive technology and never depends on hover.
+  const labels = await map.locator(".lm").evaluateAll((els) => els.map((el) => el.getAttribute("aria-label") || ""));
+  expect(labels).toHaveLength(28);
+  for (const label of labels) expect(label).toMatch(/, .+, .+, .+ territory/);
+  for (const publisher of ["NIST", "DISA", "MITRE", "FedRAMP"]) {
+    expect(labels.some((label) => label.includes(`, ${publisher}`)) || labels.some((label) => label.includes(publisher)), `${publisher} landmark`).toBe(true);
   }
-  // Named and counted, never hover-only.
-  for (const title of labels) expect(title).toMatch(/— \d+ frameworks?$/);
 
-  // The authority landmarks are obligations rather than publishers and nobody
-  // crosswalks to them, so they are named beneath the map instead of drawn in
-  // it. They have never been openable, and still are not.
-  const aside = page.locator(".atlas-mapcol__aside");
-  await expect(aside.first()).toContainText("Law and policy");
-  const landmarks = await aside.locator("em").allTextContents();
-  for (const landmark of ["Statutes", "Regulations & clauses", "Policy & directives"]) {
-    expect(landmarks.some((entry) => entry.startsWith(landmark)), landmark).toBe(true);
-  }
-  await expect(aside.locator("em")).toHaveCount(4);
-  await expect(aside.locator("button")).toHaveCount(0);
+  // Policy documents are obligations, not publishers: counted and listed under a secondary
+  // control, never drawn or openable as a place on the map.
+  await expect(map.locator('[data-landmark^="authority-"], .shore')).toHaveCount(0);
+  const policy = page.getByRole("button", { name: "Policy & directives" });
+  await expect(policy).toBeVisible();
+  await policy.click();
+  const list = page.getByRole("region", { name: /^Policy & directives · \d+$/ });
+  await expect(list).toContainText("DoDI 8510.01");
+  // The only buttons inside open the publications that cite a document, not the document as a place.
+  for (const name of await list.locator("button").allTextContents()) expect(labels.some((label) => label.startsWith(`${name},`))).toBe(true);
 });
 
 test("WS1 no palette token lands in the purple range Orbital forbids", async ({ page }) => {

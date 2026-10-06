@@ -9,8 +9,8 @@ test('refresh safety maps affected contracts without a build and rejects unknown
   const plan = createVerificationPlan(paths, classifyChangedPaths(paths));
   assert.equal(plan.blocked, false);
   assert.deepEqual(plan.steps.map((step) => step.id), ['refresh-safety-lint', 'refresh-safety-contracts']);
-  assert.deepEqual(plan.steps[1].command, ['node', '--test', 'tests/source-baseline.test.mjs', 'tests/refresh-candidate-gate.test.mjs', 'tests/mitre-release-admission.test.mjs']);
-  assert.equal(plan.steps[1].workers, 3);
+  assert.deepEqual(plan.steps[1].command, ['node', '--test', 'tests/source-baseline.test.mjs', 'tests/refresh-candidate-gate.test.mjs', 'tests/mitre-release-admission.test.mjs', 'tests/source-health-harness.test.mjs']);
+  assert.equal(plan.steps[1].workers, 4);
   assert.ok(plan.totalBudgetSeconds <= 40);
   const unknown = [...paths, 'scripts/lib/new-unmapped-refresh.mjs'];
   assert.equal(createVerificationPlan(unknown, classifyChangedPaths(unknown)).blocked, true);
@@ -55,6 +55,8 @@ test('trust and workbench changes select bounded route families and the incremen
     'source-truth-contract',
     'source-trust-browser',
     'source-identity-compatibility-browser',
+    // A public surface changed, so the rendered copy is checked too.
+    'public-copy-browser',
   ]);
   assert.equal(plan.steps.find((step) => step.id === 'source-trust-browser').expectedTests, 21);
   assert.equal(plan.steps.find((step) => step.id === 'source-trust-browser').workers, 2);
@@ -94,6 +96,7 @@ test('trust and workbench changes select bounded route families and the incremen
   assert.deepEqual(comparePlan.steps.map((step) => step.id), [
     'typecheck',
     'incremental-site-build',
+    'public-copy-browser',
     'compare-workbench-browser',
   ]);
     assert.equal(comparePlan.steps.at(-1).expectedTests, 4);
@@ -101,11 +104,11 @@ test('trust and workbench changes select bounded route families and the incremen
     assert.equal(comparePlan.steps.at(-1).budgetSeconds, 45);
 
   const boundedPlan = createVerificationPlan([
-    'src/ui/pages/AtlasMapPage.tsx',
+    'src/ui/pages/AtlasTerritoryPage.tsx',
     'src/ui/pages/ExplorePage.tsx',
     'src/ui/pages/CommonsPage.tsx',
   ], classifyChangedPaths([
-    'src/ui/pages/AtlasMapPage.tsx',
+    'src/ui/pages/AtlasTerritoryPage.tsx',
     'src/ui/pages/ExplorePage.tsx',
     'src/ui/pages/CommonsPage.tsx',
   ]));

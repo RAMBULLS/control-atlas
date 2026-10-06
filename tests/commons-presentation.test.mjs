@@ -17,6 +17,7 @@ import {
   resourceAccessLabel,
   resourceFieldLabel,
   resourceBrandIdentity,
+  resourceOriginLabel,
   resourceTypeLabel,
 } from "../src/ui/lib/resourceBrands.mjs";
 import { resolveIdentityByKey } from "../src/shared/identity-registry.mjs";
@@ -25,6 +26,15 @@ const dataset = JSON.parse(
   readFileSync(resolve("data/commons-resource-dataset.json"), "utf8"),
 );
 const resources = dataset.resources;
+
+test("Resource origin labels distinguish official, community, vendor, and historical entries", () => {
+  assert.equal(resourceOriginLabel("official"), "Official publisher");
+  assert.equal(resourceOriginLabel("open_source"), "Open-source project");
+  assert.equal(resourceOriginLabel("practitioner"), "Practitioner resource");
+  assert.equal(resourceOriginLabel("commercial"), "Vendor resource");
+  assert.equal(resourceOriginLabel("legacy"), "Historical resource");
+  assert.ok(resources.every((resource) => resourceOriginLabel(resource.resourceLane) !== "Resource"));
+});
 const sourceRegistry = JSON.parse(
   readFileSync(resolve("data/source-registry.json"), "utf8"),
 );
@@ -508,7 +518,7 @@ test("Resource routes follow the Orbital catalog and knowledge-base compositions
   assert.match(directory, /resource-compare-toggle/);
   assert.match(directory, /aria-label="Resource companions"/);
   assert.match(directory, /view="templates">[\s\S]*Browse Templates →[\s\S]*<\/AppLink>/);
-  assert.match(directory, /view="patterns">[\s\S]*Browse Guides →[\s\S]*<\/AppLink>/);
+  assert.match(directory, /view="atlas-map">[\s\S]*Need framework context\? Explore Atlas →[\s\S]*<\/AppLink>/);
 
   for (const heading of [
     "What it is",
@@ -516,10 +526,11 @@ test("Resource routes follow the Orbital catalog and knowledge-base compositions
     "How to use or access",
     "Limitations",
     "Related resources",
-    "Related topics",
   ]) {
     assert.ok(detail.includes(`title="${heading}"`), heading);
   }
+  assert.doesNotMatch(detail, /title="Related topics"/);
+  assert.match(detail, /<TaxonomyContext/);
   assert.match(detail, /<details className="resource-detail-maintenance">/);
   assert.match(detail, /Source &amp; maintenance details/);
   assert.doesNotMatch(detail, /Governed discovery tags/);
@@ -555,4 +566,18 @@ test("Resource summaries disclose whether Atlas or the publisher wrote the brows
     claimEvidence: [{ fieldPath: "/summary", origin: "publisher_normalized" }],
   }), { text: "Publisher text", origin: "publisher_normalized", label: "Publisher summary" });
   assert.ok(resources.every((resource) => resourceSummaryPresentation(resource).label === "Control Atlas summary"));
+});
+
+test("Resource detail presents single classification section without duplicating governed tags", () => {
+  const detail = readFileSync(resolve("src/ui/pages/CommonsDetailPage.tsx"), "utf8");
+
+  // Only one classification/discovery section: TaxonomyContext ("Find more like this")
+  const taxonomyMatches = detail.match(/<TaxonomyContext/g) || [];
+  assert.equal(taxonomyMatches.length, 1, "Expected exactly one TaxonomyContext on CommonsDetailPage");
+
+  // Assert no duplicate legacy taxonomy/tag sections
+  assert.doesNotMatch(detail, /DetailSection id="related-topics"/);
+  assert.doesNotMatch(detail, /Related topics<\/a>/);
+  assert.doesNotMatch(detail, /Topic basis<\/h3>/);
+  assert.doesNotMatch(detail, /AtlasCard title="Related in Control Atlas"/);
 });

@@ -121,10 +121,10 @@ test("WS3 Resources shares Template C with real list, map, and comparison modes"
   const companionLinks = companions.getByRole("link");
   await expect(companionLinks).toHaveText([
     "Looking for a starter document? Browse Templates →",
-    "Want framework context? Browse Guides →",
+    "Need framework context? Explore Atlas →",
   ]);
   await expect(companionLinks.nth(0)).toHaveAttribute("href", "#/build");
-  await expect(companionLinks.nth(1)).toHaveAttribute("href", "#/guides");
+  await expect(companionLinks.nth(1)).toHaveAttribute("href", "#/atlas");
   await expect(workspace.locator('[data-browse-state="resources"]')).toBeVisible();
   const rail = workspace.getByRole("complementary", { name: "Resource filters" });
   await expect(rail).toBeVisible();
@@ -180,7 +180,7 @@ test("WS3 Resource detail uses a knowledge-base reading sequence", async ({ page
   await waitForAppReady(page, { allowPartial: true });
 
   const article = page.locator("article.resource-detail-main");
-  await expect(page.getByText("Resource", { exact: true })).toBeVisible();
+  await expect(page.getByText("Open-source project", { exact: true })).toBeVisible();
   await expect(page.getByText("Publisher Anchore", { exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: "Open resource" })).toBeVisible();
   await expect(article.getByRole("heading", { level: 2 })).toHaveText([
@@ -253,17 +253,13 @@ test("WS3 compact Library rows preserve a readable vertical information hierarch
 
 test("WS3 Library presents generated records with human identity at every governed width", async ({ page }) => {
   test.setTimeout(120_000);
+  // The collaborator and mapping-contributor entries are retired helper records
+  // (issue 279): the vendor's product components are what a search should show.
+  const retiredIds = [
+    "nist-zt:COLLABORATOR-APPGATE-835EC7F121",
+    "nist-zt:MAPPING-CONTRIBUTOR-APPGATE-835EC7F121",
+  ];
   const records = [
-    {
-      id: "nist-zt:COLLABORATOR-APPGATE-835EC7F121",
-      primary: "Appgate",
-      type: "Technology collaborator",
-    },
-    {
-      id: "nist-zt:MAPPING-CONTRIBUTOR-APPGATE-835EC7F121",
-      primary: "Appgate",
-      type: "Mapping workbook contributor",
-    },
     {
       id: "nist-zt:PRODUCT-COMPONENT-APPGATE-APPGATE-HEADLESS-CLIENT-RESOURCE-PROTECTION-CL-E65DEBF0E8",
       primary: "Appgate Headless Client — Resource Protection – Cloud Workload Protection",
@@ -275,6 +271,9 @@ test("WS3 Library presents generated records with human identity at every govern
     await page.setViewportSize({ width, height: width < 768 ? 844 : 1024 });
     await gotoApp(page, "/#/library?q=Appgate");
     await waitForAppReady(page, { allowPartial: true });
+    for (const retiredId of retiredIds) {
+      await expect(page.locator(`[data-record-id="${retiredId}"]`), retiredId).toHaveCount(0);
+    }
     for (const record of records) {
       const row = page.locator(`[data-record-id="${record.id}"]`);
       await expect(row).toBeVisible();
@@ -310,22 +309,26 @@ test("WS3 global search and publication rows use the same generated identity con
     const dialog = page.getByRole("dialog", { name: "Search Control Atlas" });
     const search = dialog.getByRole("searchbox", { name: "Search Control Atlas" });
     await search.fill("Appgate");
-    const collaborator = dialog.getByRole("link", {
-      name: "Open Appgate, Technology collaborator, NIST Zero Trust",
+    const product = "Appgate Headless Client — Resource Protection – Cloud Workload Protection";
+    const component = dialog.getByRole("link", {
+      name: `Open ${product}, Product component, NIST Zero Trust`,
     });
-    await expect(collaborator).toBeVisible();
-    await expect(collaborator.getByRole("heading", { name: "Appgate", level: 3 })).toBeVisible();
-    await expect(collaborator).toContainText("Technology collaborator · NIST Zero Trust");
+    await expect(component).toBeVisible();
+    await expect(component.getByRole("heading", { name: product, level: 3 })).toBeVisible();
+    await expect(component).toContainText("Product component · NIST Zero Trust");
+    // Retired helper entities are not search results.
+    await expect(dialog.getByRole("link", { name: /Technology collaborator|Mapping workbook contributor/ })).toHaveCount(0);
 
     await gotoApp(page, "/#/library/publication/nist-zt?browseAll=true&q=Appgate");
     await waitForAppReady(page, { allowPartial: true });
     const row = page.getByRole("link", {
-      name: "Open Appgate, Technology collaborator, NIST Zero Trust",
+      name: `Open ${product}, Product component, NIST Zero Trust`,
     });
     await expect(row).toBeVisible();
     await expect(row).toContainText("Appgate");
-    await expect(row).toContainText("Technology collaborator · NIST Zero Trust");
-    await expect(row).not.toContainText("COLLABORATOR-APPGATE-835EC7F121");
+    await expect(row).toContainText("Product component · NIST Zero Trust");
+    await expect(row).not.toContainText("PRODUCT-COMPONENT-APPGATE");
+    await expect(page.getByRole("link", { name: /Technology collaborator|Mapping workbook contributor/ })).toHaveCount(0);
     expect(
       await page.evaluate(
         () => globalThis.document.documentElement.scrollWidth - globalThis.document.documentElement.clientWidth,

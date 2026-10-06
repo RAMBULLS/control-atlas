@@ -11,6 +11,28 @@ import {
 import { parseHashLocation, serializeHashLocation } from "../../src/ui/lib/hashRoutes";
 import { normalizeViewState } from "../../src/ui/lib/viewState";
 import { orbitalRouteContext } from "../../src/ui/components/OrbitalContextBar";
+import { START_HERE_ACCEPTANCE_MATRIX } from "../../src/app/start-here-compatibility.mjs";
+
+test("inherited guide and Start Here keys stay ordinary unknown bookmarks", () => {
+  for (const key of ["toString", "constructor", "__proto__", "hasOwnProperty"]) {
+    const guidePath = `/guides?pattern=${key}`;
+    assert.equal(canonicalizeHashLocation(guidePath).canonicalPath, guidePath, key);
+    assert.equal(canonicalizeHashLocation(`/learn?pattern=${key}`).canonicalPath, guidePath, key);
+    assert.equal(canonicalizeHashLocation(`/start?goal=${key}&context=federal`).canonicalPath, "/atlas", key);
+  }
+});
+
+test("all 28 old Start Here answer links replace with their safe product destination", () => {
+  for (const row of START_HERE_ACCEPTANCE_MATRIX) {
+    const original = `/start?goal=${row.goalId}&context=${row.contextId}`;
+    const result = canonicalizeHashLocation(original);
+    assert.equal(result.canonicalPath, row.firstDestination, original);
+    assert.equal(result.requiresReplace, true, original);
+    assert.equal(result.recoveryMessage, "", original);
+  }
+  assert.equal(canonicalizeHashLocation("/start?goal=assess&context=unsure").canonicalPath, "/atlas?atlasJourney=assessment");
+  assert.equal(canonicalizeHashLocation("/start").canonicalPath, "/atlas");
+});
 
 test("Source detail keeps recovery beside the inspector instead of duplicating a global return bar", () => {
   const state = normalizeViewState("sources", {
@@ -76,8 +98,9 @@ test("Resource detail context preserves the active Resources workspace on return
 
 test("Phase 3 durable paths and old bookmarks resolve to one canonical IA", () => {
   const cases = [
-    ["/atlas?node=nist-800-53%3AAC-2&relationshipView=map", "/atlas/nist-800-53:AC-2?relationshipView=map"],
-    ["/explore?node=nist-800-53%3AAC-2&relationshipView=map", "/atlas/nist-800-53:AC-2?relationshipView=map"],
+    // The classic "map" view is the territory record focus now; its old parameter is translated away.
+    ["/atlas?node=nist-800-53%3AAC-2&relationshipView=map", "/atlas/nist-800-53:AC-2"],
+    ["/explore?node=nist-800-53%3AAC-2&relationshipView=list", "/atlas/nist-800-53:AC-2?relationshipView=list"],
     ["/search?q=access+control&connectedOnly=true", "/library?q=access+control&connectedOnly=true"],
     ["/catalog", "/library"],
     ["/catalog/nist-800-53?q=account&family=AC", "/library/publication/nist-800-53?q=account&family=AC"],
@@ -86,6 +109,11 @@ test("Phase 3 durable paths and old bookmarks resolve to one canonical IA", () =
     ["/resources/official-nist-sp800-53-r5?from=templates", "/resources/official-nist-sp800-53-r5"],
     ["/library?kind=tools-communities&q=oscal", "/resources?q=oscal"],
     ["/learn", "/guides"],
+    ["/guides?pattern=understanding-rmf", "/atlas?atlasJourney=rmf"],
+    ["/learn?pattern=read-a-record", "/library"],
+    ["/guides?pattern=source-truth-and-notes", "/sources"],
+    ["/guides?pattern=published-mappings-in-compare", "/compare"],
+    ["/guides?pattern=starter-documents-and-judgment", "/build"],
     ["/help", "/about"],
   ] as const;
 
@@ -93,6 +121,21 @@ test("Phase 3 durable paths and old bookmarks resolve to one canonical IA", () =
     const resolved = canonicalizeHashLocation(input);
     assert.equal(resolved.canonicalPath, canonical, input);
     assert.equal(resolved.requiresReplace, input !== canonical, input);
+  }
+});
+
+test("retired guide links land on the owning page after reload", () => {
+  for (const [oldPath, view] of [
+    ["/guides?pattern=understanding-rmf", "atlas-map"],
+    ["/guides?pattern=hierarchy-and-relationships", "atlas-map"],
+    ["/guides?pattern=source-truth-and-notes", "sources"],
+    ["/guides?pattern=search-eligibility-and-ranking", "search"],
+    ["/guides?pattern=read-a-record", "search"],
+    ["/guides?pattern=published-mappings-in-compare", "matrix"],
+    ["/guides?pattern=starter-documents-and-judgment", "templates"],
+  ] as const) {
+    const [path, query = ""] = oldPath.split("?");
+    assert.equal(parseHashLocation(path, query ? `?${query}` : "").view, view);
   }
 });
 
@@ -129,8 +172,8 @@ test("invalid comparison and Library boolean state still fail closed", () => {
 });
 
 test("WS7 promotes record identity and supported comparison mode into readable path segments", () => {
-  const atlas = canonicalizeHashLocation("/atlas/nist-800-53%3AAC-2?relationshipView=map");
-  assert.equal(atlas.canonicalPath, "/atlas/nist-800-53:AC-2?relationshipView=map");
+  const atlas = canonicalizeHashLocation("/atlas/nist-800-53%3AAC-2?relationshipView=list");
+  assert.equal(atlas.canonicalPath, "/atlas/nist-800-53:AC-2?relationshipView=list");
 
   const legacyCompare = canonicalizeHashLocation(
     "/compare?crosswalk=relationships&workbench=relationships&source=nist-800-53&target=csf-2",
@@ -141,17 +184,12 @@ test("WS7 promotes record identity and supported comparison mode into readable p
   const atlasState = normalizeViewState("atlas-map", {
     view: "atlas-map",
     node: "nist-800-53:AC-2",
-    atlasParent: "nist-800-53:FAMILY-AC",
-    relationshipView: "map",
+    atlasJourney: "rmf",
+    relationshipView: "list",
   });
-  assert.equal(serializeHashLocation(atlasState), "/atlas/nist-800-53:AC-2?atlasParent=nist-800-53:FAMILY-AC&relationshipView=map");
-  assert.equal(
-    parseHashLocation(
-      "/atlas/mitre-attack:T1000",
-      "?atlasParent=mitre-attack%3ATACTIC-TA0001",
-    ).atlasParent,
-    "mitre-attack:TACTIC-TA0001",
-  );
+  assert.equal(serializeHashLocation(atlasState), "/atlas/nist-800-53:AC-2?atlasJourney=rmf&relationshipView=list");
+  const parsedAtlas = parseHashLocation("/atlas/mitre-attack:T1000", "?atlasJourney=threats");
+  assert.equal(parsedAtlas.view === "atlas-map" && parsedAtlas.atlasJourney, "threats");
 
   const compareState = normalizeViewState("matrix", {
     view: "matrix",
@@ -245,7 +283,7 @@ test("every app state has one approved display identity", () => {
 });
 
 test("direct task destinations and overflow pages own consistent active navigation", () => {
-  assert.equal(selectedNavFor("start-here"), "start-here");
+  assert.equal(selectedNavFor("start-here"), "atlas-map");
   for (const view of ["search", "catalog-detail"] as const) {
     assert.equal(selectedNavFor(view), "search", view);
   }
@@ -261,7 +299,7 @@ test("direct task destinations and overflow pages own consistent active navigati
   assert.equal(selectedNavFor("about"), "about");
 
   const destinations = new Map(CANONICAL_DESTINATIONS.map((entry) => [entry.view, entry]));
-  assert.equal(destinations.get("start-here")?.label, "Start here");
+  assert.equal(destinations.has("start-here"), false);
   assert.equal(destinations.get("search")?.label, "Library");
   assert.equal(destinations.get("matrix")?.label, "Compare");
   assert.equal(destinations.get("atlas-map")?.label, "Atlas");
@@ -308,13 +346,11 @@ test("durable Phase 3 view fields survive canonicalization", () => {
   const samples = [
     ["/atlas", {
       node: "nist-800-53:AC-2",
-      atlasAxis: "framework",
       atlasLimb: "atlas:LIMB-COMPLIANCE",
       atlasFramework: "nist-800-53",
-      atlasBaseline: "nist-800-53b:MODERATE",
-      atlasFamily: "nist-800-53:AC",
-      atlasRmfStep: "nist-800-37:RMF-SELECT",
-      relationshipView: "map",
+      atlasJourney: "rmf",
+      atlasContext: "program.stig",
+      atlasLayer: "publisher:DISA",
     }],
     ["/library", {
       q: "access control",
@@ -325,7 +361,6 @@ test("durable Phase 3 view fields survive canonicalization", () => {
       view: "map",
     }],
     ["/library/publication/nist-800-53", { q: "AC", family: "AC", page: "2", area: "Compliance" }],
-    ["/start", { goal: "assess", context: "fedramp" }],
   ] as const;
 
   for (const [path, params] of samples) {

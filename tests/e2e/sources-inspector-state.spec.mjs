@@ -23,7 +23,7 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     await expect(table).toBeVisible();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Sources");
     await expect(page.locator(".sources-page .page-header")).toContainText(
-      "Verify publisher, version, and source material for publications used in Control Atlas.",
+      "Who published each source Control Atlas uses, which edition it holds, and how recently it was checked.",
     );
     await expect(table.getByRole("columnheader")).toHaveText([
       "Publication",
@@ -36,8 +36,9 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     await expect(page.locator(".sources-inspector-pane")).toHaveCount(0);
     await expect(page.locator(".sources-inspector-pane .source-inspector")).toHaveCount(0);
 
-    // Select the official CDAO publication identity.
-    const rowButton = page.getByRole("button", { name: "CDAO AI Assurance Toolkit" });
+    // Select the CDAO publication: the practitioner name leads, the official title sits beside it.
+    const rowButton = page.getByRole("button", { name: "DoD AI Assurance", exact: true });
+    await expect(page.locator(".source-register-row").filter({ has: rowButton })).toContainText("CDAO AI Assurance Toolkit");
     await expect(rowButton).toBeVisible();
     await rowButton.click();
     await waitForAppReady(page);
@@ -58,7 +59,7 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     await gotoApp(page, "/#/sources");
     await waitForAppReady(page);
 
-    await page.getByRole("button", { name: "CDAO AI Assurance Toolkit" }).click();
+    await page.getByRole("button", { name: "DoD AI Assurance", exact: true }).click();
     await waitForAppReady(page);
 
     // The register remains visually present behind the modal, but the modal's
@@ -75,7 +76,7 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     await gotoApp(page, "/#/sources");
     await waitForAppReady(page);
 
-    const rowButton = page.getByRole("button", { name: "CDAO AI Assurance Toolkit" });
+    const rowButton = page.getByRole("button", { name: "DoD AI Assurance", exact: true });
     await expect(rowButton).toBeVisible();
     await rowButton.click();
     await waitForAppReady(page);
@@ -102,6 +103,104 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     expect(await page.locator("html").evaluate((element) => element.scrollWidth)).toBeLessThanOrEqual(390);
   });
 
+  test("390px direct link to a source opens its details on top, not after the register", async ({ page }) => {
+    // `.panel { position: relative }` once beat the modal's position: fixed, so
+    // the "modal" rendered in flow after every other source. toBeVisible() still
+    // passed; only geometry catches it.
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoApp(page, "/#/sources?source=disa-cci-list");
+    await waitForAppReady(page);
+
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).toBeVisible();
+    await expect(dialog).toHaveCSS("position", "fixed");
+    await expect(dialog.getByRole("heading", { name: "DISA CCI" })).toBeInViewport();
+    const heading = await dialog.getByRole("heading", { name: "DISA CCI" }).boundingBox();
+    expect(heading.y).toBeLessThan(200);
+    const primary = dialog.locator(".source-inspector-official-link").first();
+    await expect(primary).toBeInViewport();
+    expect((await primary.boundingBox()).y + 44).toBeLessThan(844);
+    expect(await page.locator("html").evaluate((element) => element.ownerDocument.defaultView.scrollY)).toBe(0);
+
+    // Closing keeps the deep link honest: the register comes back list-first.
+    await page.keyboard.press("Escape");
+    await waitForAppReady(page);
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await expect(page).not.toHaveURL(/source=/);
+    await expect(page.getByRole("button", { name: "DISA CCI", exact: true })).toBeFocused();
+
+    // Without a selection, nothing overlays the list.
+    await gotoApp(page, "/#/sources");
+    await waitForAppReady(page);
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await expect(page.locator(".source-register-row").first()).toBeVisible();
+  });
+
+  for (const width of [320, 375, 390]) {
+    test(`${width}px filters by publisher or issuer with one labelled selector, not a wall of bands`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 844 });
+      const overflow = () => page.locator("html").evaluate((element) => element.scrollWidth - element.clientWidth);
+
+      for (const view of [
+        { path: "/#/sources", label: "Publisher", all: /^All publishers/, pick: "NIST", nav: "Publishers" },
+        { path: "/#/sources?layer=policy", label: "Issuer", all: /^All issuers/, pick: "Department of Defense", nav: "Issuers" },
+      ]) {
+        await gotoApp(page, view.path);
+        await waitForAppReady(page);
+
+        // Exactly one publisher/issuer control is shown, and it says what it filters.
+        const select = page.getByLabel(view.label, { exact: true });
+        await expect(select).toBeVisible();
+        await expect(select.locator("option").first()).toHaveText(view.all);
+        await expect(page.getByRole("navigation", { name: view.nav })).toBeHidden();
+        expect(await overflow()).toBeLessThanOrEqual(0);
+
+        // The register starts materially sooner than it did behind the
+        // wrapped bands: measured against that layout on this same page.
+        const firstRow = page.locator(".source-register-row").first();
+        const compactTop = (await firstRow.boundingBox()).y;
+        const bands = await page.addStyleTag({
+          content: ".sources-page .workspace-result-groups{display:flex!important;flex-wrap:wrap!important}.sources-page .source-publisher-select{display:none!important}",
+        });
+        const bandsTop = (await firstRow.boundingBox()).y;
+        await bands.evaluate((element) => element.parentNode?.removeChild(element));
+        expect(bandsTop - compactTop, `${view.label} at ${width}px`).toBeGreaterThanOrEqual(100);
+        // On a 375px or 390px phone it is on the first screen.
+        if (width >= 375) await expect(firstRow).toBeInViewport();
+
+        // Choosing writes the same route state the bands use.
+        await select.selectOption(view.pick);
+        await waitForAppReady(page);
+        await expect.poll(() => page.evaluate(() =>
+          new URLSearchParams(globalThis.location.hash.split("?")[1]).get("publisher"),
+        )).toBe(view.pick);
+        await expect(page.locator(".calibration-rail")).toContainText(/Showing 1–\d+ of \d+/);
+        expect(await overflow()).toBeLessThanOrEqual(0);
+
+        // Back clears it; forward and a reload restore it.
+        await page.goBack();
+        await waitForAppReady(page);
+        await expect(select).toHaveValue("");
+        await page.goForward();
+        await waitForAppReady(page);
+        await expect(page.getByLabel(view.label, { exact: true })).toHaveValue(view.pick);
+        await page.reload();
+        await waitForAppReady(page);
+        await expect(page.getByLabel(view.label, { exact: true })).toHaveValue(view.pick);
+      }
+    });
+  }
+
+  test("tablet and desktop keep the publisher bands and hide the selector", async ({ page }) => {
+    for (const width of [768, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await gotoApp(page, "/#/sources?publisher=NIST");
+      await waitForAppReady(page);
+      await expect(page.getByRole("navigation", { name: "Publishers" }).getByRole("button", { name: /^NIST \d/ })).toHaveAttribute("aria-pressed", "true");
+      await expect(page.getByLabel("Publisher", { exact: true })).toBeHidden();
+    }
+  });
+
   test("search commits immediately on Enter without duplicating result counts", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
     await gotoApp(page, "/#/sources");
@@ -114,7 +213,7 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     await expect(page).toHaveURL(/q=DoD(?:%20|\+)AI(?:%20|\+)Assurance/);
     await expect(page.locator(".calibration-rail")).toHaveCount(1);
     await expect(page.locator(".calibration-rail")).toContainText("Showing 1–1 of 1");
-    await expect(page.getByRole("button", { name: "CDAO AI Assurance Toolkit" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "DoD AI Assurance", exact: true })).toBeVisible();
   });
 
   test("zero results use a truthful count and one primary recovery action", async ({ page }) => {
@@ -126,15 +225,19 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     await expect(page.getByRole("button", { name: "Clear publication filters" })).toHaveCount(1);
   });
 
-  test("register rows use the same official publication name as the inspector", async ({ page }) => {
+  test("register rows use the same publication identity as the inspector", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
     await gotoApp(page, "/#/sources?q=DISA%20STIG");
     await waitForAppReady(page);
 
-    const publication = page.getByRole("button", { name: "DISA Public STIG Library" });
+    const publication = page.getByRole("button", { name: "DISA STIG", exact: true });
     await expect(publication).toBeVisible();
+    await expect(page.locator(".source-register-row").filter({ has: publication })).toContainText("DISA Public STIG Library");
     await publication.click();
-    await expect(page.getByRole("heading", { name: "DISA Public STIG Library", level: 2 })).toBeVisible();
+    const inspector = page.locator(".sources-inspector-pane .source-inspector--inline");
+    await expect(inspector.getByRole("heading", { name: "DISA STIG", level: 2 })).toBeVisible();
+    await expect(inspector.locator("[data-official-title]")).toContainText("DISA Public STIG Library");
+    await expect(inspector).toContainText("Defense Information Systems Agency (DISA)");
     await expect(page.getByRole("region", { name: "Page context" })).toHaveCount(0);
   });
 
@@ -143,7 +246,7 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     await gotoApp(page, "/#/sources");
     await waitForAppReady(page);
 
-    await page.getByRole("button", { name: "CDAO AI Assurance Toolkit" }).click();
+    await page.getByRole("button", { name: "DoD AI Assurance", exact: true }).click();
     await waitForAppReady(page);
 
     await expect(page.getByRole("dialog")).toBeVisible();

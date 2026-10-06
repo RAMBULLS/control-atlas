@@ -2,6 +2,7 @@ import type { CompareCrosswalk, ViewState } from "./viewState";
 
 export type CompareModeId =
   | "frameworks"
+  | "implementation"
   | "item-mapping";
 
 type CompareState = Extract<ViewState, { view: "matrix" }>;
@@ -19,6 +20,12 @@ export const COMPARE_MODES = Object.freeze([
     required: ["source", "target"],
   },
   {
+    id: "implementation",
+    label: "Implementation",
+    crosswalk: "relationships",
+    required: ["source", "target"],
+  },
+  {
     id: "item-mapping",
     label: "Specific item",
     crosswalk: "relationships",
@@ -32,15 +39,21 @@ export type CompareStep = {
   description?: string;
 };
 
+// "Compare with" names the reader's job; "Target" was crosswalk-schema jargon.
 export const COMPARE_MODE_STEPS: Record<CompareModeId, readonly CompareStep[]> = {
   frameworks: [
     { id: "source", label: "Source", description: "Choose a framework" },
-    { id: "target", label: "Target", description: "Choose a connected framework" },
+    { id: "target", label: "Compare with", description: "Choose a connected framework" },
     { id: "results", label: "Results", description: "Review published mappings" },
+  ],
+  implementation: [
+    { id: "source", label: "Source", description: "Choose a publication" },
+    { id: "target", label: "Compare with", description: "Choose published component mappings" },
+    { id: "results", label: "Results", description: "Review implementation support" },
   ],
   "item-mapping": [
     { id: "item", label: "Item", description: "Choose a publication and exact item" },
-    { id: "target", label: "Target", description: "Choose a mapped framework" },
+    { id: "target", label: "Compare with", description: "Choose a mapped framework" },
     { id: "results", label: "Results", description: "Review published mappings" },
   ],
 };
@@ -49,11 +62,15 @@ export function getCompareSteps(modeId: CompareModeId): readonly CompareStep[] {
   return COMPARE_MODE_STEPS[modeId] || [];
 }
 
+// The results step needs an explicit run: choosing the target in the page sets `compareRun`,
+// while a link that only names a source and target waits for the reader to ask, because
+// showing results loads only that published pair.
 export function getCompareCurrentStep(
   modeId: CompareModeId,
   state: CompareState,
 ): number {
   switch (modeId) {
+    case "implementation":
     case "frameworks":
       if (state.compareRun === "true" && state.source && state.target) return 3;
       if (state.source) return 2;
@@ -70,6 +87,20 @@ export function getCompareCurrentStep(
     default:
       return 1;
   }
+}
+
+export type CompareEmptyKind = "none" | "search" | "filter" | null;
+
+// Why a result list is empty, so the wording never blames a filter for a pair that has no
+// published mappings, and never says the frameworks are unrelated.
+export function compareEmptyKind(input: {
+  pairRows: number;
+  visibleRows: number;
+  searching: boolean;
+}): CompareEmptyKind {
+  if (input.visibleRows > 0) return null;
+  if (input.pairRows === 0) return "none";
+  return input.searching ? "search" : "filter";
 }
 
 export function compareModeForState(state: CompareState) {
@@ -101,7 +132,7 @@ export function activateCompareMode(modeId: CompareModeId): Partial<CompareState
   };
 }
 
-const MODES_WITH_MAPPING_SOURCE = new Set(["frameworks", "item-mapping"]);
+const MODES_WITH_MAPPING_SOURCE = new Set(["frameworks", "implementation", "item-mapping"]);
 
 export type MappingSourceResolution =
   // No mapping source has any evidence for this pair yet (scope incomplete,
@@ -122,6 +153,7 @@ export function resolveMappingSource(
   currentValue: string,
 ): MappingSourceResolution {
   if (!eligibleMappingSources.length) return { status: "none" };
+  if (currentValue && !eligibleMappingSources.includes(currentValue)) return { status: "invalid" };
   if (eligibleMappingSources.length === 1) {
     return { status: "auto", value: eligibleMappingSources[0] };
   }

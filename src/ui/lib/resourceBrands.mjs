@@ -486,6 +486,16 @@ export function resourceTypeLabel(resourceType) {
     .join(" ");
 }
 
+export function resourceOriginLabel(resourceLane) {
+  return {
+    official: "Official publisher",
+    open_source: "Open-source project",
+    practitioner: "Practitioner resource",
+    commercial: "Vendor resource",
+    legacy: "Historical resource",
+  }[resourceLane] || "Resource";
+}
+
 export function resourceAccessLabel(resource) {
   const accessType = normalizedText(resource?.accessType);
   if (!accessType) return "";

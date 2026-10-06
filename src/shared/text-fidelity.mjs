@@ -8,7 +8,8 @@ export function repairKnownSourceEncoding(value) {
     .replaceAll("â€˜", "'")
     .replaceAll("â€™", "'")
     .replaceAll("â€œ", '"')
-    .replaceAll("â€", '"')
+    .replaceAll("\u00e2\u20ac\u009d", '"')
+    .replaceAll("â€?", '"')
     .replaceAll("â€“", "–")
     .replaceAll("â€”", "—");
 }

@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "description": "Presentation text for product changes in Pulse: a title, a summary and where to go. It never establishes that anything shipped. An entry appears only when the Git history the site is built from holds the pull request, squash-merged by GitHub onto the first-parent history, or the release tag, reachable from that history. Dates and commits come from Git; they cannot be written here.",
+  "features": [
+    {
+      "pull_request": 261,
+      "title": "Atlas map: a stable territory you can pin and share",
+      "summary": "Publications keep their place on the map, published connections show their evidence, and a shared view records the dataset it was made from.",
+      "destination": { "label": "Open the Atlas map", "view": "atlas-map", "patch": {} }
+    },
+    {
+      "pull_request": 270,
+      "title": "Evidence Matrix and five other working files reworked",
+      "summary": "The Evidence Expectation Matrix keeps SP 800-53A methods, CCIs and STIG/SRG counts beside your own columns; implementation and inheritance worksheets follow the selected baseline.",
+      "destination": { "label": "Open the Evidence Matrix", "view": "templates", "patch": { "buildSection": "documents", "templateType": "evidence_expectation_matrix" } }
+    },
+    {
+      "pull_request": 307,
+      "title": "Templates, Compare and Start Here go one step at a time",
+      "summary": "One step indicator across the three guided flows, and each step waits for your choice before moving on.",
+      "destination": { "label": "Open Templates", "view": "templates", "patch": {} }
+    },
+    {
+      "pull_request": 308,
+      "title": "Atlas starts with what you're working on",
+      "summary": "RMF & ATO, STIGs & SRGs, Zero Trust, CMMC & CUI, FedRAMP and more: each gathers the publications, steps, templates and guides for that work.",
+      "destination": { "label": "Open the RMF & ATO journey", "view": "atlas-map", "patch": { "atlasJourney": "rmf" } }
+    },
+    {
+      "pull_request": 309,
+      "title": "Home shows what changed",
+      "summary": "Accepted source updates and shipped features now appear on Home, each with its date and a link to where you can see it.",
+      "destination": { "label": "See where source updates are recorded", "view": "sources", "patch": {} }
+    }
+  ],
+  "releases": [
+    {
+      "tag": "v1.0.2",
+      "title": "Control Atlas v1.0.2 released",
+      "summary": "The final v1 maintenance release: retired old link aliases, better Atlas map contrast and steadier mobile loading.",
+      "destination": { "label": "About Control Atlas", "view": "about", "patch": {} }
+    }
+  ]
+}

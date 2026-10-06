@@ -41,33 +41,33 @@ test('detail titles resolve official entity names instead of IDs', async ({ page
 
 test('generated record routes keep stable history while browser titles distinguish record type', async ({ page }) => {
   test.setTimeout(120_000);
-  const collaboratorRoute = '/#/record/nist-zt/COLLABORATOR-APPGATE-835EC7F121';
-  const mappingRoute = '/#/record/nist-zt/MAPPING-CONTRIBUTOR-APPGATE-835EC7F121';
+  const productRoute = '/#/record/nist-zt/PRODUCT-COMPONENT-APPGATE-APPGATE-HEADLESS-CLIENT-RESOURCE-PROTECTION-CL-E65DEBF0E8';
+  const iotRoute = '/#/record/nist-iot-cybersecurity/DOMAIN-NON-TECHNICAL-MANUFACTURER-CAPABILITIES-1925D28A4B';
 
   for (const width of [320, 375, 390, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: width < 768 ? 844 : 1024 });
-    await gotoApp(page, collaboratorRoute);
+    await gotoApp(page, productRoute);
     await waitForAppReady(page);
     await dismissOnboarding(page);
     await expect(page).toHaveTitle(
-      'Appgate — Technology collaborator · NIST Zero Trust — Control Atlas',
+      'Appgate Headless Client — Resource Protection – Cloud Workload Protection — Product component · NIST Zero Trust — Control Atlas',
     );
-    await expect(page).toHaveURL(/COLLABORATOR-APPGATE-835EC7F121$/);
+    await expect(page).toHaveURL(/PRODUCT-COMPONENT-APPGATE-APPGATE-HEADLESS-CLIENT-RESOURCE-PROTECTION-CL-E65DEBF0E8$/);
 
-    await gotoApp(page, mappingRoute);
+    await gotoApp(page, iotRoute);
     await waitForAppReady(page);
     await expect(page).toHaveTitle(
-      'Appgate — Mapping workbook contributor · NIST Zero Trust — Control Atlas',
+      'Non-Technical Manufacturer Capabilities — IoT capability domain · NIST IoT Device Cybersecurity — Control Atlas',
     );
   }
 
   await page.goBack();
-  await expect(page).toHaveURL(/COLLABORATOR-APPGATE-835EC7F121$/);
+  await expect(page).toHaveURL(/PRODUCT-COMPONENT-APPGATE-APPGATE-HEADLESS-CLIENT-RESOURCE-PROTECTION-CL-E65DEBF0E8$/);
   await expect(page).toHaveTitle(
-    'Appgate — Technology collaborator · NIST Zero Trust — Control Atlas',
+    'Appgate Headless Client — Resource Protection – Cloud Workload Protection — Product component · NIST Zero Trust — Control Atlas',
   );
   await page.goForward();
-  await expect(page).toHaveURL(/MAPPING-CONTRIBUTOR-APPGATE-835EC7F121$/);
+  await expect(page).toHaveURL(/DOMAIN-NON-TECHNICAL-MANUFACTURER-CAPABILITIES-1925D28A4B$/);
 });
 
 test('legacy public aliases canonicalize while retired structural aliases remain not found', async ({ page }) => {
@@ -153,7 +153,7 @@ test('full-page search fields wait for explicit submission', async ({ page }) =>
 
   await gotoApp(page, '/#/library/publication/nist-800-53?q=AC-2');
   await waitForAppReady(page);
-  const catalogSearch = page.getByRole('searchbox', { name: 'Search NIST SP 800-53 Rev. 5' });
+  const catalogSearch = page.getByRole('searchbox', { name: 'Search SP 800-53 Rev. 5' });
   await catalogSearch.fill('');
   await catalogSearch.pressSequentially('AC-3');
   await expect(catalogSearch).toHaveValue('AC-3');
@@ -176,21 +176,21 @@ test('route transition releases after destination commit while data continues lo
   await waitForAppReady(page);
 });
 
-test('Atlas landing renders the lightweight semantic hierarchy, not the relationship graph bundle', async ({ page }) => {
+test('Atlas landing renders the territory sheet from its own small index, not the relationship graph bundle', async ({ page }) => {
   test.setTimeout(90000);
   const requests = [];
   page.on('request', (request) => requests.push(request.url()));
-  await gotoApp(page, '/#/atlas?atlasLanding=publishers');
+  await gotoApp(page, '/#/atlas');
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
-  const board = page.getByTestId('atlas-area-map');
-  await expect(board).toBeVisible();
-  await expect(board.locator('button.atlas-area__cell')).toHaveCount(8);
-  await expect(page.locator('.atlas-mapcol__aside em')).toHaveCount(4);
-  // Orientation is DOM only: no canvas renderer and no flow graph is loaded
+  const sheet = page.locator('.terr');
+  await expect(sheet).toBeVisible();
+  await expect(sheet.locator('.district')).toHaveCount(9);
+  await expect(sheet.locator('.lm')).toHaveCount(28);
+  // Orientation is SVG and DOM only: no canvas renderer and no flow graph is loaded
   // before the visitor asks for one.
-  await expect(board.locator('canvas')).toHaveCount(0);
+  await expect(page.locator('canvas')).toHaveCount(0);
   await expect(page.locator('.react-flow')).toHaveCount(0);
-  expect(requests.some((url) => /RelationshipGraph-/.test(url))).toBe(false);
+  expect(requests.some((url) => /RelationshipGraph-|atlas-network|atlas-spine|atlas-research\//.test(url))).toBe(false);
 });

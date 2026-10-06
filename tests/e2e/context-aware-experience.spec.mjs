@@ -14,15 +14,16 @@ test("Home is a calm, task-focused front door", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Make federal cybersecurity make sense.",
   );
-  await expect(page.getByText("Understand what applies, what it means, and what to do next.", { exact: true })).toBeVisible();
+  await expect(page.locator(".home-lead")).toContainText("trace where requirements come from, see how they relate, and know what to do next.");
   await expect(page.getByRole("searchbox", { name: "Search Control Atlas" })).toBeVisible();
   await expect(page.locator(".home-search").getByRole("button", { name: "Search" })).toBeVisible();
-  for (const entrance of ["Browse the Atlas", "Search the Library", "Browse Resources"]) {
-    await expect(page.getByRole("link", { name: new RegExp(entrance) })).toBeVisible();
+  for (const entrance of ["Open the Atlas", "All records"]) {
+    await expect(page.getByRole("link", { name: entrance, exact: true })).toBeVisible();
   }
+  await expect(page.getByRole("navigation", { name: "Tools" }).getByRole("link")).toHaveCount(3);
   // Five practitioner questions, ordered the way the work runs. The sixth
   // card was a record-volume statistic, not a place to start.
-  await expect(page.locator(".home-library-kpis .home-library-kpi")).toHaveCount(5);
+  await expect(page.locator(".home-library__list .home-library__item")).toHaveCount(5);
 });
 
 test("record leads with publisher text and contains no generated guidance", async ({ page }) => {

@@ -58,8 +58,8 @@ for (const template of registry.templates) {
   }
 }
 
-test('all twelve artifact companions are registered', () => {
-  assert.equal(registry.templates.length, 12);
+test('all ten artifact companions are registered', () => {
+  assert.equal(registry.templates.length, 10);
 });
 
 test('registry templates have non-empty source_refs', () => {
@@ -271,18 +271,19 @@ test('POA&M markdown preserves the schema-aligned field set without a wide table
     'externalUid', 'status', 'vulnerabilityDescription', 'sourceIdentifyingVulnerability',
     'controlAcronym', 'assessmentProcedure', 'securityChecks', 'severity', 'rawSeverity',
     'relevanceOfThreat', 'likelihood', 'impact', 'impactDescription', 'residualRiskLevel',
-    'pocOrganization', 'Point of Contact', 'resources', 'Planned Remediation',
-    'Milestones with Completion Dates', 'Original Detection Date', 'scheduledCompletionDate',
+    'pocOrganization', 'pocFirstName', 'pocLastName', 'pocEmail', 'pocPhoneNumber', 'resources', 'Planned Remediation',
+    'Original Detection Date', 'scheduledCompletionDate',
     'completionDate', 'recommendations', 'mitigations', 'Evidence Needed for Closure',
-    'Risk Acceptance / Deviation Reference', 'comments',
+    'Risk Acceptance / Deviation Reference', 'comments', 'Reviewer Notes',
   ];
   for (const field of poamFields) {
     assert.ok(result.content.includes(field), `POA&M field must survive — missing "${field}"`);
   }
-  assert.match(result.content, /## Operating Rules/, 'operating guidance must precede the register');
-  assert.match(result.content, /Classification: eMASS API v3\.22 schema-aligned preparation aid/);
-  const starterRows = (result.content.match(/\[Stable external tracking ID\]/g) || []).length;
+  assert.match(result.content, /## How to use/, 'operating guidance must precede the register');
+  assert.match(result.content, /Interoperability: Field-aligned\. Uses MITRE eMASS API v3\.22 POA&M field names and values\. Import into eMASS is not verified\./);
+  const starterRows = (result.content.match(/\[Stable ID you keep across updates\]/g) || []).length;
   assert.equal(starterRows, 20, 'register must carry exactly 20 starter rows');
+  assert.match(result.content, /## Milestones|Milestone description/, 'milestones must be their own table');
   assert.ok(maxMarkdownTableColumns(result.content) <= 6, 'POA&M starter must not emit a wide pipe table');
 });
 
@@ -304,7 +305,7 @@ test('ssp markdown renders one compact family index with a control-work handoff'
     /\| Control Family \| Selected Records \| Compact ID Index \| Detailed Work Location \|/,
     'the SSP core must summarize selected records by family',
   );
-  assert.match(result.content, /2 published control records are in the selected scope/);
+  assert.match(result.content, /no baseline selected. 2 controls /);
   assert.match(result.content, /AC-1, AC-2/);
   assert.match(result.content, /## Control Narrative Handoff/, 'the companion handoff must render as its own section');
   assert.match(result.content, /Implementation Statement Worksheet/);

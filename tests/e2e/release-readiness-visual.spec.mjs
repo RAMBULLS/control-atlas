@@ -6,7 +6,8 @@ import {
   waitForAppReady,
 } from "./support.mjs";
 
-const FOCUSED_ATLAS = "/#/atlas/nist-800-53:AC-2?relationshipView=map";
+const FOCUSED_ATLAS = "/#/atlas/nist-800-53:AC-2";
+const CONNECTION_LIST = "/#/atlas/nist-800-53:AC-2?relationshipView=list";
 
 test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
@@ -39,23 +40,18 @@ async function assertNoPageOverflow(page) {
   ).toBeLessThanOrEqual(dimensions.clientWidth + 1);
 }
 
-test("release evidence: focused Atlas keeps context above connections on desktop", async ({ page }) => {
+test("release evidence: focused Atlas keeps the record beside its map on desktop", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto(FOCUSED_ATLAS);
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
-  const context = page.locator(".atlas-focused-context");
-  const map = page.getByRole("region", { name: "Relationship map" });
-  await expect(context).toBeVisible();
+  const details = page.locator(".atl-inspector");
+  const map = page.locator(".terr");
+  await expect(details).toContainText("AC-2", { timeout: 20000 });
   await expect(map).toBeVisible();
+  await expect(details.getByRole("link", { name: "Full connection list" })).toBeVisible();
   await assertNoPageOverflow(page);
-
-  const contextBox = await context.boundingBox();
-  const mapBox = await map.boundingBox();
-  expect(contextBox).not.toBeNull();
-  expect(mapBox).not.toBeNull();
-  expect(mapBox.y).toBeGreaterThanOrEqual(contextBox.y + contextBox.height - 1);
   await page.screenshot({
     fullPage: true,
     path: "artifacts/release-readiness/atlas-desktop-map.png",
@@ -68,47 +64,28 @@ test("release evidence: focused Atlas stacks safely on mobile", async ({ page })
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
-  const context = page.locator(".atlas-focused-context");
-  const map = page.getByRole("region", { name: "Relationship map" });
-  await expect(context).toBeVisible();
-  await expect(map).toBeVisible();
+  const focused = page.locator("#atl-focus");
+  await expect(focused).toContainText("AC-2", { timeout: 20000 });
+  await expect(page.locator(".terr")).toHaveCount(0);
   await assertNoPageOverflow(page);
-
-  const contextBox = await context.boundingBox();
-  const mapBox = await map.boundingBox();
-  expect(contextBox).not.toBeNull();
-  expect(mapBox).not.toBeNull();
-  expect(mapBox.y).toBeGreaterThanOrEqual(contextBox.y + contextBox.height - 1);
-
   await page.screenshot({
     fullPage: true,
     path: "artifacts/release-readiness/atlas-mobile-map.png",
   });
 });
 
-test("release evidence: the Path offers every stage as one choice on desktop", async ({ page }) => {
+test("release evidence: the full connection list is one bounded table on desktop", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
-  await page.goto(
-    "/#/explore?node=nist-800-53%3AAC-2&relationshipView=path",
-  );
+  await page.goto(CONNECTION_LIST);
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
-  // Re-baselined 2026-08-01 for the Cybersecurity trunk spine. A focused
-  // record's Path is now its structural position — the chain from the trunk
-  // down to this record — plus the lens tabs. The guarantee is unchanged: the
-  // Path offers a route to take, it never dumps a grid of records on screen.
-  await expect(
-    page.getByRole("navigation", { name: "Where this sits" }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("navigation", { name: "Where this sits" }).getByRole("link", { name: /Cybersecurity/ }),
-  ).toBeVisible();
-  await expect(page.locator(".atlas-path-record")).toHaveCount(0);
+  await expect(page.getByRole("table", { name: "Relationship table" })).toBeVisible({ timeout: 20000 });
+  await expect(page.getByRole("status").filter({ hasText: /Showing \d+ of \d+ connections/ })).toBeVisible();
   await assertNoPageOverflow(page);
   await page.screenshot({
     fullPage: true,
-    path: "artifacts/release-readiness/atlas-desktop-purpose.png",
+    path: "artifacts/release-readiness/atlas-desktop-connections.png",
   });
 });
 
@@ -117,20 +94,13 @@ test("release evidence: Atlas reflows at the 200 percent zoom equivalent", async
 }) => {
   // A 1440px desktop viewport at 200% browser zoom exposes 720 CSS pixels.
   await page.setViewportSize({ width: 720, height: 500 });
-  await page.goto(
-    "/#/explore?node=nist-800-53%3AAC-2&relationshipView=path",
-  );
-  await waitForAppReady(page);
-  await dismissOnboarding(page);
-
-  // Re-baselined 2026-08-01: a focused record's Path is the structural chain,
-  // not the retired stage board. The guarantee under test is the same one —
-  // at the 200% zoom equivalent it reflows to a single column and the page
-  // never scrolls sideways.
-  await expect(
-    page.getByRole("navigation", { name: "Where this sits" }),
-  ).toBeVisible();
-  await assertNoPageOverflow(page);
+  for (const path of [FOCUSED_ATLAS, CONNECTION_LIST, "/#/atlas?atlasJourney=rmf"]) {
+    await page.goto(path);
+    await waitForAppReady(page);
+    await dismissOnboarding(page);
+    await expect(page.locator(".atl--mobile")).toBeVisible();
+    await assertNoPageOverflow(page);
+  }
 });
 
 test("release evidence: Atlas fits a 375 by 667 compact viewport", async ({
@@ -141,13 +111,7 @@ test("release evidence: Atlas fits a 375 by 667 compact viewport", async ({
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
-  const context = page.locator(".atlas-focused-context");
-  const map = page.getByRole("region", { name: "Relationship map" });
-  const contextBox = await context.boundingBox();
-  const mapBox = await map.boundingBox();
-  expect(contextBox).not.toBeNull();
-  expect(mapBox).not.toBeNull();
-  expect(mapBox.y).toBeGreaterThanOrEqual(contextBox.y + contextBox.height - 1);
+  await expect(page.locator("#atl-focus")).toContainText("AC-2", { timeout: 20000 });
   await assertNoPageOverflow(page);
 });
 
@@ -159,12 +123,10 @@ test("release evidence: reduced motion keeps every Atlas control available", asy
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
-  const hierarchyToggle = page.getByRole("button", { name: "Hierarchy" });
-  await expect(hierarchyToggle).toBeVisible();
-  await expect(
-    page.getByRole("region", { name: "Relationship map" }),
-  ).toBeVisible();
-  const duration = await hierarchyToggle.evaluate(
+  const journey = page.getByRole("button", { name: "RMF & ATO", exact: true });
+  await expect(journey).toBeVisible();
+  await expect(page.getByRole("link", { name: "Full connection list" })).toBeVisible({ timeout: 20000 });
+  const duration = await journey.evaluate(
     (element) => globalThis.getComputedStyle(element).transitionDuration,
   );
   expect(["0s", "0.00001s"]).toContain(duration);

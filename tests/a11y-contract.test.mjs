@@ -272,12 +272,12 @@ test("Template B Home exposes one search, governed destinations, and labelled go
   assert.match(homePage, /className="home-search home-search-trigger"/);
   assert.match(homePage, /onClick=\{onOpenSearch\}/);
   assert.match(homePage, /Search Control Atlas/);
-  assert.match(homePage, /HOME_DESTINATIONS\.map/);
-  assert.match(homePage, /aria-label="Choose a Control Atlas destination"/);
+  assert.match(homePage, /HOME_TOOLS\.map/);
+  assert.match(homePage, /aria-label="Tools"/);
   assert.match(homePage, /aria-labelledby="home-library-heading"/);
   assert.match(homePage, /HOME_LIBRARY_DISCOVERY\.map/);
-  assert.match(homePage, /home-library-kpis/);
-  assert.match(homePage, /className="home-library-kpi"/);
+  assert.match(homePage, /home-library__list/);
+  assert.match(homePage, /className="home-library__item"/);
   assert.doesNotMatch(homePage, /data-record-count|tag-count-scale|More records, bigger tag/);
   assert.equal((homePage.match(/onOpenSearch/g) || []).length >= 2, true);
   assert.doesNotMatch(homePage, /home-ecosystem-authorities|home-start-here/);
@@ -288,7 +288,6 @@ test("Template B Home exposes one search, governed destinations, and labelled go
 test("high-density task surfaces expose bounded results and name complete download actions", () => {
   const comparePage = readFileSync("src/ui/pages/ComparePage.tsx", "utf8");
   const templatesPage = readFileSync("src/ui/pages/TemplatesPage.tsx", "utf8");
-  const startHere = readFileSync("src/ui/pages/StartHerePage.tsx", "utf8");
   assert.match(comparePage, /data-continuous-results/);
   assert.match(comparePage, /Search results by ID or title/);
   assert.match(comparePage, /Evidence for \{targets\.length\.toLocaleString\(\)\} mapping/);
@@ -298,8 +297,6 @@ test("high-density task surfaces expose bounded results and name complete downlo
   assert.match(comparePage, /Counts and exports cover all/);
   assert.match(templatesPage, /Download \$\{selectedTemplate\.display_name\}/);
   assert.match(templatesPage, /template-essential-options/);
-  assert.match(startHere, /What are you trying to do\?/);
-  assert.match(startHere, /Search the Library/);
 });
 
 test("Compare modes are accessible tabs and About is a navigable article", () => {
@@ -312,8 +309,8 @@ test("Compare modes are accessible tabs and About is a navigable article", () =>
   assert.match(comparePage, /role="tab"/);
   assert.doesNotMatch(comparePage, /className="intent-card intent-card-button"/);
   assert.match(aboutPage, /<article className="learn-article">/);
-  assert.match(aboutPage, /<h2>Why Control Atlas exists<\/h2>/);
-  assert.match(aboutPage, /<h2>About the project<\/h2>/);
+  assert.match(aboutPage, /<h2>Trace federal cybersecurity requirements to their sources<\/h2>/);
+  assert.match(aboutPage, /<h2>Built in the open<\/h2>/);
   assert.match(aboutPage, /aria-label="On this page"/);
   assert.match(aboutPage, /PageJumpNav ariaLabel="Jump to About section"/);
   assert.match(primitives, /aria-labelledby=\{props\.headingLevel \? titleId : undefined\}/);
@@ -342,9 +339,11 @@ test("compact icon and chip controls retain 44 pixel touch targets", () => {
   assert.match(block[1], /min-height:\s*44px;/);
   assert.match(block[1], /min-width:\s*44px;/);
 
-  const homeLibraryKpi = surfacesCss.match(/\.home-entry \.home-library-kpis \.home-library-kpi\s*\{([^}]*)\}/);
-  assert.ok(homeLibraryKpi, "Missing Home Library discovery link rule");
-  assert.match(homeLibraryKpi[1], /min-height:\s*12rem;/);
+  // Each Home Library row is one link spanning its question, name, description and count.
+  const homeLibraryItem = surfacesCss.match(/\.home-entry \.home-library__list \.home-library__item\s*\{([^}]*)\}/);
+  assert.ok(homeLibraryItem, "Missing Home Library row link rule");
+  assert.match(homeLibraryItem[1], /display:\s*grid;/);
+  assert.match(homeLibraryItem[1], /padding:\s*var\(--ca-space-6\) 0;/);
 });
 
 test("sticky surfaces and in-page jumps share one header-safe offset", () => {

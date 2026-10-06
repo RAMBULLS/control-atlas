@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { waitForAppReady } from './support.mjs';
+import { roundCssPixels, waitForAppReady } from './support.mjs';
 
 // Regression guard for the epic-12 QA backlog fixes (2026-08-10):
 // B1/B2 Template-C browse + map, B3 tools reachability, B5/B6 landing,
@@ -35,7 +35,7 @@ test('B2: the Map toggle renders nodes for a non-empty query', async ({ page }) 
 
 test('B3: Tools & communities is reachable from home in <=2 clicks', async ({ page }) => {
   await page.goto('/#/');
-  const direct = page.locator('.home-secondary-action[href="#/resources"]');
+  const direct = page.locator('.home-tool[href="#/resources"]');
   await expect(direct).toBeVisible();
   await direct.click();
   await expect(page).toHaveURL(/#\/resources/);
@@ -59,25 +59,22 @@ test('B5: the hero has no reserved-but-empty second column', async ({ page }) =>
   expect(await hero.evaluate((el) => el.children.length)).toBe(1);
 });
 
-test('B6: the Template B destination grid has four uniform cards', async ({ page }) => {
+test('B6: the Home tools band holds three equal columns', async ({ page }) => {
   await page.goto('/#/');
-  const grid = page.locator('.home-secondary-grid');
-  await expect(grid).toBeVisible();
-  const info = await grid.evaluate((el) => {
+  const band = page.locator('.home-tools > ul');
+  await expect(band).toBeVisible();
+  const info = await band.evaluate((el) => {
     const cs = globalThis.getComputedStyle(el);
     const kids = /** @type {HTMLElement[]} */ ([...el.children]);
     return {
       display: cs.display,
-      columns: cs.gridTemplateColumns.split(/\s+/).length,
       count: kids.length,
-      first: kids[0].getBoundingClientRect().width,
-      last: kids[kids.length - 1].getBoundingClientRect().width,
+      widths: kids.map((kid) => kid.getBoundingClientRect().width),
     };
   });
   expect(info.display).toBe('grid');
-  expect(info.columns).toBe(4);
-  expect(info.count).toBe(4);
-  expect(Math.abs(info.last - info.first)).toBeLessThanOrEqual(2);
+  expect(info.count).toBe(3);
+  expect(Math.max(...info.widths) - Math.min(...info.widths)).toBeLessThanOrEqual(2);
 });
 
 test('B9: overlay result descriptions clamp within their rows', async ({ page }) => {
@@ -144,13 +141,13 @@ test('B14: every Library select exposes a non-empty accessible name', async ({ p
   expect(unnamed).toBe(0);
 });
 
-test('B16: Compare exposes only the two supported modes', async ({ page }) => {
+test('B16: Compare exposes all three supported modes', async ({ page }) => {
   await page.goto('/#/compare');
   const modes = page.getByRole('tablist', { name: 'Comparison mode' });
   await expect(modes).toBeVisible({ timeout: 15000 });
   const choices = modes.getByRole('tab');
-  await expect(choices).toHaveCount(2);
-  await expect(choices).toHaveText(['Frameworks', 'Specific item']);
+  await expect(choices).toHaveCount(3);
+  await expect(choices).toHaveText(['Frameworks', 'Implementation', 'Specific item']);
   await expect(choices.first()).toHaveAttribute('aria-selected', 'true');
 });
 
@@ -168,8 +165,11 @@ test('route semantic polish holds at all required viewport widths', async ({ pag
 
     await page.goto('/#/compare');
     const choices = page.getByRole('tablist', { name: 'Comparison mode' }).getByRole('tab');
-    await expect(choices).toHaveCount(2);
-    expect(await choices.first().evaluate((element) => element.getBoundingClientRect().height)).toBeGreaterThanOrEqual(44);
+    await expect(choices).toHaveCount(3);
+    await expect(choices).toHaveText(['Frameworks', 'Implementation', 'Specific item']);
+    for (const choice of await choices.all()) {
+      expect(roundCssPixels(await choice.evaluate((element) => element.getBoundingClientRect().height))).toBeGreaterThanOrEqual(44);
+    }
     expect(await page.evaluate(() => globalThis.document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
 
     await page.goto('/#/about');
@@ -192,7 +192,7 @@ test('route semantic polish holds at all required viewport widths', async ({ pag
       expect(footerOverflow).toBe(false);
       const links = page.locator('footer a');
       for (const link of await links.all()) {
-        expect(await link.evaluate((element) => element.getBoundingClientRect().height)).toBeGreaterThanOrEqual(44);
+        expect(roundCssPixels(await link.evaluate((element) => element.getBoundingClientRect().height))).toBeGreaterThanOrEqual(44);
       }
     }
     if (width >= 1024) {

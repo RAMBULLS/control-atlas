@@ -175,7 +175,7 @@ test("Compare exports reconcile every filtered mapping exactly once across one a
 
   const missing = data.crosswalk.find((row) => row[7] === "B-3");
   assert.ok(missing);
-  assert.deepEqual(missing.slice(9), ["", "", "", ""]);
+  assert.deepEqual(missing.slice(9, 13), ["", "", "", ""]);
   assert.equal(data.sources.filter((row) => row[0].startsWith("Crosswalk source:")).length, 2);
 });
 
@@ -206,8 +206,8 @@ test("XLSX has exactly three filterable sheets, frozen headers, text IDs, wrappe
   );
   assert.match(sheet1, /<pane ySplit="1"[^>]*state="frozen"/);
   assert.match(sheet2, /<pane ySplit="1"[^>]*state="frozen"/);
-  assert.match(table1, /<autoFilter ref="A1:M4"/);
-  assert.match(table1, /tableColumns count="13"/);
+  assert.match(table1, /<autoFilter ref="A1:Q4"/);
+  assert.match(table1, /tableColumns count="17"/);
   assert.match(styles, /numFmtId="49"/);
   assert.match(styles, /wrapText="1"/);
   assert.match(sheet1, /t="s"/);

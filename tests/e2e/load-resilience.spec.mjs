@@ -54,18 +54,16 @@ test("Atlas data failure replaces loading with a retry path", async ({
   page,
 }) => {
   test.setTimeout(60_000);
-  await page.route("**/data/generated/atlas-spine.json*", async (route) => {
+  await page.route("**/data/generated/atlas-territory-manifest.json*", async (route) => {
     await route.fulfill({ status: 503, body: "atlas unavailable" });
   });
 
   await gotoApp(page, "/#/atlas");
-  await expect(
-    page.getByRole("button", { name: "Try loading again" }),
-  ).toBeVisible({ timeout: 15000 });
-  await expect(page.getByText("Unable to load data", { exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Try again" })).toBeVisible({ timeout: 15000 });
+  await expect(page.getByRole("heading", { name: "The Atlas could not load" })).toBeVisible();
 });
 
-test("Atlas search waits for its complete compact index", async ({ page }) => {
+test("Atlas record search says it is still loading, then answers once the index arrives", async ({ page }) => {
   /** @type {(value: unknown) => void} */
   let releaseSearchArtifact = () => {};
   const searchArtifactHeld = new Promise((resolve) => {
@@ -77,13 +75,14 @@ test("Atlas search waits for its complete compact index", async ({ page }) => {
   });
 
   await gotoApp(page, "/#/atlas");
-  const searchbox = page.getByRole("searchbox", { name: "Jump to a record" });
-  await expect(searchbox).toBeDisabled();
-  await expect(page.locator("#app")).toHaveAttribute("data-app-ready", "partial");
+  const searchbox = page.getByRole("combobox", { name: "Search records and publications" });
+  await expect(searchbox).toBeEnabled();
+  await searchbox.click();
+  await page.keyboard.type("V-205646");
+  await expect(page.locator("#atlas-results")).toContainText("Record search is still loading");
 
   releaseSearchArtifact(undefined);
-  await expect(searchbox).toBeEnabled();
-  await expect(page.locator("#app")).toHaveAttribute("data-app-ready", "true");
+  await expect(page.locator("#atlas-results")).toContainText("V-205646", { timeout: 30000 });
 });
 
 test("Resources dataset failure is isolated from the rest of the product", async ({ page }) => {
@@ -108,7 +107,7 @@ test("Resources dataset failure is isolated from the rest of the product", async
 test("retry clears a rejected artifact and succeeds on a fresh request", async ({ page }) => {
   let failing = true;
   let requests = 0;
-  await page.route("**/data/generated/atlas-spine.json*", async (route) => {
+  await page.route("**/data/generated/atlas-territory-manifest.json*", async (route) => {
     requests += 1;
     if (failing) {
       await route.fulfill({ status: 503, body: "temporary atlas failure" });
@@ -118,11 +117,11 @@ test("retry clears a rejected artifact and succeeds on a fresh request", async (
   });
 
   await gotoApp(page, "/#/atlas");
-  await expect(page.getByRole("button", { name: "Try loading again" })).toBeVisible({ timeout: 15000 });
+  await expect(page.getByRole("button", { name: "Try again" })).toBeVisible({ timeout: 15000 });
   failing = false;
-  await page.getByRole("button", { name: "Try loading again" }).click();
-  await expect(page.getByRole("heading", { name: "Atlas", level: 1 })).toBeVisible({ timeout: 15000 });
-  expect(requests).toBeGreaterThanOrEqual(3);
+  await page.getByRole("button", { name: "Try again" }).click();
+  await expect(page.locator(".terr")).toBeVisible({ timeout: 15000 });
+  expect(requests).toBeGreaterThanOrEqual(2);
 });
 
 test("a persistent lazy route crash preserves navigation and isolates the failed workspace", async ({ page }) => {
@@ -130,7 +129,7 @@ test("a persistent lazy route crash preserves navigation and isolates the failed
   await page.addInitScript(() => {
     globalThis.sessionStorage.setItem("control-atlas:chunk-reload-at", String(Date.now()));
   });
-  await page.route("**/assets/AtlasMapPage-*.js", async (route) => {
+  await page.route("**/assets/AtlasTerritoryPage-*.js", async (route) => {
     await route.fulfill({ status: 503, body: "route chunk unavailable" });
   });
 

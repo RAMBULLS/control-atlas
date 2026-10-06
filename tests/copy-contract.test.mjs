@@ -12,6 +12,7 @@ import {
   formatRecordTypeLabel,
 } from "../src/shared/site-copy.mjs";
 import { provenanceDescriptionMap } from "../src/content/copy.mjs";
+import { findProhibitedCopy } from "../tools/lib/public-copy-scan.mjs";
 
 const read = (path) => readFileSync(path, "utf8");
 const PUBLIC_COPY_FILES = [
@@ -19,7 +20,7 @@ const PUBLIC_COPY_FILES = [
   "src/shared/disclaimer.mjs",
   "src/app/help-data.mjs",
   "src/app/learn-content.mjs",
-  "src/app/start-here-guide.mjs",
+  "src/app/start-here-compatibility.mjs",
   "src/app/template-engine.mjs",
   "src/index.html",
   "src/main.tsx",
@@ -27,9 +28,11 @@ const PUBLIC_COPY_FILES = [
   "src/ui/components/SearchOverlay.tsx",
   "src/ui/components/SiteFooter.tsx",
   "src/ui/App.tsx",
-  "src/ui/components/AtlasTree.tsx",
+  "src/ui/components/atlas-territory/JourneyPanels.tsx",
+  "src/ui/components/atlas-territory/ConnectionList.tsx",
+  "src/ui/lib/atlasJourneys.ts",
   "src/ui/pages/AboutPage.tsx",
-  "src/ui/pages/AtlasMapPage.tsx",
+  "src/ui/pages/AtlasTerritoryPage.tsx",
   "src/ui/pages/CatalogDetailPage.tsx",
   "src/ui/pages/CommonsDetailPage.tsx",
   "src/ui/pages/CommonsPage.tsx",
@@ -39,8 +42,19 @@ const PUBLIC_COPY_FILES = [
   "src/ui/pages/ObjectDetailPage.tsx",
   "src/ui/pages/PlaybooksPage.tsx",
   "src/ui/pages/SourcesPage.tsx",
-  "src/ui/pages/StartHerePage.tsx",
   "src/ui/pages/TemplatesPage.tsx",
+  // The trust layer writes the most process-flavoured copy in the product —
+  // freshness, limitations, lifecycle, coverage notes — and none of it was
+  // covered here while it was being written (#284).
+  "src/ui/components/PublicationOverview.tsx",
+  "src/ui/components/PublicationTrust.tsx",
+  "src/ui/lib/publicationIdentity.ts",
+  "src/ui/lib/publicationActions.ts",
+  "src/ui/lib/sourceRegister.ts",
+  "src/ui/lib/sourcePresentation.ts",
+  // Registry notes are authored here and rendered verbatim on publication
+  // pages, so they are product copy even though they live in a build script.
+  "scripts/migrate-source-truth-profiles.mjs",
   "src/ui/lib/buildRouteState.ts",
   "src/ui/lib/catalogProfiles.ts",
   "src/ui/lib/pagePrimitives.tsx",
@@ -55,15 +69,24 @@ test("site copy keeps every approved anchor exact", () => {
   assert.equal(SITE_COPY.product.searchPlaceholder, "Search by topic, title, or identifier.");
   assert.equal(SITE_COPY.product.definition, "Control Atlas is a public research tool for federal cybersecurity requirements, controls, techniques, and guidance.");
   assert.equal(SITE_COPY.product.boundary, "Use Control Atlas for research, not compliance or authorization decisions.");
+  // Home (#283), owner-approved copy.
+  assert.equal(
+    SITE_COPY.home.lead,
+    "Controls, STIGs, frameworks, and federal guidance\u2060—connected so you can trace where requirements come from, see how they relate, and know what to do next.",
+  );
+  assert.equal(SITE_COPY.home.searchPlaceholder, "Search by topic, title, or ID");
+  assert.equal(SITE_COPY.home.atlas.heading, "See how federal cybersecurity fits together.");
+  assert.equal(SITE_COPY.home.atlas.topicsLabel, "Atlas topics");
+  assert.equal(SITE_COPY.home.start, undefined);
   assert.deepEqual(
-    SITE_COPY.home.destinations.map(({ label, description }) => [label, description]),
+    SITE_COPY.home.tools.map(({ label, description, action }) => [label, description, action]),
     [
-      ["Start guided setup", "Answer two questions to find where to begin."],
-      ["Browse the Atlas", "Start with a topic."],
-      ["Search the Library", "Find a specific record."],
-      ["Browse Resources", "Find tools, training, and guidance."],
+      ["Compare", "Follow published crosswalks between frameworks and controls.", "Compare frameworks"],
+      ["Templates", "Working files for RMF, authorization, assessment, and DoD cyber work.", "Find a template"],
+      ["Resources", "Tools, training, references, and guidance worth keeping close.", "Browse resources"],
     ],
   );
+  assert.equal(SITE_COPY.home.library.lead, "Find controls, baselines, assessment procedures, STIGs, threats, and more.");
 });
 
 test("third-party federal-use provenance is described without changing its publisher", () => {
@@ -73,10 +96,48 @@ test("third-party federal-use provenance is described without changing its publi
   );
 });
 
-test("product-authored route copy excludes banned metaphor and generated guidance", () => {
-  const copy = PUBLIC_COPY_FILES.map((path) => read(path)).join("\n");
-  for (const pattern of PROHIBITED_PRIMARY_SURFACE_PATTERNS) {
-    assert.doesNotMatch(copy, pattern);
+test("product-authored route copy excludes banned metaphor, process narration and generated guidance", () => {
+  // Authored strings only. A raw file scan reported a parameter named
+  // `quarantine` and a `normalized` variable as public copy, and a check that
+  // cries wolf is a check people delete.
+  const violations = findProhibitedCopy(PUBLIC_COPY_FILES, PROHIBITED_PRIMARY_SURFACE_PATTERNS, read);
+  assert.deepEqual(
+    violations,
+    [],
+    `Prohibited public copy:\n${violations.map((v) => `  ${v.file}:${v.line}  ${v.pattern}\n    "${v.text}"`).join("\n")}`,
+  );
+});
+
+test("interface narration is caught, while ordinary verbs with a concrete object are not", () => {
+  // The rule is "describe the job, the subject and the payoff, not the
+  // interface". The phrase list must catch the phrasing, never the verb.
+  const matches = (text) => PROHIBITED_PRIMARY_SURFACE_PATTERNS.some((pattern) => pattern.test(text));
+  for (const narration of [
+    "Explore by what you’re working on.",
+    "Start with what you're working on",
+    "Start with what you came to find.",
+    "Grouped by what each document is, who issues it, or what you're trying to get done.",
+    "Ways to work",
+    "This page lets you compare frameworks.",
+    "This section shows recent changes.",
+    "Use this map to find a publication.",
+    "Records grouped by the question they answer.",
+    "Control Atlas accepted 31 new records from DISA.",
+  ]) {
+    assert.ok(matches(narration), `expected interface narration to be caught: "${narration}"`);
+  }
+  for (const concrete of [
+    "Explore the Atlas.",
+    "Browse controls and requirements.",
+    "Browse the Library",
+    "Start guided setup",
+    "Use Control Atlas for research, not compliance or authorization decisions.",
+    "See how federal cybersecurity fits together.",
+    "Follow published crosswalks between frameworks and controls.",
+    "Open the official source.",
+    "Grouped by Control Atlas for navigation. Not a publisher mapping.",
+  ]) {
+    assert.ok(!matches(concrete), `ordinary practitioner copy must stay legal: "${concrete}"`);
   }
 });
 
@@ -102,14 +163,16 @@ test("record page is contract-driven and contains no generic source or advice fa
   assert.doesNotMatch(recordPage, /"View official source"/);
   assert.match(read("src/ui/lib/officialSource.ts"), /View official source/);
   assert.match(recordPage, /See connections/);
-  assert.match(recordPage, /About This Record/);
+  assert.match(recordPage, /About (?:this|This) [rR]ecord/);
   assert.doesNotMatch(recordPage, />Official text</i);
   assert.doesNotMatch(recordPage, /What this is|What you need to do|How to satisfy it/i);
 });
 
 test("generation excludes structural scaffolding from public records", () => {
   const generator = read("scripts/build-framework-data.mjs");
-  assert.match(generator, /filter\(\(node\) => !NON_RECORD_NODE_TYPES\.has\(node\.node_type\)\)/);
+  // Structural types are never public records. Retired record types (issue 279)
+  // are excluded from search documents by the same filter.
+  assert.match(generator, /filter\(\(node\) => !NON_RECORD_NODE_TYPES\.has\(node\.node_type\) && !RETIRED_RECORD_TYPES\.has\(node\.node_type\)\)/);
 });
 
 test("Home has one centralized React and first-paint copy source", () => {

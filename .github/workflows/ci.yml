@@ -5,8 +5,8 @@ on:
     branches: [main]
   pull_request:
   schedule:
-    # Weekly full browser and accessibility sweep. Running it daily re-tested
-    # unchanged code six days out of seven and buried real failures in noise.
+    # Weekly deep browser and accessibility sweep. It runs only when main holds a
+    # commit the sweep has not tested (see sweep-gate), so quiet weeks cost nothing.
     - cron: '37 6 * * 0'
     - cron: '17 7 * * 3'
     - cron: '17 9 1 * *'
@@ -66,6 +66,9 @@ jobs:
       data_required: ${{ steps.scope.outputs.data_required }}
       security_required: ${{ steps.scope.outputs.security_required }}
       workflow_lint_required: ${{ steps.scope.outputs.workflow_lint_required }}
+      ui_review_required: ${{ steps.review.outputs.ui_review_required }}
+      ui_review_routes: ${{ steps.review.outputs.ui_review_routes }}
+      ui_review_reason: ${{ steps.review.outputs.ui_review_reason }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -99,10 +102,24 @@ jobs:
             --json ci-change-map.json >> "$GITHUB_OUTPUT"
           cat ci-change-map.json
 
+      - name: Select the public routes a person has to look at
+        id: review
+        env:
+          BASE_SHA: ${{ steps.base.outputs.base }}
+        shell: bash
+        run: |
+          node tools/ui-review-routes.mjs \
+            --base "$BASE_SHA" \
+            --head "$GITHUB_SHA" \
+            --json ci-ui-review.json >> "$GITHUB_OUTPUT"
+          cat ci-ui-review.json
+
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: ci-change-map
-          path: ci-change-map.json
+          path: |
+            ci-change-map.json
+            ci-ui-review.json
           if-no-files-found: error
           retention-days: 2
 
@@ -286,6 +303,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      # Pulse product events are derived from Git: merged pull requests on the
+      # first-parent history of the built commit and tags reachable from it.
+      # Commits and tags only (no trees or blobs), so the checkout stays small.
+      - name: Fetch commit history and release tags for Pulse
+        shell: bash
+        run: git fetch --no-recurse-submodules --filter=tree:0 --unshallow --tags origin "$GITHUB_SHA" '+refs/heads/main:refs/remotes/origin/main'
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: ${{ env.NODE_VERSION }}
@@ -460,6 +483,114 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+  ui-review:
+    name: UI review renders
+    needs: [changes, build]
+    if: ${{ needs.changes.outputs.ui_review_required == 'true' && needs.changes.outputs.build_required == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: site-build
+          path: dist/site
+
+      - name: Serve the candidate build
+        run: |
+          PORT=4317 CONTROL_ATLAS_PLAYWRIGHT_SERVER=1 node tools/serve-static-site.mjs &
+          for _ in $(seq 1 30); do
+            curl --silent --fail http://localhost:4317/release.json > /dev/null && break
+            sleep 1
+          done
+
+      - name: Capture candidate renders with the real design package
+        env:
+          ROUTES: ${{ needs.changes.outputs.ui_review_routes }}
+        run: |
+          node tools/capture-ui-review.mjs \
+            --base-url http://localhost:4317 \
+            --out artifacts/ui-review/candidate \
+            --label candidate \
+            --routes "$ROUTES"
+
+      # Base renders come from the deployed site, which is main built with the
+      # same design package. Building main again here would double the job for
+      # renders nobody would trust more.
+      - name: Capture base renders from the deployed site
+        continue-on-error: true
+        env:
+          ROUTES: ${{ needs.changes.outputs.ui_review_routes }}
+          BASE_URL: https://rambulls.github.io/control-atlas
+        run: |
+          node tools/capture-ui-review.mjs \
+            --base-url "$BASE_URL" \
+            --out artifacts/ui-review/base \
+            --label base \
+            --routes "$ROUTES"
+
+      # The concise set first. 150 raw screenshots is the audit trail, not a
+      # review: this is the handful of before/after pairs on one page.
+      - name: Build the concise review set
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          node tools/build-ui-review-summary.mjs \
+            --base artifacts/ui-review/base \
+            --candidate artifacts/ui-review/candidate \
+            --out artifacts/ui-review-summary \
+            --head "$HEAD_SHA"
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        id: summary
+        with:
+          name: ui-review-summary-${{ github.event.pull_request.number || github.run_id }}-${{ github.event.pull_request.head.sha || github.sha }}
+          path: artifacts/ui-review-summary
+          if-no-files-found: error
+          retention-days: 30
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        id: upload
+        with:
+          name: ui-review-${{ github.event.pull_request.number || github.run_id }}-${{ github.event.pull_request.head.sha || github.sha }}
+          path: artifacts/ui-review
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Say where the renders are and what they do not prove
+        env:
+          ARTIFACT_URL: ${{ steps.upload.outputs.artifact-url }}
+          SUMMARY_URL: ${{ steps.summary.outputs.artifact-url }}
+          ROUTES: ${{ needs.changes.outputs.ui_review_routes }}
+          REASON: ${{ needs.changes.outputs.ui_review_reason }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        shell: bash
+        run: |
+          {
+            echo "## UI review renders"
+            echo
+            echo "Head \`$HEAD_SHA\`"
+            echo
+            echo "**Start here: [ui-review-summary]($SUMMARY_URL)** — one page, the representative"
+            echo "before/after pairs at 1440 and 390, first viewport and full page."
+            echo
+            echo "[Full ui-review artifact]($ARTIFACT_URL) — every captured route, for a closer look."
+            echo
+            echo "Routes selected ($REASON): \`$ROUTES\`"
+            echo
+            echo "Each route is captured at 1440 desktop and 390 phone, first viewport and full page,"
+            echo "against the real design-token package. \`base/\` is the deployed main; \`candidate/\` is this head."
+            echo
+            echo "Review these renders alongside the browser, accessibility, and performance results."
+          } >> "$GITHUB_STEP_SUMMARY"
+
   workflow-lint:
     name: Workflow syntax and action pins
     needs: changes
@@ -486,7 +617,7 @@ jobs:
   required:
     name: Required CI
     if: ${{ always() && needs.changes.result != 'skipped' }}
-    needs: [changes, evidence, automation, content, fast, generated, windows-process, unit, build, contracts, browser, accessibility, visual, lighthouse, workflow-lint]
+    needs: [changes, evidence, automation, content, fast, generated, windows-process, unit, build, contracts, browser, accessibility, visual, lighthouse, workflow-lint, ui-review]
     runs-on: ubuntu-latest
     steps:
       - name: Require every selected gate
@@ -511,11 +642,39 @@ jobs:
           REQUIRED_RESULT: ${{ needs.required.result }}
         run: test "$REQUIRED_RESULT" = success
 
+  sweep-gate:
+    name: Is a deep check due
+    # Re-testing a commit that already went through the same job proves nothing.
+    # The weekly deep sweep and the monthly OSCAL check run only for a commit
+    # that has not been through them. Manual dispatch always runs.
+    if: ${{ github.event.schedule == '37 6 * * 0' || github.event.schedule == '17 9 1 * *' }}
+    runs-on: ubuntu-latest
+    outputs:
+      nightly_due: ${{ steps.nightly.outputs.due }}
+      oscal_due: ${{ steps.oscal.outputs.due }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - id: nightly
+        if: ${{ github.event.schedule == '37 6 * * 0' }}
+        env: { GH_TOKEN: '${{ github.token }}', REPO: '${{ github.repository }}', SHA: '${{ github.sha }}', RUN_ID: '${{ github.run_id }}', JOB_NAME: 'Nightly build and contracts' }
+        run: node tools/sweep-due.mjs
+      - id: oscal
+        if: ${{ github.event.schedule == '17 9 1 * *' }}
+        env: { GH_TOKEN: '${{ github.token }}', REPO: '${{ github.repository }}', SHA: '${{ github.sha }}', RUN_ID: '${{ github.run_id }}', JOB_NAME: 'Independent OSCAL validation' }
+        run: node tools/sweep-due.mjs
+
   nightly-build:
     name: Nightly build and contracts
+    needs: sweep-gate
     if: >-
-      ${{ github.event.schedule == '37 6 * * 0' ||
-          (github.event_name == 'workflow_dispatch' && inputs.task == 'nightly') }}
+      ${{ !cancelled() &&
+          ((github.event.schedule == '37 6 * * 0' && needs.sweep-gate.outputs.nightly_due == 'true') ||
+           (github.event_name == 'workflow_dispatch' && inputs.task == 'nightly')) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -542,6 +701,9 @@ jobs:
   nightly-browser:
     name: Nightly ${{ matrix.browser }} shard ${{ matrix.shard }}/2
     needs: nightly-build
+    # Explicit: a skipped sweep-gate upstream of nightly-build would otherwise skip this job
+    # silently, and a browser suite that did not run must never look like a pass.
+    if: ${{ !cancelled() && needs.nightly-build.result == 'success' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -568,7 +730,9 @@ jobs:
           PLAYWRIGHT_BLOB_OUTPUT_NAME: report-${{ matrix.browser }}-${{ matrix.shard }}.zip
           PLAYWRIGHT_FULLY_PARALLEL: '1'
           PLAYWRIGHT_WORKERS: '2'
-        run: npm run test:e2e:run -- --shard=${{ matrix.shard }}/2 --retries=0 --reporter=blob,github
+        # One retry. WebKit on a shared runner fails a different interaction spec each run (each passes when
+        # rerun), so a spec must fail twice to fail the sweep. Flaky specs are still listed in the report.
+        run: npm run test:e2e:run -- --shard=${{ matrix.shard }}/2 --retries=1 --reporter=blob,github
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         if: ${{ !cancelled() }}
         with:
@@ -580,6 +744,9 @@ jobs:
   nightly-accessibility:
     name: Nightly complete accessibility
     needs: nightly-build
+    # Explicit: a skipped sweep-gate upstream of nightly-build would otherwise skip this job
+    # silently, and a browser suite that did not run must never look like a pass.
+    if: ${{ !cancelled() && needs.nightly-build.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -609,94 +776,51 @@ jobs:
 
   sweep-alert:
     name: Scheduled job alert
-    # One notification when the sweep turns red, one when it recovers, silence
-    # in between. A solo maintainer cannot triage a nightly digest, and a
-    # permanently red job is indistinguishable from a newly broken one.
+    # One issue per sweep: opened when it turns red, brought up to date only if a
+    # different set of jobs is failing, closed when it recovers. A solo maintainer
+    # cannot triage a nightly digest, and a permanently red job is
+    # indistinguishable from a newly broken one. A job the sweep schedules that
+    # was skipped counts as red, so a sweep that did not run cannot look green.
     if: >-
       ${{ !cancelled() &&
-          (github.event.schedule == '37 6 * * 0' ||
+          ((github.event.schedule == '37 6 * * 0' && needs.sweep-gate.outputs.nightly_due == 'true') ||
            github.event.schedule == '17 7 * * 3' ||
            (github.event_name == 'workflow_dispatch'
-            && (inputs.task == 'nightly' || inputs.task == 'refresh'))) }}
-    needs: [nightly-build, nightly-browser, nightly-accessibility, refresh]
+            && (inputs.task == 'nightly' ||
+                (inputs.task == 'refresh' && github.ref == 'refs/heads/main')))) }}
+    needs: [sweep-gate, nightly-build, nightly-browser, nightly-accessibility, refresh]
     permissions:
       contents: read
       issues: write
     runs-on: ubuntu-latest
     steps:
-      - name: Open or resolve the sweep alert
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Open, update or resolve the sweep alert
+        # Which jobs must have succeeded is decided by the sweep, not by this
+        # step: a job the sweep schedules that was skipped counts as red.
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          BUILD_RESULT: ${{ needs.nightly-build.result }}
-          BROWSER_RESULT: ${{ needs.nightly-browser.result }}
-          ACCESSIBILITY_RESULT: ${{ needs.nightly-accessibility.result }}
-          REFRESH_RESULT: ${{ needs.refresh.result }}
-          ALERT_LABEL: ${{ (inputs.task == 'refresh' || github.event.schedule == '17 7 * * 3') && 'sweep-red-refresh' || 'sweep-red-nightly' }}
-        run: |
-          set -euo pipefail
-          failed=0
-          for result in "$BUILD_RESULT" "$BROWSER_RESULT" "$ACCESSIBILITY_RESULT" "$REFRESH_RESULT"; do
-            if [ "$result" != "success" ] && [ "$result" != "skipped" ]; then failed=1; fi
-          done
-          issues_enabled="$(gh api "repos/$REPO" --jq '.has_issues')"
-
-          if [ "$issues_enabled" != "true" ]; then
-            {
-              echo "### Scheduled sweep notification"
-              echo
-              echo "Repository Issues are disabled, so this workflow cannot open or resolve the persistent sweep alert."
-              echo
-              echo "Build: $BUILD_RESULT"
-              echo "Browser: $BROWSER_RESULT"
-              echo "Accessibility: $ACCESSIBILITY_RESULT"
-              echo "Data refresh: $REFRESH_RESULT"
-              echo
-              echo "Run: $RUN_URL"
-            } >> "$GITHUB_STEP_SUMMARY"
-            if [ "$failed" -eq 1 ]; then
-              echo "::warning::Scheduled sweep failed, but repository Issues are disabled. See the job summary and failed upstream job."
-            else
-              echo "Sweep green. Repository Issues are disabled, so no persistent alert state was changed."
-            fi
-            echo "::error::Persistent scheduled alerts require repository Issues."
-            exit 1
-          fi
-
-          open_issue="$(gh issue list --repo "$REPO" --label "$ALERT_LABEL" --state open             --limit 1 --json number --jq '.[0].number // empty')"
-
-          if [ "$failed" -eq 1 ] && [ -z "$open_issue" ]; then
-            gh label create "$ALERT_LABEL" --repo "$REPO" --color B60205               --description "Scheduled Control Atlas job is failing" --force >/dev/null
-            gh issue create --repo "$REPO" --label "$ALERT_LABEL"               --title "Scheduled Control Atlas job is failing: $ALERT_LABEL"               --body "A scheduled job failed. Jobs that did not run for this schedule show as skipped.
-
-          Build: $BUILD_RESULT
-          Browser: $BROWSER_RESULT
-          Accessibility: $ACCESSIBILITY_RESULT
-          Data refresh: $REFRESH_RESULT
-
-          Run: $RUN_URL
-
-          This issue closes automatically when the sweep next passes. It will
-          not be reopened or duplicated while it stays red."
-            echo "Sweep turned red; alert issue opened."
-          elif [ "$failed" -eq 1 ]; then
-            echo "Sweep still red and issue #$open_issue is already open. No new alert."
-          elif [ -n "$open_issue" ]; then
-            gh issue comment "$open_issue" --repo "$REPO"               --body "The scheduled jobs passed again. Run: $RUN_URL"
-            gh issue close "$open_issue" --repo "$REPO" --reason completed
-            echo "Sweep recovered; alert issue #$open_issue closed."
-          else
-            echo "Sweep green and no alert open. Nothing to do."
-          fi
+          SWEEP_KIND: ${{ (inputs.task == 'refresh' || github.event.schedule == '17 7 * * 3') && 'refresh' || 'nightly' }}
+          RESULT_BUILD: ${{ needs.nightly-build.result }}
+          RESULT_BROWSER: ${{ needs.nightly-browser.result }}
+          RESULT_ACCESSIBILITY: ${{ needs.nightly-accessibility.result }}
+          RESULT_REFRESH: ${{ needs.refresh.result }}
+        run: node tools/report-sweep-alert.mjs
 
   nightly-report:
     name: Nightly browser report
     if: >-
       ${{ !cancelled() &&
-          (github.event.schedule == '37 6 * * 0' ||
+          ((github.event.schedule == '37 6 * * 0' && needs.sweep-gate.outputs.nightly_due == 'true') ||
            (github.event_name == 'workflow_dispatch' && inputs.task == 'nightly')) }}
-    needs: [nightly-browser, nightly-accessibility]
+    needs: [sweep-gate, nightly-browser, nightly-accessibility]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -775,21 +899,35 @@ jobs:
         run: node tools/report-refresh-alerts.mjs
         env:
           GH_TOKEN: ${{ github.token }}
+      - name: Stop early when no source changed materially
+        # Dates and run timings are not changes. If nothing else moved and the
+        # freshness dates are still recent, the tree is restored and the rest of
+        # this job (browser install, full verification, pull request) is skipped.
+        id: outcome
+        run: node tools/classify-refresh-outcome.mjs
       - run: npm run resources:health
+        if: ${{ steps.outcome.outputs.publish == 'true' }}
       - run: npx playwright install --with-deps chromium
+        if: ${{ steps.outcome.outputs.publish == 'true' }}
       - name: Verify refreshed repository
+        if: ${{ steps.outcome.outputs.publish == 'true' }}
         env:
           PLAYWRIGHT_WORKERS: '2'
         run: npm run precommit:incremental
       - run: npm run sbom:generate
+        if: ${{ steps.outcome.outputs.publish == 'true' }}
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: ${{ steps.outcome.outputs.publish == 'true' }}
         with:
           name: source-refresh-sbom-cdx-json
           path: artifacts/sbom.cdx.json
       - name: Restore tracked SBOM before source admission
         run: git restore --worktree -- artifacts/sbom.cdx.json
+        if: ${{ steps.outcome.outputs.publish == 'true' }}
       - run: node scripts/report-refresh-diff.mjs refresh-pr-body.md
+        if: ${{ steps.outcome.outputs.publish == 'true' }}
       - name: Create repository-scoped publisher token after validation
+        if: ${{ steps.outcome.outputs.publish == 'true' }}
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         id: refresh-app
         with:
@@ -800,6 +938,7 @@ jobs:
           permission-contents: write
           permission-pull-requests: write
       - uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        if: ${{ steps.outcome.outputs.publish == 'true' }}
         with:
           token: ${{ steps.refresh-app.outputs.token }}
           add-paths: |
@@ -815,9 +954,11 @@ jobs:
 
   oscal:
     name: Independent OSCAL validation
+    needs: sweep-gate
     if: >-
-      ${{ github.event.schedule == '17 9 1 * *' ||
-          (github.event_name == 'workflow_dispatch' && inputs.task == 'oscal') }}
+      ${{ !cancelled() &&
+          ((github.event.schedule == '17 9 1 * *' && needs.sweep-gate.outputs.oscal_due == 'true') ||
+           (github.event_name == 'workflow_dispatch' && inputs.task == 'oscal')) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

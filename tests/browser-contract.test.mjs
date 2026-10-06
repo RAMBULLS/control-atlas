@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import test from 'node:test';
-import { HOME_CONTENT, HOME_DESTINATIONS } from '../src/shared/home-content.mjs';
+import { HOME_CONTENT, HOME_TOOLS } from '../src/shared/home-content.mjs';
 import { SITE_COPY } from '../src/shared/site-copy.mjs';
 
 const html = readFileSync('src/index.html', 'utf8');
@@ -87,10 +87,11 @@ test('shell exposes Templates directly and keeps reference pages in overflow', (
   assert.match(routeIdentity, /Sources/);
   assert.match(routeIdentity, /About/);
   const staticPrimaryNav = html.match(/<nav aria-label="Primary navigation"[\s\S]*?<\/nav>/)?.[0] || "";
-  assert.match(staticPrimaryNav, /#\/start[\s\S]*#\/atlas[\s\S]*#\/library[\s\S]*#\/compare[\s\S]*#\/resources[\s\S]*#\/build/);
+  assert.match(staticPrimaryNav, /#\/atlas[\s\S]*#\/library[\s\S]*#\/compare[\s\S]*#\/resources[\s\S]*#\/build/);
+  assert.doesNotMatch(staticPrimaryNav, /#\/start/);
   assert.match(navigation, /PRIMARY_SECTION_LABEL = "Explore"/);
   assert.match(navigation, /UTILITY_SECTION_LABEL = "Reference"/);
-  assert.match(navigation, /PRIMARY_NAV_ITEMS[\s\S]*view: "start-here"[\s\S]*view: "atlas-map"[\s\S]*view: "search"[\s\S]*view: "matrix"[\s\S]*view: "commons"[\s\S]*TEMPLATES_NAV_ITEM/);
+  assert.match(navigation, /PRIMARY_NAV_ITEMS[\s\S]*view: "atlas-map"[\s\S]*view: "search"[\s\S]*view: "matrix"[\s\S]*view: "commons"[\s\S]*TEMPLATES_NAV_ITEM/);
   assert.doesNotMatch(
     navigation.match(/PRIMARY_NAV_ITEMS:[\s\S]*?\n\];/)?.[0] || "",
     /view: "patterns"/,
@@ -242,7 +243,7 @@ test('secondary route pages are lazy loaded behind a suspense fallback', () => {
   // guarantee under test is code splitting, so assert the wrapper delegates to
   // lazy() rather than pinning how each call site is spelled.
   assert.match(reactApp, /function lazyRoute[\s\S]{0,200}?return lazy\(/);
-  assert.match(reactApp, /lazyRoute\(\(\) =>\s*import\("\.\/pages\/AtlasMapPage"\)/);
+  assert.match(reactApp, /lazyRoute\(\(\) =>\s*import\("\.\/pages\/AtlasTerritoryPage"\)/);
   assert.match(reactApp, /lazyRoute\(\(\) =>\s*import\("\.\/pages\/ComparePage"\)/);
   assert.match(reactApp, /lazyRoute\(\(\) =>\s*import\("\.\/pages\/ObjectDetailPage"\)/);
   assert.match(reactApp, /<Suspense/);
@@ -360,7 +361,7 @@ test('shared shell exposes visible search access and valid intent-card markup', 
   assert.equal(SITE_COPY.routes.documents.title, "Templates");
   assert.equal(
     SITE_COPY.routes.documents.purpose,
-    "Create starter cybersecurity documents from published sources.",
+    "Working files for RMF and DoD cybersecurity tasks. Pick the job, set up the file, download it.",
   );
   // Templates lands on the document browser, so the page no longer carries a
   // button whose only job was to reach the page the visitor is already on.
@@ -375,12 +376,11 @@ test('landing page states what the product is before asking for action', () => {
   const homePage = readFileSync('src/ui/pages/HomePage.tsx', 'utf8');
   const homeContent = readFileSync('src/shared/home-content.mjs', 'utf8');
   const viteConfig = readFileSync('vite.config.ts', 'utf8');
-  assert.match(homePage, /HOME_CONTENT\.definition/);
-  assert.match(homePage, /HOME_CONTENT\.breadth/);
+  assert.match(homePage, /HOME_CONTENT\.lead/);
   assert.match(homePage, /ATLAS_SCOPE_METRICS/);
   assert.match(homeContent, /SITE_COPY\.home/);
   assert.equal(HOME_CONTENT.headline, 'Make federal cybersecurity make sense.');
-  assert.equal(HOME_CONTENT.definition, 'Understand what applies, what it means, and what to do next.');
+  assert.match(HOME_CONTENT.lead, /trace where requirements come from, see how they relate, and know what to do next\.$/);
   assert.match(homePage, /aria-label="Search Control Atlas"/);
   assert.match(homePage, /data-template="B"/);
   assert.match(html, /CONTROL_ATLAS_HOME/);
@@ -393,14 +393,11 @@ test('landing page states what the product is before asking for action', () => {
     /<aside class="signal-cover__meta"><p aria-hidden="true" class="signal-cover__brand-signature">[\s\S]*?signal-cover__meta-title/,
   );
   assert.match(viteConfig, /\.replace\('<!-- CONTROL_ATLAS_HOME -->'/);
-  assert.equal(HOME_DESTINATIONS.length, 4);
-  assert.deepEqual(HOME_DESTINATIONS.map(({ label }) => label), [
-    'Start guided setup', 'Browse the Atlas', 'Search the Library', 'Browse Resources',
-  ]);
+  assert.deepEqual(HOME_TOOLS.map(({ label }) => label), ['Compare', 'Templates', 'Resources']);
   assert.doesNotMatch(homePage, /home-ecosystem-authorities/);
   assert.match(homePage, /HOME_LIBRARY_DISCOVERY\.map/);
-  assert.match(homePage, /home-library-kpis/);
-  assert.match(homePage, /Start with what you came to find\./);
+  assert.match(homePage, /home-library__list/);
+  assert.doesNotMatch(homePage, /Start with what you came to find/);
   assert.doesNotMatch(homePage, /data-record-count|tag-count-scale|More records, bigger tag/);
 });
 
@@ -438,7 +435,7 @@ test('skip links focus the workspace without turning the target into an applicat
 test('mounted record surfaces render official descriptions rather than synthetic translations', () => {
   const detailPage = readFileSync('src/ui/pages/ObjectDetailPage.tsx', 'utf8');
   const publishedText = readFileSync('src/ui/components/RecordPublishedText.tsx', 'utf8');
-  const surfaces = [detailPage, readFileSync('src/ui/pages/CatalogDetailPage.tsx', 'utf8'), readFileSync('src/ui/pages/AtlasMapPage.tsx', 'utf8'), readFileSync('src/ui/pages/ExplorePage.tsx', 'utf8'), readFileSync('src/ui/components/SearchOverlay.tsx', 'utf8')].join('\n');
+  const surfaces = [detailPage, readFileSync('src/ui/pages/CatalogDetailPage.tsx', 'utf8'), readFileSync('src/ui/pages/AtlasTerritoryPage.tsx', 'utf8'), readFileSync('src/ui/pages/ExplorePage.tsx', 'utf8'), readFileSync('src/ui/components/SearchOverlay.tsx', 'utf8')].join('\n');
   assert.match(detailPage, /recordPresentationContract/);
   assert.match(detailPage, /<RecordPublishedText/);
   assert.match(publishedText, /data-source-text="published"/);
@@ -469,9 +466,13 @@ test('Catalog controls stay anchored to the records section', () => {
   assert.match(catalogPage, /className="catalog-record-toolbar"/);
   assert.doesNotMatch(catalogPage, />Published group</);
   // The publication action label resolves through the shared official-source
-  // module so a raw download is never labelled "Open". The catalog page must
-  // route through it rather than hardcoding its own label.
-  assert.match(catalogPage, /OFFICIAL_PUBLICATION_VERBS/);
+  // module so a raw download is never labelled "Open". The publication page's
+  // next-action contract (#284) must route through it rather than hardcoding
+  // its own label, and the page must render that contract.
+  const overview = readFileSync('src/ui/components/PublicationOverview.tsx', 'utf8');
+  assert.match(readFileSync('src/ui/lib/publicationActions.ts', 'utf8'), /OFFICIAL_PUBLICATION_VERBS/);
+  assert.match(overview, /publicationNextActions/);
+  assert.match(catalogPage, /<PublicationOverview/);
   assert.match(
     readFileSync('src/ui/lib/officialSource.ts', 'utf8'),
     /Open official publication/,
@@ -479,7 +480,7 @@ test('Catalog controls stay anchored to the records section', () => {
   assert.match(catalogPage, /Search records/);
   assert.match(catalogPage, /Search \$\{tierLabelPlural/);
   assert.match(catalogPage, /data-published-tier/);
-  assert.match(catalogPage, /className="catalog-source-link"/);
+  assert.match(overview, /className="catalog-source-link"/);
   assert.match(surfaces, /\.catalog-record-toolbar\s*\{/);
   assert.match(surfaces, /\.catalog-source-link\s*\{[^}]*justify-self:\s*start;/s);
 });
@@ -524,7 +525,7 @@ test('result-affecting controls have one visible workbench owner', () => {
   assert.match(compare, /data-continuous-results/);
   assert.match(compare, /id="compare-results"/);
   assert.match(compare, /<th scope="col">From<\/th>/);
-  assert.match(compare, /<th scope="col">Maps to<\/th>/);
+  assert.match(compare, /<th scope="col">\{requestedPair\?\.scope === "implementation" \? "Related component or outcome" : "Maps to"\}<\/th>/);
   assert.match(record, /buildRecordConnectionGroups/);
   assert.doesNotMatch(record, /RelationshipExplorer|SelectField/);
 });
@@ -553,21 +554,18 @@ test('Templates stays locally coherent while Resources owns resource discovery',
 
 test('route interactions keep canonical context and synchronize visible state', () => {
   const searchOverlay = readFileSync('src/ui/components/SearchOverlay.tsx', 'utf8');
-  const atlasMap = readFileSync('src/ui/pages/AtlasMapPage.tsx', 'utf8');
+  const atlasPage = readFileSync('src/ui/pages/AtlasTerritoryPage.tsx', 'utf8');
+  const connectionList = readFileSync('src/ui/components/atlas-territory/ConnectionList.tsx', 'utf8');
   const explore = readFileSync('src/ui/pages/ExplorePage.tsx', 'utf8');
   assert.match(searchOverlay, /onOpenNode\(nodeId\)/);
-  assert.match(atlasMap, /loadAtlasNeighborhood\(nodeId\)/);
-  assert.match(atlasMap, /buildAtlasContextGroups\(record, filters\)/);
-  assert.match(atlasMap, /buildAtlasContextRows\(record, filters\)/);
-  // The Path/Map/List tabs were folded into one record workspace: Connections
-  // is always rendered and relationshipView now decides which supporting panel
-  // is open, so every existing deep link still resolves.
-  assert.match(atlasMap, /relationshipView: hierarchyOpen \? "map" : "path"/);
-  assert.match(atlasMap, /relationshipView: listOpen \? "map" : "list"/);
-  assert.doesNotMatch(atlasMap, /role="tablist"/);
-  assert.match(atlasMap, /buildStructuralChildren\(record\)/);
-  assert.match(atlasMap, /relationshipGroup/);
-  assert.doesNotMatch(atlasMap, /RelationshipExplorer/);
+  // A record's full connection list is native to the territory sheet: the same neighborhood shard
+  // and relationship groups, opened by relationshipView=list so every saved list link still resolves.
+  assert.match(connectionList, /loadAtlasNeighborhood\(nodeId\)/);
+  assert.match(connectionList, /buildAtlasContextGroups\(record, filters\)/);
+  assert.match(connectionList, /buildAtlasContextRows\(record, filters\)/);
+  assert.match(atlasPage, /state\.relationshipView === "list"/);
+  assert.match(atlasPage, /Full connection list/);
+  assert.doesNotMatch(atlasPage, /RelationshipExplorer/);
   assert.match(explore, /<WorkspaceTemplate/);
   assert.match(explore, /rows\.slice\(0, visibleCount\)/);
   assert.match(explore, /recordIdentityPresentationFor/);
@@ -594,9 +592,9 @@ test('template options use collapsed progressive disclosure and associated hints
   const templatesPage = readFileSync('src/ui/pages/TemplatesPage.tsx', 'utf8');
   assert.doesNotMatch(templatesPage, /defaultValue="options"/);
   assert.match(templatesPage, /CURRENT DOCUMENT \/ \$\{selectedTemplate\.display_name\}/);
-  assert.match(templatesPage, /Configure inputs/);
+  assert.match(templatesPage, /Set up your file/);
   assert.match(templatesPage, /Selected context/);
-  assert.match(templatesPage, />Preview<\/h2>/);
+  assert.match(templatesPage, />Review and download<\/h2>/);
   assert.match(templatesPage, /Download \$\{selectedTemplate\.display_name\}/);
   assert.match(templatesPage, /documentSelectionMountedRef/);
   assert.doesNotMatch(templatesPage, /<Panel[^>]*>/);
@@ -606,7 +604,9 @@ test('template options use collapsed progressive disclosure and associated hints
   // "Markdown, CSV, or JSON" string.
   assert.match(templatesPage, /FORMAT_HELP\[activeFormat\]/);
   assert.doesNotMatch(templatesPage, /Markdown, CSV, or JSON/);
-  assert.match(templatesPage, /return "Template"/);
+  // Interoperability wording is one of three labels, never "Control Atlas companion".
+  assert.doesNotMatch(templatesPage, /control atlas companion/i);
+  assert.match(templatesPage, /field_aligned/);
   assert.doesNotMatch(templatesPage, /Search companions by name or purpose/);
 });
 
@@ -622,7 +622,8 @@ test('Guides remain source-bounded procedures while product help stays in About'
   const glossary = readFileSync('src/ui/components/GlossaryDrawer.tsx', 'utf8');
   const about = readFileSync('src/ui/pages/AboutPage.tsx', 'utf8');
   assert.doesNotMatch(glossary, /learnArticles\.map|<Dialog\.Title>Help|>Help</);
-  assert.match(about, /PRODUCT_DEFINITION/);
-  assert.match(about, /PRODUCT_DECISION_BOUNDARY/);
+  assert.match(about, /Control Atlas is a free research tool/);
+  assert.match(about, /Control Atlas is not a government system/);
+  assert.match(about, /It does not decide what/);
   assert.doesNotMatch(playbooksPage, /Recommended for new users|No public playbooks are available yet/);
 });

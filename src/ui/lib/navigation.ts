@@ -4,7 +4,6 @@ import {
   IconGitCompare,
   IconInfoCircle,
   IconLibrary,
-  IconRocket,
   IconTopologyStar3,
   IconUsersGroup,
   IconSourceCode,
@@ -45,13 +44,6 @@ export const TEMPLATES_NAV_ITEM: NavItem = {
 };
 
 export const PRIMARY_NAV_ITEMS: NavItem[] = [
-  {
-    label: routeIdentityFor("start-here").label,
-    view: "start-here",
-    path: routeIdentityFor("start-here").path,
-    icon: IconRocket,
-    section: "discovery",
-  },
   {
     label: routeIdentityFor("atlas-map").label,
     view: "atlas-map",

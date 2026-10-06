@@ -25,6 +25,7 @@ import {
 } from "../lib/areaVisualLanguage";
 import { buildCatalogCoverageList, catalogCoverageForId, isLowCatalogCoverage } from "../lib/catalogCoverage";
 import { catalogDisplayNameFor } from "../lib/catalogProfiles";
+import { publicationTrustFor } from "../lib/publicationIdentity";
 import { LIBRARY_KINDS, libraryKindForRawType, libraryKindLabel, rawTypesForKind } from "../lib/informationArchitecture";
 import { selectLibraryResultTags } from "../lib/libraryResultTags";
 import { queryDiscoveryIndex } from "../../shared/discovery-index.mjs";
@@ -239,6 +240,28 @@ export function ExplorePage(props: {
     }) || null;
   }, [baseLibraryFilters, bundle.runtime, searchStarted, state.query, state.tags]);
 
+  /**
+   * Recovery for a search that found nothing. Every option is counted against the
+   * real index, so a suggestion is offered only when it would return records.
+   */
+  const emptyRecovery = useMemo(() => {
+    if (!searchStarted || documents.length > 0) return null;
+    const count = (query: string, filters: Record<string, unknown>) =>
+      Number((bundle.runtime as any).getLibraryTagContext?.(query, filters)?.result_count || 0);
+    const filters = { ...baseLibraryFilters, taxonomy_tag_groups: taxonomyTagGroups(state.tags) };
+    const words = state.query.trim().split(/\s+/).filter(Boolean);
+    const withoutWord = words.length < 2 ? [] : words
+      .map((word, index) => {
+        const query = words.filter((_, at) => at !== index).join(" ");
+        return { word, query, count: count(query, filters) };
+      })
+      .filter((option) => option.count > 0)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 3);
+    const withoutFilters = hasFilters && state.query.trim() ? count(state.query, {}) : 0;
+    return { withoutWord, withoutFilters };
+  }, [baseLibraryFilters, bundle.runtime, documents.length, hasFilters, searchStarted, state.query, state.tags]);
+
   const rows = useMemo(() => {
     const prepared = documents.map((document: any) => {
       const relationshipCount = Number(document.published_connection_count || 0);
@@ -298,14 +321,18 @@ export function ExplorePage(props: {
 
   const publishers = libraryFacets.publishers || [];
   const topCatalogs = useMemo(() => runtimeCatalogs
-    .map((catalog: any) => ({
-      ...catalog,
-      publisher: recordPublisherName(
-        catalog.display_group,
-        catalog.source_id ? bundle.runtime.getSource(catalog.source_id)?.owner : "",
-        catalog.display_group,
-      ),
-    }))
+    .map((catalog: any) => {
+      // The governed identity every surface shares (issue 284): practitioner name,
+      // exact official title, and the register's publisher.
+      const source = catalog.source_id ? bundle.runtime.getSource(catalog.source_id) : null;
+      const trust = source ? publicationTrustFor({ source, catalogId: catalog.id }) : null;
+      return {
+        ...catalog,
+        name: trust?.practitionerName || catalog.name,
+        officialTitle: trust?.showsOfficialTitle ? trust.officialTitle : "",
+        publisher: trust?.publisher || "",
+      };
+    })
     .filter((catalog: any) => catalog.leaf_record_count > 0)
     .sort((left: any, right: any) => right.leaf_record_count - left.leaf_record_count || left.name.localeCompare(right.name))
     .slice(0, 6), [bundle.runtime, runtimeCatalogs]);
@@ -661,9 +688,10 @@ export function ExplorePage(props: {
             <h3 id="top-publications-heading">Top publications</h3>
             <div className="workspace-browse-grid">
               {topCatalogs.map((catalog: any) => (
-                <button className="workspace-browse-card" key={catalog.id} onClick={() => onNavigate("catalog-detail", { catalog: catalog.id })} type="button">
+                <button className="workspace-browse-card" data-publication-card={catalog.id} key={catalog.id} onClick={() => onNavigate("catalog-detail", { catalog: catalog.id })} type="button">
                   <strong>{catalog.name}</strong>
-                  <span>{catalog.publisher}</span>
+                  {catalog.officialTitle ? <small className="workspace-browse-card__official">{catalog.officialTitle}</small> : null}
+                  {catalog.publisher ? <span>{catalog.publisher}</span> : null}
                   <small>{catalog.leaf_record_count.toLocaleString()} records</small>
                 </button>
               ))}
@@ -821,7 +849,21 @@ export function ExplorePage(props: {
                 ) : (
                   <>
                     <h2>{hasFilters ? "Nothing matches these filters." : "No records found."}</h2>
-                    <p>{hasFilters ? "Clear one and try again." : "Try another identifier or keyword."}</p>
+                    <p>{hasFilters ? "Clear one and try again." : "Every word you type must appear in a record. Try another identifier or keyword."}</p>
+                    {emptyRecovery && (emptyRecovery.withoutWord.length > 0 || emptyRecovery.withoutFilters > 0) ? (
+                      <ul className="empty-state__options">
+                        {emptyRecovery.withoutWord.map((option) => (
+                          <li key={option.query}>
+                            <button className="clear-filter-link" onClick={() => onNavigate("search", { query: option.query })} type="button">
+                              Try without “{option.word}” · {option.count.toLocaleString()} {option.count === 1 ? "result" : "results"}
+                            </button>
+                          </li>
+                        ))}
+                        {emptyRecovery.withoutFilters > 0 ? (
+                          <li>Without the filters, this search has {emptyRecovery.withoutFilters.toLocaleString()} {emptyRecovery.withoutFilters === 1 ? "result" : "results"}.</li>
+                        ) : null}
+                      </ul>
+                    ) : null}
                   </>
                 )}
                 <Button onClick={() => onNavigate("search", { area: "", connectedOnly: "", filter: "", kind: "", publisher: "", query: "", sort: "relevance", tags: [], viewMode: "list" })} type="button" variant="primary">{hasFilters ? "Clear filters" : "Clear search"}</Button>

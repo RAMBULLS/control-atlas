@@ -8,40 +8,9 @@ import {
   loadIndexedLibrarySearchColumns,
   parseJsonResponseOffThread,
   runtimeArtifactPlan,
-  selectAtlasStructuralPath,
 } from "../../src/ui/lib/runtimeLoader";
 import { requiresFullGraph } from "../../src/ui/lib/navigationState";
 import { normalizeViewState } from "../../src/ui/lib/viewState";
-
-test("Atlas selects the publisher path identified by branch context", () => {
-  const tacticA = { id: "attack:tactic-a", node_type: "tactic", label: "Tactic A", metadata: {} };
-  const tacticB = { id: "attack:tactic-b", node_type: "tactic", label: "Tactic B", metadata: {} };
-  const catalog = { id: "attack:catalog", node_type: "catalog", label: "ATT&CK", metadata: {} };
-  const technique = { id: "attack:T1000", node_type: "attack_technique", label: "Technique", metadata: {} };
-  const record = {
-    center_node: { ...technique, display_path: [catalog, tacticA] },
-    nodes: [catalog, tacticA, tacticB, technique],
-    edges: [],
-    structural_path: [catalog, tacticA, technique],
-    structural_paths: [
-      [catalog, tacticA, technique],
-      [catalog, tacticB, technique],
-    ],
-    published_connection_count: 0,
-    candidate_connection_count: 0,
-  };
-
-  const selected = selectAtlasStructuralPath(record, "attack:tactic-b");
-  assert.deepEqual(selected.structural_path.map((node) => node.id), [
-    "attack:catalog",
-    "attack:tactic-b",
-    "attack:T1000",
-  ]);
-  assert.deepEqual(selected.center_node.display_path?.map((node) => node.id), [
-    "attack:catalog",
-    "attack:tactic-b",
-  ]);
-});
 
 test("compressed artifacts keep cache-busting parameters after the gzip extension", () => {
   assert.equal(
@@ -156,51 +125,30 @@ test("route bootstrap loads only the smallest faithful artifact scope", () => {
 
   const atlasLanding = runtimeArtifactPlan(normalizeViewState("atlas-map"));
   assert.equal(atlasLanding.recordNodeId, "");
-  assert.equal(atlasLanding.atlasSpine, true);
+  assert.equal(atlasLanding.atlasSpine, false, "the territory sheet draws from its own small index, not the hierarchy spine");
   assert.equal(
     atlasLanding.librarySearch,
-    true,
-    "the visible Atlas search needs the complete compact search corpus",
+    false,
+    "the territory sheet loads record search only when the reader reaches for the search box",
   );
   assert.equal(atlasLanding.fullGraph, false);
 
-  const atlasPublicationChoice = runtimeArtifactPlan(
-    normalizeViewState("atlas-map", {
-      atlasAxis: "landscape",
-      atlasLimb: "atlas:LIMB-COMPLIANCE",
-    }),
-  );
-  assert.equal(
-    atlasPublicationChoice.fullGraph,
-    false,
-    "opening an area keeps its publication list responsive from the catalog bootstrap",
-  );
-
+  // Every Atlas state is the territory sheet now: publications, journeys and records read its own small
+  // index or one neighborhood shard, never the monolithic graph.
   for (const atlasState of [
-    normalizeViewState("atlas-map", { atlasAxis: "framework" }),
+    normalizeViewState("atlas-map", { atlasLimb: "atlas:LIMB-COMPLIANCE" }),
     normalizeViewState("atlas-map", { atlasFramework: "nist-800-53" }),
-    normalizeViewState("atlas-map", { atlasFamily: "nist-800-53:FAMILY-AC" }),
-    normalizeViewState("atlas-map", {
-      atlasFramework: "disa-stig",
-      atlasBenchmark: "disa-stig:BENCHMARK-ORACLE-LINUX-9-STIG",
-    }),
+    normalizeViewState("atlas-map", { atlasJourney: "rmf" }),
+    normalizeViewState("atlas-map", { node: "nist-800-53:AC-2", relationshipView: "list" }),
   ]) {
     assert.equal(runtimeArtifactPlan(atlasState).fullGraph, false);
     assert.equal(requiresFullGraph(atlasState), false);
+    assert.equal(runtimeArtifactPlan(atlasState).atlasSpine, false);
   }
   const selectedFramework = runtimeArtifactPlan(
     normalizeViewState("atlas-map", { atlasFramework: "nist-800-53" }),
   );
-  assert.equal(selectedFramework.catalogId, "nist-800-53");
-  assert.equal(selectedFramework.fullGraph, false);
-
-  for (const atlasState of [
-    normalizeViewState("atlas-map", { atlasBaseline: "nist-800-53b:MODERATE" }),
-    normalizeViewState("atlas-map", { atlasRmfStep: "nist-800-37:RMF-SELECT" }),
-  ]) {
-    assert.equal(runtimeArtifactPlan(atlasState).fullGraph, true);
-    assert.equal(requiresFullGraph(atlasState), true);
-  }
+  assert.equal(selectedFramework.catalogId, "", "the territory sheet reads publication facts from its own index");
 });
 
 test("expensive graph scope begins only after an explicit graph-dependent action", () => {
@@ -212,7 +160,7 @@ test("expensive graph scope begins only after an explicit graph-dependent action
   assert.equal(runtimeArtifactPlan(configuredCompare).fullGraph, false);
   assert.equal(
     runtimeArtifactPlan({ ...configuredCompare, compareRun: "true" }).fullGraph,
-    true,
+    false,
   );
   const configuredItemCompare = normalizeViewState("matrix", {
     crosswalk: "relationships",
@@ -222,10 +170,10 @@ test("expensive graph scope begins only after an explicit graph-dependent action
   });
   assert.equal(
     runtimeArtifactPlan(configuredItemCompare).fullGraph,
-    true,
-    "specific-item target choices require the published relationship graph",
+    false,
+    "specific-item target choices use their small catalog index",
   );
-  assert.equal(requiresFullGraph(configuredItemCompare), true);
+  assert.equal(requiresFullGraph(configuredItemCompare), false);
 
   const build = normalizeViewState("templates");
   // Templates lands on the document browser rather than an interstitial, so

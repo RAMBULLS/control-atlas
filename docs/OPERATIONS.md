@@ -2,7 +2,7 @@
 
 - **Owner:** Nexus and Pixel
 - **Status:** Canonical
-- **Last reviewed:** 2026-09-10
+- **Last reviewed:** 2026-09-21
 - **Supersession:** Update this contract and the corresponding package scripts or workflows in the same approved change.
 
 ## Unattended weekly source refresh
@@ -39,8 +39,8 @@ bytes and original provenance are retained. Separate `refresh_status`,
 `retained_count` reports these submissions. Successful retrieval replaces the
 retained version and clears those fields automatically. Retention does not admit
 the submitter's external host into the official-source fetch allowlist.
-An accepted OLIR source transaction with retained submissions keeps its source
-issue open. Only a subsequent accepted run with no retained submissions closes it.
+How retained submissions affect the source issue is described under Refresh
+decisions and health below.
 
 NIST OLIR registers developer-hosted mappings; an official catalog entry does
 not make its assertions NIST-authored or NIST-endorsed. The
@@ -110,6 +110,174 @@ and pull-request write permissions. The refresh job uses its separate Actions
 token for source requests and issue alerts; it obtains the App token only after
 validation. Required branch protections remain binding.
 
+## Refresh decisions and health
+
+A large count change is not proof of corruption, and a small one is not proof of
+health. A candidate outside the accepted count band is accepted only with
+evidence it did not write about itself:
+
+- the publisher revision proves itself (new version, new downloaded bytes,
+  complete identity reconciliation); or
+- the publisher's own inventory reconciles to the candidate exactly (for DISA,
+  every listed publication ingested, none failed or missing) and no more than
+  the policy's removal ceiling (default 5 percent) of previously accepted
+  identities disappeared.
+
+Anything else is quarantined, and the issue states how many identities were
+added, removed and changed. Mass removal is never accepted on a count match.
+
+Reviewed commits can change data without going through refresh (for example a
+fix that ingests more publications). The committed data is what production
+serves, so refresh adopts it as the reference, still subject to the record floor
+and independent-inventory rules, and records the adoption in
+`data/source-change-log.json`. A stale baseline can no longer fail every later
+refresh.
+
+Every accepted change is written to `data/source-change-log.json` by the run
+that accepted it: catalog, previous and current identity (count, checksum,
+publisher version when the publisher exposes one), added, removed and changed
+counts, lifecycle transitions and accepted time. A field is `null` when it was
+not measured. No publisher version is ever invented. The admission gate
+recomputes the log and rejects a pull request whose log does not match.
+
+`changed_count` counts records whose own content changed. Provenance stamps that
+a refresh copies onto every record (`source.snapshot_date`, `source.version`,
+`source.checksum`) are not content: a record that differs only there is counted in
+`stamp_only_count`, and entries measured this way carry
+`diff_basis: content_excluding_provenance_stamps`. Entries written before this
+rule have no `diff_basis`; their `changed_count` includes re-stamped records and
+is not shown to readers.
+
+Published relationship sets that refresh rewrites (`RELATIONSHIP_SET_ENDPOINTS` in
+`scripts/lib/catalog-refresh-profiles.mjs`) are recorded under `relationship_sets`
+in the same log, keyed by file. A set's identity is its directed relationships
+(source, relationship type, target); a re-fetch that only moves dates or checksums
+records nothing. Each entry keeps the previous and current identity and version,
+added and removed counts, and direction-preserving samples. A quarantined unit is
+rolled back and never recorded.
+
+## Pulse
+
+Pulse is an output of accepted lifecycle data and Git history, not a crawler:
+accepted refresh or merged release, then governed diff, then Pulse artifact, then
+site build. `build:site` runs `scripts/build-pulse-artifact.mjs`, which writes
+`data/generated/pulse.json` (published at the same path).
+
+Source events come only from `data/source-change-log.json`, the accepted baseline
+chain in `data/source-baselines.json`, the served relationship sets and
+`data/source-registry.json`. A source event is shown only when its decision is an
+accepted one and its snapshot is in the accepted baseline chain. Quarantined
+sources are listed with `shown_as_event: false`.
+
+Product events come only from the Git history of the commit being built
+(`scripts/lib/product-history.mjs`):
+
+- A feature exists only as a pull request that GitHub merged onto the
+  first-parent history of the build commit: a commit on that history, committed by
+  `noreply@github.com`, whose subject ends with `(#<number>)`. Its merge SHA and
+  UTC timestamp are that commit's. A pull request that is not merged there,
+  including one still in review, produces no event.
+- A release exists only as a tag whose commit is reachable from the build commit.
+  Its timestamp is the tag date (or the tagged commit's date for a lightweight
+  tag).
+- Without full history (a shallow checkout) no product event is shown, and the
+  artifact says why. The CI build job fetches commits and tags only
+  (`--filter=tree:0 --unshallow --tags`) before building.
+
+`data/pulse-presentation.json` is presentation metadata, not a release feed: for a
+pull request number or a tag it holds a title, a summary and a destination. It
+cannot hold a date, commit, issue or any other shipping fact; validation rejects
+them. An entry whose pull request or tag is not in the build history is listed as
+withheld with its reason.
+
+The artifact records the sha256 of every input file, the dataset identity and
+the build head, lists every event with its evidence (change-log pointer, or the
+merge commit and subject, or the tag, tag object and commit), and lists every
+accepted log entry or presentation entry it did not show with the reason
+(`no_verified_content_change`, `not_in_accepted_baseline_chain`,
+`decision_not_accepted`, `does_not_match_served_set`,
+`pull_request_not_merged_on_build_history`, `tag_not_found`,
+`tag_not_reachable_from_build_history`, `git_history_unavailable`). Events are
+ordered by their UTC timestamp. The same inputs give the same bytes, and an event
+id is derived from its identity (catalog and both snapshot hashes, relationship
+set and both identities, pull request number, or tag), so it is stable across
+rebuilds and duplicates collapse. No news source, forum or feed is read.
+
+Retrieval failures are separated by whether asking again could help. Timeouts,
+dropped connections, HTTP 408, 425, 429 and 5xx are retried: at most three
+requests per URL, waiting 1 and 2 seconds (a `Retry-After` is honored up to 15
+seconds), each with a 60 second timeout. A whole source that failed that way is
+attempted again after 15 seconds, up to its declared attempts. HTTP 404 and 403,
+validation rejections and parse errors are the publisher's current answer and are
+not retried. The DISA archive keeps its own per-range retry, so the transport
+makes one request per attempt there. No mirror is ever contacted. When attempts run out, the source keeps
+its accepted files and is quarantined honestly.
+
+OLIR submissions whose mapping can no longer be downloaded keep their exact
+accepted mapping and are a recorded limitation, not an incident, when NIST
+answered and publishes none (`retention.cause` is `publisher_unavailable`). A
+failure that looks temporary is also quiet, until it repeats for three
+consecutive refreshes; then the source is quarantined and one issue opens. This
+replaces the earlier rule that any retained submission kept the source issue open
+forever. Retention with no recorded cause still keeps it open.
+
+Three alert states exist on purpose and must not be merged into one health state:
+
+- **Source alert** (`control-atlas-refresh:<source>` issues, for example OLIR or DISA):
+  closes when that one source is accepted, or safely retained under its partial
+  policy with the limitation recorded.
+- **Aggregate refresh alert** (`sweep-red-refresh`): closes only when the whole
+  refresh job, including repository verification, succeeds. A source can recover
+  while this alert stays open.
+- **Nightly product alert** (`sweep-red-nightly`): closes only when the Sunday
+  sweep's build, browser and accessibility jobs pass.
+
+Tests must not pin numbers that a publisher changes. A valid refresh once broke
+two tests that hard-coded the CCI-000366 mapping count; read or derive such
+counts from the record under test.
+
+One issue exists per failing sweep. `tools/report-sweep-alert.mjs` names only the
+jobs that failed, updates the issue when the failing set changes, and closes it
+when the sweep next passes. A job the sweep schedules that was skipped counts as
+red, so a sweep that did not run cannot look green. Jobs are never marked
+`continue-on-error`.
+
+## Right-sized automation
+
+Do the least work that keeps the trust: stop as soon as the answer is known.
+
+| Trigger | Check or fetch | Validation | Rebuild scope | Test scope | Deploy |
+|---|---|---|---|---|---|
+| Wednesday refresh, nothing changed | Conditional GET per source (304 when unchanged) | Baseline band, identity and inventory rules | None. `tools/classify-refresh-outcome.mjs` restores the tree | None | No PR, no deploy |
+| Wednesday refresh, source changed | Same fetch | Per-source transaction, evidence and admission gate | Full generated-data build (the graph is one dependency unit) | Repository verification, then independent PR CI and Security | Automerge, then verified deploy |
+| Wednesday refresh, quiet for 21 days | Same fetch | Same | Bookkeeping dates only | Same | PR and deploy, so "last checked" stays inside the 45-day window |
+| Pull request | Not applicable | Change map picks affected gates | Affected build | Affected unit, contract and browser subset | No |
+| Merge to `main` | Not applicable | Full required CI, Security | Full site build | Full gates, Lighthouse budgets | Verified deploy, production smoke and Lighthouse |
+| Sunday sweep, only if `main` holds a commit it has not tested | Not applicable | Full generated-data contracts | Full site build | All browsers, complete accessibility | No |
+| Monthly OSCAL, only if `main` holds a commit it has not tested | Not applicable | Independent OSCAL cross-check | None | OSCAL validation | No |
+
+Measured cost (2026-09): refresh data phase about 5 minutes (hydration 97
+seconds and resource enrichment 90 seconds dominate); main CI about 4.5 minutes
+wall; deploy about 4 minutes; the Sunday sweep about 60 runner minutes (build 5
+minutes, six browser shards 6 to 9 minutes each, accessibility 2.3 minutes).
+
+Every scheduled job exists for one reason. Anything that re-tests our own
+unchanged code is gated by `tools/sweep-due.mjs`: the Sunday sweep and the
+monthly OSCAL check run only when the commit on `main` has not already been
+through that same job, in any earlier scheduled or manual run. A failed run
+counts as tested (the same code cannot turn green; a fix is a new commit and is
+due). If the gate cannot decide it runs the check. Manual dispatch always runs.
+The Wednesday refresh and the Monday security scan are never gated: they watch
+publishers and advisories, which change without any commit.
+
+The Sunday sweep is the deliberate deep confidence run. It exists because pull
+request CI runs one browser engine and a subset of specs, so Firefox, WebKit and
+the full spec list are only exercised there. It does not re-prove source
+integrity, which the Wednesday refresh and its admission gate already cover, and
+it runs weekly rather than nightly because unchanged code does not need daily
+proof. Refresh cadence is one weekly job because unchanged sources cost a 304,
+not a download; per-source cadence would add scheduling without measured savings.
+
 ## Local gates
 
 ### Production performance measurement
@@ -126,6 +294,36 @@ They address observed cold-run/garbage-collection variance, not application
 regressions. A failed median still fails deployment verification and must be
 investigated from the saved reports. Express's transitive `qs` override retains
 the compatible security-fixed version until Express updates its own dependency.
+
+### Temporary dependency security fixes
+
+Owner: repository maintainer (RAMBULLS). Review by 2026-11-04 and whenever either
+upstream package or parent dependency changes.
+
+`basic-ftp` is pinned to the official 6.2.1 security release across both `get-uri`
+families used by Lighthouse and browser-download proxy tooling. This deliberately
+overrides their 5.x ranges. FTP metadata, LIST fallback, download, error and
+separate-transfer-host restrictions must pass `npm run test:dependency-security`.
+Do not enable separate transfer hosts to make an incompatible server pass.
+
+`http-cache-semantics` 4.3.0 receives a repository-owned downstream patch for
+GHSA-ch52-4w7c-c8xp; 4.3.0 alone is not considered a verified upstream fix.
+Both `make-fetch-happen` parent ranges accept 4.3.0. The patch keeps response
+revalidation prohibitions separate from ordinary expiry, including after cache
+policy serialization. Source refresh continues to use private caching and
+mandatory revalidation.
+
+`npm ci` applies the patch through `postinstall`. The exact original and patched
+SHA-256 values are enforced by `scripts/security/dependency-patches.mjs`.
+`npm run verify:dependency-patches` and `npm run audit:deps` reject missing,
+unpatched or changed implementations. Ignoring installation scripts cannot yield
+a passing security gate. No audit exceptions authorize these changes.
+
+Remove the downstream patch only after a verified upstream fix passes the same
+negative and positive cache regressions. For rollback, restore the preceding
+manifest, lockfile and security tooling together and leave release blocked on
+the restored advisories. Never remove only the integrity check. Retain the
+security regression tests when adopting an upstream fix.
 
 ### Recover a validated refresh PR
 

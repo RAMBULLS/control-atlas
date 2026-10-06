@@ -1052,9 +1052,9 @@
     },
     {
       "candidate": "NIST Cryptographic Algorithm Validation Program search",
-      "canonicalUrl": "https://csrc.nist.gov/Projects/Cryptographic-Algorithm-Validation-Program",
+      "canonicalUrl": "https://csrc.nist.gov/projects/cryptographic-algorithm-validation-program/validation-search",
       "disposition": "accepted",
-      "evidence": "https://csrc.nist.gov/Projects/Cryptographic-Algorithm-Validation-Program",
+      "evidence": "https://csrc.nist.gov/projects/cryptographic-algorithm-validation-program/validation-search",
       "actionTaken": "Accepted as a canonical Resource record with source, access, freshness, and collection metadata."
     },
     {

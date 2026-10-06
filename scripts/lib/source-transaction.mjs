@@ -3,6 +3,7 @@ import {
   readdirSync, realpathSync, rmSync,
 } from 'node:fs';
 import { dirname, isAbsolute, join, relative, resolve, sep, win32 } from 'node:path';
+import { backoffDelayMs, classifyFailure, realSleep } from './retry-policy.mjs';
 
 const protectedSegment = /^(?:\.git|\.env(?:\..*)?|polic(?:y|ies)|baselines?)$/i;
 const protectedFiles = [
@@ -90,6 +91,7 @@ function declaredPaths(root, paths) {
 /** Run one source against its immediate last-good filesystem state. */
 export async function runSourceTransaction({
   root, sourceId, paths, attempts = 1, operation, validate, onQuarantine,
+  classify = classifyFailure, sleep = realSleep, backoff = { baseMs: 0, maxMs: 0 },
 }) {
   if (!Number.isSafeInteger(attempts) || attempts < 1 || typeof operation !== 'function'
     || !sourceId || (validate !== undefined && typeof validate !== 'function')
@@ -134,8 +136,18 @@ export async function runSourceTransaction({
       } catch (error) {
         lastError = error;
         restore();
-        if (attempt < attempts) continue;
-        const result = { status: 'quarantined', sourceId, attempts: attempt, error: String(lastError?.message || lastError) };
+        // Ask again only when a new retrieval could plausibly differ. A
+        // validation rejection is the publisher's current answer.
+        const failureClass = classify(error);
+        if (attempt < attempts && failureClass === 'transient') {
+          const waitMs = backoffDelayMs(attempt, { baseMs: backoff.baseMs, maxMs: backoff.maxMs });
+          if (waitMs > 0) await sleep(waitMs);
+          continue;
+        }
+        const result = {
+          status: 'quarantined', sourceId, attempts: attempt, failure_class: failureClass,
+          error: String(lastError?.message || lastError),
+        };
         if (onQuarantine) await onQuarantine(result);
         return result;
       }

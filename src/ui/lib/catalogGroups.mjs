@@ -7,24 +7,21 @@
 // treated Evidence as its own phase and had no Remediate stage at all. Every
 // starter document has a stage; there is no "Other" bucket.
 export const TEMPLATE_CATEGORIES = {
-  Plan: [
-    "security_plan_starter",
-    "hardware_baseline",
-    "software_baseline",
-    "ppsm_preparation_worksheet",
-  ],
-  Implement: [
-    "inheritance_worksheet",
-    "reciprocity_checklist",
+  "Build hardware and software baselines": ["hardware_baseline", "software_baseline"],
+  "Draft control implementation": [
     "implementation_statement_worksheet",
+    "inheritance_worksheet",
   ],
-  Assess: [
-    "assessment_planning_worksheet",
-    "stig_evidence_checklist",
+  "Plan evidence and assessment": [
     "evidence_expectation_matrix",
+    "assessment_planning_worksheet",
   ],
-  Remediate: ["poam_starter"],
-  Monitor: ["conmon_calendar"],
+  "Track POA&M remediation": ["poam_starter"],
+  "Plan continuous monitoring": ["conmon_calendar"],
+  "Draft and reuse authorization packages": [
+    "security_plan_starter",
+    "reciprocity_checklist",
+  ],
 };
 
 export function groupItemsByCategory(items, categoryMap, getId) {

@@ -1,3 +1,5 @@
+import { comparisonPairKey, comparisonScopeAllowed } from "../../shared/compare-scope.mjs";
+import { isComparisonCapableEdge, mappingSourceIdsForEdge } from "../../shared/compare-capability.mjs";
 import { createFederalGraphRuntime } from "../../app/runtime.mjs";
 import { atlasNeighborhoodShardId } from "../../app/atlas-neighborhood.mjs";
 import { RUNTIME_CACHE_VERSION } from "../../shared/runtime-cache-version.mjs";
@@ -6,8 +8,7 @@ import type {
   CommonsSearchIndex,
 } from "./commonsTypes";
 import type { ViewState } from "./viewState";
-import type { AtlasSpine } from "./atlasDrilldown";
-import type { AtlasSemanticProjectionArtifact } from "./atlasGraphProjection";
+import type { AtlasSpine } from "./atlasSpine";
 import { expandLibrarySearchTransport } from "./librarySearchTransport";
 
 const CACHE_VERSION = RUNTIME_CACHE_VERSION;
@@ -145,12 +146,17 @@ export type LibrarySearchArtifact = {
   documents: Array<Record<string, unknown>>;
 };
 
-export type AtlasNetworkArtifact = AtlasSemanticProjectionArtifact;
+
+export type ComparisonPair = {
+  scope: "frameworks" | "implementation";
+  edge_count: number;
+  path: string;
+  bytes: number;
+};
 
 export type RuntimeBundle = {
   runtime: ReturnType<typeof createFederalGraphRuntime>;
   templateRegistry: TemplateRegistry;
-  atlasNetwork?: AtlasNetworkArtifact;
   atlasSpine?: AtlasSpine;
   catalogSummaries?: Array<Record<string, any>>;
   catalogPublishedGroups?: Array<{
@@ -166,6 +172,11 @@ export type RuntimeBundle = {
   commonsSearchIndex?: CommonsSearchIndex;
   commonsDataset?: CommonsResourceDataset;
   mappingSources?: Record<string, Array<{ value: string; label: string }>>;
+  comparisonPairs?: Record<string, ComparisonPair>;
+  comparisonItems?: Record<string, string>;
+  comparisonItemTargets?: Record<string, string[]>;
+  comparisonStatus?: "idle" | "ready" | "unsupported" | "scope-mismatch" | "error";
+  comparisonError?: string;
   librarySearchReady: boolean;
   routeReady: boolean;
   graphReady: boolean;
@@ -287,7 +298,6 @@ type LibrarySearchBootstrap = {
 };
 
 export type RuntimeArtifactPlan = {
-  atlasNetwork: boolean;
   atlasSpine: boolean;
   catalogBootstrap: boolean;
   catalogFamily: string;
@@ -300,20 +310,13 @@ export type RuntimeArtifactPlan = {
   sources: boolean;
 };
 
-function isAtlasOrientationState(state: ViewState) {
-  return (
-    state.view === "atlas-map" &&
-    !state.node &&
-    (!state.atlasAxis ||
-      (state.atlasAxis === "landscape" && !state.atlasFramework))
-  );
-}
-
 export function runtimeArtifactPlan(
   state: ViewState,
   options: {
     graphRequested?: boolean;
     searchOverlayOpen?: boolean;
+    /** The territory sheet asks for record search only when the reader reaches for it. */
+    librarySearchRequested?: boolean;
   } = {},
 ): RuntimeArtifactPlan {
   // Templates now lands directly on the document browser, so every visit needs
@@ -326,27 +329,12 @@ export function runtimeArtifactPlan(
     (state.buildSection === "tasks" ||
       Boolean(state.task) ||
       Boolean(state.templateType));
-  const fullGraph =
+  // Compare uses content-addressed pair shards even when a previous view had
+  // requested the full graph. That request must never leak across the boundary.
+  const fullGraph = state.view !== "matrix" && (
     Boolean(options.graphRequested) ||
-    // Atlas area, publication, and native-group choices render from the compact
-    // Atlas spine. Baseline and RMF choices still need the full graph; a focused
-    // record uses one neighborhood shard. Keep this in step with
-    // requiresFullGraph in navigationState.ts.
-    (state.view === "atlas-map" &&
-      !state.node &&
-      Boolean(
-        state.atlasBaseline ||
-          state.atlasRmfStep ||
-          state.sourceView === "rmf" ||
-          state.sourceView === "rmf-lifecycle" ||
-          state.relationshipView === "rmf",
-      )) ||
-    (state.view === "matrix" &&
-      (state.compareRun === "true" ||
-        (state.intent === "item-mapping" &&
-          Boolean(state.source) &&
-          Boolean(state.items)))) ||
-    (state.view === "templates" && Boolean(state.templateType));
+    (state.view === "templates" && Boolean(state.templateType))
+  );
   // A real record is in focus on the Atlas route — not the landing board and
   // not one of the synthetic structural nodes the drill-down uses.
   const atlasRecordFocused =
@@ -355,22 +343,22 @@ export function runtimeArtifactPlan(
     state.node !== "foundation" &&
     state.node !== "landscape" &&
     !state.node.startsWith("hierarchy:");
+  // The territory sheet draws from its own small index. It needs neither the 11 MB relationship
+  // network nor the hierarchy spine; a focused record adds only its own neighborhood shard.
+  if (state.view === "atlas-map") {
+    return { atlasSpine: false, catalogBootstrap: true, catalogId: "", catalogFamily: "",
+      commons: false, fullGraph: false, librarySearch: atlasRecordFocused || Boolean(state.atlasResearch) || Boolean(options.librarySearchRequested) || Boolean(options.searchOverlayOpen), recordNodeId: atlasRecordFocused ? state.node : "",
+      registries: false, sources: atlasRecordFocused || Boolean(state.atlasResearch) };
+  }
   return {
-    atlasNetwork: state.view === "atlas-map",
-    atlasSpine: state.view === "atlas-map" || state.view === "library-detail",
+    atlasSpine: state.view === "library-detail",
     catalogBootstrap:
-      state.view === "atlas-map" ||
       state.view === "library-detail" ||
       state.view === "catalog-detail" ||
       state.view === "matrix" ||
       state.view === "search" ||
       buildDetailRequested,
-    catalogId:
-      state.view === "catalog-detail"
-        ? state.catalog
-        : state.view === "atlas-map"
-          ? state.atlasFramework
-          : "",
+    catalogId: state.view === "catalog-detail" ? state.catalog : "",
     catalogFamily:
       state.view === "catalog-detail" ? state.family : "",
     commons:
@@ -383,7 +371,6 @@ export function runtimeArtifactPlan(
     fullGraph,
     librarySearch:
       state.view === "search" ||
-      state.view === "atlas-map" ||
       state.view === "retired" ||
       Boolean(options.searchOverlayOpen),
     recordNodeId:
@@ -417,9 +404,7 @@ export async function preloadRuntimeArtifacts(state: ViewState) {
   const plan = runtimeArtifactPlan(state);
   const requests: Array<Promise<unknown>> = [];
   const add = (path: string) => requests.push(fetchArtifact(path));
-  const atlasLanding = isAtlasOrientationState(state);
-
-  if ((plan.librarySearch && !atlasLanding) || plan.fullGraph) {
+  if (plan.librarySearch || plan.fullGraph) {
     add(artifactPath("library-search.json"));
   }
   if (plan.sources || plan.fullGraph) {
@@ -430,9 +415,6 @@ export async function preloadRuntimeArtifacts(state: ViewState) {
   }
   if (plan.atlasSpine) {
     add(artifactPath("atlas-spine.json"));
-  }
-  if (plan.atlasNetwork) {
-    add(artifactPath("atlas-network.json"));
   }
   // A catalog route first paints from sources + catalog-bootstrap. Its larger
   // record shard starts after that shell is ready instead of competing with
@@ -625,11 +607,11 @@ async function fetchCollection(path: string, key: string) {
   }
   const shards = artifact.sharded_collection?.shards;
   if (Array.isArray(shards)) {
-    const chunks = await Promise.all(
-      shards.map((shard: { path?: string }) => {
+    const chunks = await mapBounded(
+      shards, async (shard: { path?: string }) => {
         if (!shard.path) throw new Error(`Invalid ${key} graph shard.`);
         return fetchArtifact(artifactPath(shard.path));
-      }),
+      },
     );
     return chunks.flatMap((chunk) => {
       if (!Array.isArray(chunk[key])) {
@@ -643,40 +625,6 @@ async function fetchCollection(path: string, key: string) {
 
 function artifactPath(name: string) {
   return `./data/generated/${name}?v=${CACHE_VERSION}`;
-}
-
-/**
- * The half of the Atlas projection the landing does not need.
- *
- * `details` and `record_locations` are 21MB of the artifact's 30MB and answer
- * only a drilldown or an exact record search. Fetching them with the board put
- * 3.4MB on the wire to draw five cards, on the route the product now opens on.
- * The board loads without them and this fills them in behind it.
- */
-export type AtlasNetworkDetails = Pick<
-  AtlasNetworkArtifact,
-  "details" | "record_locations"
->;
-
-let atlasNetworkDetailsRequest: Promise<AtlasNetworkDetails> | null = null;
-
-export function loadAtlasNetworkDetails(): Promise<AtlasNetworkDetails> {
-  if (!atlasNetworkDetailsRequest) {
-    atlasNetworkDetailsRequest = fetchArtifact(
-      artifactPath("atlas-network-details.json"),
-    ).then((artifact) => {
-      const loaded = artifact as Partial<AtlasNetworkDetails> | null;
-      return {
-        details: loaded?.details || {},
-        record_locations: loaded?.record_locations || {},
-      } as AtlasNetworkDetails;
-    }).catch((error) => {
-      // Let a later drilldown ask again rather than caching the failure.
-      atlasNetworkDetailsRequest = null;
-      throw error;
-    });
-  }
-  return atlasNetworkDetailsRequest;
 }
 
 export async function loadAtlasNeighborhood(
@@ -823,25 +771,6 @@ export async function loadAtlasNeighborhood(
   };
 }
 
-export function selectAtlasStructuralPath(
-  record: AtlasNeighborhoodRecord,
-  branchContext: string,
-): AtlasNeighborhoodRecord {
-  const selected = branchContext
-    ? record.structural_paths?.find((path) => path.some((hop) => hop.id === branchContext))
-    : null;
-  const structuralPath = selected || record.structural_path;
-  if (structuralPath === record.structural_path) return record;
-  return {
-    ...record,
-    center_node: {
-      ...record.center_node,
-      display_path: structuralPath.slice(0, -1),
-    },
-    structural_path: structuralPath,
-  };
-}
-
 type LibrarySearchIndexChunk = {
   library_search_index?: { columns?: unknown[][]; format?: string };
 };
@@ -984,7 +913,6 @@ export async function loadFullGraphPhase(
   commonsDataset?: CommonsResourceDataset,
   catalogSummaries: Array<Record<string, any>> = [],
   mappingSources: Record<string, Array<{ value: string; label: string }>> = {},
-  atlasNetwork?: AtlasNetworkArtifact,
   atlasSpine?: AtlasSpine,
 ): Promise<RuntimeBundle> {
   const [sources, nodes, edges, evidence, findings] = await Promise.all([
@@ -1015,7 +943,6 @@ export async function loadFullGraphPhase(
     commonsDataset,
     catalogSummaries,
     mappingSources,
-    atlasNetwork,
     atlasSpine,
     librarySearchReady: true,
     routeReady: true,
@@ -1057,6 +984,8 @@ export async function loadRuntimeDataset(): Promise<RuntimeBundle> {
 }
 
 type CatalogBootstrap = {
+  comparison_pairs?: Record<string, ComparisonPair>;
+  comparison_items?: Record<string, string>;
   catalogs?: Array<Record<string, unknown>>;
   mapping_sources?: Record<
     string,
@@ -1110,7 +1039,6 @@ async function loadRouteScopedPhase(
     libraryBootstrap,
     sourcesArtifact,
     catalogArtifact,
-    atlasNetworkArtifact,
     atlasSpineArtifact,
     catalogRecordsArtifact,
     record,
@@ -1130,9 +1058,6 @@ async function loadRouteScopedPhase(
       : Promise.resolve(null),
     plan.catalogBootstrap
       ? fetchArtifact(artifactPath("catalog-bootstrap.json"))
-      : Promise.resolve(null),
-    plan.atlasNetwork
-      ? fetchArtifact(artifactPath("atlas-network.json"))
       : Promise.resolve(null),
     plan.atlasSpine
       ? fetchArtifact(artifactPath("atlas-spine.json"))
@@ -1179,12 +1104,8 @@ async function loadRouteScopedPhase(
     )?.catalog_bootstrap || {};
   const atlasSpine = (atlasSpineArtifact as AtlasSpineArtifact | null)
     ?.atlas_spine;
-  const atlasNetwork = atlasNetworkArtifact as AtlasNetworkArtifact | null;
   if (plan.atlasSpine && !atlasSpine?.entries?.length) {
     throw new Error("Atlas spine artifact has no entries.");
-  }
-  if (plan.atlasNetwork && !atlasNetwork?.landscape?.nodes?.length) {
-    throw new Error("Atlas semantic projection artifact has no landscape landmarks.");
   }
   const catalogRecords =
     (
@@ -1256,8 +1177,9 @@ async function loadRouteScopedPhase(
       commonsDataset:
         (commonsDatasetRaw as CommonsResourceDataset) || undefined,
       mappingSources: catalogBootstrap.mapping_sources || {},
+      comparisonPairs: catalogBootstrap.comparison_pairs,
+      comparisonItems: catalogBootstrap.comparison_items || {},
       catalogSummaries: catalogBootstrap.catalogs || [],
-      atlasNetwork: atlasNetwork || undefined,
       atlasSpine,
       catalogPublishedGroups,
       catalogRecordsReady: plan.catalogId ? true : undefined,
@@ -1277,12 +1199,9 @@ async function loadRouteScopedPhase(
 async function loadCatalogShellPhase(
   plan: RuntimeArtifactPlan,
 ): Promise<RuntimeBundle> {
-  const [sourcesArtifact, catalogArtifact, atlasNetworkArtifact, atlasSpineArtifact] = await Promise.all([
+  const [sourcesArtifact, catalogArtifact, atlasSpineArtifact] = await Promise.all([
     fetchArtifact(artifactPath("sources.json")),
     fetchArtifact(artifactPath("catalog-bootstrap.json")),
-    plan.atlasNetwork
-      ? fetchArtifact(artifactPath("atlas-network.json"))
-      : Promise.resolve(null),
     plan.atlasSpine
       ? fetchArtifact(artifactPath("atlas-spine.json"))
       : Promise.resolve(null),
@@ -1298,12 +1217,8 @@ async function loadCatalogShellPhase(
     ).catalog_bootstrap || {};
   const atlasSpine = (atlasSpineArtifact as AtlasSpineArtifact | null)
     ?.atlas_spine;
-  const atlasNetwork = atlasNetworkArtifact as AtlasNetworkArtifact | null;
   if (plan.atlasSpine && !atlasSpine?.entries?.length) {
     throw new Error("Atlas spine artifact has no entries.");
-  }
-  if (plan.atlasNetwork && !atlasNetwork?.landscape?.nodes?.length) {
-    throw new Error("Atlas semantic projection artifact has no landscape landmarks.");
   }
 
   return {
@@ -1315,8 +1230,9 @@ async function loadCatalogShellPhase(
     }),
     templateRegistry: { templates: [] },
     mappingSources: catalogBootstrap.mapping_sources || {},
+    comparisonPairs: catalogBootstrap.comparison_pairs,
+    comparisonItems: catalogBootstrap.comparison_items || {},
     catalogSummaries: catalogBootstrap.catalogs || [],
-    atlasNetwork: atlasNetwork || undefined,
     atlasSpine,
     catalogRecordsReady: false,
     librarySearchReady: false,
@@ -1332,6 +1248,7 @@ export async function loadRuntimeDatasetStaged(handlers: {
   state: ViewState;
   graphRequested?: boolean;
   searchOverlayOpen?: boolean;
+  librarySearchRequested?: boolean;
   signal?: AbortSignal;
 }) {
   try {
@@ -1339,6 +1256,7 @@ export async function loadRuntimeDatasetStaged(handlers: {
     const plan = runtimeArtifactPlan(handlers.state, {
       graphRequested: handlers.graphRequested,
       searchOverlayOpen: handlers.searchOverlayOpen,
+      librarySearchRequested: handlers.librarySearchRequested,
     });
     if (plan.catalogId) {
       handlers.onSearchReady(await loadCatalogShellPhase(plan));
@@ -1346,23 +1264,6 @@ export async function loadRuntimeDatasetStaged(handlers: {
       const catalogPhase = await loadRouteScopedPhase(plan);
       if (handlers.signal?.aborted) return;
       handlers.onFullReady(catalogPhase.bundle);
-      return;
-    }
-    if (
-      handlers.state.view === "atlas-map" &&
-      !handlers.state.node &&
-      isAtlasOrientationState(handlers.state) &&
-      !plan.fullGraph
-    ) {
-      const orientationPhase = await loadRouteScopedPhase({
-        ...plan,
-        librarySearch: false,
-      });
-      if (handlers.signal?.aborted) return;
-      handlers.onSearchReady(orientationPhase.bundle);
-      const searchPhase = await loadRouteScopedPhase(plan);
-      if (handlers.signal?.aborted) return;
-      handlers.onFullReady(searchPhase.bundle);
       return;
     }
     if (handlers.state.view === "library-detail" && plan.commons) {
@@ -1380,6 +1281,11 @@ export async function loadRuntimeDatasetStaged(handlers: {
     const routePhase = await loadRouteScopedPhase(plan);
     if (handlers.signal?.aborted) return;
     handlers.onSearchReady(routePhase.bundle);
+    if (handlers.state.view === "matrix") {
+      const comparison = await loadComparePhase(handlers.state, routePhase.bundle, handlers.signal);
+      if (!handlers.signal?.aborted) handlers.onFullReady(comparison);
+      return;
+    }
     if (!plan.fullGraph) {
       return;
     }
@@ -1397,7 +1303,6 @@ export async function loadRuntimeDatasetStaged(handlers: {
       routePhase.bundle.commonsDataset,
       routePhase.bundle.catalogSummaries || [],
       routePhase.bundle.mappingSources || {},
-      routePhase.bundle.atlasNetwork,
       routePhase.bundle.atlasSpine,
     );
     if (handlers.signal?.aborted) return;
@@ -1405,5 +1310,100 @@ export async function loadRuntimeDatasetStaged(handlers: {
   } catch (error) {
     if (handlers.signal?.aborted) return;
     handlers.onError(error);
+  }
+}
+
+
+/** A small concurrency window prevents all graph/pair shards competing at once. */
+export async function mapBounded<T, R>(items: T[], task: (item: T) => Promise<R>, concurrency = 4): Promise<R[]> {
+  if (!Number.isInteger(concurrency) || concurrency < 1) throw new Error("Invalid concurrency limit");
+  const out: R[] = new Array(items.length);
+  let cursor = 0;
+  let failed = false;
+  await Promise.all(Array.from({ length: Math.min(concurrency, items.length) }, async () => {
+    while (!failed) {
+      const index = cursor++;
+      if (index >= items.length) return;
+      try { out[index] = await task(items[index]); }
+      catch (error) { failed = true; throw error; }
+    }
+  }));
+  return out;
+}
+
+/** Load only an admitted pair; failures leave the selection controls usable. */
+export async function loadComparePhase(
+  state: Extract<ViewState, { view: "matrix" }>,
+  bundle: RuntimeBundle,
+  signal?: AbortSignal,
+  load: (path: string) => Promise<any> = (path) => fetchArtifact(artifactPath(path)),
+): Promise<RuntimeBundle> {
+  const base: RuntimeBundle = { ...bundle, comparisonStatus: "idle", comparisonError: "", graphReady: false };
+  const checkedLoad = async (path: string) => {
+    if (signal?.aborted) throw new Error("Comparison cancelled");
+    if (!/^compare-data\/[a-zA-Z0-9_.-]+\.json$/.test(path) || path.includes("..")) {
+      throw new Error("Invalid comparison artifact path");
+    }
+    return load(path);
+  };
+  try {
+    // Exact-item target choices have their own small index. Merely typing an
+    // item must not download all crosswalks to discover eligible destinations.
+    if (state.intent === "item-mapping" && state.source && state.items.trim()) {
+      const path = bundle.comparisonItems?.[state.source];
+      if (path) {
+        const index = await checkedLoad(path);
+        if (index.catalog !== state.source || !index.items || typeof index.items !== "object") throw new Error("Invalid item mapping index");
+        base.comparisonItemTargets = index.items;
+      } else base.comparisonItemTargets = {};
+    }
+    if (state.compareRun !== "true" || !state.source || !state.target) return base;
+    if (!bundle.comparisonPairs) throw new Error("Missing comparison capability metadata");
+    const key = comparisonPairKey(state.source, state.target);
+    const entry = bundle.comparisonPairs?.[key];
+    if (!entry || entry.edge_count < 1) return { ...base, comparisonStatus: "unsupported" };
+    if (!comparisonScopeAllowed(entry.scope, state.intent)) return { ...base, comparisonStatus: "scope-mismatch" };
+    const header = await checkedLoad(entry.path);
+    if (header.schema_version !== 1 || header.pair?.join("|") !== key || header.scope !== entry.scope
+      || header.edge_count !== entry.edge_count || !Array.isArray(header.chunks) || !header.chunks.length) {
+      throw new Error("Invalid comparison header");
+    }
+    const chunks = await mapBounded(header.chunks as Array<{ path: string; edge_count: number }>, async (part) => {
+      const chunk = await checkedLoad(part.path);
+      if (chunk.pair?.join("|") !== key || chunk.scope !== entry.scope || !Array.isArray(chunk.edges)
+        || chunk.edges.length !== part.edge_count || !Array.isArray(chunk.nodes) || !Array.isArray(chunk.evidence)) {
+        throw new Error("Invalid comparison chunk");
+      }
+      return chunk;
+    });
+    const nodes = new Map<string, any>(), edges = new Map<string, any>(), evidence = new Map<string, any>();
+    for (const chunk of chunks) {
+      for (const node of chunk.nodes) nodes.set(node.id, node);
+      for (const item of chunk.evidence) evidence.set(item.id, item);
+      for (const edge of chunk.edges) {
+        if (edges.has(edge.id)) throw new Error("Duplicate comparison relationship");
+        edges.set(edge.id, edge);
+      }
+    }
+    if (edges.size !== entry.edge_count || nodes.size !== header.node_count) throw new Error("Incomplete comparison");
+    const sourceIds = new Set(bundle.runtime.getSources().map((source: any) => source.id));
+    for (const edge of edges.values()) {
+      const refs = mappingSourceIdsForEdge(edge);
+      if (!refs.length || refs.some((id: string) => !sourceIds.has(id))) throw new Error("Unresolved comparison source");
+      const a = nodes.get(edge.source_node_id)?.metadata?.catalog_id;
+      const b = nodes.get(edge.target_node_id)?.metadata?.catalog_id;
+      if (comparisonPairKey(a, b) !== key || !isComparisonCapableEdge(edge)) throw new Error("Unrelated comparison relationship");
+      for (const id of edge.evidence_ids || [`evidence:${edge.id.slice(5)}`]) {
+        if (!evidence.has(id)) throw new Error("Comparison source evidence missing");
+      }
+    }
+    const runtime = createFederalGraphRuntime({
+      sources: bundle.runtime.getSources(), catalogs: bundle.catalogSummaries || [],
+      nodes: [...nodes.values()], edges: [...edges.values()], evidence: [...evidence.values()], findings: [],
+    });
+    return { ...base, runtime, comparisonStatus: "ready" };
+  } catch (error) {
+    if (signal?.aborted) throw error;
+    return { ...base, comparisonStatus: "error", comparisonError: "These mappings could not be loaded. Try again, or choose another publication." };
   }
 }

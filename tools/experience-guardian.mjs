@@ -236,10 +236,10 @@ const correctionContracts = [
     message: "Global Search must submit by form, protect IME composition, and keep Clear separate from Close.",
   },
   {
-    file: "src/ui/pages/StartHerePage.tsx",
-    rule: "wizard-route-integrity",
-    pattern: /StepIndicator(?=[\s\S]*Back to context)(?=[\s\S]*Then act)(?=[\s\S]*<strong>Next:)/,
-    message: "Start Here must retain progressive steps, explicit back behavior, and a named final destination.",
+    file: "src/ui/lib/routeIdentity.ts",
+    rule: "start-here-bookmark-compatibility",
+    pattern: /import \{ startHereDestinationFor \}[\s\S]*startHereDestinationFor\(/,
+    message: "Old Start Here bookmarks must resolve through the governed product destination map.",
   },
   {
     file: "src/ui/pages/ExplorePage.tsx",
@@ -254,10 +254,10 @@ const correctionContracts = [
     message: "Browse workspaces must expose a compact filter sheet and a visible desktop filter rail.",
   },
   {
-    file: "src/ui/components/AtlasTree.tsx",
+    file: "src/ui/pages/AtlasTerritoryPage.tsx",
     rule: "atlas-promised-feature",
-    pattern: /data-semantic-level[\s\S]*atlasTreeCollisions[\s\S]*data-layout-status[\s\S]*Cybersecurity areas/,
-    message: "The Atlas route must deliver an authority-rooted, semantic-zoom, collision-checked tree immediately.",
+    pattern: /JourneyBar[\s\S]*ConnectionList[\s\S]*<TerritoryMap/,
+    message: "The Atlas route must deliver the territory map, practitioner journeys and a native full connection list.",
   },
   {
     file: "src/index.html",

@@ -73,10 +73,19 @@ const identities = canonicalPublications.map((pub) => {
     }
   }
 
-  const catalogCounts = bundle && catalogInventory?.catalogs?.[bundle.catalog_id]
+  const inventory = bundle ? catalogInventory?.catalogs?.[bundle.catalog_id] : null;
+  // Count evidence travels with the counts so a public surface can say how far
+  // the count is established (publisher inventory vs reviewed snapshot) and
+  // name any publisher entries deliberately left out, with the recorded reason.
+  const catalogCounts = inventory
     ? {
-      discovered_records: catalogInventory.catalogs[bundle.catalog_id].discovered_records,
-      normalized_records: catalogInventory.catalogs[bundle.catalog_id].normalized_records,
+      discovered_records: inventory.discovered_records,
+      normalized_records: inventory.normalized_records,
+      evidence_class: inventory.evidence_class || null,
+      excluded_records: inventory.excluded_records || 0,
+      exclusions: (bundle.expected_inventory?.exclusions || [])
+        .filter((entry) => Number.isInteger(entry?.count) && String(entry?.reason || '').trim())
+        .map((entry) => ({ count: entry.count, reason: String(entry.reason).trim() })),
     }
     : null;
 

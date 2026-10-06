@@ -40,14 +40,21 @@ function validObservation(value) {
     hashPattern.test(value.normalized_sha256) && hashPattern.test(value.identity_sha256);
 }
 
-/** Candidate values never determine their own acceptance range. */
-export function evaluateBaseline(previous, candidate, policy) {
+export const DEFAULT_MAX_REMOVED_PCT = 5;
+
+/**
+ * Candidate values never determine their own acceptance range. `evidence` is
+ * gathered by the caller from sources the candidate did not write: the
+ * committed record identities and the publisher reconciliation it cites.
+ */
+export function evaluateBaseline(previous, candidate, policy, evidence = null) {
   if (!validObservation(previous?.accepted) || !validObservation(previous?.anchor)) {
     throw new Error('Missing or invalid previously accepted baseline');
   }
   if (!policy || !Number.isSafeInteger(policy.absolute_floor) || policy.absolute_floor < 1 ||
       !Number.isFinite(policy.max_delta_pct) || policy.max_delta_pct < 0 || policy.max_delta_pct > 100 ||
-      !Number.isFinite(policy.max_anchor_delta_pct) || policy.max_anchor_delta_pct < 0 || policy.max_anchor_delta_pct > 100) {
+      !Number.isFinite(policy.max_anchor_delta_pct) || policy.max_anchor_delta_pct < 0 || policy.max_anchor_delta_pct > 100 ||
+      (policy.max_removed_pct !== undefined && !(policy.max_removed_pct >= 0 && policy.max_removed_pct <= 100))) {
     throw new Error('Invalid immutable source baseline policy');
   }
   const reject = (reason) => ({ accepted: false, reason });
@@ -65,13 +72,47 @@ export function evaluateBaseline(previous, candidate, policy) {
     candidate.publisher_version !== previous.accepted.publisher_version &&
     hashPattern.test(candidate.publisher_sha256) && candidate.publisher_sha256 !== previous.accepted.publisher_sha256 &&
     Number.isSafeInteger(candidate.publisher_byte_length) && candidate.publisher_byte_length > 0;
-  return corroborated
-    ? { accepted: true, reason: 'publisher_revision', reset_anchor: true }
-    : reject('uncorroborated_count_change');
+  if (corroborated) return { accepted: true, reason: 'publisher_revision', reset_anchor: true };
+  // A large change is also legitimate when the publisher's own inventory
+  // reconciles to it exactly and few prior identities disappeared. Growth from
+  // newly ingested publications looks like this; mass loss does not.
+  if (evidence?.inventory_reconciled === true) {
+    const ceiling = policy.max_removed_pct ?? DEFAULT_MAX_REMOVED_PCT;
+    return evidence.removed_pct <= ceiling
+      ? { accepted: true, reason: 'reconciled_change', reset_anchor: true }
+      : reject('unexplained_removals');
+  }
+  return reject('uncorroborated_count_change');
 }
 
-export function advanceBaseline(previous, candidate, policy, acceptedAt) {
-  const decision = evaluateBaseline(previous, candidate, policy);
+/** True when a rejection could be overturned by identity and inventory evidence. */
+export const isCountBandRejection = (reason) => reason === 'uncorroborated_count_change';
+
+/**
+ * The committed data is what production serves, and it passed review. When it
+ * no longer matches the recorded baseline (a reviewed change that did not go
+ * through refresh), adopt it as the reference instead of judging every future
+ * refresh against a snapshot nobody is serving. Structural floors still apply.
+ */
+export function adoptCommittedBaseline(entry, committed, policy, committedAt) {
+  if (committed.normalized_sha256 === entry.accepted.normalized_sha256) return { adopted: false, entry };
+  if (!validObservation(committed) || committed.record_count < policy.absolute_floor ||
+      (policy.require_independent_inventory && !committed.independent_inventory) ||
+      !committedAt || !Number.isFinite(Date.parse(committedAt))) return { adopted: false, entry, rejected: true };
+  return {
+    adopted: true,
+    entry: {
+      anchor: structuredClone(committed),
+      accepted: structuredClone(committed),
+      accepted_at: committedAt,
+      history: [...(entry.history || []), { ...entry.accepted, accepted_at: entry.accepted_at }].slice(-8),
+      adopted_from: 'committed_data',
+    },
+  };
+}
+
+export function advanceBaseline(previous, candidate, policy, acceptedAt, evidence = null) {
+  const decision = evaluateBaseline(previous, candidate, policy, evidence);
   if (!decision.accepted) return { decision, baseline: structuredClone(previous) };
   if (!acceptedAt || !Number.isFinite(Date.parse(acceptedAt))) throw new Error('Acceptance requires a valid timestamp');
   return {

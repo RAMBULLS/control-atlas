@@ -14,6 +14,10 @@ export const CROSSWALK_COLUMNS = [
   "Crosswalk Source Version",
   "Crosswalk URL",
   "Evidence / Locator",
+  "Published Source ID",
+  "Published Relationship",
+  "Published Target ID",
+  "Publisher Relationship Text",
 ] as const;
 
 export const SOURCES_COLUMNS = [
@@ -64,6 +68,11 @@ export type AggregatedCompareRow = {
   targets?: Array<{
     edge_id?: string;
     relationship_type?: string;
+    published_source_id?: string;
+    published_target_id?: string;
+    published_relationship_type?: string;
+    raw_relationship_type?: string;
+    publisher_assertions?: Array<{ relationship: string; property?: string | null; locator?: string }>;
     source_refs?: SourceRef[];
     to_id?: string;
     to_item_id?: string;
@@ -203,6 +212,11 @@ export function buildCompareExportData(
         joined("version"),
         firstUrl,
         joined("locator"),
+        target.published_source_id || row.from_id || "",
+        target.published_relationship_type || target.relationship_type || "",
+        target.published_target_id || target.to_id || "",
+        unique((target.publisher_assertions || []).map((entry) => entry.relationship)
+          .concat(target.raw_relationship_type || [])).join(" | "),
       ]);
     }
   }
@@ -244,6 +258,7 @@ export function buildCompareExportData(
       "Published mapping != equivalence/compliance",
       "A published crosswalk shows a cited relationship; it does not by itself establish equivalence or compliance.",
     ],
+    ["Relationship direction", "Source and target columns follow the selected view. Published Source ID, Published Relationship, and Published Target ID preserve the original assertion."],
     ["Generated date / build", `${input.generatedAt} / ${input.buildLabel}`],
   ];
 
@@ -280,9 +295,9 @@ const WORKBOOK_SHEETS = (data: CompareExportData): WorkbookSheet[] => [
     name: "Crosswalk",
     tableName: "CrosswalkTable",
     rows: data.crosswalk,
-    widths: [24, 18, 18, 34, 18, 24, 18, 18, 34, 28, 18, 42, 42],
-    idColumns: [2, 7],
-    wrapColumns: [3, 8, 9, 11, 12],
+    widths: [24, 18, 18, 34, 18, 24, 18, 18, 34, 28, 18, 42, 42, 24, 20, 24, 54],
+    idColumns: [2, 7, 13, 15],
+    wrapColumns: [3, 8, 9, 11, 12, 13, 15, 16],
     hyperlinkColumns: [11],
   },
   {

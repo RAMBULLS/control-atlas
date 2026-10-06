@@ -1,1 +1,1 @@
-export const RUNTIME_CACHE_VERSION = "20260804-1";
+export const RUNTIME_CACHE_VERSION = "20260928-compare-scope-1";

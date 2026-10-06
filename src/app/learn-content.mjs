@@ -24,21 +24,6 @@ const practitionerGuideArticles = [
     templates: [],
   },
   {
-    id: "understanding-rmf",
-    kind: "practitioner",
-    title: "Understanding RMF",
-    summary: "The seven steps and what each one produces for the next.",
-    whereItSits: "SP 800-37 Rev. 2 is the RMF's own publication.",
-    whenItMatters: "As the organizing sequence for every other guide on this page — each one maps to a step.",
-    explanation: "The Risk Management Framework is NIST's seven-step process for managing information security and privacy risk: Prepare, Categorize, Select, Implement, Assess, Authorize, and Monitor. Each step's output is the next step's input.",
-    limitations: "Control Atlas surfaces the published step structure and the records tied to each step. It does not run the process or make step decisions for you.",
-    nextAction: { label: "Browse SP 800-37 in Catalog", view: "catalog-detail", patch: { catalog: "nist-800-37" } },
-    citations: [
-      { sourceId: "nist-800-37-rev2", role: "official-subject-source", label: "SP 800-37 Rev. 2 — Risk Management Framework for Information Systems", url: "https://csrc.nist.gov/pubs/sp/800/37/r2/final", supports: "The seven-step framework this guide summarizes." },
-    ],
-    templates: [],
-  },
-  {
     id: "selecting-controls",
     kind: "practitioner",
     title: "Selecting controls",
@@ -56,14 +41,15 @@ const practitionerGuideArticles = [
   {
     id: "implementing-controls",
     kind: "practitioner",
-    title: "Implementing controls",
-    summary: "Turning a selected control into a technical or procedural setting.",
-    whereItSits: "DISA STIGs and SRGs publish concrete technical implementation, check, and fix guidance for many controls' technical requirements.",
+    title: "Documenting control implementation",
+    summary: "Write a testable statement for each selected control and its evidence.",
+    whereItSits: "SP 800-53 provides the control text. A current technology-specific STIG or SRG may add published check and fix instructions.",
     whenItMatters: "RMF's Implement step.",
-    explanation: "Implementation turns a selected control into system-specific settings, configurations, and technical or procedural measures. Where a technology-specific STIG or SRG exists, it publishes the exact setting, check, and fix text; other controls are implemented through organizational policy and procedure.",
+    explanation: "A control implementation statement records what the system or organization actually does, who owns it, and which evidence can be examined. A technology-specific STIG or SRG may provide check and fix text for the product in scope; it does not write the system's statement for you.",
     limitations: "Control Atlas shows published STIG/SRG check and fix text where it exists. It does not verify your system's actual configuration or confirm implementation is complete.",
-    nextAction: { label: "Browse DISA STIG in Catalog", view: "catalog-detail", patch: { catalog: "disa-stig" } },
+    nextAction: { label: "Write control implementation statements", view: "templates", patch: { buildSection: "tasks", task: "write-control-implementations" } },
     citations: [
+      { sourceId: "nist-800-53", role: "official-subject-source", label: "NIST SP 800-53 Rev. 5 — Security and Privacy Controls", url: "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final", supports: "Publishes the control text the implementation statement must address." },
       { sourceId: "disa-stig-library", role: "official-subject-source", label: "DISA Security Technical Implementation Guides (STIGs)", url: "https://www.cyber.mil/stigs/", supports: "Publishes the technical implementation, check, and fix guidance this guide describes." },
     ],
     templates: [],
@@ -107,7 +93,7 @@ const practitionerGuideArticles = [
     whenItMatters: "After an assessment identifies a control that isn't satisfied — remediation is tracked, not silent.",
     explanation: "A finding from an assessment that a control isn't satisfied becomes a Plan of Action and Milestones (POA&M) entry: tracked, remediated on a schedule, and re-assessed to close it out.",
     limitations: "Control Atlas provides a POA&M working-register starter document. It does not track your live remediation status or close findings for you.",
-    nextAction: { label: "Open the POA&M Working Register", view: "templates", patch: { buildSection: "documents" } },
+    nextAction: { label: "Open the POA&M Working Register", view: "templates", patch: { buildSection: "documents", templateType: "poam_starter" } },
     citations: [
       { sourceId: "fedramp-rev5", role: "official-subject-source", label: "FedRAMP Assessment and Authorization Artifacts", url: "https://www.fedramp.gov/documents-templates/", supports: "Documents the POA&M pattern this guide describes." },
     ],
@@ -122,7 +108,7 @@ const practitionerGuideArticles = [
     whenItMatters: "After authorization, on the cadence your organization's continuous monitoring strategy sets.",
     explanation: "Monitor is RMF's ongoing step: tracking control effectiveness, system changes, and vulnerability status after authorization, on the cadence the organization's continuous monitoring strategy defines.",
     limitations: "Control Atlas provides a delivery-calendar starter document for scheduling monitoring deliverables. It does not perform monitoring or assess control effectiveness.",
-    nextAction: { label: "Open the Continuous Monitoring Delivery Calendar", view: "templates", patch: { buildSection: "documents" } },
+    nextAction: { label: "Open the Continuous Monitoring Delivery Calendar", view: "templates", patch: { buildSection: "documents", templateType: "conmon_calendar" } },
     citations: [
       { sourceId: "nist-800-37-rev2", role: "official-subject-source", label: "SP 800-37 Rev. 2 — Risk Management Framework for Information Systems", url: "https://csrc.nist.gov/pubs/sp/800/37/r2/final", supports: "Defines the Monitor step this guide describes." },
     ],
@@ -137,7 +123,7 @@ const practitionerGuideArticles = [
     whenItMatters: "When a system relies on infrastructure or a service someone else already authorized.",
     explanation: "A common control is implemented and assessed once by a provider, then inherited by every system that relies on it, avoiding duplicate assessment work. FedRAMP baselines and a provider's own package document what's inherited versus customer-implemented.",
     limitations: "Control Atlas provides an inheritance worksheet starter document. It does not verify a specific provider's inheritance claims or confirm what your system actually inherits.",
-    nextAction: { label: "Open the Inheritance Worksheet", view: "templates", patch: { buildSection: "documents" } },
+    nextAction: { label: "Open the Inheritance Worksheet", view: "templates", patch: { buildSection: "documents", templateType: "inheritance_worksheet" } },
     citations: [
       { sourceId: "fedramp-rev5", role: "official-subject-source", label: "FedRAMP Rev. 5 Security Controls Baselines", url: "https://www.fedramp.gov/documents-templates/", supports: "Documents the baseline structure inheritance is scoped against." },
     ],
@@ -152,7 +138,7 @@ const practitionerGuideArticles = [
     whenItMatters: "When another organization already assessed or authorized the same system, service, or control set you need.",
     explanation: "Reciprocity means accepting another organization's existing assessment or authorization instead of re-assessing from scratch, when the same risk basis still applies. FedRAMP's authorization model exists specifically so federal agencies can reuse one cloud provider's authorization.",
     limitations: "Control Atlas provides a reciprocity package review starter document. It does not determine whether a specific existing authorization is valid for your use case.",
-    nextAction: { label: "Open the Reciprocity Package Review", view: "templates", patch: { buildSection: "documents" } },
+    nextAction: { label: "Open the Reciprocity Package Review", view: "templates", patch: { buildSection: "documents", templateType: "reciprocity_checklist" } },
     citations: [
       { sourceId: "fedramp-rev5", role: "official-subject-source", label: "FedRAMP Rev. 5 Security Controls Baselines", url: "https://www.fedramp.gov/documents-templates/", supports: "Represents the FedRAMP program this guide's reciprocity example describes." },
     ],
@@ -202,17 +188,6 @@ const GUIDE_PROCEDURES = Object.freeze({
     ],
     output: "A documented authorization starting context with source publication, baseline, decision owners, and open decisions.",
     validation: ["The system boundary and decision owners are named", "The publication and baseline version are recorded", "Unknowns remain explicit instead of being guessed"],
-  },
-  "understanding-rmf": {
-    goal: "Place the team’s current work in the RMF sequence and identify the output needed for the next step.",
-    prerequisites: ["A defined system or organizational risk-management scope", "Access to the organization’s current authorization records"],
-    steps: [
-      { title: "Locate the current step", action: "Match the work underway to Prepare, Categorize, Select, Implement, Assess, Authorize, or Monitor." },
-      { title: "Identify the handoff", action: "Read the cited publication for the current step’s expected inputs, activities, and outputs." },
-      { title: "Name the next decision", action: "Record who accepts the current output, what remains incomplete, and which RMF step receives it next." },
-    ],
-    output: "A one-page RMF handoff note naming the current step, required output, next owner, and unresolved work.",
-    validation: ["The current step is supported by the cited publication", "The next owner and handoff artifact are named", "The note does not imply that Control Atlas runs or approves RMF decisions"],
   },
   "selecting-controls": {
     goal: "Start from the applicable published baseline and preserve a reviewable record of every tailoring decision.",
@@ -423,7 +398,6 @@ export const learnArticles = Object.freeze([
 export function learnArticleById(id) {
   return (
     practitionerGuides.find((article) => article.id === id) ||
-    learnArticles.find((article) => article.id === id) ||
     null
   );
 }

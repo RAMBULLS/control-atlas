@@ -7,6 +7,7 @@ import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRegisteredOlirFetch, olirAvailability, parseOlirStructuredArtifact, retrieveStructuredOlirArtifact } from '../tools/relationship-builders/olir-retrieval.mjs';
+import { classifyFailure, isTransientStatus } from './lib/retry-policy.mjs';
 import { strictConditionalFetch } from './lib/strict-conditional-fetch.mjs';
 import { writeJsonAtomically } from './lib/write-json-atomically.mjs';
 
@@ -149,6 +150,17 @@ export async function retrieveOlirEntry(entry, options = {}) {
   }
 }
 
+/**
+ * Why a previously accepted submission could not be refreshed. Transient means
+ * a later run may well succeed; publisher_unavailable means NIST answered and
+ * no importable mapping is published there now.
+ */
+export function classifyOlirRetention(retrieval) {
+  const transient = (retrieval?.attempts || []).some((attempt) =>
+    (attempt.error && classifyFailure({ message: String(attempt.error) }) === 'transient') || isTransientStatus(attempt.status));
+  return transient ? 'transient' : 'publisher_unavailable';
+}
+
 export function validateOlirCandidate(retrievalById, previousItems = []) {
   const previouslyIngested = new Set(previousItems.filter((item) => item.ingested).map((item) => item.id));
   for (const [id, retrieval] of retrievalById) {
@@ -204,6 +216,7 @@ export async function fetchOlirCatalog() {
       entry.statusDescription === 'Final' &&
       FOCAL_CATALOG_MAP.has(entry.focusDocName),
   );
+  const generatedAt = new Date().toISOString();
   const manifestPath = join(ROOT, 'data', 'olir-catalog-manifest.json');
   const previousItems = existsSync(manifestPath)
     ? JSON.parse(readFileSync(manifestPath, 'utf8')).processed_items || [] : [];
@@ -228,13 +241,21 @@ export async function fetchOlirCatalog() {
       .map((attempt) => `${attempt.kind} ${attempt.status ?? attempt.error ?? 'not reached'}`)
       .join('; ');
 
-    if (retrieval?.retainedItem) return {
-      ...retrieval.retainedItem,
-      refresh_status: 'retained_last_good',
-      availability: olirAvailability(retrievedById.get(id)),
-      refresh_error: retrieval.unavailable_reason || 'Mapping could not be refreshed',
-      latest_retrieval_attempts: retrieval_attempts,
-    };
+    if (retrieval?.retainedItem) {
+      const prior = retrieval.retainedItem.retention;
+      return {
+        ...retrieval.retainedItem,
+        refresh_status: 'retained_last_good',
+        availability: olirAvailability(retrievedById.get(id)),
+        refresh_error: retrieval.unavailable_reason || 'Mapping could not be refreshed',
+        latest_retrieval_attempts: retrieval_attempts,
+        retention: {
+          cause: classifyOlirRetention(retrievedById.get(id)),
+          first_retained_at: prior?.first_retained_at || generatedAt,
+          consecutive_refreshes: (prior?.consecutive_refreshes || 0) + 1,
+        },
+      };
+    }
 
     return {
       id,
@@ -269,7 +290,7 @@ export async function fetchOlirCatalog() {
   });
 
   const manifest = {
-    generated_at: new Date().toISOString(),
+    generated_at: generatedAt,
     source: 'https://csrc.nist.gov/projects/olir/informative-reference-catalog',
     api_endpoint: CATALOG_URL,
     total_entries: entries.length,

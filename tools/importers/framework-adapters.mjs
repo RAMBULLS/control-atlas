@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { relationDetails } from './zero-trust-workbook-adapter.mjs';
 
 const AI_RMF_SOURCE = 'nist-ai-rmf-playbook';
 const SSDF_SOURCE = 'nist-ssdf-oscal';
@@ -788,31 +789,48 @@ export function buildNistZeroTrustCatalog(snapshotDate, curatedRoot) {
     const id = stableId(entry.collaborator ? 'PRODUCT-COMPONENT' : 'REFERENCE-COMPONENT', valueKey);
     const parentId = entry.collaborator ? stableId('MAPPING-CONTRIBUTOR', entry.collaborator) : 'SP1800-35';
     const relationshipByKey = new Map();
+    const unresolvedMappings = [];
     for (const mapping of entry.mappings) {
-      const target = normalizedNistTarget(mapping);
-      if (!target) continue;
-      const relationshipType = mapping.direction === 'component_supported_by_target' ? 'supported_by' : 'supports';
-      const key = `${target.target_catalog}\0${target.target_id}\0${relationshipType}`;
-      const sourceId = mapping.source_fragments.find((fragment) => fragment.field === 'relationship')?.source_key || mapping.source_fragments[0]?.source_key;
-      const existing = relationshipByKey.get(key);
-      if (existing) {
-        if (!existing.source_locators.includes(mapping.locator)) existing.source_locators.push(mapping.locator);
-        if (mapping.relationship_explanation && !existing.rationales.includes(mapping.relationship_explanation)) {
-          existing.rationales.push(mapping.relationship_explanation);
-          existing.rationale = existing.rationales.join('\n\n');
-        }
+      // Re-evaluate the retained publisher text as well as future workbook
+      // fetches. This repairs historical parsed directions without altering
+      // any original cell text, ID, locator, or content checksum.
+      const parsed = relationDetails(mapping.relationship);
+      if (parsed.relationship_parse_status === 'unresolved') {
+        unresolvedMappings.push({ id: mapping.id, target_id: mapping.target_id,
+          mapping_kind: mapping.mapping_kind, locator: mapping.locator,
+          relationship: mapping.relationship, reason: 'No explicit relationship type in the publisher cell.' });
         continue;
       }
-      relationshipByKey.set(key, {
-        ...target,
-        relationship_type: relationshipType,
-        rationale: mapping.relationship_explanation,
-        rationales: mapping.relationship_explanation ? [mapping.relationship_explanation] : [],
-        source_id: sourceId,
-        source_locator: mapping.locator,
-        source_locators: [mapping.locator],
-        raw_relationship_type: mapping.raw_relationship_type,
-      });
+      const target = normalizedNistTarget(mapping);
+      if (!target) continue;
+      for (const clause of parsed.relationship_clauses) {
+        const relationshipType = clause.relationship_type;
+        const key = `${target.target_catalog}\0${target.target_id}\0${relationshipType}`;
+        const sourceId = mapping.source_fragments.find((fragment) => fragment.field === 'relationship')?.source_key || mapping.source_fragments[0]?.source_key;
+        const assertion = { mapping_id: mapping.id, locator: mapping.locator,
+          relationship: parsed.raw_relationship_type, property: clause.property };
+        const existing = relationshipByKey.get(key);
+        if (existing) {
+          if (!existing.source_locators.includes(mapping.locator)) existing.source_locators.push(mapping.locator);
+          existing.publisher_assertions.push(assertion);
+          if (mapping.relationship_explanation && !existing.rationales.includes(mapping.relationship_explanation)) {
+            existing.rationales.push(mapping.relationship_explanation);
+            existing.rationale = existing.rationales.join('\n\n');
+          }
+          continue;
+        }
+        relationshipByKey.set(key, {
+          ...target,
+          relationship_type: relationshipType,
+          rationale: mapping.relationship_explanation,
+          rationales: mapping.relationship_explanation ? [mapping.relationship_explanation] : [],
+          source_id: sourceId,
+          source_locator: mapping.locator,
+          source_locators: [mapping.locator],
+          raw_relationship_type: parsed.raw_relationship_type,
+          publisher_assertions: [assertion],
+        });
+      }
     }
     const relationships = [...relationshipByKey.values()];
     records.push({
@@ -830,8 +848,14 @@ export function buildNistZeroTrustCatalog(snapshotDate, curatedRoot) {
         product: entry.product,
         architecture_component: entry.architecture_component,
         mapping_count: entry.mappings.length,
-        mapping_targets: entry.mappings.map((mapping) => ({ kind: mapping.mapping_kind, target_id: mapping.target_id })),
+        mapping_targets: entry.mappings.map((mapping) => {
+          const parsed = relationDetails(mapping.relationship);
+          return { kind: mapping.mapping_kind, target_id: mapping.target_id,
+            relationship_clauses: parsed.relationship_clauses,
+            relationship_parse_status: parsed.relationship_parse_status };
+        }),
         relationships,
+        ...(unresolvedMappings.length ? { unresolved_mappings: unresolvedMappings } : {}),
         source_fragments: entry.source_fragments,
         contributing_artifact_ids: artifactIdsFromFragments(entry.source_fragments),
       },

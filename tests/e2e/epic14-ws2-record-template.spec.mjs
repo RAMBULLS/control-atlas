@@ -19,38 +19,26 @@ test("WS2 record template leads with qualified identity and one source action", 
   await expect(page.locator("[data-canonical-breadcrumb]"))
     .toHaveAttribute("data-canonical-breadcrumb", /3\.1\.1$/);
   await expect(page.locator(".record-official-name")).toHaveCount(0);
-  await expect(template.locator(".bucket-tag")).toHaveCount(1);
-  await expect(template.locator(".bucket-tag")).toContainText("Compliance");
-  // Four chips: the publisher category and its governed taxonomy twin render
-  // the same words, so the duplicate is collapsed.
-  await expect(page.locator(".record-classification-tags").locator(":scope > *"))
-    .toHaveCount(4);
-  await expect(page.getByRole("link", { name: "Filter the Library by Access Control", exact: true })).toBeVisible();
+  const discoveryTags = page.locator(".record-discovery-tags");
+  await expect(discoveryTags).toBeVisible();
+  await expect(page.locator(".related-in-atlas")).toHaveCount(0);
+  await expect(page.locator("main")).not.toContainText("Explore by context");
+  await expect(page.locator("main")).not.toContainText("source-backed facets");
+  await expect(discoveryTags.getByRole("link", { name: "Filter the Library by Access Control", exact: true })).toBeVisible();
+  await expect(page.locator(".record-source-facts")).toContainText("Record type");
   await expect(page.getByRole("link", { name: OFFICIAL_SOURCE_ACTION })).toHaveCount(1);
 
   await expect(page.getByRole("heading", { name: "Requirement", level: 2 })).toBeVisible();
   await expect(page.locator('[data-source-field="description"]')).toContainText(
     /Limit system access to authorized users, processes acting on behalf/,
   );
-  await expect(page.getByRole("heading", { name: "About This Record", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "About this record", exact: true })).toBeVisible();
   await expect(page.getByText(/What this is|What you need to do|How to satisfy it/i)).toHaveCount(0);
 });
 
 test("generated record identities stay human-first at every governed width", async ({ page }) => {
   test.setTimeout(180_000);
   const generatedRecords = [
-    {
-      route: "/#/record/nist-zt/COLLABORATOR-APPGATE-835EC7F121",
-      primary: "Appgate",
-      context: "Technology collaborator · NIST Zero Trust",
-      stableId: "COLLABORATOR-APPGATE-835EC7F121",
-    },
-    {
-      route: "/#/record/nist-zt/MAPPING-CONTRIBUTOR-APPGATE-835EC7F121",
-      primary: "Appgate",
-      context: "Mapping workbook contributor · NIST Zero Trust",
-      stableId: "MAPPING-CONTRIBUTOR-APPGATE-835EC7F121",
-    },
     {
       route: "/#/record/nist-zt/PRODUCT-COMPONENT-APPGATE-APPGATE-HEADLESS-CLIENT-RESOURCE-PROTECTION-CL-E65DEBF0E8",
       primary: "Appgate Headless Client — Resource Protection – Cloud Workload Protection",
@@ -90,7 +78,7 @@ test("publisher-native record headings remain identifier-led at every governed w
   const nativeRecords = [
     ["/#/record/nist-800-53/AC-2", /NIST AC-2/],
     ["/#/record/disa-cci/CCI-000366", /DISA Policy and Technical CCI-000366/],
-    ["/#/record/disa-stig/V-256609", /DISA .* V-256609/],
+    ["/#/record/disa-stig/V-256609", /^V-256609$/],
   ];
 
   for (const width of [320, 375, 390, 768, 1024, 1440]) {
@@ -362,7 +350,7 @@ test("WS6 record identities and derived category explanations stay source-truthf
     // published fact on the record rather than part of its identity.
     ["/#/record/mitre-attack/T1195.002", "MITRE T1195.002"],
     ["/#/record/mitre-d3fend/D3-AA", "MITRE Harden D3-AA"],
-    ["/#/record/disa-stig/V-256876", "DISA HMC V-256876"],
+    ["/#/record/disa-stig/V-256876", "V-256876"],
   ];
   for (const [route, identity] of identities) {
     await openRecord(page, route);
@@ -374,10 +362,8 @@ test("WS6 record identities and derived category explanations stay source-truthf
   const acronym = page.locator("h1 abbr", { hasText: "DISA" });
   await acronym.focus();
   await expect(acronym).toHaveAttribute("data-tooltip", "Defense Information Systems Agency");
-  const referencedCategory = page.locator('.line-tag--explained[data-tooltip="Referenced category."]');
-  await referencedCategory.focus();
-  await expect(referencedCategory).toContainText("Access Control");
-  const inferredArea = page.locator('.bucket-tag--explained[data-tooltip="Inferred category."]');
-  await inferredArea.focus();
-  await expect(inferredArea).toContainText("Implementation");
+  const discoveryTags = page.locator(".record-discovery-tags");
+  await expect(discoveryTags).toBeVisible();
+  await expect(discoveryTags.getByRole("link", { name: "Filter the Library by Access Control", exact: true })).toBeVisible();
+  await expect(discoveryTags).not.toContainText("Implementation");
 });

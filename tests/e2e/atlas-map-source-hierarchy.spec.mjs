@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import {
   attachPageDiagnostics,
+  clickAtlasPublication,
   dismissOnboarding,
   waitForAppReady,
 } from "./support.mjs";
@@ -23,147 +24,82 @@ async function expectNoHorizontalOverflow(page) {
   expect(width.scroll).toBeLessThanOrEqual(width.client + 1);
 }
 
-/** Every node of the decomposition map is a labelled button, at every width. */
-async function clickAtlasLandmark(page, name) {
-  const node = page
-    .getByTestId("atlas-map")
-    .locator(".atlas-decomp__column")
-    .getByRole("button", { name })
-    .first();
-  await expect(node).toBeVisible();
-  await node.click();
-}
-
-/**
- * The landing draws the groups; a framework is one step inside one of them.
- * Every cell is a real button named for what it is and how much it holds, so
- * the same two clicks reach a publication at any width.
- */
-async function enterFrameworkFromLandscape(page, group, name) {
-  const map = page.getByTestId("atlas-area-map");
-  const groupCell = map.getByRole("button", { name: group }).first();
-  await expect(groupCell).toBeVisible();
-  await groupCell.click();
-  const node = map.getByRole("button", { name }).first();
-  await expect(node).toBeVisible();
-  await node.click();
-}
-
 for (const viewport of VIEWPORTS) {
-  test(`NIST reaches a focused control with choices separate from structure at ${viewport.width}px`, async ({
-    page,
-  }) => {
+  test(`NIST reaches a focused control from the territory sheet at ${viewport.width}px`, async ({ page }) => {
+    // The record search index is tens of megabytes decoded; a shared CI runner can take well over the default 45s.
+    test.setTimeout(150_000);
     await page.setViewportSize(viewport);
     await page.goto("/#/atlas");
     await waitForAppReady(page);
     await dismissOnboarding(page);
-    // Nothing is scoped yet, so the landing is the board of groups rather than
-    // the columns: the question at this point is which framework, not where
-    // inside one.
-    await expect(page.getByTestId("atlas-area-map")).toBeVisible();
-    await expect(page.getByTestId("atlas-map")).toHaveCount(0);
+    await expect(page.locator(".atl")).toBeVisible();
 
-    // Two clicks reach a publication: its group, then it. The map stays put
-    // and the panel becomes what was opened.
-    await enterFrameworkFromLandscape(page, /^Control catalogs/, /^800-53 /);
+    // Two choices reach a publication: its territory, then it.
+    if (viewport.width < 760) {
+      await page.getByRole("button", { name: "Compliance territory" }).click();
+      await page.getByRole("button", { name: /SP 800-53 Rev\. 5/ }).first().click();
+    } else {
+      // Keyboard activation: at tablet widths a landmark's hit area covers the district's centre.
+      await page.locator('[data-district="atlas:LIMB-COMPLIANCE"] .district__shape').focus();
+      await page.keyboard.press("Enter");
+      await clickAtlasPublication(page, "nist-800-53");
+    }
     await expect(page).toHaveURL(/atlasFramework=nist-800-53/);
-    await expect(page).not.toHaveURL(/atlasBaseline=/);
-    await expect(
-      page.getByTestId("atlas-detail").getByRole("heading", { level: 2 }),
-    ).toContainText("800-53");
-
-    // The group stays one step back, never a return to the top of the route.
-    const trail = page.getByRole("navigation", { name: "Map depth" });
-    await expect(trail.getByRole("button", { name: /^Control catalogs/ })).toBeVisible();
-
+    await expect(page.locator(".atl-inspector, #atl-focus").first()).toContainText("SP 800-53 Rev. 5");
     await expectNoHorizontalOverflow(page);
-    // Wait for the shared navigation lock to settle before using the global
-    // jump field.
-    await expect(page.locator("main#workspace")).not.toHaveAttribute("inert", "");
-    const jumpToRecord = page.getByRole("searchbox", { name: "Jump to a record" });
-    await expect(jumpToRecord).toBeEnabled();
-    await jumpToRecord.pressSequentially("nist-800-53:AC-1");
-    await expect(jumpToRecord).toHaveValue("nist-800-53:AC-1");
-    await jumpToRecord.press("Enter");
-    await waitForAppReady(page);
-    await expect(page).toHaveURL(/\/#\/atlas\/nist-800-53:AC-1\?/);
+
+    // Jump to a control by identifier, then open its full record.
+    // Record search loads on first focus, and Enter before it is ready does nothing by design
+    // ("Record search is still loading"). WebKit also drops text typed in the moment after the
+    // map settles, so type again until the match a reader would see is on screen.
+    const option = page.locator("#atlas-results [role=option]").filter({ hasText: "AC-1" }).first();
+    await expect(async () => {
+      await page.locator("#atlas-search").fill("nist-800-53:AC-1");
+      await expect(option).toBeVisible({ timeout: 5_000 });
+    }).toPass({ timeout: 90_000 });
+    await page.locator("#atlas-search").press("Enter");
+    await expect(page).toHaveURL(/\/#\/atlas\/nist-800-53:AC-1/);
     await expect(page.getByRole("heading", { name: "Atlas", level: 1 })).toBeVisible();
-    await expect(page.getByRole("region", { name: "Focused Atlas record" })).toBeVisible();
-    await page.getByRole("button", { name: "Hierarchy" }).click();
-    await expect(page.getByRole("heading", { name: "Where this sits" })).toBeVisible();
-    await expect(
-      page.getByRole("navigation", { name: "Where this sits" }).first(),
-    ).toContainText("Access Control");
-    await expect(
-      page.getByRole("navigation", { name: "Where this sits" }).first(),
-    ).not.toContainText("Low Impact Baseline");
+    await expect(page.locator(".atl-inspector, #atl-focus").first()).toContainText("AC-1");
     await expectNoHorizontalOverflow(page);
-    await page.screenshot({
-      fullPage: true,
-      path: `artifacts/w2-navigation/epic1-focused-${viewport.width}.png`,
-    });
+    await page.getByRole("link", { name: "Open the full record" }).click();
+    await expect(page).toHaveURL(/\/record\/nist-800-53\/AC-1/);
   });
 
   test(`RMF reaches a published result in three choices at ${viewport.width}px`, async ({
     page,
   }) => {
     await page.setViewportSize(viewport);
-    await page.goto("/#/atlas?sourceView=rmf");
+    await page.goto("/#/atlas");
     await waitForAppReady(page);
     await dismissOnboarding(page);
 
-    await expect(
-      page.getByText("Which Risk Management Framework step are you working in?"),
-    ).toBeVisible();
-
-    await page.locator(".atlas-rmf-step-list button").first().click();
-    await expect(page.getByText("Related records", { exact: true })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Prepare", exact: true })).toBeVisible();
-    await expect(page.locator(".atlas-choice-trail")).toContainText("PREPARE");
+    // One: the work, named the way practitioners name it.
+    await page.getByRole("button", { name: "RMF & ATO", exact: true }).click();
+    const journey = page.locator(".atl-journey");
+    await expect(journey.getByRole("heading", { name: "RMF steps" })).toBeVisible();
+    await expectNoHorizontalOverflow(page);
+    // Two: a step, which is a published SP 800-37 record.
+    await journey.getByRole("button", { name: "Prepare", exact: true }).click();
+    await expect(page).toHaveURL(/#\/atlas\/nist-800-37:RMF-PREPARE\?atlasJourney=rmf/);
+    await expect(page.locator(".atl-inspector, #atl-focus").first()).toContainText("Prepare", { timeout: 20000 });
     await expectNoHorizontalOverflow(page);
     await page.screenshot({
       fullPage: true,
       path: `artifacts/w2-navigation/rmf-${viewport.width}.png`,
     });
-
-    await page.locator(".atlas-path-record").first().click();
-    await expect(page).toHaveURL(/\/record\//);
+    // Three: its full record.
+    await page.getByRole("link", { name: "Open the full record" }).click();
+    await expect(page).toHaveURL(/\/record\/nist-800-37\//);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 }
 
-test("Atlas root presents a source-ecosystem interactive hierarchy", async ({
-  page,
-}) => {
-  await page.goto("/#/atlas?atlasLanding=publishers");
-  await waitForAppReady(page);
-  await dismissOnboarding(page);
-
-  const board = page.getByTestId("atlas-area-map");
-  await expect(board).toBeVisible();
-  // Eight publishers, plus the three authority landmarks and the one
-  // publication issued outside the federal ecosystems, named in strips.
-  await expect(board.locator("button.atlas-area__cell")).toHaveCount(8);
-  await expect(page.locator(".atlas-mapcol__aside em")).toHaveCount(4);
-  // The board is DOM, not a canvas, so every landmark keeps a readable label.
-  await expect(board.locator("canvas")).toHaveCount(0);
-  await expect(
-    page.getByText("Grouped by what each document is, who issues it, or what you're trying to get done.", { exact: true }),
-  ).toBeVisible();
-  await expect(page.getByRole("tab", { name: "Map", exact: true })).toHaveCount(
-    0,
-  );
-});
-
-test("a legacy RMF route recovers into the process branch", async ({ page }) => {
+test("a legacy RMF route opens the RMF journey", async ({ page }) => {
   await page.goto("/#/atlas?sourceView=rmf");
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
-  await expect(
-    page.getByText("Which Risk Management Framework step are you working in?"),
-  ).toBeVisible();
-  await expect(page.locator(".atlas-choice-trail")).toContainText(
-    "Risk Management Framework",
-  );
+  await expect(page).toHaveURL(/#\/atlas\?atlasJourney=rmf$/);
+  await expect(page.locator(".atl-journey").getByRole("heading", { name: "RMF & ATO" })).toBeVisible();
 });

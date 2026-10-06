@@ -53,8 +53,6 @@ import {
 } from "../lib/pagePrimitives";
 import { Button, ButtonLink } from "../components/lsm";
 import { AppLink } from "../components/AppLink";
-import { AtlasTag } from "../components/AtlasTag";
-import { taxonomyTagsForTemplate } from "../../shared/record-taxonomy.mjs";
 
 type TemplateRecord = {
   template_id?: string;
@@ -371,23 +369,11 @@ function TemplateMetaChip({ children }: { children: ReactNode }) {
   );
 }
 
-const TEMPLATE_TAG_PRIORITY = ["tool", "framework", "program"];
-
-function templateMeta(template: TemplateRecord, onNavigate?: (view: ViewState["view"], patch?: Partial<ViewState>) => void) {
+function templateMeta(template: TemplateRecord) {
   const formats = template.supported_formats || ["docx"];
-  const basis = compatibilityLabel(template.compatibility?.classification || template.compatibility_level);
-  const tagIds = onNavigate
-    ? TEMPLATE_TAG_PRIORITY.flatMap((dim) =>
-        taxonomyTagsForTemplate(template)
-          .filter((t: { kind?: string }) => t.kind === dim)
-          .map((t: { id: string }) => t.id),
-      ).slice(0, 2)
-    : [];
   return (
     <>
       {formats.map((f) => <TemplateMetaChip key={f}>{FORMAT_SHORT[f] || f.toUpperCase()}</TemplateMetaChip>)}
-      {basis && basis !== "Template" ? <TemplateMetaChip>{basis}</TemplateMetaChip> : null}
-      {tagIds.map((tagId) => <AtlasTag key={tagId} onNavigate={onNavigate!} showIdentity size="sm" tagId={tagId} />)}
     </>
   );
 }
@@ -1113,7 +1099,7 @@ export function TemplatesPage(props: {
                         body={template.description}
                         icon={<IconFileDescription size={20} stroke={1.8} />}
                         key={template.name}
-                        meta={templateMeta(template, onNavigate)}
+                        meta={templateMeta(template)}
                         details={templateDetails(template)}
                         onNavigate={onNavigate}
                         patch={{ buildSection: "documents", task: "", templateType: template.name, framework: state.framework || "", format: template.supported_formats?.[0] || "docx", environment: state.environment || "", baseline: "", controlFamily: "" }}
@@ -1135,7 +1121,7 @@ export function TemplatesPage(props: {
                       body={template.description}
                       icon={<IconFileDescription size={20} stroke={1.8} />}
                       key={template.name}
-                      meta={templateMeta(template, onNavigate)}
+                      meta={templateMeta(template)}
                       details={templateDetails(template)}
                       onNavigate={onNavigate}
                       patch={{ buildSection: "documents", task: "", templateType: template.name, framework: state.framework || "", format: template.supported_formats?.[0] || "docx", environment: state.environment || "", baseline: "", controlFamily: "" }}

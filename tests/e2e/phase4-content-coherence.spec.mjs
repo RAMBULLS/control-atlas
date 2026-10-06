@@ -43,6 +43,11 @@ test("Phase 4 Templates expose setup and output, then preview document structure
   await dismissOnboarding(page);
 
   const firstDocument = page.locator(".template-card-details").first();
+  const setup = page.locator(".template-card-disclosure").first();
+  await expect(setup).not.toHaveAttribute("open", "");
+  await setup.locator("summary").focus();
+  await page.keyboard.press("Enter");
+  await expect(setup).toHaveAttribute("open", "");
   await expect(firstDocument).toContainText("Setup:");
   await expect(firstDocument).toContainText("Output:");
 
@@ -126,6 +131,59 @@ test("Phase 4 Search teaches its real keyboard shortcut in context", async ({ pa
 
 const READY_HARDWARE = "/#/build/documents/hardware_baseline?environment=Generic&format=xlsx";
 
+for (const width of [375, 1440]) {
+  test(`template cards keep navigation and secondary setup separate at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/#/build/documents");
+    await waitForAppReady(page);
+    await dismissOnboarding(page);
+    const hardware = page.locator('.intent-grid a[href*="/hardware_baseline"]');
+    const software = page.locator('.intent-grid a[href*="/software_baseline"]');
+    await expect(hardware).not.toContainText("FedRAMP");
+    await expect(software).not.toContainText("FedRAMP");
+    await expect(page.locator(".intent-grid a a, .intent-grid a details")).toHaveCount(0);
+    const card = hardware.locator("..");
+    const details = card.locator("details");
+    await expect(details).not.toHaveAttribute("open", "");
+    const original = page.url();
+    await details.locator("summary").focus();
+    await page.keyboard.press("Enter");
+    await expect(details.locator(".template-card-details")).toBeVisible();
+    await expect(page).toHaveURL(original);
+    const filters = page.getByRole("group", { name: "Filter by category" });
+    for (const button of await filters.getByRole("button").all()) {
+      // Firefox exposes float rounding below 44 for an actual 44px CSS box.
+      expect(await button.evaluate((element) => Number.parseFloat(globalThis.getComputedStyle(element).height))).toBeGreaterThanOrEqual(44);
+    }
+    await expect(filters.getByRole("button", { name: "All categories" })).toHaveAttribute("aria-pressed", "true");
+    const destination = await hardware.getAttribute("href");
+    await hardware.click();
+    await expect.poll(() => new URL(page.url()).hash).toBe(destination);
+    await waitForAppReady(page);
+    await page.getByRole("heading", { name: "What this template is for" }).waitFor({ state: "visible" });
+    await expect(page.getByRole("heading", { name: "What this template is for" })).toBeVisible();
+  });
+
+  test(`template card modified navigation opens the selected template at ${width}px`, async ({ page, context }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/#/build/documents");
+    await waitForAppReady(page);
+    await dismissOnboarding(page);
+    const hardware = page.locator('.intent-grid a[href*="/hardware_baseline"]');
+    const original = page.url();
+    const destination = await hardware.getAttribute("href");
+    const opened = context.waitForEvent("page");
+    await hardware.click({ modifiers: ["Control"] });
+    const newTab = await opened;
+    await expect(newTab.locator("#app")).toHaveAttribute("data-view", "templates");
+    await waitForAppReady(newTab);
+    await expect.poll(() => new URL(newTab.url()).hash).toBe(destination);
+    await expect(newTab.getByRole("heading", { name: "What this template is for" })).toBeVisible();
+    await expect(page).toHaveURL(original);
+    await newTab.close();
+  });
+}
+
 test("Phase 4 a template download fires once per click, even on a fast double click", async ({ page }) => {
   await page.goto(READY_HARDWARE);
   await waitForAppReady(page);
@@ -193,6 +251,7 @@ test("Phase 4 Templates start from the job to be done and say what each file is 
   for (const heading of ["Build hardware and software baselines", "Draft control implementation", "Track POA&M remediation"]) {
     await expect(page.getByRole("heading", { name: heading, level: 3 })).toBeVisible();
   }
+  await page.locator(".template-card-disclosure").first().locator("summary").click();
   await expect(page.getByText("Not a replacement for:").first()).toBeVisible();
   await expect(page.locator("body")).toContainText("Your CMDB or eMASS.");
 });

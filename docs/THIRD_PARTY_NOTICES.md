@@ -30,6 +30,24 @@ The Phase 7 registries added on 2026-07-16 contain metadata and links only. They
 | [Microsoft PowerSTIG](https://github.com/microsoft/PowerStig) | MIT | Follow the repository [LICENSE](https://github.com/microsoft/PowerStig/blob/dev/LICENSE). |
 | [ComplianceAsCode Content](https://github.com/ComplianceAsCode/content) | BSD-3-Clause | Follow the repository [LICENSE](https://github.com/ComplianceAsCode/content/blob/master/LICENSE) and generated-content notices. |
 
+## Self-hosted typography
+
+Orbital Archive No. 01 1.8.0 supplies the IBM Plex Mono, Oswald and Silkscreen
+font bytes used by the interface. Production builds extract those bytes without
+modifying them, retain every declared face and weight, and publish their copyright
+notices and complete SIL Open Font License 1.1 texts alongside the font assets.
+The generated `assets/font-licenses/font-assets.json` maps each emitted font to
+its notice and records its computed SHA256 and byte length. Orbital's MIT license
+is included separately.
+
+The committed notices preserve the complete text from Google Fonts commit
+`7085eb89a950e85db5b166b7a58d414544b4140c`, with line endings and trailing
+whitespace normalized to repository conventions:
+
+- [IBM Plex Mono](../styles/font-notices/ibmplexmono-OFL.txt), from [Google Fonts](https://github.com/google/fonts/blob/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/ibmplexmono/OFL.txt).
+- [Oswald](../styles/font-notices/oswald-OFL.txt), from [Google Fonts](https://github.com/google/fonts/blob/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/oswald/OFL.txt).
+- [Silkscreen](../styles/font-notices/silkscreen-OFL.txt), from [Google Fonts](https://github.com/google/fonts/blob/7085eb89a950e85db5b166b7a58d414544b4140c/ofl/silkscreen/OFL.txt).
+
 ## Interoperability wording
 
 Control Atlas uses the following evidence labels and does not collapse them into a generic “compatible” claim:

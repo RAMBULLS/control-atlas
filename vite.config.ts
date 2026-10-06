@@ -22,6 +22,7 @@ import { normalizeViewState } from './src/ui/lib/viewState.ts';
 import { buildHomeSurface } from './src/shared/home-surface-build.ts';
 import type { HomeSurface } from './src/shared/home-surface.ts';
 import { RECORD_STARTUP_ENTRIES, recordStartupHints } from './tools/record-startup-hints.mjs';
+import { orbitalFontAssetsPlugin } from './tools/orbital-font-assets.mjs';
 
 const rootDir = fileURLToPath(new URL('.', import.meta.url));
 
@@ -216,6 +217,7 @@ export default defineConfig({
     'globalThis.__HOME_SURFACE__': JSON.stringify(homeSurface),
   },
   plugins: [
+    orbitalFontAssetsPlugin(rootDir),
     {
       name: 'control-atlas-record-startup-hints',
       apply: 'build',

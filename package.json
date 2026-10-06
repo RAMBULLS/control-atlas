@@ -151,7 +151,7 @@
     "verify:refresh-admission": "node tools/verify-refresh-admission.mjs",
     "lighthouse:production": "node tools/collect-production-lighthouse.mjs",
     "test:pipeline-reliability": "node --test tests/pipeline-reliability.test.mjs tests/ci-lighthouse.test.mjs tests/record-startup-hints.test.mjs",
-    "lint:pipeline-reliability": "eslint tools/record-startup-hints.mjs tests/record-startup-hints.test.mjs tools/run-ci-lighthouse.mjs tests/ci-lighthouse.test.mjs tools/collect-production-lighthouse.mjs tools/lighthouse-metrics.mjs tests/pipeline-reliability.test.mjs tools/report-refresh-alerts.mjs --max-warnings=0"
+    "lint:pipeline-reliability": "eslint tools/orbital-font-assets.mjs tests/orbital-token-drift.test.mjs tools/record-startup-hints.mjs tests/record-startup-hints.test.mjs tools/run-ci-lighthouse.mjs tests/ci-lighthouse.test.mjs tools/collect-production-lighthouse.mjs tools/lighthouse-metrics.mjs tests/pipeline-reliability.test.mjs tools/report-refresh-alerts.mjs --max-warnings=0"
   },
   "engines": {
     "node": "^22.22.2 || ^24.15.0 || >=26.0.0"

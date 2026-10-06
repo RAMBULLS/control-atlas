@@ -269,6 +269,40 @@ test("explore bootstrap avoids graph JSON until record open", async ({
   expect(graphArtifactUrls(requested)).toEqual([]);
 });
 
+for (const focusedAction of ['summary', '[data-record-action="copy-link"]']) {
+  test(`native record actions retain open state and focus on ${focusedAction} through enhancement`, async ({ page }) => {
+    let release = () => {};
+    const enhancement = new Promise(resolve => { release = () => resolve(undefined); });
+    await page.route(/\/assets\/(?:App|ObjectDetailPage)-[^/]+\.js$/, async route => {
+      await enhancement;
+      await route.continue();
+    });
+    try {
+      await page.goto('/#/record/nist-800-53/AC-2');
+      const nativeMenu = page.locator('[data-publisher-reader] .record-actions-menu');
+      await expect(nativeMenu).toBeVisible();
+      const source = await page.locator('[data-publisher-reader] [data-source-text]').elementHandle();
+      expect(source).not.toBeNull();
+      await nativeMenu.locator('summary').click();
+      await nativeMenu.locator(focusedAction).focus();
+      await expect(nativeMenu).toHaveAttribute('open', '');
+      await expect(nativeMenu.locator(focusedAction)).toBeFocused();
+      release();
+      await waitForAppReady(page, { allowPartial: true });
+      const enhancedMenu = page.locator('[data-react-root] .record-actions-menu');
+      await expect(enhancedMenu).toBeVisible();
+      await expect(enhancedMenu).toHaveAttribute('open', '');
+      await expect(enhancedMenu.locator(focusedAction)).toBeFocused();
+      expect(await source.evaluate(element => element.isConnected && Boolean(element.closest('[data-react-root]')))).toBe(true);
+      await page.keyboard.press('Escape');
+      await expect(enhancedMenu).not.toHaveAttribute('open', '');
+      await expect(enhancedMenu.locator('summary')).toBeFocused();
+    } finally {
+      release();
+    }
+  });
+}
+
 test("record source hints reuse the initial transfers before page code loads", async ({ page }) => {
   const names = ["sources.json", "catalog-bootstrap.json", "atlas-neighborhood-manifest.json"];
   const responses = [];
@@ -279,6 +313,10 @@ test("record source hints reuse the initial transfers before page code loads", a
   });
   await page.goto("/#/record/nist-800-53/AC-2");
   await expect(page.locator(".source-text-blocks p").first()).toBeVisible();
+  // Source is readable before the detail enhancer arrives. Compare timing only
+  // after the real resource entry exists, never by assuming readiness.
+  await expect.poll(() => page.evaluate(() => performance.getEntriesByType("resource")
+    .some((entry) => /\/assets\/ObjectDetailPage-/.test(entry.name)))).toBe(true);
   const evidence = await page.evaluate((initialNames) => {
     const version = globalThis.document.querySelector('meta[name="control-atlas-runtime-cache-version"]').getAttribute("content");
     const entries = globalThis.performance.getEntriesByType("resource");

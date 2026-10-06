@@ -74,7 +74,7 @@ test('native reading includes bounded, deduplicated published selection sets and
   const record = { center_node: center, nodes: [center, ...targets], edges: [...edges, edges[0], { ...edges[0], target_node_id: 'missing', publication_status: 'candidate' }], structural_path: [] };
   const rendered = publisherReadingModel(contract, record, { name: 'Publisher' }, 'Low');
   assert.match(text(rendered), /26/);
-  assert.match(text(rendered), /\+1 more - Explore in Atlas/);
+  assert.match(text(rendered), /\+1 more \u2014 Explore in Atlas/);
   const serialized = JSON.stringify(rendered);
   assert.match(serialized, /#\/atlas\/nist-800-53b:low/);
   assert.match(serialized, /#\/record\/nist-800-53\/AC-25/);

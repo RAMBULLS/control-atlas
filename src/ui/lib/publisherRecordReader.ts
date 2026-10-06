@@ -161,7 +161,7 @@ export async function startPublisherRecordReader(): Promise<void> {
       if (event.key === 'Escape') { event.preventDefault(); (menu as HTMLDetailsElement).open = false; menu.querySelector('summary')?.focus(); }
     });
     const popover = element('div', { class: 'record-actions-popover' });
-    const copyLink = element('button', { type: 'button', class: readerButton('secondary') }, 'Copy link');
+    const copyLink = element('button', { type: 'button', class: readerButton('secondary'), 'data-record-action': 'copy-link' }, 'Copy link');
     copyLink.addEventListener('click', () => { void copyPublisherCode(window.location.href).then(() => { copyLink.textContent = 'Link copied'; }, () => { copyLink.textContent = 'Use your browser share menu'; }); });
     popover.append(copyLink);
     popover.append(element('p', { class: 'support-meta' }, 'More tools will be available when the page finishes loading.'));

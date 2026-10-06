@@ -24,9 +24,9 @@ const EXEMPT_SELECTOR = "[data-technical-details]";
 
 /** Visible text of <main>, minus technical-details subtrees. */
 async function publicText(page) {
-  return page.evaluate((exemptSelector) => {
-    const main = document.querySelector("main");
-    if (!main) return "";
+  const visibleMain = page.getByRole("main");
+  await expect(visibleMain).toHaveCount(1);
+  return visibleMain.evaluate((main, exemptSelector) => {
     const clone = /** @type {HTMLElement} */ (main.cloneNode(true));
     for (const node of [...clone.querySelectorAll(exemptSelector)]) node.remove();
     // A closed <details> still holds its text in the DOM, and it is one click

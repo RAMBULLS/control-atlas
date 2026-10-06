@@ -31,6 +31,12 @@ export function adoptPublisherText(recordId: string, host: HTMLElement) {
     ? { start: range.startContainer, startOffset: range.startOffset, end: range.endContainer, endOffset: range.endOffset } : undefined;
   const focused = owner.element.contains(document.activeElement) ? document.activeElement as HTMLElement : null;
   const nativeMain = owner.element.closest<HTMLElement>('[data-publisher-reader]');
+  const nativeMenu = nativeMain?.querySelector<HTMLDetailsElement>('.record-actions-menu');
+  const previousMenuFocus = nativeMenu?.contains(document.activeElement) ? document.activeElement as HTMLElement : null;
+  const enhancedMenu = host.closest('[data-record-content]')?.querySelector<HTMLDetailsElement>('.record-actions-menu');
+  if (nativeMenu && enhancedMenu) enhancedMenu.open = nativeMenu.open;
+  const menuFocus = previousMenuFocus?.matches('summary') ? enhancedMenu?.querySelector<HTMLElement>('summary')
+    : previousMenuFocus?.matches('[data-record-action="copy-link"]') ? enhancedMenu?.querySelector<HTMLElement>('[data-record-action="copy-link"]') : null;
   if (nativeMain) nativeMain.hidden = true;
   host.append(owner.element);
   if (endpoints && selection) {
@@ -42,11 +48,13 @@ export function adoptPublisherText(recordId: string, host: HTMLElement) {
   }
   owner.adopted = true;
   notify();
-  if (focused) {
+  const retainedFocus = focused || menuFocus;
+  if (retainedFocus) {
     // React reveals its main after this layout effect. Restore only the focus
     // that the move displaced, without stealing a subsequent user choice.
     window.requestAnimationFrame(() => {
-      if (focused.isConnected && document.activeElement === document.body) focused.focus({ preventScroll: true });
+      if (recordIdFromHash(window.location.hash) === recordId && retainedFocus.isConnected
+        && (document.activeElement === document.body || document.activeElement === previousMenuFocus)) retainedFocus.focus({ preventScroll: true });
     });
   }
   return true;

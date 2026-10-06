@@ -39,6 +39,9 @@ test("supporting context preserves the open record action and keyboard focus", a
   });
   try {
     await page.goto("/#/record/nist-800-53/AC-2");
+    // This contract covers later supporting-context updates to the React page.
+    // The native-to-React boundary has its own retained-source/action test.
+    await expect(page.locator('[data-react-root] [data-record-content]')).toBeVisible();
     const record = page.locator("[data-record-content]");
     await expect(record).toBeVisible();
     const initialCommit = await record.getAttribute("data-record-commit");

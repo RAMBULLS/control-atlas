@@ -181,7 +181,7 @@ export function publisherReadingModel(contract: any, record: any, source: any, i
           if (description) title += ` - ${description.length > 100 ? `${description.slice(0, 97).trimEnd()}.` : description}`;
         }
         return node('li', {}, node('a', { href: recordHashForId(entry.id) }, title));
-      })), items.length > 25 ? [node('a', { href: atlasHashForId(center.id) }, `+${items.length - 25} more - Explore in Atlas`)] : []));
+      })), items.length > 25 ? [node('a', { href: atlasHashForId(center.id) }, `+${items.length - 25} more \u2014 Explore in Atlas`)] : []));
   }
   const children = published.filter((edge: any) => edge.relationship_class === 'structural' && edge.source_node_id === center.id)
     .sort((left: any, right: any) => (left.publisher_order ?? Number.MAX_SAFE_INTEGER) - (right.publisher_order ?? Number.MAX_SAFE_INTEGER))

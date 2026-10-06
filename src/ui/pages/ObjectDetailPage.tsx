@@ -303,7 +303,7 @@ export function ObjectDetailPage(props: {
               <div className="record-actions-popover">
                 {actions.compare ? <AppLink onNavigate={onNavigate} patch={{ crosswalk: "relationships", intent: "item-mapping", items: document.item_id, source: document.catalog_id }} variant="secondary" view="matrix">Compare frameworks</AppLink> : null}
                 {actions.templateFramework ? <AppLink onNavigate={onNavigate} patch={{ framework: actions.templateFramework }} variant="secondary" view="templates">Choose a template</AppLink> : null}
-                <Button onClick={() => { void copyText(canonicalRecordUrl()); }} type="button" variant="secondary">Copy link</Button>
+                <Button data-record-action="copy-link" onClick={() => { void copyText(canonicalRecordUrl()); }} type="button" variant="secondary">Copy link</Button>
               </div>
             </details>
           </div>

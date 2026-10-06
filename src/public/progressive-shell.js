@@ -264,11 +264,14 @@
         document.head.appendChild(moduleHint);
       });
       recordCode.styles.forEach(function (href) {
+        var styleUrl = new URL(href, document.baseURI).href;
+        var existingStyles = document.querySelectorAll('link[rel="stylesheet"], link[rel="preload"][as="style"]');
+        if (Array.from(existingStyles).some(function (link) { return link.href === styleUrl; })) return;
         var styleHint = document.createElement("link");
         styleHint.rel = "preload";
         styleHint.as = "style";
         styleHint.crossOrigin = "anonymous";
-        styleHint.href = new URL(href, document.baseURI).href;
+        styleHint.href = styleUrl;
         document.head.appendChild(styleHint);
       });
     }

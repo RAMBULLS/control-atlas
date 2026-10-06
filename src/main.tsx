@@ -622,7 +622,7 @@ function warmInteractiveRoute() {
   }
   void Promise.all([
     import('./ui/lib/hashRoutes'),
-    import('./ui/lib/runtimeLoader'),
+    import('./ui/lib/runtimeArtifacts'),
   ])
     .then(([routes, runtime]) =>
       runtime.preloadRuntimeArtifacts(

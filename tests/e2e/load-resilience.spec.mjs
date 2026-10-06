@@ -124,16 +124,19 @@ test("retry clears a rejected artifact and succeeds on a fresh request", async (
   expect(requests).toBeGreaterThanOrEqual(2);
 });
 
-test("a persistent lazy route crash preserves navigation and isolates the failed workspace", async ({ page }) => {
+for (const [routePath, moduleName] of [
+  ["atlas", "AtlasTerritoryPage"],
+  ["record/nist-800-53/AC-2", "ObjectDetailPage"],
+]) test(`a persistent ${moduleName} failure preserves navigation and isolates the failed workspace`, async ({ page }) => {
   await page.setViewportSize({ width: 1600, height: 900 });
   await page.addInitScript(() => {
     globalThis.sessionStorage.setItem("control-atlas:chunk-reload-at", String(Date.now()));
   });
-  await page.route("**/assets/AtlasTerritoryPage-*.js", async (route) => {
+  await page.route(`**/assets/${moduleName}-*.js`, async (route) => {
     await route.fulfill({ status: 503, body: "route chunk unavailable" });
   });
 
-  await gotoApp(page, "/#/atlas");
+  await gotoApp(page, `/#/${routePath}`);
   await expect(page.getByText("This workspace stopped unexpectedly.", { exact: false })).toBeVisible({ timeout: 15000 });
   const primaryNav = page.getByRole("navigation", { name: "Primary navigation" });
   await expect(primaryNav.getByRole("link", { name: "Resources", exact: true })).toBeVisible();

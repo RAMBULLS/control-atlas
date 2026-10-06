@@ -11,6 +11,31 @@ import {
 } from "../../src/ui/lib/runtimeLoader";
 import { requiresFullGraph } from "../../src/ui/lib/navigationState";
 import { normalizeViewState } from "../../src/ui/lib/viewState";
+import { fetchArtifact as preloadArtifact } from "../../src/ui/lib/runtimeArtifacts";
+
+test("startup acquisition and runtime consumption share one request and cache reset", async () => {
+  const originalFetch = globalThis.fetch;
+  let requests = 0;
+  clearRuntimeArtifactCache();
+  globalThis.fetch = (async () => {
+    requests += 1;
+    return new Response(JSON.stringify({ ready: true }), { status: 200 });
+  }) as typeof fetch;
+  try {
+    const [prefetched, consumed] = await Promise.all([
+      preloadArtifact("./shared-acquisition.json", { preferNativeEncoding: true }),
+      fetchArtifact("./shared-acquisition.json"),
+    ]);
+    assert.equal(requests, 1);
+    assert.equal(prefetched, consumed);
+    clearRuntimeArtifactCache();
+    await preloadArtifact("./shared-acquisition.json", { preferNativeEncoding: true });
+    assert.equal(requests, 2, "runtime retry clears the startup acquisition cache too");
+  } finally {
+    globalThis.fetch = originalFetch;
+    clearRuntimeArtifactCache();
+  }
+});
 
 test("compressed artifacts keep cache-busting parameters after the gzip extension", () => {
   assert.equal(

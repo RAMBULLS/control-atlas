@@ -17,6 +17,7 @@ export function waitForRecordPaint(nodeId: string, runtime: object, signal: Abor
   return new Promise((resolve, reject) => {
     let frame = 0;
     let paintTask: ReturnType<typeof setTimeout> | undefined;
+    let waitingForFonts = false;
     let settled = false;
     const cleanup = () => {
       if (settled) return;
@@ -28,9 +29,11 @@ export function waitForRecordPaint(nodeId: string, runtime: object, signal: Abor
     };
     const finish = () => { cleanup(); resolve(); };
     const matchingVisibleRecord = () => {
-      const content = document.getElementById("workspace")?.querySelector<HTMLElement>("[data-record-content]");
+      const workspace = document.getElementById("workspace");
+      const content = workspace?.querySelector<HTMLElement>("[data-record-content]");
       return content?.dataset.recordContent === nodeId && content.dataset.recordCommit === token
-        && content.getClientRects().length > 0 && getComputedStyle(content).visibility !== "hidden";
+        && content.getClientRects().length > 0 && getComputedStyle(content).visibility !== "hidden"
+        && workspace && getComputedStyle(workspace).visibility !== "hidden";
     };
     const check = () => {
       if (settled) return;
@@ -40,17 +43,33 @@ export function waitForRecordPaint(nodeId: string, runtime: object, signal: Abor
         reject(new Error("The record renderer could not load."));
         return;
       }
-      if (!matchingVisibleRecord() || frame || paintTask !== undefined) return;
+      if (!matchingVisibleRecord() || frame || paintTask !== undefined || waitingForFonts) return;
       // RAF callbacks precede paint. Resume supporting work in a later task,
       // after the matching visible record has had its rendering opportunity.
       frame = requestAnimationFrame(() => {
         frame = requestAnimationFrame(() => {
           frame = 0;
-          paintTask = setTimeout(() => {
-            paintTask = undefined;
-            if (document.getElementById("workspace")?.querySelector("[data-route-render-error]")) check();
-            else if (matchingVisibleRecord()) finish();
-          }, 0);
+          // Visible source text can activate another font cycle. Read readiness
+          // after its layout, then give those glyphs their own paint opportunity.
+          waitingForFonts = true;
+          void Promise.resolve(document.fonts?.ready).then(() => {
+            waitingForFonts = false;
+            if (settled) return;
+            frame = requestAnimationFrame(() => {
+              frame = 0;
+              paintTask = setTimeout(() => {
+                paintTask = undefined;
+                const recordVisible = matchingVisibleRecord();
+                if (document.getElementById("workspace")?.querySelector("[data-route-render-error]")
+                  || document.fonts?.status === "loading") check();
+                else if (recordVisible) finish();
+              }, 0);
+            });
+          }, (error: unknown) => {
+            if (settled) return;
+            cleanup();
+            reject(error);
+          });
         });
       });
     };

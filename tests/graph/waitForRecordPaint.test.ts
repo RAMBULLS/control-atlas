@@ -15,7 +15,9 @@ test("paint acknowledgement requires a visible matching runtime and a task after
   let renderError = false;
   const current: Record<string, string> = {};
   const workspace = { querySelector: (selector: string) => selector.includes("render-error") ? (renderError ? {} : null) : { dataset: current, getClientRects: () => visible ? [{}] : [] } };
-  const fakeDocument = { body: {}, getElementById: () => workspace };
+  const fakeDocument: { body: object; getElementById: () => typeof workspace; fonts?: {status: string; ready: Promise<void> } } = {
+    body: {}, getElementById: () => workspace, fonts: {status: "loaded", ready: Promise.resolve()},
+  };
   class Observer { constructor(fn: () => void) { callback = fn; } observe() { connected = true; } disconnect() { connected = false; } }
   Object.defineProperty(globalThis, "document", { configurable: true, value: fakeDocument });
   Object.defineProperty(globalThis, "MutationObserver", { configurable: true, value: Observer });
@@ -39,23 +41,50 @@ test("paint acknowledgement requires a visible matching runtime and a task after
     visible = true; callback();
     tick(); await Promise.resolve(); assert.equal(resolved, false);
     tick(); await Promise.resolve(); assert.equal(resolved, false, "supporting work cannot resume inside RAF");
+    tick();
     current.recordCommit = recordCommitToken({}); runTasks(); await Promise.resolve();
     assert.equal(resolved, false, "the record must still match when the later task runs");
-    current.recordCommit = recordCommitToken(runtime); callback(); tick(); tick(); runTasks();
+    current.recordCommit = recordCommitToken(runtime); callback(); tick(); tick(); await Promise.resolve(); tick(); runTasks();
     await pending; assert.equal(resolved, true); assert.equal(connected, false);
     const cancelled = new AbortController();
     const waiting = waitForRecordPaint("other", {}, cancelled.signal);
     cancelled.abort(); await waiting; assert.equal(connected, false); assert.equal(frames.size, 0);
     const cancelledTask = new AbortController();
     const taskWaiting = waitForRecordPaint("AC-2", runtime, cancelledTask.signal);
-    tick(); tick(); assert.equal(tasks.size, 1); cancelledTask.abort(); await taskWaiting;
+    tick(); tick(); await Promise.resolve(); tick(); assert.equal(tasks.size, 1); cancelledTask.abort(); await taskWaiting;
     assert.equal(tasks.size, 0, "abort must cancel the after-paint task");
     const failedTask = waitForRecordPaint("AC-2", runtime, new AbortController().signal);
-    tick(); tick(); renderError = true; runTasks();
+    tick(); tick(); await Promise.resolve(); tick(); renderError = true; runTasks();
     await assert.rejects(failedTask, /renderer/); assert.equal(tasks.size, 0); assert.equal(connected, false);
     renderError = true;
     await assert.rejects(waitForRecordPaint("AC-2", {}, new AbortController().signal), /renderer/);
     assert.equal(connected, false);
+    renderError = false;
+    let releaseFonts = () => {};
+    const pendingFonts = () => {
+      fakeDocument.fonts = { status: "loading", ready: new Promise<void>(resolve => { releaseFonts = resolve; }) };
+    };
+    fakeDocument.fonts = {status: "loaded", ready: Promise.resolve()};
+    const fontWait = waitForRecordPaint("AC-2", runtime, new AbortController().signal);
+    pendingFonts();
+    tick(); tick(); await Promise.resolve(); assert.equal(frames.size, 0); assert.equal(tasks.size, 0);
+    current.recordCommit = recordCommitToken({});
+    fakeDocument.fonts!.status = "loaded"; releaseFonts(); await Promise.resolve(); tick(); runTasks();
+    assert.equal(connected, true, "stale identity after font readiness must keep waiting");
+    current.recordCommit = recordCommitToken(runtime); callback(); tick(); tick(); await Promise.resolve(); tick(); runTasks();
+    await fontWait; assert.equal(connected, false);
+    pendingFonts();
+    const fontAbort = new AbortController();
+    const abortedFonts = waitForRecordPaint("AC-2", runtime, fontAbort.signal);
+    tick(); tick(); fontAbort.abort(); await abortedFonts; assert.equal(connected, false);
+    releaseFonts(); await Promise.resolve(); assert.equal(frames.size, 0);
+    pendingFonts();
+    const failedFonts = waitForRecordPaint("AC-2", runtime, new AbortController().signal);
+    tick(); tick(); renderError = true; callback(); await assert.rejects(failedFonts, /renderer/);
+    releaseFonts(); await Promise.resolve(); assert.equal(frames.size, 0); assert.equal(connected, false);
+    renderError = false; delete fakeDocument.fonts;
+    const noFontApi = waitForRecordPaint("AC-2", runtime, new AbortController().signal);
+    tick(); tick(); await Promise.resolve(); tick(); runTasks(); await noFontApi;
     const alreadyAborted = new AbortController(); alreadyAborted.abort();
     await waitForRecordPaint("AC-2", {}, alreadyAborted.signal);
     assert.equal(connected, false);

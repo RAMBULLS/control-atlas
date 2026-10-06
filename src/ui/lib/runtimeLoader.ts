@@ -352,7 +352,7 @@ export function runtimeArtifactPlan(
       registries: false, sources: atlasRecordFocused || Boolean(state.atlasResearch) };
   }
   return {
-    atlasSpine: state.view === "library-detail",
+    atlasSpine: false,
     catalogBootstrap:
       state.view === "library-detail" ||
       state.view === "catalog-detail" ||

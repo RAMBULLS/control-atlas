@@ -19,7 +19,7 @@ import { requiresFullGraph } from "../../src/ui/lib/navigationState";
 import { normalizeViewState } from "../../src/ui/lib/viewState";
 
 // Synthetic publisher fixtures exercise staging without network or generated data.
-function recordStageFixture(context: () => Promise<unknown>) {
+function recordStageFixture() {
   const id = "nist-800-53:AC-2";
   const source = { id: "fixture-source", owner: "Fixture publisher", title: "Fixture publication" };
   const nodes = [
@@ -37,8 +37,7 @@ function recordStageFixture(context: () => Promise<unknown>) {
     requests.push(url);
     if (url.includes(".json.gz")) return new Response("", { status: 404 });
     let body: unknown;
-    if (url.includes("atlas-spine.json")) body = await context();
-    else if (url.includes("atlas-neighborhood-manifest")) body = { atlas_neighborhood_manifest: { shard_count: 8 } };
+    if (url.includes("atlas-neighborhood-manifest")) body = { atlas_neighborhood_manifest: { shard_count: 8 } };
     else if (url.includes("atlas-neighborhood/")) {
       assert.ok(url.includes(`atlas-neighborhood/${atlasNeighborhoodShardId(id, 8)}.json`), "manifest count controls the requested path");
       body = { atlas_neighborhood_shard: shards.find(shard => shard.shard_id === atlasNeighborhoodShardId(id, 8)) };
@@ -91,11 +90,11 @@ test("new record cohorts bypass a cached manifest from the previous deployment",
   }
 });
 
-test("record first delivery preserves publisher content and edges before authority context", async () => {
+test("record first delivery preserves publisher content and edges through rendering", async () => {
   const originalFetch = globalThis.fetch;
   let releaseContext = (_value: unknown) => {};
   const context = new Promise(resolve => { releaseContext = resolve; });
-  const fixture = recordStageFixture(() => context);
+  const fixture = recordStageFixture();
   clearRuntimeArtifactCache();
   globalThis.fetch = fixture.fetchFixture;
   const first: RuntimeBundle[] = [];
@@ -105,6 +104,7 @@ test("record first delivery preserves publisher content and edges before authori
     await preloadRuntimeArtifacts(fixture.state);
     assert.ok(!fixture.requests.some(url => /atlas-spine|commons/.test(url)));
     const staged = loadRuntimeDatasetStaged({ state: fixture.state, onSearchReady: bundle => first.push(bundle),
+      onRecordRendered: async () => { await context; },
       onFullReady: bundle => final.push(bundle), onError: error => errors.push(error) });
     await new Promise(resolve => setTimeout(resolve, 0));
     assert.equal(first.length, 1);
@@ -113,10 +113,12 @@ test("record first delivery preserves publisher content and edges before authori
     assert.equal(first[0].runtime.getNode(fixture.id).metadata.description, "Complete fixture publisher text.");
     assert.equal(first[0].runtime.getSource(fixture.source.id).owner, fixture.source.owner);
     assert.equal(first[0].runtime.getEdgesForNode(fixture.id)[0].id, fixture.edge.id);
-    releaseContext({ atlas_spine: { entries: [{ id: fixture.id }] } });
+    releaseContext(undefined);
     await staged;
     assert.equal(final.length, 1);
-    assert.ok(final[0].atlasSpine);
+    assert.equal(final[0].atlasSpine, undefined);
+    assert.equal(final[0].recordContextReady, true);
+    assert.ok(!fixture.requests.some(url => /atlas-spine/.test(url)), "record authority uses its existing curated data");
     assert.ok(!fixture.requests.some(url => /commons/.test(url)), "a closed-search record never requests unrelated Resources artifacts");
     assert.deepEqual(final[0].runtime.getNode(fixture.id), first[0].runtime.getNode(fixture.id));
     assert.deepEqual(final[0].runtime.getEdgesForNode(fixture.id), first[0].runtime.getEdgesForNode(fixture.id));
@@ -128,24 +130,26 @@ test("record first delivery preserves publisher content and edges before authori
   }
 });
 
-test("failed required record context retains first content and a fresh retry recovers", async () => {
+test("failed record render acknowledgment retains first content and a fresh retry recovers", async () => {
   const originalFetch = globalThis.fetch;
-  let validSpine = false;
-  const fixture = recordStageFixture(async () => validSpine ? { atlas_spine: { entries: [{ id: "fixture" }] } } : {});
+  let rendered = false;
+  const fixture = recordStageFixture();
   clearRuntimeArtifactCache();
   globalThis.fetch = fixture.fetchFixture;
   const first: RuntimeBundle[] = [];
   const final: RuntimeBundle[] = [];
   const errors: unknown[] = [];
   const handlers = { state: fixture.state, onSearchReady: (bundle: RuntimeBundle) => first.push(bundle),
+    onRecordRendered: async () => { if (!rendered) throw new Error("Fixture record rendering failed"); },
     onFullReady: (bundle: RuntimeBundle) => final.push(bundle), onError: (error: unknown) => errors.push(error) };
   try {
     await loadRuntimeDatasetStaged(handlers);
     assert.equal(first.length, 1);
     assert.equal(final.length, 0);
     assert.equal(errors.length, 1);
-    assert.match(String(errors[0]), /Atlas spine artifact has no entries/);
-    validSpine = true;
+    assert.match(String(errors[0]), /Fixture record rendering failed/);
+    assert.equal(first[0].runtime.getNode(fixture.id).metadata.description, "Complete fixture publisher text.");
+    rendered = true;
     clearRuntimeArtifactCache();
     await loadRuntimeDatasetStaged(handlers);
     assert.equal(first.length, 2);
@@ -158,7 +162,7 @@ test("failed required record context retains first content and a fresh retry rec
 
 test("aborted record context emits no stale completion or recovery", async () => {
   const originalFetch = globalThis.fetch;
-  const fixture = recordStageFixture(async () => ({ atlas_spine: { entries: [{ id: "fixture" }] } }));
+  const fixture = recordStageFixture();
   clearRuntimeArtifactCache();
   globalThis.fetch = fixture.fetchFixture;
   const controller = new AbortController();
@@ -244,8 +248,8 @@ test("route bootstrap loads only the smallest faithful artifact scope", () => {
   );
   assert.equal(
     recordDetail.atlasSpine,
-    true,
-    "record rails extend primary authority through the shared authority spine",
+    false,
+    "record rails resolve complete authority from existing curated data",
   );
 
   const globalSearch = runtimeArtifactPlan(normalizeViewState("search"));

@@ -9,6 +9,7 @@ import {
   buildAtlasTreeModel,
   canonicalAtlasPath,
   extendDisplayedAuthorityTrace,
+  extendCuratedAuthorityTrace,
 } from "../../src/ui/lib/atlasTreeModel";
 import type {
   AtlasNeighborhoodEdge,
@@ -21,7 +22,8 @@ import { parseViewState, serializeViewState } from "../../src/ui/lib/viewState";
 const spine = JSON.parse(
   readFileSync(new URL("../../data/generated/atlas-spine.json", import.meta.url), "utf8"),
 ).atlas_spine as AtlasSpine;
-const model = buildAtlasTreeModel(spine);
+const authority = JSON.parse(readFileSync(new URL("../../data/curated/authority-spine.json", import.meta.url), "utf8"));
+const model = buildAtlasTreeModel(spine, authority);
 
 function neighborhood(nodeId: string): AtlasNeighborhoodRecord {
   const shardId = atlasNeighborhoodShardId(nodeId);
@@ -78,6 +80,27 @@ test("the record rail and Atlas trace use the same full authority hop sequence",
     record.structural_path.at(-1)!,
   ];
   assert.deepEqual(displayedRail.map((hop) => hop.id), expected.map((hop) => hop.id));
+  const curatedRail = extendCuratedAuthorityTrace(authority, record.structural_path);
+  assert.deepEqual(curatedRail, displayedRail, "record authority IDs, labels, ordering and provenance are unchanged");
+  assert.deepEqual(curatedRail.filter(hop => hop.origin === "authority"), expected.filter(hop => hop.origin === "authority"));
+});
+
+test("every publication keeps its complete generated authority chain without the full tree", () => {
+  for (const publication of model.publications) {
+    const canonical = atlasDisplayTrace(model, publication.id).filter(hop => hop.origin !== "authority");
+    assert.deepEqual(extendCuratedAuthorityTrace(authority, canonical), extendDisplayedAuthorityTrace(model, canonical), publication.id);
+  }
+});
+
+test("curated record authority resolution fails on cycles and unresolved parents", () => {
+  const publication = authority.publications.find((entry: { primary_authority: string | null }) => entry.primary_authority);
+  const canonical = [{ id: `${publication.catalog_id}:CATALOG`, label: publication.catalog_id, node_type: "catalog", origin: "structural" as const }];
+  const missing = structuredClone(authority);
+  missing.instruments = missing.instruments.filter((entry: { id: string }) => entry.id !== publication.primary_authority);
+  assert.throws(() => extendCuratedAuthorityTrace(missing, canonical), /unresolved instrument/);
+  const cycle = structuredClone(authority);
+  cycle.instruments.find((entry: { id: string }) => entry.id === publication.primary_authority).parent = publication.primary_authority;
+  assert.throws(() => extendCuratedAuthorityTrace(cycle, canonical), /chain cycle/);
 });
 
 test("a saved benchmark link opens that benchmark record on the territory sheet", () => {

@@ -1,4 +1,4 @@
-/** The compact Atlas spine (data/generated/atlas-spine.json) that record pages use for their authority trace. */
+/** The generated Atlas tree (data/generated/atlas-spine.json). */
 export type AtlasSpineEntry = {
   id: string;
   node_type: string;

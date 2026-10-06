@@ -21,7 +21,7 @@ import { publishedSectionsWithContent, RecordNativeFacts, RecordPublishedText, S
 import { RecordJumpButton, RecordRailSection, RecordSectionNavigation } from "../components/RecordDetailSupport";
 import { TagExplanations, TaxonomyContext } from "../components/TaxonomyContext";
 import { catalogDisplayNameFor, catalogProfileFor } from "../lib/catalogProfiles";
-import { buildAtlasTreeModel, extendDisplayedAuthorityTrace, type AtlasTraceHop } from "../lib/atlasTreeModel";
+import { extendCuratedAuthorityTrace, type AtlasTraceHop } from "../lib/atlasTreeModel";
 import { serializeHashUrl } from "../lib/hashRoutes";
 import { officialSourceActionLabel, officialSourceFor } from "../lib/officialSource";
 import { Badge, copyText, formatRelationshipLabel } from "../lib/pagePrimitives";
@@ -163,9 +163,7 @@ export function ObjectDetailPage(props: {
   }>;
   const trace = [...displayPath, { id: node.id, label: recordIdentity,
     node_type: node.node_type || document.object_type, origin: "structural" as const }];
-  const displayedTrace = bundle.atlasSpine
-    ? extendDisplayedAuthorityTrace(buildAtlasTreeModel(bundle.atlasSpine, authoritySpine), trace as AtlasTraceHop[])
-    : trace;
+  const displayedTrace = extendCuratedAuthorityTrace(authoritySpine, trace as AtlasTraceHop[]);
   const sourceMetadata = { ...node.metadata, description: document.description || node.metadata?.description || "" };
   const missingSourceFields = missingRequiredRecordFields(presentation, sourceMetadata);
   const publishedSections = publishedSectionsWithContent(presentation.sections, sourceMetadata);

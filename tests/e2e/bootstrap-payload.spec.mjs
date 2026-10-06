@@ -86,33 +86,17 @@ test("Resources exposes recovery when a delayed page module fails", async ({ pag
   }
 });
 
-test("record waits for its lazy official content before requesting supporting information", async ({ page }) => {
+test("record commits official content without a whole-tree or Resources download, then supports search", async ({ page }) => {
   const resourceRequests = [];
+  let spineRequests = 0;
   page.on("request", request => {
     if (/commons-search-index|commons-resource-dataset/.test(request.url())) resourceRequests.push(request.url());
+    if (/atlas-spine/.test(request.url())) spineRequests += 1;
   });
   let releaseRecord = () => {};
   const recordReleased = new Promise(resolve => { releaseRecord = () => resolve(undefined); });
-  let contextRequests = 0;
-  let committedToken = "";
   await page.route(/\/assets\/ObjectDetailPage-[^/]+\.js$/, async route => {
     await recordReleased;
-    await route.continue();
-  });
-  await page.route("**/data/generated/atlas-spine.json*", async route => {
-    contextRequests += 1;
-    const committed = await page.evaluate(() => {
-      const content = globalThis.document.querySelector('#workspace [data-record-content]');
-      return {
-        id: content?.getAttribute("data-record-content"),
-        token: content?.getAttribute("data-record-commit"),
-        text: content?.querySelector('[data-record-section="official-text"]')?.textContent,
-      };
-    });
-    expect(committed.id).toBe("nist-800-53:AC-2");
-    expect(committed.token).toMatch(/^\d+$/);
-    expect(committed.text).toContain("Define and document the types of accounts allowed");
-    committedToken = committed.token;
     await route.continue();
   });
   const neighborhood = page.waitForResponse(response => /atlas-neighborhood\/\d+\.json\.gz/.test(response.url()));
@@ -120,11 +104,12 @@ test("record waits for its lazy official content before requesting supporting in
     await page.goto("/#/record/nist-800-53/AC-2", { waitUntil: "domcontentloaded" });
     await neighborhood;
     await expect(page.locator('[data-route-suspense-pending="true"]')).toHaveCount(1);
-    expect(contextRequests).toBe(0);
+    expect(spineRequests).toBe(0);
     releaseRecord();
-    await expect.poll(() => contextRequests).toBe(1);
     await expect(page.locator('[data-record-content="nist-800-53:AC-2"]')).toHaveAttribute("data-record-context-ready", "true");
-    await expect(page.locator('[data-record-content="nist-800-53:AC-2"]')).toHaveAttribute("data-record-commit", committedToken);
+    await expect(page.locator('[data-record-content="nist-800-53:AC-2"]')).toHaveAttribute("data-record-commit", /^\d+$/);
+    await expect(page.locator('[data-record-section="official-text"]')).toContainText("Define and document the types of accounts allowed");
+    expect(spineRequests, "the complete record authority chain needs no whole-tree download").toBe(0);
     expect(resourceRequests, "a closed-search record needs no Resources payload").toEqual([]);
     await page.getByRole("button", { name: "Open search" }).click();
     await page.getByRole("searchbox", { name: "Search Control Atlas" }).fill("NISTControls");
@@ -138,14 +123,14 @@ test("record waits for its lazy official content before requesting supporting in
   }
 });
 
-test("record supporting information can retry while preserving usable source text", async ({ page }) => {
+test("a failed required record source can retry without inventing official text", async ({ page }) => {
   let failContext = true;
   let releaseRetry = () => {};
   const retryReleased = new Promise(resolve => { releaseRetry = () => resolve(undefined); });
   let observeRetry = () => {};
   const retryRequested = new Promise(resolve => { observeRetry = () => resolve(undefined); });
-  await page.route("**/data/generated/atlas-spine.json*", async route => {
-    if (failContext) await route.fulfill({ status: 200, contentType: "application/json", body: "{}" });
+  await page.route("**/data/generated/atlas-neighborhood/*.json*", async route => {
+    if (failContext) await route.abort();
     else {
       observeRetry();
       await retryReleased;
@@ -154,20 +139,18 @@ test("record supporting information can retry while preserving usable source tex
   });
   await page.goto("/#/record/nist-800-53/AC-2");
   const published = page.locator('[data-record-section="official-text"]');
-  await expect(published).toBeVisible();
-  const originalText = await published.innerText();
-  expect(originalText).toContain("Define and document the types of accounts allowed");
-  await expect(page.locator("[data-record-context-error]")).toBeVisible();
+  await expect(page.getByText("Unable to load data", { exact: true })).toBeVisible();
+  await expect(published).toHaveCount(0);
   failContext = false;
-  const recoveredSpine = page.waitForResponse(response => response.url().includes("atlas-spine.json.gz") && response.status() === 200);
-  await page.locator("[data-record-context-error]").getByRole("button", { name: "Try loading again" }).click();
+  const recoveredRecord = page.waitForResponse(response => /atlas-neighborhood\/\d+\.json\.gz/.test(response.url()) && response.status() === 200);
+  await page.getByRole("button", { name: "Try loading again" }).click();
   await retryRequested;
-  await expect(published).toBeVisible();
-  await expect(published).toHaveText(originalText, { useInnerText: true });
+  await expect(published).toHaveCount(0);
   releaseRetry();
-  await recoveredSpine;
-  await expect(page.locator("[data-record-context-error]")).toHaveCount(0);
-  await expect(published).toHaveText(originalText, { useInnerText: true });
+  await recoveredRecord;
+  await expect(page.getByText("Unable to load data", { exact: true })).toHaveCount(0);
+  await expect(published).toBeVisible();
+  await expect(published).toContainText("Define and document the types of accounts allowed");
 });
 
 test("home bootstrap avoids graph JSON artifacts", async ({ page }) => {

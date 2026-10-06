@@ -107,29 +107,8 @@ function taxonomyTagGroups(selected: string[]) {
   return [...groups.values()];
 }
 
-function matchReasonFor(document: any, query: string): string {
-  const needle = query.trim().toLocaleLowerCase();
-  if (!needle) return "Matches active filters";
-  const itemId = String(document.item_id || document.id || "").toLocaleLowerCase();
-  const title = String(document.title || "").toLocaleLowerCase();
-  if (itemId === needle) return "Exact identifier";
-  if (title === needle) return "Exact title";
-  if (itemId.startsWith(needle)) return "Identifier match";
-  if (title.includes(needle)) return "Title match";
-  return "Text match";
-}
-
 /** Below this many results the list is scannable and the kind band is noise. */
 const GROUPING_THRESHOLD = 20;
-
-const RELEVANCE_ORDER: Record<string, number> = {
-  "Exact identifier": 0,
-  "Exact title": 1,
-  "Identifier match": 2,
-  "Title match": 3,
-  "Text match": 4,
-  "Matches active filters": 5,
-};
 
 export function ExplorePage(props: {
   bundle: RuntimeBundle;
@@ -301,7 +280,6 @@ export function ExplorePage(props: {
         identifier: itemId,
         identity: identity.primary,
         lowCoverage: isLowCatalogCoverage(catalogCoverageForId(catalogCoverage, document.catalog_id)),
-        matchReason: matchReasonFor(document, state.query),
         publication,
         publisher,
         relationshipCount,
@@ -315,8 +293,8 @@ export function ExplorePage(props: {
     if (state.sort === "identifier") return prepared.sort(by("identifier"));
     if (state.sort === "title") return prepared.sort(by("sortTitle"));
     if (state.sort === "publication") return prepared.sort(by("publication"));
-    return prepared.sort((left: any, right: any) =>
-      (RELEVANCE_ORDER[left.matchReason] ?? 9) - (RELEVANCE_ORDER[right.matchReason] ?? 9) || by("sortTitle")(left, right));
+    // The shared search runtime owns relevance, including aliases and publication matches.
+    return prepared;
   }, [bundle.runtime, catalogCoverage, catalogNames, documents, state.query, state.sort]);
 
   const publishers = libraryFacets.publishers || [];
@@ -890,7 +868,7 @@ export function ExplorePage(props: {
                 <div key={group.type}>
                   <h3>{group.label} ({group.entries.length})</h3>
                   <ul className="cross-content-list">
-                    {group.entries.slice(0, 8).map((entry: any) => (
+                    {group.entries.map((entry: any) => (
                       <li key={entry.content_id}>
                         {entry.content_type === "resource" ? (
                           <AppLink onNavigate={onNavigate} patch={{ id: entry.content_id }} view="commons-detail">{entry.title}</AppLink>

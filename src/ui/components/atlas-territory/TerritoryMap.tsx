@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { areaCssVariables, AREA_PRESENTATIONS } from "../../lib/areaVisualLanguage";
 import type { Pt } from "../../lib/atlasTerritoryGeography";
-import { boundsOf, fitView, type TerritoryModel, type View } from "../../lib/atlasTerritoryModel";
+import { boundsOf, fitView, fitTerritoryCamera, territoryCameraProgress, type TerritoryModel, type View } from "../../lib/atlasTerritoryModel";
 import type { TerritoryRoute } from "../../lib/atlasTerritoryRoutes";
 import { hitsRects, rectsOverlap, routeBetween, type Rect, type Routed } from "../../lib/atlasTerritoryRouting";
 import type { ContextMatch } from "../../lib/atlasTerritoryContext";
@@ -54,17 +54,15 @@ const relationLabel = (types: readonly string[]) => types.join(" · ").replace(/
 export function TerritoryMap(props: MapProps & { actions: MapActions }) {
   const { model, size, focusAreaId, focusPublication, selectedRouteKey, revealed, pins, active, sharedLines, publisher, records, hops, inspectorInset, context, actions } = props;
   const [hover, setHover] = useState<{ kind: "publication" | "district" | "route"; id: string } | null>(null);
-  const aspect = size.w / Math.max(1, size.h);
+  const aspect = Math.max(1, size.w) / Math.max(1, size.h);
   const dimming = active.size > 0 || !!selectedRouteKey || hops.length > 0;
   const overview: View = model.geometry.overview;
   const pos = model.position;
 
   const target = useMemo<View>(() => {
-    const usable = Math.max(0.5, (size.w - inspectorInset) / Math.max(1, size.h));
-    const widen = (v: View): View => (inspectorInset ? { ...v, w: v.w * (size.w / (size.w - inspectorInset)) } : v);
-    if (dimming && active.size) return widen(fitView(boundsOf([...active].map(pos), 190), usable));
-    if (focusPublication && revealed.length) return widen(fitView(boundsOf([focusPublication, ...revealed.flatMap((r) => [r.a, r.b])].map(pos), 150), usable));
-    if (focusAreaId) return widen(fitView(boundsOf(model.areaById.get(focusAreaId)!.polygon, 120), usable));
+    if (dimming && active.size) return fitTerritoryCamera(boundsOf([...active].map(pos), 190), size, inspectorInset);
+    if (focusPublication && revealed.length) return fitTerritoryCamera(boundsOf([focusPublication, ...revealed.flatMap((r) => [r.a, r.b])].map(pos), 150), size, inspectorInset);
+    if (focusAreaId) return fitTerritoryCamera(boundsOf(model.areaById.get(focusAreaId)!.polygon, 120), size, inspectorInset);
     return fitView(overview, aspect);
   }, [dimming, active, focusAreaId, focusPublication, revealed, aspect, inspectorInset, size.w, size.h, model, overview, pos]);
 
@@ -74,7 +72,7 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { viewRef.current = target; setView(target); return undefined; }
     const from = viewRef.current; const t0 = performance.now(); let raf = 0;
     const step = (t: number) => {
-      const k = Math.min(1, (t - t0) / 460); const e = 1 - (1 - k) ** 3;
+      const k = territoryCameraProgress(t, t0); const e = 1 - (1 - k) ** 3;
       const v = k === 1 ? target : { x: from.x + (target.x - from.x) * e, y: from.y + (target.y - from.y) * e, w: from.w + (target.w - from.w) * e, h: from.h + (target.h - from.h) * e };
       viewRef.current = v; setView(v);
       if (k < 1) raf = requestAnimationFrame(step);

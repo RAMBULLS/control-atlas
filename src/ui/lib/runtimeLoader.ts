@@ -347,8 +347,8 @@ export function runtimeArtifactPlan(
   // network nor the hierarchy spine; a focused record adds only its own neighborhood shard.
   if (state.view === "atlas-map") {
     return { atlasSpine: false, catalogBootstrap: true, catalogId: "", catalogFamily: "",
-      commons: false, fullGraph: false, librarySearch: atlasRecordFocused || Boolean(state.atlasResearch) || Boolean(options.librarySearchRequested) || Boolean(options.searchOverlayOpen), recordNodeId: atlasRecordFocused ? state.node : "",
-      registries: false, sources: atlasRecordFocused || Boolean(state.atlasResearch) };
+      commons: Boolean(options.searchOverlayOpen), fullGraph: false, librarySearch: atlasRecordFocused || Boolean(state.atlasResearch) || Boolean(options.librarySearchRequested) || Boolean(options.searchOverlayOpen), recordNodeId: atlasRecordFocused ? state.node : "",
+      registries: false, sources: atlasRecordFocused || Boolean(state.atlasResearch) || Boolean(options.searchOverlayOpen) };
   }
   return {
     atlasSpine: state.view === "library-detail",

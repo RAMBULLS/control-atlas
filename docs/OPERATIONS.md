@@ -286,6 +286,8 @@ data, browser profiles or build output. `npm run git:push` runs it automatically
 The complete brand, copy, disclaimer and style audit remains `prepush:audit`, now
 in the required **Fresh checkout and push audit** GitHub-hosted job. Required CI
 depends on that job for every standard run, including automation-only changes.
+The read-only hosted audit may check `main` after verifying its exact checkout
+and current GitHub job. Local pushes still require a task branch.
 The brand metrics audit uses the real generated corpus. Its job consumes the
 shared generated-data artifact; the existing preparation job runs for every
 standard check, restoring valid cached data or generating it once on GitHub.

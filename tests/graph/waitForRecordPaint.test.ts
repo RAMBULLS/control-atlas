@@ -2,6 +2,121 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { recordCommitToken, waitForRecordPaint } from "../../src/ui/lib/waitForRecordPaint";
 
+test("native paint requires current text and bounds missing notifications with complete cleanup", async () => {
+  const keys = ["document", "MutationObserver", "PerformanceObserver", "requestAnimationFrame", "cancelAnimationFrame", "setTimeout", "clearTimeout", "getComputedStyle"];
+  const descriptors = new Map(keys.map((key) => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
+  let mutation = () => {};
+  let emitPaint = (_element: InstanceType<typeof globalThis.Element> | null, _identifier: string, _name = "text-paint", _visible = true) => {};
+  let nativeConnected = false;
+  let mutationConnected = false;
+  let observations = 0;
+  let renderError = false;
+  let nextId = 0;
+  const frames = new Map<number, (time: number) => void>();
+  const tasks = new Map<number, { run: () => void; delay: number }>();
+  const makeText = (top = 20) => {
+    const attributes = new Map<string, string>();
+    return {
+      textContent: "Published source text", isConnected: true,
+      getBoundingClientRect: () => ({ top, bottom: top + 100, left: 20, right: 220, width: 200, height: 100 }),
+      getAttribute: (name: string) => attributes.get(name) ?? null,
+      setAttribute: (name: string, value: string) => { attributes.set(name, value); },
+      removeAttribute: (name: string) => { attributes.delete(name); },
+    };
+  };
+  let text = makeText();
+  const current: Record<string, string> = {};
+  const content = { dataset: current, getClientRects: () => [{}], querySelector: () => text, contains: (element: unknown) => element === text };
+  const workspace = { querySelector: (selector: string) => selector.includes("render-error") ? (renderError ? {} : null) : content };
+  class Mutation { constructor(fn: () => void) { mutation = fn; } observe() { mutationConnected = true; } disconnect() { mutationConnected = false; } }
+  class Native {
+    static supportedEntryTypes = ["element"];
+    constructor(fn: ConstructorParameters<typeof globalThis.PerformanceObserver>[0]) {
+      emitPaint = (element, identifier, name = "text-paint", visible = true) => fn({ getEntries: () => [{ name, element, identifier, startTime: 30, intersectionRect: { width: visible ? 200 : 0, height: visible ? 100 : 0 } }] } as unknown as PerformanceObserverEntryList, {} as PerformanceObserver);
+    }
+    observe() { nativeConnected = true; observations += 1; }
+    disconnect() { nativeConnected = false; }
+  }
+  const replacements = {
+    document: { body: {}, documentElement: { clientHeight: 1000, clientWidth: 1440 }, fonts: { status: "loaded", ready: Promise.resolve() }, getElementById: () => workspace },
+    MutationObserver: Mutation, PerformanceObserver: Native,
+    requestAnimationFrame: (fn: (time: number) => void) => { frames.set(++nextId, fn); return nextId; },
+    cancelAnimationFrame: (id: number) => { frames.delete(id); },
+    setTimeout: (run: () => void, delay = 0) => { tasks.set(++nextId, { run, delay }); return nextId; },
+    clearTimeout: (id: number) => { tasks.delete(id); },
+    getComputedStyle: () => ({ visibility: "visible" }),
+  };
+  for (const [key, value] of Object.entries(replacements)) Object.defineProperty(globalThis, key, { configurable: true, value });
+  const tick = async () => { const pending = [...frames.values()]; frames.clear(); for (const fn of pending) fn(0); await Promise.resolve(); };
+  const portable = async () => {
+    await tick(); await tick(); await tick();
+    for (const [id, task] of [...tasks]) if (task.delay === 0) { tasks.delete(id); task.run(); }
+    await Promise.resolve();
+  };
+  const begin = () => {
+    const runtime = {};
+    current.recordContent = "AC-2"; current.recordCommit = recordCommitToken(runtime);
+    const controller = new AbortController();
+    return { controller, pending: waitForRecordPaint("AC-2", runtime, controller.signal) };
+  };
+  const clean = () => {
+    assert.equal(nativeConnected, false); assert.equal(mutationConnected, false);
+    assert.equal(frames.size, 0); assert.equal(tasks.size, 0);
+    assert.equal(text.getAttribute("elementtiming"), null);
+  };
+  try {
+    let resolved = false;
+    const first = begin(); void first.pending.then(() => { resolved = true; });
+    await portable(); assert.equal(resolved, false, "a rendering opportunity is not a native paint notification");
+    emitPaint(text as unknown as InstanceType<typeof globalThis.Element>, "record-old"); await Promise.resolve(); assert.equal(resolved, false);
+    emitPaint(null, `record-${current.recordCommit}`); await Promise.resolve(); assert.equal(resolved, false);
+    emitPaint(text as unknown as InstanceType<typeof globalThis.Element>, `record-${current.recordCommit}`, "image-paint"); await Promise.resolve(); assert.equal(resolved, false);
+    emitPaint(text as unknown as InstanceType<typeof globalThis.Element>, `record-${current.recordCommit}`, "text-paint", false); await Promise.resolve(); assert.equal(resolved, false);
+    current.recordContent = "AC-3";
+    emitPaint(text as unknown as InstanceType<typeof globalThis.Element>, `record-${current.recordCommit}`); await Promise.resolve(); assert.equal(resolved, false);
+    current.recordContent = "AC-2"; text.isConnected = false;
+    emitPaint(text as unknown as InstanceType<typeof globalThis.Element>, `record-${current.recordCommit}`); await Promise.resolve(); assert.equal(resolved, false);
+    text.isConnected = true;
+    emitPaint(text as unknown as InstanceType<typeof globalThis.Element>, `record-${current.recordCommit}`); await first.pending; clean();
+
+    const retained = begin(); await portable(); await retained.pending;
+    assert.equal(observations, 1, "retained text does not wait for a notification it may never repeat"); clean();
+
+    text = makeText(); const missing = begin(); await portable();
+    const deadline = [...tasks.values()].find((task) => task.delay === 1000);
+    assert.ok(deadline); deadline.run(); await missing.pending; clean();
+
+    text = makeText(); const earlyDeadline = begin(); let earlyResolved = false;
+    void earlyDeadline.pending.then(() => { earlyResolved = true; });
+    const pendingDeadline = [...tasks.values()].find((task) => task.delay === 1000);
+    assert.ok(pendingDeadline); pendingDeadline.run(); await Promise.resolve();
+    assert.equal(earlyResolved, false, "a watchdog does not replace the portable rendering opportunity");
+    await portable(); await earlyDeadline.pending; clean();
+
+    text = makeText(); const aborted = begin(); await portable(); aborted.controller.abort(); await aborted.pending; clean();
+    text = makeText(); const failed = begin(); await portable(); renderError = true; mutation();
+    await assert.rejects(failed.pending, /renderer could not load/); renderError = false; clean();
+    text = makeText(); const failedAtPaint = begin(); renderError = true;
+    emitPaint(text as unknown as InstanceType<typeof globalThis.Element>, `record-${current.recordCommit}`);
+    await assert.rejects(failedAtPaint.pending, /renderer could not load/); renderError = false; clean();
+    text = makeText(); const failedAtDeadline = begin(); await portable(); renderError = true;
+    const failedDeadline = [...tasks.values()].find((task) => task.delay === 1000);
+    assert.ok(failedDeadline); failedDeadline.run();
+    await assert.rejects(failedAtDeadline.pending, /renderer could not load/); renderError = false; clean();
+
+    const count = observations;
+    text = makeText(1200); const offscreen = begin(); await portable(); await offscreen.pending;
+    assert.equal(observations, count); clean();
+    Native.supportedEntryTypes = []; text = makeText(); const unsupported = begin(); await portable(); await unsupported.pending;
+    assert.equal(observations, count); clean();
+  } finally {
+    for (const [key, descriptor] of descriptors) {
+      if (descriptor) Object.defineProperty(globalThis, key, descriptor);
+      else Reflect.deleteProperty(globalThis, key);
+    }
+  }
+});
+
 test("paint acknowledgement requires a visible matching runtime and a task after paint, with cancellation/error cleanup", async () => {
   const keys = ["document", "MutationObserver", "requestAnimationFrame", "cancelAnimationFrame", "setTimeout", "clearTimeout", "getComputedStyle"];
   const descriptors = new Map(keys.map((key) => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));

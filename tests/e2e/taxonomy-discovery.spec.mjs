@@ -355,11 +355,11 @@ test("Compare shows shared and differing governed tags at desktop and narrow wid
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 900 });
     await open(page, "/#/compare/relationships?intent=frameworks&source=nist-800-53&target=csf-2&compareRun=true");
-    // Taxonomy context is a collapsed inline disclosure with its own one-line summary.
+    // Related tags is a collapsed inline disclosure with its own one-line summary.
     await expect(page.getByText(/\d+ shared · \d+ only in SP 800-53 Rev\. 5 · \d+ only in NIST CSF 2\.0/)).toBeVisible();
-    const trigger = page.getByRole("button", { name: /Taxonomy context/ });
+    const trigger = page.getByRole("button", { name: /Related tags/ });
     if ((await trigger.getAttribute("aria-expanded")) !== "true") await trigger.click();
-    const context = page.getByRole("region", { name: "Taxonomy context" });
+    const context = page.getByRole("region", { name: "Related tags" });
     await expect(context.getByRole("heading", { name: "Shared tags" })).toBeVisible();
     await expect(context.getByRole("heading", { name: "Only in SP 800-53 Rev. 5" })).toBeVisible();
     await expect(context.getByRole("heading", { name: "Only in NIST CSF 2.0" })).toBeVisible();
@@ -369,6 +369,20 @@ test("Compare shows shared and differing governed tags at desktop and narrow wid
       viewportWidth: globalThis.innerWidth,
     }));
     expect(overflow.documentWidth).toBeLessThanOrEqual(overflow.viewportWidth);
+  }
+});
+
+test("Library shows the full modest related-content groups beyond their former preview", async ({ page }) => {
+  await open(page, "/#/library?tag=organization.nist");
+  const related = page.getByRole("region", { name: "Related content across Control Atlas" });
+  for (const label of ["Catalogs", "Resources"]) {
+    const heading = related.getByRole("heading", { name: new RegExp(`^${label} \\(`) });
+    const total = Number((await heading.innerText()).match(/\((\d+)\)/)[1]);
+    expect(total).toBeGreaterThan(8);
+    const group = heading.locator("..");
+    await expect(group.getByRole("link")).toHaveCount(total);
+    await expect(group.getByRole("link").nth(8)).toBeVisible();
+    await expect(group.getByRole("navigation")).toHaveCount(0);
   }
 });
 

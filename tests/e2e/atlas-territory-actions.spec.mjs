@@ -34,6 +34,54 @@ test("there is no clear-everything action anywhere, on desktop or phone", async 
   await expect(page.getByRole("button", { name: /reset/i })).toHaveCount(0);
 });
 
+test("the open map inspector keeps valid geometry through desktop and phone transitions", async ({ page }) => {
+  await page.addInitScript(() => {
+    const probe = { frames: 0, invalid: [] };
+    globalThis.__atlasGeometryProbe = probe;
+    const sample = () => {
+      for (const svg of document.querySelectorAll(".atl svg.terr, .atl svg.mini")) {
+        const view = svg.getAttribute("viewBox")?.trim().split(/\s+/).map(Number) || [];
+        if ((view.length !== 4 || !view.every(Number.isFinite) || view[2] <= 0 || view[3] <= 0) && probe.invalid.length < 5) probe.invalid.push({ view });
+        for (const element of svg.querySelectorAll("circle, ellipse, rect, marker")) {
+          for (const name of ["r", "rx", "ry", "width", "height", "markerWidth", "markerHeight"]) {
+            const value = element.getAttribute(name);
+            if (value !== null && (!Number.isFinite(Number(value)) || Number(value) < 0) && probe.invalid.length < 5) probe.invalid.push({ name, value });
+          }
+        }
+      }
+    };
+    const tick = () => { probe.frames += 1; sample(); probe.frame = globalThis.requestAnimationFrame(tick); };
+    probe.observer = new globalThis.MutationObserver(sample);
+    probe.observer.observe(document, {
+      childList: true, subtree: true, attributes: true, attributeFilter: ["viewBox", "r", "rx", "ry", "width", "height", "markerWidth", "markerHeight"],
+    });
+    sample();
+    probe.frame = globalThis.requestAnimationFrame(tick);
+  });
+  await scene(page, PATH);
+  await expect(page.locator(".atl-inspector")).toBeVisible();
+  for (const width of [390, 1440]) {
+    const before = await page.evaluate(() => globalThis.__atlasGeometryProbe.frames);
+    await page.setViewportSize({ width, height: width < 768 ? 844 : 900 });
+    await expect(page.locator(width < 768 ? "svg.mini" : "svg.terr")).toBeVisible();
+    await page.waitForFunction((count) => globalThis.__atlasGeometryProbe.frames >= count + 35, before);
+    if (width >= 768) {
+      await expect(page.locator("svg.terr")).toHaveAttribute("aria-busy", "false");
+      await expect(page.locator(".atl-inspector")).toBeVisible();
+    }
+    await expect(page.getByRole("button", { name: "Clear path" })).toBeVisible();
+  }
+  const geometry = await page.evaluate(() => {
+    globalThis.cancelAnimationFrame(globalThis.__atlasGeometryProbe.frame);
+    globalThis.__atlasGeometryProbe.observer.disconnect();
+    return { frames: globalThis.__atlasGeometryProbe.frames, invalid: globalThis.__atlasGeometryProbe.invalid };
+  });
+  expect(geometry.frames).toBeGreaterThanOrEqual(70);
+  expect(geometry.invalid).toEqual([]);
+  await page.getByRole("button", { name: "Clear path" }).click();
+  await expect(page.getByRole("button", { name: "Clear path" })).toHaveCount(0);
+});
+
 test("irrelevant clear actions are not shown on a plain overview", async ({ page }) => {
   await open(page, "/#/atlas");
   for (const name of ["Clear path", "Clear pins", "Clear layer", "Clear context", "Atlas overview"]) {

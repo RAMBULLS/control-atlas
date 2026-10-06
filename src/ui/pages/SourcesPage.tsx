@@ -832,7 +832,7 @@ export function SourcesPage(props: {
           // "anchor searchable records or published connections" was our
           // vocabulary for what a publication does in the graph. Say what the
           // reader gets from it.
-          : `${publicationCount.toLocaleString()} publications with their full contents indexed: search their records or follow their published links to other publications. Supporting files and crosswalks are inside each one.`}
+          : `${publicationCount.toLocaleString()} publications with indexed records: search their records or follow their published links to other publications. Supporting files and crosswalks are inside each one.`}
       </p>
 
       <nav aria-label="Source register views" className="source-register-views">

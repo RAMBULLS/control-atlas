@@ -32,6 +32,7 @@ export function resolveCommitSha(commitish = 'HEAD') {
 }
 
 export async function waitForChecks(commitSha, options = {}) {
+  if (!/^[0-9a-f]{40}$/i.test(commitSha)) throw new Error('Checks require a full commit SHA.');
   const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
   const pollMs = options.pollMs ?? DEFAULT_POLL_MS;
   const runGh = options.runGh ?? gh;
@@ -49,20 +50,35 @@ export async function waitForChecks(commitSha, options = {}) {
       '--commit',
       commitSha,
       '--json',
-      'databaseId,name,status,conclusion,url',
+      'databaseId,name,status,conclusion,url,headSha',
       '--limit',
       '20',
     ]);
     const runs = JSON.parse(raw || '[]');
-    const checksRun = runs[0];
-
-    if (checksRun?.status === 'completed') {
-      if (checksRun.conclusion === 'success') {
-        return checksRun;
+    for (const checksRun of runs) {
+      const details = JSON.parse(runGh([
+        'run', 'view', String(checksRun.databaseId), '--json', 'headSha,status,conclusion,jobs',
+      ]));
+      if (checksRun.headSha !== commitSha || details.headSha !== commitSha) {
+        throw new Error(`${CHECK_WORKFLOW_NAME} run identity does not match ${commitSha}.`);
       }
-      throw new Error(
-        `${CHECK_WORKFLOW_NAME} failed (${checksRun.conclusion}). See ${checksRun.url}`,
-      );
+      const required = details.jobs?.filter(job => job.name === 'Required CI') ?? [];
+      const compatibility = details.jobs?.filter(job => job.name === 'checks') ?? [];
+      // A missing/pending inventory cannot justify falling back to an older run.
+      if (required.length !== 1 || compatibility.length !== 1) break;
+      const gates = [required[0], compatibility[0]];
+      // Scheduled and diagnostic tasks explicitly skip both acceptance jobs.
+      if (gates.every(job => job.status === 'completed' && job.conclusion === 'skipped')) continue;
+      const failed = gates.find(job => job.status === 'completed' && !['success', 'skipped'].includes(job.conclusion));
+      if (failed) throw new Error(`${CHECK_WORKFLOW_NAME} failed (${failed.name}: ${failed.conclusion}). See ${checksRun.url}`);
+      if (details.status !== 'completed' || gates.some(job => job.status !== 'completed')) break;
+      if (gates.some(job => job.conclusion !== 'success')) {
+        throw new Error(`${CHECK_WORKFLOW_NAME} failed (incomplete acceptance). See ${checksRun.url}`);
+      }
+      if (details.conclusion !== 'success') {
+        throw new Error(`${CHECK_WORKFLOW_NAME} failed (${details.conclusion}). See ${checksRun.url}`);
+      }
+      return { ...checksRun, status: details.status, conclusion: details.conclusion };
     }
 
     const elapsed = Math.round((now() - started) / 1000);

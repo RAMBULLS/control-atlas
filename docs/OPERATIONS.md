@@ -13,6 +13,17 @@ repository rules apply before requests and redirects; refreshed datasets cannot
 expand that authority. Source discovery and version changes must retain publisher
 evidence and pass independent inventory reconciliation and baseline checks.
 
+The SP 800-53 refresh resolves NIST's publisher commit and discovers the Low,
+Moderate, High, and Privacy profiles through its official repository API.
+`data/nist-800-53b-profile-manifest.json` records their exact bytes, import
+locators, and discovered-versus-ingested control selections alongside the
+catalog edition. Unknown profiles or selectors, duplicate selections, mismatched
+editions, and incomplete membership stop that source transaction. The catalog
+and profile manifest roll back together. `verify:discovery` checks reconciliation,
+`verify:manifests` checks evidence binding, and `check:oscal` downloads and validates
+the recorded immutable profiles and their imported catalog with the NIST CLI.
+Internal normalized baseline records continue to use the separate AJV gate.
+
 Each source owns a bounded set of outputs. A failed candidate restores that
 source's previously accepted files and records quarantine; unrelated sources
 continue. Final validation checks the combined candidate before publication.

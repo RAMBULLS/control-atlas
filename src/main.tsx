@@ -613,8 +613,15 @@ function warmInteractiveRoute() {
       void import('./ui/pages/CatalogDetailPage').catch(() => undefined);
       break;
     case 'record':
+      // Start the page bytes before evaluating its shared readiness loader.
+      // Module imports share the browser cache; rendering still uses the loader
+      // so a failed warmup does not replace its retry and recovery behavior.
+      void import('./ui/pages/ObjectDetailPage').catch(() => undefined);
       void import('./ui/lib/recordPageLoader')
         .then(({ loadRecordPage }) => loadRecordPage()).catch(() => undefined);
+      // Initial record rendering needs the runtime constructor. Warm its code
+      // independently so it cannot delay the lightweight artifact acquisition.
+      void import('./ui/lib/runtimeLoader').catch(() => undefined);
       break;
     case 'resources':
       void import('./ui/pages/CommonsPage').catch(() => undefined);

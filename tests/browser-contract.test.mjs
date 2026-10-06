@@ -20,6 +20,8 @@ const router = existsSync('src/ui/lib/hashRoutes.ts')
 const runtimeLoader = existsSync('src/ui/lib/runtimeLoader.ts')
   ? readFileSync('src/ui/lib/runtimeLoader.ts', 'utf8')
   : '';
+const runtimeArtifacts = readFileSync('src/ui/lib/runtimeArtifacts.ts', 'utf8');
+const recordPageLoader = readFileSync('src/ui/lib/recordPageLoader.ts', 'utf8');
 const relationshipExplorer = existsSync('src/ui/components/RelationshipExplorer.tsx')
   ? readFileSync('src/ui/components/RelationshipExplorer.tsx', 'utf8')
   : '';
@@ -223,10 +225,12 @@ test('graph implementation references are documented', () => {
 });
 
 test('static artifact loading caches requests and scopes initial data by route', () => {
-  assert.match(runtimeLoader, /new Map<.*Promise/);
-  assert.match(runtimeLoader, /artifactCache\.get/);
-  assert.match(runtimeLoader, /artifactCache\.set/);
-  assert.match(runtimeLoader, /runtimeArtifactPlan/);
+  assert.match(runtimeLoader, /import \{[^\n]*\bfetchArtifact\b[^\n]*\bruntimeArtifactPlan\b[^\n]*\} from "\.\/runtimeArtifacts"/);
+  assert.match(runtimeLoader, /export \{[^\n]*\bfetchArtifact\b[^\n]*\bruntimeArtifactPlan\b[^\n]*\} from "\.\/runtimeArtifacts"/);
+  assert.match(runtimeArtifacts, /new Map<.*Promise/);
+  assert.match(runtimeArtifacts, /artifactCache\.get/);
+  assert.match(runtimeArtifacts, /artifactCache\.set/);
+  assert.match(runtimeArtifacts, /runtimeArtifactPlan/);
   assert.match(runtimeLoader, /catalog-bootstrap\.json/);
   assert.match(runtimeLoader, /catalog-records/);
   assert.match(reactApp, /requiresFullGraph\(viewState\)/);
@@ -237,15 +241,17 @@ test('static artifact loading caches requests and scopes initial data by route',
   );
 });
 
-test('secondary route pages are lazy loaded behind a suspense fallback', () => {
-  // Routes load through lazyRoute, which wraps React.lazy so a chunk 404 left
-  // by a deploy reloads instead of reporting that the workspace stopped. The
+test('secondary route pages are code split behind loading fallbacks', () => {
+  // Most routes load through lazyRoute; records share their startup loader.
+  // Both paths recover stale deployed chunks and keep a loading fallback. The
   // guarantee under test is code splitting, so assert the wrapper delegates to
   // lazy() rather than pinning how each call site is spelled.
   assert.match(reactApp, /function lazyRoute[\s\S]{0,200}?return lazy\(/);
   assert.match(reactApp, /lazyRoute\(\(\) =>\s*import\("\.\/pages\/AtlasTerritoryPage"\)/);
   assert.match(reactApp, /lazyRoute\(\(\) =>\s*import\("\.\/pages\/ComparePage"\)/);
-  assert.match(reactApp, /lazyRoute\(\(\) =>\s*import\("\.\/pages\/ObjectDetailPage"\)/);
+  assert.match(recordPageLoader, /pending \?\?= import\("\.\.\/pages\/ObjectDetailPage"\)/);
+  assert.match(reactApp, /recoverRouteModule\(loadRecordPage\(\)\)/);
+  assert.match(reactApp, /if \(!RecordPage\) return <LoadingStatusPanel/);
   assert.match(reactApp, /<Suspense/);
   assert.match(reactApp, /fallback=\{<LoadingStatusPanel/);
 });

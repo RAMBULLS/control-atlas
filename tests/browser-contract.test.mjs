@@ -435,31 +435,33 @@ test('skip links focus the workspace without turning the target into an applicat
   assert.match(mainEntrypoint, /event\.preventDefault\(\)/);
   assert.match(mainEntrypoint, /querySelector<HTMLElement>\('#workspace'\)\?\.focus\(\)/);
   assert.match(reactApp, /document\.getElementById\("workspace"\)\?\.focus\(\)/);
-  assert.match(reactApp, /<main id="workspace" tabIndex=\{-1\}>/);
+  assert.match(reactApp, /<main\b(?=[^>]*\bid="workspace")(?=[^>]*\btabIndex=\{-1\})[^>]*>/);
 });
 
 test('mounted record surfaces render official descriptions rather than synthetic translations', () => {
   const detailPage = readFileSync('src/ui/pages/ObjectDetailPage.tsx', 'utf8');
   const publishedText = readFileSync('src/ui/components/RecordPublishedText.tsx', 'utf8');
+  const publisherModel = readFileSync('src/shared/publisher-text-model.ts', 'utf8');
   const surfaces = [detailPage, readFileSync('src/ui/pages/CatalogDetailPage.tsx', 'utf8'), readFileSync('src/ui/pages/AtlasTerritoryPage.tsx', 'utf8'), readFileSync('src/ui/pages/ExplorePage.tsx', 'utf8'), readFileSync('src/ui/components/SearchOverlay.tsx', 'utf8')].join('\n');
   assert.match(detailPage, /recordPresentationContract/);
   assert.match(detailPage, /<RecordPublishedText/);
-  assert.match(publishedText, /data-source-text="published"/);
-  assert.match(publishedText, /data-claim-origin=\{props\.claimOrigin\}/);
+  assert.match(publishedText, /publisherTextModel\(shown, props\.metadata, props\.headingLevel, props\.claimOrigin\)/);
+  assert.match(publisherModel, /'data-source-text': 'published'/);
+  assert.match(publisherModel, /'data-claim-origin': claimOrigin/);
   assert.doesNotMatch(surfaces, /No narrative description was published for this record/);
   assert.doesNotMatch(surfaces, /plain_language_summary|plain_action/);
 });
 
 test('concise DISA CCI records orient the user before the publisher requirement', () => {
   const detail = readFileSync('src/ui/pages/ObjectDetailPage.tsx', 'utf8');
-  const publishedText = readFileSync('src/ui/components/RecordPublishedText.tsx', 'utf8');
+  const publisherModel = readFileSync('src/shared/publisher-text-model.ts', 'utf8');
   const startHere = detail.indexOf('CCI records deliberately publish a concise requirement');
   const sourceExcerpt = detail.indexOf('data-record-source-identity');
   assert.ok(startHere >= 0, 'CCI records need an explicit source-first orientation');
   assert.ok(sourceExcerpt > startHere, 'CCI orientation must appear before the terse publisher requirement');
   assert.match(detail, /Explore connections/);
   assert.match(detail, /Compare this CCI/);
-  assert.match(publishedText, /props\.kind === "references"/);
+  assert.match(publisherModel, /kind === 'references'/);
   assert.match(detail, />Related records</);
   assert.match(detail, />Source evidence</);
   assert.match(detail, /Explore all connections in Atlas/);

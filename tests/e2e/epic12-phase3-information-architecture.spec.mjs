@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { attachPageDiagnostics, gotoApp, waitForAppReady } from "./support.mjs";
+import { attachPageDiagnostics, clickAtlasPublication, gotoApp, waitForAppReady } from "./support.mjs";
 
 const NAV = [
   { label: "Start here", path: "/start", placement: "primary" },
@@ -321,7 +321,7 @@ test("Phase 3 Atlas shows honest integer counts and no obsolete work-surface lab
   // Counts are whole numbers stated in the publisher's own words, never estimates.
   await expect(page.getByRole("button", { name: "Policy & directives" })).toBeVisible();
   await expect(page.getByRole("button", { name: /^Other publications · \d+$/ })).toBeVisible();
-  await page.locator('[data-landmark="nist-800-53"]').click();
+  await clickAtlasPublication(page, "nist-800-53");
   await expect(page.locator(".atl-inspector")).toContainText(/\d[\d,]* other publications? share published connections/);
   await expect(page.locator(".atl-inspector")).toContainText(/Records\s*1,196/);
 });

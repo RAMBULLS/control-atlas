@@ -196,10 +196,11 @@ function readHashLocation() {
 function routeTransitionScope(state: ViewState): string {
   switch (state.view) {
     case "atlas-map":
+      // Territory zoom updates the existing map. Keep its controls active and
+      // focused; record, publication and research changes still orient the workspace.
       return [
         state.view,
         state.node,
-        state.atlasLimb,
         state.atlasFramework,
         state.atlasResearch,
       ].join(":");

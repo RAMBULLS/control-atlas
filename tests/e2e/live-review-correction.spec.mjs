@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { clickAtlasPublication } from "./support.mjs";
 
 async function waitForReady(page) {
   await expect(page.locator('#app[data-app-ready="true"], #app[data-app-ready="partial"]')).toBeVisible({ timeout: 30000 });
@@ -132,7 +133,7 @@ test("Atlas first paint is a semantic map with drill-down and history", async ({
 
   // The map paints before its handlers are attached; WebKit on a shared runner can click in that gap. Retry the click, not the assertion.
   await expect(async () => {
-    await atlas.locator('[data-landmark="mitre-attack"]').click();
+    await clickAtlasPublication(page, "mitre-attack");
     await expect(page).toHaveURL(/atlasFramework=mitre-attack/, { timeout: 4_000 });
   }).toPass({ timeout: 45_000 });
   await expect(page.locator(".atl-inspector")).toContainText("ATT&CK");

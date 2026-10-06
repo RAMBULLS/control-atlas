@@ -310,7 +310,9 @@ export function canonicalizeHashLocation(input: string): CanonicalRoute {
   // Keep bookmarked guide URLs useful after their jobs moved to existing pages.
   if (path === "/guides") {
     const guideId = params.get("pattern") || "";
-    const destination = GUIDE_REDIRECTS[guideId as keyof typeof GUIDE_REDIRECTS];
+    const destination = Object.hasOwn(GUIDE_REDIRECTS, guideId)
+      ? GUIDE_REDIRECTS[guideId as keyof typeof GUIDE_REDIRECTS]
+      : undefined;
     if (destination) {
       const canonicalPath = destination.path;
       return {

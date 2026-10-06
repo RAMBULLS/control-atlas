@@ -3962,7 +3962,7 @@ a:focus-visible {
 }
 
 .home-hero__identity h1 {
-  width: 118%;
+  width: 100%;
   margin: 0;
   color: var(--ca-text);
   font-family: var(--ca-font-display);
@@ -4148,7 +4148,7 @@ a:focus-visible {
   position: absolute;
   z-index: 5;
   top: calc(100% + var(--ca-space-2));
-  left: 0;
+  right: 0;
   width: min(560px, calc(100cqw - 2 * var(--home-side)));
   padding: var(--ca-space-4) var(--ca-space-6);
   border: 1px solid var(--ca-border-strong);
@@ -4231,6 +4231,7 @@ a:focus-visible {
 
 .home-library__head {
   display: flex;
+  flex-wrap: wrap;
   align-items: end;
   justify-content: space-between;
   gap: var(--ca-space-6);
@@ -4240,6 +4241,7 @@ a:focus-visible {
 
 .home-library__head > div {
   display: grid;
+  min-width: 0;
   gap: var(--ca-space-2);
 }
 
@@ -5440,7 +5442,9 @@ a:focus-visible {
 @media (max-width: 480px) {
   .compare-mode-tabs {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    /* Frameworks takes its label width; the longer Implementation label gets
+       the remaining space without squeezing either label into equal halves. */
+    grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
     gap: 0;
   }
 
@@ -8914,6 +8918,7 @@ input[type="checkbox"] {
   flex-wrap: wrap;
   align-items: baseline;
   gap: var(--ca-space-2);
+  overflow-wrap: anywhere;
 }
 
 .target-mapping-relationship {
@@ -8956,7 +8961,7 @@ input[type="checkbox"] {
 
   .compare-answer .compare-export-actions .actions button {
     width: 100%;
-    white-space: nowrap;
+    white-space: normal;
   }
 
   .compare-answer .compare-export-actions small {

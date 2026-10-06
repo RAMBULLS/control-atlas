@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 
 import {
   attachPageDiagnostics,
+  clickAtlasPublication,
   dismissOnboarding,
   waitForAppReady,
 } from "./support.mjs";
@@ -114,7 +115,7 @@ test("the Atlas territory sheet uses its own small index without monolithic grap
   await sheet.locator('[data-district="atlas:LIMB-COMPLIANCE"] .district__shape').focus();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/atlasLimb=/);
-  await sheet.locator('[data-landmark="nist-800-53"]').click();
+  await clickAtlasPublication(page, "nist-800-53");
   await expect(page).toHaveURL(/atlasFramework=nist-800-53/);
   expect(graphArtifactUrls(requested)).toEqual([]);
 });

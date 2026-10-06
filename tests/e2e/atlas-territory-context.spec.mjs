@@ -1,7 +1,7 @@
 /* global document */
 import { AxeBuilder } from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
-import { attachPageDiagnostics, dismissOnboarding, gotoApp, waitForAppReady } from "./support.mjs";
+import { attachPageDiagnostics, clickAtlasPublication, dismissOnboarding, gotoApp, waitForAppReady } from "./support.mjs";
 
 const CONTEXT = ["program.stig", "product.microsoft-windows", "asset.server"];
 const contextUrl = (extra = "") => `/#/atlas?atlasContext=${encodeURIComponent(CONTEXT.join(","))}${extra}`;
@@ -67,7 +67,7 @@ test("context copy never uses internal vocabulary", async ({ page }) => {
 
 test("context + a selected publication explains why it matched and hands off to Library with the same choices", async ({ page }) => {
   await open(page, contextUrl());
-  await page.locator('[data-landmark="disa-stig"]').click();
+  await clickAtlasPublication(page, "disa-stig");
   const card = page.locator(".atl-inspector");
   await expect(card.getByRole("region", { name: "Matching this context" })).toContainText("associated with your choices");
   expect(await geography(page)).toContain("disa-stig");
@@ -167,7 +167,7 @@ test("a view made with a different data version is stated neutrally, keeps its s
   // An unknown but valid id says only that it differs; it never claims to be earlier or older.
   expect(await page.locator(".atl").innerText()).not.toMatch(/earlier|older|outdated|stale|newer/i);
   expect(query(page).get("atlasDataset")).toBe("000000000000");
-  await page.locator('[data-landmark="disa-stig"]').click();
+  await clickAtlasPublication(page, "disa-stig");
   expect(query(page).get("atlasDataset"), "the saved dataset survives navigation").toBe("000000000000");
   await expect(page.locator(".atl").getByRole("button", { name: /changes/i })).toHaveCount(0);
   await expect(page.locator(".atl").getByRole("link", { name: /changes/i })).toHaveCount(0);

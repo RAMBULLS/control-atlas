@@ -72,6 +72,15 @@ for (const viewport of VIEWPORTS) {
           const firstHeading = globalThis.document.querySelector("#workspace h1");
           const appShell = globalThis.document.querySelector("#app");
           const appBox = appShell?.getBoundingClientRect();
+          // The phone overview intentionally enlarges its SVG inside a clipped
+          // map link. Its visible boundary must still fit the app; clipping
+          // never exempts headings, controls, or an unbounded map container.
+          const isClippedMapElement = (element) => {
+            const map = element.closest(".home-map");
+            if (!map || !appBox || globalThis.getComputedStyle(map).overflowX !== "hidden") return false;
+            const box = map.getBoundingClientRect();
+            return box.left >= appBox.left - 2 && box.right <= appBox.right + 2;
+          };
           const outOfBounds = appBox
             ? [...appShell.querySelectorAll("*")]
                 .filter((element) => {
@@ -80,6 +89,7 @@ for (const viewport of VIEWPORTS) {
                   return (
                     style.display !== "none" &&
                     style.visibility !== "hidden" &&
+                    !isClippedMapElement(element) &&
                     box.width > 0 &&
                     (box.right > appBox.right + 2 || box.left < appBox.left - 2)
                   );
@@ -104,6 +114,7 @@ for (const viewport of VIEWPORTS) {
                 element.clientWidth > 100 &&
                 style.display !== "none" &&
                 style.visibility !== "hidden" &&
+                !isClippedMapElement(element) &&
                 style.textOverflow !== "ellipsis" &&
                 overflowX !== "auto" &&
                 overflowX !== "scroll" &&

@@ -13,6 +13,15 @@ import { normalizeViewState } from "../../src/ui/lib/viewState";
 import { orbitalRouteContext } from "../../src/ui/components/OrbitalContextBar";
 import { START_HERE_ACCEPTANCE_MATRIX } from "../../src/app/start-here-compatibility.mjs";
 
+test("inherited guide and Start Here keys stay ordinary unknown bookmarks", () => {
+  for (const key of ["toString", "constructor", "__proto__", "hasOwnProperty"]) {
+    const guidePath = `/guides?pattern=${key}`;
+    assert.equal(canonicalizeHashLocation(guidePath).canonicalPath, guidePath, key);
+    assert.equal(canonicalizeHashLocation(`/learn?pattern=${key}`).canonicalPath, guidePath, key);
+    assert.equal(canonicalizeHashLocation(`/start?goal=${key}&context=federal`).canonicalPath, "/atlas", key);
+  }
+});
+
 test("all 28 old Start Here answer links replace with their safe product destination", () => {
   for (const row of START_HERE_ACCEPTANCE_MATRIX) {
     const original = `/start?goal=${row.goalId}&context=${row.contextId}`;

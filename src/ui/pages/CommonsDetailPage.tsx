@@ -14,7 +14,7 @@ import { AppLink } from "../components/AppLink";
 import type { CommonsResource } from "../lib/commonsTypes";
 import { resourceDateLabel, resourceSummaryPresentation } from "../lib/commonsPresentation.mjs";
 import { serializeHashLocation } from "../lib/hashRoutes";
-import { resourceAccessLabel, resourceFieldLabel, resourceTypeLabel } from "../lib/resourceBrands.mjs";
+import { resourceAccessLabel, resourceFieldLabel, resourceOriginLabel, resourceTypeLabel } from "../lib/resourceBrands.mjs";
 
 import { taxonomyTagsForResource, deriveTags } from "../../shared/record-taxonomy.mjs";
 import { effectiveProfile } from "../../shared/entity-profiles.mjs";
@@ -155,7 +155,7 @@ export function CommonsDetailPage({ bundle, viewState, onNavigate }: Props) {
         <header className="resource-detail-hero">
           <ResourceIdentityMark resource={resource} />
           <div>
-            <p className="eyebrow">Resource</p>
+            <p className="eyebrow">{resourceOriginLabel(resource.resourceLane)}</p>
             {!["active", "unknown"].includes(lifecycleStatus) ? <span className="badge tone-warning">{resourceFieldLabel(lifecycleStatus)}</span> : null}
             <h1>{resource.name}</h1>
             <p className="resource-detail-owner">Publisher <strong>{resource.publisher}</strong></p>

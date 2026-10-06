@@ -32,7 +32,7 @@ test("every Learn article is a cited Control Atlas explanation with boundaries",
 });
 
 test("every practitioner guide answers a real work question with a verified citation", () => {
-  assert.equal(practitionerGuides.length, 12);
+  assert.equal(practitionerGuides.length, 11);
   const sourceIds = new Set(sourceRegistry.sources.map((entry) => entry.id));
   for (const article of practitionerGuides) {
     assert.equal(article.kind, "practitioner", article.id);
@@ -76,5 +76,19 @@ test("every practitioner guide answers a real work question with a verified cita
       `${article.title} ${article.summary} ${article.explanation} ${article.limitations}`,
       /\b(new user|novice|beginner|recommended for)\b/i,
     );
+  }
+});
+
+test("guide handoffs open the named working file instead of the Templates entrance", () => {
+  const expected = {
+    "managing-findings": "poam_starter",
+    "continuous-monitoring": "conmon_calendar",
+    "inheritance-and-common-controls": "inheritance_worksheet",
+    reciprocity: "reciprocity_checklist",
+  };
+  for (const [id, templateType] of Object.entries(expected)) {
+    const guide = practitionerGuides.find((article) => article.id === id);
+    assert.equal(guide.nextAction.view, "templates");
+    assert.equal(guide.nextAction.patch.templateType, templateType);
   }
 });

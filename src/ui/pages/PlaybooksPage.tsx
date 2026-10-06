@@ -9,7 +9,6 @@ import {
   IconFiles,
   IconFlag,
   IconHierarchy3,
-  IconRoute,
   IconSearch,
   IconSettings,
   IconShieldCheck,
@@ -32,7 +31,6 @@ const GUIDE_PRESENTATION: Record<
   { area: string; Icon: typeof IconFlag }
 > = Object.freeze({
   "starting-an-authorization": { area: "Governance", Icon: IconFlag },
-  "understanding-rmf": { area: "Governance", Icon: IconRoute },
   "selecting-controls": { area: "Compliance", Icon: IconChecklist },
   "implementing-controls": { area: "Implementation", Icon: IconSettings },
   "preparing-evidence": { area: "Assessment", Icon: IconFiles },
@@ -177,6 +175,7 @@ export function PlaybooksPage(props: {
           </section>
           <section id="guide-steps">
             <h2>Steps</h2>
+            <p>These Control Atlas working steps are based on the official references below. Check the publication for its own instructions.</p>
             <ol className="guide-procedure-steps">
               {selected.steps.map((step, index) => (
                 <li key={step.title}>
@@ -235,9 +234,7 @@ export function PlaybooksPage(props: {
               variant="primary"
               view={selected.nextAction.view as ViewState["view"]}
             >
-              {selected.nextAction.view === "templates"
-                ? "Choose a template"
-                : selected.nextAction.label}
+              {selected.nextAction.label}
             </AppLink>
           </div>
         </article>

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { glossaryData } from "../../app/glossary-data.mjs";
 import { templatesForPatterns } from "../lib/glossarySearch.mjs";
+import { GUIDE_REDIRECTS } from "../lib/guideRedirects";
 import type { RuntimeBundle } from "../lib/runtimeLoader";
 import type { ViewState } from "../lib/viewState";
 import { Badge, PATTERN_RENAMES } from "../lib/pagePrimitives";
@@ -105,7 +106,12 @@ export function GlossaryDrawer(props: {
                     <p>{entry.definition}</p>
                     <p className="drawer-support">Why it matters: {entry.why_it_matters}</p>
                     <div className="chip-row">
-                      {entry.related_patterns.map((patternId) => <AppLink className="chip" key={patternId} onNavigate={onNavigate} patch={{ pattern: patternId }} view="patterns">{PATTERN_RENAMES[patternId] || patternId}</AppLink>)}
+                      {entry.related_patterns.map((patternId) => {
+                        const destination = GUIDE_REDIRECTS[patternId as keyof typeof GUIDE_REDIRECTS];
+                        return destination
+                          ? <AppLink className="chip" key={patternId} onNavigate={onNavigate} patch={destination.patch} view={destination.view}>{PATTERN_RENAMES[patternId] || patternId}</AppLink>
+                          : <AppLink className="chip" key={patternId} onNavigate={onNavigate} patch={{ pattern: patternId }} view="patterns">{PATTERN_RENAMES[patternId] || patternId}</AppLink>;
+                      })}
                       {relatedTemplateIds.map((templateId) => <AppLink className="chip" key={templateId} onNavigate={onNavigate} patch={{ templateType: templateId }} view="templates">{templateId.replaceAll("_", " ")}</AppLink>)}
                       {entry.related_controls.map((controlId) => {
                         const nodeId = firstControlId(controlId);

@@ -28,10 +28,10 @@ export const UI_REVIEW_ROUTES = [
     owners: ["src/ui/pages/HomePage.tsx", "src/public/progressive-shell.js"],
   },
   {
-    id: "start-here",
-    path: "/#/start?goal=implement",
-    title: "Start Here",
-    owners: ["src/ui/pages/StartHerePage.tsx"],
+    id: "start-here-bookmark",
+    path: "/#/start",
+    title: "Former Start Here bookmark",
+    owners: ["src/app/start-here-compatibility.mjs", "src/ui/lib/routeIdentity.ts"],
   },
   {
     id: "atlas-overview",

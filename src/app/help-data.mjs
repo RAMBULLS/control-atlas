@@ -2,12 +2,6 @@ import { SITE_COPY } from "../shared/site-copy.mjs";
 
 export const helpSurfaces = [
   {
-    view: "start-here",
-    title: "Start here",
-    body: SITE_COPY.routes.start.purpose,
-    actionLabel: "Open Start here",
-  },
-  {
     view: "atlas-map",
     title: "Atlas",
     body: SITE_COPY.routes.atlas.purpose,

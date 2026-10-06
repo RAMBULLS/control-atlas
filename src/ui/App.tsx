@@ -30,6 +30,7 @@ import {
 } from "./components/OrbitalContextBar";
 import { userFacingLoadError } from "../app/display-names.mjs";
 import type { RuntimeBundle } from "./lib/runtimeLoader";
+import { waitForRecordPaint } from "./lib/waitForRecordPaint";
 import { HomePage } from "./pages/HomePage";
 import {
   browserReloadClock,
@@ -371,6 +372,11 @@ export function App() {
           searchOverlayOpen,
           librarySearchRequested: searchRequested,
           signal: loadController.signal,
+          onRecordRendered: runtimeState.view === "library-detail"
+            ? (result) => result.runtime.getNode(runtimeState.node) && result.runtime.getLibraryDocument(runtimeState.node)
+              ? waitForRecordPaint(runtimeState.node, result.runtime, loadController.signal)
+              : Promise.resolve()
+            : undefined,
           onSearchReady: (result) => {
             if (!cancelled) {
               // A delivered stage proves the connection works: cancel the hard

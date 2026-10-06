@@ -238,6 +238,12 @@ body {
   min-height: 0;
 }
 
+/* Keep the footer below the loading surface until the directory or record arrives. */
+#root[data-route-hydrated="true"] > [data-react-root]
+  #workspace:has(> #app:is([data-view="commons"], [data-view="library-detail"])) {
+  min-height: max(620px, calc(100svh - 200px));
+}
+
 .static-search-form {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;

@@ -35,6 +35,7 @@ import {
 import { extractGovernedRecordTaxonomy, buildExploreRelatedPivots } from "../lib/taxonomyContext";
 import type { RuntimeBundle } from "../lib/runtimeLoader";
 import { runtimeRecordIdentityFor } from "../lib/runtimeRecordIdentity";
+import { recordCommitToken } from "../lib/waitForRecordPaint";
 import { normalizeViewState, type ViewState } from "../lib/viewState";
 import { formatSourceDate, sourceFreshnessPresentation, sourceLifecycleDisplayName, sourcePublicationTitle } from "../lib/sourcePresentation";
 
@@ -272,7 +273,7 @@ export function ObjectDetailPage(props: {
   };
 
   return (
-    <section className="detail-page record-template ca-record-page" data-page-role={presentation.page_role} data-template="E">
+    <section className="detail-page record-template ca-record-page" data-page-role={presentation.page_role} data-template="E" data-record-content={node.id} data-record-commit={recordCommitToken(bundle.runtime)}>
       <CanonicalBreadcrumb bundle={bundle} nodeId={node.id} recordLabel={recordHeading} />
       <div className="record-template-grid ca-record-layout">
         <header className={`record-title-block${identityPresentation.stableIdIsGenerated ? " record-title-block--generated" : ""}`}

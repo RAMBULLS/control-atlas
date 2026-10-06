@@ -147,6 +147,7 @@ function observeRouteHydration() {
   const markHydrated = () => {
     const app = reactRootElement.querySelector<HTMLElement>('#app');
     if (!app || !reactRouteOwnsSurface(app)) return false;
+    if (reactRootElement.querySelector('[data-route-suspense-pending="true"]')) return false;
     if (
       app.dataset.appReady !== 'error' &&
       app.dataset.view === 'atlas-map' &&
@@ -613,6 +614,9 @@ function warmInteractiveRoute() {
       break;
     case 'record':
       void import('./ui/pages/ObjectDetailPage').catch(() => undefined);
+      break;
+    case 'resources':
+      void import('./ui/pages/CommonsPage').catch(() => undefined);
       break;
   }
   void Promise.all([

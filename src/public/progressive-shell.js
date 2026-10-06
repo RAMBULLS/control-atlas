@@ -90,6 +90,10 @@
             title: libraryCopy.title
           };
     }
+    if (route === "resources" && segments.length === 1) {
+      var resourcesCopy = sharedCopy("resources") || { eyebrow: "", summary: "Find tools, training, and guidance for federal cybersecurity work.", title: "Resources" };
+      return { eyebrow: resourcesCopy.eyebrow || "", kind: "resources", summary: resourcesCopy.summary, title: resourcesCopy.title };
+    }
     if (route === "record") {
       var recordCopy = sharedCopy("record") || { eyebrow: "", summary: "Read the published text and record details.", title: "Record" };
       return {

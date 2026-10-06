@@ -31,12 +31,14 @@ export class RouteErrorBoundary extends Component<Props, State> {
   render() {
     if (!this.state.error) return this.props.children;
     return (
+      <div data-route-render-error="true">
       <LoadErrorPanel
         message="This workspace stopped unexpectedly. The rest of Control Atlas is still available."
         onRetry={() => window.location.reload()}
       >
         <OfflineFallbackActions onNavigate={(view) => this.props.onNavigate(view)} />
       </LoadErrorPanel>
+      </div>
     );
   }
 }

@@ -3,6 +3,7 @@ import test from 'node:test';
 import { posix, win32 } from 'node:path';
 import { isHostedRunner, requireValidationLocation, verifyHostedCheckout, verifyRemoteHostedRunner } from '../tools/validation-location.mjs';
 import { assertCapacity, assertGrowth, assertLocalExpansion } from '../tools/run-local-validation.mjs';
+import { verifySourceBranch } from '../tools/local-source-hygiene.mjs';
 
 const sha = 'a'.repeat(40);
 const hosted = {
@@ -90,6 +91,29 @@ test('fresh checkout is bound to the exact workflow SHA', () => {
   assert.equal(verifyHostedCheckout({ ...options, env: hosted, git: () => sha }).sha, sha);
   assert.throws(() => verifyHostedCheckout({ ...options, env: hosted, git: () => 'b'.repeat(40) }), /does not match/);
   assert.throws(() => verifyHostedCheckout({ ...options, env: {} }), /GitHub-hosted/);
+});
+
+test('source hygiene keeps local main denied and admits ordinary task branches', async () => {
+  await verifySourceBranch('chore/hosted-main-hygiene', { env: {} });
+  await assert.rejects(verifySourceBranch('main', { ...options, env: {} }), /GitHub-hosted/);
+  await assert.rejects(verifySourceBranch('main', {
+    ...options, env: { GITHUB_ACTIONS: 'true', RUNNER_ENVIRONMENT: 'github-hosted' },
+  }), /GitHub-hosted/);
+});
+
+test('source hygiene admits main only with exact hosted checkout and current job proof', async () => {
+  const job = { id: 123, runner_name: hosted.RUNNER_NAME, runner_group_name: 'GitHub Actions',
+    status: 'in_progress', labels: ['ubuntu-latest'], head_sha: sha };
+  const context = { ...options, env: hosted, git: () => sha,
+    request: async () => ({ ok: true, json: async () => ({ jobs: [job] }) }) };
+  await verifySourceBranch('main', context);
+  await assert.rejects(verifySourceBranch('main', { ...context, git: () => 'b'.repeat(40) }), /does not match/);
+  await assert.rejects(verifySourceBranch('main', { ...context,
+    request: async () => ({ ok: true, json: async () => ({ jobs: [] }) }),
+  }), /absent or ambiguous/);
+  await assert.rejects(verifySourceBranch('main', { ...context,
+    request: async () => ({ ok: false, status: 500 }),
+  }), /readback failed/);
 });
 
 test('explicit local requests require a current checkout-scoped canonical preflight receipt', () => {

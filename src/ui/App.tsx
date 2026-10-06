@@ -74,17 +74,19 @@ import {
  * Wraps a lazy route so a chunk 404 left behind by a deploy reloads the page
  * instead of reporting that the workspace stopped. See chunkRecovery.
  */
+function recoverRouteModule<T>(pending: Promise<T>): Promise<T> {
+  return pending.catch((error: unknown) => {
+    if (isChunkLoadFailure(error) && claimChunkReload(browserReloadClock())) {
+      window.location.reload();
+      // The reload replaces this document, so this promise never settles.
+      return new Promise<T>(() => {});
+    }
+    throw error;
+  });
+}
+
 function lazyRoute<T extends ComponentType<any>>(load: () => Promise<{ default: T }>) {
-  return lazy(() =>
-    load().catch((error: unknown) => {
-      if (isChunkLoadFailure(error) && claimChunkReload(browserReloadClock())) {
-        window.location.reload();
-        // The reload replaces this document, so this promise never settles.
-        return new Promise<{ default: T }>(() => {});
-      }
-      throw error;
-    }),
-  );
+  return lazy(() => recoverRouteModule(load()));
 }
 
 const AboutPage = lazyRoute(() =>
@@ -110,11 +112,23 @@ const ExplorePage = lazyRoute(() =>
     default: module.ExplorePage,
   })),
 );
-const LazyRecordPage = lazyRoute(loadRecordPage);
-function ObjectDetailPage(props: ComponentProps<typeof LazyRecordPage>) {
-  // Keep the selected renderer for this mount: enriching the same record must
-  // not replace its component and reset focus or local interaction state.
-  const [RecordPage] = useState(() => readyRecordPage() ?? LazyRecordPage);
+function ObjectDetailPage(props: ComponentProps<NonNullable<ReturnType<typeof readyRecordPage>>>) {
+  const [RecordPage, setRecordPage] = useState(readyRecordPage);
+  const [routeError, setRouteError] = useState<{ error: unknown } | null>(null);
+  useEffect(() => {
+    if (RecordPage) return;
+    let active = true;
+    void recoverRouteModule(loadRecordPage()).then(({ default: component }) => {
+      if (active) setRecordPage(() => component);
+    }, (error: unknown) => {
+      if (active) setRouteError({ error });
+    });
+    return () => { active = false; };
+  }, [RecordPage]);
+  if (routeError) throw routeError.error;
+  // An explicit pending state avoids Suspense's retry delay for a module that
+  // startup is already fetching. Keep this renderer through context enrichment.
+  if (!RecordPage) return <LoadingStatusPanel slow={false} suspensePending />;
   return <RecordPage {...props} />;
 }
 const PlaybooksPage = lazyRoute(() =>

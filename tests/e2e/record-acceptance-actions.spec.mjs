@@ -29,6 +29,34 @@ async function openActionsMenu(page) {
   return page.locator(".record-actions-popover");
 }
 
+test("supporting context preserves the open record action and keyboard focus", async ({ page }) => {
+  attachPageDiagnostics(page);
+  let releaseContext = () => {};
+  const contextGate = new Promise((resolve) => { releaseContext = () => resolve(undefined); });
+  await page.route("**/atlas-spine.json*", async (route) => {
+    await contextGate;
+    await route.continue();
+  });
+  try {
+    await page.goto("/#/record/nist-800-53/AC-2");
+    const record = page.locator("[data-record-content]");
+    await expect(record).toBeVisible();
+    const initialCommit = await record.getAttribute("data-record-commit");
+    const initialRecord = await record.elementHandle();
+    const summary = page.locator(".record-actions-menu > summary");
+    await summary.focus();
+    await page.keyboard.press("Enter");
+    await expect(page.locator(".record-actions-menu")).toHaveAttribute("open", "");
+    releaseContext();
+    await expect(record).not.toHaveAttribute("data-record-commit", initialCommit);
+    await expect(page.locator(".record-actions-menu")).toHaveAttribute("open", "");
+    await expect(summary).toBeFocused();
+    expect(await initialRecord.evaluate((element) => element.isConnected)).toBe(true);
+  } finally {
+    releaseContext();
+  }
+});
+
 test("baseline headings name the baseline, not just the word Baseline", async ({ page }) => {
   await openRecord(page, "/#/record/nist-800-53b/HIGH");
   await expect(page.getByRole("heading", { name: "High Impact Baseline", level: 1 })).toBeVisible();

@@ -143,7 +143,7 @@ jobs:
 
   prepush:
     name: Fresh checkout and push audit
-    needs: changes
+    needs: [changes, generated]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -157,6 +157,10 @@ jobs:
       - run: npm ci
       - run: npm run validate:checkout
       - run: npm run verify:local
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: generated-data
+          path: data/generated
       - run: npm run prepush:audit
       - name: Record hosted acceptance
         run: |
@@ -237,9 +241,8 @@ jobs:
   generated:
     name: Prepare reproducible generated data
     needs: changes
-    if: >-
-      ${{ needs.changes.outputs.build_required == 'true' ||
-          needs.changes.outputs.unit_required == 'true' }}
+    # The required push audit checks corpus-wide brand metrics for every standard
+    # run. Prepare its shared data even when no product rebuild is selected.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

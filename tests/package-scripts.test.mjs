@@ -235,6 +235,10 @@ test('shipping helpers preserve local source hygiene and exact required hosted v
   assert.equal(packageJson.scripts['pregit:push'], 'npm run verify:local');
   assert.equal(packageJson.scripts['preprepush:audit'], 'node ./tools/validation-location.mjs');
   assert.match(ci, /prepush:\n\s+name: Fresh checkout and push audit/);
+  assert.match(ci, /prepush:[\s\S]*?needs: \[changes, generated\]/);
+  assert.match(ci, /prepush:[\s\S]*?name: generated-data[\s\S]*?path: data\/generated[\s\S]*?run: npm run prepush:audit/);
+  const generatedJob = ci.slice(ci.indexOf('  generated:'), ci.indexOf('  windows-process:'));
+  assert.doesNotMatch(generatedJob.split('    steps:')[0], /if:/);
   assert.match(ci, /needs: \[changes, prepush, evidence/);
   assert.match(ci, /run: npm run validate:checkout/);
   assert.match(ci, /run: npm run prepush:audit/);

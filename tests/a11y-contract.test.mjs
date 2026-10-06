@@ -202,7 +202,8 @@ test("primary actions use one authored AA contrast pair", () => {
     ) >= 4.5,
     "Primary action hover text must meet 4.5:1",
   );
-  assert.match(buttonComponent, /primary:\s*"ca-button-primary"/);
+  assert.match(buttonComponent, /primary:\s*BUTTON_PRIMARY/);
+  assert.match(readFileSync("src/ui/lib/buttonStyles.ts", "utf8"), /BUTTON_PRIMARY\s*=\s*'ca-button-primary'/);
   assert.match(
     componentsCss,
     /\.ca-button-primary\s*\{[^}]*background:\s*var\(--ca-action-primary\)[^}]*color:\s*var\(--ca-on-primary\)/s,

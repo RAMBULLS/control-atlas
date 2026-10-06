@@ -263,6 +263,8 @@
         document.head.appendChild(style);
       });
       function beginReading() {
+        var root = document.getElementById("root");
+        if (!root) return;
         if (root.dataset.progressiveShellReleased === "true") return;
         var hash = window.location.hash;
         var previous = window.controlAtlasRecordReader;
@@ -279,6 +281,7 @@
         };
       }
       beginReading();
-      window.addEventListener("hashchange", beginReading);    }
+      window.addEventListener("hashchange", beginReading);
+    }
   }
 })();

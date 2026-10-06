@@ -16,15 +16,22 @@ export function waitForRecordPaint(nodeId: string, runtime: object, signal: Abor
   const token = recordCommitToken(runtime);
   return new Promise((resolve, reject) => {
     let frame = 0;
+    let paintTask: ReturnType<typeof setTimeout> | undefined;
     let settled = false;
     const cleanup = () => {
       if (settled) return;
       settled = true;
       observer.disconnect();
       cancelAnimationFrame(frame);
+      if (paintTask !== undefined) clearTimeout(paintTask);
       signal.removeEventListener("abort", finish);
     };
     const finish = () => { cleanup(); resolve(); };
+    const matchingVisibleRecord = () => {
+      const content = document.getElementById("workspace")?.querySelector<HTMLElement>("[data-record-content]");
+      return content?.dataset.recordContent === nodeId && content.dataset.recordCommit === token
+        && content.getClientRects().length > 0 && getComputedStyle(content).visibility !== "hidden";
+    };
     const check = () => {
       if (settled) return;
       const workspace = document.getElementById("workspace");
@@ -33,25 +40,24 @@ export function waitForRecordPaint(nodeId: string, runtime: object, signal: Abor
         reject(new Error("The record renderer could not load."));
         return;
       }
-      const content = workspace?.querySelector<HTMLElement>("[data-record-content]");
-      if (content?.dataset.recordContent !== nodeId || content.dataset.recordCommit !== token) return;
-      if (frame) return;
-      // The first frame prepares the committed record; the next lets supporting
-      // work begin after its paint opportunity rather than after setState.
+      if (!matchingVisibleRecord() || frame || paintTask !== undefined) return;
+      // RAF callbacks precede paint. Resume supporting work in a later task,
+      // after the matching visible record has had its rendering opportunity.
       frame = requestAnimationFrame(() => {
         frame = requestAnimationFrame(() => {
           frame = 0;
-          const currentWorkspace = document.getElementById("workspace");
-          const current = currentWorkspace?.querySelector<HTMLElement>("[data-record-content]");
-          if (currentWorkspace?.querySelector("[data-route-render-error]")) check();
-          else if (current?.dataset.recordContent === nodeId && current.dataset.recordCommit === token) finish();
+          paintTask = setTimeout(() => {
+            paintTask = undefined;
+            if (document.getElementById("workspace")?.querySelector("[data-route-render-error]")) check();
+            else if (matchingVisibleRecord()) finish();
+          }, 0);
         });
       });
     };
     const observer = new MutationObserver(check);
     observer.observe(document.body, {
       childList: true, subtree: true, attributes: true,
-      attributeFilter: ["data-record-content", "data-record-commit", "data-route-render-error"],
+      attributeFilter: ["data-record-content", "data-record-commit", "data-route-render-error", "data-route-hydrated"],
     });
     signal.addEventListener("abort", finish, { once: true });
     check();

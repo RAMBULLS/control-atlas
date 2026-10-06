@@ -21,7 +21,7 @@ import { serializeHashUrl } from './src/ui/lib/hashRoutes.ts';
 import { normalizeViewState } from './src/ui/lib/viewState.ts';
 import { buildHomeSurface } from './src/shared/home-surface-build.ts';
 import type { HomeSurface } from './src/shared/home-surface.ts';
-import { recordStartupHints } from './tools/record-startup-hints.mjs';
+import { RECORD_STARTUP_ENTRIES, recordStartupHints } from './tools/record-startup-hints.mjs';
 
 const rootDir = fileURLToPath(new URL('.', import.meta.url));
 
@@ -218,6 +218,15 @@ export default defineConfig({
   plugins: [
     {
       name: 'control-atlas-record-startup-hints',
+      apply: 'build',
+      buildStart() {
+        for (const entry of RECORD_STARTUP_ENTRIES) {
+          this.emitFile({
+            type: 'chunk', id: resolve(rootDir, entry.module),
+            name: `record-${entry.key}`, preserveSignature: 'strict',
+          });
+        }
+      },
       transformIndexHtml: {
         order: 'post',
         handler(_html, context) {

@@ -256,24 +256,17 @@
     var moduleHints = document.getElementById("control-atlas-record-modules");
     if (moduleHints) {
       var recordCode = JSON.parse(moduleHints.textContent);
-      recordCode.modules.forEach(function (href) {
-        var moduleHint = document.createElement("link");
-        moduleHint.rel = "modulepreload";
-        moduleHint.crossOrigin = "anonymous";
-        moduleHint.href = new URL(href, document.baseURI).href;
-        document.head.appendChild(moduleHint);
-      });
-      recordCode.styles.forEach(function (href) {
-        var styleUrl = new URL(href, document.baseURI).href;
-        var existingStyles = document.querySelectorAll('link[rel="stylesheet"], link[rel="preload"][as="style"]');
-        if (Array.from(existingStyles).some(function (link) { return link.href === styleUrl; })) return;
-        var styleHint = document.createElement("link");
-        styleHint.rel = "preload";
-        styleHint.as = "style";
-        styleHint.crossOrigin = "anonymous";
-        styleHint.href = styleUrl;
-        document.head.appendChild(styleHint);
-      });
+      var recordHash = window.location.hash;
+      var recordRoute = new URL(recordHash.replace(/^#/, ""), window.location.origin);
+      Promise.all([
+        import(new URL(recordCode.artifacts, document.baseURI).href),
+        import(new URL(recordCode.routes, document.baseURI).href),
+      ]).then(function (modules) {
+        if (window.location.hash !== recordHash) return;
+        return modules[0].preloadRuntimeArtifacts(
+          modules[1].parseHashLocation(recordRoute.pathname, recordRoute.search),
+        );
+      }).catch(function () { /* Rendering retains the normal recovery path. */ });
     }
   }
 })();

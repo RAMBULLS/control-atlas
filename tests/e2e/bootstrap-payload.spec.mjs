@@ -138,24 +138,28 @@ test("a failed hinted compressed source retains the plain source fallback", asyn
   expect(plain).toHaveLength(1);
 });
 
-test("record code hints reuse emitted modules and styles without other route chunks", async ({ page }) => {
-  const responses = [];
-  page.on("response", (response) => {
-    if (response.url().includes("/assets/")) responses.push(response.url());
+test("record source acquisition starts before the interactive entry is available", async ({ page }) => {
+  let releaseEntry = () => {};
+  const entryGate = new Promise((resolve) => { releaseEntry = () => resolve(undefined); });
+  await page.route("**/assets/index-*.js", async (route) => {
+    await entryGate;
+    await route.continue();
   });
-  await page.goto("/#/record/nist-800-53/AC-2");
-  await expect(page.locator(".source-text-blocks p").first()).toBeVisible();
-  const hints = await page.evaluate(() => {
-    const manifest = JSON.parse(globalThis.document.getElementById("control-atlas-record-modules").textContent);
-    return [...manifest.modules, ...manifest.styles].map((href) => new URL(href, globalThis.document.baseURI).href);
+  const cohorts = [];
+  const scripts = [];
+  page.on("request", (request) => {
+    if (/\/data\/generated\/atlas-neighborhood\/[a-f0-9]+\.json\.gz\?/.test(request.url())) cohorts.push(request.url());
+    if (request.resourceType() === "script") scripts.push(request.url());
   });
-  expect(hints.length).toBeGreaterThan(0);
-  for (const href of hints) {
-    expect(href).not.toMatch(/\/assets\/(?!ObjectDetailPage-)[\w]+Page-/);
-    expect(responses.filter((url) => url === href), href).toHaveLength(1);
+  try {
+    await page.goto("/#/record/nist-800-53/AC-2", { waitUntil: "commit" });
+    await expect.poll(() => cohorts.length).toBe(1);
+    expect(scripts.some((url) => /\/assets\/(?:App|ObjectDetailPage|client)-/.test(url))).toBe(false);
+  } finally {
+    releaseEntry();
   }
-  for (const url of responses) expect(url).not.toMatch(/\/assets\/(?!ObjectDetailPage-)[\w]+Page-/);
-  await expect(page.locator('link[rel="modulepreload"][href*="ObjectDetailPage-"]')).toHaveCount(1);
+  await expect(page.locator(".source-text-blocks p").first()).toContainText("Define and document");
+  expect(cohorts).toHaveLength(1);
 });
 
 test("the Atlas territory sheet uses its own small index without monolithic graph JSON", async ({

@@ -208,19 +208,35 @@ body {
 }
 
 .static-route-shell {
-  min-height: max(620px, calc(100svh - 200px));
+  min-height: 100svh;
   padding-top: var(--ca-space-8);
   position: relative;
   z-index: 0;
 }
 
 .static-route-summary {
-  min-height: min(52svh, 430px);
+  min-height: 0;
   max-width: 62ch;
 }
 
+/* Lazy route styles must not rearrange the loading message. */
+.static-route-shell .page-header,
+.static-route-shell .page-header-row {
+  display: block;
+}
+
+/* Reserve the same row occupied by the record's context bar after boot. */
+#root[data-static-route-kind="record"]:not([data-route-hydrated="true"])::before {
+  content: "";
+  grid-column: 1;
+  grid-row: 2;
+  height: calc(var(--ca-control-md) + 1px);
+  pointer-events: none;
+  visibility: hidden;
+}
+
 #root[data-static-route-active="true"] [data-react-root] #workspace {
-  min-height: max(620px, calc(100svh - 200px));
+  min-height: 100svh;
   position: relative;
   visibility: hidden;
   z-index: 1;
@@ -241,7 +257,7 @@ body {
 /* Keep the footer below the loading surface until the directory or record arrives. */
 #root[data-route-hydrated="true"] > [data-react-root]
   #workspace:has(> #app:is([data-view="commons"], [data-view="library-detail"])) {
-  min-height: max(620px, calc(100svh - 200px));
+  min-height: 100svh;
 }
 
 .static-search-form {

@@ -54,10 +54,15 @@ Do not add backend services, authentication, user uploads, evidence or scan inge
 
 ## Verification
 
-Run the strongest relevant checks and finish with:
+Before committing, run checks that cover the changed inputs and their risks:
 
-```text
-npm run precommit
-```
+- Use focused contract or unit checks for affected logic, plus applicable lint and type checks.
+- For UI or runtime changes, verify the affected user journeys, accessibility and layout families.
+- Reuse recorded evidence while its relevant inputs remain unchanged. Record the covered commit or tree, checks newly run, reused evidence and remaining release checks.
+- Obtain independent review for consequential changes.
+
+Run `npm run precommit` for broad or cross-cutting changes, uncertain impact, or final integration where focused evidence does not cover the risk. It remains available as the complete local suite; it is not required again solely because a narrowly verified change is ready to commit.
+
+Local evidence does not replace release gates. Every required GitHub security, accessibility, source-integrity, behavior, visual and performance check must pass for the exact remote head before merge. Preserve their budgets and admission rules. Verify the remote checkout and the exact released commit.
 
 Runtime/public-shell changes also require a fresh live GitHub Pages audit. Keep changes minimal, document data-contract changes, and verify the staged build plus deployed Pages output stay aligned.

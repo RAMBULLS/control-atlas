@@ -87,6 +87,10 @@ test("Resources exposes recovery when a delayed page module fails", async ({ pag
 });
 
 test("record waits for its lazy official content before requesting supporting information", async ({ page }) => {
+  const resourceRequests = [];
+  page.on("request", request => {
+    if (/commons-search-index|commons-resource-dataset/.test(request.url())) resourceRequests.push(request.url());
+  });
   let releaseRecord = () => {};
   const recordReleased = new Promise(resolve => { releaseRecord = () => resolve(undefined); });
   let contextRequests = 0;
@@ -121,6 +125,14 @@ test("record waits for its lazy official content before requesting supporting in
     await expect.poll(() => contextRequests).toBe(1);
     await expect(page.locator('[data-record-content="nist-800-53:AC-2"]')).toHaveAttribute("data-record-context-ready", "true");
     await expect(page.locator('[data-record-content="nist-800-53:AC-2"]')).toHaveAttribute("data-record-commit", committedToken);
+    expect(resourceRequests, "a closed-search record needs no Resources payload").toEqual([]);
+    await page.getByRole("button", { name: "Open search" }).click();
+    await page.getByRole("searchbox", { name: "Search Control Atlas" }).fill("NISTControls");
+    await expect(page.getByRole("link", {
+      name: "Reddit /r/NISTControls Practitioner Community", exact: true,
+    })).toBeVisible();
+    expect(resourceRequests.some(url => url.includes("commons-search-index"))).toBe(true);
+    expect(resourceRequests.some(url => url.includes("commons-resource-dataset"))).toBe(true);
   } finally {
     releaseRecord();
   }

@@ -365,7 +365,6 @@ export function runtimeArtifactPlan(
     commons:
       state.view === "commons" ||
       state.view === "commons-detail" ||
-      state.view === "library-detail" ||
       state.view === "search" ||
       buildContextRequested ||
       Boolean(options.searchOverlayOpen),
@@ -1271,7 +1270,7 @@ export async function loadRuntimeDatasetStaged(handlers: {
       handlers.onFullReady(catalogPhase.bundle);
       return;
     }
-    if (handlers.state.view === "library-detail" && plan.commons) {
+    if (handlers.state.view === "library-detail") {
       const officialPhase = await loadRouteScopedPhase({
         ...plan,
         atlasSpine: false,
@@ -1286,8 +1285,12 @@ export async function loadRuntimeDatasetStaged(handlers: {
       if (handlers.signal?.aborted) return;
       const [spineArtifact, commonsIndex, commonsDataset] = await Promise.all([
         plan.atlasSpine ? fetchArtifact(artifactPath("atlas-spine.json")) : Promise.resolve(null),
-        optionalArtifact<CommonsSearchIndex | null>("./data/generated/commons-search-index.json", null),
-        optionalArtifact<CommonsResourceDataset | null>("./data/commons-resource-dataset.json", null),
+        plan.commons
+          ? optionalArtifact<CommonsSearchIndex | null>("./data/generated/commons-search-index.json", null)
+          : Promise.resolve(null),
+        plan.commons
+          ? optionalArtifact<CommonsResourceDataset | null>("./data/commons-resource-dataset.json", null)
+          : Promise.resolve(null),
       ]);
       if (handlers.signal?.aborted) return;
       const atlasSpine = (spineArtifact as AtlasSpineArtifact | null)?.atlas_spine;

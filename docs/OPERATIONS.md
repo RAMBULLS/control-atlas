@@ -348,7 +348,7 @@ Use `npm run refresh:recover-pr -- --verify-only` with `GITHUB_REPOSITORY`,
 - `npm run verify:ingestion` checks the shared ten-stage lifecycle for all catalog artifacts, all publisher catalogs, and all Resources entries.
 - `npm run test:a11y:smoke` checks representative accessibility paths.
 - `npm run test:e2e:smoke` checks representative product workflows.
-- `npm run precommit` is the complete local ship gate.
+- `npm run precommit` runs the complete local suite when broad changes or uncovered integration risk warrant it; it is not a mandatory repeat after reviewed, change-specific checks.
 - `npm run verify:affected` prints changed paths, selected checks, approximate
   test count, workers, and runtime budget without executing them.
 - `npm run verify:affected -- --run` executes that bounded plan. Unknown data or
@@ -356,8 +356,18 @@ Use `npm run refresh:recover-pr -- --verify-only` with `GITHUB_REPOSITORY`,
 
 Use the cheapest faithful contract test during development. No routine
 iteration step may exceed 50 tests or two minutes; the affected runner enforces
-those per-step limits. Run corpus rebuilds and browser matrices only at final
-integration unless a changed input explicitly invalidates their evidence.
+those per-step limits. Run corpus rebuilds and broad browser matrices when
+changed inputs or uncovered integration risk warrant them. Before committing,
+cover the affected contracts, logic, types, lint and user journeys, including
+accessibility and layout checks for changed UI families. Use independent review
+for consequential changes and record newly run checks alongside reused evidence
+and its covered commit or tree. Reuse evidence only while its relevant inputs
+remain unchanged.
+
+All required GitHub security, accessibility, integrity, behavior, visual and
+performance gates remain mandatory for the exact remote head before merge.
+Their budgets and refresh-admission rules remain unchanged. Local checks do not
+replace remote-checkout verification or exact-commit production acceptance.
 
 `packageManager` pins the npm resolver used to validate lockfiles against CI.
 `npm run verify:lockfile` checks isolated copies of the manifests with that npm

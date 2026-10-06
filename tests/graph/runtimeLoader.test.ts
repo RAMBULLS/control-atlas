@@ -117,6 +117,7 @@ test("record first delivery preserves publisher content and edges before authori
     await staged;
     assert.equal(final.length, 1);
     assert.ok(final[0].atlasSpine);
+    assert.ok(!fixture.requests.some(url => /commons/.test(url)), "a closed-search record never requests unrelated Resources artifacts");
     assert.deepEqual(final[0].runtime.getNode(fixture.id), first[0].runtime.getNode(fixture.id));
     assert.deepEqual(final[0].runtime.getEdgesForNode(fixture.id), first[0].runtime.getEdgesForNode(fixture.id));
     assert.deepEqual(errors, []);
@@ -233,8 +234,8 @@ test("route bootstrap loads only the smallest faithful artifact scope", () => {
   );
   assert.equal(
     recordDetail.commons,
-    true,
-    "record pages load their existing contextual Resources module",
+    false,
+    "record pages do not consume Resources artifacts when search is closed",
   );
   assert.equal(
     recordDetail.catalogBootstrap,
@@ -285,6 +286,10 @@ test("route bootstrap loads only the smallest faithful artifact scope", () => {
   );
   assert.equal(record.recordNodeId, "nist-800-53:AC-2");
   assert.equal(record.fullGraph, false);
+  assert.equal(runtimeArtifactPlan(
+    normalizeViewState("library-detail", { node: "nist-800-53:AC-2" }),
+    { searchOverlayOpen: true },
+  ).commons, true, "explicit record search still loads Resources results");
 
   const atlasLanding = runtimeArtifactPlan(normalizeViewState("atlas-map"));
   assert.equal(atlasLanding.recordNodeId, "");

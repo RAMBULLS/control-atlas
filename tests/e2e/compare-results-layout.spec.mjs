@@ -232,15 +232,53 @@ test("export says what it covers and delivers every matching mapping, not the pa
   );
 });
 
+test("dense mapping evidence stays bounded and reaches the same final target by keyboard", async ({ page }) => {
+  test.setTimeout(120_000);
+  await open(page, DENSE);
+  await page.getByLabel("Search results by ID or title").fill("CCI-000366");
+  const rows = page.locator(ROWS);
+  await expect(rows).toHaveCount(1);
+  const row = rows.first();
+  const targets = row.locator(".target-window");
+  const total = Number((await targets.locator(".target-window-caption").innerText()).match(/All ([\d,]+) targets/)[1].replace(/,/g, ""));
+  expect(total).toBeGreaterThan(1000);
+  await targets.getByRole("region").focus();
+  await page.keyboard.press("End");
+  const finalTarget = targets.locator(`[aria-posinset="${total}"]`);
+  await expect(finalTarget).toBeVisible();
+  const finalIdentity = await finalTarget.locator("strong").innerText();
+  const evidence = row.locator(".mapping-row-details");
+  await evidence.locator("summary").focus();
+  await page.keyboard.press("Enter");
+  await expect(evidence.locator(".mapping-evidence-list > section")).toHaveCount(25);
+  expect(await row.evaluate(element => element.getElementsByTagName("*").length)).toBeLessThan(2000);
+  const sourceUrl = page.url();
+  const pager = evidence.getByRole("navigation", { name: "Evidence pages for CCI-000366" });
+  await pager.getByRole("button", { name: "Last page" }).focus();
+  await page.keyboard.press("Enter");
+  await expect(evidence.locator(".mapping-evidence-list > section")).toHaveCount(total % 25 || 25);
+  await expect(evidence.locator(".mapping-evidence-list > section > strong").last()).toHaveText(finalIdentity);
+  await expect(pager.getByRole("button", { name: "Previous page" })).toBeFocused();
+  await expect(page).toHaveURL(sourceUrl);
+  expect(await row.evaluate(element => element.getElementsByTagName("*").length)).toBeLessThan(2000);
+  await evidence.locator("summary").focus();
+  await page.keyboard.press("Enter");
+  await expect(evidence.locator(".mapping-evidence-list")).toHaveCount(0);
+  await page.keyboard.press("Enter");
+  await expect(evidence.locator(".mapping-evidence-list > section > strong").last()).toHaveText(finalIdentity);
+  await pager.getByRole("button", { name: "Previous page" }).click();
+  await expect(evidence.locator(".mapping-evidence-list > section")).toHaveCount(25);
+});
+
 test("filtering, the taxonomy disclosure and pagination work by keyboard and keep counts honest", async ({ page }) => {
   test.setTimeout(120_000);
   await open(page, PAIR);
-  const trigger = page.getByRole("button", { name: /Taxonomy context/ });
+  const trigger = page.getByRole("button", { name: /Related tags/ });
   await trigger.focus();
   await page.keyboard.press("Enter");
-  await expect(page.getByRole("region", { name: "Taxonomy context" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Related tags" })).toBeVisible();
   await page.keyboard.press("Enter");
-  await expect(page.getByRole("region", { name: "Taxonomy context" })).toHaveCount(0);
+  await expect(page.getByRole("region", { name: "Related tags" })).toHaveCount(0);
 
   const type = page.getByLabel("Connection type");
   const before = await mappingsIn(page);

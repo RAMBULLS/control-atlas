@@ -81,7 +81,9 @@ function TerritorySheet(props: { state: AtlasState; bundle: RuntimeBundle; index
   useLayoutEffect(() => {
     const el = wrapRef.current;
     if (!el) return undefined;
-    const measure = () => setSize({ w: el.clientWidth, h: el.clientHeight });
+    const measure = () => {
+      if (el.clientWidth > 0 && el.clientHeight > 0) setSize({ w: el.clientWidth, h: el.clientHeight });
+    };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);

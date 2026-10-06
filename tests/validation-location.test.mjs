@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { resolve } from 'node:path';
+import { posix, win32 } from 'node:path';
 import { isHostedRunner, requireValidationLocation, verifyHostedCheckout, verifyRemoteHostedRunner } from '../tools/validation-location.mjs';
 import { assertCapacity, assertGrowth, assertLocalExpansion } from '../tools/run-local-validation.mjs';
 
@@ -10,7 +10,7 @@ const hosted = {
   ImageOS: 'ubuntu24', GITHUB_RUN_ID: '123', GITHUB_SHA: sha,
   GITHUB_REPOSITORY: 'RAMBULLS/control-atlas', RUNNER_TOOL_CACHE: '/opt/hostedtoolcache', GITHUB_RUN_ATTEMPT: '1',
 };
-const options = { realpath: (path) => resolve(path), executable: '/opt/hostedtoolcache/node/bin/node', platform: 'linux' };
+const options = { realpath: (path) => posix.resolve(path), executable: '/opt/hostedtoolcache/node/bin/node', platform: 'linux' };
 
 test('local wrapper rejects stale capacity, unsupported expansions and exceeded output/temporary limits', () => {
   const decision = { ExpectedOutputBytes: 8, ExpectedTemporaryBytes: 8, ReserveBytes: 100 };
@@ -42,6 +42,31 @@ test('hosted image identity also requires a runtime inside its real tool cache',
     { ...options, executable: '/caller-selected/cache/node' }), false);
   assert.equal(isHostedRunner({ ...hosted, RUNNER_TOOL_CACHE: undefined },
     { ...options, realpath: () => { throw new Error('missing cache'); } }), false);
+});
+
+test('hosted image names and runtime containment follow the actual runner platform', () => {
+  for (const ImageOS of ['ubuntu24', 'ubuntu26']) {
+    assert.equal(isHostedRunner({ ...hosted, ImageOS }, options), true);
+  }
+  for (const ImageOS of ['win25', 'windows2025', 'ubuntu', 'ubuntuinvalid', 'ubuntu24invalid']) {
+    assert.equal(isHostedRunner({ ...hosted, ImageOS }, options), false);
+  }
+  const windows = { ...hosted, RUNNER_TOOL_CACHE: 'C:\\hostedtoolcache\\windows' };
+  const windowsOptions = { platform: 'win32', realpath: (path) => win32.resolve(path),
+    executable: 'C:\\hostedtoolcache\\windows\\node\\22\\x64\\node.exe' };
+  for (const ImageOS of ['win22', 'win25', 'win25-vs2026']) {
+    assert.equal(isHostedRunner({ ...windows, ImageOS }, windowsOptions), true);
+  }
+  for (const ImageOS of ['ubuntu24', 'windows2025', 'win', 'wininvalid', 'win25invalid']) {
+    assert.equal(isHostedRunner({ ...windows, ImageOS }, windowsOptions), false);
+  }
+  assert.equal(isHostedRunner({ ...windows, ImageOS: 'win25' }, {
+    ...windowsOptions, executable: 'C:\\hostedtoolcache\\windows-other\\node.exe',
+  }), false);
+  assert.equal(isHostedRunner({ ...windows, ImageOS: 'win25' }, {
+    ...windowsOptions, executable: 'D:\\hostedtoolcache\\windows\\node.exe',
+  }), false);
+  assert.equal(isHostedRunner({ ...windows, ImageOS: 'win25', RUNNER_ENVIRONMENT: 'self-hosted' }, windowsOptions), false);
 });
 
 test('hosted acceptance requires current GitHub job and runner readback', async () => {

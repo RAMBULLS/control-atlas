@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
-import { dirname, isAbsolute, relative, resolve } from 'node:path';
+import { dirname, posix, resolve, win32 } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -10,18 +10,18 @@ export function isHostedRunner(env = process.env, options = {}) {
   const executable = options.executable ?? process.execPath;
   const platform = options.platform ?? process.platform;
   const cacheRoot = { linux: '/opt/hostedtoolcache', win32: 'C:\\hostedtoolcache\\windows' }[platform];
+  const paths = { linux: posix, win32 }[platform];
+  const imagePattern = { linux: /^ubuntu\d+(?:-|$)/i, win32: /^win\d+(?:-|$)/i }[platform];
   if (env.GITHUB_ACTIONS !== 'true' || env.RUNNER_ENVIRONMENT !== 'github-hosted' ||
       !/^GitHub Actions \S+/.test(env.RUNNER_NAME ?? '') ||
-      !/^(ubuntu|windows|macos)/i.test(env.ImageOS ?? '') ||
+      !imagePattern?.test(env.ImageOS ?? '') ||
       !/^\d+$/.test(env.GITHUB_RUN_ID ?? '') || !/^[a-f0-9]{40}$/i.test(env.GITHUB_SHA ?? '') ||
       env.GITHUB_REPOSITORY?.toLowerCase() !== 'rambulls/control-atlas') return false;
   try {
     const cache = realpath(env.RUNNER_TOOL_CACHE);
-    if (!cacheRoot || cache.toLowerCase() !== resolve(cacheRoot).toLowerCase()) return false;
-    const imagePrefix = { linux: 'ubuntu', win32: 'windows' }[platform];
-    if (!env.ImageOS.toLowerCase().startsWith(imagePrefix)) return false;
-    const path = relative(cache, realpath(executable));
-    return path !== '' && !path.startsWith('..') && !isAbsolute(path);
+    if (!cacheRoot || cache.toLowerCase() !== paths.resolve(cacheRoot).toLowerCase()) return false;
+    const path = paths.relative(cache, realpath(executable));
+    return path !== '' && !path.startsWith('..') && !paths.isAbsolute(path);
   } catch {
     return false;
   }

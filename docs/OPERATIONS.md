@@ -278,7 +278,61 @@ it runs weekly rather than nightly because unchanged code does not need daily
 proof. Refresh cadence is one weekly job because unchanged sources cost a 304,
 not a download; per-source cadence would add scheduling without measured savings.
 
-## Local gates
+## Execution location and required gates
+
+Local work consists of source edits, Git inspection and `npm run verify:local`.
+This read-only check has ten-second subprocess deadlines and creates no generated
+data, browser profiles or build output. `npm run git:push` runs it automatically.
+The complete brand, copy, disclaimer and style audit remains `prepush:audit`, now
+in the required **Fresh checkout and push audit** GitHub-hosted job. Required CI
+depends on that job for every standard run, including automation-only changes.
+
+Generation, dependency installation, full lint/types/tests, browser/accessibility
+and performance work run on the existing GitHub-hosted workflows. Open the PR for
+affected checks; dispatch `ci.yml` with `task=standard` on the task branch for final
+exact-head acceptance. Read the canonical development resource contract installed
+in the user's `.agents` directory before producing local output. Repository npm
+lifecycle guards enforce the declared heavy script entrypoints; they do not
+intercept arbitrary direct shell commands or replace user authorization.
+
+The guard requires GitHub-hosted runner identity, image and workflow metadata,
+and a Node executable inside the platform's fixed hosted tool cache. It also
+reads the current in-progress job from GitHub and verifies the runner group and
+labels, caching that identity inside the runner's temporary directory. A `CI` or
+`GITHUB_ACTIONS` flag alone cannot authorize work. Confirm actual runner names,
+groups and labels through the GitHub jobs API when recording acceptance.
+
+An explicitly requested local heavy task additionally requires the canonical
+resource helper's successful Heavy preflight. `ATLAS_LOCAL_PREFLIGHT` can point to
+a receipt containing `decision` (the unchanged helper result), the current user
+`authorization` reference, exact permitted npm `tasks`, `outputPath`, the preflight's
+declared `expectedSeconds` and `checkCount`, `issuedAt` and `expiresAt`
+(at most fifteen minutes apart), and an existing `temporaryPath` inside the
+checkout. Local exceptions currently support only the four generation/build
+entrypoints; other expansions require hosted execution. `outputPath` must be the
+complete checkout, so multiple persistent output directories cannot escape the
+inventory. Browser, installation and arbitrary-script exceptions are unsupported.
+Checkout, task, actual pre-launch capacity, expiry and the recorded
+explicit request are checked before launch. Use `npm run local:heavy -- <task>
+<receipt>`: the wrapper inventories the existing output without following links,
+limits inventory size (including dependencies; unknown or oversized inventories
+fail before launch), routes system temporary files and npm cache inside the
+monitored checkout, enforces the declared runtime, and checks output growth,
+temporary demand and free-space reserve every second and at completion. It stops
+only its owned process tree. These checks are not an operating-system disk quota.
+Direct npm execution cannot use a receipt without the monitor context.
+This is an operational guard, not a
+security boundary: operators must never fabricate authorization or a receipt.
+No local heavy exception is active by default.
+
+Each hosted job checks out the workflow commit independently. The required push
+audit also verifies Git HEAD equals `GITHUB_SHA` and records a compact summary.
+Final acceptance reuses the existing generated-data and immutable site artifacts
+across the full required gate DAG: contracts, lint, types, unit tests, browser
+shards and accessibility preserve the complete `precommit` coverage without
+another build. Lighthouse, visual review, source admission and security remain
+additional mandatory gates. Detailed evidence stays on GitHub; inspect summaries
+and small logs instead of downloading a full site or corpus to the laptop.
 
 ### Production performance measurement
 
@@ -348,13 +402,14 @@ Use `npm run refresh:recover-pr -- --verify-only` with `GITHUB_REPOSITORY`,
 - `npm run verify:ingestion` checks the shared ten-stage lifecycle for all catalog artifacts, all publisher catalogs, and all Resources entries.
 - `npm run test:a11y:smoke` checks representative accessibility paths.
 - `npm run test:e2e:smoke` checks representative product workflows.
-- `npm run precommit` is the complete local ship gate.
+- `npm run precommit` is the complete standalone hosted ship gate; standard CI
+  supplies the same coverage through its artifact-reusing required jobs.
 - `npm run verify:affected` prints changed paths, selected checks, approximate
   test count, workers, and runtime budget without executing them.
 - `npm run verify:affected -- --run` executes that bounded plan. Unknown data or
   UI paths fail closed until a source-specific or route-family mapping exists.
 
-Use the cheapest faithful contract test during development. No routine
+Use the cheapest faithful contract test on a hosted runner during development. No routine
 iteration step may exceed 50 tests or two minutes; the affected runner enforces
 those per-step limits. Run corpus rebuilds and browser matrices only at final
 integration unless a changed input explicitly invalidates their evidence.
@@ -369,11 +424,12 @@ Keep the resolver pin and this command aligned when upgrading npm.
 ## Shipping contract
 
 1. Work on a feature branch and keep commits narrow.
-2. Pass the printed affected local gate for each phase. Run the complete local
-   ship gate once after final Epic inputs freeze.
+2. Pass local source hygiene. Run affected checks on GitHub; after final inputs
+   freeze, require the complete standard hosted gate DAG on the exact task SHA.
 3. Push with `npm run git:push` and open a pull request to `main`.
 4. Require exact-head CI and security checks to pass.
-5. Verify a fresh checkout of the remote branch.
+5. Verify fresh-checkout acceptance on GitHub, including the checkout SHA and
+   the artifact identities. Do not clone and rebuild locally for this step.
 6. Merge through the repository ship flow; never merge locally around CI.
 7. Verify the deployed `release.json` commit equals merged `main` and that its separately labeled product-release and source-data timestamps match the rendered footer.
 8. Inspect representative live desktop and mobile routes, keyboard behavior, overflow, and key source records.

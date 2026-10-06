@@ -219,7 +219,7 @@ test('browser projects are selected explicitly while accessibility remains separ
   assert.ok(packageJson.devDependencies['@axe-core/playwright']);
 });
 
-test('shipping helpers preserve focused local checks and exact remote verification', () => {
+test('shipping helpers preserve local source hygiene and exact required hosted verification', () => {
   for (const script of ['git:push', 'checks:wait', 'ship:main', 'prepush:audit']) {
     assert.equal(typeof packageJson.scripts[script], 'string', script);
   }
@@ -229,8 +229,29 @@ test('shipping helpers preserve focused local checks and exact remote verificati
     'tools/ship-to-main.mjs',
   ]) assert.ok(existsSync(file), file);
   const ship = readFileSync('tools/ship-to-main.mjs', 'utf8');
-  assert.match(ship, /classify-change-scope\.mjs/);
+  assert.match(ship, /run\('npm', \['run', 'verify:local'\]\)/);
+  assert.doesNotMatch(ship, /run\('npm', \['run', 'precommit'\]\)/);
+  assert.match(ship, /--match-head-commit/);
+  assert.equal(packageJson.scripts['pregit:push'], 'npm run verify:local');
+  assert.equal(packageJson.scripts['preprepush:audit'], 'node ./tools/validation-location.mjs');
+  assert.match(ci, /prepush:\n\s+name: Fresh checkout and push audit/);
+  assert.match(ci, /needs: \[changes, prepush, evidence/);
+  assert.match(ci, /run: npm run validate:checkout/);
+  assert.match(ci, /run: npm run prepush:audit/);
   assert.match(ship, /Direct ship must start from a verified task branch, not main/);
+});
+
+test('heavy npm entrypoints fail before workload launch without admitted execution context', () => {
+  for (const task of ['build:data', 'build:site', 'build:site:incremental', 'generate:data',
+    'materialize:generated', 'verify:generated-reproducibility', 'test', 'test:ci-contracts',
+    'precommit', 'precommit:incremental', 'test:e2e:smoke', 'test:e2e:run',
+    'test:a11y:smoke', 'test:a11y:run', 'test:visual', 'test:performance:ci',
+    'lighthouse:production', 'refresh:data', 'verify:quality']) {
+    assert.equal(packageJson.scripts[`pre${task}`], 'node ./tools/validation-location.mjs', task);
+  }
+  for (const task of ['review:experience:contracts', 'review:experience:family', 'review:experience:full']) {
+    assert.equal(packageJson.scripts[`pre${task}`], 'node ./tools/validation-location.mjs', task);
+  }
 });
 
 test('Dependabot maintains npm packages and pinned GitHub Actions', () => {

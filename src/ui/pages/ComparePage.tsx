@@ -9,6 +9,7 @@ import { SITE_COPY } from "../../shared/site-copy.mjs";
 import { Button } from "../components/lsm";
 import { AtlasTag } from "../components/AtlasTag";
 import { RecordLink } from "../components/RecordLink";
+import { ListPagination } from "../components/ListPagination";
 import { parseCatalogItemIds, SourceRefList } from "../lib/compareHelpers";
 import {
   buildCompareExportData,
@@ -31,6 +32,7 @@ import {
   COMPARE_COMPACT_QUERY,
   COMPARE_INLINE_TARGET_LIMIT,
   paginateCompareRows,
+  paginateRows,
 } from "../lib/comparePagination";
 import { compareTaxonomyTags } from "../lib/compareTaxonomy.mjs";
 import {
@@ -260,8 +262,11 @@ function CompareScopeRail(props: {
 // the inner DOM until the user opens the disclosure so the initial render of
 // a full crosswalk stays bounded — the summary label is always present, only
 // the body is lazy.
-function LazyEvidenceDetails({ targets }: { targets: any[] }) {
+function LazyEvidenceDetails({ targets, recordLabel }: { targets: any[]; recordLabel: string }) {
   const [open, setOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  useEffect(() => setPage(1), [targets]);
+  const window = paginateRows(targets, String(page), 25);
   return (
     <details
       className="mapping-row-details"
@@ -273,7 +278,7 @@ function LazyEvidenceDetails({ targets }: { targets: any[] }) {
       </summary>
       {open ? (
         <div className="mapping-evidence-list">
-          {targets.map((target: any) => (
+          {window.rows.map((target: any) => (
             <section
               aria-label={`Evidence for ${target.to_item_id}`}
               key={`evidence-${target.edge_id || target.to_id}`}
@@ -289,6 +294,7 @@ function LazyEvidenceDetails({ targets }: { targets: any[] }) {
               <SourceRefList refs={target.source_refs} />
             </section>
           ))}
+          <ListPagination label={`Evidence pages for ${recordLabel}`} noun="mappings" {...window} total={targets.length} onPageChange={setPage} />
         </div>
       ) : null}
     </details>
@@ -1067,7 +1073,7 @@ export function ComparePage(props: {
                   <Accordion.Header className="disclosure-header">
                     <Accordion.Trigger className="disclosure-trigger">
                       <span aria-hidden="true" className="disclosure-chevron">▾</span>
-                      <span>Taxonomy context</span>
+                      <span>Related tags</span>
                       <span className="compare-taxonomy-summary">
                         {taxonomyComparison.shared.length.toLocaleString()} shared · {taxonomyComparison.onlySource.length.toLocaleString()} only in {sourceLabel} · {taxonomyComparison.onlyTarget.length.toLocaleString()} only in {targetLabel}
                       </span>
@@ -1131,7 +1137,7 @@ export function ComparePage(props: {
                                 onOpenNode={onOpenNode}
                                 row={row}
                               />
-                              <LazyEvidenceDetails targets={row.targets} />
+                              <LazyEvidenceDetails recordLabel={row.from_item_id} targets={row.targets} />
                             </td>
                           </tr>
                         ))}

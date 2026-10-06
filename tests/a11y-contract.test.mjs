@@ -85,8 +85,15 @@ test("relationship graph surfaces include accessible table fallback and provenan
   assert.match(explorer, /Map legend/);
   assert.match(table, /aria-label="Relationship table"/);
   assert.match(table, /ProvenanceBadge/);
-  assert.match(table, /Showing \{visibleRows\.length/);
-  assert.match(table, /Show 50 more/);
+  assert.match(table, /paginateRows\(rows, String\(page\), 50\)/);
+  assert.match(table, /ListPagination label="Connection pages"/);
+  assert.match(table, /total=\{rows\.length\}/);
+  const pagination = readFileSync("src/ui/components/ListPagination.tsx", "utf8");
+  assert.match(pagination, /<nav aria-label=\{props\.label\}/);
+  assert.match(pagination, /role="status"/);
+  assert.match(pagination, /Previous page/);
+  assert.match(pagination, /Next page/);
+  assert.match(pagination, /Last page/);
 });
 
 test("compare view state and provenance term support accessible descriptions", () => {

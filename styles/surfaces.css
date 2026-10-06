@@ -1414,13 +1414,34 @@ li {
   font-style: italic;
 }
 
+.template-card-disclosure {
+  padding: 0 var(--ca-space-4) var(--ca-space-3);
+  border-top: 1px solid var(--ca-border);
+}
+
+.template-card-disclosure > summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  cursor: pointer;
+  color: var(--ca-text);
+  font-size: var(--font-size-sm);
+}
+
+.template-card-disclosure > summary::after {
+  content: "+";
+  margin-left: auto;
+}
+
+.template-card-disclosure[open] > summary::after {
+  content: "−";
+}
+
 .template-card-details {
   display: grid;
   gap: var(--ca-space-1);
   width: 100%;
-  margin: 0 0 var(--ca-space-4);
-  padding-top: var(--ca-space-3);
-  border-top: 1px solid var(--ca-border);
+  margin: 0;
   color: var(--ca-text-muted);
   font-size: var(--font-size-sm);
   line-height: 1.45;

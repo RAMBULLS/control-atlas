@@ -546,7 +546,7 @@ export function SourceSummaryCard(props: { source: any; onOpen?: () => void; det
         ) : null}
       </div>
       )}
-      <p className="result-summary">Maintained by {source.owner}.</p>
+      <p className="result-summary">Source owner: {source.owner}.</p>
       <p className="support-meta">
         {sourceCurrentAsOf(source)}
       </p>

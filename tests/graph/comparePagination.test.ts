@@ -7,8 +7,22 @@ import {
   COMPARE_INLINE_TARGET_LIMIT,
   COMPARE_PAGE_SIZE,
   paginateCompareRows,
+  paginateRows,
 } from "../../src/ui/lib/comparePagination";
 import { parseHashLocation, serializeHashLocation } from "../../src/ui/lib/hashRoutes";
+
+test("shared list windows preserve complete small sets and clamp filtered or last pages", () => {
+  for (const size of [25, 50]) {
+    const rows = Array.from({ length: size + 1 }, (_, index) => index);
+    assert.deepEqual(paginateRows([], "3", size).rows, []);
+    assert.equal(paginateRows(rows.slice(0, size), "", size).pageCount, 1);
+    assert.deepEqual(paginateRows(rows, "2", size).rows, [size]);
+    assert.equal(paginateRows(rows, "2", size).start, size + 1);
+    assert.deepEqual(paginateRows(rows.slice(0, 2), "99", size).rows, [0, 1]);
+    assert.equal(paginateRows(rows.slice(0, 2), "99", size).valid, false);
+  }
+  assert.throws(() => paginateRows([1], "1", 0), /Invalid page size/);
+});
 
 test("Compare uses bounded fixed windows that replace rather than accumulate", () => {
   const rows = Array.from({ length: 60 }, (_, index) => `row-${index + 1}`);

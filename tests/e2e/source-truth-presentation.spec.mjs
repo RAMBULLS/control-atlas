@@ -80,7 +80,7 @@ test('Source Register separates current, historical, mapping, and reproducible e
   await gotoApp(page, '/#/sources');
   await waitForAppReady(page);
   await dismissOnboarding(page);
-  await expect(page.getByText(/\d+ publications with their full contents indexed/)).toBeVisible();
+  await expect(page.getByText(/\d+ publications with indexed records:/)).toBeVisible();
   const fedramp2026 = page.getByRole('button', { name: 'FedRAMP 2026', exact: true });
   await expect(fedramp2026).toBeVisible();
   await expect(page.locator('.source-register-row').filter({ has: fedramp2026 })).toContainText('FedRAMP Consolidated Rules for 2026');

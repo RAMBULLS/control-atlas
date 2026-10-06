@@ -17,6 +17,7 @@ import { readGeneratedCollection } from './lib/generated-graph-artifacts.mjs';
 import { resolveExpectedLocator, classifyCatalog, summarizeCompleteness } from './lib/completeness.mjs';
 import { NON_CATALOG_TECHNICAL_SHARDS } from './sync-catalog-source-bundles.mjs';
 import { writeJsonAtomically } from './lib/write-json-atomically.mjs';
+import { verifyNormalizedArtifactEvidence } from './lib/normalized-artifact-evidence.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SHA256_PREFIXED = /^sha256:[a-f0-9]{64}$/i;
@@ -190,6 +191,11 @@ if (!registry) {
     attested.set('artifact-nara-cui-registry', `sha256:${naraCui.list_page.sha256}`);
   }
   for (const art of artifacts) {
+    if (art.id === 'artifact-nist-800-53b-baselines') {
+      try {
+        verifyNormalizedArtifactEvidence(art, hydration?.results?.find((entry) => entry.id === art.id), ROOT);
+      } catch (error) { err(error.message); }
+    }
     const a = attested.get(art.id);
     if (!a) {
       err(`artifact ${art.id} evidence is UNATTESTED (no execution manifest entry proves its sha256)`);

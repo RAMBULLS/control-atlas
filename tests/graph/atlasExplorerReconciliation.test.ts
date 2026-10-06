@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
+import { atlasNeighborhoodShardId } from "../../src/app/atlas-neighborhood.mjs";
 
 import { catalogProfileFor } from "../../src/ui/lib/catalogProfiles";
 import {
@@ -117,14 +118,19 @@ type SourceRegistry = {
 };
 
 function loadNeighborhood(nodeId: string): NeighborhoodRecord | null {
-  let h = 0x811c9dc5;
-  for (let i = 0; i < nodeId.length; i++) {
-    h ^= nodeId.charCodeAt(i);
-    h = Math.imul(h, 0x01000193);
-  }
-  const shard = ((h >>> 0) % 128).toString(16).padStart(2, "0");
-  const path = join(GENERATED, "atlas-neighborhood", `${shard}.json`);
-  const data = JSON.parse(readFileSync(path, "utf8"));
+  const { atlas_neighborhood_manifest: manifest } = JSON.parse(
+    readFileSync(join(GENERATED, "atlas-neighborhood-manifest.json"), "utf8"),
+  ) as {
+    atlas_neighborhood_manifest: {
+      shard_count: number;
+      shards: Array<{ shard_id: string; path: string }>;
+    };
+  };
+  assert.ok(Number.isInteger(manifest.shard_count) && manifest.shard_count > 0);
+  const shardId = atlasNeighborhoodShardId(nodeId, manifest.shard_count);
+  const shard = manifest.shards.find((entry) => entry.shard_id === shardId);
+  assert.ok(shard, `Neighborhood shard ${shardId} is not declared`);
+  const data = JSON.parse(readFileSync(join(GENERATED, shard.path), "utf8"));
   return data.atlas_neighborhood_shard.records[nodeId] || null;
 }
 

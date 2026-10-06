@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { atlasNeighborhoodShardId } from "../../src/app/atlas-neighborhood.mjs";
 
 import {
   attachPageDiagnostics,
@@ -11,6 +12,17 @@ function graphArtifactUrls(urls) {
   return urls.filter(
     (url) => url.includes("nodes.json") || url.includes("edges.json"),
   );
+}
+
+async function declaredNeighborhoodPath(page, nodeId) {
+  const response = await page.request.get("/data/generated/atlas-neighborhood-manifest.json");
+  expect(response.ok()).toBeTruthy();
+  const { atlas_neighborhood_manifest: manifest } = await response.json();
+  expect(Number.isInteger(manifest.shard_count) && manifest.shard_count > 0).toBeTruthy();
+  const shardId = atlasNeighborhoodShardId(nodeId, manifest.shard_count);
+  const shard = manifest.shards.find((entry) => entry.shard_id === shardId);
+  expect(shard).toBeTruthy();
+  return shard.path;
 }
 
 test.beforeEach(async ({ page }) => {
@@ -206,6 +218,7 @@ test("Atlas reaches its first usable source map within the local render budget",
 test("focused Atlas loads one neighborhood without monolithic graph JSON", async ({
   page,
 }) => {
+  const neighborhoodPath = await declaredNeighborhoodPath(page, "nist-800-53:AC-2");
   const requested = [];
   page.on("request", (request) => {
     const url = request.url();
@@ -222,7 +235,7 @@ test("focused Atlas loads one neighborhood without monolithic graph JSON", async
 
   expect(graphArtifactUrls(requested)).toEqual([]);
   expect(
-    requested.some((url) => url.includes("atlas-neighborhood/32.json")),
+    requested.some((url) => url.includes(neighborhoodPath)),
   ).toBeTruthy();
 });
 
@@ -230,37 +243,44 @@ test("focused Atlas loading state avoids a content-agnostic mobile minimum heigh
   page,
 }) => {
   await page.setViewportSize({ width: 412, height: 823 });
+  const neighborhoodPath = await declaredNeighborhoodPath(page, "nist-800-53:AC-2");
+  let neighborhoodIntercepted = false;
   let releaseNeighborhood = () => {};
   const neighborhoodGate = new Promise((resolve) => {
     releaseNeighborhood = () => resolve();
   });
 
-  await page.route("**/data/generated/atlas-neighborhood/32.json*", async (route) => {
+  await page.route(`**/data/generated/${neighborhoodPath}*`, async (route) => {
+    neighborhoodIntercepted = true;
     await neighborhoodGate;
     await route.continue();
   });
 
-  await page.goto(
-    "/#/explore?node=nist-800-53%3AAC-2&relationshipView=map",
-  );
-  await expect(page.locator("#app")).toHaveAttribute("data-has-subject", "true");
-  // Re-baselined 2026-08-01: with the record's shard gated, the wait now
-  // happens in the loader, so the shared skeleton holds the surface rather
-  // than the page-level .atlas-loading block. The guarantee is unchanged —
-  // whatever is shown while loading must be sized to its content, not to a
-  // fixed viewport-height minimum.
-  await expect
-    .poll(() =>
-      page
-        .locator("#app")
-        .evaluate((element) => element.getBoundingClientRect().height),
-    )
-    .toBeGreaterThan(0);
-  const loadingHeight = await page.locator("#app").evaluate(
-    (element) => element.getBoundingClientRect().height,
-  );
-
-  releaseNeighborhood();
+  let loadingHeight;
+  try {
+    await page.goto(
+      "/#/explore?node=nist-800-53%3AAC-2&relationshipView=map",
+    );
+    await expect(page.locator("#app")).toHaveAttribute("data-has-subject", "true");
+    await expect.poll(() => neighborhoodIntercepted).toBeTruthy();
+    // Re-baselined 2026-08-01: with the record's shard gated, the wait now
+    // happens in the loader, so the shared skeleton holds the surface rather
+    // than the page-level .atlas-loading block. The guarantee is unchanged —
+    // whatever is shown while loading must be sized to its content, not to a
+    // fixed viewport-height minimum.
+    await expect
+      .poll(() =>
+        page
+          .locator("#app")
+          .evaluate((element) => element.getBoundingClientRect().height),
+      )
+      .toBeGreaterThan(0);
+    loadingHeight = await page.locator("#app").evaluate(
+      (element) => element.getBoundingClientRect().height,
+    );
+  } finally {
+    releaseNeighborhood();
+  }
   await expect(page.locator("#atl-focus")).toContainText("AC-2", {
     timeout: 30000,
   });

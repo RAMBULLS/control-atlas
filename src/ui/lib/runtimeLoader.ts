@@ -1374,7 +1374,7 @@ export async function loadComparePhase(
     const baselineMode = state.intent === "baselines";
     if (!baselineMode && !bundle.comparisonPairs) throw new Error("Missing comparison capability metadata");
     const key = comparisonPairKey(state.source, state.target);
-    const requests = baselineMode
+    const requests: Array<{ key: string; entry: ComparisonPair | ComparisonBaseline | undefined }> = baselineMode
       ? [...new Set([state.source, state.target])].map((id) => ({ key: id, entry: bundle.comparisonBaselines?.[id] }))
       : [{ key, entry: bundle.comparisonPairs?.[key] }];
     if (requests.some(({ entry }) => !entry || entry.edge_count < 1)) return { ...base, comparisonStatus: "unsupported" };

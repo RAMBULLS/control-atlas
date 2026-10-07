@@ -1,4 +1,5 @@
 import {
+  type ComponentProps,
   type ComponentType,
   lazy,
   startTransition,
@@ -16,6 +17,7 @@ import {
   OfflineFallbackActions,
 } from "./components/LoadStatusPanel";
 import { waitForRecordPaint } from "./lib/waitForRecordPaint";
+import { recordRouteModule } from "./lib/recordRouteModule";
 import {
   CompareSkeleton,
   DetailConnectionsSkeleton,
@@ -108,11 +110,18 @@ const ExplorePage = lazyRoute(() =>
     default: module.ExplorePage,
   })),
 );
-const ObjectDetailPage = lazyRoute(() =>
-  import("./pages/ObjectDetailPage").then((module) => ({
+const LazyObjectDetailPage = lazyRoute(() =>
+  recordRouteModule.load().then((module) => ({
     default: module.ObjectDetailPage,
   })),
 );
+
+function ObjectDetailPage(props: ComponentProps<typeof import("./pages/ObjectDetailPage").ObjectDetailPage>) {
+  // A fulfilled warm-up is already renderable. Keep this choice for the
+  // mounted record so later supporting context preserves its local state.
+  const Page = useRef(recordRouteModule.ready()?.ObjectDetailPage ?? LazyObjectDetailPage).current;
+  return <Page {...props} />;
+}
 const PlaybooksPage = lazyRoute(() =>
   import("./pages/PlaybooksPage").then((module) => ({
     default: module.PlaybooksPage,

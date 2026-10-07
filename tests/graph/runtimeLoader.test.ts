@@ -18,6 +18,40 @@ import { RUNTIME_CACHE_VERSION } from "../../src/shared/runtime-cache-version.mj
 import { requiresFullGraph } from "../../src/ui/lib/navigationState";
 import { normalizeViewState } from "../../src/ui/lib/viewState";
 import { recordCommitToken, waitForRecordPaint } from "../../src/ui/lib/waitForRecordPaint";
+import { createRecordRouteModuleCache } from "../../src/ui/lib/recordRouteModule";
+
+test("record module warm-up shares pending and fulfilled imports with rendering", async () => {
+  let resolveModule = (_module: object) => {};
+  let loads = 0;
+  const module = { ObjectDetailPage: () => null };
+  const cache = createRecordRouteModuleCache(() => {
+    loads += 1;
+    return new Promise<object>(resolve => { resolveModule = resolve; });
+  });
+  assert.equal(cache.ready(), null);
+  const preload = cache.load();
+  assert.equal(cache.load(), preload);
+  assert.equal(cache.ready(), null, "pending modules cannot bypass Suspense");
+  resolveModule(module);
+  assert.equal(await preload, module);
+  assert.equal(cache.ready(), module, "a fulfilled module can render directly");
+  assert.equal(cache.load(), preload);
+  assert.equal(loads, 1);
+});
+
+test("a failed record module warm-up does not poison its recovery request", async () => {
+  let loads = 0;
+  const module = { ObjectDetailPage: () => null };
+  const cache = createRecordRouteModuleCache(async () => {
+    if (++loads === 1) throw new Error("Synthetic module failure");
+    return module;
+  });
+  await assert.rejects(cache.load(), /Synthetic module failure/);
+  assert.equal(cache.ready(), null);
+  assert.equal(await cache.load(), module);
+  assert.equal(cache.ready(), module);
+  assert.equal(loads, 2);
+});
 
 test("record rendering acknowledgment binds visible runtime identity and bounds cleanup", async () => {
   const names = ["document", "MutationObserver", "requestAnimationFrame", "cancelAnimationFrame", "getComputedStyle"];

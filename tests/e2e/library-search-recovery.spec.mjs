@@ -91,6 +91,55 @@ test("Library: a genuine zero stays honest and offers no invented suggestions", 
 });
 
 test("Library: the Atlas matching-records handoff still shows the same population", async ({ page }) => {
+  test.setTimeout(120_000);
+  const tags = ["asset.server", "product.microsoft-windows", "program.stig"];
+  const rows = page.locator("#library-results .workspace-result-row");
+  const population = async () => {
+    const summary = page.locator(".workspace-result-count");
+    await expect(summary).toHaveText(/^[\d,]+ (?:matches|results?)\b/, { timeout: 30_000 });
+    const match = (await summary.innerText()).match(/^([\d,]+) /);
+    const count = Number(match[1].replace(/,/g, ""));
+    expect(Number.isSafeInteger(count)).toBe(true);
+    expect(count).toBeGreaterThan(0);
+    return count;
+  };
+  const representativeRecords = async () => {
+    await expect(rows.nth(2)).toBeVisible({ timeout: 30_000 });
+    return rows.evaluateAll(items => items.slice(0, 3).map(item => ({
+      id: item.getAttribute("data-record-id"),
+      href: item.querySelector('a[href^="#/record/"]')?.getAttribute("href"),
+    })));
+  };
   await open(page, "/#/library?filter=disa-stig&tag=asset.server&tag=product.microsoft-windows&tag=program.stig");
-  await expect(page.locator("main")).toContainText(/1,289/, { timeout: 60000 });
+  const libraryPopulation = await population();
+  const baselineRecords = await representativeRecords();
+  for (const record of baselineRecords) {
+    expect(record.id).toBeTruthy();
+    expect(record.href).toMatch(/^#\/record\//);
+  }
+
+  await page.evaluate(() => {
+    window.location.hash = "/atlas?atlasLimb=atlas:LIMB-IMPLEMENTATION&atlasFramework=disa-stig&atlasContext=asset.server,product.microsoft-windows,program.stig";
+  });
+  await waitForAppReady(page);
+  await expect(page.locator('.atl[data-route-content-ready="true"]')).toBeVisible();
+  const inspector = page.locator(".atl-inspector");
+  await expect(inspector.getByRole("heading", { name: "DISA STIG", exact: true })).toBeVisible();
+  const matching = inspector.getByRole("region", { name: "Matching this context" });
+  const atlasSummary = matching.locator(":scope > p").first();
+  await expect(atlasSummary).toHaveText(/^[\d,]+ records in this publication are associated with your choices\.$/);
+  const atlasPopulation = Number((await atlasSummary.innerText()).match(/^([\d,]+) /)[1].replace(/,/g, ""));
+  expect(atlasPopulation).toBe(libraryPopulation);
+  for (const label of ["Server", "Microsoft Windows", "STIG"]) {
+    await expect(matching.locator(".atl-breakdown")).toContainText(label);
+  }
+  await matching.getByRole("link", { name: "View matching records" }).click();
+  await expect(page).toHaveURL(/#\/library\?/);
+  const params = new URL(page.url()).hash.split("?")[1];
+  const selection = new URLSearchParams(params);
+  expect(selection.get("filter")).toBe("disa-stig");
+  expect(selection.getAll("tag").sort()).toEqual(tags.slice().sort());
+  await waitForAppReady(page);
+  expect(await population()).toBe(atlasPopulation);
+  expect(await representativeRecords()).toEqual(baselineRecords);
 });

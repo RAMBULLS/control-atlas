@@ -163,6 +163,71 @@ test("record commits official content without a whole-tree or Resources download
   }
 });
 
+test("a fulfilled record warm-up renders accepted text without another route fallback", async ({ page }) => {
+  let releaseData = () => {};
+  const dataReleased = new Promise(resolve => { releaseData = () => resolve(undefined); });
+  await page.route("**/data/generated/atlas-neighborhood/*.json*", async route => {
+    await dataReleased;
+    await route.continue();
+  });
+  const moduleResponse = page.waitForResponse(response =>
+    /\/assets\/ObjectDetailPage-[^/]+\.js$/.test(new URL(response.url()).pathname),
+  );
+  try {
+    await page.goto("/#/record/nist-800-53/AC-2", { waitUntil: "domcontentloaded" });
+    const response = await moduleResponse;
+    expect(response.ok()).toBe(true);
+    // Await evaluation of the exact module warmed by the entry, including its
+    // dependencies. A completed network response alone does not prove readiness.
+    await page.evaluate(async url => {
+      await import(url);
+      await new Promise(resolve => setTimeout(resolve, 0));
+    }, response.url());
+    await page.evaluate(() => {
+      const marker = '[data-route-suspense-pending="true"]';
+      const observe = () => {
+        if (document.querySelector(marker)) document.documentElement.dataset.recordFallbackObserved = "true";
+      };
+      observe();
+      const observer = new MutationObserver(records => {
+        // Inspect removed nodes too: a fallback inserted and removed in one
+        // browser task must still fail this contract.
+        for (const record of records) {
+          for (const node of [...record.addedNodes, ...record.removedNodes]) {
+            if (node instanceof Element && (node.matches(marker) || node.querySelector(marker))) {
+              document.documentElement.dataset.recordFallbackObserved = "true";
+            }
+          }
+        }
+        observe();
+      });
+      const root = document.getElementById("root");
+      if (!root) throw new Error("Record root is missing");
+      observer.observe(root, { childList: true, subtree: true });
+      document.addEventListener("test:stop-record-fallback-observation", () => observer.disconnect(), { once: true });
+    });
+    releaseData();
+    const record = page.locator('[data-record-content="nist-800-53:AC-2"]');
+    const published = page.locator('[data-record-section="official-text"]');
+    await expect(published).toBeVisible();
+    await expect(published).toContainText("Define and document the types of accounts allowed");
+    const acceptedText = await published.textContent();
+    const acceptedCommit = await record.getAttribute("data-record-commit");
+    expect(acceptedCommit).toMatch(/^\d+$/);
+    const acceptedNode = await published.elementHandle();
+    await expect(record).toHaveAttribute("data-record-context-ready", "true");
+    await expect(record).toHaveAttribute("data-record-commit", acceptedCommit);
+    expect(await published.textContent()).toBe(acceptedText);
+    expect(await acceptedNode.evaluate(node => node === document.querySelector('[data-record-section="official-text"]'))).toBe(true);
+    await acceptedNode.dispose();
+    await expect(page.locator("html")).not.toHaveAttribute("data-record-fallback-observed", "true");
+    await expect(page.locator('[data-route-suspense-pending="true"]')).toHaveCount(0);
+  } finally {
+    releaseData();
+    await page.evaluate(() => document.dispatchEvent(new Event("test:stop-record-fallback-observation")));
+  }
+});
+
 test("a failed required record source can retry without inventing official text", async ({ page }) => {
   let failContext = true;
   let releaseRetry = () => {};

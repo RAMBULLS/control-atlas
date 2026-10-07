@@ -12,6 +12,7 @@ import {
   SEARCH_RESULTS_FOCUS_EVENT,
 } from './shared/navigation-events';
 import { connectHomeDisclosure } from './ui/lib/homeDisclosure';
+import { recordRouteModule } from './ui/lib/recordRouteModule';
 // Orbital Archive No. 01 is the visual authority, not a copied palette. The
 // official release supplies the base recipes, DTCG tokens, and embedded fonts;
 // Control Atlas styles below are semantic/product adapters only.
@@ -632,7 +633,7 @@ function warmInteractiveRoute() {
       void import('./ui/pages/CatalogDetailPage').catch(() => undefined);
       break;
     case 'record':
-      void import('./ui/pages/ObjectDetailPage').catch(() => undefined);
+      void recordRouteModule.load().catch(() => undefined);
       break;
     case 'resources':
       void import('./ui/pages/CommonsPage').catch(() => undefined);

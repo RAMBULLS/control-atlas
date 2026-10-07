@@ -1,7 +1,7 @@
 import { comparisonPairKey, comparisonScopeAllowed } from "../../shared/compare-scope.mjs";
 import { isComparisonCapableEdge, mappingSourceIdsForEdge } from "../../shared/compare-capability.mjs";
 import { createFederalGraphRuntime } from "../../app/runtime.mjs";
-import { atlasNeighborhoodShardId } from "../../app/atlas-neighborhood.mjs";
+import { ATLAS_NEIGHBORHOOD_SHARD_COUNT, atlasNeighborhoodShardId } from "../../app/atlas-neighborhood.mjs";
 import { RUNTIME_CACHE_VERSION } from "../../shared/runtime-cache-version.mjs";
 import type {
   CommonsResourceDataset,
@@ -156,6 +156,7 @@ export type ComparisonPair = {
 
 export type RuntimeBundle = {
   runtime: ReturnType<typeof createFederalGraphRuntime>;
+  recordContextReady?: boolean;
   templateRegistry: TemplateRegistry;
   atlasSpine?: AtlasSpine;
   catalogSummaries?: Array<Record<string, any>>;
@@ -351,7 +352,7 @@ export function runtimeArtifactPlan(
       registries: false, sources: atlasRecordFocused || Boolean(state.atlasResearch) || Boolean(options.searchOverlayOpen) };
   }
   return {
-    atlasSpine: state.view === "library-detail",
+    atlasSpine: false,
     catalogBootstrap:
       state.view === "library-detail" ||
       state.view === "catalog-detail" ||
@@ -364,7 +365,6 @@ export function runtimeArtifactPlan(
     commons:
       state.view === "commons" ||
       state.view === "commons-detail" ||
-      state.view === "library-detail" ||
       state.view === "search" ||
       buildContextRequested ||
       Boolean(options.searchOverlayOpen),
@@ -401,7 +401,10 @@ export function runtimeArtifactPlan(
  * loader consumes these exact requests instead of starting a second fetch.
  */
 export async function preloadRuntimeArtifacts(state: ViewState) {
-  const plan = runtimeArtifactPlan(state);
+  const completePlan = runtimeArtifactPlan(state);
+  const plan = state.view === "library-detail"
+    ? { ...completePlan, atlasSpine: false, commons: false }
+    : completePlan;
   const requests: Array<Promise<unknown>> = [];
   const add = (path: string) => requests.push(fetchArtifact(path));
   if (plan.librarySearch || plan.fullGraph) {
@@ -634,7 +637,7 @@ export async function loadAtlasNeighborhood(
     artifactPath("atlas-neighborhood-manifest.json"),
   )) as { atlas_neighborhood_manifest?: { shard_count?: number } };
   const shardCount =
-    manifestArtifact.atlas_neighborhood_manifest?.shard_count || 128;
+    manifestArtifact.atlas_neighborhood_manifest?.shard_count || ATLAS_NEIGHBORHOOD_SHARD_COUNT;
   const shardId = atlasNeighborhoodShardId(nodeId, shardCount);
   const shardArtifact = (await fetchArtifact(
     artifactPath(`atlas-neighborhood/${shardId}.json`),
@@ -1243,6 +1246,7 @@ async function loadCatalogShellPhase(
 
 export async function loadRuntimeDatasetStaged(handlers: {
   onSearchReady: (bundle: RuntimeBundle) => void;
+  onRecordRendered?: (bundle: RuntimeBundle) => Promise<void>;
   onFullReady: (bundle: RuntimeBundle) => void;
   onError: (error: unknown) => void;
   state: ViewState;
@@ -1266,16 +1270,40 @@ export async function loadRuntimeDatasetStaged(handlers: {
       handlers.onFullReady(catalogPhase.bundle);
       return;
     }
-    if (handlers.state.view === "library-detail" && plan.commons) {
+    if (handlers.state.view === "library-detail") {
       const officialPhase = await loadRouteScopedPhase({
         ...plan,
+        atlasSpine: false,
         commons: false,
       });
       if (handlers.signal?.aborted) return;
       handlers.onSearchReady(officialPhase.bundle);
-      const contextualPhase = await loadRouteScopedPhase(plan);
       if (handlers.signal?.aborted) return;
-      handlers.onFullReady(contextualPhase.bundle);
+      // setState does not prove the lazy record committed. Let its renderer
+      // acknowledge the matching content before competing supporting requests.
+      await handlers.onRecordRendered?.(officialPhase.bundle);
+      if (handlers.signal?.aborted) return;
+      const [spineArtifact, commonsIndex, commonsDataset] = await Promise.all([
+        plan.atlasSpine ? fetchArtifact(artifactPath("atlas-spine.json")) : Promise.resolve(null),
+        plan.commons
+          ? optionalArtifact<CommonsSearchIndex | null>("./data/generated/commons-search-index.json", null)
+          : Promise.resolve(null),
+        plan.commons
+          ? optionalArtifact<CommonsResourceDataset | null>("./data/commons-resource-dataset.json", null)
+          : Promise.resolve(null),
+      ]);
+      if (handlers.signal?.aborted) return;
+      const atlasSpine = (spineArtifact as AtlasSpineArtifact | null)?.atlas_spine;
+      if (plan.atlasSpine && !atlasSpine?.entries?.length) {
+        throw new Error("Atlas spine artifact has no entries.");
+      }
+      handlers.onFullReady({
+        ...officialPhase.bundle,
+        recordContextReady: true,
+        atlasSpine,
+        commonsSearchIndex: commonsIndex || undefined,
+        commonsDataset: commonsDataset || undefined,
+      });
       return;
     }
     const routePhase = await loadRouteScopedPhase(plan);

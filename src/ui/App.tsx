@@ -15,6 +15,7 @@ import {
   LoadingStatusPanel,
   OfflineFallbackActions,
 } from "./components/LoadStatusPanel";
+import { waitForRecordPaint } from "./lib/waitForRecordPaint";
 import {
   CompareSkeleton,
   DetailConnectionsSkeleton,
@@ -163,15 +164,17 @@ const PROGRESSIVE_SHELL_SELECTORS = [
 function releaseProgressiveShell(root: HTMLElement) {
   const routeShell = root.querySelector<HTMLElement>("[data-static-route]");
   const preserveRouteShell =
-    root.dataset.routeHydrated !== "true" &&
-    Boolean(routeShell && !routeShell.hidden);
+    root.dataset.staticRoutePersistent === "resources" ||
+    (root.dataset.routeHydrated !== "true" && Boolean(routeShell && !routeShell.hidden));
 
   for (const selector of PROGRESSIVE_SHELL_SELECTORS) {
     if (selector === "[data-static-route]" && preserveRouteShell) continue;
     root.querySelector(selector)?.remove();
   }
   root.dataset.progressiveShellReleased = "true";
-  delete root.dataset.routeHydrated;
+  if (root.dataset.staticRoutePersistent !== "resources" || root.dataset.staticRouteKind !== "resources") {
+    delete root.dataset.routeHydrated;
+  }
   if (!preserveRouteShell) {
     delete root.dataset.staticRouteActive;
     delete root.dataset.staticRouteKind;
@@ -371,6 +374,9 @@ export function App() {
           searchOverlayOpen,
           librarySearchRequested: searchRequested,
           signal: loadController.signal,
+          onRecordRendered: runtimeState.view === "library-detail"
+            ? (result) => waitForRecordPaint(runtimeState.node, result.runtime, loadController.signal)
+            : undefined,
           onSearchReady: (result) => {
             if (!cancelled) {
               // A delivered stage proves the connection works: cancel the hard
@@ -379,14 +385,14 @@ export function App() {
               window.clearTimeout(slowTimer);
               window.clearTimeout(timeoutTimer);
               setLoadSlow(false);
-              startTransition(() => {
+              const commitBundle = () => {
                 setBundle((current) => {
                   // Only retain a graphReady bundle from the same scope. A
                   // graphReady bundle from a prior route (e.g. Compare) may be
                   // missing data this route needs (e.g. templateRegistry), so
                   // crossing scopes must always commit the fresh result.
                   const sameScopeGraphReady =
-                    current?.graphReady && bundleScopeKeyRef.current === scopeKey;
+                    runtimeState.view !== "library-detail" && current?.graphReady && bundleScopeKeyRef.current === scopeKey;
                   const next = runtimeState.view === "catalog-detail"
                     ? result
                     : sameScopeGraphReady
@@ -397,7 +403,9 @@ export function App() {
                     ? { ...next, atlasSpine: current.atlasSpine }
                     : next;
                 });
-              });
+              };
+              if (runtimeState.view === "library-detail") commitBundle();
+              else startTransition(commitBundle);
               setLoadError("");
             }
           },
@@ -449,16 +457,19 @@ export function App() {
     searchRequested,
   ]);
 
-  function retryLoad() {
+  function resetRuntimeLoad(preserveBundle: boolean) {
     void import("./lib/runtimeLoader").then(({ clearRuntimeArtifactCache }) => {
       clearRuntimeArtifactCache();
-      setBundle(null);
+      if (!preserveBundle) setBundle(null);
       setLoadError("");
       setLoadSlow(false);
       setGraphRequested(false);
       setLoadAttempt((current) => current + 1);
     });
   }
+
+  function retryLoad() { resetRuntimeLoad(false); }
+  function retryRecordContext() { resetRuntimeLoad(bundleScopeKeyRef.current === runtimeScopeKey); }
 
   useEffect(() => {
     const canonical = canonicalizeHashLocation(`${location.pathname}${location.search}`);
@@ -712,7 +723,11 @@ export function App() {
       /> : null}
       {chromeReady ? <OrbitalContextBar entityName={viewState.view === "atlas-map" ? "" : routeEntityName} onNavigate={navigate} state={viewState} /> : null}
 
-      <main id="workspace" tabIndex={-1}>
+      <main
+        aria-labelledby={viewState.view === "commons" && document.getElementById("root")?.dataset.staticRouteKind === "resources" ? "static-route-title" : undefined}
+        id="workspace"
+        tabIndex={-1}
+      >
         {routeRecovery ? (
           <p className="route-recovery" role="status">{routeRecovery}</p>
         ) : null}
@@ -748,6 +763,7 @@ export function App() {
                   onOpenSearch={openSearchOverlay}
                   onRequestFullGraph={requestFullGraph}
                   onRetryLoad={retryLoad}
+                  onRetryContext={retryRecordContext}
                   state={viewState}
                 />
               </Suspense>
@@ -830,6 +846,7 @@ function AppContent(props: {
   onRequestFullGraph: () => void;
   onOpenGlossary: (termId?: string) => void;
   onRetryLoad: () => void;
+  onRetryContext: () => void;
 }) {
   const {
     bundle,
@@ -843,6 +860,7 @@ function AppContent(props: {
     onRequestFullGraph,
     onOpenGlossary,
     onRetryLoad,
+    onRetryContext,
   } = props;
 
   const graphReady = Boolean(bundle?.graphReady);
@@ -938,6 +956,8 @@ function AppContent(props: {
     return (
       <ObjectDetailPage
         bundle={bundle}
+        contextUnavailable={Boolean(loadError)}
+        onRetryContext={onRetryContext}
         onNavigate={onNavigate}
         onOpenGlossary={onOpenGlossary}
         onOpenNode={onOpenNode}

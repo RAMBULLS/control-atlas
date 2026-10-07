@@ -126,19 +126,18 @@ function syncStaticRouteShell() {
     delete rootElement.dataset.staticRouteKind;
   }
   const active =
-    (Boolean(identity) || rootElement.dataset.routeHydrated !== 'true') &&
-    !isHomeHash() &&
-    !isSearchHash() &&
-    rootElement.dataset.routeHydrated !== 'true';
+    !isHomeHash() && !isSearchHash() &&
+    (rootElement.dataset.routeHydrated !== 'true' || identity?.kind === 'resources');
   shell.toggleAttribute('hidden', !active);
   if (!active) {
     delete rootElement.dataset.staticRouteActive;
     return;
   }
-  rootElement.dataset.staticRouteActive = 'true';
+  if (rootElement.dataset.routeHydrated !== 'true') rootElement.dataset.staticRouteActive = 'true';
   shell.removeAttribute('aria-hidden');
   shell.removeAttribute('inert');
-  shell.setAttribute('role', 'status');
+  if (rootElement.dataset.routeHydrated !== 'true') shell.setAttribute('role', 'status');
+  else shell.removeAttribute('role');
 }
 
 function observeRouteHydration() {
@@ -147,6 +146,11 @@ function observeRouteHydration() {
   const markHydrated = () => {
     const app = reactRootElement.querySelector<HTMLElement>('#app');
     if (!app || !reactRouteOwnsSurface(app)) return false;
+    // A static route can be ready before its lazy page has committed. Keep the
+    // first-paint identity until real content (or its recovery UI) owns it.
+    if (reactRootElement.querySelector('[data-route-suspense-pending="true"]')) {
+      return false;
+    }
     if (
       app.dataset.appReady !== 'error' &&
       app.dataset.view === 'atlas-map' &&
@@ -158,7 +162,11 @@ function observeRouteHydration() {
     rootElement.dataset.routeHydrated = 'true';
     delete rootElement.dataset.staticRouteActive;
     const shell = rootElement.querySelector<HTMLElement>('[data-static-route]');
-    shell?.remove();
+    if (rootElement.dataset.staticRouteKind === 'resources') {
+      rootElement.dataset.staticRoutePersistent = 'resources';
+      shell?.removeAttribute('role');
+    }
+    else shell?.remove();
     return true;
   };
   const scheduleHydration = () => {
@@ -177,8 +185,7 @@ function observeRouteHydration() {
   });
   scheduleHydration();
   window.setTimeout(() => {
-    markHydrated();
-    observer.disconnect();
+    if (markHydrated()) observer.disconnect();
   }, 15_000);
 }
 
@@ -285,6 +292,18 @@ function syncProgressiveShell() {
     rootElement.dataset.reactShellReady === 'true' ? 'true' : 'false';
   if (rootElement.dataset.progressiveShellReleased === 'true') {
     delete rootElement.dataset.staticRouteActive;
+    if (rootElement.dataset.staticRoutePersistent === 'resources') {
+      const resourcesActive = progressiveRouteIdentity()?.kind === 'resources';
+      rootElement.querySelector<HTMLElement>('[data-static-route]')?.toggleAttribute('hidden', !resourcesActive);
+      if (resourcesActive) {
+        rootElement.dataset.staticRouteKind = 'resources';
+        rootElement.dataset.routeHydrated = 'true';
+      } else {
+        delete rootElement.dataset.staticRouteKind;
+      }
+      delete rootElement.dataset.staticSearchActive;
+      return;
+    }
     delete rootElement.dataset.staticRouteKind;
     delete rootElement.dataset.staticRoutePersistent;
     delete rootElement.dataset.staticSearchActive;
@@ -613,6 +632,9 @@ function warmInteractiveRoute() {
       break;
     case 'record':
       void import('./ui/pages/ObjectDetailPage').catch(() => undefined);
+      break;
+    case 'resources':
+      void import('./ui/pages/CommonsPage').catch(() => undefined);
       break;
   }
   void Promise.all([

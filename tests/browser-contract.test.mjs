@@ -429,7 +429,7 @@ test('skip links focus the workspace without turning the target into an applicat
   assert.match(mainEntrypoint, /event\.preventDefault\(\)/);
   assert.match(mainEntrypoint, /querySelector<HTMLElement>\('#workspace'\)\?\.focus\(\)/);
   assert.match(reactApp, /document\.getElementById\("workspace"\)\?\.focus\(\)/);
-  assert.match(reactApp, /<main id="workspace" tabIndex=\{-1\}>/);
+  assert.match(reactApp, /<main(?=\s)[^>]*\sid="workspace"[^>]*\stabIndex=\{-1\}[^>]*>/);
 });
 
 test('mounted record surfaces render official descriptions rather than synthetic translations', () => {

@@ -90,6 +90,16 @@
             title: libraryCopy.title
           };
     }
+    if (route === "resources") {
+      if (segments.length > 1) return null;
+      var resourcesCopy = sharedCopy("resources") || { eyebrow: "", summary: "Find tools, training, and guidance for federal cybersecurity work.", title: "Resources" };
+      return {
+        eyebrow: resourcesCopy.eyebrow || "",
+        kind: "resources",
+        summary: resourcesCopy.summary,
+        title: resourcesCopy.title
+      };
+    }
     if (route === "record") {
       var recordCopy = sharedCopy("record") || { eyebrow: "", summary: "Read the published text and record details.", title: "Record" };
       return {
@@ -212,6 +222,7 @@
       }
       shell.querySelector("[data-static-route-title]").textContent = identity.title;
       shell.querySelector("[data-static-route-summary]").textContent = identity.summary;
+      setHidden(shell.querySelector("[data-static-resource-companions]"), identity.kind !== "resources");
       shell.removeAttribute("hidden");
     } else if (shell) {
       setHidden(shell, true);

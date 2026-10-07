@@ -21,7 +21,7 @@ import { publishedSectionsWithContent, RecordNativeFacts, RecordPublishedText, S
 import { RecordJumpButton, RecordRailSection, RecordSectionNavigation } from "../components/RecordDetailSupport";
 import { TagExplanations, TaxonomyContext } from "../components/TaxonomyContext";
 import { catalogDisplayNameFor, catalogProfileFor } from "../lib/catalogProfiles";
-import { buildAtlasTreeModel, extendDisplayedAuthorityTrace, type AtlasTraceHop } from "../lib/atlasTreeModel";
+import { extendCuratedAuthorityTrace, type AtlasTraceHop } from "../lib/atlasTreeModel";
 import { serializeHashUrl } from "../lib/hashRoutes";
 import { officialSourceActionLabel, officialSourceFor } from "../lib/officialSource";
 import { Badge, copyText, formatRelationshipLabel } from "../lib/pagePrimitives";
@@ -36,6 +36,7 @@ import { extractGovernedRecordTaxonomy, buildExploreRelatedPivots } from "../lib
 import type { RuntimeBundle } from "../lib/runtimeLoader";
 import { runtimeRecordIdentityFor } from "../lib/runtimeRecordIdentity";
 import { normalizeViewState, type ViewState } from "../lib/viewState";
+import { recordCommitToken } from "../lib/waitForRecordPaint";
 import { formatSourceDate, sourceFreshnessPresentation, sourceLifecycleDisplayName, sourcePublicationTitle } from "../lib/sourcePresentation";
 
 function sentenceCaseKind(kind: string): string {
@@ -44,13 +45,14 @@ function sentenceCaseKind(kind: string): string {
 
 function RecordNotFound(props: {
   attemptedId: string;
+  commitToken: string;
   onNavigate: (view: ViewState["view"], patch?: Partial<ViewState>) => void;
 }) {
   const attempted = String(props.attemptedId || "");
   const seed = attempted.includes(":") ? attempted.split(":").slice(1).join(":") : attempted;
   const [query, setQuery] = useState(seed);
   return (
-    <section className="notice">
+    <section className="notice" data-record-content={props.attemptedId} data-record-commit={props.commitToken}>
       <h1>Record not found</h1>
       <p>{seed
         ? `Nothing in the Library matches "${seed}". Search for it, or browse from the Library.`
@@ -70,6 +72,8 @@ function RecordNotFound(props: {
 
 export function ObjectDetailPage(props: {
   bundle: RuntimeBundle;
+  contextUnavailable?: boolean;
+  onRetryContext?: () => void;
   state: Extract<ViewState, { view: "library-detail" }>;
   onNavigate: (view: ViewState["view"], patch?: Partial<ViewState>, reset?: boolean, replace?: boolean) => void;
   onOpenGlossary: (termId?: string) => void;
@@ -98,10 +102,10 @@ export function ObjectDetailPage(props: {
     if (retirement) onNavigate(retirement.view as ViewState["view"], retirement.patch as Partial<ViewState>, true, true);
   }, [retirementKey]);
 
-  if (!node || !document) return <RecordNotFound attemptedId={state.node} onNavigate={onNavigate} />;
+  if (!node || !document) return <RecordNotFound attemptedId={state.node} commitToken={recordCommitToken(bundle.runtime)} onNavigate={onNavigate} />;
   if (retirement) {
     return (
-      <section className="notice" data-record-retired="true" role="status">
+      <section className="notice" data-record-content={state.node} data-record-commit={recordCommitToken(bundle.runtime)} data-record-retired="true" role="status">
         <p>This page has moved. Opening {retirement.label}…</p>
         <AppLink onNavigate={onNavigate} patch={retirement.patch as Partial<ViewState>} variant="secondary" view={retirement.view as ViewState["view"]}>Open {retirement.label}</AppLink>
       </section>
@@ -159,9 +163,7 @@ export function ObjectDetailPage(props: {
   }>;
   const trace = [...displayPath, { id: node.id, label: recordIdentity,
     node_type: node.node_type || document.object_type, origin: "structural" as const }];
-  const displayedTrace = bundle.atlasSpine
-    ? extendDisplayedAuthorityTrace(buildAtlasTreeModel(bundle.atlasSpine, authoritySpine), trace as AtlasTraceHop[])
-    : trace;
+  const displayedTrace = extendCuratedAuthorityTrace(authoritySpine, trace as AtlasTraceHop[]);
   const sourceMetadata = { ...node.metadata, description: document.description || node.metadata?.description || "" };
   const missingSourceFields = missingRequiredRecordFields(presentation, sourceMetadata);
   const publishedSections = publishedSectionsWithContent(presentation.sections, sourceMetadata);
@@ -272,7 +274,7 @@ export function ObjectDetailPage(props: {
   };
 
   return (
-    <section className="detail-page record-template ca-record-page" data-page-role={presentation.page_role} data-template="E">
+    <section className="detail-page record-template ca-record-page" data-page-role={presentation.page_role} data-record-content={state.node} data-record-commit={recordCommitToken(bundle.runtime)} data-record-context-ready={bundle.recordContextReady ? "true" : "false"} data-template="E">
       <CanonicalBreadcrumb bundle={bundle} nodeId={node.id} recordLabel={recordHeading} />
       <div className="record-template-grid ca-record-layout">
         <header className={`record-title-block${identityPresentation.stableIdIsGenerated ? " record-title-block--generated" : ""}`}
@@ -308,6 +310,12 @@ export function ObjectDetailPage(props: {
 
         <article className="record-template-main">
           <RecordSectionNavigation items={sectionNavItems} />
+          {props.contextUnavailable ? (
+            <section className="notice" data-record-context-error role="status">
+              <p>Some supporting information did not load. This record is still available.</p>
+              <Button onClick={props.onRetryContext} type="button" variant="secondary">Try loading again</Button>
+            </section>
+          ) : null}
           {document.catalog_id === "disa-cci" ? (
             <section className="record-context-note" aria-labelledby="cci-context-heading">
               <h2 id="cci-context-heading">Start here</h2>

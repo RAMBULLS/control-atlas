@@ -245,7 +245,10 @@ test('secondary route pages are lazy loaded behind a suspense fallback', () => {
   assert.match(reactApp, /function lazyRoute[\s\S]{0,200}?return lazy\(/);
   assert.match(reactApp, /lazyRoute\(\(\) =>\s*import\("\.\/pages\/AtlasTerritoryPage"\)/);
   assert.match(reactApp, /lazyRoute\(\(\) =>\s*import\("\.\/pages\/ComparePage"\)/);
-  assert.match(reactApp, /lazyRoute\(\(\) =>\s*import\("\.\/pages\/ObjectDetailPage"\)/);
+  const recordModule = readFileSync('src/ui/lib/recordRouteModule.ts', 'utf8');
+  assert.match(reactApp, /const LazyObjectDetailPage = lazyRoute\(\(\) =>\s*recordRouteModule\.load\(\)/);
+  assert.match(recordModule, /\(\) => import\("\.\.\/pages\/ObjectDetailPage"\)/);
+  assert.doesNotMatch(recordModule, /^\s*import\s+(?!type\b)/m, 'record warming must not eagerly import its page or React');
   assert.match(reactApp, /<Suspense/);
   assert.match(reactApp, /fallback=\{<LoadingStatusPanel/);
 });
@@ -429,7 +432,7 @@ test('skip links focus the workspace without turning the target into an applicat
   assert.match(mainEntrypoint, /event\.preventDefault\(\)/);
   assert.match(mainEntrypoint, /querySelector<HTMLElement>\('#workspace'\)\?\.focus\(\)/);
   assert.match(reactApp, /document\.getElementById\("workspace"\)\?\.focus\(\)/);
-  assert.match(reactApp, /<main id="workspace" tabIndex=\{-1\}>/);
+  assert.match(reactApp, /<main(?=\s)[^>]*\sid="workspace"[^>]*\stabIndex=\{-1\}[^>]*>/);
 });
 
 test('mounted record surfaces render official descriptions rather than synthetic translations', () => {

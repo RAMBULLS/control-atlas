@@ -113,15 +113,19 @@
       data-static-route
       role="status"
     >
-      <header class="page-header">
-        <p class="eyebrow" data-static-route-eyebrow hidden></p>
-        <div class="page-header-row">
-          <div>
+      <header class="page-header mission-page-header" data-route-primary-header="true">
+        <div class="page-header-title" data-route-primary-copy="true">
+            <p class="eyebrow" data-static-route-eyebrow hidden></p>
             <h1 id="static-route-title" data-static-route-title>Opening workspace</h1>
             <p class="page-summary static-route-summary" data-static-route-summary>
               Opening the page.
             </p>
-          </div>
+        </div>
+        <div class="page-header-action" data-static-resource-companions hidden>
+          <nav aria-label="Resource companions" class="resource-context-links">
+            <a href="#/build">Looking for a starter document? Browse Templates →</a>
+            <a href="#/atlas">Need framework context? Explore Atlas →</a>
+          </nav>
         </div>
       </header>
     </section>

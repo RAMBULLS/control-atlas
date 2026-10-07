@@ -62,7 +62,7 @@ test("published baseline selections reconcile, filter and export on desktop and 
   await testInfo.attach("baseline-comparison-mobile", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" });
   await page.getByRole("tab", { name: "Frameworks", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Choose a framework", exact: true })).toBeVisible();
-  await expect(page.getByLabel(/^Publication\b/)).toHaveValue("");
+  await expect(page.getByPlaceholder("Search published frameworks", { exact: true })).toHaveValue("");
   await expect(page.locator("[data-baseline-result]")).toHaveCount(0);
 });
 

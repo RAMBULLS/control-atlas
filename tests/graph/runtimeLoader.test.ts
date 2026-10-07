@@ -29,13 +29,13 @@ test("record rendering acknowledgment binds visible runtime identity and bounds 
   let disconnected = false;
   let notify = () => {};
   let nextFrame = 0;
-  const frames = new Map<number, FrameRequestCallback>();
+  const frames = new Map<number, (time: number) => void>();
   const content = { dataset: { recordContent: "fixture:record", recordCommit: "stale" }, getClientRects: () => visible ? [{}] : [] };
   const workspace = { querySelector: (selector: string) => selector.includes("render-error") ? failed ? {} : null : content };
   const replacements = [
     { body: {}, getElementById: () => workspace },
     class { constructor(callback: () => void) { notify = callback; } observe() {} disconnect() { disconnected = true; } },
-    (callback: FrameRequestCallback) => { const id = ++nextFrame; frames.set(id, callback); return id; },
+    (callback: (time: number) => void) => { const id = ++nextFrame; frames.set(id, callback); return id; },
     (id: number) => frames.delete(id),
     () => ({ visibility: visible ? "visible" : "hidden" }),
   ];

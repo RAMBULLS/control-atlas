@@ -55,9 +55,9 @@ test(`Resources keeps its identity and heading geometry at ${width}px until the 
     await expect(page).toHaveURL(/q=zero\+trust/);
     await expect(page.getByRole("heading", { name: "Resources", exact: true, level: 1 })).toHaveCount(1);
     await expect(page.getByRole("searchbox", { name: "Find resources" })).toBeFocused();
-    await page.locator('#workspace a[href="#/guides"]').first().click();
+    await page.locator('#workspace a[href="#/templates"]').first().click();
     await expect(shell).not.toBeVisible();
-    await expect(page.getByRole("heading", { name: "Guides", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Templates", exact: true, level: 1 })).toBeVisible();
     await expect(page.locator("#workspace")).not.toHaveAttribute("aria-labelledby", "static-route-title");
     await page.locator('.site-header a[href="#/resources"]').click();
     await expect(shell.getByRole("heading", { level: 1 })).toBeFocused();

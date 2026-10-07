@@ -8,6 +8,7 @@ import { clearRuntimeArtifactCache, loadComparePhase, loadRuntimeDatasetStaged, 
 import { normalizeViewState } from "../../src/ui/lib/viewState";
 import { parseHashLocation } from "../../src/ui/lib/hashRoutes";
 import { buildCompareExportData, CROSSWALK_COLUMNS } from "../../src/ui/lib/compareExport";
+import { buildBaselineExportData, compareExportToCsv, filterBaselineRows, type BaselineResultRow } from "../../src/ui/lib/compareExport";
 
 const source = { id: "nist-mapping", name: "NIST mapping", display_name: "NIST mapping", version: "2025", owner: "NIST", provenance_class: "federal_published" };
 const nodes = [
@@ -36,6 +37,56 @@ const state = (patch = {}) => normalizeViewState("matrix", {
   crosswalk: "relationships", source: "csf-2", target: "nist-zt", compareRun: "true", intent: "implementation", ...patch,
 }) as Extract<ReturnType<typeof normalizeViewState>, { view: "matrix" }>;
 const load = async (path: string) => JSON.parse(projection.files.get(path)!);
+
+test("baseline selections load complete same-catalog sets with both citations and safe filtered exports", async () => {
+  const baselineNodes = ["a", "b"].map((id) => ({ id, node_type: "baseline", source_id: source.id, metadata: { catalog_id: "baselines", item_id: id, title: id } }));
+  const controls = Array.from({ length: 31 }, (_, i) => ({ id: `controls:${i}`, node_type: "control", source_id: source.id,
+    metadata: { catalog_id: "controls", item_id: `C-${i}`, title: i === 0 ? " =unsafe" : `Control ${i}` } }));
+  const selections = baselineNodes.flatMap((baseline) => controls.filter((_, i) => baseline.id === "a" ? i < 30 : i > 0).map((control) => ({
+    ...edge, id: `edge:${baseline.id}-${control.id}`, source_node_id: baseline.id, target_node_id: control.id,
+    relationship_type: "selects", relationship_class: "applicability", evidence_ids: [`evidence:${baseline.id}-${control.id}`],
+  })));
+  const projected = buildComparisonArtifacts({ sources: [source], nodes: [...baselineNodes, ...controls], edges: selections,
+    evidence: selections.map((selection) => ({ id: selection.evidence_ids[0], source_id: source.id, locator: selection.id })) }, 4096);
+  const baselineBundle = { ...bundle(), comparisonBaselines: projected.baselineManifest };
+  const transport = async (path: string) => JSON.parse(projected.files.get(path)!);
+  const loaded = await loadComparePhase(state({ intent: "baselines", source: "a", target: "b" }), baselineBundle, undefined, transport);
+  assert.equal(loaded.comparisonStatus, "ready");
+  assert.equal(loaded.graphReady, false);
+  const comparison = loaded.runtime.buildBaselineComparison({ baseline_a: "a", baseline_b: "b" });
+  assert.equal(comparison.shared.length, 29);
+  assert.equal(comparison.only_a.length, 1); assert.equal(comparison.only_b.length, 1);
+  assert.equal(comparison.shared[0].source_refs.length, 2);
+  const reverse = loaded.runtime.buildBaselineComparison({ baseline_a: "b", baseline_b: "a" });
+  assert.deepEqual(reverse.only_a, comparison.only_b);
+  assert.deepEqual(reverse.only_b, comparison.only_a);
+  const same = await loadComparePhase(state({ intent: "baselines", source: "a", target: "a" }), baselineBundle, undefined, transport);
+  assert.equal(same.runtime.buildBaselineComparison({ baseline_a: "a", baseline_b: "a" }).shared.length, 30);
+  const rows: BaselineResultRow[] = (["shared", "only_a", "only_b"] as const).flatMap((group) => comparison[group].map((entry: any) => ({ ...entry, group })));
+  const filtered = filterBaselineRows(rows, "shared", "Control");
+  assert.equal(filtered.length, 29, "filters cover more than the visible page");
+  const data = buildBaselineExportData({ rows: filtered, labelA: "Baseline A", labelB: "Baseline B",
+    resolveSource: () => ({ ...source, catalog_browse_url: "https://example.gov/baselines" }) });
+  assert.equal(data.crosswalk.length, 30);
+  assert.match(data.crosswalk[1][8], /edge:a-/); assert.match(data.crosswalk[1][8], /edge:b-/);
+  assert.match(compareExportToCsv(data), /https:\/\/example.gov\/baselines/);
+  for (const prefix of ["=", "+", "-", "@", " \t="]) {
+    const injection = buildBaselineExportData({ rows: [{ ...rows[0], control_node: { ...rows[0].control_node, metadata: { title: `${prefix}formula` } } }],
+      labelA: "A", labelB: "B", resolveSource: () => source });
+    assert.ok(compareExportToCsv(injection).includes(`"'${prefix}formula"`));
+  }
+  assert.deepEqual(filterBaselineRows(rows, "shared", "not a control"), []);
+  const incomplete = await loadComparePhase(state({ intent: "baselines", source: "a", target: "b" }), baselineBundle, undefined, async (path) => {
+    const value = await transport(path); if (value.edges) value.edges = []; return value;
+  });
+  assert.equal(incomplete.comparisonStatus, "error");
+  const unsupported = await loadComparePhase(state({ intent: "baselines", source: "unknown", target: "b" }), baselineBundle, undefined, () => { throw Error("must not load"); });
+  assert.equal(unsupported.comparisonStatus, "unsupported");
+  const cancelled = new AbortController();
+  await assert.rejects(loadComparePhase(state({ intent: "baselines", source: "a", target: "b" }), baselineBundle, cancelled.signal, async (path) => {
+    const value = await transport(path); cancelled.abort(); return value;
+  }), /cancelled/);
+});
 
 test("the owner's exact framework deep link is rejected before component mapping downloads", async () => {
   const request = parseHashLocation("/compare/relationships", "?source=csf-2&target=nist-zt&intent=frameworks&compareRun=true");

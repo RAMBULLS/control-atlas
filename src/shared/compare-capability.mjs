@@ -47,3 +47,12 @@ export function mappingSourceIdsForEdge(edge) {
     ),
   ];
 }
+
+// Baseline membership is a publisher selection of canonical controls, never a
+// crosswalk or a claim that two independently named requirements are equal.
+export function isBaselineSelection(edge, from, to) {
+  return edge?.publication_status === "published" &&
+    edge.relationship_class === "applicability" && edge.relationship_type === "selects" &&
+    ["baseline", "baseline_profile"].includes(from?.node_type) &&
+    ["control", "control_enhancement"].includes(to?.node_type);
+}

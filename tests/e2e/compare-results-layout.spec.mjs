@@ -26,6 +26,45 @@ test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
 });
 
+test("published baseline selections reconcile, filter and export on desktop and mobile", async ({ page }, testInfo) => {
+  test.setTimeout(120_000);
+  const baselineRoute = "/#/compare/relationships?intent=baselines&source=nist-800-53b:MODERATE&target=fedramp-rev5:MODERATE&compareRun=true";
+  await gotoApp(page, baselineRoute);
+  await waitForAppReady(page); await dismissOnboarding(page);
+  await expect(page.locator("[data-baseline-result]").first()).toBeVisible({ timeout: 90_000 });
+  await expect(page.locator("#compare-results")).toContainText("historical");
+  await expect(page.locator("#compare-workspace")).toContainText("not a compliance failure");
+  const totals = await page.locator("#compare-results > p").nth(1).innerText();
+  const shared = Number(totals.match(/([\d,]+) shared/)[1].replaceAll(",", ""));
+  expect(shared).toBeGreaterThan(25);
+  await page.getByLabel("Result group").selectOption("shared");
+  expect(await page.locator("[data-baseline-result]").count()).toBeLessThanOrEqual(25);
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Download CSV" }).click();
+  const csv = await readFile(await (await downloadPromise).path(), "utf8");
+  expect(csv.split("\r\n")).toHaveLength(shared + 1);
+  expect(csv).toContain('"Shared"'); expect(csv).not.toContain('"Only in A"');
+  expect(csv).toContain("https://"); expect(csv).toContain("fedramp.gov");
+  await page.getByLabel("Search results by ID or title").fill("no-such-control-zzzz");
+  await expect(page.getByText("No controls match these filters.")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Download CSV" })).toBeDisabled();
+  await page.getByLabel("Search results by ID or title").fill("");
+  await page.getByLabel("Baseline B").selectOption("nist-800-53b:MODERATE");
+  await expect(page.locator("#compare-results")).toContainText(/0 only in A · [\d,]+ shared · 0 only in B/);
+  await page.goBack();
+  await expect(page.locator("#compare-results > p").nth(1)).toHaveText(totals);
+  for (const width of [1440, 390, 320]) {
+    await page.setViewportSize({ width, height: 900 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+    const scan = await new AxeBuilder({ page }).include("#compare-workspace").analyze();
+    expect(scan.violations.filter((v) => ["serious", "critical"].includes(v.impact))).toEqual([]);
+  }
+  await testInfo.attach("baseline-comparison-mobile", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" });
+  await page.getByRole("tab", { name: "Frameworks", exact: true }).click();
+  await expect(page.getByLabel("Publication", { exact: true })).toBeVisible();
+  await expect(page.locator("[data-baseline-result]")).toHaveCount(0);
+});
+
 async function open(page, route, size = { width: 1440, height: 900 }) {
   await page.setViewportSize(size);
   await gotoApp(page, route);

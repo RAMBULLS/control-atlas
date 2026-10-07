@@ -137,8 +137,8 @@ test("Phase 4 places comparison limits with results and removes menu methodology
   await waitForRenderedRoute(page, "/#/compare");
 
   const modes = page.getByRole("tablist", { name: "Comparison mode" }).getByRole("tab");
-  await expect(modes).toHaveCount(3);
-  await expect(modes).toHaveText(["Frameworks", "Implementation", "Specific item"]);
+  await expect(modes).toHaveCount(4);
+  await expect(modes).toHaveText(["Frameworks", "Implementation", "Specific item", "Baselines"]);
   await expect(page.locator(".compare-decision-boundary")).toHaveCount(0);
 
   await gotoApp(

@@ -99,6 +99,8 @@ Guides and other small curated directories use typed entries, a clear sequence o
 
 ## F. Focused workbench
 
+Baselines compares complete published control selections using canonical control identity. Only in A, Shared and Only in B describe membership, never compliance or equivalent parameters. Shared rows retain both selections' evidence. Baseline names include publication, version and recorded lifecycle; unsupported selections and missing data remain explicit. Search and group filters apply to all CSV rows, with source URLs and spreadsheet formula protection. Existing pagination bounds the visible controls. Revision text comparison is unavailable here; mapping documents alone cannot stand in for historical catalogs.
+
 Compare, Templates, and other task flows present scope, working controls, results, and next action in that order.
 
 Compare results lead with the selected publications, the count of published mappings, and the mappings themselves. Frameworks, Implementation, and Specific item have different admission rules. Component-function mappings from NIST Zero Trust are available under Implementation or for an exact item; they must not be presented as whole-framework equivalence. Admission comes from the same published, cited graph edges used to generate the pair read model. An unsupported pair or wrong mode is explained from small metadata before any mapping payload is requested; a wrong mode offers an explicit handoff with the original selections preserved.

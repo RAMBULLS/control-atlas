@@ -1,4 +1,5 @@
 import { comparisonPairKey, comparisonScopeAllowed } from "../../shared/compare-scope.mjs";
+import { BaselineComparison } from "./BaselineComparison";
 import * as Accordion from "@radix-ui/react-accordion";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ComponentProps } from "react";
@@ -453,13 +454,21 @@ function TargetWindow({
   );
 }
 
-export function ComparePage(props: {
+type ComparePageProps = {
   bundle: RuntimeBundle;
   state: CompareState;
   onNavigate: (view: ViewState["view"], patch?: Partial<ViewState>) => void;
   onOpenNode: (nodeId: string) => void;
   onRetry?: () => void;
-}) {
+};
+
+export function ComparePage(props: ComparePageProps) {
+  return props.state.intent === "baselines"
+    ? <BaselineComparison key={`${props.state.source}|${props.state.target}`} {...props} />
+    : <MappingComparePage {...props} />;
+}
+
+function MappingComparePage(props: ComparePageProps) {
   const { bundle, state, onNavigate, onOpenNode, onRetry } = props;
   const [resultQuery, setResultQuery] = useState("");
   const inlineTargetLimit = useInlineTargetLimit();
@@ -804,6 +813,7 @@ export function ComparePage(props: {
           { id: "frameworks" as const, label: "Frameworks" },
           { id: "implementation" as const, label: "Implementation" },
           { id: "item-mapping" as const, label: "Specific item" },
+          { id: "baselines" as const, label: "Baselines" },
         ].map((entry) => (
           <button
             aria-selected={mode === entry.id}

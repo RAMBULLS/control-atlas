@@ -141,13 +141,13 @@ test('B14: every Library select exposes a non-empty accessible name', async ({ p
   expect(unnamed).toBe(0);
 });
 
-test('B16: Compare exposes all three supported modes', async ({ page }) => {
+test('B16: Compare exposes all four supported modes', async ({ page }) => {
   await page.goto('/#/compare');
   const modes = page.getByRole('tablist', { name: 'Comparison mode' });
   await expect(modes).toBeVisible({ timeout: 15000 });
   const choices = modes.getByRole('tab');
-  await expect(choices).toHaveCount(3);
-  await expect(choices).toHaveText(['Frameworks', 'Implementation', 'Specific item']);
+  await expect(choices).toHaveCount(4);
+  await expect(choices).toHaveText(['Frameworks', 'Implementation', 'Specific item', 'Baselines']);
   await expect(choices.first()).toHaveAttribute('aria-selected', 'true');
 });
 
@@ -165,8 +165,8 @@ test('route semantic polish holds at all required viewport widths', async ({ pag
 
     await page.goto('/#/compare');
     const choices = page.getByRole('tablist', { name: 'Comparison mode' }).getByRole('tab');
-    await expect(choices).toHaveCount(3);
-    await expect(choices).toHaveText(['Frameworks', 'Implementation', 'Specific item']);
+    await expect(choices).toHaveCount(4);
+    await expect(choices).toHaveText(['Frameworks', 'Implementation', 'Specific item', 'Baselines']);
     for (const choice of await choices.all()) {
       expect(roundCssPixels(await choice.evaluate((element) => element.getBoundingClientRect().height))).toBeGreaterThanOrEqual(44);
     }

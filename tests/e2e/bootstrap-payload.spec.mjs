@@ -141,7 +141,7 @@ test("record commits official content without a whole-tree or Resources download
     expect(spineRequests, "the complete record authority chain needs no whole-tree download").toBe(0);
     expect(resourceRequests, "a closed-search record needs no Resources payload").toEqual([]);
     const coldTransfer = await page.evaluate(() => {
-      const entries = performance.getEntriesByType("resource");
+      const entries = /** @type {PerformanceResourceTiming[]} */ (performance.getEntriesByType("resource"));
       return {
         totalEncodedBytes: entries.reduce((total, entry) => total + entry.encodedBodySize, 0),
         recordArtifacts: entries.filter(entry => /atlas-neighborhood/.test(entry.name))

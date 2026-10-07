@@ -58,6 +58,12 @@ export const UI_REVIEW_ROUTES = [
     owners: ["src/ui/pages/ComparePage.tsx"],
   },
   {
+    id: "compare-baselines",
+    path: "/#/compare/relationships?intent=baselines&source=nist-800-53b:MODERATE&target=fedramp-rev5:MODERATE&compareRun=true",
+    title: "Compare baseline selections",
+    owners: ["src/ui/pages/BaselineComparison.tsx"],
+  },
+  {
     id: "templates",
     path: "/#/build",
     title: "Templates",

@@ -3954,6 +3954,7 @@ export function buildFrameworkData({ generatedDirectory = DEFAULT_GENERATED } = 
     catalogs,
     comparison_pairs: comparisons.manifest,
     comparison_items: comparisons.itemManifest,
+    comparison_baselines: comparisons.baselineManifest,
     mapping_sources: Object.fromEntries(
       [...mappingSourcesByPair.entries()].map(([key, sourceIds]) => [
         key,

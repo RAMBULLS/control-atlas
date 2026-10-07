@@ -280,6 +280,44 @@ export function compareExportToCsv(data: CompareExportData) {
     .join("\r\n")}`;
 }
 
+export type BaselineResultRow = {
+  group: "shared" | "only_a" | "only_b";
+  control_node: { id: string; source_id?: string; metadata?: { item_id?: string; title?: string } };
+  source_refs: SourceRef[];
+};
+
+export function filterBaselineRows(rows: BaselineResultRow[], group: string, query: string) {
+  const needle = compareNeedle(query);
+  return rows.filter((row) => (!group || row.group === group) &&
+    (!needle || includesNeedle(needle, row.control_node.metadata?.item_id, row.control_node.metadata?.title)));
+}
+
+export function buildBaselineExportData(input: {
+  rows: BaselineResultRow[];
+  labelA: string;
+  labelB: string;
+  resolveSource: CompareExportInput["resolveSource"];
+}): CompareExportData {
+  return {
+    about: [], sources: [], mappingCount: input.rows.length,
+    crosswalk: [["Group", "Baseline A", "Baseline B", "Control ID", "Control title", "Control source URL", "Selection sources", "Selection source URLs", "Evidence / Locator"],
+      ...input.rows.map((row) => {
+        const references = row.source_refs.map((ref) => {
+          const id = ref.source_id || ref.sourceId || "";
+          const source = input.resolveSource(id);
+          return { name: `${sourceName(id, source, ref)} ${sourceVersion(source, ref)}`.trim(),
+            url: officialUrl(source), locator: ref.locator || "" };
+        });
+        return [row.group === "shared" ? "Shared" : row.group === "only_a" ? "Only in A" : "Only in B",
+          input.labelA, input.labelB, row.control_node.metadata?.item_id || row.control_node.id,
+          row.control_node.metadata?.title || "", officialUrl(input.resolveSource(row.control_node.source_id || "")),
+          unique(references.map((ref) => ref.name)).join(" | "),
+          unique(references.map((ref) => ref.url)).join(" | "),
+          unique(references.map((ref) => ref.locator)).join(" | ")];
+      })],
+  };
+}
+
 type WorkbookSheet = {
   hyperlinkColumns: number[];
   idColumns: number[];

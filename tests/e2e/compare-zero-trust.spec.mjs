@@ -26,10 +26,10 @@ for (const width of [320, 390, 1440]) {
     await open(page, EXACT);
     if (width <= 480) {
       const tabList = page.getByRole("tablist", { name: "Comparison mode" });
-      await expect(tabList.getByRole("tab")).toHaveCount(3);
+      await expect(tabList.getByRole("tab")).toHaveCount(4);
       const tabs = await tabList.getByRole("tab").all();
       const bounds = await Promise.all(tabs.map((tab) => tab.boundingBox()));
-      expect(bounds).toHaveLength(3);
+      expect(bounds).toHaveLength(4);
       expect(bounds.every(Boolean)).toBe(true);
       expect(bounds[0].x + bounds[0].width).toBeLessThanOrEqual(bounds[1].x + 1);
       expect(bounds[2].y).toBeGreaterThanOrEqual(bounds[0].y + bounds[0].height - 1);

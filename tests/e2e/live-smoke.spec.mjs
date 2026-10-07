@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { readFile } from "node:fs/promises";
 
 import {
   attachPageDiagnostics,
@@ -89,6 +90,41 @@ test("live smoke: compare hub loads", async ({ page }) => {
   await dismissOnboarding(page);
   await expect(page.getByRole("heading", { name: "Compare", level: 1 })).toBeVisible();
   await expect(page.getByText("See how frameworks connect using published crosswalks.", { exact: true })).toBeVisible();
+});
+
+test("live smoke: baseline comparison filters and exports complete selections", async ({ page }) => {
+  test.setTimeout(120000);
+  await gotoApp(page, "/#/compare/relationships?intent=baselines&source=nist-800-53b:MODERATE&target=fedramp-rev5:MODERATE&compareRun=true");
+  await waitForAppReady(page);
+  await dismissOnboarding(page);
+  const rows = page.locator("[data-baseline-result]");
+  await expect(rows.first()).toBeVisible({ timeout: 90000 });
+  await expect(page.locator("#compare-results")).toContainText("historical");
+  await expect(page.locator("#compare-workspace")).toContainText("not a compliance failure");
+  const totals = await page.locator("#compare-results > p").nth(1).innerText();
+  const sharedMatch = totals.match(/([\d,]+) shared/);
+  expect(sharedMatch).not.toBeNull();
+  const shared = Number(sharedMatch[1].replaceAll(",", ""));
+  expect(shared).toBeGreaterThan(25);
+
+  await page.getByLabel("Result group").selectOption("shared");
+  await expect(page.locator('[data-baseline-result]:not([data-baseline-result="shared"])')).toHaveCount(0);
+  expect(await rows.count()).toBeLessThanOrEqual(25);
+  await rows.first().getByText("Selection evidence", { exact: true }).click();
+  await expect(rows.first().getByRole("link", { name: /official source/ })).toHaveCount(2);
+
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Download CSV" }).click();
+  const csv = await readFile(await (await downloadPromise).path(), "utf8");
+  expect(csv.split("\r\n")).toHaveLength(shared + 1);
+  expect(csv).toContain('"Shared"');
+  expect(csv).not.toContain('"Only in A"');
+  expect(csv).not.toContain('"Only in B"');
+  expect(csv).toContain("https://");
+  expect(csv).toContain("fedramp.gov");
+  await page.getByLabel("Search results by ID or title").fill("no-such-control-zzzz");
+  await expect(rows).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Download CSV" })).toBeDisabled();
 });
 
 test("live smoke: deployed runtime cache version matches source", async ({

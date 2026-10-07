@@ -11,6 +11,7 @@
         "http://localhost:4317/#/record/nist-800-53/AC-2"
       ],
       "settings": {
+        "configPath": "./tools/lighthouse-diagnostic.config.mjs",
         "saveAssets": true,
         "chromeFlags": "--headless --no-sandbox",
         "formFactor": "mobile",

@@ -4,7 +4,13 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, 
 import { dirname, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
-import { inventoryCiReports, runCiLighthouse } from '../tools/run-ci-lighthouse.mjs';
+import { inventoryCiReports, runCiLighthouse as runLighthouse } from '../tools/run-ci-lighthouse.mjs';
+import diagnosticConfig from '../tools/lighthouse-diagnostic.config.mjs';
+import { assertCapturePair, lighthouseRuntime, reproduction } from '../tools/lighthouse-diagnostic-support.mjs';
+import { exportLanternCriticalPath, flattenEstimate, timerEdges } from '../tools/export-lantern-critical-path.mjs';
+
+// Assertion-runner fixtures do not contain original browser metric inputs.
+const runCiLighthouse = options => runLighthouse({ exportDiagnostics() {}, ...options });
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const config = JSON.parse(readFileSync(join(root, '.lighthouserc.ci.json'), 'utf8'));
@@ -188,4 +194,102 @@ test('malformed fresh reports fail and still invoke report export', t => {
   } });
   assert.deepEqual(calls, ['healthcheck', 'collect', 'upload']);
   assert.ok(evidence.failures.some(message => message.startsWith('report inventory:')));
+});
+
+test('diagnostic extension preserves default audits, artifacts, settings and scoring', async () => {
+  const runtime = lighthouseRuntime(root);
+  assert.equal(runtime.version, '13.4.1');
+  const { initializeConfig } = await runtime.load('core/config/config.js');
+  const { configPath, ...settings } = config.ci.collect.settings;
+  const baseline = (await initializeConfig('navigation', undefined, settings)).resolvedConfig;
+  const diagnostic = (await initializeConfig('navigation', diagnosticConfig, {
+    ...settings, configPath: resolve(root, configPath),
+  })).resolvedConfig;
+  const diagnosticRefs = diagnostic.categories.performance.auditRefs;
+  assert.deepEqual(diagnosticRefs.filter(ref => ref.id !== 'atlas-metric-inputs'), baseline.categories.performance.auditRefs);
+  assert.equal(diagnosticRefs.find(ref => ref.id === 'atlas-metric-inputs').weight, 0);
+  for (const id of ['accessibility', 'best-practices', 'seo']) assert.deepEqual(diagnostic.categories[id], baseline.categories[id]);
+  assert.deepEqual(diagnostic.artifacts.map(artifact => artifact.id), baseline.artifacts.map(artifact => artifact.id));
+  assert.deepEqual(diagnostic.audits.filter(audit => audit.implementation.meta.id !== 'atlas-metric-inputs')
+    .map(audit => audit.implementation.meta.id), baseline.audits.map(audit => audit.implementation.meta.id));
+  assert.deepEqual(diagnostic.settings, baseline.settings);
+});
+
+test('record pairing rejects pooled final URLs, different navigation and fetch time', () => {
+  const identity = { frameId: 'synthetic-frame', navigationId: 'synthetic-navigation', timeOriginUs: 1000000 };
+  const report = { requestedUrl: config.ci.collect.url[2], fetchTime: '2026-01-01T00:00:00.000Z',
+    finalUrl: config.ci.collect.url[0], finalDisplayedUrl: config.ci.collect.url[2] };
+  const capture = { fetchTime: report.fetchTime, identity,
+    URL: { requestedUrl: report.requestedUrl, mainDocumentUrl: report.finalUrl, finalDisplayedUrl: report.finalDisplayedUrl } };
+  assert.doesNotThrow(() => assertCapturePair(report, capture, { identity }, identity));
+  assert.throws(() => assertCapturePair({ ...report, requestedUrl: config.ci.collect.url[1] }, capture, { identity }, identity), /URL\/fetchTime/);
+  assert.throws(() => assertCapturePair(report, { ...capture, fetchTime: 'other' }, { identity }, identity), /URL\/fetchTime/);
+  assert.throws(() => assertCapturePair(report, capture, { identity }, { ...identity, navigationId: 'different' }), /navigation identity/);
+  assert.equal(reproduction(4323.0362, 4323.5).accepted, true);
+  assert.equal(reproduction(4323.0362, 4168.8635).accepted, false);
+  assert.equal(reproduction(undefined, 0).accepted, false);
+});
+
+test('graph export distinguishes observed and modeled waits and excludes offscreen image maxima', () => {
+  // Synthetic timing data tests units and accounting, not product performance.
+  const request = { requestId: 'request', url: 'https://example.test/script.js', resourceType: 'Script', priority: 'High',
+    transferSize: 100, resourceSize: 200, networkRequestTime: 10, responseHeadersEndTime: 20, networkEndTime: 30 };
+  const network = { id: 'request', type: 'network', startTime: 1000000, endTime: 1030000, request, getDependencies: () => [] };
+  const cpu = { id: 'render', type: 'cpu', startTime: 1030000, endTime: 1040000, getDependencies: () => [network],
+    event: { name: 'RunTask', ts: 1030000, dur: 10000 }, childEvents: [],
+    didPerformLayout: () => true, getEvaluateScriptURLs: () => new Set() };
+  const image = { ...network, id: 'offscreen', request: { ...request, resourceType: 'Image', priority: 'Low' } };
+  const graph = { traverse: visit => [network, cpu, image].forEach(visit) };
+  const estimate = { timeInMs: 450, nodeTimings: new Map([
+    [network, { startTime: 0, endTime: 300, duration: 300 }],
+    [cpu, { startTime: 400, endTime: 450, duration: 50 }],
+    [image, { startTime: 0, endTime: 999, duration: 999 }],
+  ]) };
+  const complete = new Map([[network, { queuedTime: 0, connectionTiming: { timeToFirstByte: 200 } }], [cpu, { queuedTime: 300 }]]);
+  const exported = flattenEstimate(graph, estimate, complete, 1000000);
+  const cpuRow = exported.nodes.find(node => node.id === 'render');
+  const networkRow = exported.nodes.find(node => node.id === 'request');
+  assert.deepEqual(cpuRow.observed, { startMs: 30, endMs: 40, durationMs: 10 });
+  assert.equal(cpuRow.modeled.queueWaitMs, 100);
+  assert.equal(networkRow.network.observedWaitMs, 10);
+  assert.equal(networkRow.network.observedTransferMs, 10);
+  assert.equal(networkRow.network.modeledTransferMs, 100);
+  assert.equal(exported.nodes.find(node => node.id === 'offscreen').excludedFromLcpMaximum, true);
+  assert.deepEqual(exported.predecessorChains, [{ terminalId: 'render', ids: ['request', 'render'] }]);
+});
+
+test('missing originals are exported as a gap and diagnostic errors retain failed assertions', async t => {
+  const cwd = fixture(t);
+  const evidence = runCiLighthouse({ cwd, runCommand(command, args) {
+    if (command === 'collect') writeReports(cwd, reportsFor({ lcp: 3000 }));
+    if (command === 'assert') {
+      const asserted = assertWithCli(cwd, args);
+      if (asserted.status !== 0) throw new Error(`assert exit ${asserted.status}`);
+    }
+  }, exportDiagnostics() { throw new Error('Synthetic diagnostic export failure'); } });
+  assert.ok(evidence.failures.some(message => message.startsWith('assert:')));
+  assert.ok(evidence.failures.some(message => message.startsWith('diagnostic export:')));
+  assert.equal(evidence.routes.find(route => route.requestedUrl.endsWith('/resources')).passed, false);
+  assert.deepEqual(JSON.parse(readFileSync(join(cwd, config.ci.upload.outputDir, 'route-assertions.json'), 'utf8')), evidence);
+  const gap = await exportLanternCriticalPath({ cwd });
+  assert.equal(gap.status, 'unavailable');
+  assert.deepEqual(gap.gaps, ['Original URL/GatherContext/settings/simulator/SourceMaps/HostDPR capture is missing.']);
+  assert.equal(gap.reproduction, undefined);
+});
+
+test('timer mapping reports observed elapsed time and actual graph membership without inferring cause', () => {
+  const install = { name: 'TimerInstall', ts: 1000000, pid: 1, tid: 2, args: { data: { timerId: 7, timeout: 10 } } };
+  const fire = { name: 'TimerFire', ts: 1015000, pid: 1, tid: 2, args: { data: { timerId: 7 } } };
+  const child = { name: 'TimerFire', tsUs: fire.ts, pid: fire.pid, tid: fire.tid, args: fire.args };
+  const estimates = { optimistic: { nodes: [
+    { id: 'fire-task', cpu: { childEvents: [child] } },
+    { id: 'another-timer', cpu: { childEvents: [{ ...child, args: { data: { timerId: 8 } } }] } },
+    { id: 'another-thread', cpu: { childEvents: [{ ...child, tid: 3 }] } },
+  ] } };
+  const [edge] = timerEdges([fire, install], estimates);
+  assert.equal(edge.observedElapsedMs, 15);
+  assert.equal(edge.declaredTimeoutMs, 10);
+  assert.deepEqual(edge.installGraphNodes, { optimistic: [] });
+  assert.deepEqual(edge.fireGraphNodes, { optimistic: ['fire-task'] });
+  assert.match(edge.relation, /does not prove/);
 });

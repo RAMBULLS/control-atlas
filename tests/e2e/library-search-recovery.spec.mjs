@@ -119,7 +119,7 @@ test("Library: the Atlas matching-records handoff still shows the same populatio
   }
 
   await page.evaluate(() => {
-    window.location.hash = "/atlas?atlasLimb=atlas:LIMB-IMPLEMENTATION&atlasFramework=disa-stig&atlasContext=asset.server,product.microsoft-windows,program.stig";
+    document.location.hash = "/atlas?atlasLimb=atlas:LIMB-IMPLEMENTATION&atlasFramework=disa-stig&atlasContext=asset.server,product.microsoft-windows,program.stig";
   });
   await waitForAppReady(page);
   await expect(page.locator('.atl[data-route-content-ready="true"]')).toBeVisible();

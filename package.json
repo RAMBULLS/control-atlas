@@ -151,7 +151,7 @@
     "verify:refresh-admission": "node tools/verify-refresh-admission.mjs",
     "lighthouse:production": "node tools/collect-production-lighthouse.mjs",
     "test:pipeline-reliability": "node --test tests/pipeline-reliability.test.mjs tests/ci-lighthouse.test.mjs",
-    "lint:pipeline-reliability": "eslint tools/collect-production-lighthouse.mjs tools/lighthouse-metrics.mjs tools/run-ci-lighthouse.mjs tests/pipeline-reliability.test.mjs tests/ci-lighthouse.test.mjs tools/report-refresh-alerts.mjs --max-warnings=0",
+    "lint:pipeline-reliability": "eslint tools/collect-production-lighthouse.mjs tools/lighthouse-metrics.mjs tools/run-ci-lighthouse.mjs tools/lighthouse-diagnostic.config.mjs tools/lighthouse-diagnostic-support.mjs tools/lighthouse-metric-inputs.audit.mjs tools/export-lantern-critical-path.mjs tests/pipeline-reliability.test.mjs tests/ci-lighthouse.test.mjs tools/report-refresh-alerts.mjs --max-warnings=0",
     "verify:local": "node ./tools/local-source-hygiene.mjs",
     "local:heavy": "node ./tools/run-local-validation.mjs",
     "validate:checkout": "node ./tools/validation-location.mjs --checkout",

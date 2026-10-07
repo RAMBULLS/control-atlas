@@ -28,7 +28,7 @@ export function inventoryCiReports(config, reports) {
   return { urls, runs };
 }
 
-export function runCiLighthouse({ cwd = process.cwd(), runCommand } = {}) {
+export function runCiLighthouse({ cwd = process.cwd(), runCommand, exportDiagnostics } = {}) {
   const configPath = resolve(cwd, '.lighthouserc.ci.json');
   const config = JSON.parse(readFileSync(configPath, 'utf8'));
   const reportDirectory = join(cwd, '.lighthouseci');
@@ -60,6 +60,7 @@ export function runCiLighthouse({ cwd = process.cwd(), runCommand } = {}) {
   // before collection prevents a failed invocation from retaining older reports.
   rmSync(outputDirectory, { recursive: true, force: true });
   mkdirSync(reportDirectory, { recursive: true });
+  rmSync(join(reportDirectory, 'metric-inputs'), { recursive: true, force: true });
   // A failed collection must never upload evidence from an earlier invocation.
   for (const filename of readdirSync(reportDirectory)) {
     if (/^lhr-\d+\.(json|html)$/.test(filename) || filename === 'assertion-results.json') {
@@ -115,6 +116,17 @@ export function runCiLighthouse({ cwd = process.cwd(), runCommand } = {}) {
     failures,
   };
   writeFileSync(join(outputDirectory, 'route-assertions.json'), `${JSON.stringify(evidence, null, 2)}\n`);
+  try {
+    const exportDiagnostic = exportDiagnostics ?? (() => runNodeSync(
+      [resolve(cwd, 'tools/export-lantern-critical-path.mjs')],
+      { cwd, stdio: 'inherit', label: 'Lighthouse offline diagnostic' },
+    ));
+    exportDiagnostic();
+  } catch (error) {
+    // Preserve every original route assertion, including performance failures.
+    evidence.failures.push(`diagnostic export: ${error.message}`);
+    writeFileSync(join(outputDirectory, 'route-assertions.json'), `${JSON.stringify(evidence, null, 2)}\n`);
+  }
   return evidence;
 }
 

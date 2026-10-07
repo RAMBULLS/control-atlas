@@ -213,6 +213,13 @@ test('diagnostic extension preserves default audits, artifacts, settings and sco
   assert.deepEqual(diagnostic.audits.filter(audit => audit.implementation.meta.id !== 'atlas-metric-inputs')
     .map(audit => audit.implementation.meta.id), baseline.audits.map(audit => audit.implementation.meta.id));
   assert.deepEqual(diagnostic.settings, baseline.settings);
+  // Lighthouse narrows the audit argument to declared artifacts, including
+  // base metadata. Every source artifact we capture must cross that boundary.
+  const captureAudit = diagnostic.audits.find(audit => audit.implementation.meta.id === 'atlas-metric-inputs');
+  const captureSource = readFileSync(join(root, 'tools/lighthouse-metric-inputs.audit.mjs'), 'utf8');
+  for (const [, name] of captureSource.matchAll(/\bartifacts\.([A-Za-z_][A-Za-z_0-9]*)/g)) {
+    assert.ok(captureAudit.implementation.meta.requiredArtifacts.includes(name), `Captured artifact ${name} must be declared.`);
+  }
 });
 
 test('record pairing rejects pooled final URLs, different navigation and fetch time', () => {

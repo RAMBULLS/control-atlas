@@ -13,7 +13,7 @@ export default class MetricInputs extends Audit {
       description: 'Retains original inputs for offline diagnostic reproduction; contributes no score.',
       scoreDisplayMode: Audit.SCORING_MODES.INFORMATIVE,
       supportedModes: ['navigation'],
-      requiredArtifacts: ['HostUserAgent', 'Trace', 'DevtoolsLog', 'GatherContext', 'URL', 'SourceMaps', 'HostDPR'],
+      requiredArtifacts: ['HostUserAgent', 'Trace', 'DevtoolsLog', 'GatherContext', 'URL', 'SourceMaps', 'HostDPR', 'fetchTime', 'TraceElements'],
     };
   }
 
@@ -22,6 +22,7 @@ export default class MetricInputs extends Audit {
     try {
       if (process.env.INTERNAL_LANTERN_USE_TRACE !== undefined) throw new Error('Alternative trace graph is unsupported.');
       if (runtime.version !== '13.4.1') throw new Error(`Expected Lighthouse 13.4.1, found ${runtime.version}.`);
+      if (typeof artifacts.fetchTime !== 'string') throw new Error('Original fetchTime artifact is unavailable.');
       const { ProcessedTrace } = await runtime.load('core/computed/processed-trace.js');
       const { stringifyReplacer } = await runtime.load('core/lib/asset-saver.js');
       const identity = traceIdentity(await ProcessedTrace.request(artifacts.Trace, context));

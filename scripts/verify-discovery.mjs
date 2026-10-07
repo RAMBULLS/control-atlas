@@ -5,6 +5,7 @@
 import { readFileSync, existsSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { verifyBaselineManifest } from './lib/nist-baseline-profiles.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const FRESH = process.env.CONTROL_ATLAS_REQUIRE_FRESH_FETCH === '1';
@@ -19,6 +20,14 @@ const EXPECTED_MANIFESTS = [
 
 const errors = [];
 const err = (m) => errors.push(m);
+
+try {
+  const manifest = JSON.parse(readFileSync(join(ROOT, 'data/nist-800-53b-profile-manifest.json'), 'utf8'));
+  const catalog = JSON.parse(readFileSync(join(ROOT, 'data/controls-800-53.json'), 'utf8'));
+  const reconciliation = verifyBaselineManifest(manifest, catalog);
+  console.log(`PASS: NIST 800-53B - ${reconciliation.length} discovered profiles fully reconciled.`);
+  if (FRESH && (!Number.isFinite(Date.parse(manifest.retrieved_at)) || Date.now() - Date.parse(manifest.retrieved_at) > STALE_DAYS * 86400000)) err('NIST baseline discovery is stale during required-fresh run');
+} catch (error) { err(error.message); }
 
 function daysOld(iso) {
   const t = Date.parse(iso);

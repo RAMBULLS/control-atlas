@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { fetch80053BBaselines } from '../tools/importers/catalog-adapters-ext.mjs';
 
-const profile = (title) => ({ profile: { metadata: { title }, imports: [{ 'include-controls': [{ 'with-ids': ['ac-1'] }] }] } });
+const profile = (title) => ({ profile: { metadata: { title }, merge: { 'as-is': true }, imports: [{ href: 'NIST_SP-800-53_rev5_catalog.json', 'include-controls': [{ 'with-ids': ['ac-1'] }] }] } });
 test('baseline enrichment requires all four publisher profiles', async () => {
   let requests = 0;
   const result = await fetch80053BBaselines(async () => new Response(JSON.stringify(profile(`baseline-${requests++}`))));
@@ -17,6 +17,6 @@ test('baseline enrichment does not silently publish partial HTTP or parse result
   await assert.rejects(fetch80053BBaselines(async () => new Response('{broken')), /JSON|property/i);
 });
 test('baseline enrichment rejects empty selectors and duplicate labels', async () => {
-  await assert.rejects(fetch80053BBaselines(async () => new Response(JSON.stringify({ profile: { imports: [] } }))), /no imports/);
+  await assert.rejects(fetch80053BBaselines(async () => new Response(JSON.stringify({ profile: { metadata: { title: 'empty' }, imports: [] } }))), /no imports/);
   await assert.rejects(fetch80053BBaselines(async () => new Response(JSON.stringify(profile('same')))), /Duplicate/);
 });

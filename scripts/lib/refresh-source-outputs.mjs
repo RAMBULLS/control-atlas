@@ -32,7 +32,7 @@ const outputs = {
 };
 
 const frameworkOutputs = {
-  'nist-800-53-rev5': ['data/controls-800-53.json'],
+  'nist-800-53-rev5': ['data/controls-800-53.json', 'data/nist-800-53b-profile-manifest.json'],
   'nist-csf-2': ['data/csf-subcategories.json', 'data/csf-reference-tool-manifest.json'],
   'nist-800-171-rev3': ['data/requirements-800-171.json'],
   'nist-800-171-rev2': ['data/requirements-800-171-rev2.json'],

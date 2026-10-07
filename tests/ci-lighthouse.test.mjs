@@ -10,6 +10,12 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const config = JSON.parse(readFileSync(join(root, '.lighthouserc.ci.json'), 'utf8'));
 const cli = join(root, 'node_modules/@lhci/cli/src/cli.js');
 
+test('normal hosted collection retains raw trace evidence without changing budgets', () => {
+  assert.equal(config.ci.collect.settings.saveAssets, true);
+  assert.equal(config.ci.assert.assertions['largest-contentful-paint'][1].maxNumericValue, 2500);
+  assert.equal(config.ci.assert.assertions['cumulative-layout-shift'][1].maxNumericValue, 0.1);
+});
+
 // Synthetic audit fixtures exercise the real assertion CLI; these are not
 // collected product measurements or upstream source evidence.
 function reportFixture(requestedUrl, { lcp = 1800, performance = 0.99 } = {}) {
@@ -102,6 +108,31 @@ for (const scenario of [
     assert.deepEqual(JSON.parse(readFileSync(join(cwd, config.ci.upload.outputDir, 'route-assertions.json'), 'utf8')), evidence);
   });
 }
+
+test('raw assets belong to this collection and enter its existing artifact export', t => {
+  const cwd = fixture(t);
+  const staleName = 'localhost_2026-01-01_01-01-01-0.trace.json';
+  const rawNames = ['localhost_2026-01-02_01-01-01-0.trace.json', 'localhost_2026-01-02_01-01-01-0.devtoolslog.json'];
+  const simulatedName = 'localhost_2026-01-02_01-01-01-lcp-optimistic.trace.json';
+  writeFileSync(join(cwd, staleName), 'synthetic stale trace fixture');
+  const evidence = runCiLighthouse({ cwd, runCommand(command, args) {
+    if (command === 'collect') {
+      writeReports(cwd, reportsFor());
+      for (const name of [...rawNames, simulatedName]) writeFileSync(join(cwd, name), 'synthetic collection asset fixture');
+    }
+    if (command === 'assert') {
+      const result = assertWithCli(cwd, args);
+      if (result.status !== 0) throw new Error(`assert exit ${result.status}`);
+    }
+  } });
+  assert.deepEqual(evidence.rawAssets.sort(), rawNames.sort());
+  for (const name of rawNames) {
+    assert.equal(existsSync(join(cwd, name)), false);
+    assert.equal(existsSync(join(cwd, config.ci.upload.outputDir, 'raw-assets', name)), true);
+  }
+  assert.equal(existsSync(join(cwd, staleName)), true);
+  assert.equal(existsSync(join(cwd, simulatedName)), true);
+});
 
 test('failed collection cannot admit or upload stale assertion evidence', t => {
   const cwd = fixture(t);

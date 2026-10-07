@@ -222,6 +222,7 @@
       }
       shell.querySelector("[data-static-route-title]").textContent = identity.title;
       shell.querySelector("[data-static-route-summary]").textContent = identity.summary;
+      setHidden(shell.querySelector("[data-static-resource-companions]"), identity.kind !== "resources");
       shell.removeAttribute("hidden");
     } else if (shell) {
       setHidden(shell, true);

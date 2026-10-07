@@ -120,7 +120,9 @@ function recordStageFixture() {
     let body: unknown;
     if (url.includes("atlas-neighborhood-manifest")) body = { atlas_neighborhood_manifest: { shard_count: 8 } };
     else if (url.includes("atlas-neighborhood/")) {
-      assert.ok(url.includes(`atlas-neighborhood/${atlasNeighborhoodShardId(id, 8)}.json`), "manifest count controls the requested path");
+      if (!url.includes(`atlas-neighborhood/${atlasNeighborhoodShardId(id, 8)}.json`)) {
+        return new Response("", { status: 404 });
+      }
       body = { atlas_neighborhood_shard: shards.find(shard => shard.shard_id === atlasNeighborhoodShardId(id, 8)) };
     }
     else if (url.includes("catalog-bootstrap")) body = { catalog_bootstrap: { catalogs: [{ id: "nist-800-53", name: "Fixture publication" }] } };
@@ -133,6 +135,67 @@ function recordStageFixture() {
     return new Response(JSON.stringify(body), { status: 200 });
   }) as typeof fetch;
   return { id, edge, source, requests, fetchFixture, state: normalizeViewState("library-detail", { node: id }) };
+}
+
+for (const earlyFailure of [false, true]) {
+test(`record cohort overlaps its manifest without premature admission (${earlyFailure ? "early rejection and retry" : "shared request"})`, async () => {
+  const originalFetch = globalThis.fetch;
+  const id = "nist-800-53:AC-2";
+  const node = { id, node_type: "control", source_id: "fixture-source", metadata: {
+    catalog_id: "nist-800-53", item_id: "AC-2", title: "Fixture account management",
+    description: "Complete fixture publisher text.",
+  } };
+  const shardId = atlasNeighborhoodShardId(id);
+  const shards = buildAtlasNeighborhoodShards({ nodes: [node], edges: [] });
+  let releaseManifest = () => {};
+  const manifestReady = new Promise<void>(resolve => { releaseManifest = resolve; });
+  let cohortStarted = () => {};
+  const cohortReady = new Promise<void>(resolve => { cohortStarted = resolve; });
+  let rejectCohort = earlyFailure;
+  let cohortRequests = 0;
+  globalThis.fetch = (async (input: Parameters<typeof fetch>[0]) => {
+    const url = String(input);
+    if (url.includes(".json.gz")) return new Response("", { status: 404 });
+    if (url.includes("atlas-neighborhood-manifest")) {
+      await manifestReady;
+      return new Response(JSON.stringify({ atlas_neighborhood_manifest: { shard_count: 2048 } }));
+    }
+    assert.ok(url.includes(`atlas-neighborhood/${shardId}.json`));
+    cohortRequests += 1;
+    cohortStarted();
+    return rejectCohort ? new Response("", { status: 503 }) : new Response(JSON.stringify({
+      atlas_neighborhood_shard: shards.find(shard => shard.shard_id === shardId),
+    }));
+  }) as typeof fetch;
+  clearRuntimeArtifactCache();
+  try {
+    let settled = false;
+    const record = loadAtlasNeighborhood(id);
+    // Observe rejection immediately, as a real staged-loader caller does.
+    const outcome = record.then(value => ({ value }), error => ({ error })).finally(() => { settled = true; });
+    await cohortReady;
+    assert.equal(settled, false, "downloaded bytes are not admitted before the manifest");
+    releaseManifest();
+    const result = await outcome;
+    if (earlyFailure) {
+      assert.ok("error" in result);
+      rejectCohort = false;
+      const retry = await loadAtlasNeighborhood(id);
+      assert.equal(retry?.center_node.metadata.description, node.metadata.description);
+      assert.equal(cohortRequests, 2, "the rejected request is evicted for a fresh retry");
+    } else {
+      assert.ok("value" in result);
+      assert.equal(result.value?.center_node.metadata.description, node.metadata.description);
+      const again = await loadAtlasNeighborhood(id);
+      assert.equal(again?.center_node.id, id);
+      assert.equal(cohortRequests, 1, "matched cohort bytes are consumed from the shared cache");
+    }
+  } finally {
+    releaseManifest();
+    globalThis.fetch = originalFetch;
+    clearRuntimeArtifactCache();
+  }
+});
 }
 
 test("new record cohorts bypass a cached manifest from the previous deployment", async () => {

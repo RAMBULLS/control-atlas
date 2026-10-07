@@ -1,9 +1,10 @@
-import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { runNodeSync } from './lib/process-runner.mjs';
 
 const REPORT_FILE = /^lhr-\d+\.json$/;
+const RAW_ASSET_FILE = /_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}-\d+\.(trace|devtoolslog)\.json$/;
 
 export function inventoryCiReports(config, reports) {
   const urls = config.ci?.collect?.url;
@@ -33,6 +34,7 @@ export function runCiLighthouse({ cwd = process.cwd(), runCommand } = {}) {
   const reportDirectory = join(cwd, '.lighthouseci');
   const assertionPath = join(reportDirectory, 'assertion-results.json');
   const outputDirectory = resolve(cwd, 'artifacts/lighthouse-ci');
+  const existingAssets = new Set(readdirSync(cwd).filter(filename => RAW_ASSET_FILE.test(filename)));
   if (config.ci?.upload?.target !== 'filesystem' ||
       resolve(cwd, config.ci.upload.outputDir ?? '') !== outputDirectory) {
     throw new Error('CI Lighthouse requires its dedicated artifacts/lighthouse-ci filesystem export.');
@@ -84,7 +86,7 @@ export function runCiLighthouse({ cwd = process.cwd(), runCommand } = {}) {
         failures.push(`${report.requestedUrl}: ${error.message}`);
         assertions = [];
       }
-      routes.push({ requestedUrl: report.requestedUrl, filename, passed: passed && assertions.length > 0, assertions });
+      routes.push({ requestedUrl: report.requestedUrl, ...(typeof report.fetchTime === 'string' ? { fetchTime: report.fetchTime } : {}), filename, passed: passed && assertions.length > 0, assertions });
     }
   } catch (error) {
     failures.push(`report inventory: ${error.message}`);
@@ -96,10 +98,20 @@ export function runCiLighthouse({ cwd = process.cwd(), runCommand } = {}) {
   }))), null, 2));
   attempt('upload');
   mkdirSync(outputDirectory, { recursive: true });
+  // Retain this collection's raw evidence in the existing uploaded export.
+  // Lighthouse saves it at cwd even when its JSON report goes to stdout.
+  // Leave pre-existing files and auxiliary simulated traces untouched.
+  const rawAssets = readdirSync(cwd).filter(filename => RAW_ASSET_FILE.test(filename) && !existingAssets.has(filename));
+  if (rawAssets.length) {
+    const assetDirectory = join(outputDirectory, 'raw-assets');
+    mkdirSync(assetDirectory, { recursive: true });
+    for (const filename of rawAssets) renameSync(join(cwd, filename), join(assetDirectory, filename));
+  }
   const evidence = {
     expectedRoutes: config.ci.collect.url,
     numberOfRuns: config.ci.collect.numberOfRuns,
     routes,
+    rawAssets,
     failures,
   };
   writeFileSync(join(outputDirectory, 'route-assertions.json'), `${JSON.stringify(evidence, null, 2)}\n`);

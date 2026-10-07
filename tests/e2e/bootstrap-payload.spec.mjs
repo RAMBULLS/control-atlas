@@ -33,6 +33,7 @@ test(`Resources keeps its identity and heading geometry at ${width}px until the 
     const shell = page.locator("[data-static-route]");
     await expect(shell).toBeVisible();
     await expect(shell.getByRole("heading", { level: 1 })).toHaveText("Resources");
+    await expect(shell.getByRole("navigation", { name: "Resource companions" })).toBeVisible();
     const beforeHeading = await shell.getByRole("heading", { level: 1 }).boundingBox();
     await expect(page.locator('[data-route-suspense-pending="true"]')).toHaveCount(1);
     await expect(page.locator('[data-route-suspense-pending="true"]')).not.toBeVisible();
@@ -49,13 +50,22 @@ test(`Resources keeps its identity and heading geometry at ${width}px until the 
     expect(Math.abs(afterHeading.y - beforeHeading.y), "masthead vertical handoff").toBeLessThanOrEqual(1);
     expect(Math.abs(afterHeading.height - beforeHeading.height), "masthead height handoff").toBeLessThanOrEqual(1);
     expect(Math.abs(afterHeading.width - beforeHeading.width), "masthead width handoff").toBeLessThanOrEqual(1);
+    const companions = page.getByRole("navigation", { name: "Resource companions" });
+    await expect(companions).toHaveCount(1);
+    const headerBox = await shell.locator("header").boundingBox();
+    const searchBox = await page.locator(".workspace-search").boundingBox();
+    expect(headerBox).not.toBeNull();
+    expect(searchBox).not.toBeNull();
+    const searchGap = searchBox.y - (headerBox.y + headerBox.height);
+    expect(searchGap, "search does not overlap its masthead").toBeGreaterThanOrEqual(0);
+    expect(searchGap, "search follows the single masthead").toBeLessThanOrEqual(28);
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.getByRole("searchbox", { name: "Find resources" }).fill("zero trust");
     await page.getByRole("searchbox", { name: "Find resources" }).press("Enter");
     await expect(page).toHaveURL(/q=zero\+trust/);
     await expect(page.getByRole("heading", { name: "Resources", exact: true, level: 1 })).toHaveCount(1);
     await expect(page.getByRole("searchbox", { name: "Find resources" })).toBeFocused();
-    await page.locator('#workspace a[href="#/templates"]').first().click();
+    await companions.getByRole("link", { name: /Browse Templates/ }).click();
     await expect(shell).not.toBeVisible();
     await expect(page.getByRole("heading", { name: "Templates", exact: true, level: 1 })).toBeVisible();
     await expect(page.locator("#workspace")).not.toHaveAttribute("aria-labelledby", "static-route-title");
@@ -72,6 +82,17 @@ test(`Resources keeps its identity and heading geometry at ${width}px until the 
   }
 });
 }
+
+test("client navigation to Resources retains its complete React masthead", async ({ page }) => {
+  await page.goto("/#/guides");
+  await waitForAppReady(page);
+  await page.locator('.site-header a[href="#/resources"]').click();
+  await expect(page.getByRole("searchbox", { name: "Find resources" })).toBeVisible();
+  await expect(page.locator("[data-static-route]")).toHaveCount(0);
+  await expect(page.locator(".workspace-template > .page-header")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Resources", exact: true, level: 1 })).toHaveCount(1);
+  await expect(page.getByRole("navigation", { name: "Resource companions" })).toHaveCount(1);
+});
 
 test("Resources exposes recovery when a delayed page module fails", async ({ page }) => {
   await page.clock.install();

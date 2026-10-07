@@ -633,15 +633,24 @@ function artifactPath(name: string) {
 export async function loadAtlasNeighborhood(
   nodeId: string,
 ): Promise<AtlasNeighborhoodRecord | null> {
+  // The release's expected cohort can download while its manifest is read.
+  // Only the manifest-selected cohort is admitted; a different publication
+  // layout discards this bounded prediction and loads its authoritative path.
+  const expectedShardId = atlasNeighborhoodShardId(nodeId);
+  const expectedShard = fetchArtifact(
+    artifactPath(`atlas-neighborhood/${expectedShardId}.json`),
+  ).then(value => ({ value }), error => ({ error }));
   const manifestArtifact = (await fetchArtifact(
     artifactPath("atlas-neighborhood-manifest.json"),
   )) as { atlas_neighborhood_manifest?: { shard_count?: number } };
   const shardCount =
     manifestArtifact.atlas_neighborhood_manifest?.shard_count || ATLAS_NEIGHBORHOOD_SHARD_COUNT;
   const shardId = atlasNeighborhoodShardId(nodeId, shardCount);
-  const shardArtifact = (await fetchArtifact(
-    artifactPath(`atlas-neighborhood/${shardId}.json`),
-  )) as {
+  const selectedShard = shardId === expectedShardId
+    ? await expectedShard
+    : { value: await fetchArtifact(artifactPath(`atlas-neighborhood/${shardId}.json`)) };
+  if ("error" in selectedShard) throw selectedShard.error;
+  const shardArtifact = selectedShard.value as {
     atlas_neighborhood_shard?: {
       records?: Record<string, AtlasNeighborhoodShardRecord>;
     };

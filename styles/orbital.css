@@ -269,9 +269,28 @@ body {
   grid-row: 5;
 }
 
-#root[data-static-route-kind="resources"]
-  > [data-react-root] .workspace-template > .page-header > .page-header-title {
+#root[data-static-route-kind="resources"]:has(> [data-static-route]:not([hidden]))
+  > [data-react-root] .workspace-template > .page-header {
   display: none;
+}
+
+#root[data-static-route-kind="resources"]:has(> [data-static-route]:not([hidden]))
+  > [data-react-root] .workspace-template {
+  padding-top: 0;
+}
+
+/* A record identifier is already known from its URL. Use the reader's type
+   scale without reserving blank space for publisher content not yet admitted. */
+#root[data-static-route-kind="record"] .static-route-summary {
+  min-height: 0;
+}
+
+#root[data-static-route-kind="record"] [data-static-route-title] {
+  font-family: var(--ca-font-mono);
+  font-size: clamp(1.55rem, 3vw, 2.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  text-transform: none;
 }
 
 .static-search-form {

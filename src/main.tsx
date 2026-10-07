@@ -110,6 +110,7 @@ function syncStaticRouteShell() {
   const identity = progressiveRouteIdentity();
   if (identity) {
     rootElement.dataset.staticRouteKind = identity.kind;
+    shell.querySelector<HTMLElement>('[data-static-resource-companions]')?.toggleAttribute('hidden', identity.kind !== 'resources');
     const eyebrow = shell.querySelector<HTMLElement>('[data-static-route-eyebrow]');
     const title = shell.querySelector<HTMLElement>('[data-static-route-title]');
     const summary = shell.querySelector<HTMLElement>('[data-static-route-summary]');

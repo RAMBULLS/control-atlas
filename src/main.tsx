@@ -12,6 +12,7 @@ import {
   SEARCH_RESULTS_FOCUS_EVENT,
 } from './shared/navigation-events';
 import { connectHomeDisclosure } from './ui/lib/homeDisclosure';
+import { recordRouteModule } from './ui/lib/recordRouteModule';
 // Orbital Archive No. 01 is the visual authority, not a copied palette. The
 // official release supplies the base recipes, DTCG tokens, and embedded fonts;
 // Control Atlas styles below are semantic/product adapters only.
@@ -110,6 +111,7 @@ function syncStaticRouteShell() {
   const identity = progressiveRouteIdentity();
   if (identity) {
     rootElement.dataset.staticRouteKind = identity.kind;
+    shell.querySelector<HTMLElement>('[data-static-resource-companions]')?.toggleAttribute('hidden', identity.kind !== 'resources');
     const eyebrow = shell.querySelector<HTMLElement>('[data-static-route-eyebrow]');
     const title = shell.querySelector<HTMLElement>('[data-static-route-title]');
     const summary = shell.querySelector<HTMLElement>('[data-static-route-summary]');
@@ -126,19 +128,18 @@ function syncStaticRouteShell() {
     delete rootElement.dataset.staticRouteKind;
   }
   const active =
-    (Boolean(identity) || rootElement.dataset.routeHydrated !== 'true') &&
-    !isHomeHash() &&
-    !isSearchHash() &&
-    rootElement.dataset.routeHydrated !== 'true';
+    !isHomeHash() && !isSearchHash() &&
+    (rootElement.dataset.routeHydrated !== 'true' || identity?.kind === 'resources');
   shell.toggleAttribute('hidden', !active);
   if (!active) {
     delete rootElement.dataset.staticRouteActive;
     return;
   }
-  rootElement.dataset.staticRouteActive = 'true';
+  if (rootElement.dataset.routeHydrated !== 'true') rootElement.dataset.staticRouteActive = 'true';
   shell.removeAttribute('aria-hidden');
   shell.removeAttribute('inert');
-  shell.setAttribute('role', 'status');
+  if (rootElement.dataset.routeHydrated !== 'true') shell.setAttribute('role', 'status');
+  else shell.removeAttribute('role');
 }
 
 function observeRouteHydration() {
@@ -147,6 +148,11 @@ function observeRouteHydration() {
   const markHydrated = () => {
     const app = reactRootElement.querySelector<HTMLElement>('#app');
     if (!app || !reactRouteOwnsSurface(app)) return false;
+    // A static route can be ready before its lazy page has committed. Keep the
+    // first-paint identity until real content (or its recovery UI) owns it.
+    if (reactRootElement.querySelector('[data-route-suspense-pending="true"]')) {
+      return false;
+    }
     if (
       app.dataset.appReady !== 'error' &&
       app.dataset.view === 'atlas-map' &&
@@ -158,7 +164,11 @@ function observeRouteHydration() {
     rootElement.dataset.routeHydrated = 'true';
     delete rootElement.dataset.staticRouteActive;
     const shell = rootElement.querySelector<HTMLElement>('[data-static-route]');
-    shell?.remove();
+    if (rootElement.dataset.staticRouteKind === 'resources') {
+      rootElement.dataset.staticRoutePersistent = 'resources';
+      shell?.removeAttribute('role');
+    }
+    else shell?.remove();
     return true;
   };
   const scheduleHydration = () => {
@@ -177,8 +187,7 @@ function observeRouteHydration() {
   });
   scheduleHydration();
   window.setTimeout(() => {
-    markHydrated();
-    observer.disconnect();
+    if (markHydrated()) observer.disconnect();
   }, 15_000);
 }
 
@@ -285,6 +294,18 @@ function syncProgressiveShell() {
     rootElement.dataset.reactShellReady === 'true' ? 'true' : 'false';
   if (rootElement.dataset.progressiveShellReleased === 'true') {
     delete rootElement.dataset.staticRouteActive;
+    if (rootElement.dataset.staticRoutePersistent === 'resources') {
+      const resourcesActive = progressiveRouteIdentity()?.kind === 'resources';
+      rootElement.querySelector<HTMLElement>('[data-static-route]')?.toggleAttribute('hidden', !resourcesActive);
+      if (resourcesActive) {
+        rootElement.dataset.staticRouteKind = 'resources';
+        rootElement.dataset.routeHydrated = 'true';
+      } else {
+        delete rootElement.dataset.staticRouteKind;
+      }
+      delete rootElement.dataset.staticSearchActive;
+      return;
+    }
     delete rootElement.dataset.staticRouteKind;
     delete rootElement.dataset.staticRoutePersistent;
     delete rootElement.dataset.staticSearchActive;
@@ -600,6 +621,17 @@ function onLocationChange() {
 function warmInteractiveRoute() {
   const hashRoute = window.location.hash.replace(/^#/, '') || '/';
   const routeUrl = new URL(hashRoute, window.location.origin);
+  // Queue the existing cached data path before the route module burst.
+  void Promise.all([
+    import('./ui/lib/hashRoutes'),
+    import('./ui/lib/runtimeLoader'),
+  ])
+    .then(([routes, runtime]) =>
+      runtime.preloadRuntimeArtifacts(
+        routes.parseHashLocation(routeUrl.pathname, routeUrl.search),
+      ),
+    )
+    .catch(() => undefined);
   switch (routeUrl.pathname.split('/')[1]) {
     case 'search':
       void import('./ui/pages/ExplorePage').catch(() => undefined);
@@ -612,19 +644,13 @@ function warmInteractiveRoute() {
       void import('./ui/pages/CatalogDetailPage').catch(() => undefined);
       break;
     case 'record':
-      void import('./ui/pages/ObjectDetailPage').catch(() => undefined);
+      void recordRouteModule.load().catch(() => undefined);
+      break;
+    case 'resources':
+      void import('./ui/pages/CommonsPage').catch(() => undefined);
       break;
   }
-  void Promise.all([
-    import('./ui/lib/hashRoutes'),
-    import('./ui/lib/runtimeLoader'),
-  ])
-    .then(([routes, runtime]) =>
-      runtime.preloadRuntimeArtifacts(
-        routes.parseHashLocation(routeUrl.pathname, routeUrl.search),
-      ),
-    )
-    .catch(() => undefined);
+
 }
 
 async function start() {

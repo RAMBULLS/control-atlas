@@ -42,7 +42,10 @@ export function scrollToTop(): void {
 
 export function focusRouteHeading(): number {
   return window.requestAnimationFrame(() => {
-    const heading = document.querySelector<HTMLElement>("#workspace h1");
+    const heading = [...document.querySelectorAll<HTMLElement>(
+      "#workspace h1, [data-static-route]:not([hidden]) h1, [data-static-search] h1",
+    )].find(element => element.getClientRects().length > 0 &&
+      window.getComputedStyle(element).visibility !== "hidden");
     if (heading) {
       if (!heading.hasAttribute("tabindex")) heading.tabIndex = -1;
       heading.focus({ preventScroll: true });

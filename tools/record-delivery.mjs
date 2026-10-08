@@ -123,8 +123,22 @@ export function verifyRecordDelivery(bundle, rootDir) {
   // The classic progressive-shell script is the fourth allowed request.
   // Count the actual emitted entry, including a facade if one is present.
   for (const entry of homeEntries) {
-    if (closure(entry).length > 3) {
-      throw new Error(`Home entry exceeds three module scripts: ${entry.fileName}.`);
+    const entryClosure = closure(entry);
+    if (entryClosure.length > 3) {
+      const diagnostic = JSON.stringify({
+        totalChunks: entryClosure.length,
+        chunks: entryClosure.slice(0, 8).map(chunk => ({
+          file: chunk.fileName,
+          bytes: Buffer.byteLength(chunk.code),
+          importCount: chunk.imports.length,
+          imports: chunk.imports.slice(0, 8),
+          moduleCount: Object.keys(chunk.modules).length,
+          modules: Object.keys(chunk.modules).slice(0, 16)
+            .map(id => normalized(id).replace(`${normalized(rootDir)}/`, '')),
+        })),
+        omittedChunks: Math.max(0, entryClosure.length - 8),
+      });
+      throw new Error(`Home entry exceeds three module scripts: ${entry.fileName}.\n${diagnostic.slice(0, 12_000)}${diagnostic.length > 12_000 ? '\n[closure diagnostic truncated at 12000 characters]' : ''}`);
     }
   }
   const pages = chunks.flatMap(chunk => Object.keys(chunk.modules).filter(id => /\/src\/ui\/pages\/[^/]+Page\.tsx$/.test(normalized(id)))

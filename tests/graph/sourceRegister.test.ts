@@ -442,7 +442,10 @@ test("canonical publication register builds exactly 49 publication rows with rol
   assert.equal(sp80053.publisher.value, "NIST");
   assert.equal(sp80053.officialTitle, "NIST SP 800-53 Rev. 5");
   assert.equal(sp80053.version.value, "Revision 5, Release 5.2.0");
-  assert.equal(sp80053.verifiedAt.value, "2026-07-28");
+  const acceptedSource = sources.sources.find((source: { id: string }) => source.id === "nist-800-53");
+  assert.ok(acceptedSource);
+  assert.match(acceptedSource.last_checked, /^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(sp80053.verifiedAt.value, acceptedSource.last_checked);
   assert.ok(
     sp80053.sourceMaterials.primary.some((m) => m.id === "artifact-nist-800-53"),
   );
@@ -498,7 +501,12 @@ test("publication register source-file memberships match the canonical identity 
 });
 
 test("publication register exposes truthful absence states for version and last checked", () => {
-  const publications = buildPublicationRegister(sources.sources, catalogs);
+  const fixtureSources = structuredClone(sources.sources);
+  const checkedSource = fixtureSources.find((source: { id: string }) => source.id === "nist-800-53");
+  assert.ok(checkedSource);
+  const seededCheckDate = "2026-09-14";
+  checkedSource.last_checked = seededCheckDate;
+  const publications = buildPublicationRegister(fixtureSources, catalogs);
 
   // A publication whose register records that the publisher states no version
   // reports that recorded reason, not a generic "missing" (#284).
@@ -547,7 +555,7 @@ test("publication register exposes truthful absence states for version and last 
   const sp80053 = publications.find((pub) => pub.id === "nist-800-53");
   assert.ok(sp80053);
   assert.equal(sp80053.verifiedAt.state, "recorded");
-  assert.equal(sp80053.verifiedAt.value, "2026-07-28");
+  assert.equal(sp80053.verifiedAt.value, seededCheckDate);
 });
 
 test("publication register search matches attached supplemental materials and mapping evidence", () => {

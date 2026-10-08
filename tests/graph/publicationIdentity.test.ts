@@ -27,6 +27,7 @@ const base = {
 test("unsupported 53A proxy checks use the existing retrieved-only labels", () => {
   const id = "nist-800-53a-assessment-procedures";
   const input = {
+    schema_version: "5.0",
     sources: [{ ...base, id, last_checked: "2026-10-08", license_or_use: "Public domain" }],
     freshness: { sources: [{ source_id: id, last_checked: "2026-10-08" }] },
   };

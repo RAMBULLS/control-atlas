@@ -106,7 +106,7 @@ test('explicit null ledger checks cannot resurrect a legacy source date', () => 
 
 test('legacy-only source projection also leaves its canonical input untouched', () => {
   const id = 'nist-800-53a-assessment-procedures';
-  const input = { sources: [{ id, license_or_use: 'Public domain', last_checked: '2026-10-08', retrieved_at: '2026-06-13' }],
+  const input = { schema_version: '5.0', sources: [{ id, license_or_use: 'Public domain', last_checked: '2026-10-08', retrieved_at: '2026-06-13' }],
     freshness: { sources: [{ source_id: id, last_checked: '2026-10-08' }] } };
   const before = structuredClone(input);
   const source = loadSourceRegistry(input).byId.get(id);
@@ -128,12 +128,13 @@ test('legacy check correction preserves audit history and genuine future 53A evi
       checked_at: '2026-10-09T12:00:00Z', http: 200, validation: 'revalidated', sha256: `sha256:${'b'.repeat(64)}`, byte_length: 100 }] };
   // Deliberate future admitted-input fixture, not an addition to the registry.
   const futureArtifact = { id: 'artifact-fixture-nist-800-53a', publication_source_id: legacy.source_id,
-    authority_class: 'publisher', origin: 'publisher_exact', format: 'pdf', artifact_url: evidence.requests[0].url,
+    source_role: 'assessment', authority_class: 'publisher', origin: 'publisher_exact', format: 'pdf', artifact_url: evidence.requests[0].url,
     sha256: evidence.requests[0].sha256, byte_length: 100, record_count: 0, relationship_count: 0 };
   const supported = { ...corrected, last_checked: '2026-10-09', check_evidence: evidence };
   assert.equal(sourceCheckFreshness(supported).last_checked, null, 'official URL alone does not admit an artifact');
   assert.deepEqual(sourceCheckFreshness(supported, [futureArtifact]), supported);
   const runtime = (freshness) => loadSourceRegistry({
+    schema_version: '5.0',
     sources: [{ id: legacy.source_id, license_or_use: 'Public domain', last_checked: '2026-10-08', retrieved_at: '2026-06-13' }],
     artifacts: [futureArtifact],
     freshness: { sources: [freshness] },

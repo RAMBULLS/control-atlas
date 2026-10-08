@@ -1,3 +1,4 @@
+import { isComparisonRecord, projectComparisonRecord } from "../../src/shared/content-comparison.mjs";
 import { createHash } from "node:crypto";
 import { comparisonPairKey, comparisonScopeForNodes } from "../../src/shared/compare-scope.mjs";
 import { isBaselineSelection, isComparisonCapableEdge, mappingSourceIdsForEdge } from "../../src/shared/compare-capability.mjs";
@@ -18,7 +19,7 @@ function compactNode(node) {
 }
 
 /** A disposable read model of the governed graph, never a second mapping registry. */
-export function buildComparisonArtifacts(graph, budget = COMPARE_CHUNK_BYTES) {
+export function buildComparisonArtifacts(graph, budget = COMPARE_CHUNK_BYTES, includeContent = false) {
   const nodes = new Map(graph.nodes.map((node) => [node.id, node]));
   const evidence = new Map(graph.evidence.map((item) => [item.id, item]));
   const sourceIds = new Set(graph.sources.map((source) => source.id));
@@ -120,5 +121,34 @@ export function buildComparisonArtifacts(graph, budget = COMPARE_CHUNK_BYTES) {
         .map(([id, targets]) => [id, [...targets].sort()])),
     }).path;
   }
-  return { manifest, itemManifest, baselineManifest, files };
+  const contentManifest = {};
+  const inventories = new Map();
+  for (const node of (includeContent ? graph.nodes : []).filter(isComparisonRecord)) {
+    if (!sourceIds.has(node.source_id)) throw new Error(`Comparison record source missing: ${node.id}`);
+    const catalog = node.metadata.catalog_id;
+    const records = inventories.get(catalog) || [];
+    records.push(projectComparisonRecord(node));
+    inventories.set(catalog, records);
+  }
+  for (const [catalog, records] of [...inventories].sort(([a], [b]) => a.localeCompare(b))) {
+    const chunks = [];
+    let chunk = [], bytes = 128;
+    const flush = () => {
+      if (!chunk.length) return;
+      const file = emit(`content-${catalog}-${chunks.length}`, { catalog, records: chunk });
+      if (file.bytes > budget) throw new Error(`Content chunk exceeds transport budget: ${catalog}`);
+      chunks.push({ ...file, record_count: chunk.length });
+      chunk = []; bytes = 128;
+    };
+    for (const record of sortById(records)) {
+      const size = Buffer.byteLength(JSON.stringify(record)) + 2;
+      if (size + 128 > budget) throw new Error(`Comparison record exceeds transport budget: ${record.id}`);
+      if (bytes + size > budget) flush();
+      chunk.push(record); bytes += size;
+    }
+    flush();
+    contentManifest[catalog] = { record_count: records.length,
+      ...emit(`content-${catalog}-index`, { schema_version: 1, catalog, record_count: records.length, chunks }) };
+  }
+  return { manifest, itemManifest, baselineManifest, contentManifest, files };
 }

@@ -158,3 +158,20 @@ test("live smoke: deployed artifact matches the expected commit", async ({
   expect(release.released_at).toMatch(/^\d{4}-\d{2}-\d{2}T/);
   expect(release.source_data_generated_at).toMatch(/^\d{4}-\d{2}-\d{2}T/);
 });
+
+
+
+test("live smoke: content inventories and sourced literal comparisons load", async ({ page }) => {
+  test.setTimeout(120000);
+  await gotoApp(page, "/#/compare/relationships?intent=content&source=nist-800-171-rev2&target=nist-800-171&compareRun=true");
+  await waitForAppReady(page); await dismissOnboarding(page);
+  const rows = page.locator("[data-content-result]");
+  await expect(rows.first()).toBeVisible({ timeout: 90000 });
+  await expect(page.locator("#compare-workspace")).toContainText("do not establish semantic continuity");
+  await rows.first().getByText("Compared fields and sources", { exact: true }).click();
+  await expect(rows.first().getByRole("link", { name: /official source/ }).first()).toBeVisible();
+  await page.getByLabel("Result group").selectOption("unavailable");
+  await expect(page.locator('[data-content-result]:not([data-content-result="unavailable"])')).toHaveCount(0);
+  await page.getByLabel("Search results by ID or title").fill("no-such-record-zzzz");
+  await expect(page.getByRole("button", { name: "Download CSV" })).toBeDisabled();
+});

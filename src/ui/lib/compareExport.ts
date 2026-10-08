@@ -1,3 +1,4 @@
+import { comparisonFields } from "../../shared/content-comparison.mjs";
 import { officialSourceFor } from "./officialSource";
 
 export const CROSSWALK_COLUMNS = [
@@ -433,3 +434,34 @@ export const COMPARE_EXPORT_MIME_TYPES = Object.freeze({
   csv: "text/csv;charset=utf-8",
   xlsx: XLSX_MIME,
 });
+
+
+/** Every displayed result, including unmatched records, retains both publication citations. */
+export function buildContentExportData(input: {
+  rows: any[]; labelA: string; labelB: string; countA: number; countB: number; basis: string;
+  inventorySourcesA?: string[]; inventorySourcesB?: string[];
+  resolveSource: CompareExportInput["resolveSource"];
+}): CompareExportData {
+  const inventorySources = (ids: string[] = []) => JSON.stringify(ids.map((id) => {
+    const source = input.resolveSource(id);
+    return { id, name: sourceName(id, source), version: sourceVersion(source), lifecycle: sourceStatus(source), official_url: officialUrl(source) };
+  }));
+  const recordCells = (node: any) => {
+    if (!node) return ["", "", "", "", "", "", "", "", ""];
+    const source = input.resolveSource(node.source_id);
+    return [node.id, node.node_type, node.metadata.publisher_item_id || node.metadata.item_id, node.metadata.title || "", sourceName(node.source_id, source),
+      sourceVersion(source), sourceStatus(source), officialUrl(source),
+      JSON.stringify({ fields: Object.fromEntries(comparisonFields(node).map((field: string) => [field, node.metadata[field] ?? null])),
+        locator: node.metadata.source_locator || "", source_refs: node.source_refs || [] })];
+  };
+  return { about: [], sources: [], mappingCount: input.rows.length,
+    crosswalk: [["Group", "Comparison basis", "Publication A", "Publication B", "Complete A records", "Complete B records", "A inventory sources", "B inventory sources",
+      "A canonical record ID", "A record type", "A ID", "A title", "A source", "A version", "A lifecycle", "A official URL", "A compared fields and locators",
+      "B canonical record ID", "B record type", "B ID", "B title", "B source", "B version", "B lifecycle", "B official URL", "B compared fields and locators",
+      "Alignment / relationship", "Different fields", "Mapping sources and evidence", "Native publisher mapping", "Limitations"],
+    ...input.rows.map((row) => [row.group, input.basis, input.labelA, input.labelB, String(input.countA), String(input.countB), inventorySources(input.inventorySourcesA), inventorySources(input.inventorySourcesB),
+      ...recordCells(row.a), ...recordCells(row.b), row.alignment, row.changed.join(" | "),
+      JSON.stringify((row.source_refs || []).map((ref: SourceRef) => ({ ...ref,
+        official_url: officialUrl(input.resolveSource(ref.source_id || ref.sourceId || "")) }))), JSON.stringify(row.mapping || null),
+      "Literal published fields only. Identifier matches and published mappings do not establish semantic equivalence, revision continuity, applicability or compliance. Missing content is unavailable, not withdrawn."])] };
+}

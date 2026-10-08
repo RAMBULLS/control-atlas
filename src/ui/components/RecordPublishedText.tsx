@@ -38,6 +38,10 @@ export type PublisherCitationEntry = { title: string; url: string };
  */
 const PublisherCitationContext = createContext<Record<string, PublisherCitationEntry>>({});
 
+export function PublisherCitationProvider(props: { citations: Record<string, PublisherCitationEntry>; children: ReactNode }) {
+  return <PublisherCitationContext.Provider value={props.citations}>{props.children}</PublisherCitationContext.Provider>;
+}
+
 function PublisherCitation(props: { citationKey: string }) {
   const citations = useContext(PublisherCitationContext);
   const resolved = citations[props.citationKey];

@@ -39,6 +39,7 @@ test("generated data cache key covers the canonical package-script pipeline", ()
     assert.ok(inputs.includes(entrypoint), `${entrypoint} is not a cache input`);
   }
   assert.ok(inputs.includes("src/app/runtime.mjs"));
+  assert.ok(inputs.includes("src/shared/content-comparison.mjs"));
   assert.ok(inputs.every((path) => !path.startsWith("data/generated/")));
   assert.match(calculateGeneratedDataCacheKey(), /^[0-9a-f]{64}$/);
 });

@@ -262,7 +262,18 @@ test("complete content inventories preserve literal fields, missing text, source
     basis: "Literal fields", resolveSource: () => ({ ...source, catalog_browse_url: "https://example.gov/publication" }) }));
   assert.equal(csv.split("\r\n").length, 29, "export includes every filtered row beyond one page");
   assert.ok(csv.includes('"\' =unsafe"'));
-  assert.ok(csv.includes("https://example.gov/publication"));
+  // Read complete quoted CSV cells; a substring anywhere in the file cannot
+  // prove that every record retains both exact source URLs.
+  const csvRows = csv.slice(1).split("\r\n").map((line) =>
+    Array.from(line.matchAll(/"((?:[^"]|"")*)"(?=,|$)/g), ([, cell]) => cell.replaceAll('""', '"')));
+  const [header, ...exportedRows] = csvRows;
+  const sourceColumns = ["A official URL", "B official URL"].map((name) => header.indexOf(name));
+  assert.ok(sourceColumns.every((index) => index >= 0));
+  assert.equal(exportedRows.length, shared.length);
+  for (const row of exportedRows) {
+    assert.equal(row.length, header.length);
+    for (const index of sourceColumns) assert.equal(row[index], "https://example.gov/publication");
+  }
   assert.ok(csv.includes("Official table row"));
   assert.deepEqual(filterContentRows(rows, "", "no-such-record"), []);
   const unsupported = await loadComparePhase({ ...request, target: "unavailable-revision" }, contentBundle, undefined, async () => { throw Error("must not load"); });

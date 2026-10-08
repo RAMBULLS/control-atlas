@@ -107,7 +107,8 @@ test("FedRAMP runtime preserves every rule discussion and optional publisher lis
   for (const record of catalog.records.filter((entry) => entry.type === "rule")) {
     const node = byId.get(`fedramp-2026:${record.id}`);
     assert.ok(node, record.id);
-    assert.equal(node.metadata.discussion, record.metadata?.discussion || record.discussion || null, record.id);
+    // The established runtime compaction omits null metadata fields.
+    assert.equal(node.metadata.discussion, record.metadata?.discussion || record.discussion || undefined, record.id);
     assert.deepEqual(node.metadata.following_information_bullets, record.metadata?.following_information_bullets, record.id);
     assert.equal(node.metadata.source_locator, record.source.locator, record.id);
     assert.equal(node.metadata.benchmark_version, record.source.version, record.id);
@@ -117,7 +118,7 @@ test("FedRAMP runtime preserves every rule discussion and optional publisher lis
   const controls = JSON.parse(readFileSync("data/controls-800-53.json", "utf8")).records;
   for (const record of controls) {
     const node = byId.get(`nist-800-53:${record.id}`);
-    if (node) assert.equal(node.metadata.discussion, record.metadata?.discussion || null, record.id);
+    if (node) assert.equal(node.metadata.discussion, record.metadata?.discussion || undefined, record.id);
   }
 });
 

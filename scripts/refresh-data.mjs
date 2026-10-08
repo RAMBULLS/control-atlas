@@ -8,6 +8,7 @@ import { INGESTION_STAGES, INGESTION_TASKS, validateIngestionPipelineDefinition 
 import { loadSourceRefreshContract, validateSourceRefreshContract } from './lib/source-refresh-contract.mjs';
 import { sourceUnitsForTask, localProjectionForTask, loadSourceUnitInventory } from './lib/refresh-source-outputs.mjs';
 import { runSourceTransaction } from './lib/source-transaction.mjs';
+import { resetSourceCheckReceipt, sourceCheckReceiptPath } from './lib/source-check-receipts.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 // Between whole-source attempts after a transient failure: 15s, then 30s (cap 60s).
@@ -20,7 +21,10 @@ export function executeRefreshUnit(unit, root, spawn = spawnSync) {
   const result = spawn(process.execPath, args, {
     cwd: root, stdio: ['ignore', 'inherit', 'pipe'], encoding: 'utf8',
     maxBuffer: 4 * 1024 * 1024, timeout: 15 * 60 * 1000,
-    env: { ...process.env, CONTROL_ATLAS_REQUIRE_FRESH_FETCH: '1' },
+    env: { ...process.env, CONTROL_ATLAS_REQUIRE_FRESH_FETCH: '1',
+      CONTROL_ATLAS_SOURCE_CHECK_RECEIPT: unit.checkReceiptPath ? join(root, unit.checkReceiptPath) : '',
+      CONTROL_ATLAS_REFRESH_STARTED_AT: unit.refreshStartedAt || '',
+    },
   });
   if (result.stderr) process.stderr.write(result.stderr);
   if (result.error) throw result.error;
@@ -41,8 +45,11 @@ export async function runRefreshPipeline({
     if (task.isolation !== (task.remote_fetch === true ? 'quarantinable' : 'fail_fast')) {
       throw new Error(`Invalid isolation for ${task.id}`);
     }
-    const units = task.remote_fetch ? describeSources(task, inventory) : [];
-    if (task.remote_fetch && (!units.length || units.some((unit) => !unit.paths?.length))) {
+    const units = task.remote_fetch ? describeSources(task, inventory).map((unit) => {
+      const checkReceiptPath = sourceCheckReceiptPath(unit.taskId, unit.sourceId);
+      return { ...unit, checkReceiptPath, paths: [...(unit.paths || []), checkReceiptPath] };
+    }) : [];
+    if (task.remote_fetch && (!units.length || units.some((unit) => unit.paths.length < 2))) {
       throw new Error(`Missing output ownership for ${task.id}`);
     }
     return { task, units, projection: describeProjection(task) };
@@ -76,13 +83,15 @@ export async function runRefreshPipeline({
             root, sourceId: unit.sourceId, paths: unit.paths, attempts: unit.retries || 1,
             backoff, ...(sleep ? { sleep } : {}),
             operation: async () => {
-              await executor(unit, root);
-              if (unit.followUp) await executor({ ...unit, ...unit.followUp, followUp: undefined }, root);
+              // A failed partial attempt cannot lend checks to a later retry.
+              resetSourceCheckReceipt(root, unit);
+              await executor({ ...unit, refreshStartedAt: startedAt }, root);
+              if (unit.followUp) await executor({ ...unit, ...unit.followUp, followUp: undefined, refreshStartedAt: startedAt }, root);
             },
             validate: () => validateCandidate(unit),
           });
           const entry = {
-            ...unit, status: result.status, attempts: result.attempts,
+            ...unit, status: result.status, attempts: result.attempts, completed_at: new Date().toISOString(),
             ...(result.error ? { error: result.error, failure_class: result.failure_class } : {}),
             successfulPaths: result.status === 'accepted' ? [...unit.paths] : [],
             quarantinedPaths: result.status === 'quarantined' ? [...unit.paths] : [],
@@ -93,9 +102,9 @@ export async function runRefreshPipeline({
           save('running');
         }
       } else {
-        await executor({ ...task, taskId: task.id, sourceId: task.id, args: task.args || [] }, root);
+        await executor({ ...task, taskId: task.id, sourceId: task.id, args: task.args || [], refreshStartedAt: startedAt }, root);
       }
-      if (projection) await executor(projection, root);
+      if (projection) await executor({ ...projection, refreshStartedAt: startedAt }, root);
       const quarantined = taskSources.filter((entry) => entry.status === 'quarantined').length;
       results.push({
         ...taskRecord,

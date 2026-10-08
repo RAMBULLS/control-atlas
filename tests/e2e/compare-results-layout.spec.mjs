@@ -456,7 +456,7 @@ test("FedRAMP content comparison renders and exports exact publisher lists and n
     await expect(result).toHaveCount(1);
     await expect(result).toContainText(id);
     const details = result.locator("details");
-    if (!(await details.evaluate((element) => element.open))) {
+    if (!(await details.evaluate((element) => element.hasAttribute("open")))) {
       await result.getByText("Compared fields and sources", { exact: true }).click();
     }
     const sides = result.locator(".compare-step-fields > section");

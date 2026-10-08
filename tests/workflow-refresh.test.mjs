@@ -11,6 +11,50 @@ const trackedWorkflows = readdirSync('.github/workflows')
   .filter((name) => /\.ya?ml$/.test(name))
   .map((name) => `.github/workflows/${name}`);
 
+test('FedRAMP diagnostic preserves only the fixed catalog without relaxing generated-data failures', () => {
+  const steps = parse(workflow).jobs.generated.steps;
+  const reproduce = steps.findIndex((step) => step.id === 'reproduce-data');
+  const generate = steps.findIndex((step) => step.id === 'generate-data');
+  const capture = steps.findIndex((step) => step.id === 'fedramp-diagnostic');
+  const upload = steps.findIndex((step) => step.name === 'Upload FedRAMP catalog diagnostic');
+  const guard = steps.findIndex((step) => step.name === 'Reject generator writes outside derived output');
+  const clean = steps.findIndex((step) => step.name === 'Verify clean canonical FedRAMP input');
+  assert.ok(clean >= 0 && clean < reproduce && clean < generate);
+  assert.equal(steps[clean].run, 'git diff --exit-code HEAD -- data/fedramp-2026-catalog.json');
+  assert.ok(reproduce < capture && generate < capture && capture < upload && upload < guard);
+  assert.equal(steps[reproduce].run, 'npm run verify:generated-reproducibility');
+  assert.equal(steps[generate].run, 'npm run generate:data');
+  for (const index of [reproduce, generate, capture, upload, guard]) {
+    assert.notEqual(steps[index]['continue-on-error'], true);
+    assert.doesNotMatch(steps[index].run || '', /\|\| true|set \+e|git (?:restore|checkout|reset)/);
+  }
+  assert.match(steps[capture].if, /!cancelled\(\)/);
+  for (const id of ['reproduce-data', 'generate-data']) {
+    assert.ok(steps[capture].if.includes(`steps.${id}.outcome == 'failure'`));
+    assert.ok(steps[capture].if.includes(`steps.${id}.outcome == 'success'`));
+  }
+  assert.match(steps[capture].run, /catalog=data\/fedramp-2026-catalog\.json/);
+  assert.match(steps[capture].run, /output="\$RUNNER_TEMP\/fedramp-catalog-diagnostic"/);
+  assert.match(steps[capture].run, /git diff --no-ext-diff --no-textconv --binary HEAD -- "\$catalog"/);
+  for (const field of ['head_sha', 'checkout_sha', 'run_id', 'run_attempt', 'old_sha256', 'new_sha256', 'patch_sha256', 'raw_sha256', 'generator_sha256']) {
+    assert.ok(steps[capture].run.includes(`--arg ${field} `), field);
+  }
+  assert.deepEqual(steps[upload].with.path.trim().split('\n'), [
+    '${{ runner.temp }}/fedramp-catalog-diagnostic/fedramp-2026-catalog.json',
+    '${{ runner.temp }}/fedramp-catalog-diagnostic/catalog.patch',
+    '${{ runner.temp }}/fedramp-catalog-diagnostic/receipt.json',
+  ]);
+  assert.equal(steps[upload].with['if-no-files-found'], 'error');
+  assert.equal(steps[upload].with['retention-days'], 2);
+  assert.match(steps[upload].if, /!cancelled\(\).*steps\.fedramp-diagnostic\.outputs\.changed == 'true'/);
+  assert.equal(steps[guard].if, undefined);
+  assert.ok(steps[guard].run.includes("git status --short --untracked-files=all -- . ':(exclude)data/generated/**'"));
+  assert.match(steps[guard].run, /exit 1/);
+  const accepted = steps.find((step) => step.with?.name === 'generated-data');
+  assert.equal(accepted.if, undefined);
+  assert.equal(accepted.with.path, 'data/generated');
+});
+
 test('source refresh runs weekly and remains manually dispatchable', () => {
   assert.match(workflow, /cron: '17 7 \* \* 3'/);
   assert.match(workflow, /workflow_dispatch:/);

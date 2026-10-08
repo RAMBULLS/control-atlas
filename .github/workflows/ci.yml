@@ -262,14 +262,86 @@ jobs:
         with:
           path: data/generated
           key: generated-data-${{ runner.os }}-v3-${{ steps.generated-key.outputs.key }}
+      - name: Verify clean canonical FedRAMP input
+        run: git diff --exit-code HEAD -- data/fedramp-2026-catalog.json
       - name: Reproduce changed data from a clean state
+        id: reproduce-data
         if: ${{ needs.changes.outputs.data_required == 'true' }}
         run: npm run verify:generated-reproducibility
       - name: Generate data on a cold cache
+        id: generate-data
         if: >-
           ${{ needs.changes.outputs.data_required != 'true' &&
               steps.generated-cache.outputs.cache-hit != 'true' }}
         run: npm run generate:data
+      # Reproducibility cleanup restores data/generated, but intentionally leaves
+      # canonical inputs alone. Preserve this one generator output even when a
+      # later generator fails. This is diagnostic evidence, never gate approval.
+      - name: Preserve changed FedRAMP catalog for review
+        id: fedramp-diagnostic
+        if: >-
+          ${{ !cancelled() &&
+              (steps.reproduce-data.outcome == 'success' || steps.reproduce-data.outcome == 'failure' ||
+               steps.generate-data.outcome == 'success' || steps.generate-data.outcome == 'failure') }}
+        env:
+          REPRODUCE_OUTCOME: ${{ steps.reproduce-data.outcome }}
+          GENERATE_OUTCOME: ${{ steps.generate-data.outcome }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          catalog=data/fedramp-2026-catalog.json
+          if git diff --quiet HEAD -- "$catalog"; then
+            exit 0
+          else
+            [[ "$?" -eq 1 ]]
+          fi
+          [[ -f "$catalog" && ! -L "$catalog" ]]
+          [[ "$(git ls-files -s -- "$catalog" | cut -d' ' -f1)" == 100644 ]]
+          checkout_sha="$(git rev-parse HEAD)"
+          [[ "$checkout_sha" == "$GITHUB_SHA" ]]
+          [[ "$ATLAS_RUNNER_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]
+          output="$RUNNER_TEMP/fedramp-catalog-diagnostic"
+          mkdir "$output"
+          old_sha256="$(git show "HEAD:$catalog" | sha256sum | cut -d' ' -f1)"
+          cp -- "$catalog" "$output/fedramp-2026-catalog.json"
+          git diff --no-ext-diff --no-textconv --binary HEAD -- "$catalog" > "$output/catalog.patch"
+          new_sha256="$(sha256sum "$output/fedramp-2026-catalog.json" | cut -d' ' -f1)"
+          patch_sha256="$(sha256sum "$output/catalog.patch" | cut -d' ' -f1)"
+          raw_sha256="$(sha256sum data/fedramp-2026-rules.json | cut -d' ' -f1)"
+          generator_sha256="$(sha256sum scripts/build-fedramp-2026-catalog.mjs | cut -d' ' -f1)"
+          jq -n \
+            --arg path "$catalog" \
+            --arg repository "$GITHUB_REPOSITORY" \
+            --arg head_sha "$ATLAS_RUNNER_HEAD_SHA" \
+            --arg checkout_sha "$checkout_sha" \
+            --arg run_id "$GITHUB_RUN_ID" \
+            --arg run_attempt "$GITHUB_RUN_ATTEMPT" \
+            --arg run_url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT" \
+            --arg reproduce_outcome "$REPRODUCE_OUTCOME" \
+            --arg generate_outcome "$GENERATE_OUTCOME" \
+            --arg old_sha256 "$old_sha256" \
+            --arg new_sha256 "$new_sha256" \
+            --arg patch_sha256 "$patch_sha256" \
+            --arg raw_sha256 "$raw_sha256" \
+            --arg generator_sha256 "$generator_sha256" \
+            '{schema_version: 1, purpose: "Diagnostic only; generation and required gates may have failed",
+              path: $path, repository: $repository, head_sha: $head_sha, checkout_sha: $checkout_sha,
+              run_id: $run_id, run_attempt: $run_attempt, run_url: $run_url,
+              generation_steps: {reproduce: $reproduce_outcome, cold_cache: $generate_outcome},
+              old_sha256: $old_sha256, new_sha256: $new_sha256, patch_sha256: $patch_sha256,
+              raw_sha256: $raw_sha256, generator_sha256: $generator_sha256}' > "$output/receipt.json"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+      - name: Upload FedRAMP catalog diagnostic
+        if: ${{ !cancelled() && steps.fedramp-diagnostic.outputs.changed == 'true' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: fedramp-catalog-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/fedramp-catalog-diagnostic/fedramp-2026-catalog.json
+            ${{ runner.temp }}/fedramp-catalog-diagnostic/catalog.patch
+            ${{ runner.temp }}/fedramp-catalog-diagnostic/receipt.json
+          if-no-files-found: error
+          retention-days: 2
       - name: Reject generator writes outside derived output
         shell: bash
         run: |

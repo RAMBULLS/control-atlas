@@ -85,6 +85,19 @@ test('framework catalogs execute as independent only units followed by one local
   assert.equal(result.results[0].status, 'partial');
 });
 
+test('quarantined NIST baseline refresh restores catalog and profile evidence together', async (t) => {
+  const { root, put, get } = setup(t);
+  const framework = INGESTION_TASKS.find((entry) => entry.id === 'fetch-framework-catalogs');
+  const unit = sourceUnitsForTask(framework).find((entry) => entry.sourceId === 'nist-800-53-rev5');
+  assert.deepEqual(unit.paths, ['data/controls-800-53.json', 'data/nist-800-53b-profile-manifest.json']);
+  for (const path of unit.paths) put(path, `accepted ${path}`);
+  const result = await runRefreshPipeline({ ...gates, root, tasks: [framework], describeSources: () => [unit],
+    executor: () => { for (const path of unit.paths) put(path, 'rejected partial update'); throw new Error('offline'); },
+  });
+  assert.equal(result.status, 'complete_with_quarantine');
+  for (const path of unit.paths) assert.equal(get(path), `accepted ${path}`);
+});
+
 test('unknown ownership fails before any task, manifest or source write', async (t) => {
   const { root } = setup(t);
   await assert.rejects(runRefreshPipeline({ ...gates, root,

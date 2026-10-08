@@ -116,8 +116,12 @@ test("WS3 Resources shares Template C with real list, map, and comparison modes"
   await waitForAppReady(page, { allowPartial: true });
 
   const workspace = page.locator('[data-page-template="workspace"]');
-  await expect(workspace.getByRole("heading", { name: "Resources", level: 1 })).toBeVisible();
-  const companions = workspace.getByRole("navigation", { name: "Resource companions" });
+  await expect(page.getByRole("main", { name: "Resources" })).toBeVisible();
+  const heading = page.getByRole("heading", { name: "Resources", exact: true, level: 1 });
+  await expect(heading).toHaveCount(1);
+  await expect(heading).toBeVisible();
+  const companions = page.getByRole("navigation", { name: "Resource companions" });
+  await expect(companions).toHaveCount(1);
   const companionLinks = companions.getByRole("link");
   await expect(companionLinks).toHaveText([
     "Looking for a starter document? Browse Templates →",
@@ -140,8 +144,8 @@ test("WS3 Resources shares Template C with real list, map, and comparison modes"
 
   await workspace.getByRole("button", { name: /Browse all \d+ resources/ }).click();
   await expect(page.locator('[data-result-bar-order="count,sort,view,compare"]')).toBeVisible();
-  await expect(page.locator(".workspace-result-count")).toHaveText(`${resourceCount.toLocaleString("en-US")} results · showing 25`);
-  await expect(page.locator('[data-result-class="resource"]')).toHaveCount(25);
+  await expect(page.locator(".workspace-result-count")).toHaveText(`${resourceCount.toLocaleString("en-US")} results`);
+  await expect(page.locator('[data-result-class="resource"]')).toHaveCount(resourceCount);
   const firstRow = page.locator('[data-result-class="resource"]').first();
   await expect(firstRow).toBeVisible();
   await expect(firstRow.locator(".resource-type-icon")).toBeVisible();

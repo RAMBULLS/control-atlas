@@ -12,7 +12,6 @@ import {
   SEARCH_RESULTS_FOCUS_EVENT,
 } from './shared/navigation-events';
 import { connectHomeDisclosure } from './ui/lib/homeDisclosure';
-import { recordRouteModule } from './ui/lib/recordRouteModule';
 // Orbital Archive No. 01 is the visual authority, not a copied palette. The
 // official release supplies the base recipes, DTCG tokens, and embedded fonts;
 // Control Atlas styles below are semantic/product adapters only.
@@ -618,20 +617,33 @@ function onLocationChange() {
   if (!isHomeHash()) void bootReactApp();
 }
 
-function warmInteractiveRoute() {
+async function warmInteractiveRoute() {
+  // Wait only for the data-loader modules, not their network requests. Merely
+  // scheduling these imports before React lets the UI request burst overtake
+  // the loader and leaves the record shard queued behind unrelated scripts.
+  let preloader: [
+    typeof import('./ui/lib/hashRoutes'),
+    typeof import('./ui/lib/runtimeLoader'),
+  ] | undefined;
+  try {
+    preloader = await Promise.all([
+      import('./ui/lib/hashRoutes'),
+      import('./ui/lib/runtimeLoader'),
+    ]);
+  } catch {
+    // The interactive loader still owns error and retry presentation.
+  }
+  // Navigation during that module wait wins. Never start the former record's
+  // data or route module after the reader has returned to the static Home.
+  if (isHomeHash()) return;
   const hashRoute = window.location.hash.replace(/^#/, '') || '/';
   const routeUrl = new URL(hashRoute, window.location.origin);
-  // Queue the existing cached data path before the route module burst.
-  void Promise.all([
-    import('./ui/lib/hashRoutes'),
-    import('./ui/lib/runtimeLoader'),
-  ])
-    .then(([routes, runtime]) =>
-      runtime.preloadRuntimeArtifacts(
-        routes.parseHashLocation(routeUrl.pathname, routeUrl.search),
-      ),
-    )
-    .catch(() => undefined);
+  if (preloader) {
+    const [routes, runtime] = preloader;
+    void runtime.preloadRuntimeArtifacts(
+      routes.parseHashLocation(routeUrl.pathname, routeUrl.search),
+    ).catch(() => undefined);
+  }
   switch (routeUrl.pathname.split('/')[1]) {
     case 'search':
       void import('./ui/pages/ExplorePage').catch(() => undefined);
@@ -644,7 +656,9 @@ function warmInteractiveRoute() {
       void import('./ui/pages/CatalogDetailPage').catch(() => undefined);
       break;
     case 'record':
-      void recordRouteModule.load().catch(() => undefined);
+      void import('./ui/lib/recordRouteModule')
+        .then(({ recordRouteModule }) => recordRouteModule.load())
+        .catch(() => undefined);
       break;
     case 'resources':
       void import('./ui/pages/CommonsPage').catch(() => undefined);
@@ -693,10 +707,15 @@ async function start() {
   // waterfall: CSS and the entry module finished before the React route and
   // its data even started. Home keeps its one-script static boundary above.
   // The classic progressive shell has already revealed the route identity.
-  // Begin fetching the route and framework immediately so network time overlaps
-  // that stable first paint and produces the interactive result without an
-  // extra task boundary between framework readiness and the initial commit.
-  warmInteractiveRoute();
+  // Start the cached data requests before route/framework imports compete for
+  // the connection. Data and UI then download together behind that stable shell.
+  await warmInteractiveRoute();
+  if (isHomeHash() && !reactBoot) {
+    connectStaticHome();
+    window.addEventListener('hashchange', onLocationChange);
+    window.addEventListener('popstate', onLocationChange);
+    return;
+  }
   void bootReactApp();
 }
 

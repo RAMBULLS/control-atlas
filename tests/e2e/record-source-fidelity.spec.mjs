@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { readFileSync } from "node:fs";
 
 import { attachPageDiagnostics, dismissOnboarding, OFFICIAL_SOURCE_ACTION, waitForAppReady } from "./support.mjs";
 
@@ -17,6 +18,30 @@ const roleRecords = [
   ["assessment_question", "/#/record/microsoft-zt-maturity/MSZT-1-1"],
   ["implementation_artifact", "/#/record/nist-zt/SP180035-E1B1"],
 ];
+
+test("FedRAMP records render the exact publisher bullet lists and incident note", async ({ page }) => {
+  const catalog = JSON.parse(readFileSync("data/fedramp-2026-catalog.json", "utf8"));
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 1000 });
+    for (const id of ["VER-EVA-EPA", "IEC-CSO-EFI"]) {
+      const record = catalog.records.find((entry) => entry.id === id);
+      await openRecord(page, `/#/record/fedramp-2026/${id}`);
+      const list = page.locator('[data-source-field="following_information_bullets"]');
+      await expect(list.locator("ul > li")).toHaveText(record.metadata.following_information_bullets.map((bullet) => bullet.replaceAll("**", "")));
+      await expect(list.locator("li strong")).toHaveText(id === "VER-EVA-EPA"
+        ? ["N0", "N1", "N2", "N3", "N4", "N5"] : ["N1", "N2", "N3", "N4", "N5"]);
+      if (id === "IEC-CSO-EFI") {
+        await expect(page.locator('[data-source-field="discussion"] p')).toHaveText(record.discussion);
+        await expect(list).not.toContainText("N0");
+      } else {
+        await expect(page.locator('[data-source-field="discussion"]')).toHaveCount(0);
+      }
+      expect(await page.evaluate(() => globalThis.document.documentElement.scrollWidth - globalThis.document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+    }
+  }
+  await openRecord(page, "/#/record/fedramp-2026/AFC-CSO-ACK");
+  await expect(page.locator('[data-source-field="following_information_bullets"]')).toHaveCount(0);
+});
 
 test("every public semantic role uses the governed universal record shell", async ({ page }) => {
   for (const [role, route] of roleRecords) {

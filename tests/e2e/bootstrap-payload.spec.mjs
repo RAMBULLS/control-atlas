@@ -18,6 +18,107 @@ test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
 });
 
+test("record navigation waits for its own neighborhood and never announces stale absence", async ({ page }) => {
+  const firstId = "nist-800-53:AC-2";
+  const nextId = "fedramp-2026:IEC-CSO-EFI";
+  const nextShard = atlasNeighborhoodShardId(nextId);
+  expect(nextShard).not.toBe(atlasNeighborhoodShardId(firstId));
+  await page.goto("/#/record/nist-800-53/AC-2");
+  await expect(page.locator(`[data-record-content="${firstId}"]`)).toBeVisible();
+  let held = false;
+  let release = () => {};
+  const released = new Promise(resolve => { release = () => resolve(undefined); });
+  await page.route(`**/data/generated/atlas-neighborhood/${nextShard}.json*`, async route => {
+    held = true;
+    await released;
+    await route.continue();
+  });
+  try {
+    await page.goto("/#/record/fedramp-2026/IEC-CSO-EFI", { waitUntil: "domcontentloaded" });
+    await expect.poll(() => held).toBe(true);
+    await expect(page.locator('[data-record-content]')).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: "Record not found", exact: true })).toHaveCount(0);
+    await expect(page).toHaveTitle("Loading record — Control Atlas");
+    await expect(page.locator("#app")).toHaveAttribute("data-app-ready", "false");
+    await page.goto("/#/");
+    await waitForAppReady(page);
+    release();
+    await expect(page.locator('[data-record-content]')).toHaveCount(0);
+    await page.goto("/#/record/fedramp-2026/IEC-CSO-EFI");
+    await expect(page.locator(`[data-record-content="${nextId}"]`)).toBeVisible();
+    await expect(page.locator('[data-source-field="discussion"]')).toContainText("All incidents must be assigned a default PAIN-5");
+    // Accepted absence still produces the real recovery page.
+    await page.goto("/#/record/fedramp-2026/NOT-A-PUBLISHED-RECORD");
+    await expect(page.getByRole("heading", { name: "Record not found", exact: true })).toBeVisible();
+  } finally {
+    release();
+  }
+});
+
+test("record data requests start before the route import burst after the loader becomes available", async ({ page }) => {
+  const requested = [];
+  page.on("request", request => requested.push(request.url()));
+  let loaderWaiting = false;
+  let releaseLoader = () => {};
+  const loaderReleased = new Promise(resolve => { releaseLoader = () => resolve(undefined); });
+  await page.route(/\/assets\/runtimeLoader-[^/]+\.js$/, async route => {
+    loaderWaiting = true;
+    await loaderReleased;
+    await route.continue();
+  });
+  const routeScript = url => /\/assets\/(?:App|ObjectDetailPage|record-ui|client)-[^/]+\.js$/.test(url);
+  try {
+    await page.goto("/#/record/nist-800-53/AC-2", { waitUntil: "domcontentloaded" });
+    await expect.poll(() => loaderWaiting).toBe(true);
+    expect(requested.filter(routeScript), "UI imports must wait for the data loader module").toEqual([]);
+    releaseLoader();
+    await expect(page.locator('[data-record-section="official-text"]')).toContainText("Define and document the types of accounts allowed");
+    const shardIndex = requested.findIndex(url => /atlas-neighborhood\/[0-9a-f]+\.json\.gz/.test(url));
+    const firstUiIndex = requested.findIndex(routeScript);
+    expect(shardIndex).toBeGreaterThanOrEqual(0);
+    expect(firstUiIndex).toBeGreaterThan(shardIndex);
+  } finally {
+    releaseLoader();
+  }
+});
+
+test("returning Home during the initial loader wait never commits the stale record", async ({ page }) => {
+  const requested = [];
+  page.on("request", request => requested.push(request.url()));
+  let loaderWaiting = false;
+  let releaseLoader = () => {};
+  const loaderReleased = new Promise(resolve => { releaseLoader = () => resolve(undefined); });
+  await page.route(/\/assets\/runtimeLoader-[^/]+\.js$/, async route => {
+    loaderWaiting = true;
+    await loaderReleased;
+    await route.continue();
+  });
+  const loaderResponse = page.waitForResponse(response => /\/assets\/runtimeLoader-[^/]+\.js$/.test(response.url()));
+  try {
+    await page.goto("/#/record/nist-800-53/AC-2", { waitUntil: "domcontentloaded" });
+    await expect.poll(() => loaderWaiting).toBe(true);
+    await page.evaluate(() => { globalThis.location.hash = "/"; });
+    releaseLoader();
+    const response = await loaderResponse;
+    expect(response.ok()).toBe(true);
+    await page.evaluate(async url => {
+      await import(url);
+      await new Promise(resolve => setTimeout(resolve, 0));
+    }, response.url());
+    await waitForAppReady(page);
+    await expect(page.locator('[data-static-home]')).toBeVisible();
+    await expect(page.locator('[data-record-content]')).toHaveCount(0);
+    await expect(page.locator('[data-route-suspense-pending="true"]')).toHaveCount(0);
+    expect(requested.filter(url => /atlas-neighborhood|\/assets\/ObjectDetailPage-/.test(url))).toEqual([]);
+    await page.getByRole("link", { name: "All records", exact: true }).click();
+    await waitForAppReady(page);
+    await expect(page).toHaveURL(/#\/library/);
+    await expect(page.locator('[data-record-content]')).toHaveCount(0);
+  } finally {
+    releaseLoader();
+  }
+});
+
 for (const width of [412, 1440]) {
 test(`Resources keeps its identity and heading geometry at ${width}px until the lazy directory is usable`, async ({ page }) => {
   await page.setViewportSize({ width, height: 823 });

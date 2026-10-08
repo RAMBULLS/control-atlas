@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve, sep } from 'node:path';
@@ -54,6 +55,11 @@ function fixture(t) {
     rmSync(cwd, { recursive: true, force: true });
   });
   writeFileSync(join(cwd, '.lighthouserc.ci.json'), JSON.stringify(config));
+  mkdirSync(join(cwd, 'dist/site'), { recursive: true });
+  writeFileSync(join(cwd, 'dist/site/record-delivery-chunks.json'), JSON.stringify({
+    home: 'synthetic-main.js', runtimeLoader: 'synthetic-loader.js',
+    homeEntryClosures: [], runtimeLoaderClosure: [],
+  }));
   return cwd;
 }
 
@@ -132,6 +138,9 @@ test('raw assets belong to this collection and enter its existing artifact expor
     }
   } });
   assert.deepEqual(evidence.rawAssets.sort(), rawNames.sort());
+  const graphBytes = readFileSync(join(cwd, 'dist/site/record-delivery-chunks.json'));
+  assert.deepEqual(readFileSync(join(cwd, config.ci.upload.outputDir, 'record-delivery-chunks.json')), graphBytes);
+  assert.deepEqual(evidence.deliveryGraph, { file: 'record-delivery-chunks.json', sha256: createHash('sha256').update(graphBytes).digest('hex') });
   for (const name of rawNames) {
     assert.equal(existsSync(join(cwd, name)), false);
     assert.equal(existsSync(join(cwd, config.ci.upload.outputDir, 'raw-assets', name)), true);
@@ -161,7 +170,16 @@ test('failed collection cannot admit or upload stale assertion evidence', t => {
   assert.equal(evidence.routes.length, 0);
   assert.ok(evidence.failures.some(message => message.includes('collection failure')));
   assert.ok(evidence.failures.some(message => message.includes('expected 1 reports, found 0')));
-  assert.deepEqual(readdirSync(outputDirectory), ['route-assertions.json']);
+  assert.deepEqual(readdirSync(outputDirectory), ['record-delivery-chunks.json', 'route-assertions.json']);
+});
+
+test('a missing build graph is recorded as a failure rather than borrowed from an older export', t => {
+  const cwd = fixture(t);
+  rmSync(join(cwd, 'dist/site/record-delivery-chunks.json'));
+  const evidence = runCiLighthouse({ cwd, runCommand() {} });
+  assert.equal(evidence.deliveryGraph, null);
+  assert.ok(evidence.failures.some(message => message.startsWith('build graph export:')));
+  assert.equal(existsSync(join(cwd, config.ci.upload.outputDir, 'record-delivery-chunks.json')), false);
 });
 
 test('export cleanup rejects a directory outside the dedicated report output', t => {

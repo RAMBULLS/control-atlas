@@ -4,6 +4,7 @@ import test from "node:test";
 
 import {
   buildPublicationRegister,
+  buildSupportingSourceInventory,
   buildSourceLayers,
   publicationReviewsForSource,
   sourceLayerCompleteness,
@@ -320,7 +321,7 @@ test("all governed publication reviews resolve without replacing source check da
     (source) =>
       source.id === "nist-iot-device-cybersecurity-requirement-catalogs",
   );
-  assert.equal(iotSource?.last_checked, undefined);
+  assert.equal(iotSource?.last_checked ?? null, null);
   assert.deepEqual(
     publicationReviewsForSource(iotSource!.id, sources.sources, catalogs).map(
       (review) => ({
@@ -338,18 +339,22 @@ test("all governed publication reviews resolve without replacing source check da
     ],
   );
 
-  const checkedSource = sources.sources.find(
+  const checkedSources = structuredClone(sources.sources);
+  const checkedSource = checkedSources.find(
     (source) => source.id === "nist-800-53",
   );
-  assert.equal(checkedSource?.last_checked, "2026-07-28");
+  assert.ok(checkedSource);
+  const seededCheckDate = "2025-01-02";
+  checkedSource.last_checked = seededCheckDate;
   assert.equal(
     publicationReviewsForSource(
-      checkedSource!.id,
-      sources.sources,
+      checkedSource.id,
+      checkedSources,
       catalogs,
     )[0]?.reviewedAt,
     "2026-08-13",
   );
+  assert.equal(checkedSource.last_checked, seededCheckDate);
 
   const childReviews = publicationReviewsForSource(
     "artifact-nist-iot-requirements-80053-mapping-draft",
@@ -515,8 +520,8 @@ test("publication register exposes truthful absence states for version and last 
   const iotSourceRecord = sources.sources.find(
     (source: { id: string }) =>
       source.id === "nist-iot-device-cybersecurity-requirement-catalogs",
-  ) as { last_checked?: string; retrieved_at?: string };
-  assert.equal(iotSourceRecord.last_checked, undefined, "fixture has no check date");
+  ) as { last_checked?: string | null; retrieved_at?: string };
+  assert.equal(iotSourceRecord.last_checked ?? null, null, "fixture has no check date");
   assert.equal(iot.verifiedAt.state, "derived");
   assert.equal(iot.verifiedAt.value, iotSourceRecord.retrieved_at);
   assert.match(iot.verifiedAt.reason, /No verification check is recorded/);
@@ -559,4 +564,43 @@ test("publication register search matches attached supplemental materials and ma
   });
   assert.ok(crosswalkResults.length >= 2);
   assert.ok(crosswalkResults.some((p) => p.id === "nist-csf-2"));
+});
+
+
+test("canonical and supporting inventories cover every source without promoting aliases or files", () => {
+  const canonical = buildPublicationRegister(sources.sources, catalogs);
+  const supporting = buildSupportingSourceInventory(sources.sources, catalogs);
+  const canonicalIds = new Set(canonical.map((row) => row.id));
+  assert.equal(canonical.length, publicationIdentityIndex.identities.length);
+  assert.equal(canonical.length, 49);
+  assert.equal(canonical.filter((row) => row.kind === "policy").length, 19);
+  assert.ok(supporting.every((row) => !canonicalIds.has(row.id)));
+  assert.deepEqual(
+    [...new Set([...canonical, ...supporting].map((row) => row.id))].sort(),
+    sources.sources.map((source: any) => source.id).sort(),
+  );
+  const reference = supporting.find((row) => row.id === "cyber-mil-stig-downloads");
+  assert.ok(reference);
+  assert.ok(buildSupportingSourceInventory(sources.sources, catalogs, { query: reference.id })
+    .some((row) => row.id === reference.id));
+  const filtered = buildSupportingSourceInventory(sources.sources, catalogs, {
+    publisher: reference.publisher.value || undefined,
+  });
+  assert.ok(filtered.every((row) => row.publisher.value === reference.publisher.value));
+});
+
+test("a genuinely absent source never receives an invented active status or check date", () => {
+  const identity = publicationIdentityIndex.identities.find((entry: any) => !entry.id.startsWith("authority-"));
+  const remaining = sources.sources.filter((source: any) => source.id !== identity.id);
+  const absent = buildPublicationRegister(remaining, catalogs).find((row) => row.id === identity.id)!;
+  assert.equal(absent.lifecycle.state, "missing");
+  assert.equal(absent.lifecycle.value, null);
+  assert.equal(absent.trust.lifecycle.label, "Not recorded");
+  assert.equal(absent.verifiedAt.state, "missing");
+  assert.equal(absent.verifiedAt.value, null);
+  assert.equal(absent.trust.freshness.state, "unrecorded");
+  const retired = sources.sources.find((source: any) => source.id === "fedramp-rev5"
+    && publicationIdentityIndex.identities.some((entry: any) => entry.id === source.id));
+  assert.ok(retired, "the fixture includes the historical FedRAMP canonical source");
+  assert.equal(buildPublicationRegister(sources.sources, catalogs).find((row) => row.id === retired.id)?.trust.lifecycle.value, "historical");
 });

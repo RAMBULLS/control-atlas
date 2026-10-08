@@ -1285,7 +1285,13 @@ function buildNodes(registry) {
               ["benchmark_status_date", record.source?.snapshot_date, "The publisher source did not provide a benchmark status date."],
             ].filter(([, value]) => !value).map(([field, , reason]) => [field, reason])),
             superseded_by: record.metadata?.superseded_by || null,
-            discussion: record.metadata?.discussion || null,
+            discussion: record.metadata?.discussion
+              || (catalogId === "fedramp-2026" ? record.discussion : null)
+              || null,
+            ...(catalogId === "fedramp-2026" && Array.isArray(record.metadata?.following_information_bullets)
+              && record.metadata.following_information_bullets.length
+              ? { following_information_bullets: record.metadata.following_information_bullets }
+              : {}),
             related_controls: record.metadata?.related_controls || null,
             tactic_id: record.metadata?.tactic_id || null,
             tactic_title: record.metadata?.tactic_title || null,

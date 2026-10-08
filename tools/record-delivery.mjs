@@ -96,8 +96,10 @@ export function verifyRecordDelivery(bundle, rootDir) {
   const home = chunks.find(chunk => owns(chunk, 'src/main.tsx'));
   const loader = chunks.find(chunk => owns(chunk, 'src/ui/lib/runtimeLoader.ts'));
   if (!home || !loader) throw new Error('Record delivery entry or loader chunk is missing.');
+  const homeEntries = chunks.filter(chunk => chunk.isEntry && closure(chunk).includes(home));
+  if (!homeEntries.length) throw new Error('Home has no emitted entry closure.');
   const forbidden = /\/node_modules\/react(?:-dom)?\/|\/src\/ui\/pages\/|\/src\/ui\/App\.tsx$/;
-  for (const [name, entry] of [['Home', home], ['Runtime preloader', loader]]) {
+  for (const [name, entry] of [['Home', home], ...homeEntries.map(entry => ['Home entry', entry]), ['Runtime preloader', loader]]) {
     for (const chunk of closure(entry)) {
       if (['record-ui', 'record-icons'].includes(chunk.name) || Object.keys(chunk.modules).some(id => forbidden.test(normalized(id)))) {
         throw new Error(`${name} statically imports route UI or React through ${chunk.fileName}.`);
@@ -110,7 +112,15 @@ export function verifyRecordDelivery(bundle, rootDir) {
   const emittedFontHashes = new Set(Object.values(bundle).filter(output => output.type === 'asset' && output.fileName.endsWith('.woff2'))
     .map(output => hash(output.source)));
   if (ORBITAL_FONT_HASHES.some(digest => !emittedFontHashes.has(digest))) throw new Error('An exact Orbital font asset was omitted or changed.');
+  const describeClosure = entry => closure(entry).map(chunk => ({
+    file: chunk.fileName, name: chunk.name, bytes: Buffer.byteLength(chunk.code), imports: chunk.imports,
+    modules: Object.keys(chunk.modules).map(id => normalized(id).replace(`${normalized(rootDir)}/`, '')),
+  }));
+  // Include an emitted entry facade when present, not just the chunk containing
+  // main.tsx. Its extra request is part of the real Home bootstrap cost.
   return { home: home.fileName, runtimeLoader: loader.fileName, pages,
+    homeEntryClosures: homeEntries.map(entry => ({ entry: entry.fileName, chunks: describeClosure(entry) })),
+    runtimeLoaderClosure: describeClosure(loader),
     groups: chunks.filter(chunk => ['record-ui', 'record-icons'].includes(chunk.name)).map(chunk => ({ name: chunk.name, file: chunk.fileName, modules: Object.keys(chunk.modules).map(normalized), imports: chunk.imports })),
     fontHashes: [...new Set(ORBITAL_FONT_HASHES)],
   };

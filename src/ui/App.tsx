@@ -259,11 +259,9 @@ export function App() {
   // below reads this ref instead of viewState so it always sees the most
   // recent navigation even if its own dependencies haven't re-run yet.
   const latestNavStateRef = useRef<ViewState>(viewState);
-  // Tracks which runtimeScopeKey was active when the current bundle was last
-  // committed, so onSearchReady can decide whether retaining a graphReady
-  // bundle from a prior route is safe or would silently deliver stale data.
-  const bundleScopeKeyRef = useRef<string>("");
-  const [bundle, setBundle] = useState<RuntimeBundle | null>(null);
+  // Commit the data and its scope together. A ref written inside an updater
+  // could describe a render React has not committed or has abandoned.
+  const [bundle, setBundle] = useState<(RuntimeBundle & { loadedScopeKey: string }) | null>(null);
   const [loadError, setLoadError] = useState<string>("");
   const [loadSlow, setLoadSlow] = useState(false);
   const [loadAttempt, setLoadAttempt] = useState(0);
@@ -401,16 +399,18 @@ export function App() {
                   // missing data this route needs (e.g. templateRegistry), so
                   // crossing scopes must always commit the fresh result.
                   const sameScopeGraphReady =
-                    runtimeState.view !== "library-detail" && current?.graphReady && bundleScopeKeyRef.current === scopeKey;
+                    runtimeState.view !== "library-detail" && current?.graphReady && current.loadedScopeKey === scopeKey;
                   const next = runtimeState.view === "catalog-detail"
                     ? result
                     : sameScopeGraphReady
                       ? current
                       : result;
-                  bundleScopeKeyRef.current = scopeKey;
-                  return current?.atlasSpine && !next.atlasSpine
+                  const nextWithSpine = current?.atlasSpine && !next.atlasSpine
                     ? { ...next, atlasSpine: current.atlasSpine }
                     : next;
+                  return nextWithSpine === current
+                    ? current
+                    : { ...nextWithSpine, loadedScopeKey: scopeKey };
                 });
               };
               if (runtimeState.view === "library-detail") commitBundle();
@@ -425,10 +425,9 @@ export function App() {
               setLoadSlow(false);
               startTransition(() => {
                 setBundle((current) => {
-                  bundleScopeKeyRef.current = scopeKey;
                   return current?.atlasSpine && !result.atlasSpine
-                    ? { ...result, atlasSpine: current.atlasSpine }
-                    : result;
+                    ? { ...result, atlasSpine: current.atlasSpine, loadedScopeKey: scopeKey }
+                    : { ...result, loadedScopeKey: scopeKey };
                 });
               });
               setLoadError("");
@@ -478,7 +477,7 @@ export function App() {
   }
 
   function retryLoad() { resetRuntimeLoad(false); }
-  function retryRecordContext() { resetRuntimeLoad(bundleScopeKeyRef.current === runtimeScopeKey); }
+  function retryRecordContext() { resetRuntimeLoad(bundle?.loadedScopeKey === runtimeScopeKey); }
 
   useEffect(() => {
     const canonical = canonicalizeHashLocation(`${location.pathname}${location.search}`);
@@ -504,7 +503,14 @@ export function App() {
   // Per-route document.title (CATL-61): honest browser-history/bookmark labels,
   // with record pages resolving to the official record name once the graph is
   // loaded.
+  const recordScopePending = viewState.view === "library-detail"
+    && bundle?.loadedScopeKey !== runtimeScopeKey;
+  // A previous record's neighborhood cannot prove the next record is absent.
+  // Keep it available to shared search, but wait for the requested scope before
+  // passing data to the record renderer or announcing that route as ready.
+  const routeBundle = recordScopePending ? null : bundle;
   const routeEntityName = (() => {
+    if (recordScopePending) return "";
     const activeNodeId =
       viewState.view === "library-detail" || viewState.view === "atlas-map"
         ? viewState.node
@@ -561,7 +567,9 @@ export function App() {
       viewState.view === "library-detail" && viewState.node && bundle
         ? bundle.runtime.getNode(viewState.node)
         : null;
-    document.title = routeDocumentTitle(viewState, node, routeEntityName);
+    document.title = recordScopePending
+      ? `${loadError ? "Record unavailable" : "Loading record"} — Control Atlas`
+      : routeDocumentTitle(viewState, node, routeEntityName);
     if (
       (viewState.view === "library-detail" ||
         viewState.view === "atlas-map" ||
@@ -573,7 +581,7 @@ export function App() {
       );
       if (progressiveTitle) progressiveTitle.textContent = routeEntityName;
     }
-  }, [viewState, bundle, routeEntityName]);
+  }, [viewState, bundle, routeEntityName, recordScopePending, loadError]);
 
   useEffect(() => {
     if (viewState.view !== "search") return;
@@ -681,10 +689,11 @@ export function App() {
     ? "error"
     : canRenderWithoutBundle && viewState.view !== "search"
       ? "true"
-    : bundle?.routeReady &&
-        (!requiresFullGraph(viewState) || bundle.graphReady)
+    : routeBundle?.routeReady &&
+        (viewState.view !== "sources" || routeBundle.sourcesReady) &&
+        (!requiresFullGraph(viewState) || routeBundle.graphReady)
       ? "true"
-      : bundle
+      : routeBundle
         ? "partial"
         : "false";
   const showWorkspaceContent =
@@ -762,7 +771,7 @@ export function App() {
             >
               <Suspense fallback={<LoadingStatusPanel slow={false} suspensePending />}>
                 <AppContent
-                  bundle={bundle}
+                  bundle={routeBundle}
                   loadError={loadError}
                   loadSlow={loadSlow}
                   onNavigate={navigate}
@@ -1005,8 +1014,9 @@ function AppContent(props: {
   }
 
   if (state.view === "sources") {
-    if (!bundle) {
-      return <DataPendingNotice onRetry={onRetryLoad} slow={loadSlow} />;
+    if (!bundle?.sourcesReady) {
+      if (loadError) return <LoadErrorPanel message={loadError} onRetry={onRetryLoad} />;
+      return <DataPendingNotice description="Loading recorded source versions, check dates, and status." onRetry={onRetryLoad} slow={loadSlow} title="Loading sources" />;
     }
     return (
       <SourcesPage bundle={bundle} onNavigate={onNavigate} state={state} />
@@ -1094,6 +1104,11 @@ function AppContent(props: {
 
 function routeLoadingCopy(view: ViewState["view"]) {
   switch (view) {
+    case "library-detail":
+      return {
+        title: "Loading record",
+        description: "Loading the selected record and its source.",
+      };
     case "matrix":
       return {
         title: "Loading comparison data",

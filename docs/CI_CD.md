@@ -46,6 +46,20 @@ Routine checkout uses depth 1 and fetches only the comparison base SHA. Full his
 
 `npm run verify:generated-reproducibility` performs two clean generations and requires identical file counts, byte counts, and SHA-256 tree digests. Generation uses `CONTROL_ATLAS_GENERATED_AT`, `SOURCE_DATE_EPOCH`, or the latest versioned source-observation date, in that order, so output does not depend on a prior generated directory, an unrelated UI commit, or wall-clock time.
 
+If generation changes the tracked `data/fedramp-2026-catalog.json` input, the
+existing generated-data job preserves only that exact file, a scoped Git patch,
+and a diagnostic receipt in a separate, short-lived Actions artifact. The
+receipt binds the task head and checkout SHA, run and attempt, individual
+generation-step outcomes, and old/new/patch, raw-source, and generator SHA-256
+hashes. Capture runs after an attempted generation even if reproducibility or a
+later generator fails; the reproducibility tool restores only `data/generated/`.
+The artifact is diagnostic evidence, not an accepted catalog or successful
+build. Failed steps remain failures, and the unchanged dirty-input guard still
+rejects canonical writes. The artifact grants no publication or merge approval.
+Review its exact bytes and provenance before committing the generated catalog
+and rerunning all normal gates. Raw publisher snapshots still use the canonical
+main-only source-refresh publication path.
+
 Atomic JSON writers preserve identical files and mtimes. `npm run
 build:site:incremental` preserves validated staged data and recompresses only
 changed JSON while rebuilding application assets.

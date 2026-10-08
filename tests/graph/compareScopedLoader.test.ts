@@ -341,3 +341,57 @@ test("content comparison excludes derived presentation fields and preserves nati
     raw_relationship_type: "Supports (integral to)", publisher_assertions: [{ relationship: "Supports (integral to)", locator: "C2" }], warning: "Qualified mapping" };
   assert.deepEqual(buildMappingInventoryRows([nodes[0]], [nodes[1]], [mapping])[0].mapping, mapping);
 });
+
+test("FedRAMP Compare chunks, literal differences and CSV retain every bullet and note exactly", async () => {
+  const { buildContentRows, compareRecordContent } = await import("../../src/shared/content-comparison.mjs");
+  const { buildContentExportData } = await import("../../src/ui/lib/compareExport");
+  const read = (path: string) => JSON.parse(readFileSync(`data/generated/${path}`, "utf8"));
+  const catalog = JSON.parse(readFileSync("data/fedramp-2026-catalog.json", "utf8"));
+  const entry = read("catalog-bootstrap.json").catalog_bootstrap.comparison_content["fedramp-2026"];
+  const records = read(entry.path).chunks.flatMap((chunk: any) => read(chunk.path).records);
+  const byId = new Map<string, any>(records.map((record: any) => [record.metadata.item_id, record]));
+  for (const record of catalog.records.filter((item: any) => item.type === "rule")) {
+    const compared = byId.get(record.id);
+    assert.ok(compared, record.id);
+    assert.equal(compared.metadata.discussion ?? null, record.discussion || null, record.id);
+    assert.deepEqual(compared.metadata.following_information_bullets, record.metadata?.following_information_bullets, record.id);
+    assert.equal(compared.metadata.source_locator, record.source.locator, record.id);
+  }
+  const selected = ["VER-EVA-EPA", "IEC-CSO-EFI"].map((id) => byId.get(id));
+  const rows = buildContentRows(selected, selected);
+  assert.ok(rows.every((row: any) => row.group === "shared"));
+  const csv = compareExportToCsv(buildContentExportData({
+    rows, labelA: "FedRAMP 2026", labelB: "FedRAMP 2026", countA: records.length, countB: records.length,
+    basis: "Literal publisher fields", resolveSource: () => ({
+      id: selected[0].source_id, display_name: "FedRAMP 2026", version: catalog.source_version,
+      catalog_browse_url: "https://www.fedramp.gov/2026/",
+    }),
+  }));
+  const [header, ...exported] = csv.slice(1).split("\r\n").map((line) =>
+    Array.from(line.matchAll(/"((?:[^"]|"")*)"(?=,|$)/g), ([, cell]) => cell.replaceAll('""', '"')));
+  assert.equal(exported.length, selected.length);
+  for (const row of exported) {
+    assert.equal(row.length, header.length);
+    for (const side of ["A", "B"]) {
+      const id = row[header.indexOf(`${side} ID`)];
+      const expected = catalog.records.find((record: any) => record.id === id);
+      const cell = JSON.parse(row[header.indexOf(`${side} compared fields and locators`)]);
+      assert.deepEqual(cell.fields.following_information_bullets, expected.metadata.following_information_bullets, id);
+      assert.equal(cell.fields.discussion, expected.discussion || null, id);
+      assert.equal(cell.locator, expected.source.locator, id);
+      assert.deepEqual(cell.source_refs, byId.get(id).source_refs || [], id);
+    }
+  }
+  const changed = structuredClone(selected[0]);
+  changed.metadata.following_information_bullets[0] += " ";
+  assert.deepEqual(compareRecordContent(selected[0], changed).changed, ["following_information_bullets"]);
+  const reordered = structuredClone(selected[0]);
+  reordered.metadata.following_information_bullets.reverse();
+  assert.deepEqual(compareRecordContent(selected[0], reordered).changed, ["following_information_bullets"]);
+  const noteChanged = structuredClone(selected[1]);
+  noteChanged.metadata.discussion += " ";
+  assert.deepEqual(compareRecordContent(selected[1], noteChanged).changed, ["discussion"]);
+  const sparse = byId.get("AFC-CSO-ACK");
+  assert.equal(Object.hasOwn(sparse.metadata, "following_information_bullets"), false);
+  assert.equal(compareRecordContent(sparse, sparse).group, "shared");
+});

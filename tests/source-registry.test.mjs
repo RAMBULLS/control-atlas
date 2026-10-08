@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
-import { loadSourceRegistry, validateSourceRegistry } from '../tools/validators/source-registry.mjs';
+import { loadSourceRegistry, sourceCheckFreshness, validateSourceRegistry } from '../tools/validators/source-registry.mjs';
 import { assertPublisherVolume } from './helpers/publisher-volume.mjs';
 
 const registry = JSON.parse(readFileSync('data/source-registry.json', 'utf8'));
@@ -69,6 +69,106 @@ test('missing verification dates stay missing instead of receiving a generated f
   delete freshness.last_checked;
   const loaded = loadSourceRegistry(withoutDate);
   assert.equal(loaded.byId.get(freshness.source_id).last_checked, null);
+});
+
+test('runtime hides the unsupported 53A proxy check before normal reconciliation persists its history', () => {
+  const id = 'nist-800-53a-assessment-procedures';
+  const input = structuredClone(registry);
+  const original = input.freshness.sources.find((entry) => entry.source_id === id);
+  original.last_checked = '2026-10-08';
+  delete original.check_evidence;
+  delete original.unsupported_check_history;
+  const before = structuredClone(original);
+  const inputBefore = structuredClone(input);
+  const loaded = loadSourceRegistry(input).byId.get(id);
+  assert.equal(loaded.last_checked, null);
+  assert.equal(loaded.retrieved_at, input.publications.find((entry) => entry.id === id).retrieved_at);
+  assert.deepEqual(loaded.unsupported_check_history, [{
+    last_checked: before.last_checked,
+    status: 'unsupported_source_identity',
+    reason: 'Legacy check date came from the SP 800-53 Rev. 5 control-catalog refresh, not an SP 800-53A assessment-procedure retrieval.',
+    evidence_locator: 'data/controls-800-53.json',
+  }]);
+  assert.deepEqual(original, before, 'runtime projection does not rewrite the stored audit record');
+  assert.deepEqual(input, inputBefore, 'runtime loading does not mutate canonical source or publication objects');
+  assert.equal(loadSourceRegistry(input).byId.get('nist-oscal').last_checked,
+    input.freshness.sources.find((entry) => entry.source_id === 'nist-oscal').last_checked);
+});
+
+test('explicit null ledger checks cannot resurrect a legacy source date', () => {
+  const input = structuredClone(registry);
+  const id = 'nist-800-53a-assessment-procedures';
+  input.publications.find((entry) => entry.id === id).last_checked = '2026-10-08';
+  input.sources.find((entry) => entry.id === id).last_checked = '2026-10-08';
+  input.freshness.sources.find((entry) => entry.source_id === id).last_checked = null;
+  assert.equal(loadSourceRegistry(input).byId.get(id).last_checked, null);
+});
+
+test('legacy-only source projection also leaves its canonical input untouched', () => {
+  const id = 'nist-800-53a-assessment-procedures';
+  const input = { schema_version: '5.0', sources: [{ id, license_or_use: 'Public domain', last_checked: '2026-10-08', retrieved_at: '2026-06-13' }],
+    freshness: { sources: [{ source_id: id, last_checked: '2026-10-08' }] } };
+  const before = structuredClone(input);
+  const source = loadSourceRegistry(input).byId.get(id);
+  assert.equal(source.last_checked, null);
+  assert.equal(source.unsupported_check_history[0].last_checked, '2026-10-08');
+  assert.deepEqual(input, before);
+});
+
+test('legacy check correction preserves audit history and genuine future 53A evidence', () => {
+  const legacy = { source_id: 'nist-800-53a-assessment-procedures', last_checked: '2026-10-08',
+    last_imported: '2026-09-10', hash: `sha256:${'a'.repeat(64)}` };
+  const corrected = sourceCheckFreshness(legacy);
+  assert.equal(corrected.last_checked, null);
+  assert.equal(corrected.last_imported, legacy.last_imported);
+  assert.equal(corrected.hash, legacy.hash);
+  assert.deepEqual(sourceCheckFreshness(corrected), corrected, 'migration is idempotent');
+  const evidence = { scope: 'publisher_artifact_retrieval', checked_at: '2026-10-09T12:00:00Z',
+    requests: [{ url: 'https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53Ar5.pdf',
+      checked_at: '2026-10-09T12:00:00Z', http: 200, validation: 'revalidated', sha256: `sha256:${'b'.repeat(64)}`, byte_length: 100 }] };
+  // Deliberate future admitted-input fixture, not an addition to the registry.
+  const futureArtifact = { id: 'artifact-fixture-nist-800-53a', publication_source_id: legacy.source_id,
+    source_role: 'assessment', authority_class: 'publisher', origin: 'publisher_exact', format: 'pdf', artifact_url: evidence.requests[0].url,
+    sha256: evidence.requests[0].sha256, byte_length: 100, record_count: 0, relationship_count: 0 };
+  const supported = { ...corrected, last_checked: '2026-10-09', check_evidence: evidence };
+  assert.equal(sourceCheckFreshness(supported).last_checked, null, 'official URL alone does not admit an artifact');
+  assert.deepEqual(sourceCheckFreshness(supported, [futureArtifact]), supported);
+  const runtime = (freshness) => loadSourceRegistry({
+    schema_version: '5.0',
+    sources: [{ id: legacy.source_id, license_or_use: 'Public domain', last_checked: '2026-10-08', retrieved_at: '2026-06-13' }],
+    artifacts: [futureArtifact],
+    freshness: { sources: [freshness] },
+  }).byId.get(legacy.source_id);
+  assert.equal(runtime(corrected).last_checked, null);
+  assert.deepEqual(runtime(corrected).unsupported_check_history, corrected.unsupported_check_history);
+  assert.equal(runtime(supported).last_checked, '2026-10-09');
+  assert.deepEqual(runtime(supported).unsupported_check_history, corrected.unsupported_check_history);
+  const wrongPublication = { ...supported, check_evidence: { ...evidence, requests: [{ ...evidence.requests[0],
+    url: 'https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json' }] } };
+  const rejected = sourceCheckFreshness(wrongPublication, [futureArtifact]);
+  assert.equal(rejected.last_checked, null);
+  assert.equal(rejected.check_evidence, null);
+  assert.equal(rejected.unsupported_check_history.length, 2);
+  assert.deepEqual(rejected.unsupported_check_history[1].check_evidence, wrongPublication.check_evidence);
+  assert.match(rejected.unsupported_check_history[1].reason, /does not match an admitted SP 800-53A publisher procedure artifact/);
+  assert.deepEqual(rejected.unsupported_check_history[0], corrected.unsupported_check_history[0]);
+  for (const url of [
+    'https://example.com/nistpubs/SpecialPublications/NIST.SP.800-53Ar5.pdf',
+    'https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53Ar5-mappings.pdf',
+  ]) {
+    const request = { ...evidence.requests[0], url };
+    const mismatched = { ...supported, check_evidence: { ...evidence, requests: [request] } };
+    assert.equal(sourceCheckFreshness(mismatched, [{ ...futureArtifact, artifact_url: url }]).last_checked, null, url);
+  }
+  for (const changedArtifact of [
+    { ...futureArtifact, publication_source_id: 'nist-800-53' },
+    { ...futureArtifact, sha256: `sha256:${'c'.repeat(64)}` },
+    { ...futureArtifact, byte_length: 101 },
+    { ...futureArtifact, origin: 'publisher_normalized' },
+  ]) assert.equal(sourceCheckFreshness(supported, [changedArtifact]).last_checked, null);
+  const redirected = { ...supported, check_evidence: { ...evidence,
+    requests: [{ ...evidence.requests[0], resolved_url: 'https://example.com/NIST.SP.800-53Ar5.pdf' }] } };
+  assert.equal(sourceCheckFreshness(redirected, [futureArtifact]).last_checked, null);
 });
 
 test('reviewed publication identity stays distinct from parser artifacts', () => {

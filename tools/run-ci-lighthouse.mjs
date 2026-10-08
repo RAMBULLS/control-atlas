@@ -1,4 +1,5 @@
-import { mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { runNodeSync } from './lib/process-runner.mjs';
@@ -99,6 +100,21 @@ export function runCiLighthouse({ cwd = process.cwd(), runCommand, exportDiagnos
   }))), null, 2));
   attempt('upload');
   mkdirSync(outputDirectory, { recursive: true });
+  let deliveryGraph = null;
+  try {
+    const path = join(cwd, 'dist/site/record-delivery-chunks.json');
+    const stat = lstatSync(path);
+    if (!stat.isFile() || stat.isSymbolicLink() || stat.size > 1024 * 1024) throw new Error('Invalid bounded build-graph file.');
+    const bytes = readFileSync(path);
+    const graph = JSON.parse(bytes.toString('utf8'));
+    if (!graph.home || !graph.runtimeLoader || !Array.isArray(graph.homeEntryClosures) || !Array.isArray(graph.runtimeLoaderClosure)) {
+      throw new Error('Build-graph closure evidence is missing.');
+    }
+    writeFileSync(join(outputDirectory, 'record-delivery-chunks.json'), bytes);
+    deliveryGraph = { file: 'record-delivery-chunks.json', sha256: createHash('sha256').update(bytes).digest('hex') };
+  } catch (error) {
+    failures.push(`build graph export: ${error.message}`);
+  }
   // Retain this collection's raw evidence in the existing uploaded export.
   // Lighthouse saves it at cwd even when its JSON report goes to stdout.
   // Leave pre-existing files and auxiliary simulated traces untouched.
@@ -113,6 +129,7 @@ export function runCiLighthouse({ cwd = process.cwd(), runCommand, exportDiagnos
     numberOfRuns: config.ci.collect.numberOfRuns,
     routes,
     rawAssets,
+    deliveryGraph,
     failures,
   };
   writeFileSync(join(outputDirectory, 'route-assertions.json'), `${JSON.stringify(evidence, null, 2)}\n`);

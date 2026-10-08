@@ -67,6 +67,46 @@ Known remediation remains in the generated audit and must not be converted to a 
 
 `last_checked` is the source registry's check date. It is not interchangeable with `retrieved_at` or the governed publication review's `reviewed_at`. Product trust surfaces keep the three evidence classes under separate labels, make a missing source check date explicit on source detail, and show the bounded currentness disposition from the publication review without backfilling that date.
 
+Refresh check dates require successful publisher request receipts from the current
+accepted source transaction. The shared fetch adapter records consumed HTTP 200
+bytes, including publisher-revalidated cached bytes, only when that transaction
+explicitly enables its private receipt file. Local cache hits, failed requests,
+retained inputs and committed extractions do not establish a check. Receipt files
+belong to the source's rollback boundary and are cleared before each retry. The
+existing finalization and publication gates still decide whether candidate data
+can ship; a green run alone is never source-check evidence.
+
+`check_evidence` retains the exact public URLs, check timestamps and byte evidence
+for the source's required retrievals. Canonical publication aliases are explicit;
+references, mappings and shared bundles do not implicitly check another source.
+All owned artifacts must succeed before a multi-artifact publication advances.
+The DISA range exception remains labeled `publisher_range_probe` and requires its
+publisher index, validated compilation probe and every standalone package receipt.
+An admitted publication without evidence gets a null check date, never a date
+copied from `generated_at`, a review or a local import.
+
+A fixed eCFR date or pinned repository edition establishes only that edition's
+retrieval. It records `last_retrieval_checked` and `retrieval_evidence` with scope
+`pinned_edition_retrieval`, without advancing publication `last_checked`. A pinned
+artifact may support a publication revision check only alongside the adapter's
+current publisher revision discovery and complete required-artifact receipts.
+`last_imported` and its normalized content hash remain separate from these checks.
+
+The legacy `nist-800-53a-assessment-procedures` check was advanced from the
+SP 800-53 control catalog without an SP 800-53A procedure retrieval. Normal
+reconciliation preserves that date and its identity-mismatch reason in
+`unsupported_check_history`, then clears the valid check. Runtime loading applies
+the same correction before persistence, so existing trust surfaces show retrieval
+with no recorded check. An explicit null ledger check cannot fall back to a
+legacy source date. A later supported receipt-backed check can establish a valid
+date while the unsupported historical entry remains available for audit. That
+exception requires the exact official SP 800-53A Rev5 procedure PDF URL and a
+matching admitted, 53A-owned publisher artifact checksum and byte length; a
+similar document name, mapping, other host or control catalog does not qualify.
+A later rejected receipt keeps its own unsupported-artifact reason and evidence,
+separate from the original legacy proxy event. No 53A artifact is admitted by
+this historical correction.
+
 The platform gate considered OSCAL assessment-results for this register, but rejected it because that model represents system assessment findings rather than publication-source review. JSON Schema 2020-12 plus AJV is the existing MIT-licensed, maintained, repository-native validation path and avoids a semantically false OSCAL document.
 
 ## Reconciliation gates

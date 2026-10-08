@@ -42,6 +42,21 @@ test("record presentation rejects unknown kinds and missing required source fiel
   );
 });
 
+test("FedRAMP following-information lists are optional publisher text, never inferred ratings", () => {
+  const profile = recordPresentationContract("fedramp-2026", "rule");
+  assert.deepEqual(profile.sections.map((section) => [section.field, section.kind]), [
+    ["description", "text"], ["following_information_bullets", "list"], ["discussion", "text"],
+  ]);
+  assert.deepEqual(profile.field_dispositions.following_information_bullets, {
+    disposition: "rendered_secondary", origin: "publisher",
+  });
+  assert.ok(profile.optional_fields.includes("following_information_bullets"));
+  assert.deepEqual(missingRequiredRecordFields(profile, { description: "Exact rule statement." }), []);
+  assert.deepEqual(undeclaredCapturedRecordFields(profile, {
+    description: "Exact rule statement.", following_information_bullets: ["**N1**: Exact source text."],
+  }), []);
+});
+
 test("catalog-specific profiles preserve source-native nouns", () => {
   assert.equal(recordPresentationContract("csf-2", "requirement").sections[0].heading, "Outcome");
   assert.equal(recordPresentationContract("nist-ssdf", "requirement").sections[0].heading, "Practice");
@@ -114,6 +129,13 @@ test("high-risk publisher fields survive normalization into runtime metadata exa
   );
   const byId = new Map(nodes.map((node: any) => [node.id, node]));
   const cases = [
+    ...["VER-EVA-EPA", "IEC-CSO-EFI"].map((recordId) => ({
+      catalogId: "fedramp-2026",
+      recordId,
+      sourcePath: "data/fedramp-2026-catalog.json",
+      fields: recordId === "IEC-CSO-EFI" ? ["description", "discussion"] : ["description"],
+      metadataFields: ["following_information_bullets"],
+    })),
     {
       catalogId: "csf-2",
       recordId: "PR.AA-01",

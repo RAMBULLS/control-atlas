@@ -1,11 +1,74 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
 
 import { createStrictConditionalFetch } from '../scripts/lib/strict-conditional-fetch.mjs';
+import { observePublisherResponse, resetSourceCheckReceipt, sourceCheckReceiptPath } from '../scripts/lib/source-check-receipts.mjs';
+
+function receiptFixture(t) {
+  const root = mkdtempSync(join(tmpdir(), 'atlas-source-check-'));
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  const unit = { taskId: 'fetch-source', sourceId: 'publication', checkReceiptPath: sourceCheckReceiptPath('fetch-source', 'publication') };
+  resetSourceCheckReceipt(root, unit);
+  const path = join(root, unit.checkReceiptPath);
+  return { root, unit, path, read: () => JSON.parse(readFileSync(path, 'utf8')).requests };
+}
+
+test('opt-in receipts attest consumed publisher bytes without retaining bodies or request secrets', async (t) => {
+  const fixture = receiptFixture(t);
+  const fetchSource = createStrictConditionalFetch({ receiptPath: fixture.path,
+    fetchImpl: async () => new Response('publisher content', { headers: { 'x-local-cache-status': 'skip' } }),
+  });
+  const response = await fetchSource('https://csrc.nist.gov/source', { headers: { Authorization: 'Bearer fixture-secret' } });
+  assert.equal(fixture.read().length, 0, 'headers alone are not a complete artifact');
+  assert.equal(await response.text(), 'publisher content');
+  const [receipt] = fixture.read();
+  assert.equal(receipt.http, 200);
+  assert.equal(receipt.validation, 'remote', 'uncacheable remote responses still check the publisher');
+  assert.equal(receipt.byte_length, Buffer.byteLength('publisher content'));
+  assert.match(receipt.sha256, /^sha256:[a-f0-9]{64}$/);
+  assert.doesNotMatch(JSON.stringify(receipt), /fixture-secret|publisher content|authorization/i);
+});
+
+test('publisher-revalidated cached bytes count, while local cache hits do not', async (t) => {
+  const fixture = receiptFixture(t);
+  for (const status of ['hit', 'revalidated']) {
+    const response = await observePublisherResponse(new Response('{"ok":true}', { headers: { 'x-local-cache-status': status } }), {
+      path: fixture.path, url: 'https://csrc.nist.gov/source',
+    });
+    assert.deepEqual(await response.json(), { ok: true });
+  }
+  assert.equal(fixture.read().length, 1);
+  assert.equal(fixture.read()[0].validation, 'revalidated');
+});
+
+test('failed bodies, invalid JSON, secret URLs and ordinary non-opted-in reads create no receipts', async (t) => {
+  const fixture = receiptFixture(t);
+  const options = { path: fixture.path, url: 'https://csrc.nist.gov/source' };
+  const broken = new Response('bytes');
+  broken.arrayBuffer = async () => { throw new Error('truncated body'); };
+  await assert.rejects((await observePublisherResponse(broken, options)).arrayBuffer(), /truncated body/);
+  await assert.rejects((await observePublisherResponse(new Response('not json'), options)).json(), SyntaxError);
+  await (await observePublisherResponse(new Response('bytes'), { ...options, url: 'https://csrc.nist.gov/source?token=fixture-secret' })).text();
+  await (await observePublisherResponse(new Response('bytes'), { url: options.url })).text();
+  assert.deepEqual(fixture.read(), []);
+});
+
+test('206 bodies never become full-artifact receipts, and only a complete one-byte probe checks a range', async (t) => {
+  const fixture = receiptFixture(t);
+  const options = { path: fixture.path, url: 'https://dl.dod.cyber.mil/archive.zip' };
+  for (const [body, range] of [['fragment', 'bytes 1-8/100'], ['', 'bytes 0-0/100'], ['x', 'bytes 0-0/100']]) {
+    const response = await observePublisherResponse(new Response(body, { status: 206, headers: { 'content-range': range, 'x-local-cache-status': 'skip' } }), options);
+    await response.arrayBuffer();
+  }
+  assert.equal(fixture.read().length, 1);
+  assert.equal(fixture.read()[0].scope, 'publisher_range_probe');
+  assert.equal(fixture.read()[0].total_byte_length, 100);
+  assert.equal(fixture.read()[0].sha256, undefined);
+});
 
 test('strict refresh gates the initial request and every redirect before network access', async () => {
   const requested = [];

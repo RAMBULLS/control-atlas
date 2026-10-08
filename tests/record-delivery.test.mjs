@@ -12,6 +12,7 @@ const fontAssets = () => Object.fromEntries([...externalizeOrbitalFonts(css).fon
   `${digest}.woff2`, { type: 'asset', fileName: `${digest}.woff2`, source: bytes },
 ]));
 const chunk = (fileName, modules, imports = []) => ({ type: 'chunk', fileName, name: fileName.replace(/\.js$/, ''), imports,
+  code: 'export {};', isEntry: fileName === 'main.js',
   modules: Object.fromEntries(modules.map(id => [`${root}/${id}`, {}])) });
 const bundle = () => ({
   'main.js': chunk('main.js', ['src/main.tsx']),
@@ -72,6 +73,16 @@ test('emitted graph rejects UI in Home or data warm-up, merged pages, and change
   const report = verifyRecordDelivery(valid, root);
   assert.equal(report.pages.length, 2);
   assert.equal(report.fontHashes.length, 4);
+  assert.deepEqual(report.homeEntryClosures[0], { entry: 'main.js', chunks: [{
+    file: 'main.js', name: 'main', bytes: 10, imports: [], modules: ['src/main.tsx'],
+  }] });
+  const facade = bundle();
+  facade['main.js'].isEntry = false;
+  facade['entry.js'] = { ...chunk('entry.js', [], ['main.js']), isEntry: true };
+  assert.deepEqual(verifyRecordDelivery(facade, root).homeEntryClosures[0].chunks.map(entry => entry.file), ['entry.js', 'main.js']);
+  facade['entry.js'].imports.push('react.js');
+  facade['react.js'] = chunk('react.js', ['node_modules/react/index.js']);
+  assert.throws(() => verifyRecordDelivery(facade, root), /Home entry statically imports route UI or React/);
   for (const name of ['main.js', 'loader.js']) {
     const contaminated = bundle();
     contaminated[name].imports.push('record-ui.js');
@@ -94,6 +105,11 @@ test('existing data preloader is queued before the record route import and every
   const main = readFileSync('src/main.tsx', 'utf8');
   const warm = main.slice(main.indexOf('function warmInteractiveRoute()'), main.indexOf('async function start()'));
   assert.ok(warm.indexOf("import('./ui/lib/runtimeLoader')") < warm.indexOf('recordRouteModule.load()'));
+  assert.match(warm, /preloader = await Promise\.all/);
+  assert.match(warm, /void runtime\.preloadRuntimeArtifacts/);
+  assert.doesNotMatch(warm, /await runtime\.preloadRuntimeArtifacts/);
+  assert.doesNotMatch(main, /import \{ recordRouteModule \} from/);
+  assert.match(main, /await warmInteractiveRoute\(\);[\s\S]*void bootReactApp\(\);/);
   const config = JSON.parse(readFileSync('.lighthouserc.ci.json', 'utf8'));
   assert.equal(config.ci.collect.numberOfRuns, 1);
   assert.equal(config.ci.collect.url.length, 3);

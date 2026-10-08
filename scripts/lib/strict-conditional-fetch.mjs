@@ -1,4 +1,5 @@
 import { join } from 'node:path';
+import { observePublisherResponse } from './source-check-receipts.mjs';
 
 import makeFetchHappen from 'make-fetch-happen';
 
@@ -55,6 +56,7 @@ export function createStrictConditionalFetch(options = {}) {
 
   return async function strictConditionalFetch(url, init = {}) {
     let current = new URL(urlPolicy(url));
+    const requestedUrl = current.href;
     const headers = new Headers(init.headers);
     const method = (init.method || 'GET').toUpperCase();
     if (!['GET', 'HEAD'].includes(method)) throw new Error('strict refresh permits GET and HEAD only');
@@ -80,7 +82,10 @@ export function createStrictConditionalFetch(options = {}) {
       if (response.status === 304) {
         throw new Error(`strict refresh received 304 without reusable cached bytes for ${current.href}`);
       }
-      if (![301, 302, 303, 307, 308].includes(response.status)) return response;
+      if (![301, 302, 303, 307, 308].includes(response.status)) return observePublisherResponse(response, {
+        path: options.receiptPath ?? process.env.CONTROL_ATLAS_SOURCE_CHECK_RECEIPT,
+        url: requestedUrl, resolvedUrl: current.href, method,
+      });
       // Finish cache writes and release the connection before following.
       if (response.arrayBuffer) await response.arrayBuffer();
       if (redirects >= maxRedirects) throw new Error('strict refresh exceeded redirect limit');

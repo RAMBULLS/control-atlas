@@ -6,6 +6,7 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { resolve } from 'node:path';
 import { RUNTIME_CACHE_VERSION } from './src/shared/runtime-cache-version.mjs';
+import { materializeOrbitalFonts, recordChunkGroups, verifyRecordDelivery } from './tools/record-delivery.mjs';
 import { HOME_CONTENT, HOME_TOOLS } from './src/shared/home-content.mjs';
 import { FIRST_PAINT_ROUTE_COPY, SITE_COPY } from './src/shared/site-copy.mjs';
 import {
@@ -23,6 +24,7 @@ import { buildHomeSurface } from './src/shared/home-surface-build.ts';
 import type { HomeSurface } from './src/shared/home-surface.ts';
 
 const rootDir = fileURLToPath(new URL('.', import.meta.url));
+const orbitalFonts = materializeOrbitalFonts(rootDir);
 
 function readGeneratedJson(relativePath: string) {
   return JSON.parse(readFileSync(resolve(rootDir, 'data/generated', relativePath), 'utf8'));
@@ -207,6 +209,7 @@ function getBuildSha(): string {
 }
 
 export default defineConfig({
+  resolve: { alias: [{ find: /^orbital-archive-no-01\/fonts\.css$/, replacement: orbitalFonts }] },
   base: './',
   root: resolve(rootDir, 'src'),
   define: {
@@ -254,6 +257,13 @@ export default defineConfig({
         };
       },
     },
+    {
+      name: 'record-delivery-boundaries',
+      generateBundle(_options, bundle) {
+        const report = verifyRecordDelivery(bundle, rootDir);
+        this.emitFile({ type: 'asset', fileName: 'record-delivery-chunks.json', source: JSON.stringify(report, null, 2) });
+      },
+    },
     tailwindcss(),
     react(),
   ],
@@ -262,5 +272,12 @@ export default defineConfig({
     emptyOutDir: globalThis.process.env.CONTROL_ATLAS_REUSE_STAGED_DATA !== '1',
     sourcemap: false,
     assetsDir: 'assets',
+    rolldownOptions: {
+      preserveEntrySignatures: false,
+      output: {
+        strictExecutionOrder: true,
+        codeSplitting: { groups: recordChunkGroups(rootDir) },
+      },
+    },
   },
 });

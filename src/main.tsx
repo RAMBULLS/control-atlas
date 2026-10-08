@@ -110,6 +110,7 @@ function syncStaticRouteShell() {
   const identity = progressiveRouteIdentity();
   if (identity) {
     rootElement.dataset.staticRouteKind = identity.kind;
+    shell.querySelector<HTMLElement>('[data-static-resource-companions]')?.toggleAttribute('hidden', identity.kind !== 'resources');
     const eyebrow = shell.querySelector<HTMLElement>('[data-static-route-eyebrow]');
     const title = shell.querySelector<HTMLElement>('[data-static-route-title]');
     const summary = shell.querySelector<HTMLElement>('[data-static-route-summary]');
@@ -126,19 +127,18 @@ function syncStaticRouteShell() {
     delete rootElement.dataset.staticRouteKind;
   }
   const active =
-    (Boolean(identity) || rootElement.dataset.routeHydrated !== 'true') &&
-    !isHomeHash() &&
-    !isSearchHash() &&
-    rootElement.dataset.routeHydrated !== 'true';
+    !isHomeHash() && !isSearchHash() &&
+    (rootElement.dataset.routeHydrated !== 'true' || identity?.kind === 'resources');
   shell.toggleAttribute('hidden', !active);
   if (!active) {
     delete rootElement.dataset.staticRouteActive;
     return;
   }
-  rootElement.dataset.staticRouteActive = 'true';
+  if (rootElement.dataset.routeHydrated !== 'true') rootElement.dataset.staticRouteActive = 'true';
   shell.removeAttribute('aria-hidden');
   shell.removeAttribute('inert');
-  shell.setAttribute('role', 'status');
+  if (rootElement.dataset.routeHydrated !== 'true') shell.setAttribute('role', 'status');
+  else shell.removeAttribute('role');
 }
 
 function observeRouteHydration() {
@@ -147,6 +147,11 @@ function observeRouteHydration() {
   const markHydrated = () => {
     const app = reactRootElement.querySelector<HTMLElement>('#app');
     if (!app || !reactRouteOwnsSurface(app)) return false;
+    // A static route can be ready before its lazy page has committed. Keep the
+    // first-paint identity until real content (or its recovery UI) owns it.
+    if (reactRootElement.querySelector('[data-route-suspense-pending="true"]')) {
+      return false;
+    }
     if (
       app.dataset.appReady !== 'error' &&
       app.dataset.view === 'atlas-map' &&
@@ -158,7 +163,11 @@ function observeRouteHydration() {
     rootElement.dataset.routeHydrated = 'true';
     delete rootElement.dataset.staticRouteActive;
     const shell = rootElement.querySelector<HTMLElement>('[data-static-route]');
-    shell?.remove();
+    if (rootElement.dataset.staticRouteKind === 'resources') {
+      rootElement.dataset.staticRoutePersistent = 'resources';
+      shell?.removeAttribute('role');
+    }
+    else shell?.remove();
     return true;
   };
   const scheduleHydration = () => {
@@ -177,8 +186,7 @@ function observeRouteHydration() {
   });
   scheduleHydration();
   window.setTimeout(() => {
-    markHydrated();
-    observer.disconnect();
+    if (markHydrated()) observer.disconnect();
   }, 15_000);
 }
 
@@ -285,6 +293,18 @@ function syncProgressiveShell() {
     rootElement.dataset.reactShellReady === 'true' ? 'true' : 'false';
   if (rootElement.dataset.progressiveShellReleased === 'true') {
     delete rootElement.dataset.staticRouteActive;
+    if (rootElement.dataset.staticRoutePersistent === 'resources') {
+      const resourcesActive = progressiveRouteIdentity()?.kind === 'resources';
+      rootElement.querySelector<HTMLElement>('[data-static-route]')?.toggleAttribute('hidden', !resourcesActive);
+      if (resourcesActive) {
+        rootElement.dataset.staticRouteKind = 'resources';
+        rootElement.dataset.routeHydrated = 'true';
+      } else {
+        delete rootElement.dataset.staticRouteKind;
+      }
+      delete rootElement.dataset.staticSearchActive;
+      return;
+    }
     delete rootElement.dataset.staticRouteKind;
     delete rootElement.dataset.staticRoutePersistent;
     delete rootElement.dataset.staticSearchActive;
@@ -597,9 +617,36 @@ function onLocationChange() {
   if (!isHomeHash()) void bootReactApp();
 }
 
-function warmInteractiveRoute() {
+async function warmInteractiveRoute() {
+  // Wait only for the data-loader modules, not their network requests. Merely
+  // scheduling these imports before React lets the UI request burst overtake
+  // the loader and leaves the record shard queued behind unrelated scripts.
+  let preloader: [
+    typeof import('./ui/lib/hashRoutes'),
+    typeof import('./ui/lib/runtimeLoader'),
+  ] | undefined;
+  try {
+    preloader = await Promise.all([
+      import('./ui/lib/hashRoutes'),
+      import('./ui/lib/runtimeLoader'),
+    ]);
+  } catch {
+    // The interactive loader still owns error and retry presentation.
+  }
+  // Navigation during that module wait wins. Never start the former record's
+  // data or route module after the reader has returned to the static Home.
+  if (isHomeHash()) return;
   const hashRoute = window.location.hash.replace(/^#/, '') || '/';
   const routeUrl = new URL(hashRoute, window.location.origin);
+  if (preloader) {
+    const [routes, runtime] = preloader;
+    void runtime.preloadRuntimeArtifacts(
+      routes.parseHashLocation(routeUrl.pathname, routeUrl.search),
+    ).catch(() => undefined);
+  }
+  // Data requests have started. Give the cached framework/App imports their
+  // place in the queue before the route helper starts its own import burst.
+  void loadReactModules().catch(() => undefined);
   switch (routeUrl.pathname.split('/')[1]) {
     case 'search':
       void import('./ui/pages/ExplorePage').catch(() => undefined);
@@ -612,19 +659,15 @@ function warmInteractiveRoute() {
       void import('./ui/pages/CatalogDetailPage').catch(() => undefined);
       break;
     case 'record':
-      void import('./ui/pages/ObjectDetailPage').catch(() => undefined);
+      void import('./ui/lib/recordRouteModule')
+        .then(({ recordRouteModule }) => recordRouteModule.load())
+        .catch(() => undefined);
+      break;
+    case 'resources':
+      void import('./ui/pages/CommonsPage').catch(() => undefined);
       break;
   }
-  void Promise.all([
-    import('./ui/lib/hashRoutes'),
-    import('./ui/lib/runtimeLoader'),
-  ])
-    .then(([routes, runtime]) =>
-      runtime.preloadRuntimeArtifacts(
-        routes.parseHashLocation(routeUrl.pathname, routeUrl.search),
-      ),
-    )
-    .catch(() => undefined);
+
 }
 
 async function start() {
@@ -667,10 +710,15 @@ async function start() {
   // waterfall: CSS and the entry module finished before the React route and
   // its data even started. Home keeps its one-script static boundary above.
   // The classic progressive shell has already revealed the route identity.
-  // Begin fetching the route and framework immediately so network time overlaps
-  // that stable first paint and produces the interactive result without an
-  // extra task boundary between framework readiness and the initial commit.
-  warmInteractiveRoute();
+  // Start the cached data requests before route/framework imports compete for
+  // the connection. Data and UI then download together behind that stable shell.
+  await warmInteractiveRoute();
+  if (isHomeHash() && !reactBoot) {
+    connectStaticHome();
+    window.addEventListener('hashchange', onLocationChange);
+    window.addEventListener('popstate', onLocationChange);
+    return;
+  }
   void bootReactApp();
 }
 

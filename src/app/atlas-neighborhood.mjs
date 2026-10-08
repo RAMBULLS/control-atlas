@@ -1,4 +1,6 @@
-export const ATLAS_NEIGHBORHOOD_SHARD_COUNT = 128;
+// Smaller cohorts preserve each complete neighborhood while keeping unrelated
+// records off a cold record's download path.
+export const ATLAS_NEIGHBORHOOD_SHARD_COUNT = 2048;
 
 export function atlasNeighborhoodShardId(
   nodeId,

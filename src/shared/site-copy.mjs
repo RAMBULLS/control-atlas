@@ -132,6 +132,7 @@ export const SITE_COPY = Object.freeze({
  * Eyebrows that merely repeat the route title are omitted.
  */
 export const FIRST_PAINT_ROUTE_COPY = Object.freeze({
+  resources: Object.freeze({ eyebrow: "", summary: SITE_COPY.routes.resources.purpose, title: SITE_COPY.routes.resources.title }),
   atlas: Object.freeze({ eyebrow: "THE WHOLE LANDSCAPE", summary: SITE_COPY.routes.atlas.purpose, title: SITE_COPY.routes.atlas.title }),
   library: Object.freeze({ eyebrow: "", summary: SITE_COPY.routes.library.purpose, title: SITE_COPY.routes.library.title }),
   record: Object.freeze({ eyebrow: "", summary: "Read the published text and record details.", title: "Record" }),

@@ -384,6 +384,7 @@ test("content revisions compare complete inventories, source fields and CSV with
   await page.getByLabel("Publication B", { exact: true }).selectOption("nist-800-171-rev2");
   await expect(page.locator('[data-content-result="shared"]').first()).toBeVisible();
   await expect(page.locator('[data-content-result="only_a"], [data-content-result="only_b"], [data-content-result="different"]')).toHaveCount(0);
+  await page.getByText("Compare two specific records", { exact: true }).click();
   await page.getByLabel("Exact record A (optional)").fill("3.1.1");
   await page.getByLabel("Exact record B (optional)").fill("3.1.2");
   await expect(rows).toHaveCount(1); await expect(rows.first()).toContainText("Explicit record selection");
@@ -432,6 +433,7 @@ test("content comparison retains resolved ATT&CK publisher citation links", asyn
   await gotoApp(page, "/#/compare/relationships?intent=content&source=mitre-attack&target=mitre-attack&compareRun=true");
   await waitForAppReady(page); await dismissOnboarding(page);
   await expect(page.locator("[data-content-result]").first()).toBeVisible({ timeout: 90_000 });
+  await page.getByText("Compare two specific records", { exact: true }).click();
   await page.getByLabel("Exact record A (optional)").fill("T1059.001");
   await page.getByLabel("Exact record B (optional)").fill("T1059.001");
   await expect(page.locator("[data-content-result]")).toHaveCount(1);

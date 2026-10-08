@@ -105,9 +105,12 @@ export function ContentComparison(props: {
     <section className="panel" aria-label="Choose publication content">
       <div className="compare-step-fields"><SelectField label="Publication A" emptyLabel="Choose a publication" options={options} value={state.source} onChange={(value) => select("source", value)} />
         <SelectField label="Publication B" emptyLabel="Choose a publication" options={options} value={state.target} onChange={(value) => select("target", value)} /></div>
+      <p>Matching IDs across editions do not prove they describe the same requirement. Missing text stays unavailable.</p>
+      <details><summary>How this comparison works</summary>
       <p>Only imported publication editions are listed. Unavailable historical snapshots cannot be compared.</p>
       <p>Identifier alignment compares the same record type and publisher ID. Matching IDs across editions do not prove they describe the same requirement. Only in B means new to this selected inventory; only in A means missing from it, not withdrawn or noncompliant.</p>
       <p>Content comparison preserves the literal title, published sections and facts shown on each record page. Differences are not compliance, applicability or equivalence decisions. Missing source content remains unavailable.</p>
+      </details>
       {state.source && state.target && state.compareRun !== "true" ? <Button type="button" onClick={() => onNavigate("matrix", { ...state, compareRun: "true" })}>Compare content</Button> : null}
     </section>
     {state.compareRun === "true" && !ready && !["ready", "error", "unsupported"].includes(bundle.comparisonStatus || "") ? <p role="status">Loading complete selected inventories.</p> : null}
@@ -118,9 +121,9 @@ export function ContentComparison(props: {
       <SelectField label="Comparison basis" emptyLabel="" value={basis} options={[{ value: "content", label: "Identifiers and literal content" }, ...(bundle.comparisonMappingAvailable ? [{ value: "mappings", label: "Complete published mapping inventory" }] : [])]}
         onChange={(value) => { setBasis(value); setGroup(""); setPage("1"); }} />
       {basis === "mappings" ? <p>Every imported record is included. Only in A or B means no published mapping to a public record in the other inventory across this pair's available sources. A published mapping retains its relationship meaning and does not imply equivalence.</p>
-        : <div className="compare-step-fields">{[{ side: "A", value: itemA, set: setItemA }, { side: "B", value: itemB, set: setItemB }].map((item) =>
+        : <details><summary>Compare two specific records</summary><div className="compare-step-fields">{[{ side: "A", value: itemA, set: setItemA }, { side: "B", value: itemB, set: setItemB }].map((item) =>
           <Field key={item.side} label={`Exact record ${item.side} (optional)`}><input type="search" value={item.value} placeholder="Publisher ID or full record ID"
-            onChange={(event) => { item.set(event.target.value); setPage("1"); setGroup(""); }} /></Field>)}</div>}
+            onChange={(event) => { item.set(event.target.value); setPage("1"); setGroup(""); }} /></Field>)}</div></details>}
       {basis === "content" && explicit && (!selectedA || !selectedB) ? <p role="status">Enter one exact record on each side. For repeated publisher IDs, use the full record ID from its record link.</p> : null}
       <p data-content-totals>Complete inventory totals: {totals.map((entry) => `${entry.count.toLocaleString()} ${entry.label.toLowerCase()}`).join(" · ")}</p>
       <div className="compare-step-fields"><SelectField label="Result group" emptyLabel="All groups" value={group}

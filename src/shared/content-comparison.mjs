@@ -62,7 +62,7 @@ export function buildContentRows(a, b, selectedA = '', selectedB = '') {
   const left = byKey(a), right = byKey(b);
   return [...new Set([...left.keys(), ...right.keys()])].sort().flatMap((key) => {
     const aa = left.get(key) || [], bb = right.get(key) || [];
-    if (aa.length === 1 && bb.length === 1) return [{ id: `${aa[0].id}|${bb[0].id}`, a: aa[0], b: bb[0], ...compareRecordContent(aa[0], bb[0]), alignment: 'Same record type and publisher identifier; semantic continuity not established' }];
+    if (aa.length === 1 && bb.length === 1) return [{ id: `${aa[0].id}|${bb[0].id}`, a: aa[0], b: bb[0], ...compareRecordContent(aa[0], bb[0]), alignment: 'Matched by record type and publisher ID' }];
     const ambiguous = aa.length > 1 || bb.length > 1;
     return [...aa.map((node) => ({ id: `a:${node.id}`, a: node, b: null, group: ambiguous ? 'unavailable' : 'only_a', changed: [], alignment: ambiguous ? 'Repeated identifier; select exact records to compare' : 'Identifier only in A' })),
       ...bb.map((node) => ({ id: `b:${node.id}`, a: null, b: node, group: ambiguous ? 'unavailable' : 'only_b', changed: [], alignment: ambiguous ? 'Repeated identifier; select exact records to compare' : 'Identifier only in B' }))];

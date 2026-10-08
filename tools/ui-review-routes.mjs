@@ -64,6 +64,12 @@ export const UI_REVIEW_ROUTES = [
     owners: ["src/ui/pages/BaselineComparison.tsx"],
   },
   {
+    id: "compare-content",
+    path: "/#/compare/relationships?intent=content&source=nist-800-171-rev2&target=nist-800-171&compareRun=true",
+    title: "Compare publication content",
+    owners: ["src/ui/pages/ContentComparison.tsx", "src/shared/content-comparison.mjs"],
+  },
+  {
     id: "templates",
     path: "/#/build",
     title: "Templates",

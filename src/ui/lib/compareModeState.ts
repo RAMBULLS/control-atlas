@@ -3,6 +3,7 @@ import type { CompareCrosswalk, ViewState } from "./viewState";
 export type CompareModeId =
   | "frameworks"
   | "implementation"
+  | "content"
   | "baselines"
   | "item-mapping";
 
@@ -33,6 +34,7 @@ export const COMPARE_MODES = Object.freeze([
     required: ["source", "items", "target"],
   },
   { id: "baselines", label: "Baselines", crosswalk: "relationships", required: ["source", "target"] },
+  { id: "content", label: "Content & revisions", crosswalk: "relationships", required: ["source", "target"] },
 ] as const);
 
 export type CompareStep = {
@@ -43,6 +45,11 @@ export type CompareStep = {
 
 // "Compare with" names the reader's job; "Target" was crosswalk-schema jargon.
 export const COMPARE_MODE_STEPS: Record<CompareModeId, readonly CompareStep[]> = {
+  content: [
+    { id: "source", label: "Publication A" },
+    { id: "target", label: "Publication B" },
+    { id: "results", label: "Results" },
+  ],
   baselines: [
     { id: "source", label: "Baseline A" },
     { id: "target", label: "Baseline B" },
@@ -77,6 +84,7 @@ export function getCompareCurrentStep(
   state: CompareState,
 ): number {
   switch (modeId) {
+    case "content":
     case "baselines":
     case "implementation":
     case "frameworks":

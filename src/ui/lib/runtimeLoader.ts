@@ -1,3 +1,4 @@
+import { isComparisonRecord } from "../../shared/content-comparison.mjs";
 import { comparisonPairKey, comparisonScopeAllowed } from "../../shared/compare-scope.mjs";
 import { isBaselineSelection, isComparisonCapableEdge, mappingSourceIdsForEdge } from "../../shared/compare-capability.mjs";
 import { createFederalGraphRuntime } from "../../app/runtime.mjs";
@@ -163,6 +164,8 @@ export type ComparisonBaseline = Omit<ComparisonPair, "scope"> & {
   lifecycle_status: string;
 };
 
+export type ComparisonContent = { record_count: number; path: string; bytes: number };
+
 export type RuntimeBundle = {
   runtime: ReturnType<typeof createFederalGraphRuntime>;
   templateRegistry: TemplateRegistry;
@@ -181,6 +184,9 @@ export type RuntimeBundle = {
   commonsSearchIndex?: CommonsSearchIndex;
   commonsDataset?: CommonsResourceDataset;
   mappingSources?: Record<string, Array<{ value: string; label: string }>>;
+  comparisonContent?: Record<string, ComparisonContent>;
+  comparisonMappingAvailable?: boolean;
+  comparisonInventoryMappings?: Array<Record<string, any>>;
   comparisonPairs?: Record<string, ComparisonPair>;
   comparisonBaselines?: Record<string, ComparisonBaseline>;
   comparisonItems?: Record<string, string>;
@@ -994,6 +1000,7 @@ export async function loadRuntimeDataset(): Promise<RuntimeBundle> {
 }
 
 type CatalogBootstrap = {
+  comparison_content?: Record<string, ComparisonContent>;
   comparison_baselines?: Record<string, ComparisonBaseline>;
   comparison_pairs?: Record<string, ComparisonPair>;
   comparison_items?: Record<string, string>;
@@ -1190,6 +1197,7 @@ async function loadRouteScopedPhase(
       mappingSources: catalogBootstrap.mapping_sources || {},
       comparisonPairs: catalogBootstrap.comparison_pairs,
       comparisonBaselines: catalogBootstrap.comparison_baselines || {},
+      comparisonContent: catalogBootstrap.comparison_content || {},
       comparisonItems: catalogBootstrap.comparison_items || {},
       catalogSummaries: catalogBootstrap.catalogs || [],
       atlasSpine,
@@ -1244,6 +1252,7 @@ async function loadCatalogShellPhase(
     mappingSources: catalogBootstrap.mapping_sources || {},
     comparisonPairs: catalogBootstrap.comparison_pairs,
     comparisonBaselines: catalogBootstrap.comparison_baselines || {},
+      comparisonContent: catalogBootstrap.comparison_content || {},
     comparisonItems: catalogBootstrap.comparison_items || {},
     catalogSummaries: catalogBootstrap.catalogs || [],
     atlasSpine,
@@ -1371,6 +1380,40 @@ export async function loadComparePhase(
       } else base.comparisonItemTargets = {};
     }
     if (state.compareRun !== "true" || !state.source || !state.target) return base;
+    if (state.intent === "content") {
+      const ids = [...new Set([state.source, state.target])];
+      if (ids.some((id) => !bundle.comparisonContent?.[id])) return { ...base, comparisonStatus: "unsupported" };
+      const inventories = await mapBounded(ids, async (catalog) => {
+        const entry = bundle.comparisonContent![catalog];
+        const header = await checkedLoad(entry.path);
+        if (header.schema_version !== 1 || header.catalog !== catalog || header.record_count !== entry.record_count ||
+          !Array.isArray(header.chunks) || !header.chunks.length) throw new Error("Invalid content inventory");
+        const chunks = await mapBounded(header.chunks as Array<{ path: string; record_count: number }>, async (part) => {
+          const chunk = await checkedLoad(part.path);
+          if (chunk.catalog !== catalog || !Array.isArray(chunk.records) || chunk.records.length !== part.record_count) {
+            throw new Error("Incomplete content chunk");
+          }
+          return chunk.records;
+        });
+        const records = chunks.flat();
+        const unique = new Set(records.map((node) => node.id));
+        if (records.length !== entry.record_count || unique.size !== records.length || records.some((node) =>
+          !isComparisonRecord(node) || node.metadata.catalog_id !== catalog || !bundle.runtime.getSource(node.source_id))) {
+          throw new Error("Incomplete or unrelated content inventory");
+        }
+        return records;
+      }, 1);
+      const pair = bundle.comparisonPairs?.[comparisonPairKey(state.source, state.target)];
+      const mapped = pair ? await loadComparePhase({ ...state, intent: pair.scope }, bundle, signal, load) : null;
+      if (mapped && mapped.comparisonStatus !== "ready") throw new Error("Published mappings unavailable");
+      if (signal?.aborted) throw new Error("Comparison cancelled");
+      const records = inventories.flat();
+      const runtime = createFederalGraphRuntime({ sources: bundle.runtime.getSources(), catalogs: bundle.catalogSummaries || [],
+        nodes: records, edges: [], evidence: [], findings: [] });
+      const mappings = mapped?.runtime.buildRelationshipRows({ source_catalog: state.source, target_catalog: state.target,
+        comparisons_only: true, include_candidates: false }).rows || [];
+      return { ...base, runtime, comparisonStatus: "ready", comparisonMappingAvailable: Boolean(pair), comparisonInventoryMappings: mappings };
+    }
     const baselineMode = state.intent === "baselines";
     if (!baselineMode && !bundle.comparisonPairs) throw new Error("Missing comparison capability metadata");
     const key = comparisonPairKey(state.source, state.target);

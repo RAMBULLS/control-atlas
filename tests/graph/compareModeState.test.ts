@@ -21,7 +21,7 @@ import { readGeneratedCollection } from "../../scripts/lib/generated-graph-artif
 import { createFederalGraphRuntime } from "../../src/app/runtime.mjs";
 
 test("each Compare mode has distinct required input state after one activation", () => {
-  assert.deepEqual(COMPARE_MODES.map((mode) => mode.id), ["frameworks", "implementation", "item-mapping", "baselines"]);
+  assert.deepEqual(COMPARE_MODES.map((mode) => mode.id), ["frameworks", "implementation", "item-mapping", "baselines", "content"]);
   for (const mode of COMPARE_MODES) {
     const state = normalizeViewState("matrix", {
       view: "matrix",

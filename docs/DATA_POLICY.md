@@ -81,3 +81,28 @@ Zero Trust is not one interchangeable framework. DoD activities and overlays, NI
 For the NIST SP 1800-35 workbooks, parse the leading relationship clause(s), including `Supports`, `Is supported by` / `Supported by`, and `Equivalent`. Preserve the publisher's `example of`, `integral to`, and `precedes` properties and all original cells/locators. Compound assertions remain compound. Shorthand without an explicit resolved predicate stays in the retained source data as unresolved; do not default it to `supports` or fabricate an edge. Regeneration changes derived semantics, not publisher text or retrieval dates.
 
 The generated `compare-data/` files are disposable projections of eligible graph edges, not a second source of mapping truth. Their manifest records endpoint scope. Compare validates scope before payload loading and preserves native direction when presenting a reversed view. Tests reconcile every pair's edges and source evidence to the generated graph.
+
+
+## Literal content and complete inventory comparisons
+
+Compare's Content & revisions mode projects the existing public-record set,
+excluding structural and retired records. It retains each record's exact title,
+published sections and facts from its governed record-presentation contract,
+with source identity, edition, lifecycle, and locators. It does not compare
+editorial notes or infer uncaptured source text. Chunk counts, unique record IDs,
+catalog membership and source resolution must reconcile before results appear.
+
+Automatic alignment uses record type and publisher identifier, never a claim
+of semantic continuity between editions or equivalence between publications.
+Repeated identifiers require explicit record selection. Missing primary text is
+unavailable, not withdrawn. Only-in-A/B groups describe the selected inventories,
+not compliance or a publisher's formal change classification. Historical editions
+without imported content are unsupported.
+
+The published-mapping inventory uses every eligible mapping in the selected
+pair, before display filters, and lists records without a mapping to a public
+record in the other inventory. Mappings retain their publisher relationship and
+sources; they are not content equality. CSV includes every filtered result,
+complete inventory totals, compared fields, source URLs and locators. Pagination
+bounds rendering only. Content projections reuse the bounded compare-data
+transport and are disposable views of governed records, not a new source registry.

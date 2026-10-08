@@ -55,7 +55,7 @@ export function BaselineComparison(props: {
         summary="Find controls selected by both baselines and those selected by only one." />
       <div aria-label="Comparison mode" className="compare-mode-tabs" role="tablist">
         {([{ id: "frameworks", label: "Frameworks" }, { id: "implementation", label: "Implementation" },
-          { id: "item-mapping", label: "Specific item" }, { id: "baselines", label: "Baselines" }] as const).map((mode) => (
+          { id: "item-mapping", label: "Specific item" }, { id: "baselines", label: "Baselines" }, { id: "content", label: "Content & revisions" }] as const).map((mode) => (
           <button type="button" role="tab" className="compare-mode-tab" key={mode.id} aria-selected={mode.id === "baselines"}
             onClick={() => mode.id !== "baselines" && onNavigate("matrix", activateCompareMode(mode.id))}>{mode.label}</button>
         ))}
@@ -66,7 +66,7 @@ export function BaselineComparison(props: {
           <SelectField label="Baseline B" emptyLabel="Choose a baseline" options={options} value={state.target} onChange={(value) => select("target", value)} />
         </div>
         <p>Shared means the same control record is selected by both baselines. Selection does not establish identical parameters or requirements. A control absent from a baseline is not a compliance failure.</p>
-        <p>Only baselines with published control selections are listed. Revision text changes and historical editions without full source content are not available in this comparison.</p>
+        <p>Only baselines with published control selections are listed. Use Content & revisions to compare available publication text. Historical editions without imported source content are unavailable.</p>
         {state.source && state.target && state.compareRun !== "true" ? <Button type="button" onClick={() => onNavigate("matrix", { ...state, compareRun: "true" })}>Compare baselines</Button> : null}
         {!options.length ? <p role="status">No published baseline selections are available.</p> : null}
       </section>

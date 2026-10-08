@@ -218,3 +218,126 @@ test("a malformed pair cannot promote an unregistered mapping source", async () 
   });
   assert.equal(result.comparisonStatus, "error");
 });
+
+
+test("complete content inventories preserve literal fields, missing text, sources and all unmatched records", async () => {
+  const { buildContentRows, buildMappingInventoryRows, filterContentRows } = await import("../../src/shared/content-comparison.mjs");
+  const { buildContentExportData } = await import("../../src/ui/lib/compareExport");
+  const records = (catalog: string, start: number) => Array.from({ length: 31 }, (_, offset) => {
+    const i = start + offset;
+    return { id: `${catalog}:${i}`, node_type: "requirement", source_id: source.id, metadata: {
+      catalog_id: catalog, item_id: String(i), title: i === 4 ? " =unsafe" : `Requirement ${i}`,
+      description: catalog === "nist-800-171" && i === 1 ? "" : `Exact statement ${i}${catalog === "nist-800-171" && i === 2 ? " " : ""}`,
+      source_locator: `Official table row ${i}`,
+    } };
+  });
+  const a = records("nist-800-171-rev2", 0), b = records("nist-800-171", 1);
+  const mapping = { ...edge, id: "edge:content", source_node_id: a[0].id, target_node_id: b[30].id, evidence_ids: ["evidence:content"] };
+  const projected = buildComparisonArtifacts({ sources: [source], nodes: [...a, ...b], edges: [mapping],
+    evidence: [{ id: "evidence:content", source_id: source.id, locator: "Crosswalk row" }] }, 4096, true);
+  const contentBundle = { ...bundle(), comparisonContent: projected.contentManifest, comparisonPairs: projected.manifest };
+  const transport = async (path: string) => JSON.parse(projected.files.get(path)!);
+  const request = state({ intent: "content", source: "nist-800-171-rev2", target: "nist-800-171" });
+  const loaded = await loadComparePhase(request, contentBundle, undefined, transport);
+  assert.equal(loaded.comparisonStatus, "ready");
+  assert.equal(loaded.runtime.getNodes().length, 62);
+  const rows = buildContentRows(loaded.runtime.getNodes({ catalog_id: request.source }), loaded.runtime.getNodes({ catalog_id: request.target }));
+  assert.equal(rows.filter((row: any) => row.group === "only_a").length, 1);
+  assert.equal(rows.filter((row: any) => row.group === "only_b").length, 1);
+  assert.equal(rows.filter((row: any) => row.group === "unavailable").length, 1, "blank Rev. 3 text is unavailable, not withdrawn");
+  assert.equal(rows.filter((row: any) => row.group === "different").length, 1, "whitespace is preserved");
+  assert.equal(rows.filter((row: any) => row.group === "shared").length, 28);
+  assert.equal(buildContentRows(a, a).length, 31);
+  assert.ok(buildContentRows(a, a).every((row: any) => row.group === "shared"));
+  assert.equal(buildContentRows(a, b, a[0].id, b[30].id)[0].alignment, "Explicit record selection");
+  assert.equal(buildContentRows(a, [...b, { ...b[0], id: "another-b" }]).filter((row: any) => row.group === "unavailable").length, 3, "repeated identifiers are never overwritten or aligned silently");
+  assert.equal(buildContentRows(b, a).filter((row: any) => row.group === "only_a")[0].a.id, b[30].id);
+  const mapped = buildMappingInventoryRows(a, b, loaded.comparisonInventoryMappings);
+  assert.equal(mapped.filter((row: any) => row.group === "mapped").length, 1);
+  assert.equal(mapped.filter((row: any) => row.group === "only_a").length, 30);
+  assert.equal(mapped.filter((row: any) => row.group === "only_b").length, 30);
+  assert.equal(mapped.find((row: any) => row.group === "mapped").source_refs[0].locator, "Crosswalk row");
+  const shared = filterContentRows(rows, "shared", "");
+  const csv = compareExportToCsv(buildContentExportData({ rows: shared, labelA: "Rev. 2", labelB: "Rev. 3", countA: a.length, countB: b.length,
+    basis: "Literal fields", resolveSource: () => ({ ...source, catalog_browse_url: "https://example.gov/publication" }) }));
+  assert.equal(csv.split("\r\n").length, 29, "export includes every filtered row beyond one page");
+  assert.ok(csv.includes('"\' =unsafe"'));
+  // Read complete quoted CSV cells; a substring anywhere in the file cannot
+  // prove that every record retains both exact source URLs.
+  const csvRows = csv.slice(1).split("\r\n").map((line) =>
+    Array.from(line.matchAll(/"((?:[^"]|"")*)"(?=,|$)/g), ([, cell]) => cell.replaceAll('""', '"')));
+  const [header, ...exportedRows] = csvRows;
+  const sourceColumns = ["A official URL", "B official URL"].map((name) => header.indexOf(name));
+  assert.ok(sourceColumns.every((index) => index >= 0));
+  assert.equal(exportedRows.length, shared.length);
+  for (const row of exportedRows) {
+    assert.equal(row.length, header.length);
+    for (const index of sourceColumns) assert.equal(row[index], "https://example.gov/publication");
+  }
+  assert.ok(csv.includes("Official table row"));
+  assert.deepEqual(filterContentRows(rows, "", "no-such-record"), []);
+  const unsupported = await loadComparePhase({ ...request, target: "unavailable-revision" }, contentBundle, undefined, async () => { throw Error("must not load"); });
+  assert.equal(unsupported.comparisonStatus, "unsupported");
+  for (const corruption of ["missing", "duplicate", "source", "catalog"]) {
+    const broken = await loadComparePhase(request, contentBundle, undefined, async (path) => {
+      const payload = await transport(path);
+      if (payload.records?.length > 1) {
+        if (corruption === "missing") payload.records.pop();
+        if (corruption === "duplicate") payload.records[1] = payload.records[0];
+        if (corruption === "source") payload.records[0].source_id = "unknown";
+        if (corruption === "catalog") payload.records[0].metadata.catalog_id = "wrong";
+      }
+      return payload;
+    });
+    assert.equal(broken.comparisonStatus, "error", corruption);
+  }
+  const cancelled = new AbortController();
+  await assert.rejects(loadComparePhase(request, contentBundle, cancelled.signal, async (path) => {
+    const payload = await transport(path); cancelled.abort(); return payload;
+  }), /cancelled/);
+  const brokenMapping = await loadComparePhase(request, contentBundle, undefined, async (path) => {
+    const payload = await transport(path); if (payload.edges) payload.edges = []; return payload;
+  });
+  assert.equal(brokenMapping.comparisonStatus, "error", "missing mapping data cannot become unmatched inventory");
+});
+
+test("generated content inventory reconciles exactly to all public source records", async () => {
+  const { readGeneratedCollection } = await import("../../scripts/lib/generated-graph-artifacts.mjs");
+  const { isComparisonRecord, projectComparisonRecord } = await import("../../src/shared/content-comparison.mjs");
+  const read = (path: string) => JSON.parse(readFileSync(`data/generated/${path}`, "utf8"));
+  const manifest = read("catalog-bootstrap.json").catalog_bootstrap.comparison_content;
+  const graphRecords = readGeneratedCollection(".", "nodes").nodes.filter(isComparisonRecord);
+  const expected = new Map(graphRecords.map((node: any) => [node.id, projectComparisonRecord(node)]));
+  const actual = new Map();
+  for (const [catalog, entry] of Object.entries(manifest) as Array<[string, any]>) {
+    const header = read(entry.path);
+    const emitted = header.chunks.flatMap((part: any) => {
+      assert.ok(part.bytes <= 512 * 1024);
+      const chunk = read(part.path);
+      assert.equal(chunk.catalog, catalog); assert.equal(chunk.records.length, part.record_count);
+      return chunk.records;
+    });
+    assert.equal(emitted.length, entry.record_count);
+    for (const record of emitted) {
+      assert.equal(actual.has(record.id), false);
+      assert.equal(record.metadata.catalog_id, catalog);
+      assert.deepEqual(record, expected.get(record.id));
+      actual.set(record.id, record);
+    }
+  }
+  assert.equal(actual.size, expected.size);
+  assert.ok(manifest["nist-800-171"] && manifest["nist-800-171-rev2"]);
+  assert.equal(manifest["nist-800-53-rev4"], undefined);
+  assert.equal(manifest["csf-1.1"], undefined);
+});
+
+
+test("content comparison excludes derived presentation fields and preserves native mapping assertions", async () => {
+  const { comparisonFields, buildMappingInventoryRows } = await import("../../src/shared/content-comparison.mjs");
+  assert.equal(comparisonFields({ node_type: "mobile_threat", metadata: { catalog_id: "nist-mobile-threats" } }).includes("publisher_field_availability"), false);
+  assert.equal(comparisonFields(nodes[0]).includes("mapping_count"), false);
+  const mapping = { edge_id: "mapping", from_id: nodes[0].id, to_id: nodes[1].id, relationship_type: "supported_by",
+    published_source_id: nodes[1].id, published_target_id: nodes[0].id, published_relationship_type: "supports",
+    raw_relationship_type: "Supports (integral to)", publisher_assertions: [{ relationship: "Supports (integral to)", locator: "C2" }], warning: "Qualified mapping" };
+  assert.deepEqual(buildMappingInventoryRows([nodes[0]], [nodes[1]], [mapping])[0].mapping, mapping);
+});

@@ -592,7 +592,7 @@ export function recordPresentationContract(catalogId, nodeType) {
         entry.field,
         {
           disposition: entry.disposition,
-          origin: "publisher",
+          origin: base.field_dispositions[entry.field]?.origin || "publisher",
         },
       ]),
     ),

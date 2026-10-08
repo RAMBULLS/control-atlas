@@ -1,4 +1,5 @@
 import { comparisonPairKey, comparisonScopeAllowed } from "../../shared/compare-scope.mjs";
+import { ContentComparison } from "./ContentComparison";
 import { BaselineComparison } from "./BaselineComparison";
 import * as Accordion from "@radix-ui/react-accordion";
 import { useVirtualizer } from "@tanstack/react-virtual";
@@ -463,6 +464,7 @@ type ComparePageProps = {
 };
 
 export function ComparePage(props: ComparePageProps) {
+  if (props.state.intent === "content") return <ContentComparison key={`${props.state.source}|${props.state.target}`} {...props} />;
   return props.state.intent === "baselines"
     ? <BaselineComparison key={`${props.state.source}|${props.state.target}`} {...props} />
     : <MappingComparePage {...props} />;
@@ -814,6 +816,7 @@ function MappingComparePage(props: ComparePageProps) {
           { id: "implementation" as const, label: "Implementation" },
           { id: "item-mapping" as const, label: "Specific item" },
           { id: "baselines" as const, label: "Baselines" },
+          { id: "content" as const, label: "Content & revisions" },
         ].map((entry) => (
           <button
             aria-selected={mode === entry.id}

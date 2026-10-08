@@ -359,3 +359,84 @@ test("the result has no serious or critical accessibility violations at desktop 
     expect(results.violations.filter((v) => ["serious", "critical"].includes(v.impact))).toEqual([]);
   }
 });
+
+
+test("content revisions compare complete inventories, source fields and CSV with safe unsupported states", async ({ page }, testInfo) => {
+  test.setTimeout(120_000);
+  await gotoApp(page, "/#/compare/relationships?intent=content&source=nist-800-171-rev2&target=nist-800-171&compareRun=true");
+  await waitForAppReady(page); await dismissOnboarding(page);
+  const rows = page.locator("[data-content-result]");
+  await expect(rows.first()).toBeVisible({ timeout: 90_000 });
+  await expect(page.locator("#compare-workspace")).toContainText("do not prove they describe the same requirement");
+  await expect(page.locator("[data-content-totals]")).toContainText("different content");
+  expect(await rows.count()).toBeLessThanOrEqual(25);
+  await rows.first().getByText("Compared fields and sources", { exact: true }).click();
+  await expect(rows.first().getByRole("link", { name: /official source/ }).first()).toBeVisible();
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Download CSV" }).click();
+  const csv = await readFile(await (await download).path(), "utf8");
+  expect(csv).toContain("Complete A records"); expect(csv).toContain("semantic equivalence");
+  expect(csv).toContain("https://");
+  expect(csv.split("\r\n").length).toBeGreaterThan(26);
+  await page.getByLabel("Search results by ID or title").fill("no-such-record-zzzz");
+  await expect(rows).toHaveCount(0); await expect(page.getByRole("button", { name: "Download CSV" })).toBeDisabled();
+  await page.getByLabel("Search results by ID or title").fill("");
+  await page.getByLabel("Publication B", { exact: true }).selectOption("nist-800-171-rev2");
+  await expect(page.locator('[data-content-result="shared"]').first()).toBeVisible();
+  await expect(page.locator('[data-content-result="only_a"], [data-content-result="only_b"], [data-content-result="different"]')).toHaveCount(0);
+  await page.getByText("Compare two specific records", { exact: true }).click();
+  await page.getByLabel("Exact record A (optional)").fill("3.1.1");
+  await page.getByLabel("Exact record B (optional)").fill("3.1.2");
+  await expect(rows).toHaveCount(1); await expect(rows.first()).toContainText("Explicit record selection");
+  await page.goBack();
+  await expect(page.getByLabel("Publication B", { exact: true })).toHaveValue("nist-800-171");
+  await expect(rows.first()).toBeVisible();
+  for (const width of [1440, 390, 320]) {
+    await page.setViewportSize({ width, height: 900 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+  }
+  const scan = await new AxeBuilder({ page }).include("#compare-workspace").analyze();
+  expect(scan.violations.filter((violation) => ["serious", "critical"].includes(violation.impact))).toEqual([]);
+  await testInfo.attach("content-comparison-mobile", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" });
+  await gotoApp(page, "/#/compare/relationships?intent=content&source=nist-800-53-rev4&target=nist-800-53&compareRun=true");
+  await expect(page.getByText("A selected edition has no supported content inventory. Choose an available publication above.")).toBeVisible();
+  await expect(rows).toHaveCount(0);
+});
+
+test("complete mapping inventories export every unmatched record and preserve published relationships", async ({ page }) => {
+  test.setTimeout(120_000);
+  await gotoApp(page, "/#/compare/relationships?intent=content&source=nist-800-53&target=csf-2&compareRun=true");
+  await waitForAppReady(page); await dismissOnboarding(page);
+  await expect(page.locator("[data-content-result]").first()).toBeVisible({ timeout: 90_000 });
+  await page.getByLabel("Comparison basis").selectOption("mappings");
+  await expect(page.locator("[data-content-totals]")).toContainText("published mapping");
+  await page.getByLabel("Result group").selectOption("only_a");
+  const rows = page.locator('[data-content-result="only_a"]');
+  await expect(rows.first()).toBeVisible();
+  await expect(page.locator('[data-content-result]:not([data-content-result="only_a"])')).toHaveCount(0);
+  const totalText = await page.locator("[data-content-totals]").innerText();
+  const count = Number(totalText.match(/([\d,]+) only in a/)[1].replaceAll(",", ""));
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Download CSV" }).click();
+  const csv = await readFile(await (await download).path(), "utf8");
+  expect(csv.split("\r\n")).toHaveLength(count + 1);
+  expect(csv).toContain("A inventory sources"); expect(csv).toContain("B inventory sources");
+  expect(csv).toContain('"only_a"'); expect(csv).not.toContain('"mapped"');
+  expect(csv).toContain("https://");
+  await page.getByLabel("Result group").selectOption("mapped");
+  await page.locator('[data-content-result="mapped"]').first().getByText("Compared fields and sources", { exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Publisher mapping", exact: true })).toBeVisible();
+});
+
+test("content comparison retains resolved ATT&CK publisher citation links", async ({ page }) => {
+  test.setTimeout(120_000);
+  await gotoApp(page, "/#/compare/relationships?intent=content&source=mitre-attack&target=mitre-attack&compareRun=true");
+  await waitForAppReady(page); await dismissOnboarding(page);
+  await expect(page.locator("[data-content-result]").first()).toBeVisible({ timeout: 90_000 });
+  await page.getByText("Compare two specific records", { exact: true }).click();
+  await page.getByLabel("Exact record A (optional)").fill("T1059.001");
+  await page.getByLabel("Exact record B (optional)").fill("T1059.001");
+  await expect(page.locator("[data-content-result]")).toHaveCount(1);
+  await page.getByText("Compared fields and sources", { exact: true }).click();
+  await expect(page.getByRole("link", { name: /Publisher reference:/ }).first()).toHaveAttribute("href", /^https?:\/\//);
+});

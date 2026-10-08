@@ -3949,12 +3949,13 @@ export function buildFrameworkData({ generatedDirectory = DEFAULT_GENERATED } = 
       mappingSourcesByPair.set(key, values);
     }
   }
-  const comparisons = buildComparisonArtifacts(graph);
+  const comparisons = buildComparisonArtifacts(graph, undefined, true);
   const catalogBootstrap = {
     catalogs,
     comparison_pairs: comparisons.manifest,
     comparison_items: comparisons.itemManifest,
     comparison_baselines: comparisons.baselineManifest,
+    comparison_content: comparisons.contentManifest,
     mapping_sources: Object.fromEntries(
       [...mappingSourcesByPair.entries()].map(([key, sourceIds]) => [
         key,

@@ -441,3 +441,18 @@ test("content comparison deep links survive canonicalization and state round tri
   assert.ok(invalid.recoveryMessage);
   assert.ok(!invalid.canonicalPath.includes("intent=unpublished"));
 });
+
+
+test("Sources defaults to the complete register and preserves explicit category filters", () => {
+  const all = normalizeViewState("sources");
+  assert.equal(all.view, "sources");
+  if (all.view !== "sources") throw new Error("Expected Sources state");
+  assert.equal(all.layer, "all");
+  assert.equal(serializeHashLocation(all), "/sources");
+  for (const layer of ["publication", "policy"] as const) {
+    const route = `/sources?layer=${layer}`;
+    assert.equal(canonicalizeHashLocation(route).canonicalPath, route);
+    const filtered = parseHashLocation("/sources", `?layer=${layer}`);
+    assert.equal(serializeHashLocation(filtered), route);
+  }
+});

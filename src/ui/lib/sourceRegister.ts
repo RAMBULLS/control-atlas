@@ -519,6 +519,7 @@ function matchesPublicationFilters(
     row.version.value || "",
     row.coverageSummary,
     row.catalogId || "",
+    ...row.associatedSourceIds,
     ...(row.coverage.value || []),
     ...row.sourceMaterials.primary.flatMap((m) => [m.id, m.displayTitle]),
     ...row.sourceMaterials.enrichment.flatMap((m) => [m.id, m.displayTitle]),
@@ -564,7 +565,6 @@ export function buildPublicationRegister(
         name: identity.name,
         display_name: identity.name,
         owner: identity.publisher,
-        lifecycle_status: "active",
       };
 
     const sourceCatalogs =
@@ -828,6 +828,21 @@ export function buildSourceLayers(
     );
   }
   return layers;
+}
+
+/** All noncanonical ledger entries, without promoting them to publication identities. */
+export function buildSupportingSourceInventory(
+  sources: any[],
+  catalogs: CatalogSummary[],
+  filters: SourceRegisterFilters = {},
+): SourceRegisterRow[] {
+  const canonicalIds = new Set(
+    publicationIdentityIndexArtifact.identities.map((identity) => identity.id),
+  );
+  return Object.values(buildSourceLayers(sources, catalogs, filters))
+    .flat()
+    .filter((row) => !canonicalIds.has(row.id))
+    .sort((left, right) => left.displayTitle.localeCompare(right.displayTitle));
 }
 
 export function sourceLayerOptions(rows: SourceRegisterRow[]): SourceLayerOptions {

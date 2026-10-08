@@ -140,8 +140,8 @@ test("WS3 Resources shares Template C with real list, map, and comparison modes"
 
   await workspace.getByRole("button", { name: /Browse all \d+ resources/ }).click();
   await expect(page.locator('[data-result-bar-order="count,sort,view,compare"]')).toBeVisible();
-  await expect(page.locator(".workspace-result-count")).toHaveText(`${resourceCount.toLocaleString("en-US")} results · showing 25`);
-  await expect(page.locator('[data-result-class="resource"]')).toHaveCount(25);
+  await expect(page.locator(".workspace-result-count")).toHaveText(`${resourceCount.toLocaleString("en-US")} results`);
+  await expect(page.locator('[data-result-class="resource"]')).toHaveCount(resourceCount);
   const firstRow = page.locator('[data-result-class="resource"]').first();
   await expect(firstRow).toBeVisible();
   await expect(firstRow.locator(".resource-type-icon")).toBeVisible();

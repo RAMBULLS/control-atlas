@@ -194,6 +194,8 @@ export type RuntimeBundle = {
   comparisonStatus?: "idle" | "ready" | "unsupported" | "scope-mismatch" | "error";
   comparisonError?: string;
   librarySearchReady: boolean;
+  /** True only after the source ledger has loaded, even if it contains no rows. */
+  sourcesReady?: boolean;
   routeReady: boolean;
   graphReady: boolean;
 };
@@ -913,6 +915,7 @@ export async function loadLibrarySearchPhase(): Promise<RuntimeBundle> {
     commonsSearchIndex: (commonsSearchIndexRaw as CommonsSearchIndex) || undefined,
     commonsDataset: (commonsDatasetRaw as CommonsResourceDataset) || undefined,
     librarySearchReady: true,
+    sourcesReady: false,
     routeReady: true,
     graphReady: false,
   };
@@ -961,6 +964,7 @@ export async function loadFullGraphPhase(
     mappingSources,
     atlasSpine,
     librarySearchReady: true,
+    sourcesReady: true,
     routeReady: true,
     graphReady: true,
   };
@@ -1203,6 +1207,7 @@ async function loadRouteScopedPhase(
       atlasSpine,
       catalogPublishedGroups,
       catalogRecordsReady: plan.catalogId ? true : undefined,
+      sourcesReady: Boolean(sourcesArtifact),
       librarySearchReady: plan.librarySearch,
       routeReady: true,
       graphReady: false,
@@ -1257,6 +1262,7 @@ async function loadCatalogShellPhase(
     catalogSummaries: catalogBootstrap.catalogs || [],
     atlasSpine,
     catalogRecordsReady: false,
+    sourcesReady: true,
     librarySearchReady: false,
     routeReady: true,
     graphReady: false,

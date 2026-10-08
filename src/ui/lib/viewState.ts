@@ -29,6 +29,7 @@ export type CompareCrosswalk =
 export type CompareViewMode = "map" | "list";
 
 export type SourceLayerMode =
+  | "all"
   | "publication"
   /** Policy & directives: statutes, regulations, orders and directives in the register. */
   | "policy"
@@ -37,6 +38,7 @@ export type SourceLayerMode =
   | "organization";
 
 const SOURCE_LAYER_MODES = new Set<SourceLayerMode>([
+  "all",
   "publication",
   "policy",
   "connection",
@@ -64,7 +66,7 @@ export function normalizeAtlasDataset(value: unknown): string {
 function sourceLayerMode(value: unknown): SourceLayerMode {
   return SOURCE_LAYER_MODES.has(value as SourceLayerMode)
     ? (value as SourceLayerMode)
-    : "publication";
+    : "all";
 }
 
 export type ViewState =
@@ -783,7 +785,7 @@ export function serializeViewState(state: ViewState): string {
     setIfValue(params, "q", state.query);
   } else if (state.view === "sources") {
     params.set("view", state.view);
-    if (state.layer !== "publication") setIfValue(params, "layer", state.layer);
+    if (state.layer !== "all") setIfValue(params, "layer", state.layer);
     setIfValue(params, "q", state.query);
     setIfValue(params, "source", state.source);
     setIfValue(params, "publisher", state.publisher);

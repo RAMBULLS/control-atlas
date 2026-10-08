@@ -356,8 +356,8 @@ test("all canonical sources are visible without reveal controls and categories r
 test("Resources to Sources waits for metadata instead of painting missing fields and active statuses", async ({ page }) => {
   await gotoApp(page, "/#/resources");
   await waitForAppReady(page);
-  let release;
-  const gate = new Promise((resolve) => { release = resolve; });
+  let release = () => {};
+  const gate = new Promise((resolve) => { release = () => resolve(undefined); });
   await page.route(/\/data\/generated\/sources\.json(?:\.gz)?(?:\?|$)/, async (route) => {
     await gate;
     await route.continue();

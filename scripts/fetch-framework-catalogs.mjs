@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { writeJsonAtomically } from './lib/write-json-atomically.mjs';
 import { strictConditionalFetch } from './lib/strict-conditional-fetch.mjs';
 import { assertPublisherInventory } from './lib/publisher-inventory.mjs';
+import { baselineUrls, byteEvidence, discoverBaselineProfiles, fetchBaselineProfiles, gitBlobSha, verifyBaselineReconciliation } from './lib/nist-baseline-profiles.mjs';
 import {
   buildCmmcPublicCatalog,
   buildCuiPolicyCatalog,
@@ -24,7 +25,6 @@ import {
 } from '../tools/importers/framework-adapters.mjs';
 import {
   enrichCatalogMetadata,
-  fetch80053BBaselines,
   fetchFedrampBaselineMembership,
 } from '../tools/importers/catalog-adapters-ext.mjs';
 import {
@@ -67,11 +67,12 @@ const REMOTE_CATALOGS = [
     backupUrls: [oscalBackup('SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json')],
     outfile: 'controls-800-53.json',
     parse: parse80053Catalog,
-    enrich: async (records) => {
-      const [fedramp, baselines] = await Promise.all([
-        fetchFedrampBaselineMembership(),
-        fetch80053BBaselines(),
-      ]);
+    enrich: async (records, context) => {
+      const discovery = await discoverBaselineProfiles(context.fetchImpl);
+      if (context.catalogEvidence.git_blob_sha !== discovery.catalog.git_blob_sha) throw new Error('Fetched NIST catalog differs from discovered publisher edition');
+      const profileUrls = baselineUrls.map((url) => url.replace('/main/', `/${discovery.publisher_commit}/`));
+      const { membership: baselines, profiles } = await fetchBaselineProfiles(context.fetchImpl, profileUrls);
+      const fedramp = await context.fetchFedrampMembership();
       const enrichment = {};
       for (const record of records) {
         const fedrampBaselines = Object.entries(fedramp)
@@ -87,7 +88,19 @@ const REMOTE_CATALOGS = [
           };
         }
       }
-      return enrichCatalogMetadata(records, enrichment);
+      const enriched = enrichCatalogMetadata(records, enrichment);
+      const manifest = { schema_version: '1.0', retrieved_at: SNAPSHOT, discovery,
+        catalog: { ...context.catalogEvidence, retrieved_url: context.catalogEvidence.url, url: discovery.catalog.url },
+        profiles: profiles.map((profile) => ({ ...profile, reconciliation: {
+          discovered: profile.control_ids.length,
+          ingested: enriched.filter((record) => record.metadata?.nist_800_53b_baselines?.includes(profile.label)).length,
+          missing: profile.control_ids.filter((id) => !enriched.some((record) => record.id === id)),
+          extra: [],
+        } })),
+      };
+      verifyBaselineReconciliation(manifest, enriched);
+      context.pendingWrites.push([join(ROOT, 'data/nist-800-53b-profile-manifest.json'), manifest]);
+      return enriched;
     },
   },
   {
@@ -244,7 +257,10 @@ export async function fetchFrameworkCatalogs(options = {}) {
     const bytes = Buffer.from(await response.arrayBuffer());
     const payload = target.responseType === 'text' ? bytes.toString('utf8') : JSON.parse(bytes.toString('utf8'));
     let document = target.parse(payload, target.sourceKey || target.id);
-    const context = { fetchImpl, pendingWrites: [] };
+    const context = { fetchImpl, pendingWrites: [],
+      fetchFedrampMembership: options.fetchFedrampMembership || fetchFedrampBaselineMembership,
+      catalogEvidence: { url: servedUrl, ...byteEvidence(bytes), git_blob_sha: gitBlobSha(bytes), publisher_version: payload?.catalog?.metadata?.version ?? null },
+    };
     if (target.enrich) {
       document = { ...document, records: await target.enrich(document.records, context) };
     }

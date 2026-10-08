@@ -58,6 +58,9 @@ export function assertOfficialSourceUrl(input) {
   if (api) {
     if (rest.length && !(
       (['commits', 'branches'].includes(rest[0]) && rest.length === 2) ||
+      (parts.slice(0, 2).join('/').toLowerCase() === 'usnistgov/oscal-content'
+        && rest.join('/') === 'contents/nist.gov/SP800-53/rev5/json'
+        && [...url.searchParams.keys()].length === 1 && /^[a-f0-9]{40}$/.test(url.searchParams.get('ref') || '')) ||
       (rest[0] === 'readme' && rest.length === 1) ||
       (rest[0] === 'releases' && rest[1] === 'latest' && rest.length === 2)
     )) reject();

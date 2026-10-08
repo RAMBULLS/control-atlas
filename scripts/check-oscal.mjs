@@ -4,6 +4,7 @@ import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { verifyBaselineCatalogBytes, verifyBaselineManifest, verifyBaselineProfileBytes } from './lib/nist-baseline-profiles.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -42,14 +43,26 @@ export async function checkUpstreamOscal({ root = ROOT, fetchImpl = fetch, valid
   const registry = JSON.parse(readFileSync(join(root, 'data/source-registry.json'), 'utf8'));
   const manifest = JSON.parse(readFileSync(join(root, 'data/artifact-hydration-manifest.json'), 'utf8'));
   const artifacts = admittedOscalArtifacts(registry, manifest);
+  const baselineManifest = JSON.parse(readFileSync(join(root, 'data/nist-800-53b-profile-manifest.json'), 'utf8'));
+  const baselineReconciliation = verifyBaselineManifest(baselineManifest, JSON.parse(readFileSync(join(root, 'data/controls-800-53.json'), 'utf8')));
+  const profiles = baselineManifest.profiles.map((profile) => ({ ...profile, id: `nist-800-53b-${profile.url.split('/').pop()}`, artifact_url: profile.url }));
+  const baselineCatalog = { ...baselineManifest.catalog, id: 'nist-800-53b-imported-catalog', artifact_url: baselineManifest.catalog.url, baseline_catalog: true };
   const output = join(root, 'artifacts/oscal-cli/upstream');
   mkdirSync(output, { recursive: true });
   const results = [];
-  for (const artifact of artifacts) {
+  for (const artifact of [...artifacts, baselineCatalog, ...profiles]) {
     const response = await fetchImpl(artifact.artifact_url, { signal: AbortSignal.timeout(60000) });
     if (!response.ok) throw new Error(`Upstream OSCAL retrieval failed: ${artifact.id} HTTP ${response.status}`);
     const bytes = Buffer.from(await response.arrayBuffer());
     const model = verifyUpstreamBytes(artifact, bytes);
+    if (artifact.baseline_catalog) {
+      if (model !== 'catalog') throw new Error('NIST baseline imported bytes are not an OSCAL catalog');
+      verifyBaselineCatalogBytes(artifact, bytes);
+    }
+    if (artifact.control_ids) {
+      if (model !== 'profile') throw new Error('NIST baseline bytes are not an OSCAL profile');
+      verifyBaselineProfileBytes(artifact, bytes);
+    }
     const path = join(output, `${artifact.id}.json`);
     writeFileSync(path, bytes);
     await validate(model, path);
@@ -57,7 +70,7 @@ export async function checkUpstreamOscal({ root = ROOT, fetchImpl = fetch, valid
   }
   const report = { generated_at: new Date().toISOString(), validation_scope: 'admitted publisher-exact OSCAL payloads only', oscal_cli_version: '1.0.3', results,
     excluded_normalized_artifacts: registry.artifacts.filter((entry) => entry.origin === 'publisher_normalized').map((entry) => entry.id),
-    baseline_profile_completeness: 'not established by this check; normalized baseline records are validated separately with AJV' };
+    baseline_profile_completeness: { validation_scope: 'all four publisher profiles discovered at the recorded NIST commit, reconciled against ingested catalog membership and validated by the NIST CLI', publisher_commit: baselineManifest.discovery.publisher_commit, reconciliation: baselineReconciliation } };
   writeFileSync(join(output, '../upstream-check.json'), `${JSON.stringify(report, null, 2)}\n`);
   console.log(`Upstream OSCAL verification: ${results.length} admitted publisher payloads passed the NIST CLI.`);
   return report;

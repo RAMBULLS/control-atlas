@@ -8,7 +8,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { SITE_COPY } from "../../shared/site-copy.mjs";
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 
 import "../../../styles/resources.css";
 import { AppLink } from "../components/AppLink";
@@ -34,7 +34,6 @@ import type { ViewState } from "../lib/viewState";
 
 type CommonsState = Extract<ViewState, { view: "commons" }>;
 
-const RESOURCE_LIST_STEP = 25;
 const RESOURCE_MAP_LIMIT = 75;
 
 const EMPTY_STATE: CommonsState = {
@@ -69,14 +68,12 @@ export function CommonsPage(props: {
   const [queryDraft, setQueryDraft] = useState(state.query);
   const [compareMode, setCompareMode] = useState(false);
   const [selectedResourceIds, setSelectedResourceIds] = useState<string[]>([]);
-  const [visibleCount, setVisibleCount] = useState(RESOURCE_LIST_STEP);
   const directoryAvailable = Boolean(bundle?.commonsDataset);
   const resources = (bundle?.commonsDataset?.resources || []) as CommonsResource[];
   const collections = (bundle?.commonsDataset?.collections || []) as CommonsCollection[];
   const update = (patch: Partial<CommonsState>) => onNavigate("commons", { ...state, ...patch });
 
   useLayoutEffect(() => setQueryDraft(state.query), [state.query]);
-  useEffect(() => setVisibleCount(RESOURCE_LIST_STEP), [state.collection, state.owner, state.query, state.resourceType, state.sort]);
 
   const filtered = useMemo(() => {
     const eligible = filterDirectoryResources(resources, {
@@ -117,12 +114,9 @@ export function CommonsPage(props: {
       },
     },
   })), [collectionTitles, filtered, state.collection, state.owner, state.query, state.resourceType, state.showAll, state.sort, state.viewMode]);
-  const visibleResourceCount = Math.min(visibleCount, filtered.length);
   const resultCountLabel = state.viewMode === "map" && filtered.length > mapItems.length
     ? `${filtered.length.toLocaleString()} results · mapping ${mapItems.length.toLocaleString()}`
-    : visibleResourceCount < filtered.length
-      ? `${filtered.length.toLocaleString()} results · showing ${visibleResourceCount.toLocaleString()}`
-      : `${filtered.length.toLocaleString()} result${filtered.length === 1 ? "" : "s"}`;
+    : `${filtered.length.toLocaleString()} result${filtered.length === 1 ? "" : "s"}`;
 
   const reset = () => {
     setQueryDraft("");
@@ -304,7 +298,7 @@ export function CommonsPage(props: {
               navigating by heading. */}
           <h2 className="visually-hidden" id="resource-results-heading">Resources</h2>
           <ul aria-labelledby="resource-results-heading" className="workspace-result-list resource-catalog-grid">
-            {filtered.slice(0, visibleCount).map((resource) => {
+            {filtered.map((resource) => {
               const selected = selectedResourceIds.includes(resource.id);
               const summary = resourceSummaryPresentation(resource);
               return (
@@ -363,13 +357,6 @@ export function CommonsPage(props: {
                 </li>
               );
             })}
-            {filtered.length > visibleCount ? (
-              <li className="workspace-result-list__action">
-                <Button onClick={() => setVisibleCount((count) => count + RESOURCE_LIST_STEP)} type="button" variant="secondary">
-                  Show {Math.min(RESOURCE_LIST_STEP, filtered.length - visibleCount)} more
-                </Button>
-              </li>
-            ) : null}
           </ul>
         </>
       ) : (

@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
 
 async function gotoApp(page, path) {
@@ -331,4 +332,83 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
     expect(await diag.getAttribute("data-build-sha")).toBeTruthy();
     expect(await diag.getAttribute("data-cache-version")).toBeTruthy();
   });
+});
+
+
+test("all canonical sources are visible without reveal controls and categories remain filters", async ({ page }) => {
+  const identities = JSON.parse(readFileSync("data/generated/publication-identity-index.json", "utf8")).identities;
+  await gotoApp(page, "/#/sources");
+  await waitForAppReady(page);
+  await expect(page.locator(".source-register-row")).toHaveCount(identities.length);
+  await expect(page.getByRole("button", { name: /Show.*more publications/ })).toHaveCount(0);
+  const views = page.getByRole("navigation", { name: "Source register views" });
+  await views.getByRole("button", { name: /^Policy & directives/ }).click();
+  await expect(page.locator(".source-register-row")).toHaveCount(19);
+  await views.getByRole("button", { name: /^Publications/ }).click();
+  await expect(page.locator(".source-register-row")).toHaveCount(identities.length - 19);
+  await views.getByRole("button", { name: /^All sources/ }).click();
+  await expect(page.locator(".source-register-row")).toHaveCount(identities.length);
+  await page.getByRole("searchbox", { name: "Search publications" }).fill("cyber-mil-stig-downloads");
+  await page.getByRole("searchbox", { name: "Search publications" }).press("Enter");
+  await expect(page.locator('[data-supporting-source-id="cyber-mil-stig-downloads"]')).toBeVisible();
+});
+
+test("Resources to Sources waits for metadata instead of painting missing fields and active statuses", async ({ page }) => {
+  await gotoApp(page, "/#/resources");
+  await waitForAppReady(page);
+  let release;
+  const gate = new Promise((resolve) => { release = resolve; });
+  await page.route(/\/data\/generated\/sources\.json(?:\.gz)?(?:\?|$)/, async (route) => {
+    await gate;
+    await route.continue();
+  });
+  try {
+    await page.evaluate(() => { globalThis.location.hash = "#/sources"; });
+    await expect(page.getByText("Loading recorded source versions, check dates, and status.")).toBeVisible();
+    await expect(page.locator(".source-register-row")).toHaveCount(0);
+    await expect(page.locator("#app")).not.toHaveAttribute("data-app-ready", "true");
+  } finally {
+    release();
+  }
+  await waitForAppReady(page);
+  await expect(page.locator(".source-register-row")).toHaveCount(49);
+  const identities = JSON.parse(readFileSync("data/generated/publication-identity-index.json", "utf8")).identities;
+  const sources = JSON.parse(readFileSync("data/generated/sources.json", "utf8")).sources;
+  const retired = sources.find((source) => source.id === "fedramp-rev5"
+    && identities.some((identity) => identity.id === source.id));
+  expect(retired).toBeTruthy();
+  const row = page.locator(".source-register-row").filter({ has: page.locator(`[id="source-trigger-${retired.id}"]`) });
+  await expect(row.locator(".source-col-status")).not.toHaveText("Active");
+  await expect(row.locator(".source-col-status")).not.toHaveText("Not recorded");
+});
+
+test("Resources lists every matching entry without Show more and retains type filtering", async ({ page }) => {
+  const resources = JSON.parse(readFileSync("data/commons-resource-dataset.json", "utf8")).resources;
+  await gotoApp(page, "/#/resources?showAll=true");
+  await waitForAppReady(page);
+  await expect(page.locator('[data-result-class="resource"]')).toHaveCount(resources.length);
+  await expect(page.getByRole("button", { name: /^Show \d+ more$/ })).toHaveCount(0);
+  await gotoApp(page, "/#/resources?showAll=true&resourceType=template");
+  await waitForAppReady(page);
+  await expect(page.locator('[data-result-class="resource"]')).toHaveCount(resources.filter((resource) => resource.resourceType === "template").length);
+});
+
+
+test("Sources loading failures retain an honest empty register and recover through retry", async ({ page }) => {
+  test.setTimeout(90_000);
+  let failSources = true;
+  await page.route(/\/data\/generated\/sources\.json(?:\.gz)?(?:\?|$)/, async (route) => {
+    if (failSources) await route.abort();
+    else await route.continue();
+  });
+  await gotoApp(page, "/#/sources");
+  await expect(page.getByText("Unable to load data", { exact: true })).toBeVisible({ timeout: 30_000 });
+  await expect(page.locator(".source-register-row")).toHaveCount(0);
+  await expect(page.locator(".source-col-status")).toHaveCount(0);
+  const retry = page.getByRole("button", { name: "Try loading again", exact: true });
+  await expect(retry).toBeVisible();
+  failSources = false;
+  await retry.click();
+  await waitForAppReady(page);
+  await expect(page.locator(".source-register-row")).toHaveCount(49);
 });

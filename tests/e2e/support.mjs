@@ -45,6 +45,12 @@ export function appUrl(path = '/') {
   return new URL(normalizedPath, normalizedBase).toString();
 }
 
+export async function readServedArtifact(page, filename) {
+  const response = await page.request.get(appUrl(`/data/generated/${filename}`));
+  expect(response.ok()).toBe(true);
+  return response.json();
+}
+
 export async function gotoApp(page, path = '/', options = undefined) {
   // The shared config intentionally keeps interaction navigation unconstrained
   // for large local artifacts, but initial route navigation must not wait

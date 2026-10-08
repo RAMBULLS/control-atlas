@@ -644,6 +644,9 @@ async function warmInteractiveRoute() {
       routes.parseHashLocation(routeUrl.pathname, routeUrl.search),
     ).catch(() => undefined);
   }
+  // Data requests have started. Give the cached framework/App imports their
+  // place in the queue before the route helper starts its own import burst.
+  void loadReactModules().catch(() => undefined);
   switch (routeUrl.pathname.split('/')[1]) {
     case 'search':
       void import('./ui/pages/ExplorePage').catch(() => undefined);

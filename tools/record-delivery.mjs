@@ -7,6 +7,14 @@ const require = createRequire(import.meta.url);
 const normalized = value => value.replace(/\\/g, '/').split('?')[0].replace(/\/$/, '');
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 
+export const HOME_SHELL_MODULES = Object.freeze([
+  'src/main.tsx',
+  'src/shared/atlas-presentation.ts',
+  'src/shared/brand-rotation.ts',
+  'src/shared/navigation-events.ts',
+  'src/ui/lib/homeDisclosure.ts',
+]);
+
 export const RECORD_UI_MODULES = Object.freeze([
   'src/app/display-names.mjs',
   'src/shared/record-taxonomy.mjs',
@@ -30,10 +38,16 @@ export const RECORD_ICON_MODULES = Object.freeze([
 
 export function recordChunkGroups(rootDir) {
   const ui = new Set(RECORD_UI_MODULES.map(path => `${normalized(rootDir)}/${path}`));
+  const home = new Set(HOME_SHELL_MODULES.map(path => `${normalized(rootDir)}/${path}`));
   return [
     { name: 'record-ui', test: id => ui.has(normalized(id)), priority: 10,
       minShareCount: 1, entriesAware: false, includeDependenciesRecursively: false },
     { name: 'record-icons', test: id => RECORD_ICON_MODULES.some(path => normalized(id).endsWith(path)), priority: 20,
+      minShareCount: 1, entriesAware: false, includeDependenciesRecursively: false },
+    // Include only the existing non-React Home closure. Keeping presentation
+    // with the entry avoids a separate request even when an entry facade is
+    // emitted to preserve execution order for shared shell functions.
+    { name: 'home-shell', test: id => home.has(normalized(id)), priority: 10,
       minShareCount: 1, entriesAware: false, includeDependenciesRecursively: false },
   ];
 }
@@ -104,6 +118,13 @@ export function verifyRecordDelivery(bundle, rootDir) {
       if (['record-ui', 'record-icons'].includes(chunk.name) || Object.keys(chunk.modules).some(id => forbidden.test(normalized(id)))) {
         throw new Error(`${name} statically imports route UI or React through ${chunk.fileName}.`);
       }
+    }
+  }
+  // The classic progressive-shell script is the fourth allowed request.
+  // Count the actual emitted entry, including a facade if one is present.
+  for (const entry of homeEntries) {
+    if (closure(entry).length > 3) {
+      throw new Error(`Home entry exceeds three module scripts: ${entry.fileName}.`);
     }
   }
   const pages = chunks.flatMap(chunk => Object.keys(chunk.modules).filter(id => /\/src\/ui\/pages\/[^/]+Page\.tsx$/.test(normalized(id)))

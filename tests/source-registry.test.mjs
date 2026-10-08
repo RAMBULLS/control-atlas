@@ -319,13 +319,20 @@ test('source registry rejects invalid or incomplete freshness metadata', () => {
   const invalid = structuredClone(registry);
   invalid.freshness.sources[0].last_checked = '2026-02-30';
   invalid.freshness.sources[1].hash = 'sha256:placeholder';
-  invalid.freshness.sources.find((entry) => entry.sync_model === 'link_out').last_imported = '2026-01-01';
-  invalid.freshness.sources.pop();
+  const linkOut = invalid.freshness.sources.find((entry) => entry.sync_model === 'link_out');
+  linkOut.last_imported = '2026-01-01';
+  const malformedIds = new Set([
+    invalid.freshness.sources[0].source_id, invalid.freshness.sources[1].source_id, linkOut.source_id,
+  ]);
+  const missingSource = invalid.sources.find((source) => !malformedIds.has(source.id));
+  assert.ok(missingSource, 'fixture includes a distinct required source');
+  assert.ok(invalid.freshness.sources.some((entry) => entry.source_id === missingSource.id));
+  invalid.freshness.sources = invalid.freshness.sources.filter((entry) => entry.source_id !== missingSource.id);
   const errors = validateSourceRegistry(invalid);
   assert.ok(errors.some((error) => error.includes('last_checked')));
   assert.ok(errors.some((error) => error.includes('sha256 digest')));
   assert.ok(errors.some((error) => error.includes('link-out source')));
-  assert.ok(errors.some((error) => error.includes('missing freshness entry')));
+  assert.ok(errors.includes(`missing freshness entry for source ${missingSource.id}`));
 });
 
 test('manual review records never fabricate content checksums', () => {

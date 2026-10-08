@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import test from 'node:test';
-import { externalizeOrbitalFonts, ORBITAL_FONT_HASHES, recordChunkGroups, RECORD_UI_MODULES, verifyRecordDelivery } from '../tools/record-delivery.mjs';
+import { externalizeOrbitalFonts, HOME_SHELL_MODULES, ORBITAL_FONT_HASHES, recordChunkGroups, RECORD_UI_MODULES, verifyRecordDelivery } from '../tools/record-delivery.mjs';
 
 const require = createRequire(import.meta.url);
 const css = readFileSync(require.resolve('orbital-archive-no-01/fonts.css'), 'utf8');
@@ -66,6 +66,31 @@ test('font delivery changes only URLs and preserves all five declarations and ex
   }
   assert.throws(() => externalizeOrbitalFonts(css.replace(/base64,./, 'base64,!')), /changed/);
   assert.throws(() => externalizeOrbitalFonts(`${css}\n@font-face{src:url(data:font/woff2;base64,d09GMg==);}`), /changed/);
+});
+
+test('Home group contains only its finite non-React shell closure', () => {
+  const home = recordChunkGroups(root).find(group => group.name === 'home-shell');
+  assert.ok(HOME_SHELL_MODULES.every(path => home.test(`${root}/${path}`)));
+  for (const path of [
+    'src/ui/App.tsx', 'src/ui/pages/HomePage.tsx', 'src/ui/pages/ObjectDetailPage.tsx',
+    'src/ui/lib/runtimeLoader.ts', 'src/app/runtime.mjs', 'node_modules/react/index.js',
+    ...RECORD_UI_MODULES,
+  ]) assert.equal(home.test(`${root}/${path}`), false, path);
+  assert.equal(home.includeDependenciesRecursively, false);
+  assert.equal(home.entriesAware, false);
+  assert.equal(home.minShareCount, 1);
+});
+
+test('Home emitted entry budget counts a facade and every shared module', () => {
+  const current = bundle();
+  current['main.js'].isEntry = false;
+  current['entry.js'] = { ...chunk('entry.js', [], ['main.js']), isEntry: true };
+  current['main.js'].imports.push('runtime.js');
+  current['runtime.js'] = chunk('runtime.js', []);
+  assert.equal(verifyRecordDelivery(current, root).homeEntryClosures[0].chunks.length, 3);
+  current['main.js'].imports.push('presentation.js');
+  current['presentation.js'] = chunk('presentation.js', ['src/shared/atlas-presentation.ts']);
+  assert.throws(() => verifyRecordDelivery(current, root), /Home entry exceeds three module scripts/);
 });
 
 test('emitted graph rejects UI in Home or data warm-up, merged pages, and changed font bytes', () => {

@@ -197,10 +197,12 @@
       remove(root.querySelector("[data-static-route]"));
       remove(root.querySelector("[data-static-search]"));
     } else if (search) {
-      remove(root.querySelector("[data-static-home]"));
+      setHidden(root.querySelector("[data-static-home]"), true);
       remove(root.querySelector("[data-static-route]"));
     } else {
-      remove(root.querySelector("[data-static-home]"));
+      // The initial route can return Home while its data-loader module is
+      // pending. Keep that recovery surface until React actually starts.
+      setHidden(root.querySelector("[data-static-home]"), true);
       remove(root.querySelector("[data-static-search]"));
     }
 

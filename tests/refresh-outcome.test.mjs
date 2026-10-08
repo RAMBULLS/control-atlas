@@ -23,6 +23,17 @@ test('dates and run timings are bookkeeping, records and versions are not', () =
   assert.equal(isMaterialChange('data/x.json', Buffer.from('{not json'), Buffer.from('{other')), true, 'unparseable changes fail toward publishing');
 });
 
+test('successful receipt timestamps and cache-validation telemetry do not force a content release', () => {
+  const before = { last_checked: '2026-10-01', last_retrieval_checked: '2026-10-01', hash: 'same',
+    check_evidence: { checked_at: '2026-10-01T12:00:00Z', requests: [{ validation: 'remote' }] },
+    retrieval_evidence: { scope: 'pinned_edition_retrieval', checked_at: '2026-10-01T12:00:00Z' } };
+  const after = { ...before, last_checked: '2026-10-08', last_retrieval_checked: '2026-10-08',
+    check_evidence: { checked_at: '2026-10-08T12:00:00Z', requests: [{ validation: 'revalidated' }] },
+    retrieval_evidence: { scope: 'pinned_edition_retrieval', checked_at: '2026-10-08T12:00:00Z' } };
+  assert.equal(isMaterialChange('data/source-registry.json', json(before), json(after)), false);
+  assert.equal(isMaterialChange('data/source-registry.json', json(before), json({ ...after, hash: 'changed' })), true);
+});
+
 test('nothing material and fresh dates stops the run; material change or a due heartbeat publishes', () => {
   const noise = [{ path: 'data/a.json', head: json({ generated_at: '1' }), working: json({ generated_at: '2' }) }];
   const quiet = classifyRefresh({ changes: noise, headRegistry: registry('2026-09-16'), now });

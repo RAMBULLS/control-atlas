@@ -17,6 +17,7 @@ import { fileURLToPath } from 'node:url';
 import { unzipSync } from 'fflate';
 import { strictConditionalFetch } from './lib/strict-conditional-fetch.mjs';
 import { writeJsonAtomically } from './lib/write-json-atomically.mjs';
+import { retrievalScope } from './lib/source-check-receipts.mjs';
 import readXlsxFile from 'read-excel-file/node';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -408,6 +409,8 @@ export async function hydrateArtifacts({ root = ROOT, only = null, onlyPrefix = 
 
       changed += 1;
       log.push({ id: r.id, status: 'OK', http: status, url: r.url, sha256, byte_length: byteLength, record_count: recordCount, retrieved_at: retrievedAt,
+        ...(!r.local && status === 200
+          ? { checked_at: new Date().toISOString(), check_scope: retrievalScope(r.url) } : {}),
         ...(r.normalized ? { evidence_scope: 'local_normalized', local_path: r.local, format: r.format, relationship_count: art.relationship_count, upstream_reference_url: r.upstream_reference_url } : {}) });
       console.log(`OK  ${r.id}  ${byteLength}B  records=${recordCount}  ${sha256.slice(0, 22)}…`);
     } catch (e) {

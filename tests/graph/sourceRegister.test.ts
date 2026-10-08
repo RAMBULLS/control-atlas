@@ -321,7 +321,7 @@ test("all governed publication reviews resolve without replacing source check da
     (source) =>
       source.id === "nist-iot-device-cybersecurity-requirement-catalogs",
   );
-  assert.equal(iotSource?.last_checked, undefined);
+  assert.equal(iotSource?.last_checked ?? null, null);
   assert.deepEqual(
     publicationReviewsForSource(iotSource!.id, sources.sources, catalogs).map(
       (review) => ({
@@ -339,18 +339,22 @@ test("all governed publication reviews resolve without replacing source check da
     ],
   );
 
-  const checkedSource = sources.sources.find(
+  const checkedSources = structuredClone(sources.sources);
+  const checkedSource = checkedSources.find(
     (source) => source.id === "nist-800-53",
   );
-  assert.equal(checkedSource?.last_checked, "2026-07-28");
+  assert.ok(checkedSource);
+  const seededCheckDate = "2025-01-02";
+  checkedSource.last_checked = seededCheckDate;
   assert.equal(
     publicationReviewsForSource(
-      checkedSource!.id,
-      sources.sources,
+      checkedSource.id,
+      checkedSources,
       catalogs,
     )[0]?.reviewedAt,
     "2026-08-13",
   );
+  assert.equal(checkedSource.last_checked, seededCheckDate);
 
   const childReviews = publicationReviewsForSource(
     "artifact-nist-iot-requirements-80053-mapping-draft",
@@ -516,8 +520,8 @@ test("publication register exposes truthful absence states for version and last 
   const iotSourceRecord = sources.sources.find(
     (source: { id: string }) =>
       source.id === "nist-iot-device-cybersecurity-requirement-catalogs",
-  ) as { last_checked?: string; retrieved_at?: string };
-  assert.equal(iotSourceRecord.last_checked, undefined, "fixture has no check date");
+  ) as { last_checked?: string | null; retrieved_at?: string };
+  assert.equal(iotSourceRecord.last_checked ?? null, null, "fixture has no check date");
   assert.equal(iot.verifiedAt.state, "derived");
   assert.equal(iot.verifiedAt.value, iotSourceRecord.retrieved_at);
   assert.match(iot.verifiedAt.reason, /No verification check is recorded/);

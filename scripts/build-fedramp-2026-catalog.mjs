@@ -81,6 +81,9 @@ export function normalizeFedramp2026(data, sourceEvidence = {}) {
               subset_id: subsetId,
               force: rule.force || null,
               effective: process.info?.effective || null,
+              ...(Array.isArray(rule.following_information_bullets) && rule.following_information_bullets.length
+                ? { following_information_bullets: [...rule.following_information_bullets] }
+                : {}),
             },
           });
           inventory.rules += 1;

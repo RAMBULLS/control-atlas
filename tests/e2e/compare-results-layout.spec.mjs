@@ -440,3 +440,47 @@ test("content comparison retains resolved ATT&CK publisher citation links", asyn
   await page.getByText("Compared fields and sources", { exact: true }).click();
   await expect(page.getByRole("link", { name: /Publisher reference:/ }).first()).toHaveAttribute("href", /^https?:\/\//);
 });
+
+test("FedRAMP content comparison renders and exports exact publisher lists and notes", async ({ page }) => {
+  test.setTimeout(120_000);
+  const catalog = JSON.parse(await readFile("data/fedramp-2026-catalog.json", "utf8"));
+  await gotoApp(page, "/#/compare/relationships?intent=content&source=fedramp-2026&target=fedramp-2026&compareRun=true");
+  await waitForAppReady(page); await dismissOnboarding(page);
+  await expect(page.locator("[data-content-result]").first()).toBeVisible({ timeout: 90_000 });
+  await page.getByText("Compare two specific records", { exact: true }).click();
+  for (const id of ["VER-EVA-EPA", "IEC-CSO-EFI"]) {
+    const record = catalog.records.find((entry) => entry.id === id);
+    await page.getByLabel("Exact record A (optional)").fill(id);
+    await page.getByLabel("Exact record B (optional)").fill(id);
+    const result = page.locator("[data-content-result]");
+    await expect(result).toHaveCount(1);
+    await expect(result).toContainText(id);
+    const details = result.locator("details");
+    if (!(await details.evaluate((element) => element.open))) {
+      await result.getByText("Compared fields and sources", { exact: true }).click();
+    }
+    const sides = result.locator(".compare-step-fields > section");
+    await expect(sides).toHaveCount(2);
+    for (const side of await sides.all()) {
+      const list = side.getByRole("heading", { name: "Following Information Bullets", exact: true }).locator("..");
+      await expect(list.locator("ul > li")).toHaveText(record.metadata.following_information_bullets.map((bullet) => bullet.replaceAll("**", "")));
+      if (record.discussion) {
+        await expect(side.getByRole("heading", { name: "Following Information", exact: true }).locator("..").locator("p")).toHaveText(record.discussion);
+      }
+    }
+    const download = page.waitForEvent("download");
+    await page.getByRole("button", { name: "Download CSV" }).click();
+    const csv = await readFile(await (await download).path(), "utf8");
+    const [header, ...exported] = csv.slice(1).split("\r\n").map((line) =>
+      Array.from(line.matchAll(/"((?:[^"]|"")*)"(?=,|$)/g), ([, cell]) => cell.replaceAll('""', '"')));
+    expect(exported).toHaveLength(1);
+    expect(exported[0]).toHaveLength(header.length);
+    for (const side of ["A", "B"]) {
+      expect(exported[0][header.indexOf(`${side} ID`)]).toBe(id);
+      const value = JSON.parse(exported[0][header.indexOf(`${side} compared fields and locators`)]);
+      expect(value.fields.following_information_bullets).toEqual(record.metadata.following_information_bullets);
+      expect(value.fields.discussion).toBe(record.discussion || null);
+      expect(value.locator).toBe(record.source.locator);
+    }
+  }
+});

@@ -99,6 +99,28 @@ test("every public record has an approved presentation profile and required sour
   assert.doesNotThrow(() => validateRecordPresentation(generated("nodes").nodes));
 });
 
+test("FedRAMP runtime preserves every rule discussion and optional publisher list", () => {
+  const catalog = JSON.parse(readFileSync("data/fedramp-2026-catalog.json", "utf8"));
+  const byId = new Map(generated("nodes").nodes.map((node) => [node.id, node]));
+  const discussions = catalog.records.filter((record) => record.type === "rule" && record.discussion);
+  assert.ok(discussions.length >= 108, "retain the reviewed discussion inventory");
+  for (const record of catalog.records.filter((entry) => entry.type === "rule")) {
+    const node = byId.get(`fedramp-2026:${record.id}`);
+    assert.ok(node, record.id);
+    assert.equal(node.metadata.discussion, record.metadata?.discussion || record.discussion || null, record.id);
+    assert.deepEqual(node.metadata.following_information_bullets, record.metadata?.following_information_bullets, record.id);
+    assert.equal(node.metadata.source_locator, record.source.locator, record.id);
+    assert.equal(node.metadata.benchmark_version, record.source.version, record.id);
+    assert.equal(node.metadata.benchmark_status_date, record.source.snapshot_date, record.id);
+  }
+  // Catalogs that already use metadata.discussion keep that source and precedence.
+  const controls = JSON.parse(readFileSync("data/controls-800-53.json", "utf8")).records;
+  for (const record of controls) {
+    const node = byId.get(`nist-800-53:${record.id}`);
+    if (node) assert.equal(node.metadata.discussion, record.metadata?.discussion || null, record.id);
+  }
+});
+
 test("NIST Mobile uses publisher fields instead of adapter-generated threat prose", () => {
   const record = generated("nodes").nodes.find(
     (node) => node.id === "nist-mobile-threats:APP-0",

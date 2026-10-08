@@ -2,8 +2,8 @@
   "schema_version": "1.0",
   "source_key": "fedramp-2026-rules",
   "source_artifact": "https://raw.githubusercontent.com/FedRAMP/rules/main/fedramp-consolidated-rules.json",
-  "source_version": "2026.09.13.02",
-  "snapshot_date": "2026-09-13",
+  "source_version": "2026.10.05.01",
+  "snapshot_date": "2026-10-05",
   "source_inventory": {
     "control_context": 77,
     "definitions": 80,
@@ -14,10 +14,10 @@
   "record_count": 449,
   "publisher_inventory": {
     "source_url": "https://raw.githubusercontent.com/FedRAMP/rules/main/fedramp-consolidated-rules.json",
-    "source_sha256": "sha256:64915d88e72353c95f321ea4a9014516ac9441972cbd7f3d1abef7d1514c8fc8",
-    "source_byte_length": 564946,
-    "input_sha256": "sha256:64915d88e72353c95f321ea4a9014516ac9441972cbd7f3d1abef7d1514c8fc8",
-    "input_byte_length": 564946,
+    "source_sha256": "sha256:d8a1cd5513fb0e1ecebf2ad8a74259c4b74900e8f7b4b429d6d6741bf9fe555f",
+    "source_byte_length": 568543,
+    "input_sha256": "sha256:d8a1cd5513fb0e1ecebf2ad8a74259c4b74900e8f7b4b429d6d6741bf9fe555f",
+    "input_byte_length": 568543,
     "raw_count": 451,
     "eligible_count": 449,
     "imported_count": 449,
@@ -33,7 +33,7 @@
     ],
     "raw_identity_sha256": "sha256:654360509484b0875cc036e52b531e016e29929442da100307fb051c63fd96d8",
     "imported_identity_sha256": "sha256:c5de624796c9bef40cb6823f75df1032cc5bad92d65d0250b7f7cff92ebbc38b",
-    "publisher_version": "2026.09.13.02"
+    "publisher_version": "2026.10.05.01"
   },
   "records": [
     {
@@ -46,8 +46,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AFC.data.all.CSO.AFC-CSO-ACK",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -77,8 +77,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AFC.data.all.CSO.AFC-CSO-CRA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -108,8 +108,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AFC.data.all.CSO.AFC-CSO-EMR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -139,8 +139,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AFC.data.all.CSO.AFC-CSO-IMA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -170,8 +170,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AFC.data.all.CSO.AFC-CSO-INB",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -201,8 +201,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AFC.data.all.CSO.AFC-CSO-NOC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -232,8 +232,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AFC.data.all.CSO.AFC-CSO-RCV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -263,8 +263,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AFC.data.all.CSO.AFC-CSO-TFG",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -294,8 +294,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AFC.data.all.FRP.AFC-FRP-CDS",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -325,8 +325,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AFC.data.all.FRP.AFC-FRP-COR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -356,8 +356,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AFC.data.all.FRP.AFC-FRP-ERT",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -387,8 +387,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AFC.data.all.FRP.AFC-FRP-PNT",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -418,8 +418,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AFC.data.all.FRP.AFC-FRP-RPM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -449,8 +449,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AFC.data.all.FRP.AFC-FRP-RQA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -480,8 +480,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AFC.data.all.FRP.AFC-FRP-UFS",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -511,8 +511,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AFC.data.all.FRP.AFC-FRP-VRE",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -542,8 +542,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.AGC.AGU-AGC-AIP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -574,8 +574,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.AGC.AGU-AGC-GRC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -606,8 +606,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.AGC.AGU-AGC-LIA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -638,8 +638,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.AGC.AGU-AGC-NAA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -670,8 +670,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.AGC.AGU-AGC-NAI",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -702,8 +702,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.AGC.AGU-AGC-NAR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -734,8 +734,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.AGC.AGU-AGC-SIN",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -766,8 +766,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.AGC.AGU-AGC-TPP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -798,8 +798,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.AGC.AGU-AGC-WKG",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -830,8 +830,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.SPN.AGU-SPN-MRC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -862,8 +862,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.USE.AGU-USE-ABU",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -894,8 +894,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.USE.AGU-USE-AFR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -926,8 +926,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.USE.AGU-USE-CLA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -958,8 +958,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.USE.AGU-USE-DSO",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -990,8 +990,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.USE.AGU-USE-NFC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1022,8 +1022,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.USE.AGU-USE-NPC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1054,8 +1054,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.USE.AGU-USE-RCF",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1086,8 +1086,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.USE.AGU-USE-RIR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1118,8 +1118,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.USE.AGU-USE-ROR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1150,8 +1150,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.AGU.data.all.USE.AGU-USE-RSG",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1182,8 +1182,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CCM.data.all.AGM.CCM-AGM-CSC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1202,8 +1202,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CCM.data.all.AGM.CCM-AGM-ROR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1222,8 +1222,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CCM.data.all.OCR.CCM-OCR-AFS",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1242,8 +1242,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CCM.data.all.OCR.CCM-OCR-AVL",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1262,8 +1262,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CCM.data.all.OCR.CCM-OCR-FBM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1282,8 +1282,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CCM.data.all.OCR.CCM-OCR-LSI",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1302,8 +1302,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CCM.data.all.OCR.CCM-OCR-NRD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1322,8 +1322,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CCM.data.all.OCR.CCM-OCR-RPS",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1342,8 +1342,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CCM.data.all.OCR.CCM-OCR-SOR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1362,8 +1362,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CCM.data.all.QTR.CCM-QTR-ACT",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1382,8 +1382,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CCM.data.all.QTR.CCM-QTR-MTG",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1402,8 +1402,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CCM.data.all.QTR.CCM-QTR-NID",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1422,8 +1422,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CCM.data.all.QTR.CCM-QTR-NRD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1442,8 +1442,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CCM.data.all.QTR.CCM-QTR-REG",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1462,8 +1462,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CCM.data.all.QTR.CCM-QTR-RTP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1482,8 +1482,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CCM.data.all.QTR.CCM-QTR-RTR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1502,8 +1502,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CCM.data.all.QTR.CCM-QTR-SAR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1522,8 +1522,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CCM.data.all.QTR.CCM-QTR-SCR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1542,8 +1542,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CCM.data.all.QTR.CCM-QTR-SRR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1562,8 +1562,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.rev5.CSF.CDS-CSF-TCM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "rev5",
@@ -1582,8 +1582,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.CSO.CDS-CSO-AVR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1602,8 +1602,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.CSO.CDS-CSO-CBF",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1622,8 +1622,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.CSO.CDS-CSO-FID",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1642,8 +1642,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.CSO.CDS-CSO-FRC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1662,8 +1662,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.CSO.CDS-CSO-HAD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1682,8 +1682,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.CSO.CDS-CSO-IRP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1702,8 +1702,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.CSO.CDS-CSO-PSM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1717,13 +1717,13 @@
       "type": "rule",
       "title": "Public Information",
       "description": "Providers MUST publicly share up-to-date information about the cloud service offering in both human-readable and JSON formats, including at least the following information that is available and applicable:",
-      "discussion": "FedRAMP ID\n\nService Model\n\nDeployment Model\n\nBusiness Category\n\nUEI Number\n\nSales Contact Information\n\nSecurity Contact Information\n\nProduct Website Link\n\nLink to Product Logo\n\nOverall Service Description\n\nDetailed list of specific services and their security categories (see CDS-CSO-SVC (Public Service List) (Service List))\n\nLink to Secure Configuration Guidance\n\nOverview of documentation supplied by the provider for the cloud service offering\n\nLink to Trust Center landing page that includes instructions on accessing information in the trust center\n\nNext Ongoing Certification Report date (see CCM-OCR-NRD (Next Report Date))\n\nCurrent FedRAMP Recognized independent assessment service\n\nGenerally, this information should be available on a public webpage or publicly shared in a FedRAMP-compatible trust center.",
+      "discussion": "FedRAMP ID\n\nService Model\n\nDeployment Model\n\nBusiness Category\n\nUEI Number\n\nSales Contact Information\n\nSecurity Contact Information\n\nProduct Website Link\n\nLink to Product Logo (must be a valid image link, properly named, that will display in a browser without processing - transparent PNG preferred)\n\nOverall Service Description\n\nDetailed list of specific services and their security categories (see CDS-CSO-SVC (Public Service List) (Service List))\n\nLink to Secure Configuration Guidance\n\nOverview of documentation supplied by the provider for the cloud service offering\n\nLink to Trust Center landing page that includes instructions on accessing information in the trust center\n\nNext Ongoing Certification Report date (see CCM-OCR-NRD (Next Report Date))\n\nCurrent FedRAMP Recognized independent assessment service\n\nGenerally, this information should be available on a public webpage or publicly shared in a FedRAMP-compatible trust center.\n\nThe JSON data for this rule will be consumed by FedRAMP and agency GRC tools using automation with web-based tools. Do not expect FedRAMP or your customers to download this data directly, it should be accessible for common web frameworks. FedRAMP strongly recommends that application engineering experts be involved in making public JSON data and the related information available in a way that can work with web-based applications.",
       "family": "Certification Data Sharing",
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.CSO.CDS-CSO-PUB",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1742,8 +1742,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.CSO.CDS-CSO-RIS",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1762,8 +1762,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.CSO.CDS-CSO-RPS",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1782,8 +1782,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.CSO.CDS-CSO-SVC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1802,8 +1802,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.CSO.CDS-CSO-UTC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1822,8 +1822,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.TRC.CDS-TRC-AAI",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1842,8 +1842,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.TRC.CDS-TRC-ACL",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1862,8 +1862,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.TRC.CDS-TRC-HMR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1882,8 +1882,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.TRC.CDS-TRC-PAC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1902,8 +1902,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.TRC.CDS-TRC-SSM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1922,8 +1922,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.TRC.CDS-TRC-USH",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1942,8 +1942,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.UTC.CDS-UTC-AAD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1962,8 +1962,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CDS.data.all.UTC.CDS-UTC-AGA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -1982,8 +1982,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CMU.data.all.CSO.CMU-CSO-CAT",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -2002,8 +2002,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CMU.data.all.CSO.CMU-CSO-CMD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -2017,13 +2017,13 @@
       "type": "rule",
       "title": "Using Validated Cryptographic Modules",
       "description": "Class A: Providers with Class A Certifications MAY use cryptographic modules or update streams of cryptographic modules with active validations under the NIST Cryptographic Module Validation Program when using cryptographic services to protect federal customer data.\n\nClass B: Providers with Class B Certifications MAY use cryptographic modules or update streams of cryptographic modules with active validations under the NIST Cryptographic Module Validation Program when using cryptographic services to protect federal customer data.\n\nClass C: Providers with Class C Certifications SHOULD use cryptographic modules or update streams of cryptographic modules with active validations under the NIST Cryptographic Module Validation Program when using cryptographic services to protect federal customer data.\n\nClass D: Providers with Class D Certifications MUST use cryptographic modules or update streams of cryptographic modules with active validations under the NIST Cryptographic Module Validation Program when using cryptographic services to protect federal customer data.",
-      "discussion": "",
+      "discussion": "Cryptographic modules include specific algorithms by definition; if an update stream of a cryptographic module adds new algorithms that were not previously validated then those algorithms can not be considered within the scope of update stream usage under these rules as they are new algorithms within the module that have never been validated.",
       "family": "Cryptographic Module Use",
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CMU.data.all.CSO.CMU-CSO-UVM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -2042,8 +2042,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CPO.data.rev5.CSF.CPO-CSF-CPM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "rev5",
@@ -2062,8 +2062,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CPO.data.all.CSO.CPO-CSO-MTD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -2082,8 +2082,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CPO.data.all.CSO.CPO-CSO-OSA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -2102,8 +2102,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CPO.data.all.CSO.CPO-CSO-OVR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -2122,8 +2122,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.CPO.data.20x.CSX.CPO-CSX-CPM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "20x",
@@ -2141,8 +2141,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.AC.AC-06-01",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2154,8 +2154,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.AC.AC-06-02",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2167,8 +2167,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.AC.AC-06-08",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2180,8 +2180,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.AC.AC-20",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2193,8 +2193,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.AU.AU-06",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2206,8 +2206,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.AU.AU-06-05",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2219,8 +2219,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.AU.AU-10",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2232,8 +2232,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.AU.AU-12",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2245,8 +2245,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.CA.CA-02",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2258,8 +2258,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.CA.CA-02-03",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2271,8 +2271,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.CA.CA-07",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2284,8 +2284,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.CA.CA-08",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2297,8 +2297,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.CM.CM-01",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2310,8 +2310,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.CM.CM-08",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2323,8 +2323,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.CM.CM-11",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2336,8 +2336,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.CM.CM-12",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2349,8 +2349,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.CM.CM-12-01",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2362,8 +2362,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.CM.CM-14",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2375,8 +2375,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.CP.CP-02-03",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2388,8 +2388,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.CP.CP-07-01",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2401,8 +2401,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.CP.CP-10-04",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2414,8 +2414,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IA.IA-02",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2427,8 +2427,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IA.IA-02-01",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2440,8 +2440,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IA.IA-02-02",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2453,8 +2453,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IA.IA-02-06",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2466,8 +2466,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IA.IA-02-08",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2479,8 +2479,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IA.IA-04-04",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2492,8 +2492,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-01",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2505,8 +2505,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-02",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2518,8 +2518,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-02-01",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2531,8 +2531,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-02-02",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2544,8 +2544,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-03",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2557,8 +2557,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-03-02",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2570,8 +2570,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-04",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2583,8 +2583,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-04-01",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2596,8 +2596,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-04-02",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2609,8 +2609,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-04-04",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2622,8 +2622,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-04-06",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2635,8 +2635,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-04-11",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2648,8 +2648,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-05",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2661,8 +2661,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-05-01",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2674,8 +2674,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-06",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2687,8 +2687,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-06-01",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2700,8 +2700,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-06-03",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2713,8 +2713,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-07",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2726,8 +2726,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-07-01",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2739,8 +2739,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-08",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2752,8 +2752,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-09",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2765,8 +2765,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-09-02",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2778,8 +2778,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-09-03",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2791,8 +2791,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.IR.IR-09-04",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2804,8 +2804,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.MA.MA-05",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2817,8 +2817,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.MA.MA-05-01",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2830,8 +2830,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.PS.PS-07",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2843,8 +2843,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.RA.RA-05",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2856,8 +2856,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.RA.RA-05-02",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2869,8 +2869,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.RA.RA-05-03",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2882,8 +2882,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.RA.RA-05-04",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2895,8 +2895,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.RA.RA-05-05",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2908,8 +2908,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.RA.RA-05-08",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2921,8 +2921,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.RA.RA-05-11",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2934,8 +2934,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.RA.RA-07",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2947,8 +2947,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.SA.SA-05",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2960,8 +2960,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.SA.SA-09-02",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2973,8 +2973,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.SC.SC-07",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2986,8 +2986,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.SC.SC-13",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -2999,8 +2999,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.SI.SI-02",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3012,8 +3012,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.SI.SI-02-02",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3025,8 +3025,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.SI.SI-04",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3038,8 +3038,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.SI.SI-04-01",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3051,8 +3051,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.SI.SI-04-02",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3064,8 +3064,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.SI.SI-04-04",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3077,8 +3077,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.SI.SI-04-05",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3090,8 +3090,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.SI.SI-05",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3103,8 +3103,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.SI.SI-08",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3116,8 +3116,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.SR.SR-03",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3129,8 +3129,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "CTL.SR.SR-08",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3143,8 +3143,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.APP.FRC-APP-AFC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3163,8 +3163,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.APP.FRC-APP-FCP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3183,8 +3183,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.APP.FRC-APP-FIA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3203,8 +3203,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.APP.FRC-APP-MLF",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3223,8 +3223,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.APP.FRC-APP-NTP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3243,8 +3243,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.APP.FRC-APP-USA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3263,8 +3263,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.APS.FRC-APS-ATO",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3283,8 +3283,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.CCL.FRC-CCL-DCC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3303,8 +3303,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.CCL.FRC-CCL-DNP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3323,8 +3323,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.CCL.FRC-CCL-UCC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3343,8 +3343,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.CLA.FRC-CLA-ASF",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3363,8 +3363,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.CLA.FRC-CLA-EAM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3383,8 +3383,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.CLA.FRC-CLA-IVV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3403,8 +3403,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.CLA.FRC-CLA-MFR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3423,8 +3423,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.CLA.FRC-CLA-OFR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3443,8 +3443,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.CLA.FRC-CLA-RFR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3463,8 +3463,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.rev5.CSF.FRC-CSF-ACP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "rev5",
@@ -3483,8 +3483,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.rev5.CSF.FRC-CSF-BSL",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "rev5",
@@ -3503,8 +3503,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.rev5.CSF.FRC-CSF-FFG",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "rev5",
@@ -3517,14 +3517,14 @@
       "id": "FRC-CSF-RDY",
       "type": "rule",
       "title": "FedRAMP Ready Conversion",
-      "description": "Providers with FedRAMP Rev5 Ready status MUST convert to a FedRAMP Certification by whichever of the follow dates is later: the expiration of their annual assessment or November 17, 2026 (the legacy FedRAMP Ready status will be entirely removed on December 31, 2027).",
+      "description": "Providers with FedRAMP Rev5 Ready status MUST convert to a FedRAMP Certification by whichever of the following dates is later: the expiration of their annual assessment or November 17, 2026 (the legacy FedRAMP Ready status will be entirely removed on December 31, 2027).",
       "discussion": "The simplest conversion in most cases would be to a FedRAMP 20x Class A Certification.\n\nCloud services that do not wish to convert or do not meet conversion criteria will be renamed Legacy FedRAMP Ready and otherwise retired from FedRAMP Ready.",
       "family": "FedRAMP Certification",
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.rev5.CSF.FRC-CSF-RDY",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "rev5",
@@ -3543,8 +3543,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.CSO.FRC-CSO-FCP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3557,14 +3557,14 @@
       "id": "FRC-CSO-JSN",
       "type": "rule",
       "title": "FedRAMP JSON Schemas",
-      "description": "Providers MUST supply machine-readable information in JSON documents that are valid against the corresponding JSON schema when a rule contains a FedRAMP JSON schema, UNLESS otherwise specified in the rule.",
-      "discussion": "FedRAMP JSON schemas are designed to be lightweight and flexible to establish a minimum set of structured information while allowing providers to improve on the format and structure of the information as needed to meet their needs and the needs of their customers.",
+      "description": "Providers MUST supply machine-readable information in JSON documents that are valid against the corresponding JSON schema when a rule contains a FedRAMP JSON schema, UNLESS otherwise specified in the rule; public JSON data MUST be supplied in a manner compatible with modern web frameworks, including:",
+      "discussion": "Cross-Origin Resource Sharing (CORS) should allow web applications running on a different domain to access the public JSON data directly.\n\nProper web application headers should be supplied for public JSON data, including at least setting Content-Type to application/json and X-Content-Type-Options: nosniff.\n\nFedRAMP JSON schemas are designed to be lightweight and flexible to establish a minimum set of structured information while allowing providers to improve on the format and structure of the information as needed to meet their needs and the needs of their customers.\n\nPublic JSON data is intended to be consumed by FedRAMP, agency GRC tools, and more - it should be available in a way that enables standard web-application use following standard web frameworks. Generally, if you can't write a web app to parse this data without configuring a browser to bypass security defaults then there has likely been a problem.\n\nThe Schema Validator available at fedramp.gov will not work properly if Cross-Origin Resource Sharing is not properly configured.",
       "family": "FedRAMP Certification",
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.CSO.FRC-CSO-JSN",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3583,8 +3583,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.CSO.FRC-CSO-MRA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3603,8 +3603,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.CSO.FRC-CSO-PKG",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3623,8 +3623,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.all.CSO.FRC-CSO-POP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -3643,8 +3643,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.20x.CSX.FRC-CSX-MAS",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "20x",
@@ -3663,8 +3663,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.20x.CSX.FRC-CSX-MOT",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "20x",
@@ -3683,8 +3683,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.20x.CSX.FRC-CSX-VVK",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "20x",
@@ -3703,8 +3703,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.FRC.data.20x.CSX.FRC-CSX-VVR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "20x",
@@ -3722,8 +3722,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-AAP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3735,8 +3735,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-ACV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3748,8 +3748,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-ADP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3761,8 +3761,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-ADV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3774,8 +3774,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-AGY",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3787,8 +3787,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-ANA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3800,8 +3800,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-ANP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3813,8 +3813,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-ART",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3826,8 +3826,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-ASR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3839,8 +3839,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-CCC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3852,8 +3852,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-CCL",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3865,8 +3865,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-CPF",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3878,8 +3878,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-CPH",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3891,8 +3891,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-CRD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3904,8 +3904,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-CRP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3917,8 +3917,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-CSO",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3930,8 +3930,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-CTY",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3943,8 +3943,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-DCE",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3956,8 +3956,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-DCF",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3969,8 +3969,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-DFT",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3982,8 +3982,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-DTM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -3995,8 +3995,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-FCD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4008,8 +4008,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-FCR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4021,8 +4021,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-FCT",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4034,8 +4034,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-FIN",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4047,8 +4047,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-FIR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4060,8 +4060,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-FMV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4073,8 +4073,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-FPR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4086,8 +4086,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-FPV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4099,8 +4099,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-FRA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4112,8 +4112,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-FRI",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4125,8 +4125,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-FSI",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4138,8 +4138,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-HAN",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4151,8 +4151,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-IFA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4164,8 +4164,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-IIR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4177,8 +4177,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-INC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4190,8 +4190,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-INT",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4203,8 +4203,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-IRS",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4216,8 +4216,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-IRV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4229,8 +4229,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-KEV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4242,8 +4242,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-LEV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4255,8 +4255,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-LKY",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4268,8 +4268,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-MAY",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4281,8 +4281,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-MBI",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4294,8 +4294,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-MCE",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4307,8 +4307,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-MGN",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4320,8 +4320,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-MNT",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4333,8 +4333,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-MRD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4346,8 +4346,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-MST",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4359,8 +4359,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-NCE",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4372,8 +4372,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-OCR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4385,8 +4385,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-ODV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4398,8 +4398,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-OIR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4411,8 +4411,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-ONC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4424,8 +4424,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-PAC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4437,8 +4437,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-PAI",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4450,8 +4450,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-PER",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4463,8 +4463,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-PFA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4476,8 +4476,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-PMV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4489,8 +4489,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-PRO",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4502,8 +4502,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-PRV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4515,8 +4515,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-QTR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4528,8 +4528,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-RGL",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4541,8 +4541,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-RMV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4554,8 +4554,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-RSP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4567,8 +4567,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-RTR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4580,8 +4580,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-SCT",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4593,8 +4593,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-SDR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4606,8 +4606,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-SGC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4619,8 +4619,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-SHD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4632,8 +4632,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-SNT",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4645,8 +4645,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-TLA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4658,8 +4658,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-TPR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4671,8 +4671,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-TRC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4684,8 +4684,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-TRF",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4697,8 +4697,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-VLD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4710,8 +4710,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-VLN",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4723,8 +4723,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-VLR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4736,8 +4736,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-VRF",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4749,8 +4749,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRD.data.all.FRD-VUL",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       }
     },
     {
@@ -4763,8 +4763,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IEC.data.all.CSO.IEC-CSO-AIR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -4783,8 +4783,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IEC.data.all.CSO.IEC-CSO-DPR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -4803,8 +4803,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IEC.data.all.CSO.IEC-CSO-EFI",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -4823,8 +4823,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IEC.data.all.CSO.IEC-CSO-EFR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -4843,8 +4843,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IEC.data.all.CSO.IEC-CSO-FIR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -4863,8 +4863,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IEC.data.all.CSO.IEC-CSO-IIR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -4883,8 +4883,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IEC.data.all.CSO.IEC-CSO-OIR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -4903,8 +4903,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IEC.data.all.FRP.IEC-FRP-ORV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -4923,8 +4923,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.rev5.CSF.IVV-CSF-ACF",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "rev5",
@@ -4943,8 +4943,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.rev5.CSF.IVV-CSF-AIA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "rev5",
@@ -4963,8 +4963,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.rev5.CSF.IVV-CSF-MCA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "rev5",
@@ -4983,8 +4983,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.rev5.CSF.IVV-CSF-PCA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "rev5",
@@ -5003,8 +5003,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.all.CSO.IVV-CSO-DUS",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -5023,8 +5023,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.all.CSO.IVV-CSO-FIA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -5043,8 +5043,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.all.CSO.IVV-CSO-ICP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -5063,8 +5063,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.all.CSO.IVV-CSO-RAA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -5083,8 +5083,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.all.CSO.IVV-CSO-SEE",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -5103,8 +5103,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.all.CSO.IVV-CSO-SEI",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -5123,8 +5123,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.all.CSO.IVV-CSO-STE",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -5143,8 +5143,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.all.CSO.IVV-CSO-USR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -5163,8 +5163,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.20x.CSX.IVV-CSX-AIA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "20x",
@@ -5183,8 +5183,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.all.IAS.IVV-IAS-EPX",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -5203,8 +5203,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.all.IAS.IVV-IAS-OSA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -5223,8 +5223,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.all.IAS.IVV-IAS-SHA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -5243,8 +5243,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.all.IAS.IVV-IAS-SUM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -5263,8 +5263,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.all.IAS.IVV-IAS-VEF",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -5283,8 +5283,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.all.IAS.IVV-IAS-VIM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -5303,8 +5303,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.IVV.data.all.IAS.IVV-IAS-VIP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -5322,8 +5322,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.CED.indicators.KSI-CED-RAT",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5351,8 +5351,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.CMT.indicators.KSI-CMT-LMC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5376,8 +5376,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.CMT.indicators.KSI-CMT-RMV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5401,8 +5401,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.CMT.indicators.KSI-CMT-RVP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5425,8 +5425,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.CMT.indicators.KSI-CMT-VTD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5447,8 +5447,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.CNA.indicators.KSI-CNA-DFP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5467,8 +5467,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.CNA.indicators.KSI-CNA-EIS",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5487,8 +5487,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.CNA.indicators.KSI-CNA-IBP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5508,8 +5508,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.CNA.indicators.KSI-CNA-MAT",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5540,8 +5540,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.CNA.indicators.KSI-CNA-OFA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [],
@@ -5557,8 +5557,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.CNA.indicators.KSI-CNA-RNT",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5580,8 +5580,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.CNA.indicators.KSI-CNA-RVP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5601,8 +5601,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.CNA.indicators.KSI-CNA-ULN",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5627,8 +5627,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.IAM.indicators.KSI-IAM-AAM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5654,8 +5654,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.IAM.indicators.KSI-IAM-APM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5685,8 +5685,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.IAM.indicators.KSI-IAM-ELP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5737,8 +5737,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.IAM.indicators.KSI-IAM-JIT",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5793,8 +5793,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.IAM.indicators.KSI-IAM-SNU",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5818,8 +5818,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.IAM.indicators.KSI-IAM-SUS",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5843,8 +5843,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.INR.indicators.KSI-INR-AAR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5865,8 +5865,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.INR.indicators.KSI-INR-RIR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5893,8 +5893,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.INR.indicators.KSI-INR-RPI",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5916,8 +5916,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.MLA.indicators.KSI-MLA-ALA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5935,8 +5935,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.MLA.indicators.KSI-MLA-EVC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5957,8 +5957,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.MLA.indicators.KSI-MLA-LET",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -5985,8 +5985,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.MLA.indicators.KSI-MLA-OSM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6021,8 +6021,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.MLA.indicators.KSI-MLA-RVL",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6046,8 +6046,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.PIY.indicators.KSI-PIY-GIV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6071,8 +6071,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.PIY.indicators.KSI-PIY-RES",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [],
@@ -6088,8 +6088,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.PIY.indicators.KSI-PIY-RIS",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6115,8 +6115,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.PIY.indicators.KSI-PIY-RSD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6145,8 +6145,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.PIY.indicators.KSI-PIY-RVD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6164,8 +6164,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.RPL.indicators.KSI-RPL-ABO",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6188,8 +6188,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.RPL.indicators.KSI-RPL-ARP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6222,8 +6222,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.RPL.indicators.KSI-RPL-RRO",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6242,8 +6242,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.RPL.indicators.KSI-RPL-TRC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6270,8 +6270,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.SCR.indicators.KSI-SCR-MIT",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6300,8 +6300,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.SCR.indicators.KSI-SCR-MON",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6328,8 +6328,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.SVC.indicators.KSI-SVC-ACM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6357,8 +6357,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.SVC.indicators.KSI-SVC-ASM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6380,8 +6380,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.SVC.indicators.KSI-SVC-EIS",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6407,8 +6407,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.SVC.indicators.KSI-SVC-PRR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6426,8 +6426,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.SVC.indicators.KSI-SVC-RUD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6446,8 +6446,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.SVC.indicators.KSI-SVC-SIN",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6476,8 +6476,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.SVC.indicators.KSI-SVC-VCM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6496,8 +6496,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "KSI.SVC.indicators.KSI-SVC-VRI",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "controls": [
@@ -6522,8 +6522,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.MAS.data.all.CSO.MAS-CSO-FLO",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -6542,8 +6542,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.MAS.data.all.CSO.MAS-CSO-IIR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -6562,8 +6562,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.MAS.data.all.CSO.MAS-CSO-MDI",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -6582,8 +6582,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.MAS.data.all.CSO.MAS-CSO-SUP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -6602,8 +6602,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.MAS.data.all.CSO.MAS-CSO-TPR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -6622,8 +6622,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.MKT.data.all.CAS.MKT-CAS-LRQ",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -6654,8 +6654,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.MKT.data.all.CAS.MKT-CAS-RFR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -6686,8 +6686,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.MKT.data.all.CAS.MKT-CAS-WEB",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -6718,8 +6718,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.MKT.data.all.CSO.MKT-CSO-MLR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -6750,8 +6750,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.MKT.data.all.CSO.MKT-CSO-PML",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -6782,8 +6782,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.MKT.data.all.FRP.MKT-FRP-SOF",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -6814,8 +6814,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.MKT.data.all.IAS.MKT-IAS-LRQ",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -6846,8 +6846,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.MKT.data.all.IAS.MKT-IAS-OFR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -6878,8 +6878,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.MKT.data.all.IAS.MKT-IAS-WEB",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -6910,8 +6910,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.MKT.data.all.IIP.MKT-IIP-AGU",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -6942,8 +6942,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.MKT.data.all.IIP.MKT-IIP-DCP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -6974,8 +6974,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.MKT.data.all.IIP.MKT-IIP-DLA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7006,8 +7006,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.REC.data.all.FRP.REC-FRP-DRD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7038,8 +7038,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.REC.data.all.FRP.REC-FRP-FOC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7070,8 +7070,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.REC.data.all.FRP.REC-FRP-RAO",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7102,8 +7102,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.REC.data.all.IAS.REC-IAS-ACC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7134,8 +7134,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.REC.data.all.IAS.REC-IAS-ADA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7166,8 +7166,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.REC.data.all.IAS.REC-IAS-AFI",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7198,8 +7198,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.REC.data.all.IAS.REC-IAS-ANR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7230,8 +7230,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.REC.data.all.IAS.REC-IAS-CAP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7262,8 +7262,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.REC.data.all.IAS.REC-IAS-CFI",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7294,8 +7294,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.REC.data.all.IAS.REC-IAS-INV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7326,8 +7326,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.REC.data.all.IAS.REC-IAS-PSC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7358,8 +7358,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.REC.data.all.IAS.REC-IAS-PST",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7390,8 +7390,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.REC.data.all.IAS.REC-IAS-RAR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7422,8 +7422,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.REC.data.all.IAS.REC-IAS-RAS",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7454,8 +7454,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.REC.data.all.IAS.REC-IAS-RQU",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7486,8 +7486,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.REC.data.all.IAS.REC-IAS-SEP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7518,8 +7518,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCG.data.all.CSO.SCG-CSO-AUP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7549,8 +7549,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCG.data.all.CSO.SCG-CSO-PUB",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7580,8 +7580,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCG.data.all.CSO.SCG-CSO-RSC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7611,8 +7611,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCG.data.all.CSO.SCG-CSO-SDF",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7642,8 +7642,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCG.data.all.ENH.SCG-ENH-API",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7673,8 +7673,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCG.data.all.ENH.SCG-ENH-CMP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7704,8 +7704,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCG.data.all.ENH.SCG-ENH-EXP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7735,8 +7735,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCG.data.all.ENH.SCG-ENH-MRG",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7766,8 +7766,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCG.data.all.ENH.SCG-ENH-VRH",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7797,8 +7797,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCN.data.all.ADP.SCN-ADP-NTF",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7817,8 +7817,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCN.data.all.CSO.SCN-CSO-ARI",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7837,8 +7837,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCN.data.all.CSO.SCN-CSO-EMG",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7857,8 +7857,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCN.data.all.CSO.SCN-CSO-EVA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7877,8 +7877,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCN.data.all.CSO.SCN-CSO-HIS",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7897,8 +7897,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCN.data.all.CSO.SCN-CSO-HRM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7917,8 +7917,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCN.data.all.CSO.SCN-CSO-INF",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7937,8 +7937,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCN.data.all.CSO.SCN-CSO-MAR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7957,8 +7957,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCN.data.all.CSO.SCN-CSO-NOM",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7977,8 +7977,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCN.data.all.FRP.SCN-FRP-CAP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -7997,8 +7997,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCN.data.all.RTR.SCN-RTR-NNR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8017,8 +8017,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCN.data.all.TRF.SCN-TRF-NAF",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8037,8 +8037,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCN.data.all.TRF.SCN-TRF-NAV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8057,8 +8057,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCN.data.all.TRF.SCN-TRF-NFP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8077,8 +8077,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCN.data.all.TRF.SCN-TRF-NIP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8097,8 +8097,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCN.data.all.TRF.SCN-TRF-TPR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8117,8 +8117,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SCN.data.all.TRF.SCN-TRF-UPD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8137,8 +8137,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SDR.data.rev5.CSF.SDR-CSF-CTF",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "rev5",
@@ -8157,8 +8157,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SDR.data.all.CSO.SDR-CSO-FRR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8177,8 +8177,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SDR.data.all.CSO.SDR-CSO-MTD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8197,8 +8197,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SDR.data.20x.CSX.SDR-CSX-KMT",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "20x",
@@ -8217,8 +8217,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.SDR.data.20x.CSX.SDR-CSX-KSI",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "20x",
@@ -8237,8 +8237,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VDR.data.all.CSO.VDR-CSO-ADT",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8269,8 +8269,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VDR.data.all.CSO.VDR-CSO-AKE",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8301,8 +8301,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VDR.data.all.CSO.VDR-CSO-DAC",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8333,8 +8333,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VDR.data.all.CSO.VDR-CSO-DET",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8365,8 +8365,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VDR.data.all.CSO.VDR-CSO-DFR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8397,8 +8397,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VDR.data.all.CSO.VDR-CSO-FAV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8429,8 +8429,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VDR.data.all.CSO.VDR-CSO-MSP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8461,8 +8461,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VDR.data.all.CSO.VDR-CSO-RES",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8493,8 +8493,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VDR.data.all.CSO.VDR-CSO-SIR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8525,8 +8525,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VDR.data.all.TFR.VDR-TFR-KEV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8557,8 +8557,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VDR.data.rev5.TFR.VDR-TFR-MVF",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "rev5",
@@ -8589,8 +8589,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VDR.data.20x.TFR.VDR-TFR-MVX",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "20x",
@@ -8621,8 +8621,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VDR.data.all.TFR.VDR-TFR-NMV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8653,8 +8653,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VDR.data.all.TFR.VDR-TFR-PCD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8685,8 +8685,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VDR.data.all.TFR.VDR-TFR-PDD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8717,8 +8717,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VDR.data.all.TFR.VDR-TFR-PSD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8749,8 +8749,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VDR.data.all.TFR.VDR-TFR-PVR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8781,8 +8781,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VDR.data.all.TFR.VDR-TFR-RMN",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8813,8 +8813,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.AGM.VER-AGM-MAP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8845,8 +8845,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.AGM.VER-AGM-RVR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8877,8 +8877,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.EVA.VER-EVA-AIA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8909,8 +8909,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.EVA.VER-EVA-EFA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8941,8 +8941,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.EVA.VER-EVA-EFP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -8973,8 +8973,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.EVA.VER-EVA-EIR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -9005,8 +9005,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.EVA.VER-EVA-ELX",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -9031,14 +9031,14 @@
       "id": "VER-EVA-EPA",
       "type": "rule",
       "title": "Estimate Potential Agency Impact",
-      "description": "Providers MUST evaluate detected vulnerabilities, considering the context of the cloud service offering, to estimate the potential agency impact of exploitation on government customers AND assign one of the following Potential Agency Impact N-ratings (PAIN):",
+      "description": "Providers MUST evaluate detected vulnerabilities, considering the context of the cloud service offering, to estimate the likely potential agency impact of exploitation on government customers AND assign one of the following Potential Agency Impact N-ratings (PAIN):",
       "discussion": "",
       "family": "Vulnerability Evaluation and Reporting",
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.EVA.VER-EVA-EPA",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -9069,8 +9069,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.EVA.VER-EVA-GRV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -9101,8 +9101,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.FRP.VER-FRP-ADV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -9133,8 +9133,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.FRP.VER-FRP-ARP",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -9165,8 +9165,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.RPT.VER-RPT-AVI",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -9197,8 +9197,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.RPT.VER-RPT-HLO",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -9229,8 +9229,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.RPT.VER-RPT-NID",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -9261,8 +9261,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.RPT.VER-RPT-PER",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -9293,8 +9293,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.RPT.VER-RPT-RPD",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -9325,8 +9325,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.RPT.VER-RPT-VDT",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -9357,8 +9357,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.TFR.VER-TFR-EVU",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -9389,8 +9389,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.TFR.VER-TFR-IRI",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -9421,8 +9421,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.TFR.VER-TFR-MAV",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -9453,8 +9453,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.TFR.VER-TFR-MHR",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -9485,8 +9485,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.TFR.VER-TFR-MRH",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",
@@ -9517,8 +9517,8 @@
       "source": {
         "key": "fedramp-2026-rules",
         "locator": "FRR.VER.data.all.TFR.VER-TFR-NRI",
-        "snapshot_date": "2026-09-13",
-        "version": "2026.09.13.02"
+        "snapshot_date": "2026-10-05",
+        "version": "2026.10.05.01"
       },
       "metadata": {
         "applicability": "all",

@@ -28,7 +28,7 @@ export function projectComparisonRecord(node) {
   return { id: node.id, node_type: node.node_type, label: node.label, source_id: node.source_id,
     publication_source_id: node.publication_source_id, artifact_ids: node.artifact_ids,
     source_refs: node.source_refs,
-    metadata: Object.fromEntries([...new Set(fields)].filter((field) => metadata[field] !== undefined)
+    metadata: Object.fromEntries([...new Set(fields)].filter((field) => metadata[field] != null)
       .map((field) => [field, metadata[field]])) };
 }
 

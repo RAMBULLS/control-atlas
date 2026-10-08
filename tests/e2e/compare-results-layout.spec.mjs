@@ -367,7 +367,7 @@ test("content revisions compare complete inventories, source fields and CSV with
   await waitForAppReady(page); await dismissOnboarding(page);
   const rows = page.locator("[data-content-result]");
   await expect(rows.first()).toBeVisible({ timeout: 90_000 });
-  await expect(page.locator("#compare-workspace")).toContainText("do not establish semantic continuity");
+  await expect(page.locator("#compare-workspace")).toContainText("do not prove they describe the same requirement");
   await expect(page.locator("[data-content-totals]")).toContainText("different content");
   expect(await rows.count()).toBeLessThanOrEqual(25);
   await rows.first().getByText("Compared fields and sources", { exact: true }).click();

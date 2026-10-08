@@ -17,6 +17,8 @@ import type { ViewState } from "../lib/viewState";
 const LABELS: Record<string, string> = { shared: "Shared identifier, same content", different: "Shared identifier, different content",
   only_a: "Only in A", only_b: "Only in B", unavailable: "Content or alignment unavailable", mapped: "Published mapping" };
 const identifier = (node: any) => node.metadata.publisher_item_id || node.metadata.item_id;
+const fieldHeading = (node: any, field: string) => recordPresentationContract(node.metadata.catalog_id, node.node_type)
+  .sections.find((entry: any) => entry.field === field)?.heading || (field === "title" ? "Title" : field.replaceAll("_", " "));
 
 function ContentDetails({ row, bundle, onOpenNode }: { row: any; bundle: RuntimeBundle; onOpenNode: (id: string) => void }) {
   const [open, setOpen] = useState(false);
@@ -35,7 +37,7 @@ function ContentDetails({ row, bundle, onOpenNode }: { row: any; bundle: Runtime
         {comparisonFields(node).map((field: string) => {
           const section = contract.sections.find((entry: any) => entry.field === field);
           const value = node.metadata[field];
-          return <div key={field}><h4>{section?.heading || field.replaceAll("_", " ")}{row.changed.includes(field) ? " · differs" : ""}</h4>
+          return <div key={field}><h4>{fieldHeading(node, field)}{row.changed.includes(field) ? " · differs" : ""}</h4>
             {!hasComparisonValue(value) ? <p>Not available in the imported source.</p> : section
               ? <PublisherCitationProvider citations={node.metadata.citations || {}}><SourceSectionContent kind={section.kind} value={value} presentation={node.metadata.source_text_presentation?.[field]} /></PublisherCitationProvider>
               : <p style={{ whiteSpace: "pre-wrap" }}>{typeof value === "string" ? value : JSON.stringify(value)}</p>}</div>;
@@ -96,7 +98,7 @@ export function ContentComparison(props: {
   };
   const totals = Object.entries(LABELS).map(([key, label]) => ({ key, label, count: completeRows.filter((row: any) => row.group === key).length })).filter((entry) => entry.count);
   return <MissionPage className="compare-page" id="compare-workspace" maxWidth="workspace">
-    <PageHeader primary title="Compare" eyebrow="PUBLISHED CONTENT & INVENTORIES" summary="Compare available publication editions, exact records, and complete published mapping inventories." />
+    <PageHeader primary title="Compare" eyebrow="PUBLISHED CONTENT & INVENTORIES" summary="Select two publications to compare their text and records." />
     <div aria-label="Comparison mode" className="compare-mode-tabs" role="tablist">{COMPARE_MODES.map((mode) =>
       <button type="button" role="tab" className="compare-mode-tab" key={mode.id} aria-selected={mode.id === "content"}
         onClick={() => mode.id !== "content" && onNavigate("matrix", activateCompareMode(mode.id))}>{mode.label}</button>)}</div>
@@ -104,7 +106,7 @@ export function ContentComparison(props: {
       <div className="compare-step-fields"><SelectField label="Publication A" emptyLabel="Choose a publication" options={options} value={state.source} onChange={(value) => select("source", value)} />
         <SelectField label="Publication B" emptyLabel="Choose a publication" options={options} value={state.target} onChange={(value) => select("target", value)} /></div>
       <p>Only imported publication editions are listed. Unavailable historical snapshots cannot be compared.</p>
-      <p>Identifier alignment compares the same record type and publisher ID. Matching IDs across editions do not establish semantic continuity. Only in B means new to this selected inventory; only in A means missing from it, not withdrawn or noncompliant.</p>
+      <p>Identifier alignment compares the same record type and publisher ID. Matching IDs across editions do not prove they describe the same requirement. Only in B means new to this selected inventory; only in A means missing from it, not withdrawn or noncompliant.</p>
       <p>Content comparison preserves the literal title, published sections and facts shown on each record page. Differences are not compliance, applicability or equivalence decisions. Missing source content remains unavailable.</p>
       {state.source && state.target && state.compareRun !== "true" ? <Button type="button" onClick={() => onNavigate("matrix", { ...state, compareRun: "true" })}>Compare content</Button> : null}
     </section>
@@ -131,7 +133,7 @@ export function ContentComparison(props: {
       <ul className="source-ref-list">{window.rows.map((row: any) => <li key={row.id} className="panel" data-content-result={row.group}>
         <span className="label">{explicit && basis === "content" && ["shared", "different"].includes(row.group) ? (row.group === "shared" ? "Same compared content" : "Different compared content") : LABELS[row.group]}</span>
         <p>{row.a ? `A: ${identifier(row.a)} — ${row.a.metadata.title}` : "A: no aligned record"}<br />{row.b ? `B: ${identifier(row.b)} — ${row.b.metadata.title}` : "B: no aligned record"}</p>
-        <p>{row.alignment}{row.changed.length ? ` · Different fields: ${row.changed.join(", ")}` : ""}</p>
+        <p>{row.alignment}{row.changed.length ? ` · Different fields: ${row.changed.map((field: string) => fieldHeading(row.a || row.b, field)).join(", ")}` : ""}</p>
         <ContentDetails row={row} bundle={bundle} onOpenNode={onOpenNode} />
       </li>)}</ul>
       <ListPagination label="Content results" noun="results" {...window} total={filtered.length} onPageChange={(value) => setPage(String(value))} />

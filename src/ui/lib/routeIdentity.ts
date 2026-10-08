@@ -224,7 +224,7 @@ function permittedParams(params: URLSearchParams, permitted: Set<string>): { par
       discarded = true;
       continue;
     }
-    if (key === "intent" && !["frameworks", "implementation", "item-mapping", "baselines"].includes(value)) {
+    if (key === "intent" && !["frameworks", "implementation", "item-mapping", "baselines", "content"].includes(value)) {
       discarded = true;
       continue;
     }

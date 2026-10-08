@@ -422,3 +422,22 @@ test("unrecognized retired aliases remain honest not-found routes", () => {
     assert.equal(parseHashLocation(path, "").view, "not-found", path);
   }
 });
+
+
+test("content comparison deep links survive canonicalization and state round trips", () => {
+  const path = "/compare/relationships";
+  const search = "?intent=content&source=nist-800-171-rev2&target=nist-800-171&compareRun=true";
+  const canonical = canonicalizeHashLocation(path + search);
+  assert.equal(canonical.recoveryMessage, "");
+  const parsed = parseHashLocation(path, search);
+  assert.equal(parsed.view, "matrix");
+  if (parsed.view !== "matrix") throw new Error("Expected Compare state");
+  assert.equal(parsed.intent, "content");
+  assert.equal(parsed.source, "nist-800-171-rev2");
+  assert.equal(parsed.target, "nist-800-171");
+  assert.equal(parsed.compareRun, "true");
+  assert.deepEqual(parseHashLocation(serializeHashLocation(parsed), ""), parsed);
+  const invalid = canonicalizeHashLocation(path + search.replace("intent=content", "intent=unpublished"));
+  assert.ok(invalid.recoveryMessage);
+  assert.ok(!invalid.canonicalPath.includes("intent=unpublished"));
+});

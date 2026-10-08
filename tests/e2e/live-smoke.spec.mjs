@@ -167,7 +167,7 @@ test("live smoke: content inventories and sourced literal comparisons load", asy
   await waitForAppReady(page); await dismissOnboarding(page);
   const rows = page.locator("[data-content-result]");
   await expect(rows.first()).toBeVisible({ timeout: 90000 });
-  await expect(page.locator("#compare-workspace")).toContainText("do not establish semantic continuity");
+  await expect(page.locator("#compare-workspace")).toContainText("do not prove they describe the same requirement");
   await rows.first().getByText("Compared fields and sources", { exact: true }).click();
   await expect(rows.first().getByRole("link", { name: /official source/ }).first()).toBeVisible();
   await page.getByLabel("Result group").selectOption("unavailable");

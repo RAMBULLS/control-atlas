@@ -42,7 +42,7 @@ test('sourced lifecycle and replacement history remain visible', async ({ page }
   // The official-source action resolves to the issuance itself, not the
   // directory of every DoD instruction. Sending a practitioner to an index and
   // making them find the document by hand is the work they came here to avoid.
-  await expect(page.getByRole('button', { name: /^Policy & directives/ })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('button', { name: /^All sources/ })).toHaveAttribute('aria-pressed', 'true');
   await expect(replacementInspector.getByRole('link', { name: /^Read the official text/ })).toHaveAttribute(
     'href',
     'https://www.esd.whs.mil/Portals/54/Documents/DD/issuances/dodi/851001p.pdf',
@@ -80,7 +80,7 @@ test('Source Register separates current, historical, mapping, and reproducible e
   await gotoApp(page, '/#/sources');
   await waitForAppReady(page);
   await dismissOnboarding(page);
-  await expect(page.getByText(/\d+ publications with indexed records:/)).toBeVisible();
+  await expect(page.getByText(/\d+ publications and policy documents\./)).toBeVisible();
   const fedramp2026 = page.getByRole('button', { name: 'FedRAMP 2026', exact: true });
   await expect(fedramp2026).toBeVisible();
   await expect(page.locator('.source-register-row').filter({ has: fedramp2026 })).toContainText('FedRAMP Consolidated Rules for 2026');

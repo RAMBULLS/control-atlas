@@ -13,6 +13,12 @@ async function waitForAppReady(page) {
   });
 }
 
+async function readServedArtifact(page, filename) {
+  const response = await page.request.get(`/data/generated/${filename}`);
+  expect(response.ok()).toBe(true);
+  return response.json();
+}
+
 test.describe("Sources Inspector State & Trust Workflow", () => {
   test("1440px desktop uses master-detail layout without occluding the register", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
@@ -336,7 +342,7 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
 
 
 test("all canonical sources are visible without reveal controls and categories remain filters", async ({ page }) => {
-  const identities = JSON.parse(readFileSync("data/generated/publication-identity-index.json", "utf8")).identities;
+  const { identities } = await readServedArtifact(page, "publication-identity-index.json");
   await gotoApp(page, "/#/sources");
   await waitForAppReady(page);
   await expect(page.locator(".source-register-row")).toHaveCount(identities.length);
@@ -372,8 +378,8 @@ test("Resources to Sources waits for metadata instead of painting missing fields
   }
   await waitForAppReady(page);
   await expect(page.locator(".source-register-row")).toHaveCount(49);
-  const identities = JSON.parse(readFileSync("data/generated/publication-identity-index.json", "utf8")).identities;
-  const sources = JSON.parse(readFileSync("data/generated/sources.json", "utf8")).sources;
+  const { identities } = await readServedArtifact(page, "publication-identity-index.json");
+  const { sources } = await readServedArtifact(page, "sources.json");
   const retired = sources.find((source) => source.id === "fedramp-rev5"
     && identities.some((identity) => identity.id === source.id));
   expect(retired).toBeTruthy();

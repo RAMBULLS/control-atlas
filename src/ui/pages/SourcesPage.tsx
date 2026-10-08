@@ -829,13 +829,13 @@ export function SourcesPage(props: {
 
       <p className="source-register-boundary">
         {registerView === "policy"
-          ? `${policyCount.toLocaleString()} statutes, regulations, orders and directives cited as the basis for the publications listed here. Each shows its official title, issuer and a link to the official text. Being listed does not decide legal precedence or whether it applies to you.`
+          ? `${policyCount.toLocaleString()} policy documents. Listing does not decide legal precedence or applicability.`
           // "anchor searchable records or published connections" was our
           // vocabulary for what a publication does in the graph. Say what the
           // reader gets from it.
           : registerView === "all"
-            ? `${registerRows.length.toLocaleString()} publications and policy documents. Source files and published crosswalks are available with each publication; other supporting sources and files are listed below.`
-            : `${publicationCount.toLocaleString()} publications: search indexed records or follow their published links to other publications. Supporting files and crosswalks are inside each one.`}
+            ? `${registerRows.length.toLocaleString()} publications and policy documents.`
+            : `${publicationCount.toLocaleString()} publications.`}
       </p>
 
       <nav aria-label="Source register views" className="source-register-views">

@@ -4,6 +4,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadSourceChecks } from './lib/source-check-receipts.mjs';
+import { sourceCheckFreshness } from '../tools/validators/source-registry.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const REGISTRY_PATH = join(ROOT, 'data', 'source-registry.json');
@@ -87,6 +88,7 @@ export function reconcileFreshness(registry, artifactDocuments, runDate, sourceC
     if (dependencies.some((id) => quarantinedIds.has(id) || quarantinedSources.has(id))) quarantinedSources.add(alias);
   }
   for (const freshness of registry.freshness.sources) {
+    Object.assign(freshness, sourceCheckFreshness(freshness, registry.artifacts));
     const quarantined = quarantinedIds.has(freshness.source_id) || quarantinedSources.has(freshness.source_id);
     const check = sourceChecks.get(freshness.source_id);
     if (!quarantined && check) {
@@ -101,6 +103,7 @@ export function reconcileFreshness(registry, artifactDocuments, runDate, sourceC
         freshness.check_evidence = check;
       }
     }
+    Object.assign(freshness, sourceCheckFreshness(freshness, registry.artifacts));
     if (freshness.sync_model !== 'auto_synced') continue;
     const document = artifactDocuments.get(freshness.source_id);
     if (!document) throw new Error(`Missing refreshed artifact for ${freshness.source_id}`);

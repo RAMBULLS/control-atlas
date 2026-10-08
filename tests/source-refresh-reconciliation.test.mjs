@@ -9,6 +9,41 @@ import { fetchCatalogWithFallback } from '../scripts/fetch-framework-catalogs.mj
 import { artifactHash, reconcileFreshness } from '../scripts/reconcile-source-freshness.mjs';
 import { collectSourceChecks, retrievalScope, sourceCheckReceiptPath } from '../scripts/lib/source-check-receipts.mjs';
 
+test('normal reconciliation persists the unsupported 53A proxy date once without fabricating another check', () => {
+  const id = 'nist-800-53a-assessment-procedures';
+  const documents = new Map([[id, [{ records: [{ id: 'AC-01' }] }]]]);
+  const registry = { publications: [{ id, retrieved_at: '2026-06-13' }], freshness: { sources: [{ source_id: id,
+    sync_model: 'auto_synced', last_checked: '2026-10-08', last_imported: '2026-09-10', hash: artifactHash(documents.get(id)) }] } };
+  reconcileFreshness(registry, documents, '2026-10-09');
+  const freshness = registry.freshness.sources[0];
+  assert.equal(freshness.last_checked, null);
+  assert.equal(freshness.unsupported_check_history[0].last_checked, '2026-10-08');
+  assert.equal(freshness.unsupported_check_history[0].status, 'unsupported_source_identity');
+  assert.equal(freshness.last_imported, '2026-09-10');
+  assert.equal(registry.publications[0].retrieved_at, '2026-06-13');
+  const history = structuredClone(freshness.unsupported_check_history);
+  reconcileFreshness(registry, documents, '2026-10-10');
+  assert.deepEqual(freshness.unsupported_check_history, history);
+  const check = { scope: 'publisher_artifact_retrieval', checked_at: '2026-10-11T12:00:00Z',
+    requests: [{ url: 'https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53Ar5.pdf',
+      checked_at: '2026-10-11T12:00:00Z', http: 200, validation: 'remote', sha256: `sha256:${'b'.repeat(64)}`, byte_length: 100 }] };
+  // An incoming receipt without an admitted procedure artifact remains invalid.
+  reconcileFreshness(registry, documents, '2026-10-11', new Map([[id, check]]));
+  assert.equal(freshness.last_checked, null);
+  assert.equal(freshness.unsupported_check_history.length, 2);
+  assert.deepEqual(freshness.unsupported_check_history[0], history[0]);
+  assert.match(freshness.unsupported_check_history[1].reason, /does not match an admitted SP 800-53A publisher procedure artifact/);
+  const historyBeforeAdmission = structuredClone(freshness.unsupported_check_history);
+  registry.artifacts = [{ id: 'artifact-fixture-nist-800-53a', publication_source_id: id,
+    authority_class: 'publisher', origin: 'publisher_exact', format: 'pdf', artifact_url: check.requests[0].url,
+    sha256: check.requests[0].sha256, byte_length: check.requests[0].byte_length }];
+  reconcileFreshness(registry, documents, '2026-10-11', new Map([[id, check]]));
+  reconcileFreshness(registry, documents, '2026-10-12');
+  assert.equal(freshness.last_checked, '2026-10-11');
+  assert.deepEqual(freshness.check_evidence, check);
+  assert.deepEqual(freshness.unsupported_check_history, historyBeforeAdmission);
+});
+
 const checkTime = '2026-10-08T12:00:02.000Z';
 const checkSha = `sha256:${'a'.repeat(64)}`;
 const request = (url, extra = {}) => ({ url, checked_at: checkTime, method: 'GET', http: 200,

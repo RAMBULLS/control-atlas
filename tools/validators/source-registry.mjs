@@ -283,6 +283,49 @@ export function isIsoDate(value) {
   return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
 }
 
+// The legacy 53A row was stamped by the 800-53 control-catalog projection,
+// without an assessment-procedure retrieval. Preserve the audit fact without
+// presenting it as a verified publication check, including before the next
+// refresh persists this correction. New receipt-backed checks remain valid.
+export function sourceCheckFreshness(freshness, artifacts = []) {
+  if (freshness?.source_id !== 'nist-800-53a-assessment-procedures' || !freshness.last_checked) return freshness;
+  const evidence = freshness.check_evidence;
+  // This is an identity contract for a future admitted raw procedure artifact,
+  // not an admission or a URL allowlist addition. No such artifact exists in
+  // the legacy registry; its 800-53 control-catalog proxy cannot qualify.
+  const procedureUrl = 'https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53Ar5.pdf';
+  const receiptBacked = ['publisher_artifact_retrieval', 'publisher_revision_retrieval'].includes(evidence?.scope) &&
+    typeof evidence.checked_at === 'string' && evidence.checked_at.slice(0, 10) === freshness.last_checked &&
+    Array.isArray(evidence.requests) && evidence.requests.some((request) => request.http === 200 &&
+      ['remote', 'revalidated'].includes(request.validation) &&
+      /^sha256:[a-f0-9]{64}$/.test(request.sha256 || '') && Number.isSafeInteger(request.byte_length) && request.byte_length > 0 &&
+      Date.parse(request.checked_at) >= Date.parse(evidence.checked_at) &&
+      request.url === procedureUrl && (!request.resolved_url || request.resolved_url === procedureUrl) &&
+      artifacts.some((artifact) => artifact.publication_source_id === freshness.source_id &&
+        artifact.authority_class === 'publisher' && artifact.origin === 'publisher_exact' && artifact.format === 'pdf' &&
+        artifact.artifact_url === procedureUrl && artifact.sha256 === request.sha256 && artifact.byte_length === request.byte_length));
+  if (receiptBacked) return freshness;
+  const historical = {
+    last_checked: freshness.last_checked,
+    status: 'unsupported_source_identity',
+    ...(evidence ? {
+      reason: 'Recorded check evidence does not match an admitted SP 800-53A publisher procedure artifact.',
+    } : {
+      reason: 'Legacy check date came from the SP 800-53 Rev. 5 control-catalog refresh, not an SP 800-53A assessment-procedure retrieval.',
+      evidence_locator: 'data/controls-800-53.json',
+    }),
+    ...(evidence ? { check_evidence: evidence } : {}),
+  };
+  const history = freshness.unsupported_check_history || [];
+  return {
+    ...freshness,
+    last_checked: null,
+    ...(evidence ? { check_evidence: null } : {}),
+    unsupported_check_history: history.some((entry) => JSON.stringify(entry) === JSON.stringify(historical))
+      ? history : [...history, historical],
+  };
+}
+
 export function loadSourceRegistry(registry) {
   const errors = validateSourceRegistry(registry);
   if (errors.length) throw new Error(`Invalid source registry:\n- ${errors.join('\n- ')}`);
@@ -345,7 +388,7 @@ export function loadSourceRegistry(registry) {
   if (Array.isArray(registry.sources)) {
     for (const src of registry.sources) {
       const existing = byId.get(src.id);
-      const merged = existing ? { ...src, ...existing, metadata: { ...(src.metadata || {}), ...(existing.metadata || {}) } } : src;
+      const merged = existing ? { ...src, ...existing, metadata: { ...(src.metadata || {}), ...(existing.metadata || {}) } } : { ...src };
       byId.set(src.id, merged);
       const idx = sources.findIndex((s) => s.id === src.id);
       if (idx !== -1) sources[idx] = merged;
@@ -358,11 +401,14 @@ export function loadSourceRegistry(registry) {
     const freshnessMap = new Map((registry.freshness.sources || []).map((f) => [f.source_id, f]));
     const staleDays = registry.freshness.stale_after_days || 45;
     for (const [id, source] of byId.entries()) {
-      const f = freshnessMap.get(id);
+      const f = sourceCheckFreshness(freshnessMap.get(id), artifacts);
       if (f) {
         source.sync_model = f.sync_model;
         source.stale_after_days = staleDays;
-        source.last_checked = f.last_checked ?? source.last_checked ?? null;
+        // An explicit unknown check is authoritative; never resurrect a
+        // rejected ledger date from legacy source/publication metadata.
+        source.last_checked = Object.hasOwn(f, 'last_checked') ? f.last_checked : (source.last_checked ?? null);
+        if (f.unsupported_check_history) source.unsupported_check_history = f.unsupported_check_history;
         source.last_imported = f.last_imported ?? null;
         source.hash = f.hash ?? null;
       }

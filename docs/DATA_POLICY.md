@@ -92,6 +92,21 @@ artifact may support a publication revision check only alongside the adapter's
 current publisher revision discovery and complete required-artifact receipts.
 `last_imported` and its normalized content hash remain separate from these checks.
 
+The legacy `nist-800-53a-assessment-procedures` check was advanced from the
+SP 800-53 control catalog without an SP 800-53A procedure retrieval. Normal
+reconciliation preserves that date and its identity-mismatch reason in
+`unsupported_check_history`, then clears the valid check. Runtime loading applies
+the same correction before persistence, so existing trust surfaces show retrieval
+with no recorded check. An explicit null ledger check cannot fall back to a
+legacy source date. A later supported receipt-backed check can establish a valid
+date while the unsupported historical entry remains available for audit. That
+exception requires the exact official SP 800-53A Rev5 procedure PDF URL and a
+matching admitted, 53A-owned publisher artifact checksum and byte length; a
+similar document name, mapping, other host or control catalog does not qualify.
+A later rejected receipt keeps its own unsupported-artifact reason and evidence,
+separate from the original legacy proxy event. No 53A artifact is admitted by
+this historical correction.
+
 The platform gate considered OSCAL assessment-results for this register, but rejected it because that model represents system assessment findings rather than publication-source review. JSON Schema 2020-12 plus AJV is the existing MIT-licensed, maintained, repository-native validation path and avoids a semantically false OSCAL document.
 
 ## Reconciliation gates

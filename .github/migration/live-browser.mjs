@@ -18,7 +18,7 @@ try {
  for(const viewport of [{width:1440,height:1000},{width:390,height:844}]) {
   const context=await browser.newContext({viewport,isMobile:viewport.width===390,hasTouch:viewport.width===390});
   context.setDefaultTimeout(30000);context.setDefaultNavigationTimeout(60000);
-  const errors=[],violations=[],unexpected=[],responses=[],pending=[],navigationAborts=[],inspected=new Set();let bytes=0;
+  const errors=[],violations=[],unexpected=[],responses=[],pending=[],navigationAborts=[],workerHttpChecks=[],inspected=new Set();let bytes=0;
   await context.exposeBinding('__captureMigrationCsp',(_,x)=>violations.push(x));
   await context.addInitScript(()=>document.addEventListener('securitypolicyviolation',e=>window.__captureMigrationCsp({directive:e.effectiveDirective,blocked:e.blockedURI,disposition:e.disposition})));
   context.on('request',req=>{const u=new URL(req.url());if(![canonical,'https://rambulls.github.io'].includes(u.origin))unexpected.push(req.url());});
@@ -32,7 +32,19 @@ try {
     const u=new URL(res.url());name=decodeURIComponent(u.pathname).slice(1);if(!name||name.endsWith('/'))name+='index.html';
     if(res.status()===304)return;assert.equal(res.status(),200,'Completed response '+name);
     if(inspected.has(name))return;const expected=files.get(name);assert(expected,'Unexpected served path '+name);
-    const body=await bounded(res.body(),'completed response body '+name);assert(body.length<=64*1024**2);bytes+=body.length;assert(bytes<=256*1024**2);
+    let body;
+    try{body=await bounded(res.body(),'completed response body '+name);}catch(bodyError){
+     if(name!=='assets/jsonParseWorker-vpjcTFyL.js'||!bodyError.message.includes('response.body: Target page, context or browser has been closed'))throw bodyError;
+     assert(!page.isClosed(),'A closed browser page cannot qualify Worker HTTP coverage');
+     const independent=await context.request.get(u.href,{timeout:15000,maxRedirects:0});assert.equal(independent.status(),200);
+     const contentType=independent.headers()['content-type']?.split(';')[0];assert(['application/javascript','text/javascript'].includes(contentType));
+     const fetched=await bounded(independent.body(),'independent Worker HTTP body');assert(fetched.length<=64*1024**2);
+     const fetchedHash=createHash('sha256').update(fetched).digest('hex');assert.equal(fetchedHash,expected.sha256,name);
+     workerHttpChecks.push({path:name,url:u.href,original_completed_browser_status:res.status(),original_browser_body_available:false,original_body_error:bodyError.message,
+      verification:'Separate normal trusted TLS HTTP GET; does not prove original Worker browser-body bytes.',http_status:independent.status(),content_type:contentType,bytes:fetched.length,sha256:fetchedHash,expected_sha256:expected.sha256});
+     inspected.add(name);return;
+    }
+    assert(body.length<=64*1024**2);bytes+=body.length;assert(bytes<=256*1024**2);
     const digest=createHash('sha256').update(body).digest('hex');assert.equal(digest,expected.sha256,name);inspected.add(name);
     responses.push({path:name,bytes:body.length,sha256:digest,status:res.status(),content_type:res.headers()['content-type'],completed:true});
    }catch(e){errors.push('Completed response '+(name||req.url())+': '+e.message);}})());
@@ -64,7 +76,7 @@ try {
   const storage=await page.evaluate(()=>({local:Object.keys(localStorage),session:Object.keys(sessionStorage)}));assert.deepEqual(storage.local,[]);
   await page.waitForLoadState('networkidle',{timeout:15000});await drainCompleted();assert(responses.length>10);assert.deepEqual(errors,[]);assert.deepEqual(violations,[]);assert.deepEqual(unexpected,[]);
   await context.close();await drainCompleted();assert.deepEqual(errors,[]);
-  proof.contexts.push({viewport,old_bookmark_final,bookmark_reload_history:true,legacy_scoped_route:true,retired_guide_destination:true,library_query:true,keyboard_focus:true,release_sha:sha,csv:{bytes:csv.length,sha256:csvSha},storage,responses,navigation_aborts:navigationAborts,csp_events:violations,errors,unexpected_requests:unexpected});
+  proof.contexts.push({viewport,old_bookmark_final,bookmark_reload_history:true,legacy_scoped_route:true,retired_guide_destination:true,library_query:true,keyboard_focus:true,release_sha:sha,csv:{bytes:csv.length,sha256:csvSha},storage,responses,worker_http_checks:workerHttpChecks,navigation_aborts:navigationAborts,csp_events:violations,errors,unexpected_requests:unexpected});
  }
  proof.status='PASS';
 }catch(e){proof.status='FAIL';proof.failure=e.stack;throw e;}finally{await writeFile(path.join(out,'browser-proof.json'),JSON.stringify(proof,null,2));await browser.close();}

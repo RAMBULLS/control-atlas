@@ -18,24 +18,30 @@ try {
  for(const viewport of [{width:1440,height:1000},{width:390,height:844}]) {
   const context=await browser.newContext({viewport,isMobile:viewport.width===390,hasTouch:viewport.width===390});
   context.setDefaultTimeout(30000);context.setDefaultNavigationTimeout(60000);
-  const errors=[],violations=[],unexpected=[],responses=[],pending=[],inspected=new Set();let bytes=0;
+  const errors=[],violations=[],unexpected=[],responses=[],pending=[],navigationAborts=[],inspected=new Set();let bytes=0;
   await context.exposeBinding('__captureMigrationCsp',(_,x)=>violations.push(x));
   await context.addInitScript(()=>document.addEventListener('securitypolicyviolation',e=>window.__captureMigrationCsp({directive:e.effectiveDirective,blocked:e.blockedURI,disposition:e.disposition})));
   context.on('request',req=>{const u=new URL(req.url());if(![canonical,'https://rambulls.github.io'].includes(u.origin))unexpected.push(req.url());});
-  context.on('response',res=>{
-   const u=new URL(res.url());if(u.origin!==canonical||res.status()!==200)return;
-   let name=decodeURIComponent(u.pathname).slice(1);if(!name||name.endsWith('/'))name+='index.html';
-   if(inspected.has(name))return;inspected.add(name);
-   pending.push((async()=>{try{const expected=files.get(name);assert(expected,'Unexpected served path '+name);
-    const body=await bounded(res.body(),'response body '+name);assert(body.length<=64*1024**2);bytes+=body.length;assert(bytes<=256*1024**2);
-    const digest=createHash('sha256').update(body).digest('hex');assert.equal(digest,expected.sha256,name);
-    responses.push({path:name,bytes:body.length,sha256:digest,status:res.status(),content_type:res.headers()['content-type']});
-   }catch(e){errors.push('Response '+name+': '+e.message);}})());
+  context.on('requestfailed',req=>{const url=req.url(),failure=req.failure()?.errorText||'unknown';const u=new URL(url);
+   if(u.origin===canonical&&u.pathname.startsWith('/data/generated/library-search-index/')&&failure==='net::ERR_ABORTED')navigationAborts.push({url,failure});
+   else errors.push('Request failed '+url+': '+failure);
   });
+  context.on('requestfinished',req=>{
+   if(new URL(req.url()).origin!==canonical)return;
+   pending.push((async()=>{let name;try{const res=await req.response();if(!res)return;
+    const u=new URL(res.url());name=decodeURIComponent(u.pathname).slice(1);if(!name||name.endsWith('/'))name+='index.html';
+    if(res.status()===304)return;assert.equal(res.status(),200,'Completed response '+name);
+    if(inspected.has(name))return;const expected=files.get(name);assert(expected,'Unexpected served path '+name);
+    const body=await bounded(res.body(),'completed response body '+name);assert(body.length<=64*1024**2);bytes+=body.length;assert(bytes<=256*1024**2);
+    const digest=createHash('sha256').update(body).digest('hex');assert.equal(digest,expected.sha256,name);inspected.add(name);
+    responses.push({path:name,bytes:body.length,sha256:digest,status:res.status(),content_type:res.headers()['content-type'],completed:true});
+   }catch(e){errors.push('Completed response '+(name||req.url())+': '+e.message);}})());
+  });
+  async function drainCompleted(){let count=0;while(count<pending.length){const next=pending.length;await bounded(Promise.all(pending.slice(count,next)),'completed response inspection');count=next;}}
   const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
   await page.emulateMedia({reducedMotion:'reduce'});
   async function checkpoint(phase){proof.last_checkpoint={phase,viewport,url:page.url(),completed_hashes:responses.length,bytes,errors:[...errors]};console.log(JSON.stringify(proof.last_checkpoint));await writeFile(path.join(out,'browser-proof.json'),JSON.stringify(proof,null,2));}
-  async function open(url){await checkpoint('before '+url);await bounded(Promise.all(pending),'completed response inspection');await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});await waitForAppReady(page,{allowPartial:true});await dismissOnboarding(page);await checkpoint('opened '+url);}
+  async function open(url){await checkpoint('before '+url);await drainCompleted();await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});await waitForAppReady(page,{allowPartial:true});await dismissOnboarding(page);await checkpoint('opened '+url);}
   await open(old+'/'+query+fragment);assert.equal(page.url(),canonical+'/'+query+fragment);
   await expect(page.locator('.compare-results-table tbody tr').first()).toBeVisible({timeout:60000});
   const old_bookmark_final=page.url();
@@ -56,9 +62,9 @@ try {
   await page.screenshot({path:path.join(out,'atlas-'+viewport.width+'.png'),fullPage:true});
   const release=await context.request.get(canonical+'/release.json');assert.equal(release.status(),200);assert.equal((await release.json()).commit_sha,sha);
   const storage=await page.evaluate(()=>({local:Object.keys(localStorage),session:Object.keys(sessionStorage)}));assert.deepEqual(storage.local,[]);
-  await bounded(Promise.all(pending),'final response inspection');assert(responses.length>10);assert.deepEqual(errors,[]);assert.deepEqual(violations,[]);assert.deepEqual(unexpected,[]);
-  proof.contexts.push({viewport,old_bookmark_final,bookmark_reload_history:true,legacy_scoped_route:true,retired_guide_destination:true,library_query:true,keyboard_focus:true,release_sha:sha,csv:{bytes:csv.length,sha256:csvSha},storage,responses,csp_events:violations,errors,unexpected_requests:unexpected});
-  await context.close();
+  await page.waitForLoadState('networkidle',{timeout:15000});await drainCompleted();assert(responses.length>10);assert.deepEqual(errors,[]);assert.deepEqual(violations,[]);assert.deepEqual(unexpected,[]);
+  await context.close();await drainCompleted();assert.deepEqual(errors,[]);
+  proof.contexts.push({viewport,old_bookmark_final,bookmark_reload_history:true,legacy_scoped_route:true,retired_guide_destination:true,library_query:true,keyboard_focus:true,release_sha:sha,csv:{bytes:csv.length,sha256:csvSha},storage,responses,navigation_aborts:navigationAborts,csp_events:violations,errors,unexpected_requests:unexpected});
  }
  proof.status='PASS';
 }catch(e){proof.status='FAIL';proof.failure=e.stack;throw e;}finally{await writeFile(path.join(out,'browser-proof.json'),JSON.stringify(proof,null,2));await browser.close();}

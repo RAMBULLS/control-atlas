@@ -19,7 +19,14 @@ test("live smoke: current Home contract and AC-2 record path", async ({ page }) 
   await waitForAppReady(page);
   await dismissOnboarding(page);
   if (process.env.PLAYWRIGHT_BASE_URL) {
-    expect(page.url()).toContain("/control-atlas/");
+    const expectedSite = new URL(process.env.PLAYWRIGHT_BASE_URL);
+    const actualSite = new URL(page.url());
+    expect(actualSite.origin).toBe(expectedSite.origin);
+    expect(actualSite.pathname).toBe(
+      expectedSite.pathname.endsWith("/")
+        ? expectedSite.pathname
+        : `${expectedSite.pathname}/`,
+    );
   }
   await expect(
     page.getByRole("heading", {

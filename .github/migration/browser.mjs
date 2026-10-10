@@ -16,7 +16,8 @@ try {
   for(const viewport of [{width:1440,height:1000},{width:390,height:844}]) {
     const context=await browser.newContext({viewport,isMobile:viewport.width===390,hasTouch:viewport.width===390});
     const errors=[];const blocked=[];const violations=[];const missing=[];const served=[];
-    await context.addInitScript(()=>document.addEventListener('securitypolicyviolation',e=>window.__violations=(window.__violations||[]).concat({directive:e.effectiveDirective,blocked:e.blockedURI})));
+    await context.exposeBinding('__captureMigrationCsp',(_,event)=>violations.push(event));
+    await context.addInitScript(()=>document.addEventListener('securitypolicyviolation',e=>window.__captureMigrationCsp({directive:e.effectiveDirective,blocked:e.blockedURI,disposition:e.disposition})));
     await context.route('**/*',async route=>{
       const url=new URL(route.request().url());
       if(![canonical,old].includes(url.origin)){blocked.push(url.origin);await route.abort();return;}
@@ -47,6 +48,10 @@ try {
     for(const phase of ['candidate','rollback','candidate']) {
       mode=phase;await page.goto('about:blank');await open(bookmark);
       await expect(page.locator('.compare-results-table tbody tr').first()).toBeVisible({timeout:60000});
+      const pendingDownload=page.waitForEvent('download');
+      await page.getByRole('button',{name:'CSV',exact:true}).click();
+      const download=await pendingDownload;assert.match(download.suggestedFilename(),/\.csv$/);
+      const csv=await readFile(await download.path(),'utf8');assert(csv.length>30&&csv.length<1024*1024);assert.match(csv,/AC-2/);assert(csv.split('\n').length>=2);
       await page.reload();await waitForAppReady(page,{allowPartial:true});await dismissOnboarding(page);
       await expect(page.locator('.compare-results-table tbody tr').first()).toBeVisible({timeout:60000});
       const release=await page.evaluate(async()=>await(await fetch('./release.json')).json());assert.equal(release.commit_sha,manifests[mode].sha);
@@ -63,13 +68,12 @@ try {
       assert.equal(new URL(page.url()).search,'?migration-fixture=1');
       if(mode==='candidate'&&row.phases.length===0)await page.screenshot({path:path.join(out,'atlas-'+viewport.width+'.png'),fullPage:true});
       await page.keyboard.press('Tab');assert(await page.evaluate(()=>document.activeElement!==document.body));
-      violations.push(...await page.evaluate(()=>window.__violations||[]));
-      row.phases.push({mode,release_sha:release.commit_sha,bookmark_reload_history:true,legacy_scoped_route:true,retired_guide_destination:true,library_query:true,keyboard_focus:true});
+      row.phases.push({mode,release_sha:release.commit_sha,bookmark_reload_history:true,legacy_scoped_route:true,retired_guide_destination:true,library_query:true,keyboard_focus:true,csv_download:{bytes:Buffer.byteLength(csv),sha256:createHash('sha256').update(csv).digest('hex')}});
     }
     assert.equal((await page.goto(canonical+'/missing-migration-page')).status(),404);
     assert.deepEqual(missing.map(x=>x.name).filter(x=>x!=='missing-migration-page'),[]);
     assert.deepEqual(errors,[]);assert.deepEqual(blocked,[]);assert.deepEqual(violations,[]);
-    row.served_count=served.length;row.served_unique=[...new Set(served.map(x=>x.mode+':'+x.path))].length;
+    row.served_count=served.length;row.served_unique=[...new Set(served.map(x=>x.mode+':'+x.path))].length;row.csp_events=violations;row.errors=errors;row.unexpected_requests=blocked;
     proof.contexts.push(row);await context.close();
   }
   proof.storage='Source inventory finds only origin-scoped introduction and chunk-reload session flags, no localStorage/IndexedDB/service-worker persistence. Genuine selection/comparison state is retained in the app-generated bookmark; origin flags need no user-data transfer.';

@@ -78,3 +78,10 @@ id = "generic-api-key"
   regexTarget = "line"
   paths = ['''^data/nist-zt\.json$''']
   regexes = ['''"source_key": "nist-sp-1800-35-critical-software-mappings"''']
+
+  [[rules.allowlists]]
+  description = "Official Cloudflare public browser measurement token; not an authentication credential"
+  condition = "AND"
+  regexTarget = "secret"
+  paths = ['''^src/index\.html$''']
+  regexes = ['''^5b01bc114032482bb8a5ac13fa69bb77$''']

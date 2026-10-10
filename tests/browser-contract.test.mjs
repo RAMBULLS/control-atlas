@@ -47,7 +47,7 @@ test('shell identifies Control Atlas and progressively boots the React workspace
   assert.match(html, /Control Atlas/);
   assert.match(html, /name="application-name" content="Control Atlas"/);
   assert.match(html, /CONTROL_ATLAS_PRODUCT_DESCRIPTION/);
-  assert.match(html, /rel="canonical" href="https:\/\/rambulls\.github\.io\/control-atlas\/"/);
+  assert.match(html, /rel="canonical" href="https:\/\/atlas\.rambulls\.dev\/"/);
   assert.match(html, /type="application\/ld\+json"/);
   assert.match(html, /A RAM\.BULLS project/);
   assert.equal(SITE_COPY.product.definition, 'Control Atlas is a public research tool for federal cybersecurity requirements, controls, techniques, and guidance.');

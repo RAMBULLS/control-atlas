@@ -429,6 +429,39 @@ jobs:
           if-no-files-found: error
           retention-days: 2
 
+  analytics-candidate:
+    name: Analytics candidate qualification
+    needs: [changes, build]
+    if: ${{ github.event_name == 'pull_request' && github.head_ref == 'chore/rb-domain-t16-analytics' && needs.changes.outputs.build_required == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: site-build
+          path: dist/site
+      - name: Prepare hosted browser library
+        run: npm install --prefix "$RUNNER_TEMP/browser" --no-audit --no-fund --ignore-scripts playwright@1.64.0
+      - name: Qualify the immutable candidate with the official SDK and collector
+        env:
+          PLAYWRIGHT_MODULE: ${{ runner.temp }}/browser/node_modules/playwright/index.mjs
+          ANALYTICS_HOST: atlas.rambulls.dev
+          PUBLIC_ROOT: dist/site
+        run: node .github/analytics/candidate.mjs
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: always()
+        with:
+          name: analytics-candidate-${{ github.sha }}
+          path: ${{ runner.temp }}/analytics-candidate
+          if-no-files-found: error
+          retention-days: 3
+
   contracts:
     name: Static, data, and Guardian contracts
     needs: [changes, build]
@@ -716,7 +749,7 @@ jobs:
   required:
     name: Required CI
     if: ${{ always() && needs.changes.result != 'skipped' }}
-    needs: [changes, prepush, evidence, automation, content, fast, generated, windows-process, unit, build, contracts, browser, accessibility, visual, lighthouse, workflow-lint, ui-review]
+    needs: [changes, prepush, evidence, automation, content, fast, generated, windows-process, unit, build, analytics-candidate, contracts, browser, accessibility, visual, lighthouse, workflow-lint, ui-review]
     runs-on: ubuntu-latest
     steps:
       - name: Require every selected gate

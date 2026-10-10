@@ -1,9 +1,9 @@
 /* Optional analytics controls inherit the site's typography and palette. */
 .rb-analytics-root {
-  --rb-bg: var(--graphite, var(--lsm-color-palette-graphite, #253139));
-  --rb-text: var(--bone, var(--lsm-color-palette-bone, #e7e1d5));
-  --rb-border: var(--rule, var(--lsm-color-palette-gridline, #56656e));
-  --rb-focus: var(--focus, var(--lsm-color-palette-teal, #5ca3a6));
+  --rb-bg: var(--ca-surface, var(--lsm-color-palette-graphite));
+  --rb-text: var(--ca-text, var(--lsm-color-palette-bone));
+  --rb-border: var(--ca-border-strong, var(--lsm-color-palette-gridline));
+  --rb-focus: var(--ca-accent, var(--lsm-color-palette-teal));
   color: var(--rb-text);
   font: inherit;
   font-size: 14px;
@@ -29,7 +29,7 @@
   background: var(--rb-bg);
   color: var(--rb-text);
   z-index: 10000;
-  box-shadow: 0 4px 16px #0006;
+  box-shadow: var(--ca-elev-overlay);
   max-height: calc(100dvh - 24px);
   overflow: auto;
 }
@@ -94,6 +94,10 @@
 }
 .rb-analytics-toggle-btn[hidden] {
   display: none;
+}
+.rb-analytics-banner .rb-analytics-toggle-btn {
+  position: static;
+  margin-top: 8px;
 }
 .rb-analytics-status {
   margin: 12px 0;

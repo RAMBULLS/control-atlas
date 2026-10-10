@@ -1,7 +1,11 @@
 (function () {
   "use strict";
 
-  var ALLOWED_HOSTS = ["rambulls.dev", "atlas.rambulls.dev", "orbital.rambulls.dev"];
+  var ALLOWED_HOSTS = [
+    "rambulls.dev",
+    "atlas.rambulls.dev",
+    "orbital.rambulls.dev",
+  ];
   var STORAGE_KEY = "rambulls.analytics.choice";
   var BEACON_URL = "https://static.cloudflareinsights.com/beacon.min.js";
   var EXPIRY_DAYS = 180;
@@ -15,19 +19,27 @@
 
   if (!dataHost || !token) return;
   if (ALLOWED_HOSTS.indexOf(dataHost) === -1) return;
-  if (window.location.protocol !== "https:" || window.location.hostname !== dataHost) return;
+  if (
+    window.location.protocol !== "https:" ||
+    window.location.hostname !== dataHost
+  )
+    return;
   if (!/^[a-f0-9]{32}$/i.test(token)) return;
 
   var state = {
     started: false,
     cspRestricted: false,
     memChoice: null,
-    expiryTimer: null
+    expiryTimer: null,
   };
 
   function hasPrivacySignal() {
     if (navigator.globalPrivacyControl === true) return true;
-    return [navigator.doNotTrack, window.doNotTrack, navigator.msDoNotTrack].some(function (value) {
+    return [
+      navigator.doNotTrack,
+      window.doNotTrack,
+      navigator.msDoNotTrack,
+    ].some(function (value) {
       return value === "1" || value === "yes";
     });
   }
@@ -62,7 +74,11 @@
   }
 
   function saveChoice(choice) {
-    var payload = { version: 1, choice: choice, expiresAt: Date.now() + EXPIRY_DAYS * 86400000 };
+    var payload = {
+      version: 1,
+      choice: choice,
+      expiresAt: Date.now() + EXPIRY_DAYS * 86400000,
+    };
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
       state.memChoice = null;
@@ -78,7 +94,7 @@
     if (expiresAt)
       state.expiryTimer = setTimeout(
         evaluateState,
-        Math.max(1, Math.min(MAX_SAFE_TIMEOUT, expiresAt - Date.now()))
+        Math.max(1, Math.min(MAX_SAFE_TIMEOUT, expiresAt - Date.now())),
       );
   }
 
@@ -102,11 +118,15 @@
     script.id = "rb-cf-beacon";
     script.type = "module";
     script.src = BEACON_URL;
-    script.setAttribute("data-cf-beacon", JSON.stringify({ token: token, spa: false }));
+    script.setAttribute(
+      "data-cf-beacon",
+      JSON.stringify({ token: token, spa: false }),
+    );
     script.onerror = function () {
       var statusEl = document.getElementById("rb-analytics-status");
       if (statusEl) {
-        statusEl.textContent = "Analytics is unavailable. You can keep using the site.";
+        statusEl.textContent =
+          "Analytics is unavailable. You can keep using the site.";
       }
     };
     document.head.appendChild(script);
@@ -116,7 +136,7 @@
     banner: null,
     panel: null,
     toggleBtn: null,
-    statusMsg: null
+    statusMsg: null,
   };
 
   function createDOM() {
@@ -135,7 +155,7 @@
     var bannerText = document.createElement("p");
     bannerText.className = "rb-analytics-text";
     bannerText.textContent =
-      "With your permission, Cloudflare measures page visits and loading speed. Declining wonÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢t affect this site.";
+      "With your permission, Cloudflare measures page visits and loading speed. Declining won\u2019t affect this site.";
 
     var noticeLink = document.createElement("a");
     noticeLink.className = "rb-analytics-link";
@@ -246,7 +266,10 @@
     ui.statusMsg = statusMsg;
 
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && !panel.classList.contains("rb-analytics-hidden")) {
+      if (
+        e.key === "Escape" &&
+        !panel.classList.contains("rb-analytics-hidden")
+      ) {
         closePanel();
       }
     });
@@ -279,7 +302,8 @@
       }
       saveChoice("deny");
       if (ui.statusMsg)
-        ui.statusMsg.textContent = "Analytics declined. Future connections restricted.";
+        ui.statusMsg.textContent =
+          "Analytics declined. Future connections restricted.";
     }
     if (ui.banner) ui.banner.classList.add("rb-analytics-hidden");
     updateUI();
@@ -303,6 +327,7 @@
     if (!ui.panel) return;
     ui.panel.classList.add("rb-analytics-hidden");
     ui.toggleBtn.setAttribute("aria-expanded", "false");
+    updateUI();
     if (ui.toggleBtn) ui.toggleBtn.focus();
   }
 
@@ -333,9 +358,15 @@
     }
 
     if (btnAllow)
-      btnAllow.textContent = state.cspRestricted ? "Allow analytics and reload" : "Allow analytics";
-    ui.toggleBtn.hidden = !choice && !privacy;
-    if (!choice && !privacy) {
+      btnAllow.textContent = state.cspRestricted
+        ? "Allow analytics and reload"
+        : "Allow analytics";
+    var showBanner =
+      !choice && !privacy && ui.panel.classList.contains("rb-analytics-hidden");
+    var toggleParent = showBanner ? ui.banner : ui.banner.parentNode;
+    if (ui.toggleBtn.parentNode !== toggleParent)
+      toggleParent.appendChild(ui.toggleBtn);
+    if (showBanner) {
       if (ui.banner) ui.banner.classList.remove("rb-analytics-hidden");
     } else {
       if (ui.banner) ui.banner.classList.add("rb-analytics-hidden");

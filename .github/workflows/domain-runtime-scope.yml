@@ -1,0 +1,46 @@
+name: Domain runtime scope
+on:
+  push:
+    branches: [chore/rb-domain-t18-runtime-scope]
+permissions:
+  actions: read
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      GH_TOKEN: ${{ github.token }}
+      VITE_CONTROL_ATLAS_BUILD_SHA: 3fdbc2bbfea8e674994d750b401111d3b28e794b
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: verification
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ef649b33622559543b677bb3bc13364122bcd3d9
+          path: candidate
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: candidate/package-lock.json
+      - run: npm ci
+        working-directory: candidate
+      - name: Verify immutable input and reuse selected generated inputs
+        run: python3 ../verification/.github/migration/runtime-inputs.py
+        working-directory: candidate
+      - name: Inspect byte-matched runtime module graph without writing a site
+        run: |
+          cp ../verification/.github/migration/runtime-scope.mjs .github/migration/runtime-scope.mjs
+          node .github/migration/runtime-scope.mjs
+        working-directory: candidate
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: domain-runtime-scope-${{ github.sha }}
+          path: ${{ runner.temp }}/runtime-proof
+          if-no-files-found: error
+          retention-days: 3

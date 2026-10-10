@@ -34,6 +34,7 @@ jobs:
         working-directory: candidate
       - name: Inspect byte-matched runtime module graph without writing a site
         run: |
+          mkdir -p .github/migration
           cp ../verification/.github/migration/runtime-scope.mjs .github/migration/runtime-scope.mjs
           node .github/migration/runtime-scope.mjs
         working-directory: candidate

@@ -19,11 +19,18 @@ const results=await build({configFile:path.resolve('vite.config.ts'),copyPublicD
 }}]});
 const outputs=(Array.isArray(results)?results:[results]).flatMap(r=>r.output);
 const js=outputs.filter(x=>x.fileName.endsWith('.js')).map(x=>({path:x.fileName,sha256:hash(x.type==='chunk'?x.code:x.source)}));
+const standalone=[];
+for(const [filename,sha] of Object.entries(expected))if(!js.some(x=>x.path===filename)){
+ assert.equal(filename,'progressive-shell.js','Unexpected non-emitted JavaScript');
+ const content=fs.readFileSync(path.join(root,'src/public',filename));assert.equal(hash(content),sha);
+ assert(!/\b(?:import\s*\(|require\s*\(|from\s*['"])/.test(content.toString()),'Standalone script contains module imports');
+ standalone.push({path:filename,sha256:sha,classification:'Existing classic public script, source byte-matched to immutable artifact; no module imports'});js.push({path:filename,sha256:sha});
+}
 assert(js.length>0);assert.equal(js.length,Object.keys(expected).length);
 for(const row of js)assert.equal(row.sha256,expected[row.path],row.path+' does not match immutable candidate');
 const matches=seen.flatMap(c=>c.modules.filter(m=>m.chainMatch).map(m=>({chunk:c.filename,...m})));
 assert.equal(matches.filter(m=>m.chainMatch.includes('/sprintf-js/')).length,0,'sprintf-js reached runtime graph');
 assert.equal(matches.filter(m=>m.chainMatch.includes('/@lhci/')).length,0,'LHCI reached runtime graph');
-const report={status:'PASS',candidate:'ef649b33622559543b677bb3bc13364122bcd3d9',artifact:11654737888,release:process.env.VITE_CONTROL_ATLAS_BUILD_SHA,js_count:js.length,exact_js_hashes:js,module_count:seen.reduce((n,c)=>n+c.modules.length,0),chain_matches:matches,lockFindings,direct_runtime_dependencies:Object.keys(pkg.dependencies||{}),chunks:seen,limits:'Exact byte-matched browser bundles and module graph only; vulnerable devtool remains in LHCI, no full security compliance claim.'};
+const report={status:'PASS',candidate:'ef649b33622559543b677bb3bc13364122bcd3d9',artifact:11654737888,release:process.env.VITE_CONTROL_ATLAS_BUILD_SHA,js_count:js.length,exact_js_hashes:js,standalone,module_count:seen.reduce((n,c)=>n+c.modules.length,0),chain_matches:matches,lockFindings,direct_runtime_dependencies:Object.keys(pkg.dependencies||{}),chunks:seen,limits:'Exact byte-matched browser bundles and module graph only; vulnerable devtool remains in LHCI, no full security compliance claim.'};
 const body=JSON.stringify(report,null,2);assert(Buffer.byteLength(body)<2*1024*1024);
 fs.writeFileSync(path.join(scratch,'runtime-proof/runtime-scope.json'),body);console.log(JSON.stringify({status:report.status,js_count:report.js_count,module_count:report.module_count,chain_matches:matches.length}));

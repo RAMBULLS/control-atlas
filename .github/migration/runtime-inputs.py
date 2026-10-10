@@ -30,5 +30,5 @@ with zipfile.ZipFile(p) as z:
   q=pathlib.PurePosixPath(name);assert not q.is_absolute() and '..' not in q.parts
   data=read('data/generated/'+name);dest=root/'data/generated'/name;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(data)
  (s/'runtime-expected.json').write_text(json.dumps(expected_js))
- (o/'runtime-inputs.json').write_text(json.dumps({'artifact_id':a['id'],'digest':expected,'head':a['workflow_run']['head_sha'],'release':release['commit_sha'],'selected_bytes':total,'js_count':len(expected_js),'generated_inputs':required,'static_generated_imports':import_inputs},indent=2))
+ (o/'runtime-inputs.json').write_text(json.dumps({'artifact_id':a['id'],'digest':expected,'head':a['workflow_run']['head_sha'],'release':release,'selected_bytes':total,'js_count':len(expected_js),'generated_inputs':required,'static_generated_imports':import_inputs},indent=2))
 print(json.dumps({'js_count':len(expected_js),'selected_bytes':total,'artifact_digest':expected}))

@@ -11,7 +11,6 @@ jobs:
     timeout-minutes: 12
     env:
       GH_TOKEN: ${{ github.token }}
-      VITE_CONTROL_ATLAS_BUILD_SHA: 3fdbc2bbfea8e674994d750b401111d3b28e794b
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -19,7 +18,7 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: ef649b33622559543b677bb3bc13364122bcd3d9
+          ref: 3fdbc2bbfea8e674994d750b401111d3b28e794b
           path: candidate
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020

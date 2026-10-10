@@ -27,6 +27,7 @@ jobs:
         run: python3 .github/migration/live-http.py
       - name: Verify native old bookmarks, mobile and downloaded content
         if: ${{ !cancelled() }}
+        timeout-minutes: 8
         run: node .github/migration/live-browser.mjs
       - name: Retain compact live proof and renders
         if: always()

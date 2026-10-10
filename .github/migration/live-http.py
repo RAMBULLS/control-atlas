@@ -37,7 +37,7 @@ def request(url,method='GET'):
   return {'url':url,'method':method,'status':status,'headers':headers,'bytes':len(body),'sha256':hashlib.sha256(body).hexdigest(),'trusted_tls':True},body
  except Exception as e:return {'url':url,'method':method,'error':str(e),'match':False},b''
 origin='https://atlas.rambulls.dev';index={x['path']:x for x in rows}
-paths=['index.html','release.json','robots.txt','sitemap.xml','404.html','assets/ControlAtlasMeta.png']
+paths=['index.html','release.json','robots.txt','sitemap.xml','404.html','og-image.png']
 paths+=re.findall(r'(?:src|href)="\./(assets/[^"?]+\.(?:js|css))"',html)
 paths += [x['path'] for x in rows if x['path'].endswith('.json') and x['path'].startswith('data/') and x['bytes']<100000][:3]
 paths=list(dict.fromkeys(paths));assert len(paths)<=18
@@ -49,7 +49,7 @@ def resource(name):
  return row
 with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:resources=list(pool.map(resource,paths))
 query='?source=test&x=1&x=2&empty=&utf8=%E2%9C%93';redirects=[]
-for suffix in ['/', '/'+query,'/release.json','/robots.txt','/sitemap.xml','/assets/ControlAtlasMeta.png','/missing-migration-page']:
+for suffix in ['/', '/'+query,'/release.json','/robots.txt','/sitemap.xml','/og-image.png','/missing-migration-page']:
  row,_=request('https://rambulls.github.io/control-atlas'+suffix);row['expected_location']=origin+suffix;row['match']=row.get('status')==301 and row.get('headers',{}).get('location')==row['expected_location'];redirects.append(row)
 row,_=request('https://rambulls.github.io/control-atlas/'+query,'HEAD');row['expected_location']=origin+'/'+query;row['match']=row.get('status')==301 and row.get('headers',{}).get('location')==row['expected_location'];redirects.append(row)
 guards=[]

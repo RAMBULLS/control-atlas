@@ -146,7 +146,7 @@ try {
     try {
       const marker = "SYNTHETIC_T16_" + process.env.GITHUB_RUN_ID;
       const url =
-        origin + "/?query=" + marker + "&x=1&x=2&empty=#bookmark=" + marker;
+        origin + "/?query=" + marker + "&x=1&x=2&empty=#/?bookmark=" + marker;
       await page.goto(url, {
         waitUntil: "networkidle",
         timeout: 45000,
@@ -219,7 +219,7 @@ try {
       await page.locator("#rb-panel-allow").click();
       await page.keyboard.press("Escape");
       await page.evaluate(() => {
-        location.hash = "#/library?search=SYNTHETIC_SEARCH";
+        location.hash = "#/library?q=SYNTHETIC_SEARCH";
       });
       await page.waitForTimeout(800);
       assert.equal(row.sdk.length, 1);
@@ -300,7 +300,8 @@ try {
         row.csp.some(
           (x) =>
             x.disposition === "enforce" &&
-            x.blocked.includes("cloudflareinsights.com"),
+            URL.canParse(x.blocked) &&
+            new URL(x.blocked).origin === "https://cloudflareinsights.com",
         ),
       );
       row.stages.push({
@@ -326,13 +327,13 @@ try {
         await page.locator('a[href="privacy/"]').click();
         await page.locator("h1").waitFor();
         assert.equal(
-          await page.locator("h1").innerText(),
+          (await page.locator("h1").textContent()).trim(),
           "Analytics is your choice.",
         );
         await page.locator('a[href="/shady-bits/privacy/"]').click();
         await page.locator("h1").waitFor();
         assert(
-          (await page.locator("h1").innerText()).includes(
+          (await page.locator("h1").textContent()).includes(
             "Your checks stay on your phone",
           ),
         );

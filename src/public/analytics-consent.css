@@ -1,0 +1,100 @@
+/* Optional analytics controls inherit the site's typography and palette. */
+.rb-analytics-root {
+  --rb-bg: var(--graphite, var(--lsm-color-palette-graphite, #253139));
+  --rb-text: var(--bone, var(--lsm-color-palette-bone, #e7e1d5));
+  --rb-border: var(--rule, var(--lsm-color-palette-gridline, #56656e));
+  --rb-focus: var(--focus, var(--lsm-color-palette-teal, #5ca3a6));
+  color: var(--rb-text);
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  padding-bottom: 72px;
+}
+.rb-analytics-root *,
+.rb-analytics-root *::before,
+.rb-analytics-root *::after {
+  box-sizing: border-box;
+}
+.rb-analytics-hidden {
+  display: none !important;
+}
+.rb-analytics-banner,
+.rb-analytics-panel {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  width: min(620px, calc(100vw - 24px));
+  padding: 16px;
+  border: 1px solid var(--rb-border);
+  background: var(--rb-bg);
+  color: var(--rb-text);
+  z-index: 10000;
+  box-shadow: 0 4px 16px #0006;
+  max-height: calc(100dvh - 24px);
+  overflow: auto;
+}
+.rb-analytics-panel {
+  bottom: 64px;
+  width: min(420px, calc(100vw - 24px));
+}
+.rb-analytics-text,
+.rb-analytics-panel-desc {
+  margin: 0 0 12px;
+  color: inherit;
+}
+.rb-analytics-panel-title {
+  margin: 0 0 8px;
+  font: inherit;
+  font-size: 18px;
+  font-weight: 600;
+}
+.rb-analytics-link {
+  color: inherit;
+  text-decoration: underline;
+}
+.rb-analytics-actions,
+.rb-analytics-panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.rb-analytics-root .rb-analytics-btn,
+.rb-analytics-root .rb-analytics-toggle-btn {
+  appearance: none;
+  cursor: pointer;
+  border: 1px solid var(--rb-border);
+  border-radius: 3px;
+  background: var(--rb-bg);
+  color: var(--rb-text);
+  font: inherit;
+  padding: 10px 14px;
+  min-height: 44px;
+}
+.rb-analytics-actions .rb-analytics-btn {
+  flex: 1 1 140px;
+}
+.rb-analytics-root button:hover {
+  border-color: var(--rb-text);
+}
+.rb-analytics-root button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+.rb-analytics-root button:focus-visible,
+.rb-analytics-link:focus-visible {
+  outline: 2px solid var(--rb-focus);
+  outline-offset: 3px;
+}
+.rb-analytics-toggle-btn {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  z-index: 9998;
+}
+.rb-analytics-toggle-btn[hidden] {
+  display: none;
+}
+.rb-analytics-status {
+  margin: 12px 0;
+}

@@ -5,27 +5,47 @@ def api(p):return json.loads(subprocess.check_output(['gh','api','repos/RAMBULLS
 run=api('actions/runs/'+run_id);artifact=api('actions/artifacts/'+artifact_id)
 assert run['conclusion']=='success' and run['event']=='push' and run['head_branch']=='main' and run['head_sha']==sha
 assert artifact['workflow_run']['id']==int(run_id) and artifact['workflow_run']['head_sha']==sha and artifact['name']=='site-build' and not artifact['expired'] and artifact['size_in_bytes']<500_000_000
-archive=scratch/'atlas-live.zip'
-with archive.open('wb') as f:subprocess.run(['gh','api',f'repos/RAMBULLS/control-atlas/actions/artifacts/{artifact_id}/zip'],stdout=f,check=True,timeout=300)
-with archive.open('rb') as f:assert hashlib.file_digest(f,'sha256').hexdigest()==artifact['digest'].split(':')[1]
-rows=[];seen=set();total=0
-with zipfile.ZipFile(archive) as z:
- assert len(z.infolist())<10000
- for e in z.infolist():
-  p=pathlib.PurePosixPath(e.filename);assert not p.is_absolute() and '..' not in p.parts and '\\' not in e.filename and not stat.S_ISLNK(e.external_attr>>16)
-  if e.is_dir():continue
-  assert e.filename.casefold() not in seen;seen.add(e.filename.casefold());assert not any(x in ['.env','.git','.github','AGENTS.md','CLAUDE.md','GEMINI.md','CNAME'] for x in p.parts)
-  total+=e.file_size;assert total<2_000_000_000
-  with z.open(e) as stream:digest=hashlib.file_digest(stream,'sha256').hexdigest()
-  rows.append({'path':e.filename,'bytes':e.file_size,'sha256':digest})
- release=json.loads(z.read('release.json'));assert release['commit_sha']==sha
- html=z.read('index.html').decode();script=re.search(r'<script type="application/ld\+json">(.*?)</script>',html,re.S).group(1)
- inline=base64.b64encode(hashlib.sha256(script.encode()).digest()).decode();assert "'sha256-"+inline+"'" in html
- assert 'rel="canonical" href="https://atlas.rambulls.dev/"' in html
- assert 'https://atlas.rambulls.dev/sitemap.xml' in z.read('robots.txt').decode() and '<loc>https://atlas.rambulls.dev/</loc>' in z.read('sitemap.xml').decode()
-manifest={'sha':sha,'run':run_id,'artifact':artifact,'digest_verified':True,'files':rows,'file_count':len(rows),'bytes':total,'release':release,'inline_jsonld_hash':inline}
-(out/'live-manifest.json').write_text(json.dumps(manifest,indent=2))
-assert len(rows)==3745
+proof_id=os.environ.get('MANIFEST_PROOF_ARTIFACT')
+if proof_id:
+ prior=api('actions/artifacts/'+proof_id)
+ assert prior['workflow_run']['id']==38074392022 and prior['workflow_run']['head_sha']=='e8507077ad1289c8db1a35bd69a70e503482137c' and not prior['expired'] and prior['size_in_bytes']<1_000_000
+ assert prior['digest']=='sha256:4469837357448153c0f52482e68049b0cf841f271f8620a2ec32b23624e61ade'
+ archive=scratch/'prior-compact-proof.zip'
+ with archive.open('wb') as f:subprocess.run(['gh','api',f'repos/RAMBULLS/control-atlas/actions/artifacts/{proof_id}/zip'],stdout=f,check=True,timeout=60)
+ assert hashlib.sha256(archive.read_bytes()).hexdigest()==prior['digest'].split(':')[1]
+ with zipfile.ZipFile(archive) as z:
+  assert set(z.namelist())=={'http-proof.json','live-manifest.json'} and sum(e.file_size for e in z.infolist())<2_000_000
+  manifest_bytes=z.read('live-manifest.json');assert hashlib.sha256(manifest_bytes).hexdigest()=='a79f4993c8f0d5062cd2eac181e693e77ce5f8012235ef68db9b72d52eeda42c'
+  manifest=json.loads(manifest_bytes);prior_http=json.loads(z.read('http-proof.json'))
+ assert manifest['sha']==sha and manifest['run']==run_id and manifest['artifact']['id']==int(artifact_id) and manifest['artifact']['digest']==artifact['digest'] and manifest['digest_verified'] is True
+ rows=manifest['files'];total=manifest['bytes'];release=manifest['release'];inline=manifest['inline_jsonld_hash']
+ assert len(rows)==manifest['file_count']==3745 and sum(x['bytes'] for x in rows)==total<2_000_000_000 and release['commit_sha']==sha
+ manifest['reused_verified_proof']={'id':prior['id'],'digest':prior['digest'],'manifest_sha256':'a79f4993c8f0d5062cd2eac181e693e77ce5f8012235ef68db9b72d52eeda42c'}
+ manifest['artifact']=artifact
+ (out/'live-manifest.json').write_text(json.dumps(manifest,indent=2))
+else:
+ archive=scratch/'atlas-live.zip'
+ with archive.open('wb') as f:subprocess.run(['gh','api',f'repos/RAMBULLS/control-atlas/actions/artifacts/{artifact_id}/zip'],stdout=f,check=True,timeout=300)
+ with archive.open('rb') as f:assert hashlib.file_digest(f,'sha256').hexdigest()==artifact['digest'].split(':')[1]
+ rows=[];seen=set();total=0
+ with zipfile.ZipFile(archive) as z:
+  assert len(z.infolist())<10000
+  for e in z.infolist():
+   p=pathlib.PurePosixPath(e.filename);assert not p.is_absolute() and '..' not in p.parts and '\\' not in e.filename and not stat.S_ISLNK(e.external_attr>>16)
+   if e.is_dir():continue
+   assert e.filename.casefold() not in seen;seen.add(e.filename.casefold());assert not any(x in ['.env','.git','.github','AGENTS.md','CLAUDE.md','GEMINI.md','CNAME'] for x in p.parts)
+   total+=e.file_size;assert total<2_000_000_000
+   with z.open(e) as stream:digest=hashlib.file_digest(stream,'sha256').hexdigest()
+   rows.append({'path':e.filename,'bytes':e.file_size,'sha256':digest})
+  release=json.loads(z.read('release.json'));assert release['commit_sha']==sha
+  html=z.read('index.html').decode();script=re.search(r'<script type="application/ld\+json">(.*?)</script>',html,re.S).group(1)
+  inline=base64.b64encode(hashlib.sha256(script.encode()).digest()).decode();assert "'sha256-"+inline+"'" in html
+  assert 'rel="canonical" href="https://atlas.rambulls.dev/"' in html
+  assert 'https://atlas.rambulls.dev/sitemap.xml' in z.read('robots.txt').decode() and '<loc>https://atlas.rambulls.dev/</loc>' in z.read('sitemap.xml').decode()
+ manifest={'sha':sha,'run':run_id,'artifact':artifact,'digest_verified':True,'files':rows,'file_count':len(rows),'bytes':total,'release':release,'inline_jsonld_hash':inline}
+ (out/'live-manifest.json').write_text(json.dumps(manifest,indent=2))
+ assert len(rows)==3745
+
 class NoRedirect(urllib.request.HTTPRedirectHandler):
  def redirect_request(self,*a,**k):return None
 opener=urllib.request.build_opener(NoRedirect)
@@ -37,10 +57,14 @@ def request(url,method='GET'):
   return {'url':url,'method':method,'status':status,'headers':headers,'bytes':len(body),'sha256':hashlib.sha256(body).hexdigest(),'trusted_tls':True},body
  except Exception as e:return {'url':url,'method':method,'error':str(e),'match':False},b''
 origin='https://atlas.rambulls.dev';index={x['path']:x for x in rows}
-paths=['index.html','release.json','robots.txt','sitemap.xml','404.html','og-image.png']
-paths+=re.findall(r'(?:src|href)="\./(assets/[^"?]+\.(?:js|css))"',html)
-paths += [x['path'] for x in rows if x['path'].endswith('.json') and x['path'].startswith('data/') and x['bytes']<100000][:3]
-paths=list(dict.fromkeys(paths));assert len(paths)<=18
+if proof_id:
+ paths=list(dict.fromkeys(x['path'].replace('assets/ControlAtlasMeta.png','og-image.png') for x in prior_http['resources']))
+ assert len(paths)<=18 and all(p in index for p in paths)
+else:
+ paths=['index.html','release.json','robots.txt','sitemap.xml','404.html','og-image.png']
+ paths+=re.findall(r'(?:src|href)="\./(assets/[^"?]+\.(?:js|css))"',html)
+ paths += [x['path'] for x in rows if x['path'].endswith('.json') and x['path'].startswith('data/') and x['bytes']<100000][:3]
+ paths=list(dict.fromkeys(paths));assert len(paths)<=18
 mime={'.html':['text/html'],'.json':['application/json'],'.js':['application/javascript','text/javascript'],'.css':['text/css'],'.xml':['text/xml','application/xml'],'.txt':['text/plain'],'.png':['image/png']}
 def resource(name):
  route='/' if name=='index.html' else '/'+name;row,body=request(origin+route);row['path']=name

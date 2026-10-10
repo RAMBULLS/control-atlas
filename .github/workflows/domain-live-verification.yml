@@ -14,6 +14,7 @@ jobs:
       EXPECTED_DEPLOY_SHA: ab44a4d431c81e867bf5b0ff2226e1043a3bec30
       PRODUCTION_CI_RUN: '38073649680'
       PRODUCTION_ARTIFACT: '11678016432'
+      MANIFEST_PROOF_ARTIFACT: '11678443562'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

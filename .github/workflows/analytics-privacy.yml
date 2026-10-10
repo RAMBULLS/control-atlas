@@ -1,0 +1,32 @@
+name: Public analytics privacy qualification
+on:
+  push:
+    branches: [chore/rb-domain-t16-analytics-qualification]
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '22'
+      - name: Retrieve current official SDK with validated TLS
+        run: curl --fail --silent --show-error --max-time 30 --max-filesize 262144 https://static.cloudflareinsights.com/beacon.min.js --output "$RUNNER_TEMP/beacon.min.js"
+      - name: Prepare isolated hosted browser dependency
+        run: npm install --prefix "$RUNNER_TEMP/browser" --no-audit --no-fund --ignore-scripts playwright@1.64.0
+      - name: Capture synthetic payloads without sending analytics to provider
+        env:
+          PLAYWRIGHT_MODULE: ${{ runner.temp }}/browser/node_modules/playwright/index.mjs
+        run: node .github/migration/analytics-privacy.mjs
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: public-analytics-privacy-${{ github.sha }}
+          path: ${{ runner.temp }}/analytics-proof
+          if-no-files-found: error
+          retention-days: 3

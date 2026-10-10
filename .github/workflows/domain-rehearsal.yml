@@ -1,0 +1,40 @@
+name: Atlas domain rehearsal
+on:
+  push:
+    branches: [chore/rb-domain-t18-atlas-rehearsal]
+permissions:
+  actions: read
+  contents: read
+jobs:
+  rehearse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Inspect exact candidate and original known-good artifacts
+        run: python3 .github/migration/inspect.py
+      - name: Test canonical origin, genuine bookmarks and artifact restoration
+        run: node .github/migration/browser.mjs
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: atlas-domain-proof-${{ github.sha }}
+          path: ${{ runner.temp }}/atlas-proof
+          if-no-files-found: error
+          retention-days: 3
+      - name: Retain original recovery archive unchanged
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: atlas-original-recovery-aa4cc1af4b0ab53572f444fbf48af4a2b842d760
+          path: ${{ runner.temp }}/atlas-rollback.zip
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 3

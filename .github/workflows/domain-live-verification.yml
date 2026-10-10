@@ -1,0 +1,38 @@
+name: Atlas domain live verification
+on:
+  push:
+    branches: [chore/rb-domain-t14-live-verification]
+permissions:
+  actions: read
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+      EXPECTED_DEPLOY_SHA: ab44a4d431c81e867bf5b0ff2226e1043a3bec30
+      PRODUCTION_CI_RUN: '38073649680'
+      PRODUCTION_ARTIFACT: '11678016432'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Verify immutable actual production archive and native HTTP
+        run: python3 .github/migration/live-http.py
+      - name: Verify native old bookmarks, mobile and downloaded content
+        if: ${{ !cancelled() }}
+        run: node .github/migration/live-browser.mjs
+      - name: Retain compact live proof and renders
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: atlas-domain-live-proof-${{ github.sha }}
+          path: ${{ runner.temp }}/atlas-live-proof
+          if-no-files-found: error
+          retention-days: 3

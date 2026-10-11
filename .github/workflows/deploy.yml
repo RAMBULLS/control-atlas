@@ -55,7 +55,7 @@ jobs:
           echo "run_id=$SELECTED_RUN_ID" >> "$GITHUB_OUTPUT"
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: ci-change-map
           path: .ci
@@ -98,7 +98,7 @@ jobs:
       sha: ${{ needs.release.outputs.sha }}
       run_id: ${{ needs.release.outputs.run_id }}
     steps:
-      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: site-build
           path: dist/site
@@ -218,7 +218,7 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
-      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         if: ${{ steps.target.outputs.enabled == 'true' }}
         with:
           name: site-build

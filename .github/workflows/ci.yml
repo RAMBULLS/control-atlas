@@ -694,7 +694,7 @@ jobs:
           name: ui-review-${{ github.event.pull_request.number || github.run_id }}-${{ github.event.pull_request.head.sha || github.sha }}
           path: artifacts/ui-review
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 7
 
       - name: Say where the renders are and what they do not prove
         env:

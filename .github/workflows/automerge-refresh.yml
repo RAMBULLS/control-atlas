@@ -4,6 +4,7 @@ on:
   workflow_run:
     workflows: [Control Atlas CI, Control Atlas Security]
     types: [completed]
+    branches: [automation/source-refresh]
 
 permissions:
   contents: read

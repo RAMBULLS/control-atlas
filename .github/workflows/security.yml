@@ -77,8 +77,10 @@ jobs:
           curl --fail --silent --show-error --location --remote-name "${release}/${checksums}"
           grep "  ${archive}$" "$checksums" | sha256sum --check --strict
           tar --extract --gzip --file "$archive" --no-same-owner gitleaks
+      - name: Verify publisher secret-scan contract
+        run: npm run test:publisher-secret-gate
       - name: Scan the complete checked-out snapshot
-        run: ./gitleaks dir . --redact --config=.gitleaks.toml --report-format=sarif --report-path=results.sarif
+        run: python3 tools/publisher-secret-gate.py snapshot results.sarif
       - name: Label snapshot secret-scan results
         if: ${{ always() }}
         shell: bash
@@ -95,7 +97,7 @@ jobs:
           NODE
       - name: Scan complete history on the weekly schedule
         if: ${{ always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
-        run: ./gitleaks git . --redact --config=.gitleaks.toml --report-format=sarif --report-path=history-results.sarif
+        run: python3 tools/publisher-secret-gate.py history history-results.sarif
       - name: Label historical secret-scan results
         if: ${{ always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
         shell: bash

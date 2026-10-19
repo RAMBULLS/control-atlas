@@ -207,7 +207,24 @@ export function hydrationResolutions(nistZeroTrustManifest = null) {
 
 export function loadHydrationResolutions(root = ROOT) {
   const path = join(root, 'data', 'curated', 'nist-zt', 'nist-source-manifest.json');
-  return hydrationResolutions(existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : null);
+  const resolutions = hydrationResolutions(existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : null);
+  const disaPath = join(root, 'data/disa-artifact-manifest.json');
+  if (existsSync(disaPath)) {
+    const manifest = JSON.parse(readFileSync(disaPath));
+    for (const entry of resolutions.filter((row) => ['artifact-disa-compilation-zip', 'artifact-disa-stig-library', 'artifact-disa-srg-library', 'artifact-disa-stig-srg-cci-references'].includes(row.id))) entry.url = manifest.compilation_url;
+  }
+  return resolutions;
+}
+
+export function disaInventoryCheckedToday(manifest, today) {
+  const check = manifest?.inventory_check;
+  const prior = new Date(manifest?.retrieval_timestamp); const current = new Date(`${today}T00:00:00Z`);
+  return /^sha256:[a-f0-9]{64}$/i.test(manifest?.discovery_content_checksum || '')
+    && check?.content_checksum === manifest.discovery_content_checksum
+    && check.status === 'no_declared_inventory_change' && check.check_tier === 'publisher_directory_inventory'
+    && check.publisher_bytes_retrieved === false && String(check.checked_at).startsWith(today)
+    && check.retained_content_retrieved_at === manifest.retrieval_timestamp
+    && prior.getUTCFullYear() === current.getUTCFullYear() && Math.floor(prior.getUTCMonth() / 3) === Math.floor(current.getUTCMonth() / 3);
 }
 
 const COUNTERS = {
@@ -353,7 +370,8 @@ export async function hydrateArtifacts({ root = ROOT, only = null, onlyPrefix = 
         if (!/^sha256:[a-f0-9]{64}$/i.test(checksum || '') || !Number.isInteger(byteLength) || byteLength <= 0 || !retrievedAt) {
           throw new Error('fresh DISA compilation attestation is missing or invalid');
         }
-        if (process.env.CONTROL_ATLAS_REQUIRE_FRESH_FETCH === '1' && !String(retrievedAt).startsWith(today)) {
+        const inventoryOnly = !String(retrievedAt).startsWith(today) && disaInventoryCheckedToday(disaCompilation, today);
+        if (process.env.CONTROL_ATLAS_REQUIRE_FRESH_FETCH === '1' && !String(retrievedAt).startsWith(today) && !inventoryOnly) {
           throw new Error(`DISA compilation was not retrieved today: ${retrievedAt}`);
         }
         art.artifact_url = disaCompilation.artifact_url;
@@ -364,13 +382,14 @@ export async function hydrateArtifacts({ root = ROOT, only = null, onlyPrefix = 
         log.push({
           id: r.id,
           status: 'OK',
-          http: 'range-verified',
+          http: inventoryOnly ? 'retained-range-verified' : 'range-verified',
           url: disaCompilation.artifact_url,
           sha256: checksum,
           byte_length: byteLength,
           record_count: art.record_count,
           retrieved_at: art.retrieved_at,
-          attestation: 'fresh DISA compilation range download and parse',
+          attestation: inventoryOnly ? 'Retained verified archive; current publisher directory inventory checked, archive bytes not retrieved this run.' : 'DISA compilation range download and parse',
+          ...(inventoryOnly ? { check_tier: 'publisher_directory_inventory', publisher_bytes_retrieved: false, inventory_checked_at: disaCompilation.inventory_check.checked_at } : {}),
         });
         console.log(`OK  ${r.id}  ${byteLength}B  range-verified ${checksum.slice(0, 22)}â€¦`);
         continue;
@@ -390,6 +409,8 @@ export async function hydrateArtifacts({ root = ROOT, only = null, onlyPrefix = 
       art.parser = r.parser;
       art.parser_version = r.parser_version;
       art.sha256 = sha256;
+      art.byte_length = byteLength;
+      art.retrieved_at = retrievedAt;
       if (r.count === 'json_relationships') {
         art.relationship_count = JSON.parse(buf.toString('utf8')).relationships?.length || 0;
         art.record_count = 0;

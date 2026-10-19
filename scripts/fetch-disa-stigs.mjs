@@ -19,6 +19,9 @@ import {
 import { writeJsonAtomically } from './lib/write-json-atomically.mjs';
 import { createStrictConditionalFetch } from './lib/strict-conditional-fetch.mjs';
 import { assertOfficialSourceUrl } from './lib/source-url-policy.mjs';
+import { readDisaCatalog, writeDisaCatalog, attestDisaProjections } from './lib/disa-record-history.mjs';
+import { disaContentDue, disaInventoryChecksum, verifyDisaSnapshot, mergeDisaSnapshot } from './lib/disa-refresh.mjs';
+import { disaNativeInventories } from '../tools/importers/disa-native-inventory.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DISCOVERY_URL = 'https://public.cyber.mil/stigs/downloads/';
@@ -372,6 +375,12 @@ async function discoverAndFetchAll(fetchImpl, options = {}) {
     throw new Error(`No *Library*.zip compilation found in DISA directory index (${DL_BASE})`);
   }
 
+  const acceptedPath = join(ROOT, 'data/disa-artifact-manifest.json');
+  if (options.inventoryCheck && existsSync(acceptedPath)) {
+    const accepted = JSON.parse(readFileSync(acceptedPath));
+    if (!disaContentDue(accepted, indexHtml)) return { discoveryOnly: true, discoveryContentChecksum: disaInventoryChecksum(indexHtml) };
+  }
+
   const compilationResult = await fetchAndParseCompilation(compilationUrl, fetchImpl);
   const compilationInnerZips = new Set(
     (compilationResult.inventory || [])
@@ -418,6 +427,7 @@ async function discoverAndFetchAll(fetchImpl, options = {}) {
 
   return {
     ...compilationResult,
+    discoveryContentChecksum: disaInventoryChecksum(indexHtml),
     stig: {
       ...compilationResult.stig,
       records: allStigs,
@@ -469,6 +479,7 @@ function writeDisaArtifactManifest(result, outputRoot = ROOT) {
     byte_length: result.byteLength,
     retrieval_timestamp: new Date().toISOString(),
     checksum: result.checksum,
+    ...(result.discoveryContentChecksum ? { discovery_content_checksum: result.discoveryContentChecksum, discovery_checksum_kind: 'decoded_utf8_publisher_directory_snapshot' } : {}),
     publications,
     reconciliation: {
       discovered_urls: result.discoveredUrls ?? null,
@@ -491,6 +502,7 @@ function writeDisaArtifactManifest(result, outputRoot = ROOT) {
     },
   };
   writeJsonAtomically(join(outputRoot, 'data', 'disa-artifact-manifest.json'), manifest);
+  return manifest;
 }
 
 export async function fetchDisaStigs(options = {}) {
@@ -520,7 +532,15 @@ async function main() {
   const requestedOutput = process.argv.find((arg) => arg.startsWith('--output='))?.slice(9);
   const outputRoot = requestedOutput ? resolve(ROOT, requestedOutput) : ROOT;
   if (requestedOutput && !outputRoot.startsWith(`${resolve(ROOT, '.local-agent/reference-export')}${sep}`)) throw new Error('Candidate output must remain in the existing local reference-export task area');
-  const result = await fetchDisaStigs({ requireFresh });
+  let result = await fetchDisaStigs({ requireFresh, inventoryCheck: process.argv.includes('--inventory-check') && !process.argv.includes('--require-fresh') });
+  if (result.discoveryOnly) {
+    const path = join(ROOT, 'data/disa-artifact-manifest.json'); const accepted = JSON.parse(readFileSync(path));
+    accepted.inventory_check = { checked_at: new Date().toISOString(), status: 'no_declared_inventory_change', content_checksum: result.discoveryContentChecksum,
+      check_tier: 'publisher_directory_inventory', publisher_bytes_retrieved: false, retained_content_retrieved_at: accepted.retrieval_timestamp };
+    writeJsonAtomically(path, accepted);
+    console.log('DISA publisher inventory unchanged in the accepted quarter; retained content dates and checksums unchanged. No archive download or parse.');
+    return;
+  }
   if (requestedOutput) writeJsonAtomically(join(outputRoot, 'retrieval-diagnostics.json'), { fallback_mode: result.fallbackMode || null,
     publications: result.publications || null, failed_publications: result.failedPublications || [], failed_files: result.failed || [] });
   if (result.fallbackMode && requireFresh) {
@@ -529,10 +549,22 @@ async function main() {
   if ((result.publications?.failed_publications > 0 || result.publications?.missing_publications > 0 || result.failed?.length) && requireFresh) {
     throw new Error(`DISA refresh failed: ${result.publications.failed_publications} publication(s) failed`);
   }
-  writeJsonAtomically(join(outputRoot, 'data', 'stig-rules.json'), result.stig);
-  writeJsonAtomically(join(outputRoot, 'data', 'srg-requirements.json'), result.srg);
+  if (!requestedOutput && !result.fallbackMode) {
+    const previous = { stig: readDisaCatalog(ROOT, 'stig'), srg: readDisaCatalog(ROOT, 'srg'), relationships: JSON.parse(readFileSync(COMMITTED_ARTIFACTS.relationships)) };
+    const manifest = writeDisaArtifactManifest(result, outputRoot);
+    const native = await disaNativeInventories(ROOT, manifest);
+    verifyDisaSnapshot(result, native, new Set(JSON.parse(readFileSync(join(ROOT, 'data/ccis.json'))).records.map((row) => row.id)));
+    const merged = mergeDisaSnapshot(previous, result, JSON.parse(readFileSync(join(ROOT, 'data/curated/reference-catalogs/publisher-inventories.json'))), native, manifest);
+    result = merged.result;
+    writeJsonAtomically(join(ROOT, 'data/curated/reference-catalogs/publisher-inventories.json'), merged.proofs);
+    writeDisaCatalog(ROOT, 'stig', result.stig); writeDisaCatalog(ROOT, 'srg', result.srg);
+  } else {
+    writeJsonAtomically(join(outputRoot, 'data', 'stig-rules.json'), result.stig);
+    writeJsonAtomically(join(outputRoot, 'data', 'srg-requirements.json'), result.srg);
+  }
   writeJsonAtomically(join(outputRoot, 'maps', 'stig-srg-to-cci.json'), result.relationships);
-  if (!result.fallbackMode) writeDisaArtifactManifest(result, outputRoot);
+  if (!result.fallbackMode && requestedOutput) writeDisaArtifactManifest(result, outputRoot);
+  if (!result.fallbackMode && !requestedOutput) attestDisaProjections(ROOT, JSON.parse(readFileSync(join(ROOT, 'data/disa-artifact-manifest.json'))));
   if (result.fallbackMode) {
     console.log(`DISA fetch fallback: ${result.fallbackMode}`);
   }

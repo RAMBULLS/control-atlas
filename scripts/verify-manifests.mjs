@@ -17,6 +17,7 @@ import { readGeneratedCollection } from './lib/generated-graph-artifacts.mjs';
 import { resolveExpectedLocator, classifyCatalog, summarizeCompleteness } from './lib/completeness.mjs';
 import { NON_CATALOG_TECHNICAL_SHARDS } from './sync-catalog-source-bundles.mjs';
 import { writeJsonAtomically } from './lib/write-json-atomically.mjs';
+import { restoreDisaHistory } from './lib/disa-record-history.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SHA256_PREFIXED = /^sha256:[a-f0-9]{64}$/i;
@@ -77,6 +78,16 @@ if (!registry) {
   err('missing data/source-registry.json');
 } else {
   const artifacts = registry.artifacts || [];
+  for (const [id, path] of [['artifact-disa-stig-library', 'data/stig-rules.json'], ['artifact-disa-srg-library', 'data/srg-requirements.json']]) {
+    try {
+      const document = readJson(path);
+      if (!document) throw new Error('Missing DISA catalog');
+      restoreDisaHistory(document, (relative) => readFileSync(join(ROOT, relative)));
+      const declared = artifacts.find((row) => row.id === id)?.metadata?.supporting_files || [];
+      const expected = document.record_history ? [{ ...document.record_history, role: 'retained_native_editions' }] : [];
+      if (JSON.stringify(declared) !== JSON.stringify(expected)) throw new Error('Supporting history descriptor disagrees with source registry');
+    } catch (error) { err(`${id}: ${error.message}`); }
+  }
   const publications = registry.publications || [];
   const sources = registry.sources || [];
   const bundles = registry.catalog_source_bundles || [];

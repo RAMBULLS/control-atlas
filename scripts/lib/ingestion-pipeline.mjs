@@ -25,7 +25,7 @@ export const INGESTION_TASKS = Object.freeze([
   { id: 'fetch-olir-catalog', script: 'fetch-olir-catalog.mjs', stages: ['discover', 'acquire', 'parse'], scope: ['olir'], remote_fetch: true, retries: 2 },
   { id: 'fetch-olir-mappings', script: 'fetch-olir-mappings.mjs', stages: ['acquire', 'parse', 'relationships'], scope: ['olir'], remote_fetch: true, retries: 2 },
   { id: 'fetch-ccis', script: 'fetch-ccis.mjs', stages: ['acquire', 'parse', 'relationships'], scope: ['disa-cci'], remote_fetch: true, retries: 2 },
-  { id: 'fetch-disa-library', script: 'fetch-disa-stigs.mjs', stages: ['discover', 'acquire', 'parse'], scope: ['disa-stig', 'disa-srg'], remote_fetch: true, retries: 1 },
+  { id: 'fetch-disa-library', script: 'fetch-disa-stigs.mjs', args: ['--inventory-check'], stages: ['discover', 'acquire', 'parse'], scope: ['disa-stig', 'disa-srg'], remote_fetch: true, retries: 1 },
   { id: 'fetch-mitre', script: 'fetch-mitre-data.mjs', stages: ['acquire', 'parse', 'relationships'], scope: ['mitre-attack', 'mitre-d3fend'], remote_fetch: true, retries: 2 },
   { id: 'fetch-zero-trust-workbooks', script: 'fetch-zero-trust-workbooks.mjs', stages: ['acquire', 'parse', 'relationships'], scope: ['nist-zt', 'microsoft-zt-maturity'], remote_fetch: true, retries: 2 },
   { id: 'fetch-nist-zero-trust', script: 'fetch-nist-zero-trust-pages.mjs', stages: ['acquire', 'parse'], scope: ['nist-zt'], remote_fetch: true, retries: 2 },
@@ -39,20 +39,6 @@ export const INGESTION_TASKS = Object.freeze([
   { id: 'migrate-source-truth-before-build', script: 'migrate-source-truth-profiles.mjs', stages: ['normalize', 'presentation'], scope: ['all-resources', 'all-sources'], retries: 1 },
   { id: 'sync-inventory-contracts', script: 'sync-catalog-inventory-contracts.mjs', stages: ['attest', 'reconcile'], scope: ['all-catalogs'], retries: 1 },
   { id: 'hydrate-artifacts', script: 'hydrate-artifacts.mjs', stages: ['acquire', 'attest'], scope: ['all-artifacts'], remote_fetch: true, retries: 2 },
-  { id: 'reconcile-freshness', script: 'reconcile-source-freshness.mjs', stages: ['attest', 'reconcile'], scope: ['all-sources'], retries: 1 },
-  // Must precede build-framework-data, which reaches src/shared/taxonomy-contract.mjs
-  // and that module statically imports data/generated/taxonomy-registry.json. A
-  // static JSON import cannot be guarded at runtime, so the file has to exist
-  // before the task runs. build:data already orders these two this way; the
-  // refresh pipeline was simply missing the prerequisite, so build-framework-data
-  // could never run on a clean runner. Inputs are all curated and tracked, so
-  // this task has no upstream dependency of its own.
-  { id: 'build-taxonomy-registry', script: 'build-taxonomy-registry.mjs', stages: ['normalize', 'structure'], scope: ['all-catalogs'], retries: 1 },
-  {
-    id: 'build-framework-data', script: 'build-framework-data.mjs',
-    stages: ['normalize', 'structure', 'relationships', 'presentation', 'publish'],
-    scope: ['all-catalogs'], retries: 1,
-  },
   {
     id: 'enrich-commons-resources', script: 'enrich-commons-resources.mjs',
     stages: ['acquire', 'attest', 'parse', 'presentation'],
@@ -72,6 +58,20 @@ export const INGESTION_TASKS = Object.freeze([
   // because there it normalizes the committed dataset; here it has to follow
   // the task that rewrites it.
   { id: 'migrate-source-truth-profiles', script: 'migrate-source-truth-profiles.mjs', stages: ['normalize', 'presentation'], scope: ['all-resources', 'all-sources'], retries: 1 },
+  { id: 'reconcile-freshness', script: 'reconcile-source-freshness.mjs', stages: ['attest', 'reconcile'], scope: ['all-sources'], retries: 1 },
+  // Must precede build-framework-data, which reaches src/shared/taxonomy-contract.mjs
+  // and that module statically imports data/generated/taxonomy-registry.json. A
+  // static JSON import cannot be guarded at runtime, so the file has to exist
+  // before the task runs. build:data already orders these two this way; the
+  // refresh pipeline was simply missing the prerequisite, so build-framework-data
+  // could never run on a clean runner. Inputs are all curated and tracked, so
+  // this task has no upstream dependency of its own.
+  { id: 'build-taxonomy-registry', script: 'build-taxonomy-registry.mjs', stages: ['normalize', 'structure'], scope: ['all-catalogs'], retries: 1 },
+  {
+    id: 'build-framework-data', script: 'build-framework-data.mjs',
+    stages: ['normalize', 'structure', 'relationships', 'presentation', 'publish'],
+    scope: ['all-catalogs'], retries: 1,
+  },
   // build-framework-data clears generated governance artifacts. Rebuild the
   // independent catalog inventory afterward, matching build:data.
   { id: 'build-source-inventory', script: 'build-catalog-source-inventory.mjs', stages: ['discover', 'normalize', 'reconcile'], scope: ['all-catalogs'], retries: 1 },
@@ -111,6 +111,8 @@ export const INGESTION_TASKS = Object.freeze([
 
 export function validateIngestionPipelineDefinition(tasks = INGESTION_TASKS) {
   const errors = [];
+  const projection = tasks.findIndex((task) => task.id === 'build-taxonomy-registry');
+  if (projection >= 0 && tasks.slice(projection).some((task) => task.remote_fetch)) errors.push('All remote sources must complete before the generated projection decision');
   const ids = new Set();
   const covered = new Set();
   for (const task of tasks) {

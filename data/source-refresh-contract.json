@@ -202,11 +202,12 @@
       "required_artifacts": ["DISA STIG/SRG compilation archive", "every standalone STIG package the publisher lists"],
       "optional_artifacts": [],
       "partial_policy": "all_or_nothing",
-      "check_tier": "range_probe",
+      "check_tier": "publisher_directory_inventory",
       "identity_key": "records[].id",
       "version_fields": ["source_version"],
       "lifecycle_fields": [],
-      "expected_change": "Changes with each compilation release and standalone package. A large increase in rules is normal when new publications appear, so the count alone is never treated as corruption.",
+      "expected_change": "DISA publishes quarterly compilations and listed out-of-cycle packages. Weekly directory checks acquire content when the directory changes or a new UTC quarter begins; --require-fresh forces byte retrieval. Inventory-only checks preserve original byte-retrieval dates. Unlisted in-place changes can remain undetected until the next quarter or forced check. Sparse accepted history is insufficient to learn a cadence.",
+      "content_cadence": {"basis":"publisher_policy","compilation":"quarterly","months":[1,4,7,10],"directory_check":"weekly","force_acquisition":"changed directory, new UTC quarter or --require-fresh","official_policy_url":"https://www.cyber.mil/stigs/compilations/","historical_inference":"UNKNOWN: insufficient accepted events"},
       "downstream": ["disa-stig", "disa-srg", "maps/stig-srg-to-cci", "STIG viewer records"]
     },
     {
@@ -342,12 +343,14 @@
       "cadence": "on_demand",
       "conditional_policy": "live_probe_exception",
       "exception_reason": "HEAD and fallback GET requests measure current endpoint health and must not be satisfied from an HTTP object cache."
-    }
+    },
+    {"script":"fetch-reference-catalogs.mjs","source_ids":["nist-csf-1.1","nist-critical-software"],"cadence":"on_demand","conditional_policy":"strict"}
   ],
   "behavior": {
     "check_tiers": {
       "conditional_get": "Conditional GET (ETag / Last-Modified). An unchanged publisher answers 304 and no bytes are downloaded.",
       "range_probe": "Ranged download with byte-length and total checks; the publisher does not offer validators for its large archive.",
+      "publisher_directory_inventory": "Fresh official directory discovery compared with its decoded UTF-8 snapshot checksum. No-change within the accepted quarter retains publisher bytes with their original retrieval date; changed directory or new quarter triggers range-verified archive acquisition. This tier does not establish freshness of archive bytes.",
       "per_item_conditional_get": "One conditional GET per registered item; each unchanged item is a 304."
     },
     "transient_failure": {

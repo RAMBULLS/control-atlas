@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { readFileSync } from "node:fs";
 
 import { dismissOnboarding, gotoApp, waitForAppReady } from "./support.mjs";
 
@@ -170,7 +171,11 @@ test("V1 workflow 08 — inspect a source and how it is used", async ({ page }) 
   await open(page, "/#/sources?source=nist-800-53");
   const checkedDetail = page.getByRole("region", { name: "Source status summary" });
   await expect(checkedDetail).toContainText("Source freshness");
-  await expect(checkedDetail).toContainText(/Checked\s+Jul 28, 2026/);
+  const registry = JSON.parse(readFileSync(new URL('../../data/source-registry.json', import.meta.url), 'utf8'));
+  const checked = registry.freshness.sources.find((source) => source.source_id === 'nist-800-53')?.last_checked;
+  expect(checked, 'Canonical source must record its actual verification date').toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  const date = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${checked}T00:00:00Z`));
+  await expect(checkedDetail).toContainText(`Checked ${date}`);
 
   await open(page, "/#/sources?source=nist-800-53a-assessment-procedures");
   const assessmentDetail = page.getByRole("region", { name: "Source status summary" });

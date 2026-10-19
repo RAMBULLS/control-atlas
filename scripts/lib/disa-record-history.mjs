@@ -60,3 +60,27 @@ export function writeDisaCatalog(root, kind, document) {
   writeJsonAtomically(join(root, 'data', kind === 'stig' ? 'stig-rules.json' : 'srg-requirements.json'), main);
   return main;
 }
+
+/** Attest actual stored projections and supporting files without inventing publisher byte evidence. */
+export function attestDisaProjections(root, manifest) {
+  const registry = JSON.parse(readFileSync(join(root, 'data/source-registry.json')));
+  const hydration = JSON.parse(readFileSync(join(root, 'data/artifact-hydration-manifest.json')));
+  for (const [id, relative] of [['artifact-disa-stig-library', 'data/stig-rules.json'], ['artifact-disa-srg-library', 'data/srg-requirements.json'], ['artifact-disa-stig-srg-cci-references', 'maps/stig-srg-to-cci.json']]) {
+    const bytes = readFileSync(join(root, relative)); const document = JSON.parse(bytes);
+    const artifact = registry.artifacts.find((row) => row.id === id); assert.ok(artifact, 'Missing admitted DISA artifact');
+    Object.assign(artifact, { sha256: checksum(bytes), byte_length: bytes.length, artifact_url: manifest.compilation_url, retrieved_at: manifest.retrieval_timestamp.slice(0, 10) });
+    if (document.records) artifact.record_count = document.records.length;
+    if (document.relationships) artifact.relationship_count = document.relationships.length;
+    artifact.metadata = { ...artifact.metadata, byte_evidence_kind: 'normalized_projection', byte_evidence_locator: relative, current_compilation_checksum: manifest.checksum,
+      ...(document.record_history ? { supporting_files: [{ ...document.record_history, role: 'retained_native_editions' }] } : {}) };
+    const receipt = hydration.results.find((row) => row.id === id);
+    if (receipt) Object.assign(receipt, { sha256: artifact.sha256, byte_length: bytes.length, url: manifest.compilation_url, retrieved_at: artifact.retrieved_at });
+  }
+  const artifact = registry.artifacts.find((row) => row.id === 'artifact-disa-compilation-zip'); assert.ok(artifact);
+  const edition = manifest.compilation_url.match(/Library_([A-Za-z]+_\d{4}|\d{4}_\d{2})\.zip$/)?.[1]?.replaceAll('_', ' ') || null;
+  Object.assign(artifact, { version: edition, artifact_url: manifest.compilation_url, sha256: manifest.checksum, byte_length: manifest.byte_length, retrieved_at: manifest.retrieval_timestamp.slice(0, 10) });
+  const receipt = hydration.results.find((row) => row.id === artifact.id);
+  if (receipt) Object.assign(receipt, { sha256: artifact.sha256, byte_length: artifact.byte_length, url: artifact.artifact_url, retrieved_at: artifact.retrieved_at });
+  writeJsonAtomically(join(root, 'data/source-registry.json'), registry);
+  writeJsonAtomically(join(root, 'data/artifact-hydration-manifest.json'), hydration);
+}

@@ -309,22 +309,39 @@ export function dedupeDisaRelationships(relationships) {
 }
 
 /** Keep prior native editions and IDs; absence from a new snapshot never implies retirement. */
+const ABSENT_RECORD_WARNING = 'Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred.';
+const ABSENT_CONNECTION_WARNING = 'Recorded in a verified prior publisher edition and retained; absent from the latest selected snapshot. No current applicability is inferred.';
+
 export function preserveDisaRecordHistory(previous, current) {
-  const editionKey = (record) => JSON.stringify([record.metadata?.benchmark_id, record.source?.version, record.rule_id]);
+  const captureKey = (record) => {
+    const copy = { ...record, ...(record.source ? { source: { ...record.source } } : {}), ...(record.metadata ? { metadata: { ...record.metadata } } : {}) };
+    if (copy.source) delete copy.source.snapshot_date;
+    if (copy.metadata) {
+      delete copy.metadata.previous_editions; delete copy.metadata.current_snapshot_presence;
+      if (copy.metadata.source_warnings) {
+        copy.metadata.source_warnings = copy.metadata.source_warnings.filter((warning) => warning !== ABSENT_RECORD_WARNING);
+        if (!copy.metadata.source_warnings.length) delete copy.metadata.source_warnings;
+      }
+    }
+    const ordered = (value) => Array.isArray(value) ? value.map(ordered) : value && typeof value === 'object'
+      ? Object.fromEntries(Object.keys(value).sort().map((key) => [key, ordered(value[key])])) : value;
+    return JSON.stringify(ordered(copy));
+  };
   const old = new Map(previous.map((record) => [record.id, record])); const next = new Map();
   for (const record of current) {
     if (next.has(record.id)) throw new Error(`Duplicate current DISA ID: ${record.id}`);
     const copy = structuredClone(record); const prior = old.get(record.id);
-    const history = [...(prior?.metadata?.previous_editions || [])];
-    if (prior && editionKey(prior) !== editionKey(record)) {
+    if (copy.metadata?.source_warnings) copy.metadata.source_warnings = copy.metadata.source_warnings.filter((warning) => warning !== ABSENT_RECORD_WARNING);
+    const history = [...new Map([...(prior?.metadata?.previous_editions || []), ...(record.metadata?.previous_editions || [])].map((entry) => [captureKey(entry), entry])).values()];
+    if (prior && captureKey(prior) !== captureKey(record)) {
       const historical = structuredClone(prior); if (historical.metadata) delete historical.metadata.previous_editions;
-      if (!history.some((entry) => editionKey(entry) === editionKey(historical))) history.push(historical);
+      if (!history.some((entry) => captureKey(entry) === captureKey(historical))) history.push(historical);
     }
     copy.metadata = { ...copy.metadata, current_snapshot_presence: true, ...(history.length ? { previous_editions: history } : {}) };
     next.set(copy.id, copy);
   }
   for (const record of previous) if (!next.has(record.id)) {
-    const copy = structuredClone(record); const warning = 'Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred.';
+    const copy = structuredClone(record); const warning = ABSENT_RECORD_WARNING;
     copy.metadata = { ...copy.metadata, current_snapshot_presence: false, source_warnings: [...new Set([...(copy.metadata?.source_warnings || []), warning])] };
     next.set(copy.id, copy);
   }
@@ -350,7 +367,8 @@ export function preserveDisaConnectionIds(previous, current, stem = 'stig-srg-to
   for (const row of merged) {
     let id = existing.get(key(row)); if (!id) { do { id = `edge:${stem}:${++maximum}`; } while (used.has(id)); used.add(id); }
     row.atlas_connection_id = id; row.current_snapshot_presence = currentKeys.has(key(row));
-    if (!row.current_snapshot_presence) row.warning = 'Recorded in a verified prior publisher edition and retained; absent from the latest selected snapshot. No current applicability is inferred.';
+    if (row.current_snapshot_presence && row.warning === ABSENT_CONNECTION_WARNING) delete row.warning;
+    if (!row.current_snapshot_presence && !row.warning) row.warning = ABSENT_CONNECTION_WARNING;
   }
   return merged;
 }

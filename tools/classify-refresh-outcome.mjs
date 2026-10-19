@@ -70,7 +70,7 @@ export function classifyRefresh({ changes, headRegistry, now = new Date() }) {
 const git = (args, options = {}) => execFileSync('git', args, { maxBuffer: 256 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'], ...options });
 const tryGit = (args) => { try { return git(args); } catch { return null; } };
 
-function collectChanges(root) {
+export function collectChanges(root) {
   const tracked = git(['diff', '--name-only', '-z', 'HEAD', '--', 'data', 'maps'], { cwd: root, encoding: 'utf8' }).split('\0').filter(Boolean);
   const untracked = git(['ls-files', '--others', '--exclude-standard', '-z', '--', 'data', 'maps'], { cwd: root, encoding: 'utf8' }).split('\0').filter(Boolean);
   return [...new Set([...tracked, ...untracked])].filter((path) => !path.startsWith('data/generated/')).map((path) => {
@@ -78,6 +78,11 @@ function collectChanges(root) {
     try { working = readFileSync(resolve(root, path)); } catch { working = null; }
     return { path, head: tryGit(['show', `HEAD:${path}`]), working };
   });
+}
+
+export function refreshBuildDecision(root) {
+  const headRegistry = JSON.parse(git(['show', 'HEAD:data/source-registry.json'], { cwd: root, encoding: 'utf8' }));
+  return classifyRefresh({ changes: collectChanges(root), headRegistry });
 }
 
 function main() {

@@ -8,6 +8,7 @@ import { INGESTION_STAGES, INGESTION_TASKS, validateIngestionPipelineDefinition 
 import { loadSourceRefreshContract, validateSourceRefreshContract } from './lib/source-refresh-contract.mjs';
 import { sourceUnitsForTask, localProjectionForTask, loadSourceUnitInventory } from './lib/refresh-source-outputs.mjs';
 import { runSourceTransaction } from './lib/source-transaction.mjs';
+import { refreshBuildDecision } from '../tools/classify-refresh-outcome.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 // Between whole-source attempts after a transient failure: 15s, then 30s (cap 60s).
@@ -30,7 +31,7 @@ export function executeRefreshUnit(unit, root, spawn = spawnSync) {
 export async function runRefreshPipeline({
   root = ROOT, tasks = INGESTION_TASKS, executor = executeRefreshUnit,
   validateCandidate, recordResult, finalize, describeSources = sourceUnitsForTask,
-  describeProjection = localProjectionForTask, sleep, backoff = DEFAULT_UNIT_BACKOFF,
+  describeProjection = localProjectionForTask, sleep, backoff = DEFAULT_UNIT_BACKOFF, shouldBuild = () => ({ publish: true }),
 } = {}) {
   if (typeof validateCandidate !== 'function' || typeof finalize !== 'function') {
     throw new Error('Refresh requires candidate validation and finalization gates');
@@ -64,7 +65,14 @@ export async function runRefreshPipeline({
     });
   }
   save('running');
+  let projectionDecision;
   for (const { task, units, projection } of execution) {
+    if (task.id === 'build-taxonomy-registry') projectionDecision = await shouldBuild();
+    if (projectionDecision?.publish === false) {
+      results.push({ task_id: task.id, script: task.script, stages: task.stages, scope: task.scope,
+        status: 'skipped_unchanged', reason: 'Verified inputs unchanged and freshness heartbeat not due; reuse deployed projection.' });
+      save('running'); continue;
+    }
     console.log(`\n==> [${task.stages.join(' + ')}] ${task.id}`);
     const taskStarted = Date.now();
     const taskSources = [];
@@ -133,7 +141,7 @@ async function main() {
   if (contractErrors.length) throw new Error(`Invalid source refresh contract: ${contractErrors.join('; ')}`);
   const { createCandidateGate } = await import('./lib/refresh-candidate-gate.mjs');
   const gate = await createCandidateGate(ROOT);
-  const result = await runRefreshPipeline({ ...gate, root: ROOT });
+  const result = await runRefreshPipeline({ ...gate, root: ROOT, shouldBuild: () => refreshBuildDecision(ROOT) });
   console.log(`\nrefresh:data ${result.status}; source outcomes: .local/source-refresh-results.json`);
 }
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-import { createWriteStream, existsSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { copyFileSync, createWriteStream, existsSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
@@ -14,6 +14,7 @@ import {
   groupAndSelectCurrentPublications,
   reconcilePublicationInventory,
   dedupeDisaRecords,
+  dedupeDisaRelationships,
 } from './lib/disa-publication-reconciliation.mjs';
 import { writeJsonAtomically } from './lib/write-json-atomically.mjs';
 import { createStrictConditionalFetch } from './lib/strict-conditional-fetch.mjs';
@@ -174,7 +175,7 @@ async function fetchAndParseStandalonePackages(standaloneNeeded, fetchImpl, opti
     const cachedFile = join(cacheDir, pkg.filename);
     try {
       let buffer;
-      if (existsSync(cachedFile) && statSync(cachedFile).size > 0) {
+      if (existsSync(cachedFile) && statSync(cachedFile).size > 0 && !options.requireFresh) {
         buffer = readFileSync(cachedFile);
       } else {
         const response = await fetchImpl(url);
@@ -182,6 +183,12 @@ async function fetchAndParseStandalonePackages(standaloneNeeded, fetchImpl, opti
           throw new Error(`HTTP ${response.status} fetching ${url}`);
         }
         buffer = Buffer.from(await response.arrayBuffer());
+        if (existsSync(cachedFile) && checksum(readFileSync(cachedFile)) !== checksum(buffer)) {
+          const history = join(cacheDir, 'history'); mkdirSync(history, { recursive: true });
+          const priorHash = checksum(readFileSync(cachedFile)).slice(7);
+          const snapshot = join(history, `${priorHash}.zip`);
+          if (!existsSync(snapshot)) copyFileSync(cachedFile, snapshot);
+        }
         writeFileSync(cachedFile, buffer);
       }
 
@@ -211,6 +218,7 @@ async function fetchAndParseStandalonePackages(standaloneNeeded, fetchImpl, opti
         stigRecords: res.parsed.stigRecords.length,
         srgRecords: res.parsed.srgRecords.length,
         checksum: res.parsed.checksum,
+        xccdf_files: res.parsed.inventory.filter((entry) => entry.status === 'ingested').length,
       });
       stigs.push(...res.parsed.stigRecords);
       srgs.push(...res.parsed.srgRecords);
@@ -391,6 +399,7 @@ async function discoverAndFetchAll(fetchImpl, options = {}) {
   const combinedSeeds = [...compilationResult.relationships.relationships];
   for (const seed of standaloneResult.relationshipSeeds) {
     combinedSeeds.push({
+      ...seed,
       source_catalog: seed.source_catalog,
       source_id: seed.source_id,
       target_catalog: seed.target_catalog,
@@ -401,15 +410,7 @@ async function discoverAndFetchAll(fetchImpl, options = {}) {
       evidence_source: 'disa-stig-srg-cci-references',
     });
   }
-  const relSeen = new Set();
-  const uniqueRelationships = [];
-  for (const rel of combinedSeeds) {
-    const key = `${rel.source_catalog}:${rel.source_id}:${rel.target_catalog}:${rel.target_id}`;
-    if (!relSeen.has(key)) {
-      relSeen.add(key);
-      uniqueRelationships.push(rel);
-    }
-  }
+  const uniqueRelationships = dedupeDisaRelationships(combinedSeeds);
   uniqueRelationships.sort((a, b) => a.source_id.localeCompare(b.source_id) || a.target_id.localeCompare(b.target_id));
 
   const totalExcludedArchives = publicationInventory.excludedByRule.length + publicationInventory.supersededPublications.length;
@@ -448,7 +449,7 @@ async function discoverAndFetchAll(fetchImpl, options = {}) {
   };
 }
 
-function writeDisaArtifactManifest(result) {
+function writeDisaArtifactManifest(result, outputRoot = ROOT) {
   const inventory = result.inventory || [];
   const count = (status) => inventory.filter((entry) => entry.status === status).length;
   const publications = result.publications || {
@@ -472,7 +473,9 @@ function writeDisaArtifactManifest(result) {
     reconciliation: {
       discovered_urls: result.discoveredUrls ?? null,
       compilation_entries: inventory.length,
-      ingested_files: count('ingested') + (publications.standalone_ingested || 0),
+      ingested_files: count('ingested') + (result.standaloneSuccesses || []).reduce((sum, pkg) => sum + pkg.xccdf_files, 0),
+      compilation_ingested_files: count('ingested'),
+      standalone_ingested_files: (result.standaloneSuccesses || []).reduce((sum, pkg) => sum + pkg.xccdf_files, 0),
       excluded_files: count('excluded'),
       failed_files: count('failed') + (publications.failed_publications || 0),
       ignored_files: count('ignored'),
@@ -487,10 +490,11 @@ function writeDisaArtifactManifest(result) {
       inventory_details: inventory,
     },
   };
-  writeJsonAtomically(join(ROOT, 'data', 'disa-artifact-manifest.json'), manifest);
+  writeJsonAtomically(join(outputRoot, 'data', 'disa-artifact-manifest.json'), manifest);
 }
 
 export async function fetchDisaStigs(options = {}) {
+  const requireFresh = options.requireFresh || process.env.CONTROL_ATLAS_REQUIRE_FRESH_FETCH === '1';
   const fetchImpl = options.fetchImpl || strictConditionalFetch;
   const explicitUrl = options.compilationUrl || process.env.DISA_STIG_COMPILATION_URL || '';
 
@@ -498,7 +502,7 @@ export async function fetchDisaStigs(options = {}) {
     try {
       return await fetchAndParseCompilation(explicitUrl, fetchImpl);
     } catch (error) {
-      if (process.env.CONTROL_ATLAS_REQUIRE_FRESH_FETCH === '1') throw error;
+      if (requireFresh) throw error;
       return loadCommittedArtifacts();
     }
   }
@@ -506,23 +510,29 @@ export async function fetchDisaStigs(options = {}) {
   try {
     return await discoverAndFetchAll(fetchImpl, options);
   } catch (error) {
-    if (process.env.CONTROL_ATLAS_REQUIRE_FRESH_FETCH === '1') throw error;
+    if (requireFresh) throw error;
     return loadCommittedArtifacts();
   }
 }
 
 async function main() {
-  const result = await fetchDisaStigs();
-  if (result.fallbackMode && process.env.CONTROL_ATLAS_REQUIRE_FRESH_FETCH === '1') {
+  const requireFresh = process.argv.includes('--require-fresh') || process.env.CONTROL_ATLAS_REQUIRE_FRESH_FETCH === '1';
+  const requestedOutput = process.argv.find((arg) => arg.startsWith('--output='))?.slice(9);
+  const outputRoot = requestedOutput ? resolve(ROOT, requestedOutput) : ROOT;
+  if (requestedOutput && !outputRoot.startsWith(`${resolve(ROOT, '.local-agent/reference-export')}${sep}`)) throw new Error('Candidate output must remain in the existing local reference-export task area');
+  const result = await fetchDisaStigs({ requireFresh });
+  if (requestedOutput) writeJsonAtomically(join(outputRoot, 'retrieval-diagnostics.json'), { fallback_mode: result.fallbackMode || null,
+    publications: result.publications || null, failed_publications: result.failedPublications || [], failed_files: result.failed || [] });
+  if (result.fallbackMode && requireFresh) {
     throw new Error(`DISA refresh required a live upstream fetch but used ${result.fallbackMode}`);
   }
-  if (result.publications?.failed_publications > 0 && process.env.CONTROL_ATLAS_REQUIRE_FRESH_FETCH === '1') {
+  if ((result.publications?.failed_publications > 0 || result.publications?.missing_publications > 0 || result.failed?.length) && requireFresh) {
     throw new Error(`DISA refresh failed: ${result.publications.failed_publications} publication(s) failed`);
   }
-  writeJsonAtomically(join(ROOT, 'data', 'stig-rules.json'), result.stig);
-  writeJsonAtomically(join(ROOT, 'data', 'srg-requirements.json'), result.srg);
-  writeJsonAtomically(join(ROOT, 'maps', 'stig-srg-to-cci.json'), result.relationships);
-  if (!result.fallbackMode) writeDisaArtifactManifest(result);
+  writeJsonAtomically(join(outputRoot, 'data', 'stig-rules.json'), result.stig);
+  writeJsonAtomically(join(outputRoot, 'data', 'srg-requirements.json'), result.srg);
+  writeJsonAtomically(join(outputRoot, 'maps', 'stig-srg-to-cci.json'), result.relationships);
+  if (!result.fallbackMode) writeDisaArtifactManifest(result, outputRoot);
   if (result.fallbackMode) {
     console.log(`DISA fetch fallback: ${result.fallbackMode}`);
   }

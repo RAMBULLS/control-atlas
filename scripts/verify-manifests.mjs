@@ -356,12 +356,16 @@ function buildCoverageManifest() {
     }
 
     const primaryQuarantined = primary.length > 0 && primary.every((a) => quarantinedIds.has(a.id));
+    const inventory = readJson('data/generated/catalog-source-inventory.json')?.catalogs?.[b.catalog_id];
+    const independentInventory = inventory?.independent_inventory === true
+      || (inventory && inventory.evidence_class !== 'reviewed_snapshot' && inventory.independent_inventory !== false);
     const { status, missing, errors: classifyErrors } = classifyCatalog({
       expected,
       imported: importedRecords,
       excluded,
       allChecksumsReal,
       primaryQuarantined,
+      independentInventory: Boolean(independentInventory),
     });
     const ctx = { expected, imported: importedRecords, excluded, missing };
     for (const code of classifyErrors) {
@@ -372,7 +376,10 @@ function buildCoverageManifest() {
     catalogs.push({
       catalog_id: b.catalog_id,
       completeness_status: status,
-      expected_records: expected,
+      expected_records: independentInventory ? expected : null,
+      snapshot_expected_records: independentInventory ? null : expected,
+      inventory_evidence_class: inventory?.evidence_class || 'unknown',
+      independent_inventory: Boolean(independentInventory),
       imported_records: importedRecords,
       excluded_records: excluded,
       missing_records: missing,

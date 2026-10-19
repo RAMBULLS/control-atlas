@@ -2,16 +2,19 @@
 // Build the source-side catalog inventory before graph construction. This is
 // deliberately separate from generated graph counts: a graph cannot certify
 // that its own importer was complete.
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { generatedAt } from './lib/stable-generated-at.mjs';
 import { observeCatalog } from './lib/source-baseline.mjs';
+import { PUBLISHER_UNIT_PROOF_PATH, resolvePublisherUnitProof } from './lib/publisher-native-proof.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'data/generated/catalog-source-inventory.json');
 
 export const PROFILES = Object.freeze({
+  'nist-csf-1.1': { file: 'data/csf-1.1.json' },
+  'nist-critical-software': { file: 'data/critical-software.json' },
   'cmmc-2': { file: 'data/cmmc-practices.json' },
   'csf-2': { file: 'data/csf-subcategories.json' },
   'cui-policy': { file: 'data/cui-policy.json' },
@@ -53,6 +56,9 @@ export const PUBLISHER_INVENTORY_CATALOGS = Object.freeze([
 ]);
 
 export const NATIVE_INVENTORIES = Object.freeze({
+  'cui-policy': { file: 'data/nara-cui-registry-manifest.json', field: 'publisher_inventory.record_count', identityField: 'publisher_inventory.record_ids', evidenceClass: 'publisher_inventory' },
+  'nist-csf-1.1': { file: 'data/curated/reference-catalogs/source-manifest.json', field: 'catalogs.csf11.records', identityField: 'catalogs.csf11.record_ids', evidenceClass: 'publisher_inventory' },
+  'nist-critical-software': { file: 'data/curated/reference-catalogs/source-manifest.json', field: 'catalogs.critical_software.records', identityField: 'catalogs.critical_software.record_ids', evidenceClass: 'publisher_inventory' },
   'disa-srg': { file: 'data/disa-artifact-manifest.json', field: 'reconciliation.srg_records_parsed' },
   'disa-stig': { file: 'data/disa-artifact-manifest.json', field: 'reconciliation.stig_records_parsed' },
   'dod-zt': { file: 'data/curated/dod-zt/source-manifest.json', field: 'reconciliation.atlas_records_expected', reviewedCount: 320 },
@@ -72,17 +78,26 @@ export function resolveNativeInventory(catalogId, manifest) {
   const field = (path) => path.split('.').reduce((value, key) => value?.[key], manifest);
   const expected = field(profile.field);
   const excluded = profile.excludedField ? field(profile.excludedField) : 0;
+  const recordIds = profile.identityField ? field(profile.identityField) : null;
   if (!Number.isSafeInteger(expected) || expected < 1 || !Number.isSafeInteger(excluded) || excluded < 0 || excluded >= expected) {
     throw new Error(`Invalid native inventory count for ${catalogId}`);
   }
   if (profile.reviewedCount !== undefined && expected !== profile.reviewedCount) {
     throw new Error(`${catalogId} curated inventory must retain the reviewed ${profile.reviewedCount} records`);
   }
-  return { expected_count: expected, excluded_count: excluded, evidence_locator: `${profile.file}#${profile.field}` };
+  if (profile.identityField && (!Array.isArray(recordIds) || recordIds.length !== expected || new Set(recordIds).size !== expected)) {
+    throw new Error(`Invalid publisher identity inventory for ${catalogId}`);
+  }
+  return { expected_count: expected, excluded_count: excluded, ...(recordIds ? { record_ids: recordIds } : {}), evidence_locator: `${profile.file}#${profile.field}` };
 }
 
 /** Resolve native count evidence before accepting any source transaction. */
 export function readNativeInventory(root, catalogId) {
+  const proofPath = join(root, PUBLISHER_UNIT_PROOF_PATH);
+  if (existsSync(proofPath)) {
+    const proof = resolvePublisherUnitProof(catalogId, JSON.parse(readFileSync(proofPath, 'utf8')));
+    if (proof) return proof;
+  }
   const profile = NATIVE_INVENTORIES[catalogId];
   return profile ? resolveNativeInventory(catalogId, JSON.parse(readFileSync(join(root, profile.file), 'utf8'))) : null;
 }
@@ -97,6 +112,10 @@ export function buildInventory(document, baseline, options = {}) {
     if (!Number.isSafeInteger(eligible) || eligible < 1 || eligible !== observed.record_count) {
       throw new Error(`Native source inventory mismatch: expected ${eligible}, imported ${observed.record_count}`);
     }
+    if (native.record_ids) {
+      const actualIds = document.records.map((record) => record.id).sort();
+      if (JSON.stringify(actualIds) !== JSON.stringify([...native.record_ids].sort())) throw new Error('Publisher identity inventory disagrees with normalized records');
+    }
     return {
       discovered_records: native.expected_count,
       normalized_records: observed.record_count,
@@ -104,9 +123,10 @@ export function buildInventory(document, baseline, options = {}) {
       raw_records: native.expected_count,
       excluded_records: native.excluded_count,
       evidence_locator: native.evidence_locator,
-      evidence_class: 'native_manifest',
-      independent_inventory: false,
-      evidence_reason: 'Retained native publisher or curated extraction count boundary; count reconciliation does not assert an independent identity inventory',
+      evidence_class: native.evidence_class || 'native_manifest',
+      independent_inventory: Boolean(native.record_ids),
+      ...(native.scope ? { inventory_scope: native.scope, source_evidence_kinds: native.source_evidence_kinds } : {}),
+      evidence_reason: native.scope ? 'Independent native source identities reconciled within the declared inventory scope; primary-source acquisition and currentness remain separate.' : 'Retained native publisher or curated extraction count boundary; count reconciliation does not assert an independent identity inventory',
     };
   }
   const proof = document.publisher_inventory;

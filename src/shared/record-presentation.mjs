@@ -62,6 +62,7 @@ const commonFields = Object.freeze({
   primary_artifact_id: { disposition: "source_metadata", origin: "source_metadata" },
   source_fragments: { disposition: "source_metadata", origin: "source_metadata" },
   source_refs: { disposition: "relationship_evidence", origin: "source_metadata" },
+  source_warnings: { disposition: "source_metadata", origin: "source_metadata" },
   authority_source_refs: { disposition: "relationship_evidence", origin: "source_metadata" },
   mandate: { disposition: "source_metadata", origin: "publisher" },
   mandate_note: { disposition: "source_metadata", origin: "publisher" },
@@ -74,6 +75,7 @@ const commonFields = Object.freeze({
   superseded_by: { disposition: "relationship_evidence", origin: "publisher" },
   publisher_status: { disposition: "source_metadata", origin: "publisher" },
   publisher_mappings: { disposition: "relationship_evidence", origin: "publisher" },
+  unresolved_mappings: { disposition: "relationship_evidence", origin: "publisher" },
   is_subtechnique: {
     disposition: "intentionally_hidden",
     origin: "derived",
@@ -471,7 +473,11 @@ const disaContract = atomic(
             origin: "publisher",
           },
         ])
-        .concat([["published_cci_references", { disposition: "relationship_evidence", origin: "publisher" }]]),
+        .concat([
+          ["published_cci_references", { disposition: "relationship_evidence", origin: "publisher" }],
+          ["current_snapshot_presence", { disposition: "source_metadata", origin: "derived" }],
+          ["previous_editions", { disposition: "source_metadata", origin: "source_metadata" }],
+        ]),
     ),
   },
 );
@@ -484,6 +490,8 @@ export const CATALOG_RECORD_TYPES = Object.freeze({
   "atlas-organizing-spine": ["limb", "trunk"],
   "cmmc-2": ["catalog", "program"],
   "csf-2": ["catalog", "category", "function", "requirement"],
+  "nist-csf-1.1": ["catalog", "category", "function", "requirement"],
+  "nist-critical-software": ["catalog", "group", "requirement"],
   "cui-policy": ["catalog", "policy"],
   "disa-cci": ["catalog", "requirement"],
   "disa-srg": ["benchmark", "catalog", "srg_requirement"],
@@ -547,6 +555,8 @@ export const SUPPORTED_RECORD_CONTRACT_KEYS = Object.freeze(
 const supportedKeys = new Set(SUPPORTED_RECORD_CONTRACT_KEYS);
 
 const CATALOG_OVERRIDES = Object.freeze({
+  "nist-csf-1.1:requirement": [section("description", "Outcome"), section("informative_references", "Informative References", "list", "rendered_secondary")],
+  "nist-critical-software:requirement": [section("description", "Security Measure"), section("category", "Objective Number", "text", "rendered_secondary"), section("informative_references", "Federal Government Informative References", "list", "rendered_secondary")],
   "csf-2:requirement": [
     section("description", "Outcome"),
     section("implementation_examples", "Implementation Examples", "list", "rendered_secondary"),

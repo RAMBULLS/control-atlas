@@ -222,6 +222,7 @@ function createDocument(sourceKey, artifactUrl, checksumValue, records, sourceMe
 function createRelationshipDocument(artifactUrl, checksumValue, relationshipSeeds, sourceMetadata) {
   const relationships = relationshipSeeds.map((seed) => ({
     ...seed,
+    source_checksum: seed.source_checksum || checksumValue,
     why: `The official DISA ${seed.source_catalog === 'disa-stig' ? 'STIG' : 'SRG'} content references ${seed.target_id}.`,
     evidence_source: 'disa-stig-srg-cci-references',
   }));
@@ -263,6 +264,10 @@ function appendDocument(accumulator, document) {
         target_id: relationship.target_id,
         relationship_type: relationship.relationship_type,
         source_locator: record.source.locator,
+        source_url: document.source_artifact,
+        source_version: record.source.version,
+        native_rule_id: record.rule_id,
+        benchmark_id: record.metadata.benchmark_id,
       });
     }
     accumulator.records[kind].push({
@@ -498,7 +503,7 @@ export function parseDisaStandalonePackage(buffer, {
   return {
     stigRecords: accumulator.records.stig,
     srgRecords: accumulator.records.srg,
-    relationshipSeeds: accumulator.relationshipSeeds,
+    relationshipSeeds: accumulator.relationshipSeeds.map((seed) => ({ ...seed, source_checksum: checksumValue })),
     checksum: checksumValue,
     failed,
     inventory,

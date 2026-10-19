@@ -4,7 +4,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readGeneratedCollection } from './lib/generated-graph-artifacts.mjs';
 import { INGESTION_STAGES, validateIngestionPipelineDefinition } from './lib/ingestion-pipeline.mjs';
-import { validateDataTrustContracts, validateRecordPresentation } from './build-framework-data.mjs';
+import { CATALOGS, MAPS, validateDataTrustContracts, validateRecordPresentation } from './build-framework-data.mjs';
+import { reconcileReferenceRelationships } from './lib/reference-reconciliation.mjs';
 import { DATA_TRUST_CONTRACT_VERSION } from '../src/shared/data-trust-contracts.mjs';
 import { catalogStructureProfile } from '../src/shared/catalog-structure.mjs';
 import { preserveGeneratedAt } from './lib/stable-generated-at.mjs';
@@ -21,6 +22,8 @@ const edgesRaw = readGeneratedCollection(ROOT, 'edges');
 const nodes = Array.isArray(nodesRaw) ? nodesRaw : nodesRaw.nodes;
 const edges = Array.isArray(edgesRaw) ? edgesRaw : edgesRaw.edges;
 const errors = [...validateIngestionPipelineDefinition()];
+const relationshipReconciliation = reconcileReferenceRelationships(ROOT, { nodes, edges }, { catalogs: CATALOGS, maps: MAPS });
+errors.push(...relationshipReconciliation.errors);
 const registeredArtifactIds = new Set((registry.artifacts || []).map((artifact) => artifact.id));
 const registeredReferenceIds = new Set([
   ...(registry.publications || []).map((entry) => entry.id),

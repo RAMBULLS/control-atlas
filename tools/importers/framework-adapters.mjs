@@ -37,6 +37,7 @@ function stableId(prefix, value) {
   const digest = createHash('sha256').update(String(value)).digest('hex').slice(0, 10).toUpperCase();
   return `${prefix}-${label}-${digest}`;
 }
+export { stableId as referenceUnitId };
 
 export function parseAiRmfPlaybook(playbook, snapshotDate) {
   const records = (playbook || [])
@@ -374,7 +375,7 @@ export function buildCuiPolicyCatalog(snapshotDate, registryManifestPath) {
       title: entry.title,
       family: entry.grouping,
       description: entry.description || entry.title,
-      source: source(NARA_CUI_SOURCE, snapshotDate, `registry/category-detail/${entry.slug}`),
+      source: source(NARA_CUI_SOURCE, snapshotDate, entry.detail_status === 'UNKNOWN' ? entry.detail_url : `registry/category-detail/${entry.slug}`),
       metadata: {
         parent_designation: parentDesignation,
         designation: entry.designation,
@@ -386,6 +387,7 @@ export function buildCuiPolicyCatalog(snapshotDate, registryManifestPath) {
         last_modified: entry.last_modified,
         sha256: entry.sha256,
         byte_length: entry.byte_length,
+        ...(entry.detail_status === 'UNKNOWN' ? { source_warnings: [entry.detail_unavailable_reason, entry.identity_evidence] } : {}),
       },
     };
   });
@@ -541,6 +543,12 @@ export function buildDodZeroTrustCatalog(snapshotDate, curatedRoot) {
 }
 
 function normalizedNistTarget(mapping) {
+  if (mapping.mapping_kind === 'csf_1_1') {
+    return { target_catalog: 'nist-csf-1.1', target_id: mapping.target_id };
+  }
+  if (mapping.mapping_kind === 'critical_software') {
+    return { target_catalog: 'nist-critical-software', target_id: mapping.target_id };
+  }
   if (mapping.mapping_kind === 'csf_2') {
     return {
       target_catalog: 'csf-2',
@@ -552,7 +560,7 @@ function normalizedNistTarget(mapping) {
     if (!match) return null;
     return { target_catalog: 'nist-800-53', target_id: `${match[1]}-${match[2]}${match[3] ? `.${match[3]}` : ''}` };
   }
-  return null;
+  throw new Error(`Unsupported NIST mapping kind ${mapping.mapping_kind}: ${mapping.id}`);
 }
 
 function artifactIdsFromFragments(fragments = []) {
@@ -798,7 +806,8 @@ export function buildNistZeroTrustCatalog(snapshotDate, curatedRoot) {
       if (parsed.relationship_parse_status === 'unresolved') {
         unresolvedMappings.push({ id: mapping.id, target_id: mapping.target_id,
           mapping_kind: mapping.mapping_kind, locator: mapping.locator,
-          relationship: mapping.relationship, reason: 'No explicit relationship type in the publisher cell.' });
+          relationship: mapping.relationship, reason: 'No explicit relationship type in the publisher cell.',
+          ...(mapping.source_disposition ? { source_disposition: mapping.source_disposition } : {}) });
         continue;
       }
       const target = normalizedNistTarget(mapping);
@@ -921,6 +930,7 @@ export function buildNistIoTRequirementCatalog(snapshotDate, curatedRoot) {
         parent_id: entry.parent_id,
         publisher_status: 'draft',
         publisher_mappings: entry.publisher_mappings,
+        ...(entry.unresolved_mappings ? { unresolved_mappings: entry.unresolved_mappings } : {}),
         relationships: entry.relationships,
         source_fragments: entry.source_fragments,
         contributing_artifact_ids: artifactIdsFromFragments(entry.source_fragments),

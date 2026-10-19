@@ -27,13 +27,17 @@ export function readGeneratedCollection(root, name) {
     };
   }
 
-  return {
-    ...artifact,
-    [collection]: shards.flatMap((shard) => {
+  const values = shards.flatMap((shard) => {
       const shardArtifact = JSON.parse(
         readFileSync(join(root, "data", "generated", shard.path), "utf8"),
       );
-      return shardArtifact[collection] || [];
-    }),
-  };
+      if (!Array.isArray(shardArtifact[collection]) || (shard.record_count !== undefined && shardArtifact[collection].length !== shard.record_count)) {
+        throw new Error(`Invalid ${collection} shard ${shard.path}: count or collection missing`);
+      }
+      return shardArtifact[collection];
+    });
+  if (artifact.sharded_collection.record_count !== undefined && values.length !== artifact.sharded_collection.record_count) {
+    throw new Error(`Incomplete ${collection} collection: shard total differs from the manifest`);
+  }
+  return { ...artifact, [collection]: values };
 }

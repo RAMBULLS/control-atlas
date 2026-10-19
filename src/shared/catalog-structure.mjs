@@ -11,6 +11,8 @@ const profile = (catalogId, label, paths, options = {}) => Object.freeze({
  * belong to the relationship layer and must never appear here.
  */
 export const CATALOG_STRUCTURE_PROFILES = Object.freeze({
+  "nist-csf-1.1": profile("nist-csf-1.1", "NIST CSF 1.1", [["catalog", "function", "category", "requirement"]]),
+  "nist-critical-software": profile("nist-critical-software", "NIST Critical Software Security Measures", [["catalog", "group", "requirement"]]),
   "cmmc-2": profile("cmmc-2", "CMMC 2.0", [["catalog", "program"]]),
   "csf-2": profile("csf-2", "NIST CSF 2.0", [["catalog", "function", "category", "requirement"]]),
   "cui-policy": profile("cui-policy", "CUI Program", [

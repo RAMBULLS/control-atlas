@@ -174,9 +174,11 @@ export const BASE_RESOLUTIONS = Object.freeze([
   { id: 'artifact-disa-stig-library', local: 'data/stig-rules.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0', count: 'json_records' },
   { id: 'artifact-disa-srg-library', local: 'data/srg-requirements.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0', count: 'json_records' },
   { id: 'artifact-disa-stig-srg-cci-references', local: 'maps/stig-srg-to-cci.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0', count: 'json_relationships' },
-  // 800-53B baselines: the generated baseline data (generated-from-download of
-  // the OSCAL rev5 baseline profiles), hashed from its committed copy.
-  { id: 'artifact-nist-800-53b-baselines', local: 'data/800-53b-baselines.json', url: `${OSCAL}/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json`, format: 'oscal_json', parser: 'oscal-profile', parser_version: '1.5.0' },
+  // Hash each actual publisher profile, never the generated four-row summary.
+  ...['LOW','MODERATE','HIGH','PRIVACY'].map((baseline) => ({
+    id: baseline === 'MODERATE' ? 'artifact-nist-800-53b-baselines' : `artifact-nist-800-53b-${baseline.toLowerCase()}-profile`,
+    url: `${OSCAL}/SP800-53/rev5/json/NIST_SP-800-53_rev5_${baseline}-baseline_profile.json`, format: 'oscal_json', parser: 'oscal-profile', parser_version: '1.5.0', count: 'oscal_profile_unit',
+  })),
   // Control Atlas's own editorial structure spine (hashed from the repo file).
   { id: 'artifact-control-atlas-structure', local: 'data/curated/tree-spine.json', url: 'https://github.com/rambulls/control-atlas/blob/main/data/curated/tree-spine.json', format: 'json', parser: 'control-atlas-spine', parser_version: '1.0.0', count: 'jsonld' },
 ].map((entry) => Object.freeze(entry)));
@@ -234,6 +236,7 @@ export async function countXlsxRows(buf, { root = ROOT, readWorkbook = readXlsxF
 }
 
 async function countRecords(method, buf, root = ROOT) {
+  if (method === 'oscal_profile_unit') { if (!JSON.parse(buf).profile) throw new Error('Publisher artifact is not an OSCAL profile'); return 1; }
   if (method === 'xlsx') return countXlsxRows(buf, { root });
   if (method && COUNTERS[method]) return COUNTERS[method](buf);
   return null;
@@ -394,6 +397,8 @@ export async function hydrateArtifacts({ root = ROOT, only = null, onlyPrefix = 
         art.record_count = recordCount;
       }
       if (typeof art.relationship_count !== 'number') art.relationship_count = 0;
+
+      if (r.count === 'oscal_profile_unit') art.relationship_count = countOscalProfileImports(JSON.parse(buf));
 
       changed += 1;
       log.push({ id: r.id, status: 'OK', http: status, url: r.url, sha256, byte_length: byteLength, record_count: recordCount, retrieved_at: retrievedAt });

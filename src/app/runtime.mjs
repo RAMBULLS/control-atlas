@@ -1,4 +1,5 @@
 import { orientedRelationshipType } from "../shared/compare-scope.mjs";
+import { csvCell } from "../shared/csv.mjs";
 import {
   isComparisonCapableEdge,
   mappingSourceIdsForEdge,
@@ -275,10 +276,6 @@ export function resolveControlAliases(rawNeedle) {
 function normalizeControlNotation(needle) {
   const aliases = resolveControlAliases(needle);
   return aliases.length > 1 ? aliases[1] : (aliases[0] || needle);
-}
-
-function csvCell(value) {
-  return `"${String(value ?? "").replaceAll('"', '""')}"`;
 }
 
 function uniqueBy(items, keyFn) {

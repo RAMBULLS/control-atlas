@@ -1,5 +1,23 @@
 import { createHash } from 'node:crypto';
 import readXlsxFile from 'read-excel-file/node';
+import csf11 from '../../data/csf-1.1.json' with { type: 'json' };
+import referenceManifest from '../../data/curated/reference-catalogs/source-manifest.json' with { type: 'json' };
+import { rejectInvalidPublisherIdentifier } from './reference-dispositions.mjs';
+
+const csf11Ids = new Set(csf11.records.map((record) => record.id));
+export function iotMappingDisposition(record) {
+  const unresolved = (record.publisher_mappings || []).filter((mapping) => mapping.target_catalog === 'nist-csf-1.1' && !csf11Ids.has(mapping.target_id));
+  return {
+    relationships: (record.publisher_mappings || []).filter((mapping) => !unresolved.includes(mapping)),
+    ...(unresolved.length ? { unresolved_mappings: unresolved.map((mapping) => ({ ...mapping,
+      reason: 'Publisher mapping target is absent from the complete official CSF 1.1 Core; the original citation is retained without an inferred correction.',
+      source_disposition: rejectInvalidPublisherIdentifier(mapping, csf11Ids, {
+        source_url: referenceManifest.sources.find((entry) => entry.id === 'nist-csf-1.1').url,
+        source_sha256: referenceManifest.sources.find((entry) => entry.id === 'nist-csf-1.1').sha256,
+        record_ids: referenceManifest.catalogs.csf11.record_ids,
+      }) })) } : {}),
+  };
+}
 
 function text(value) {
   return value == null ? '' : String(value).replace(/\r/g, '').replace(/[ \t]+/g, ' ').trim();
@@ -15,6 +33,7 @@ function stableId(prefix, ...parts) {
   const readable = identity.replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '').toUpperCase().slice(0, 54);
   return `${prefix}-${readable}-${createHash('sha256').update(identity).digest('hex').slice(0, 10).toUpperCase()}`;
 }
+export { stableId as iotUnitId };
 
 function columnName(index) {
   let number = index + 1;
@@ -171,7 +190,7 @@ export async function parseNistIoTRequirementWorkbooks(sp80053Bytes, csfBytes, s
   const output = [...records.values()].map((record) => ({
     ...record,
     publisher_mappings: record.publisher_mappings || [],
-    relationships: (record.publisher_mappings || []).filter((mapping) => mapping.target_catalog === 'nist-800-53'),
+    ...iotMappingDisposition(record),
   }));
   return {
     records: output,
@@ -186,7 +205,10 @@ export async function parseNistIoTRequirementWorkbooks(sp80053Bytes, csfBytes, s
       records: output.length,
       mapped_records: output.filter((record) => record.publisher_mappings.length).length,
       published_mapping_assertions: output.reduce((sum, record) => sum + record.publisher_mappings.length, 0),
-      graph_eligible_80053_relationships: output.reduce((sum, record) => sum + record.relationships.length, 0),
+      published_csf11_relationships: output.reduce((sum, record) => sum + record.publisher_mappings.filter((mapping) => mapping.target_catalog === 'nist-csf-1.1').length, 0),
+      unresolved_mapping_assertions: output.reduce((sum, record) => sum + (record.unresolved_mappings || []).length, 0),
+      graph_eligible_80053_relationships: output.reduce((sum, record) => sum + record.relationships.filter((mapping) => mapping.target_catalog === 'nist-800-53').length, 0),
+      graph_eligible_csf11_relationships: output.reduce((sum, record) => sum + record.relationships.filter((mapping) => mapping.target_catalog === 'nist-csf-1.1').length, 0),
       synthetic_records: 0,
     },
   };

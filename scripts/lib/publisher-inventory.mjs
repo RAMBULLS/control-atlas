@@ -19,7 +19,7 @@ const clean = (value) => Array.isArray(value)
   ? value.map(clean).filter(Boolean).join(' ')
   : String(value || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 
-function csvRows(payload) {
+export function csvRows(payload) {
   if (typeof payload !== 'string') throw new Error('Invalid publisher CSV text');
   const rows = [];
   let row = [];

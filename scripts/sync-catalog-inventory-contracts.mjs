@@ -12,6 +12,13 @@ export function synchronizeCatalogInventoryContracts(input, nativeInventories = 
   const supported = new Set(PUBLISHER_INVENTORY_CATALOGS);
   for (const bundle of registry.catalog_source_bundles || []) {
     const root = `data/generated/catalog-source-inventory.json#catalogs.${bundle.catalog_id}`;
+    const proof = nativeInventories[bundle.catalog_id];
+    if (proof?.scope) {
+      bundle.expected_inventory = { basis: proof.scope, evidence_class: proof.evidence_class || 'publisher_inventory', evidence_locator: proof.evidence_locator,
+        ...(proof.primary_extraction_status ? { primary_extraction_status: proof.primary_extraction_status } : {}),
+        imported_evidence_locator: `${root}.normalized_records`, exclusions: [] };
+      continue;
+    }
     const native = NATIVE_INVENTORIES[bundle.catalog_id];
     if (native) {
       const excluded = nativeInventories[bundle.catalog_id]?.excluded_count ??
@@ -67,8 +74,9 @@ export function synchronizeCatalogInventoryContracts(input, nativeInventories = 
 }
 
 if (process.argv[1]?.includes('sync-catalog-inventory-contracts.mjs')) {
-  const nativeInventories = Object.fromEntries(Object.keys(NATIVE_INVENTORIES).map((id) => [id, readNativeInventory(ROOT, id)]));
-  const registry = synchronizeCatalogInventoryContracts(JSON.parse(readFileSync(path, 'utf8')), nativeInventories);
+  const current = JSON.parse(readFileSync(path, 'utf8'));
+  const nativeInventories = Object.fromEntries(current.catalog_source_bundles.map((bundle) => [bundle.catalog_id, readNativeInventory(ROOT, bundle.catalog_id)]));
+  const registry = synchronizeCatalogInventoryContracts(current, nativeInventories);
   writeJsonAtomically(path, registry);
   console.log(`Synchronized inventory contracts for ${registry.catalog_source_bundles.length} catalogs.`);
 }

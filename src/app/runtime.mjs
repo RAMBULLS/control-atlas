@@ -1,4 +1,5 @@
 import { orientedRelationshipType } from "../shared/compare-scope.mjs";
+import { csvCell } from "../shared/csv.mjs";
 import {
   isBaselineSelection,
   isComparisonCapableEdge,
@@ -278,10 +279,6 @@ function normalizeControlNotation(needle) {
   return aliases.length > 1 ? aliases[1] : (aliases[0] || needle);
 }
 
-function csvCell(value) {
-  return `"${String(value ?? "").replaceAll('"', '""')}"`;
-}
-
 function uniqueBy(items, keyFn) {
   const seen = new Set();
   return items.filter((item) => {
@@ -519,6 +516,8 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
   const CATALOG_DISPLAY_NAMES = {
     "cmmc-2": { name: "CMMC 2.0", group: "Other" },
     "csf-2": { name: "NIST CSF 2.0", group: "NIST" },
+    "nist-csf-1.1": { name: "NIST CSF 1.1", group: "NIST" },
+    "nist-critical-software": { name: "NIST Critical Software Security Measures", group: "NIST" },
     "cui-policy": { name: "CUI Program", group: "Other" },
     "disa-cci": { name: "DISA CCI", group: "DISA" },
     "disa-srg": { name: "DISA SRG", group: "DISA" },

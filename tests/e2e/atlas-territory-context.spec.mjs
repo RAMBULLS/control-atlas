@@ -45,7 +45,7 @@ test("context: STIG + Microsoft Windows + Server highlights only publications wi
   // Only publications that contain matching records are highlighted; everything else is dimmed, and nothing moved.
   await expect(page.locator(".lm.is-match")).toHaveCount(1);
   await expect(page.locator('.lm.is-match[data-landmark="disa-stig"]')).toHaveCount(1);
-  expect(await page.locator(".lm.is-dim").count()).toBe(28 - (await page.locator(".lm.is-match").count()));
+  expect(await page.locator(".lm.is-dim").count()).toBe(30 - (await page.locator(".lm.is-match").count()));
   expect(await geography(page), "coordinates drift").toBe(before);
 
   const card = page.locator(".atl-inspector");

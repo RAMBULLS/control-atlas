@@ -46,6 +46,9 @@ export function assertOfficialSourceUrl(input) {
   // DoD's toolkit is linked by official Army guidance (UTP 3-10.4).
   // Admit only its existing public summary, not the hosted assessment app.
   if (url.hostname === 'rai.acqbot.com' && url.pathname === '/executive-summary' && !url.search) return url;
+  // The current official CIO library links these public documents after its
+  // move from dodcio.defense.gov. Keep admission scoped to the observed library.
+  if (url.hostname === 'dowcio.war.gov' && (url.pathname === '/Library/' || url.pathname.startsWith('/Portals/0/Documents/Library/'))) return url;
   // Reject ambiguous encoded path separators, dot segments, and nested encoding.
   if (/%(?:2e|2f|5c|25)/i.test(url.pathname)) reject();
   if (PUBLISHER_HOSTS.has(url.hostname)) return url;

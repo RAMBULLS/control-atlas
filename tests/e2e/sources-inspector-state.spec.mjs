@@ -377,7 +377,7 @@ test("Resources to Sources waits for metadata instead of painting missing fields
     release();
   }
   await waitForAppReady(page);
-  await expect(page.locator(".source-register-row")).toHaveCount(49);
+  await expect(page.locator(".source-register-row")).toHaveCount(51);
   const { identities } = await readServedArtifact(page, "publication-identity-index.json");
   const { sources } = await readServedArtifact(page, "sources.json");
   const retired = sources.find((source) => source.id === "fedramp-rev5"
@@ -416,5 +416,5 @@ test("Sources loading failures retain an honest empty register and recover throu
   failSources = false;
   await retry.click();
   await waitForAppReady(page);
-  await expect(page.locator(".source-register-row")).toHaveCount(49);
+  await expect(page.locator(".source-register-row")).toHaveCount(51);
 });

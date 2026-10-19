@@ -15,10 +15,12 @@ import { fileURLToPath } from 'node:url';
 import { parse as parseHtml } from 'node-html-parser';
 import { writeJsonAtomically } from './lib/write-json-atomically.mjs';
 import { strictConditionalFetch } from './lib/strict-conditional-fetch.mjs';
+import { cuiPublisherInventory } from '../tools/importers/cui-inventory.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const LIST_URL = 'https://www.archives.gov/cui/registry/category-list';
 const CHANGE_LOG_URL = 'https://www.archives.gov/cui/registry/registry-change-log';
+const MARKING_LIST_URL = 'https://www.archives.gov/cui/registry/category-marking-list';
 const DETAIL_BASE = 'https://www.archives.gov/cui/registry/category-detail/';
 
 function sha256(buffer) {
@@ -133,6 +135,24 @@ function parseCategoryDetail(html, slug) {
   };
 }
 
+// NARA's category identity and markings remain authoritative even when its
+// linked detail URL is broken. This does not fabricate the unavailable detail.
+export function parseRegistryMarkingIdentity(html, slug) {
+  const rows = parseHtml(html).querySelectorAll('table tr').filter((row) => {
+    const href = row.querySelector('td a')?.getAttribute('href') || '';
+    return href.replace(/[?#].*$/, '').split('/').at(-1) === slug;
+  });
+  if (rows.length !== 1) throw new Error(`Official marking table has ${rows.length} identities for ${slug}`);
+  const cells = rows[0].querySelectorAll('td');
+  if (cells.length !== 5) throw new Error(`Unexpected official marking-table columns for ${slug}`);
+  const [title, specified, basic, marking, grouping] = cells.map(cellText);
+  if (!title || !marking || !grouping || (!specified && !basic)) throw new Error(`Incomplete official marking identity for ${slug}`);
+  return { title, grouping, designation: specified && basic ? 'MIXED' : specified ? 'CUI-SPECIFIED' : 'CUI-BASIC',
+    banner_marking: specified || basic, category_marking: marking,
+    description: `${title} (${marking}); ${specified ? `specified banner marking: ${specified}` : `basic banner marking: ${basic}`}; organizational index grouping: ${grouping}.`,
+    alternative_banner_markings: {}, authorities: [], last_modified: null };
+}
+
 export function validateNaraCandidate(manifest, previous = { results: [] }) {
   const failures = Array.from(manifest.results).filter((entry) => entry?.status !== 'OK');
   const knownMissing = new Set(previous.results.filter((entry) => entry.status === 'FAILED').map((entry) => entry.slug));
@@ -168,7 +188,18 @@ export async function fetchNaraCuiRegistry({ concurrency = 8 } = {}) {
           status: 'OK',
         };
       } catch (error) {
-        results[index] = { ...entry, status: 'FAILED', error: error.message };
+        if (/\(404\)/.test(error.message)) {
+          try {
+            const markings = await fetchText(MARKING_LIST_URL);
+            const identity = parseRegistryMarkingIdentity(markings.text, entry.slug);
+            results[index] = { ...entry, ...identity, status: 'OK', detail_url: MARKING_LIST_URL,
+              byte_length: markings.buffer.length, sha256: sha256(markings.buffer),
+              detail_status: 'UNKNOWN', detail_unavailable_reason: error.message,
+              identity_evidence: 'Official NARA category marking table; unavailable detail prose and safeguarding authorities are not reconstructed.' };
+          } catch (fallbackError) {
+            results[index] = { ...entry, status: 'FAILED', error: `${error.message}; marking identity: ${fallbackError.message}` };
+          }
+        } else results[index] = { ...entry, status: 'FAILED', error: error.message };
       }
     }
   }
@@ -210,6 +241,11 @@ export async function fetchNaraCuiRegistry({ concurrency = 8 } = {}) {
   validateNaraCandidate(manifest, previous);
   const registryPath = join(ROOT, 'data', 'source-registry.json');
   const registry = JSON.parse(readFileSync(registryPath, 'utf8'));
+  const regulation = registry.artifacts?.find((entry) => entry.id === 'artifact-isoo-cui-regulation');
+  if (!regulation) throw new Error('Missing official CUI regulation artifact.');
+  const regulationEvidence = await fetchText(regulation.artifact_url);
+  if (`sha256:${sha256(regulationEvidence.buffer)}` !== regulation.sha256 || regulationEvidence.buffer.length !== regulation.byte_length) throw new Error('CUI regulation byte evidence changed; refresh its registered source before accepting the inventory.');
+  manifest.publisher_inventory = cuiPublisherInventory(listHtml, regulationEvidence.text, regulation.artifact_url);
   const artifact = registry.artifacts?.find(
     (entry) => entry.id === 'artifact-nara-cui-registry',
   );

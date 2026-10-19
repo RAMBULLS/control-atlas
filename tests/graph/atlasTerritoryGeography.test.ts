@@ -18,15 +18,28 @@ const positions = (g: TerritoryGeometry, catalogs = Object.keys(g.assignments)) 
 
 // Changing any landmark coordinate is a deliberate geography revision: bump the version and this fingerprint together.
 const POSITIONS_FINGERPRINT_TERRITORY_1 = "25beb0b82994630a04b9aef611028ba408aae9ce546ba6551dd4f201b271b6e9";
+const POSITIONS_FINGERPRINT_TERRITORY_2 = "5f627cc2bf852bee8fcbb462bedd92d08b0f780debae4782c0748027d86a4f45";
 const fingerprint = (g: TerritoryGeometry) => createHash("sha256").update(JSON.stringify(positions(g))).digest("hex");
 
 test("the geography is the reviewed version and satisfies every structural rule", () => {
-  assert.equal(TERRITORY_GEOMETRY_VERSION, "territory-1");
+  assert.equal(TERRITORY_GEOMETRY_VERSION, "territory-2");
   assert.deepEqual(validateTerritoryGeometry(TERRITORY_GEOMETRY, catalogTerritory, territoryIds), []);
 });
 
 test("every landmark coordinate matches the reviewed geography version", () => {
-  assert.equal(fingerprint(TERRITORY_GEOMETRY), POSITIONS_FINGERPRINT_TERRITORY_1, "landmark coordinates changed without a geography version revision");
+  assert.equal(fingerprint(TERRITORY_GEOMETRY), POSITIONS_FINGERPRINT_TERRITORY_2, "landmark coordinates changed without a geography version revision");
+});
+
+test("restored reference catalogs occupy reserved slots without moving the original 28 publications", () => {
+  const added = ["nist-csf-1.1", "nist-critical-software"];
+  const legacy = positions(TERRITORY_GEOMETRY, Object.keys(TERRITORY_GEOMETRY.assignments).filter((id) => !added.includes(id)));
+  assert.equal(Object.keys(legacy).length, 28);
+  assert.equal(createHash("sha256").update(JSON.stringify(legacy)).digest("hex"), POSITIONS_FINGERPRINT_TERRITORY_1);
+  for (const id of added) {
+    assert.ok(pointInPolygon(landmarkPosition(TERRITORY_GEOMETRY, id)!, territoryPolygon(TERRITORY_GEOMETRY, catalogTerritory[id])));
+    assert.equal(TERRITORY_GEOMETRY.presentation[id].major, false);
+  }
+  assert.equal(TERRITORY_GEOMETRY.presentation["nist-csf-1.1"].alias, "CSF 1.1");
 });
 
 test("nine canonical territories form one landmass with shared borders", () => {

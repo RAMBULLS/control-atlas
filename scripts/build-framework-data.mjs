@@ -17,6 +17,7 @@ import {
   isValidSourceTextPresentation,
 } from "../src/shared/source-text-presentation.mjs";
 import { writeJsonAtomically } from "./lib/write-json-atomically.mjs";
+import { restoreDisaHistory } from "./lib/disa-record-history.mjs";
 import { generatedAt as reproducibleGeneratedAt } from "./lib/stable-generated-at.mjs";
 import { validateGraphArtifacts } from "../tools/validators/federal-graph.mjs";
 import { loadSourceRegistry } from "../tools/validators/source-registry.mjs";
@@ -212,7 +213,9 @@ export function validateRecordPresentation(nodes) {
   }
 }
 
-const CATALOGS = [
+export const CATALOGS = [
+  ["csf-1.1.json", "nist-csf-1.1", "nist-csf-1.1", "requirement"],
+  ["critical-software.json", "nist-critical-software", "nist-critical-software", "requirement"],
   ["controls-800-53.json", "nist-800-53", "nist-oscal", "control"],
   [
     "800-53b-baselines.json",
@@ -299,6 +302,24 @@ const CATALOGS = [
  * first; neither case is served by inventing a tier here.
  */
 export const CATALOG_TIERS = {
+  "nist-csf-1.1": {
+    nodeType: "category", idPrefix: "CATEGORY", key: (record) => record.category_id,
+    publisherItemId: (record) => record.category_id, title: (record) => record.category,
+    edgeDataset: "csf11-category-membership",
+    rationale: (record) => `${record.id} is published in category ${record.category_id} of CSF 1.1.`,
+    parentTier: {
+      nodeType: "function", idPrefix: "FUNCTION", key: (record) => record.function_id,
+      publisherItemId: (record) => record.function_id, title: (record) => record.function,
+      edgeDataset: "csf11-function-membership",
+      rationale: (record) => `CSF 1.1 publishes this category under function ${record.function_id}.`,
+    },
+  },
+  "nist-critical-software": {
+    nodeType: "group", idPrefix: "OBJECTIVE", key: (record) => record.metadata?.category,
+    publisherItemId: (record) => `Objective ${record.metadata?.category}`, title: (record) => record.family,
+    edgeDataset: "critical-software-objective-membership",
+    rationale: (record) => `${record.id} is published under ${record.family}.`,
+  },
   "microsoft-zt-maturity": {
     nodeType: "zt_pillar",
     idPrefix: "PILLAR",
@@ -486,7 +507,7 @@ export const CATALOG_TIERS = {
   },
 };
 
-const MAPS = [
+export const MAPS = [
   ["800-53-to-csf.json", "nist-800-53", "csf-2", "nist-olir-csf2-to-sp800-53"],
   [
     "800-53-to-800-171.json",
@@ -537,6 +558,8 @@ const MAPS = [
 ];
 
 const CATALOG_SUMMARIES = new Map([
+  ["nist-csf-1.1", { sourceId: "nist-csf-1.1", title: "NIST CSF 1.1 Core" }],
+  ["nist-critical-software", { sourceId: "nist-critical-software", title: "Security Measures for EO-Critical Software Use" }],
   [
     "nist-800-53",
     {
@@ -686,7 +709,10 @@ const CATALOG_SUMMARIES = new Map([
   ],
 ]);
 
-const readJson = (path) => JSON.parse(readFileSync(path, "utf8"));
+const readJson = (path) => {
+  const document = JSON.parse(readFileSync(path, "utf8"));
+  return document.record_history ? restoreDisaHistory(document, (relative) => readFileSync(join(ROOT, relative))) : document;
+};
 const nodeId = (catalogId, recordId) => recordId.startsWith(`${catalogId}:`) ? recordId : `${catalogId}:${recordId}`;
 const identifier = (value) => String(value).replace(/[^A-Za-z0-9:_-]+/g, "-");
 
@@ -859,6 +885,7 @@ function aliasArtifact(id) {
 // (applyOrganizingSpine) so neither path ships a node with no provenance.
 function attachNodeProvenance(node, sourceId, registry) {
   const source = registry.byId.get(sourceId);
+  if (node.metadata?.catalog_id === "nist-csf-1.1") node.lifecycle_status = "superseded";
   const defaultArtifactId = aliasArtifact(`artifact-${sourceId}`);
   const sourceBundle = registry.catalogSourceBundles
     .find((bundle) => bundle.catalog_id === node.metadata?.catalog_id);
@@ -1068,6 +1095,7 @@ function nodeSeverity(record) {
 }
 
 export function lifecycleStatus(record) {
+  if (record.status === "superseded") return "superseded";
   if (record.status === "withdrawn") return "withdrawn";
   if (record.status === "deprecated") return "deprecated";
   return "active";
@@ -1212,6 +1240,7 @@ function buildNodes(registry) {
             ingestion_source_id: ingestionSourceId,
             source_locator: record.source?.locator || `${filename}#${record.id}`,
             item_id: record.id,
+            ...(record.metadata?.publisher_item_id ? { publisher_item_id: record.metadata.publisher_item_id } : {}),
             title: publisherTitle || record.id,
             // The NIST Mobile Threat Catalogue publishes a title plus
             // structured origin/examples/countermeasures. Older normalized
@@ -1273,6 +1302,9 @@ function buildNodes(registry) {
             benchmark_title: record.metadata?.benchmark_title || null,
             benchmark_version: record.source?.version || null,
             benchmark_status_date: record.source?.snapshot_date || null,
+            ...(record.metadata?.current_snapshot_presence !== undefined ? { current_snapshot_presence: record.metadata.current_snapshot_presence } : {}),
+            ...(record.metadata?.previous_editions?.length ? { previous_editions: record.metadata.previous_editions } : {}),
+            ...(record.metadata?.source_warnings?.length ? { source_warnings: record.metadata.source_warnings } : {}),
             published_cci_references: (record.metadata?.relationships || [])
               .filter((relationship) => relationship.target_catalog === "disa-cci")
               .map((relationship) => relationship.target_id),
@@ -1333,6 +1365,7 @@ function buildNodes(registry) {
             architecture_component: record.metadata?.architecture_component || null,
             mapping_count: record.metadata?.mapping_count || null,
             mapping_targets: record.metadata?.mapping_targets || null,
+            ...(record.metadata?.unresolved_mappings ? { unresolved_mappings: record.metadata.unresolved_mappings } : {}),
             outcomes: record.metadata?.outcomes || null,
             end_state: record.metadata?.end_state || null,
             predecessors: record.metadata?.predecessors || null,
@@ -1482,13 +1515,15 @@ function addPublishedEdge(state, registry, nodeIds, payload) {
   }));
 
   evidenceLocators.forEach((locator, index) => {
+    const citation = payload.sourceCitations?.find((entry) => entry.locator === locator);
     state.evidence.push({
       id: evidenceIds[index],
       source_id: payload.sourceId,
-      source_version: payload.sourceVersion || source.version,
+      source_version: citation?.source_version || payload.sourceVersion || source.version,
       locator,
       retrieved_at: payload.retrievedAt || source.retrieved_at,
-      checksum: payload.checksum || source.checksum,
+      checksum: citation?.checksum || payload.checksum || source.checksum,
+      ...(citation?.source_url ? { source_url: citation.source_url, native_rule_id: citation.native_rule_id, benchmark_id: citation.benchmark_id } : {}),
       evidence_quality: payload.evidenceQuality || "primary",
       ingestion_source_id: payload.ingestionSourceId || payload.sourceId,
     });
@@ -1877,6 +1912,7 @@ function addBaselineMembershipEdges(state, registry, nodeIds) {
       addPublishedEdge(state, registry, nodeIds, {
         subjectId,
         sourceId: "nist-800-53b-baselines",
+        sourceArtifactId: `artifact-nist-800-53b-${baselineId.toLowerCase()}-profile`,
         sourceNodeId,
         targetNodeId,
         relationshipType: "selects",
@@ -2333,7 +2369,9 @@ function buildEdges(registry, nodes) {
       );
       const sourceId =
         relationship.evidence_source || document.source_key || defaultSourceId;
-      const subjectId = `${filename.replace(".json", "")}:${index + 1}`;
+      const stableId = relationship.atlas_connection_id;
+      if (stableId && !stableId.startsWith('edge:')) throw new Error(`Invalid stored connection ID: ${stableId}`);
+      const subjectId = stableId ? stableId.slice(5) : `${filename.replace(".json", "")}:${index + 1}`;
       addPublishedEdge(state, registry, nodeIds, {
         subjectId,
         sourceId,
@@ -2345,6 +2383,9 @@ function buildEdges(registry, nodes) {
         // than restating one, so they are "derived", not "direct".
         confidence: relationship.confidence,
         sourceVersion: document.source_version,
+        evidenceLocators: relationship.source_locators,
+        sourceCitations: relationship.source_citations,
+        warning: relationship.warning,
         locator:
           relationship.source_locator ||
           `${document.source_key || sourceId}#relationship`,

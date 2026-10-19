@@ -106,12 +106,25 @@ test('security uses native GitHub controls without rebuilding the site', () => {
   assert.match(security, /github\/codeql-action\/init@[0-9a-f]{40}/);
   assert.match(security, /build-mode: none/);
   assert.match(security, /Install checksum-verified Gitleaks 8\.24\.3/);
-  assert.match(security, /\.\/gitleaks dir \./);
+  assert.match(security, /npm run test:publisher-secret-gate/);
+  assert.match(security, /python3 tools\/publisher-secret-gate\.py snapshot results\.sarif/);
+  assert.match(security, /python3 tools\/publisher-secret-gate\.py history history-results\.sarif/);
   assert.match(security, /github\/codeql-action\/upload-sarif@[0-9a-f]{40}/);
   assert.equal((security.match(/fetch-depth: 0/g) ?? []).length, 1);
   assert.doesNotMatch(security, /npm ci|npm run build:site|npm run audit:deps/);
   assert.ok(existsSync('.gitleaks.toml'));
   assert.ok(existsSync('.github/dependabot.yml'));
+});
+
+test('portable export reuses the qualified graph and retains only the validated delivery package', () => {
+  const contracts = ci.slice(ci.indexOf('  contracts:'), ci.indexOf('  browser:'));
+  assert.match(contracts, /name: generated-data[\s\S]*?run: npm run verify:contracts/);
+  assert.match(contracts, /if: \$\{\{ needs\.changes\.outputs\.data_required == 'true' \}\}\n\s+run: npm run export:reference:compact && npm run verify:reference-export:compact/);
+  assert.match(contracts, /name: reference-export/);
+  assert.match(contracts, /ControlAtlas_DoD_Reference\.zip/);
+  assert.match(contracts, /compact-validation\.json/);
+  assert.match(contracts, /if-no-files-found: error\n\s+retention-days: 2/);
+  assert.doesNotMatch(contracts, /npm run (?:build:data|generate:data|build:site)/);
 });
 
 test('deployment consumes the successful main CI artifact and never rebuilds it', () => {

@@ -129,7 +129,7 @@ test("Atlas first paint is a semantic map with drill-down and history", async ({
   await expect(atlas).toBeVisible();
   // Every territory and landmark is on screen at first paint, labelled.
   await expect(atlas.locator(".district")).toHaveCount(9);
-  await expect(atlas.locator(".lm")).toHaveCount(28);
+  await expect(atlas.locator(".lm")).toHaveCount(30);
 
   // The map paints before its handlers are attached; WebKit on a shared runner can click in that gap. Retry the click, not the assertion.
   await expect(async () => {

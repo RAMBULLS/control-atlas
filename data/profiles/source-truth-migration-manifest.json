@@ -565,6 +565,12 @@
       "status": "active"
     },
     {
+      "old_label": "equivalent",
+      "predicate": "equivalent",
+      "profile_id": "assertion.equivalent",
+      "status": "active"
+    },
+    {
       "old_label": "extends",
       "predicate": "extends",
       "profile_id": "assertion.extends",

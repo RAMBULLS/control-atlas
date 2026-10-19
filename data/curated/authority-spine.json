@@ -821,6 +821,36 @@
           "locator": "DoDI 8500.01, Enclosure 2"
         }
       ]
+    },
+    {
+      "catalog_id": "nist-csf-1.1",
+      "mandate": "issued_without_federal_mandate",
+      "primary_authority": null,
+      "also_required_by": [],
+      "publication_type": "Historical outcome framework",
+      "mandate_note": "This reference catalog records the cited NIST publication. It does not independently establish a current mandate or determine applicability to an organization.",
+      "source_refs": [
+        {
+          "source_id": "nist-csf-1.1",
+          "ref_type": "primary",
+          "locator": "https://www.nist.gov/cyberframework/csf-11-archive"
+        }
+      ]
+    },
+    {
+      "catalog_id": "nist-critical-software",
+      "mandate": "issued_without_federal_mandate",
+      "primary_authority": null,
+      "also_required_by": [],
+      "publication_type": "Security-measure guidance",
+      "mandate_note": "This reference catalog records the cited NIST publication. It does not independently establish a current mandate or determine applicability to an organization.",
+      "source_refs": [
+        {
+          "source_id": "nist-critical-software",
+          "ref_type": "primary",
+          "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security"
+        }
+      ]
     }
   ]
 }

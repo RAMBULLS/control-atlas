@@ -175,6 +175,11 @@ export const BASE_RESOLUTIONS = Object.freeze([
   { id: 'artifact-disa-stig-library', local: 'data/stig-rules.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0', count: 'json_records' },
   { id: 'artifact-disa-srg-library', local: 'data/srg-requirements.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0', count: 'json_records' },
   { id: 'artifact-disa-stig-srg-cci-references', local: 'maps/stig-srg-to-cci.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0', count: 'json_relationships' },
+  // Keep actual publisher profiles distinct from the normalized summary artifact.
+  ...['LOW','MODERATE','HIGH','PRIVACY'].map((baseline) => ({
+    id: `artifact-nist-800-53b-${baseline.toLowerCase()}-profile`,
+    url: `${OSCAL}/SP800-53/rev5/json/NIST_SP-800-53_rev5_${baseline}-baseline_profile.json`, format: 'oscal_json', parser: 'oscal-profile', parser_version: '1.5.0', count: 'oscal_profile_unit',
+  })),
   // 800-53B baselines: the generated baseline data (generated-from-download of
   // the OSCAL rev5 baseline profiles), hashed from its committed copy.
   { id: 'artifact-nist-800-53b-baselines', local: 'data/800-53b-baselines.json', url: 'https://github.com/RAMBULLS/control-atlas/blob/main/data/800-53b-baselines.json', format: 'json', parser: 'normalized-baseline-records', parser_version: '1.0.0', count: 'json_records', normalized: true, upstream_reference_url: `${OSCAL}/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json` },
@@ -206,7 +211,24 @@ export function hydrationResolutions(nistZeroTrustManifest = null) {
 
 export function loadHydrationResolutions(root = ROOT) {
   const path = join(root, 'data', 'curated', 'nist-zt', 'nist-source-manifest.json');
-  return hydrationResolutions(existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : null);
+  const resolutions = hydrationResolutions(existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : null);
+  const disaPath = join(root, 'data/disa-artifact-manifest.json');
+  if (existsSync(disaPath)) {
+    const manifest = JSON.parse(readFileSync(disaPath));
+    for (const entry of resolutions.filter((row) => ['artifact-disa-compilation-zip', 'artifact-disa-stig-library', 'artifact-disa-srg-library', 'artifact-disa-stig-srg-cci-references'].includes(row.id))) entry.url = manifest.compilation_url;
+  }
+  return resolutions;
+}
+
+export function disaInventoryCheckedToday(manifest, today) {
+  const check = manifest?.inventory_check;
+  const prior = new Date(manifest?.retrieval_timestamp); const current = new Date(`${today}T00:00:00Z`);
+  return /^sha256:[a-f0-9]{64}$/i.test(manifest?.discovery_content_checksum || '')
+    && check?.content_checksum === manifest.discovery_content_checksum
+    && check.status === 'no_declared_inventory_change' && check.check_tier === 'publisher_directory_inventory'
+    && check.publisher_bytes_retrieved === false && String(check.checked_at).startsWith(today)
+    && check.retained_content_retrieved_at === manifest.retrieval_timestamp
+    && prior.getUTCFullYear() === current.getUTCFullYear() && Math.floor(prior.getUTCMonth() / 3) === Math.floor(current.getUTCMonth() / 3);
 }
 
 const COUNTERS = {
@@ -235,6 +257,7 @@ export async function countXlsxRows(buf, { root = ROOT, readWorkbook = readXlsxF
 }
 
 async function countRecords(method, buf, root = ROOT) {
+  if (method === 'oscal_profile_unit') { if (!JSON.parse(buf).profile) throw new Error('Publisher artifact is not an OSCAL profile'); return 1; }
   if (method === 'xlsx') return countXlsxRows(buf, { root });
   if (method && COUNTERS[method]) return COUNTERS[method](buf);
   return null;
@@ -351,7 +374,8 @@ export async function hydrateArtifacts({ root = ROOT, only = null, onlyPrefix = 
         if (!/^sha256:[a-f0-9]{64}$/i.test(checksum || '') || !Number.isInteger(byteLength) || byteLength <= 0 || !retrievedAt) {
           throw new Error('fresh DISA compilation attestation is missing or invalid');
         }
-        if (process.env.CONTROL_ATLAS_REQUIRE_FRESH_FETCH === '1' && !String(retrievedAt).startsWith(today)) {
+        const inventoryOnly = !String(retrievedAt).startsWith(today) && disaInventoryCheckedToday(disaCompilation, today);
+        if (process.env.CONTROL_ATLAS_REQUIRE_FRESH_FETCH === '1' && !String(retrievedAt).startsWith(today) && !inventoryOnly) {
           throw new Error(`DISA compilation was not retrieved today: ${retrievedAt}`);
         }
         art.artifact_url = disaCompilation.artifact_url;
@@ -362,13 +386,14 @@ export async function hydrateArtifacts({ root = ROOT, only = null, onlyPrefix = 
         log.push({
           id: r.id,
           status: 'OK',
-          http: 'range-verified',
+          http: inventoryOnly ? 'retained-range-verified' : 'range-verified',
           url: disaCompilation.artifact_url,
           sha256: checksum,
           byte_length: byteLength,
           record_count: art.record_count,
           retrieved_at: art.retrieved_at,
-          attestation: 'fresh DISA compilation range download and parse',
+          attestation: inventoryOnly ? 'Retained verified archive; current publisher directory inventory checked, archive bytes not retrieved this run.' : 'DISA compilation range download and parse',
+          ...(inventoryOnly ? { check_tier: 'publisher_directory_inventory', publisher_bytes_retrieved: false, inventory_checked_at: disaCompilation.inventory_check.checked_at } : {}),
         });
         console.log(`OK  ${r.id}  ${byteLength}B  range-verified ${checksum.slice(0, 22)}â€¦`);
         continue;
@@ -406,6 +431,8 @@ export async function hydrateArtifacts({ root = ROOT, only = null, onlyPrefix = 
         art.record_count = recordCount;
       }
       if (typeof art.relationship_count !== 'number') art.relationship_count = 0;
+
+      if (r.count === 'oscal_profile_unit') art.relationship_count = countOscalProfileImports(JSON.parse(buf));
 
       changed += 1;
       log.push({ id: r.id, status: 'OK', http: status, url: r.url, sha256, byte_length: byteLength, record_count: recordCount, retrieved_at: retrievedAt,

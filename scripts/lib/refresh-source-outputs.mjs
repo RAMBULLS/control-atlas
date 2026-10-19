@@ -22,7 +22,7 @@ const outputs = {
   'fetch-olir-catalog': ['data/olir-catalog-manifest.json', 'maps/olir'],
   'fetch-olir-mappings': ['maps/800-53-to-csf.json', 'maps/800-53-to-800-171.json', 'maps/800-171-to-csf.json'],
   'fetch-ccis': ['data/ccis.json', 'maps/cci-to-800-53.json', 'data/generated/cci-diff.json'],
-  'fetch-disa-library': ['data/stig-rules.json', 'data/srg-requirements.json', 'maps/stig-srg-to-cci.json', 'data/disa-artifact-manifest.json'],
+  'fetch-disa-library': ['data/stig-rules.json', 'data/srg-requirements.json', 'maps/stig-srg-to-cci.json', 'data/disa-artifact-manifest.json', 'data/curated/disa/stig-previous-editions.json', 'data/curated/disa/srg-previous-editions.json', 'data/curated/reference-catalogs/publisher-inventories.json', 'data/source-registry.json', 'data/artifact-hydration-manifest.json'],
   'fetch-mitre': ['data/attack-techniques-enterprise.json', 'data/attack-techniques-ics.json', 'data/d3fend-countermeasures.json', 'maps/attack-to-d3fend.json', 'maps/d3fend-to-800-53.json', 'data/artifact-hydration-manifest.json'],
   'fetch-zero-trust-workbooks': ['data/curated/nist-zt/mappings.json', 'data/curated/nist-zt/microsoft-questionnaire.json', 'data/curated/nist-zt/structured-source-manifest.json'],
   'fetch-nist-zero-trust': ['data/curated/nist-zt/sp800-207-core.json', 'data/curated/nist-zt/sp800-207a-core.json', 'data/curated/nist-zt/sp1800-35-overview.json', 'data/curated/nist-zt/sp1800-35-builds.json', 'data/curated/nist-zt/nist-source-manifest.json'],

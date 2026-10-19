@@ -17,6 +17,7 @@ import { readGeneratedCollection } from './lib/generated-graph-artifacts.mjs';
 import { resolveExpectedLocator, classifyCatalog, summarizeCompleteness } from './lib/completeness.mjs';
 import { NON_CATALOG_TECHNICAL_SHARDS } from './sync-catalog-source-bundles.mjs';
 import { writeJsonAtomically } from './lib/write-json-atomically.mjs';
+import { restoreDisaHistory } from './lib/disa-record-history.mjs';
 import { verifyNormalizedArtifactEvidence } from './lib/normalized-artifact-evidence.mjs';
 import { verifyBaselineManifest } from './lib/nist-baseline-profiles.mjs';
 
@@ -81,6 +82,16 @@ if (!registry) {
   err('missing data/source-registry.json');
 } else {
   const artifacts = registry.artifacts || [];
+  for (const [id, path] of [['artifact-disa-stig-library', 'data/stig-rules.json'], ['artifact-disa-srg-library', 'data/srg-requirements.json']]) {
+    try {
+      const document = readJson(path);
+      if (!document) throw new Error('Missing DISA catalog');
+      restoreDisaHistory(document, (relative) => readFileSync(join(ROOT, relative)));
+      const declared = artifacts.find((row) => row.id === id)?.metadata?.supporting_files || [];
+      const expected = document.record_history ? [{ ...document.record_history, role: 'retained_native_editions' }] : [];
+      if (JSON.stringify(declared) !== JSON.stringify(expected)) throw new Error('Supporting history descriptor disagrees with source registry');
+    } catch (error) { err(`${id}: ${error.message}`); }
+  }
   const publications = registry.publications || [];
   const sources = registry.sources || [];
   const bundles = registry.catalog_source_bundles || [];
@@ -365,12 +376,16 @@ function buildCoverageManifest() {
     }
 
     const primaryQuarantined = primary.length > 0 && primary.every((a) => quarantinedIds.has(a.id));
+    const inventory = readJson('data/generated/catalog-source-inventory.json')?.catalogs?.[b.catalog_id];
+    const independentInventory = inventory?.independent_inventory === true
+      || (inventory && inventory.evidence_class !== 'reviewed_snapshot' && inventory.independent_inventory !== false);
     const { status, missing, errors: classifyErrors } = classifyCatalog({
       expected,
       imported: importedRecords,
       excluded,
       allChecksumsReal,
       primaryQuarantined,
+      independentInventory: Boolean(independentInventory),
     });
     const ctx = { expected, imported: importedRecords, excluded, missing };
     for (const code of classifyErrors) {
@@ -381,7 +396,10 @@ function buildCoverageManifest() {
     catalogs.push({
       catalog_id: b.catalog_id,
       completeness_status: status,
-      expected_records: expected,
+      expected_records: independentInventory ? expected : null,
+      snapshot_expected_records: independentInventory ? null : expected,
+      inventory_evidence_class: inventory?.evidence_class || 'unknown',
+      independent_inventory: Boolean(independentInventory),
       imported_records: importedRecords,
       excluded_records: excluded,
       missing_records: missing,

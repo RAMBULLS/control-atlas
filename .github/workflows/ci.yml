@@ -485,6 +485,18 @@ jobs:
           name: generated-data
           path: data/generated
       - run: npm run verify:contracts
+      - name: Validate portable reference package from the qualified graph
+        if: ${{ needs.changes.outputs.data_required == 'true' }}
+        run: npm run export:reference:compact && npm run verify:reference-export:compact
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: ${{ needs.changes.outputs.data_required == 'true' }}
+        with:
+          name: reference-export
+          path: |
+            .local-agent/reference-export/ControlAtlas_DoD_Reference.zip
+            .local-agent/reference-export/compact-validation.json
+          if-no-files-found: error
+          retention-days: 2
 
   browser:
     name: Browser shard ${{ matrix.shard }}/2

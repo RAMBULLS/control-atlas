@@ -92,7 +92,7 @@ test("landmark and territory coordinates are identical before and after context 
     evaluateContext(ctx, selection);
     assert.equal(snapshot(), before, `coordinates changed for ${selection.join("+") || "no context"}`);
   }
-  assert.equal(Object.keys(TERRITORY_GEOMETRY.assignments).length, 28);
+  assert.equal(Object.keys(TERRITORY_GEOMETRY.assignments).length, 30);
 });
 
 test("URL values are bounded, de-duplicated and stripped of anything that is not a tag id", () => {

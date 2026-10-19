@@ -187,7 +187,7 @@ test('Atlas landing renders the territory sheet from its own small index, not th
   const sheet = page.locator('.terr');
   await expect(sheet).toBeVisible();
   await expect(sheet.locator('.district')).toHaveCount(9);
-  await expect(sheet.locator('.lm')).toHaveCount(28);
+  await expect(sheet.locator('.lm')).toHaveCount(30);
   // Orientation is SVG and DOM only: no canvas renderer and no flow graph is loaded
   // before the visitor asks for one.
   await expect(page.locator('canvas')).toHaveCount(0);

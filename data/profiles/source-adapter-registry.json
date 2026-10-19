@@ -349,6 +349,32 @@
       ]
     },
     {
+      "adapter_id": "nist-reference-catalogs",
+      "adapter_version": "1.0.0",
+      "catalog_ids": [
+        "nist-csf-1.1",
+        "nist-critical-software"
+      ],
+      "accepted_source_types": [
+        "spreadsheet",
+        "html"
+      ],
+      "produced_profile_ids": [
+        "record.requirement",
+        "record.category",
+        "record.function"
+      ],
+      "field_transformations": [
+        "Preserve native identifiers, captured source text, source fragments, edition and publisher hierarchy from the official Core workbook and security-measure table."
+      ],
+      "relationship_rules": [
+        "Publisher containment only; informative-reference prose is retained as supporting content. No inferred crosswalks."
+      ],
+      "fixture_set": "tests/reference-catalogs.test.mjs",
+      "failure_policy": "fail_closed",
+      "source_policy": "Verify actual downloaded bytes and complete identifier inventories. Keep CSF 1.1 separate from CSF 2.0 and retain unmapped critical-software measures."
+    },
+    {
       "adapter_id": "zero-trust-source-family",
       "adapter_version": "2.0.0",
       "catalog_ids": [

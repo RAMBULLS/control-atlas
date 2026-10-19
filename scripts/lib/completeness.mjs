@@ -39,9 +39,13 @@ export function resolveExpectedLocator(locator, readJson) {
   const doc = readJson(rel.trim());
   if (!doc) return null;
   let node = doc;
-  for (const key of path.trim().split('.')) {
-    if (node && typeof node === 'object' && key in node) node = node[key];
-    else return null;
+  const parts = path.trim().split('.');
+  while (parts.length) {
+    if (!node || typeof node !== 'object') return null;
+    let consumed = parts.length;
+    while (consumed && !(parts.slice(0, consumed).join('.') in node)) consumed -= 1;
+    if (!consumed) return null;
+    node = node[parts.splice(0, consumed).join('.')];
   }
   return Number.isInteger(node) ? node : null;
 }
@@ -49,7 +53,7 @@ export function resolveExpectedLocator(locator, readJson) {
 // Pure per-catalog classification. `expected` is an integer or null.
 // Returns { status, missing, errors[] } where errors are machine-readable codes
 // the caller maps to human messages and pushes into the gate's error list.
-export function classifyCatalog({ expected, imported, excluded, allChecksumsReal, primaryQuarantined }) {
+export function classifyCatalog({ expected, imported, excluded, allChecksumsReal, primaryQuarantined, independentInventory = true }) {
   const errors = [];
   const hasExpected = Number.isInteger(expected);
   const missing = hasExpected ? expected - imported - excluded : null;
@@ -57,6 +61,9 @@ export function classifyCatalog({ expected, imported, excluded, allChecksumsReal
   let status;
   if (primaryQuarantined && imported === 0) {
     status = 'quarantined';
+  } else if (!independentInventory) {
+    if (hasExpected && expected !== imported + excluded) errors.push('regression-inventory-mismatch');
+    return { status: imported > 0 ? 'discovered' : 'unknown', missing: null, errors };
   } else if (!hasExpected) {
     status = imported > 0 ? 'discovered' : 'unknown';
   } else if (missing < 0) {

@@ -29,10 +29,12 @@ test('NIST IoT workbooks reconcile every publisher row without synthetic records
   assert.equal(reconciliation.records, iot.records.length);
   assert.equal(reconciliation.mapped_records, iot.records.filter((record) => record.publisher_mappings.length).length);
   assert.equal(reconciliation.published_mapping_assertions, iot.records.reduce((sum, record) => sum + record.publisher_mappings.length, 0));
-  assert.equal(reconciliation.graph_eligible_80053_relationships, iot.records.reduce((sum, record) => sum + record.relationships.length, 0));
+  assert.equal(reconciliation.graph_eligible_80053_relationships, iot.records.reduce((sum, record) => sum + record.relationships.filter((mapping) => mapping.target_catalog === 'nist-800-53').length, 0));
+  assert.equal(reconciliation.graph_eligible_csf11_relationships, iot.records.reduce((sum, record) => sum + record.relationships.filter((mapping) => mapping.target_catalog === 'nist-csf-1.1').length, 0));
   for (const record of iot.records) {
     assert.ok(record.id);
-    assert.deepEqual(record.relationships, record.publisher_mappings.filter((mapping) => mapping.target_catalog === 'nist-800-53'));
+    assert.equal(record.publisher_mappings.length, record.relationships.length + (record.unresolved_mappings || []).length);
+    assert.ok(record.relationships.every((mapping) => ['nist-800-53', 'nist-csf-1.1'].includes(mapping.target_catalog)));
     const expectedMappings = record.source_fragments.filter((fragment) => fragment.field === 'mapping').flatMap((fragment) => {
       const source = manifest.sources.find((entry) => entry.source_key === fragment.source_key);
       assert.ok(source);

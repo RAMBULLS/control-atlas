@@ -91,7 +91,7 @@ test("source layers preserve truthful nullable fields and exact layer counts", (
   const layers = buildSourceLayers(sources.sources, catalogs);
   assert.deepEqual(
     Object.fromEntries(Object.entries(layers).map(([layer, rows]) => [layer, rows.length])),
-    { organization: 2, publication: 49, connection: 28, ingestion: 114 },
+    { organization: 2, publication: 51, connection: 28, ingestion: 120 },
   );
 
   const sp800171Mappings = layers.connection.find(
@@ -149,9 +149,21 @@ test("artifact publishers resolve from their parent publications without fabrica
   const derived = [...layers.connection, ...layers.ingestion].filter(
     (row) => row.publicationSourceId,
   );
-  assert.equal(derived.length, 91);
+  assert.equal(derived.length, 97);
   assert.ok(derived.every((row) => row.publisher.value), "every parent-linked artifact resolves a publisher");
   assert.ok(derived.some((row) => row.publisher.state === "derived"));
+
+  for (const [id, publicationSourceId] of [
+    ["artifact-nist-csf-1.1", "nist-csf-1.1"],
+    ["artifact-nist-critical-software", "nist-critical-software"],
+    ...["low", "moderate", "high", "privacy"].map((level) => [
+      `artifact-nist-800-53b-${level}-profile`, "nist-800-53b-baselines",
+    ]),
+  ]) {
+    const artifact = derived.find((row) => row.id === id);
+    assert.equal(artifact?.publicationSourceId, publicationSourceId, id);
+    assert.equal(artifact?.publisher.value, "NIST", id);
+  }
 
   const cci = layers.ingestion.find((row) => row.id === "artifact-disa-cci-list");
   assert.equal(cci?.publisher.value, "DISA");
@@ -300,7 +312,7 @@ test("generated layer completeness accounts for every field state and fails requ
 
 test("all governed publication reviews resolve without replacing source check dates", () => {
   const reviewedCatalogs = catalogs.filter((catalog) => catalog.source_review);
-  assert.equal(reviewedCatalogs.length, 28);
+  assert.equal(reviewedCatalogs.length, 30);
 
   for (const catalog of reviewedCatalogs) {
     const reviews = publicationReviewsForSource(
@@ -386,9 +398,9 @@ test("all governed publication reviews resolve without replacing source check da
   );
 });
 
-test("canonical publication register builds exactly 49 publication rows with role-grouped source materials", () => {
+test("canonical publication register builds exactly 51 publication rows with role-grouped source materials", () => {
   const publications = buildPublicationRegister(sources.sources, catalogs);
-  assert.equal(publications.length, 49);
+  assert.equal(publications.length, 51);
 
   // Every publication row must have non-empty displayTitle, publisher, and valid field states
   for (const pub of publications) {
@@ -580,7 +592,7 @@ test("canonical and supporting inventories cover every source without promoting 
   const supporting = buildSupportingSourceInventory(sources.sources, catalogs);
   const canonicalIds = new Set(canonical.map((row) => row.id));
   assert.equal(canonical.length, publicationIdentityIndex.identities.length);
-  assert.equal(canonical.length, 49);
+  assert.equal(canonical.length, 51);
   assert.equal(canonical.filter((row) => row.kind === "policy").length, 19);
   assert.ok(supporting.every((row) => !canonicalIds.has(row.id)));
   assert.deepEqual(

@@ -52,6 +52,19 @@ test("no relationship network or research index loads for the ordinary Atlas", a
   expect(seen.filter((u) => /atlas-network|atlas-research\/|atlasResearch\.worker|atlas-spine/.test(u))).toEqual([]);
 });
 
+for (const [id, name] of [["nist-csf-1.1", "CSF 1.1"], ["nist-critical-software", "Critical software"]]) {
+  test(`restored ${name} publication is a visible, keyboard-operable landmark`, async ({ page }) => {
+    await open(page);
+    const landmark = page.locator(`[data-landmark="${id}"]`);
+    await expect(landmark).toBeVisible();
+    await expect(landmark).toHaveAttribute("aria-label", new RegExp(name.replaceAll(".", "\\.")));
+    await landmark.focus();
+    await page.keyboard.press("Enter");
+    await expect(page.locator(".atl-inspector")).toContainText(name);
+    await expect(page).toHaveURL(new RegExp(`atlasFramework=${id.replaceAll(".", "\\.")}`));
+  });
+}
+
 test("a hub shows a bounded set first, then the complete set on request", async ({ page }) => {
   await open(page);
   await page.locator('[data-district="atlas:LIMB-COMPLIANCE"] .district__shape').click();

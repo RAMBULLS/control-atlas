@@ -1,6 +1,6 @@
 {
  "_doc": "Control Atlas territory geography. Hand-authored navigation geography, versioned; never generated from data. Adjacency and proximity mean NOTHING about published relationships, authority, applicability, equivalence, dependency, mapping or legal precedence. Territories are polygons over one shared vertex mesh so neighbouring borders are identical. A landmark is placed by an explicit slot id in `assignments`, never by array index; a new publication takes a free reserved slot and existing coordinates change only when this version is deliberately revised. Presentation aliases and the major flag are reviewed presentation metadata, not facts.",
- "version": "territory-1",
+ "version": "territory-2",
  "world": {
   "w": 1600,
   "h": 1000
@@ -1165,7 +1165,9 @@
   "nist-800-53a": "territory.assessment.slot.02",
   "fedramp-rev5": "territory.compliance.slot.11",
   "nist-800-53b": "territory.compliance.slot.12",
-  "disa-cci": "territory.implementation.slot.03"
+  "disa-cci": "territory.implementation.slot.03",
+  "nist-csf-1.1": "territory.compliance.slot.13",
+  "nist-critical-software": "territory.implementation.slot.04"
  },
  "presentation": {
   "nist-800-53": {
@@ -1278,6 +1280,14 @@
   },
   "disa-cci": {
    "alias": "DISA CCI",
+   "major": false
+  },
+  "nist-csf-1.1": {
+   "alias": "CSF 1.1",
+   "major": false
+  },
+  "nist-critical-software": {
+   "alias": "Critical software",
    "major": false
   }
  }

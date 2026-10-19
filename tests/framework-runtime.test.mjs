@@ -1847,6 +1847,24 @@ test("STIG catalog chain returns complete nodes without a 250 record cap", () =>
   assert.equal(chain.rows.length, 350, "All 350 STIG nodes must be included without 250 truncation");
 });
 
+test("restored reference editions have distinct published names in generated catalog pickers", () => {
+  const ids = ["csf-2", "nist-csf-1.1", "nist-critical-software"];
+  const runtime = createFederalGraphRuntime({
+    sources: [], edges: [], evidence: [], findings: [],
+    nodes: ids.map((id) => ({ id: `${id}:fixture`, node_type: "requirement", label: "Unit fixture",
+      metadata: { catalog_id: id, item_id: "fixture", title: "Unit fixture" } })),
+  });
+  const catalogs = runtime.getCatalogs();
+  assert.deepEqual(catalogs.map((catalog) => catalog.id).sort(), ids.sort());
+  assert.equal(new Set(catalogs.map((catalog) => catalog.name)).size, 3);
+  for (const catalog of catalogs) {
+    assert.notEqual(catalog.name, catalog.id);
+    assert.equal(catalog.display_group, "NIST");
+  }
+  assert.equal(catalogs.find((catalog) => catalog.id === "nist-csf-1.1").name, "NIST CSF 1.1");
+  assert.equal(catalogs.find((catalog) => catalog.id === "nist-critical-software").name, "NIST Critical Software Security Measures");
+});
+
 test("runtime preserves exact dotted ATT&CK sub-technique identifiers", () => {
   const node = {
     id: "mitre-attack:T1098.004",

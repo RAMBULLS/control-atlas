@@ -22,11 +22,40 @@ const task = (id, remote = true) => ({ id, script: `${id}.mjs`, args: [], stages
 const descriptor = (task) => [{ taskId: task.id, sourceId: task.id, script: task.script, args: [], paths: ['data/shared.json'], retries: task.retries }];
 const gates = { validateCandidate: () => {}, finalize: () => {}, describeProjection: () => null };
 
+test('unchanged validated inputs skip heavy projections and retain an explicit task disposition', async (t) => {
+  const { root, put, get } = setup(t); put('data/shared.json', '{}');
+  const calls = [];
+  const result = await runRefreshPipeline({ ...gates, root,
+    tasks: [task('source'), task('build-taxonomy-registry', false), task('build-framework-data', false)],
+    describeSources: descriptor, shouldBuild: () => ({ publish: false }), executor: (unit) => calls.push(unit.taskId),
+  });
+  assert.deepEqual(calls, ['source']);
+  assert.equal(result.results[1].status, 'skipped_unchanged');
+  assert.equal(result.results[2].status, 'skipped_unchanged');
+  assert.ok(JSON.parse(get('data/ingestion-pipeline-manifest.json')).results[1].reason.includes('unchanged'));
+});
+
 test('failed subprocess reports the actual source diagnostic and has a finite deadline', () => {
   assert.throws(() => executeRefreshUnit({ script: 'example.mjs', args: [] }, '.', (_exe, _args, options) => {
     assert.equal(options.timeout, 900000);
     return { status: 1, stderr: 'HTTP 404: official publisher detail is missing' };
   }), /HTTP 404: official publisher detail is missing/);
+});
+
+test('registered reference reconciliation fails the refresh before finalization', async (t) => {
+  const { root, get } = setup(t);
+  const reconciliation = INGESTION_TASKS.find((entry) => entry.id === 'verify-reference-relationships');
+  assert.equal(reconciliation?.script, 'verify-reference-relationships.mjs');
+  assert.equal(reconciliation.isolation, 'fail_fast');
+  const seen = [];
+  await assert.rejects(runRefreshPipeline({ ...gates, root, tasks: [reconciliation],
+    executor: (unit) => { seen.push(unit.script); throw new Error('Missing publisher assertion endpoint'); },
+    finalize: () => assert.fail('unreconciled relationships cannot finalize'),
+  }), /Missing publisher assertion endpoint/);
+  assert.deepEqual(seen, ['verify-reference-relationships.mjs']);
+  const manifest = JSON.parse(get('data/ingestion-pipeline-manifest.json'));
+  assert.equal(manifest.status, 'failed');
+  assert.equal(manifest.failed_task, 'verify-reference-relationships');
 });
 
 test('every production remote task has explicit outputs and local isolation cannot quarantine', () => {

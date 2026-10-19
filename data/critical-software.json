@@ -1,0 +1,2318 @@
+{
+  "schema_version": "1.0",
+  "source_key": "nist-critical-software",
+  "records": [
+    {
+      "id": "SM-1.1",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Use multi-factor authentication that is verifier impersonation-resistant for all users and administrators of EO-critical software and EO-critical software platforms. (See FAQ #7.)",
+      "description": "Use multi-factor authentication that is verifier impersonation-resistant for all users and administrators of EO-critical software and EO-critical software platforms. (See FAQ #7.)",
+      "family": "Objective 1: Protect EO-critical software and EO-critical software platforms from unauthorized access and usage.",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=3",
+      "metadata": {
+        "publisher_item_id": "SM 1.1",
+        "category": "1",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: PR.AC-1, PR.AC-7",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AC-2, IA-2, IA-4, IA-5",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Bad Practices",
+            "links": [
+              {
+                "title": "Bad Practices",
+                "url": "https://www.cisa.gov/BadPractices"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Capacity Enhancement Guide: Implementing Strong Authentication",
+            "links": [
+              {
+                "title": "Capacity Enhancement Guide: Implementing Strong Authentication",
+                "url": "https://www.cisa.gov/sites/default/files/publications/CISA_CEG_Implementing_Strong_Authentication_508_1.pdf"
+              }
+            ]
+          },
+          {
+            "text": "CISA, CDM Program Dashboard Ecosystem",
+            "links": [
+              {
+                "title": "CDM Program Dashboard Ecosystem",
+                "url": "https://www.cisa.gov/publication/cdm-program-dashboard-ecosystem"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Continuous Diagnostics and Mitigation Program: Identity and Access Management – Who is on the Network?",
+            "links": [
+              {
+                "title": "Continuous Diagnostics and Mitigation Program: Identity and Access Management – Who is on the Network?",
+                "url": "https://www.cisa.gov/publication/cdm-capabilities-identity-and-access-management"
+              }
+            ]
+          },
+          {
+            "text": "GSA, Federal Identity, Credential, and Access Management (FICAM) Architecture",
+            "links": [
+              {
+                "title": "Federal Identity, Credential, and Access Management (FICAM) Architecture",
+                "url": "https://playbooks.idmanagement.gov/arch/"
+              }
+            ]
+          },
+          {
+            "text": "GSA, IDManagement.gov",
+            "links": [
+              {
+                "title": "IDManagement.gov",
+                "url": "https://www.idmanagement.gov/"
+              }
+            ]
+          },
+          {
+            "text": "NIST, Best Practices for Privileged User PIV Authentication",
+            "links": [
+              {
+                "title": "Best Practices for Privileged User PIV Authentication",
+                "url": "https://csrc.nist.gov/csrc/media/publications/white-paper/2016/04/21/best-practices-for-privileged-user-piv-authentication/final/documents/best-practices-privileged-user-piv-authentication.pdf"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-63-3, Digital Identity Guidelines",
+            "links": [
+              {
+                "title": "Digital Identity Guidelines",
+                "url": "https://doi.org/10.6028/NIST.SP.800-63-3"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-157, Guidelines for Derived Personal Identity Verification (PIV) Credentials",
+            "links": [
+              {
+                "title": "Guidelines for Derived Personal Identity Verification (PIV) Credentials",
+                "url": "https://csrc.nist.gov/publications/detail/sp/800-157/final"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 1800-12, Derived Personal Identity Verification (PIV) Credentials",
+            "links": [
+              {
+                "title": "Derived Personal Identity Verification (PIV) Credentials",
+                "url": "https://www.nccoe.nist.gov/projects/building-blocks/piv-credentials"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 1800-17, Multifactor Authentication for E-Commerce: Risk-Based, FIDO Universal Second Factor Implementations for Purchasers",
+            "links": [
+              {
+                "title": "Multifactor Authentication for E-Commerce: Risk-Based, FIDO Universal Second Factor Implementations for Purchasers",
+                "url": "https://doi.org/10.6028/NIST.SP.1800-17"
+              }
+            ]
+          },
+          {
+            "text": "NSA, Selecting Secure Multi-factor Authentication Solutions",
+            "links": [
+              {
+                "title": "Selecting Secure Multi-factor Authentication Solutions",
+                "url": "https://media.defense.gov/2024/Jul/31/2003515137/-1/-1/0/MULTIFACTOR_AUTHENTICATION_SOLUTIONS_UOO17091520.PDF"
+              }
+            ]
+          },
+          {
+            "text": "NSA, Transition to Multi-Factor Authentication",
+            "links": [
+              {
+                "title": "Transition to Multi-Factor Authentication",
+                "url": "https://media.defense.gov/2019/Sep/09/2002180346/-1/-1/0/Transition%20to%20Multi-factor%20Authentication%20-%20Copy.pdf"
+              }
+            ]
+          },
+          {
+            "text": "OMB, Memorandum M-19-17, Enabling Mission Delivery through Improved Identity, Credential, and Access Management",
+            "links": [
+              {
+                "title": "Enabling Mission Delivery through Improved Identity, Credential, and Access Management",
+                "url": "https://www.whitehouse.gov/wp-content/uploads/2019/05/M-19-17.pdf"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 1.1: Use multi-factor authentication that is verifier impersonation-resistant for all users and administrators of EO-critical software and EO-critical software platforms. (See FAQ #7.)",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=3",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:c49a9b49aead42ba4b16a0d120f2ce8b7cfbb51f94ebc9b4c92938e58442b0b4",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 1: Protect EO-critical software and EO-critical software platforms from unauthorized access and usage.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=3",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:c73e5e10f6d82106db167e3b37b5e2b9ded6e7f85c5ac3c636bd8b1d64fc69db",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: PR.AC-1, PR.AC-7\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AC-2, IA-2, IA-4, IA-5\n CISA, Bad Practices\nCISA, Capacity Enhancement Guide: Implementing Strong Authentication\nCISA, CDM Program Dashboard Ecosystem\nCISA, Continuous Diagnostics and Mitigation Program: Identity and Access Management – Who is on the Network?\nGSA, Federal Identity, Credential, and Access Management (FICAM) Architecture\nGSA, IDManagement.gov\nNIST, Best Practices for Privileged User PIV Authentication\nNIST, SP 800-63-3, Digital Identity Guidelines\nNIST, SP 800-157, Guidelines for Derived Personal Identity Verification (PIV) Credentials\nNIST, SP 1800-12, Derived Personal Identity Verification (PIV) Credentials\nNIST, SP 1800-17, Multifactor Authentication for E-Commerce: Risk-Based, FIDO Universal Second Factor Implementations for Purchasers\nNSA, Selecting Secure Multi-factor Authentication Solutions\nNSA, Transition to Multi-Factor Authentication\nOMB, Memorandum M-19-17, Enabling Mission Delivery through Improved Identity, Credential, and Access Management",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=3",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:69692e9907536b152795012c9b769fd85579d7267ac7e4098be19c755513866d",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=3"
+      }
+    },
+    {
+      "id": "SM-1.2",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Uniquely identify and authenticate each service attempting to access EO-critical software or EO-critical software platforms.",
+      "description": "Uniquely identify and authenticate each service attempting to access EO-critical software or EO-critical software platforms.",
+      "family": "Objective 1: Protect EO-critical software and EO-critical software platforms from unauthorized access and usage.",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=4",
+      "metadata": {
+        "publisher_item_id": "SM 1.2",
+        "category": "1",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: PR.AC-1, PR.AC-7",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AC-2, IA-9",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Bad Practices",
+            "links": [
+              {
+                "title": "Bad Practices",
+                "url": "https://www.cisa.gov/BadPractices"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 1.2: Uniquely identify and authenticate each service attempting to access EO-critical software or EO-critical software platforms.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=4",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:b5f8b67bc4588357d674547a57be9b74e0502d8dfa304b4e4965a9a7ce383ce9",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 1: Protect EO-critical software and EO-critical software platforms from unauthorized access and usage.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=4",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:c73e5e10f6d82106db167e3b37b5e2b9ded6e7f85c5ac3c636bd8b1d64fc69db",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: PR.AC-1, PR.AC-7\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AC-2, IA-9\n CISA, Bad Practices",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=4",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:496ac692c550505ec73c5a94dcb87a2c431cd462c6d67a6d72f338dfaa671b42",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=4"
+      }
+    },
+    {
+      "id": "SM-1.3",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Follow privileged access management principles for network-based administration of EO-critical software and EO-critical software platforms. Examples of possible implementations include using hardened platforms dedicated to administration and verified before each use, requiring unique identification of each administrator, and proxying and logging all administrative sessions to EO-critical software platforms.",
+      "description": "Follow privileged access management principles for network-based administration of EO-critical software and EO-critical software platforms. Examples of possible implementations include using hardened platforms dedicated to administration and verified before each use, requiring unique identification of each administrator, and proxying and logging all administrative sessions to EO-critical software platforms.",
+      "family": "Objective 1: Protect EO-critical software and EO-critical software platforms from unauthorized access and usage.",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=5",
+      "metadata": {
+        "publisher_item_id": "SM 1.3",
+        "category": "1",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: PR.AC-1, PR.AC-7, PR.MA-1, PR.MA-2",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AC-2, IA-2, SC-2, SC-7 enhancement 15",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Securing High Value Assets",
+            "links": [
+              {
+                "title": "Securing High Value Assets",
+                "url": "https://www.cisa.gov/sites/default/files/publications/Securing%20High%20Value%20Assets_Version%201.1_July%202018_508c.pdf"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Securing Network Infrastructure Devices",
+            "links": [
+              {
+                "title": "Securing Network Infrastructure Devices",
+                "url": "https://www.cisa.gov/news-events/news/securing-network-infrastructure-devices"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 1.3: Follow privileged access management principles for network-based administration of EO-critical software and EO-critical software platforms. Examples of possible implementations include using hardened platforms dedicated to administration and verified before each use, requiring unique identification of each administrator, and proxying and logging all administrative sessions to EO-critical software platforms.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=5",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:c882f7e17dbc427136265246ad74073a8d236e0cbfc708656c3b66839449af0f",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 1: Protect EO-critical software and EO-critical software platforms from unauthorized access and usage.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=5",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:c73e5e10f6d82106db167e3b37b5e2b9ded6e7f85c5ac3c636bd8b1d64fc69db",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: PR.AC-1, PR.AC-7, PR.MA-1, PR.MA-2\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AC-2, IA-2, SC-2, SC-7 enhancement 15\n CISA, Securing High Value Assets\nCISA, Securing Network Infrastructure Devices",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=5",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:a0ab18d19be87fcd9255027274a5724d418efcdd525cf541436c71ed54ba4054",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=5"
+      }
+    },
+    {
+      "id": "SM-1.4",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Employ boundary protection techniques as appropriate to minimize direct access to EO-critical software, EO-critical software platforms, and associated data. Examples of such techniques include network segmentation, isolation, software-defined perimeters, and proxies.",
+      "description": "Employ boundary protection techniques as appropriate to minimize direct access to EO-critical software, EO-critical software platforms, and associated data. Examples of such techniques include network segmentation, isolation, software-defined perimeters, and proxies.",
+      "family": "Objective 1: Protect EO-critical software and EO-critical software platforms from unauthorized access and usage.",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=6",
+      "metadata": {
+        "publisher_item_id": "SM 1.4",
+        "category": "1",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: PR.AC-3, PR.AC-5",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: SC-7",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Continuous Diagnostics and Mitigation Program: Network Security Management – What is Happening on the Network? How is the Network Protected?",
+            "links": [
+              {
+                "title": "Continuous Diagnostics and Mitigation Program: Network Security Management – What is Happening on the Network? How is the Network Protected?",
+                "url": "https://www.cisa.gov/publication/cdm-capabilities-network-security-management"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Defending Against Software Supply Chain Attacks",
+            "links": [
+              {
+                "title": "Defending Against Software Supply Chain Attacks",
+                "url": "https://www.cisa.gov/sites/default/files/publications/defending_against_software_supply_chain_attacks_508_1.pdf"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Securing Network Infrastructure Devices",
+            "links": [
+              {
+                "title": "Securing Network Infrastructure Devices",
+                "url": "https://www.cisa.gov/news-events/news/securing-network-infrastructure-devices"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Trusted Internet Connections 3.0: Traditional TIC Use Case",
+            "links": [
+              {
+                "title": "Trusted Internet Connections 3.0: Traditional TIC Use Case",
+                "url": "https://www.cisa.gov/sites/default/files/publications/CISA%20TIC%203.0%20Traditional%20TIC%20Use%20Case.pdf"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-41 Rev. 1, Guidelines on Firewalls and Firewall Policy",
+            "links": [
+              {
+                "title": "Guidelines on Firewalls and Firewall Policy",
+                "url": "https://doi.org/10.6028/NIST.SP.800-41r1"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-207, Zero Trust Architecture",
+            "links": [
+              {
+                "title": "Zero Trust Architecture",
+                "url": "https://doi.org/10.6028/NIST.SP.800-207"
+              }
+            ]
+          },
+          {
+            "text": "NSA, Segment Networks and Deploy Application-Aware Defenses",
+            "links": [
+              {
+                "title": "Segment Networks and Deploy Application-Aware Defenses",
+                "url": "https://media.defense.gov/2019/Sep/09/2002180325/-1/-1/0/Segment%20Networks%20and%20Deploy%20Application%20Aware%20Defenses%20-%20Copy.pdf"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 1.4: Employ boundary protection techniques as appropriate to minimize direct access to EO-critical software, EO-critical software platforms, and associated data. Examples of such techniques include network segmentation, isolation, software-defined perimeters, and proxies.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=6",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:ae5af1a18372f9768d107085accc972fac38ec284957fdae575d5ce0574c2404",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 1: Protect EO-critical software and EO-critical software platforms from unauthorized access and usage.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=6",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:c73e5e10f6d82106db167e3b37b5e2b9ded6e7f85c5ac3c636bd8b1d64fc69db",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: PR.AC-3, PR.AC-5\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: SC-7\n CISA, Continuous Diagnostics and Mitigation Program: Network Security Management – What is Happening on the Network? How is the Network Protected?\nCISA, Defending Against Software Supply Chain Attacks\nCISA, Securing Network Infrastructure Devices\nCISA, Trusted Internet Connections 3.0: Traditional TIC Use Case\nNIST, SP 800-41 Rev. 1, Guidelines on Firewalls and Firewall Policy\nNIST, SP 800-207, Zero Trust Architecture\nNSA, Segment Networks and Deploy Application-Aware Defenses",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=6",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:a4793e1c8a8b0d0bf8958beb74596867666843599913673389db50fe702cfa07",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=6"
+      }
+    },
+    {
+      "id": "SM-2.1",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Establish and maintain a data inventory for EO-critical software and EO-critical software platforms.",
+      "description": "Establish and maintain a data inventory for EO-critical software and EO-critical software platforms.",
+      "family": "Objective 2: Protect the confidentiality, integrity, and availability of data used by EO-critical software and EO-critical software platforms. (See FAQ #6.)",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=8",
+      "metadata": {
+        "publisher_item_id": "SM 2.1",
+        "category": "2",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: ID.AM-3, DE.AE-1",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: CM-8, PM-5",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Continuous Diagnostics and Mitigation Program: Data Protection Management – How is Data Protected?",
+            "links": [
+              {
+                "title": "Continuous Diagnostics and Mitigation Program: Data Protection Management – How is Data Protected?",
+                "url": "https://www.cisa.gov/publication/cdm-capabilities-data-protection-management"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Defending Against Software Supply Chain Attacks",
+            "links": [
+              {
+                "title": "Defending Against Software Supply Chain Attacks",
+                "url": "https://www.cisa.gov/sites/default/files/publications/defending_against_software_supply_chain_attacks_508_1.pdf"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Software Asset Management FAQ",
+            "links": [
+              {
+                "title": "Software Asset Management FAQ",
+                "url": "https://www.cisa.gov/sites/default/files/cdm_files/SWAM_CapabilityDescription.pdf"
+              }
+            ]
+          },
+          {
+            "text": "GSA, Inventory.data.gov Guide",
+            "links": [
+              {
+                "title": "Inventory.data.gov Guide",
+                "url": "https://resources.data.gov/resources/inventory-data-gov-guide/"
+              }
+            ]
+          },
+          {
+            "text": "NIST, Data Classification project",
+            "links": [
+              {
+                "title": "Data Classification project",
+                "url": "https://www.nccoe.nist.gov/projects/building-blocks/data-classification"
+              }
+            ]
+          },
+          {
+            "text": "OMB, Memorandum M-16-12, Category Management Policy 16-1: Improving the Acquisition and Management of Common Information Technology: Software Licensing",
+            "links": [
+              {
+                "title": "Category Management Policy 16-1: Improving the Acquisition and Management of Common Information Technology: Software Licensing",
+                "url": "https://obamawhitehouse.archives.gov/sites/default/files/omb/memoranda/2016/m-16-12_1.pdf"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 2.1: Establish and maintain a data inventory for EO-critical software and EO-critical software platforms.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=8",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:f6f1358c0b63ba18250c07fc28ba9a1ba24900b4b186d0424204ce20264fd26c",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 2: Protect the confidentiality, integrity, and availability of data used by EO-critical software and EO-critical software platforms. (See FAQ #6.)",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=8",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:6c2e12675628efaba341cfab1f673413b5285e3cc96b8855b07b3c585d1cd599",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: ID.AM-3, DE.AE-1\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: CM-8, PM-5\n CISA, Continuous Diagnostics and Mitigation Program: Data Protection Management – How is Data Protected?\nCISA, Defending Against Software Supply Chain Attacks\nCISA, Software Asset Management FAQ\nGSA, Inventory.data.gov Guide\nNIST, Data Classification project\nOMB, Memorandum M-16-12, Category Management Policy 16-1: Improving the Acquisition and Management of Common Information Technology: Software Licensing",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=8",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:be99f45088bbb1a8237ce564d985675468e49ca1766c011fa7a0217779de03ac",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=8"
+      }
+    },
+    {
+      "id": "SM-2.2",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Use fine-grained access control for data and resources used by EO-critical software and EO-critical software platforms to enforce the principle of least privilege to the extent possible.",
+      "description": "Use fine-grained access control for data and resources used by EO-critical software and EO-critical software platforms to enforce the principle of least privilege to the extent possible.",
+      "family": "Objective 2: Protect the confidentiality, integrity, and availability of data used by EO-critical software and EO-critical software platforms. (See FAQ #6.)",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=9",
+      "metadata": {
+        "publisher_item_id": "SM 2.2",
+        "category": "2",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: PR.AC-4",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AC-2, AC-3, AC-6",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Continuous Diagnostics and Mitigation Program: Identity and Access Management – Who is on the Network?",
+            "links": [
+              {
+                "title": "Continuous Diagnostics and Mitigation Program: Identity and Access Management – Who is on the Network?",
+                "url": "https://www.cisa.gov/publication/cdm-capabilities-identity-and-access-management"
+              }
+            ]
+          },
+          {
+            "text": "CISA, QSMO Services – Identity Management and Access Control",
+            "links": [
+              {
+                "title": "QSMO Services – Identity Management and Access Control",
+                "url": "https://www.cisa.gov/qsmo-services-identity-management-and-access-control"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-162, Guide to Attribute Based Access Control (ABAC) Definition and Considerations",
+            "links": [
+              {
+                "title": "Guide to Attribute Based Access Control (ABAC) Definition and Considerations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-162"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-205, Attribute Considerations for Access Control Systems",
+            "links": [
+              {
+                "title": "Attribute Considerations for Access Control Systems",
+                "url": "https://doi.org/10.6028/NIST.SP.800-205"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-207, Zero Trust Architecture",
+            "links": [
+              {
+                "title": "Zero Trust Architecture",
+                "url": "https://doi.org/10.6028/NIST.SP.800-207"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 2.2: Use fine-grained access control for data and resources used by EO-critical software and EO-critical software platforms to enforce the principle of least privilege to the extent possible.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=9",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:43f11e9864b795565371b0213a9e2e9ef4b0a01b838e4ec6a21f120a17fc6a35",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 2: Protect the confidentiality, integrity, and availability of data used by EO-critical software and EO-critical software platforms. (See FAQ #6.)",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=9",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:6c2e12675628efaba341cfab1f673413b5285e3cc96b8855b07b3c585d1cd599",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: PR.AC-4\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AC-2, AC-3, AC-6\n CISA, Continuous Diagnostics and Mitigation Program: Identity and Access Management – Who is on the Network?\nCISA, QSMO Services – Identity Management and Access Control\nNIST, SP 800-162, Guide to Attribute Based Access Control (ABAC) Definition and Considerations\nNIST, SP 800-205, Attribute Considerations for Access Control Systems\nNIST, SP 800-207, Zero Trust Architecture",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=9",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:ce0a0b615995fd1c3709f5eddc2821ca82d59a23c014d7e1212d9161fa0004b3",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=9"
+      }
+    },
+    {
+      "id": "SM-2.3",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Protect data at rest by encrypting the sensitive data used by EO-critical software and EO-critical software platforms consistent with NIST’s cryptographic standards.",
+      "description": "Protect data at rest by encrypting the sensitive data used by EO-critical software and EO-critical software platforms consistent with NIST’s cryptographic standards.",
+      "family": "Objective 2: Protect the confidentiality, integrity, and availability of data used by EO-critical software and EO-critical software platforms. (See FAQ #6.)",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=10",
+      "metadata": {
+        "publisher_item_id": "SM 2.3",
+        "category": "2",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: PR.DS-1",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: SC-28",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Continuous Diagnostics and Mitigation Program: Data Protection Management – How is Data Protected?",
+            "links": [
+              {
+                "title": "Continuous Diagnostics and Mitigation Program: Data Protection Management – How is Data Protected?",
+                "url": "https://www.cisa.gov/publication/cdm-capabilities-data-protection-management"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Protecting Data on the Network with Multi-Layered Data Protection Strategies",
+            "links": [
+              {
+                "title": "Protecting Data on the Network with Multi-Layered Data Protection Strategies",
+                "url": "https://www.cisa.gov/sites/default/files/2023-01/layering-network-security-segmentation_infographic_508_0.pdf"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-111, Guide to Storage Encryption Technologies for End User Devices",
+            "links": [
+              {
+                "title": "Guide to Storage Encryption Technologies for End User Devices",
+                "url": "https://doi.org/10.6028/NIST.SP.800-111"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-175B Rev. 1, Guideline for Using Cryptographic Standards in the Federal Government: Cryptographic Mechanisms",
+            "links": [
+              {
+                "title": "Guideline for Using Cryptographic Standards in the Federal Government: Cryptographic Mechanisms",
+                "url": "https://doi.org/10.6028/NIST.SP.800-175Br1"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-209, Security Guidelines for Storage Infrastructure",
+            "links": [
+              {
+                "title": "Security Guidelines for Storage Infrastructure",
+                "url": "https://doi.org/10.6028/NIST.SP.800-209"
+              }
+            ]
+          },
+          {
+            "text": "OMB, Circular A-130, Appendix I, 4. i. 14",
+            "links": [
+              {
+                "title": "Circular A-130",
+                "url": "https://www.federalregister.gov/documents/2016/07/28/2016-17872/revision-of-omb-circular-no-a-130-managing-information-as-a-strategic-resource"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 2.3: Protect data at rest by encrypting the sensitive data used by EO-critical software and EO-critical software platforms consistent with NIST’s cryptographic standards.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=10",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:5638410fcc4cd8b53a8e3cff26719f1b77b83abf8bc1a8c9eae280c1eadb488b",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 2: Protect the confidentiality, integrity, and availability of data used by EO-critical software and EO-critical software platforms. (See FAQ #6.)",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=10",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:6c2e12675628efaba341cfab1f673413b5285e3cc96b8855b07b3c585d1cd599",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: PR.DS-1\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: SC-28\n CISA, Continuous Diagnostics and Mitigation Program: Data Protection Management – How is Data Protected?\nCISA, Protecting Data on the Network with Multi-Layered Data Protection Strategies\nNIST, SP 800-111, Guide to Storage Encryption Technologies for End User Devices\nNIST, SP 800-175B Rev. 1, Guideline for Using Cryptographic Standards in the Federal Government: Cryptographic Mechanisms\nNIST, SP 800-209, Security Guidelines for Storage Infrastructure\nOMB, Circular A-130, Appendix I, 4. i. 14",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=10",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:8b812144ad7046a541f874c8c8eedc6612970fbafea45e98358836f83c6a4266",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=10"
+      }
+    },
+    {
+      "id": "SM-2.4",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Protect data in transit by using mutual authentication whenever feasible and by encrypting sensitive data communications for EO-critical software and EO-critical software platforms consistent with NIST’s cryptographic standards.",
+      "description": "Protect data in transit by using mutual authentication whenever feasible and by encrypting sensitive data communications for EO-critical software and EO-critical software platforms consistent with NIST’s cryptographic standards.",
+      "family": "Objective 2: Protect the confidentiality, integrity, and availability of data used by EO-critical software and EO-critical software platforms. (See FAQ #6.)",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=11",
+      "metadata": {
+        "publisher_item_id": "SM 2.4",
+        "category": "2",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: PR.AC-3, PR.AC-7, PR.DS-2, PR.PT-4, DE.CM-7",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AC-4, AC-17, SC-8",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Continuous Diagnostics and Mitigation Program: Data Protection Management – How is Data Protected?",
+            "links": [
+              {
+                "title": "Continuous Diagnostics and Mitigation Program: Data Protection Management – How is Data Protected?",
+                "url": "https://www.cisa.gov/publication/cdm-capabilities-data-protection-management"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Protecting Data on the Network with Multi-Layered Data Protection Strategies",
+            "links": [
+              {
+                "title": "Protecting Data on the Network with Multi-Layered Data Protection Strategies",
+                "url": "https://www.cisa.gov/sites/default/files/2023-01/layering-network-security-segmentation_infographic_508_0.pdf"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-46 Rev. 2, Guide to Enterprise Telework, Remote Access, and Bring Your Own Device (BYOD) Security",
+            "links": [
+              {
+                "title": "Guide to Enterprise Telework, Remote Access, and Bring Your Own Device (BYOD) Security",
+                "url": "https://doi.org/10.6028/NIST.SP.800-46r2"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-47 Rev. 1, Managing the Security of Information Exchanges",
+            "links": [
+              {
+                "title": "Managing the Security of Information Exchanges",
+                "url": "https://doi.org/10.6028/NIST.SP.800-47r1-draft"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-52 Rev. 2, Guidelines for the Selection, Configuration, and Use of Transport Layer Security (TLS) Implementations",
+            "links": [
+              {
+                "title": "Guidelines for the Selection, Configuration, and Use of Transport Layer Security (TLS) Implementations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-52r2"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-77 Rev. 1, Guide to IPsec VPNs",
+            "links": [
+              {
+                "title": "Guide to IPsec VPNs",
+                "url": "https://doi.org/10.6028/NIST.SP.800-77r1"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-175B Rev. 1, Guideline for Using Cryptographic Standards in the Federal Government: Cryptographic Mechanisms",
+            "links": [
+              {
+                "title": "Guideline for Using Cryptographic Standards in the Federal Government: Cryptographic Mechanisms",
+                "url": "https://doi.org/10.6028/NIST.SP.800-175Br1"
+              }
+            ]
+          },
+          {
+            "text": "NSA, Eliminating Obsolete Transport Layer Security (TLS) Protocol Configurations",
+            "links": [
+              {
+                "title": "Eliminating Obsolete Transport Layer Security (TLS) Protocol Configurations",
+                "url": "https://media.defense.gov/2021/Jan/05/2002560140/-1/-1/0/ELIMINATING_OBSOLETE_TLS_UOO197443-20.PDF"
+              }
+            ]
+          },
+          {
+            "text": "OMB, Circular A-130, Appendix I, 4. i. 14",
+            "links": [
+              {
+                "title": "Circular A-130",
+                "url": "https://www.federalregister.gov/documents/2016/07/28/2016-17872/revision-of-omb-circular-no-a-130-managing-information-as-a-strategic-resource"
+              }
+            ]
+          },
+          {
+            "text": "OMB, Memorandum M-15-13, Policy to Require Secure Connections across Federal Websites and Web Services",
+            "links": [
+              {
+                "title": "Policy to Require Secure Connections across Federal Websites and Web Services",
+                "url": "https://obamawhitehouse.archives.gov/sites/default/files/omb/memoranda/2015/m-15-13.pdf"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 2.4: Protect data in transit by using mutual authentication whenever feasible and by encrypting sensitive data communications for EO-critical software and EO-critical software platforms consistent with NIST’s cryptographic standards.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=11",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:b062f00d7bf4f05a1b8462239cc14700f87c80657c155c3793c0b6cb951083ef",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 2: Protect the confidentiality, integrity, and availability of data used by EO-critical software and EO-critical software platforms. (See FAQ #6.)",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=11",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:6c2e12675628efaba341cfab1f673413b5285e3cc96b8855b07b3c585d1cd599",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: PR.AC-3, PR.AC-7, PR.DS-2, PR.PT-4, DE.CM-7\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AC-4, AC-17, SC-8\n CISA, Continuous Diagnostics and Mitigation Program: Data Protection Management – How is Data Protected?\nCISA, Protecting Data on the Network with Multi-Layered Data Protection Strategies\nNIST, SP 800-46 Rev. 2, Guide to Enterprise Telework, Remote Access, and Bring Your Own Device (BYOD) Security\nNIST, SP 800-47 Rev. 1, Managing the Security of Information Exchanges\nNIST, SP 800-52 Rev. 2, Guidelines for the Selection, Configuration, and Use of Transport Layer Security (TLS) Implementations\nNIST, SP 800-77 Rev. 1, Guide to IPsec VPNs\nNIST, SP 800-175B Rev. 1, Guideline for Using Cryptographic Standards in the Federal Government: Cryptographic Mechanisms\nNSA, Eliminating Obsolete Transport Layer Security (TLS) Protocol Configurations\nOMB, Circular A-130, Appendix I, 4. i. 14\nOMB, Memorandum M-15-13, Policy to Require Secure Connections across Federal Websites and Web Services",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=11",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:347a0dd7f4133768c35a3d85ab72ba533ff8a2f9dec6d07842899d422d9aaa34",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=11"
+      }
+    },
+    {
+      "id": "SM-2.5",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Back up data, exercise backup restoration, and be prepared to recover data used by EO-critical software and EO-critical software platforms at any time from backups.",
+      "description": "Back up data, exercise backup restoration, and be prepared to recover data used by EO-critical software and EO-critical software platforms at any time from backups.",
+      "family": "Objective 2: Protect the confidentiality, integrity, and availability of data used by EO-critical software and EO-critical software platforms. (See FAQ #6.)",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=12",
+      "metadata": {
+        "publisher_item_id": "SM 2.5",
+        "category": "2",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: PR.IP-4",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: CP-9, CP-10",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-34 Rev. 1, Contingency Planning Guide for Federal Information Systems",
+            "links": [
+              {
+                "title": "Contingency Planning Guide for Federal Information Systems",
+                "url": "https://doi.org/10.6028/NIST.SP.800-34r1"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-57 Rev. 5, Recommendation for Key Management: Part 1—General",
+            "links": [
+              {
+                "title": "Recommendation for Key Management: Part 1—General",
+                "url": "https://doi.org/10.6028/NIST.SP.800-57pt1r5"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-175B Rev. 1, Guideline for Using Cryptographic Standards in the Federal Government: Cryptographic Mechanisms",
+            "links": [
+              {
+                "title": "Guideline for Using Cryptographic Standards in the Federal Government: Cryptographic Mechanisms",
+                "url": "https://doi.org/10.6028/NIST.SP.800-175Br1"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 2.5: Back up data, exercise backup restoration, and be prepared to recover data used by EO-critical software and EO-critical software platforms at any time from backups.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=12",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:3b44ea900503c76dc1db034d3d7cfde9454bf9588789bd272af46be4631bca37",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 2: Protect the confidentiality, integrity, and availability of data used by EO-critical software and EO-critical software platforms. (See FAQ #6.)",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=12",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:6c2e12675628efaba341cfab1f673413b5285e3cc96b8855b07b3c585d1cd599",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: PR.IP-4\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: CP-9, CP-10\n NIST, SP 800-34 Rev. 1, Contingency Planning Guide for Federal Information Systems\nNIST, SP 800-57 Rev. 5, Recommendation for Key Management: Part 1—General\nNIST, SP 800-175B Rev. 1, Guideline for Using Cryptographic Standards in the Federal Government: Cryptographic Mechanisms",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=12",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:2401b67de93cb305c356e9c8ae5177b9bfeff79d70ef257c639e18b51155b726",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=12"
+      }
+    },
+    {
+      "id": "SM-3.1",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Establish and maintain a software inventory for all platforms running EO-critical software and all software (both EO-critical and non-EO-critical) deployed to each platform.",
+      "description": "Establish and maintain a software inventory for all platforms running EO-critical software and all software (both EO-critical and non-EO-critical) deployed to each platform.",
+      "family": "Objective 3: Identify and maintain EO-critical software platforms and the software deployed to those platforms to protect the EO-critical software from exploitation.",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=14",
+      "metadata": {
+        "publisher_item_id": "SM 3.1",
+        "category": "3",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: ID.AM-1, ID.AM-2, ID.SC-2",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: CM-8, PM-5, RA-9",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "CISA, CDM Program Dashboard Ecosystem",
+            "links": [
+              {
+                "title": "CDM Program Dashboard Ecosystem",
+                "url": "https://www.cisa.gov/publication/cdm-program-dashboard-ecosystem"
+              }
+            ]
+          },
+          {
+            "text": "CISA, CDM Software Asset Management (SWAM) Capability",
+            "links": [
+              {
+                "title": "CDM Software Asset Management (SWAM) Capability",
+                "url": "https://us-cert.cisa.gov/sites/default/files/cdm_files/Intro_to_SWAM.pdf"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Continuous Diagnostics and Mitigation Program: Asset Management – What is on the Network?",
+            "links": [
+              {
+                "title": "Continuous Diagnostics and Mitigation Program: Asset Management – What is on the Network?",
+                "url": "https://www.cisa.gov/publication/cdm-capabilities-asset-management"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Defending Against Software Supply Chain Attacks",
+            "links": [
+              {
+                "title": "Defending Against Software Supply Chain Attacks",
+                "url": "https://www.cisa.gov/sites/default/files/publications/defending_against_software_supply_chain_attacks_508_1.pdf"
+              }
+            ]
+          },
+          {
+            "text": "NIST, IR 8011 Vol. 3, Automation Support for Security Control Assessments: Software Asset Management",
+            "links": [
+              {
+                "title": "Automation Support for Security Control Assessments: Software Asset Management",
+                "url": "https://doi.org/10.6028/NIST.IR.8011-3"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 1800-5, IT Asset Management",
+            "links": [
+              {
+                "title": "IT Asset Management",
+                "url": "https://doi.org/10.6028/NIST.SP.1800-5"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 3.1: Establish and maintain a software inventory for all platforms running EO-critical software and all software (both EO-critical and non-EO-critical) deployed to each platform.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=14",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:f00724fec97cf9dbda5fce0a7c11b69621ccaa43f4a94952280c36511d726cde",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 3: Identify and maintain EO-critical software platforms and the software deployed to those platforms to protect the EO-critical software from exploitation.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=14",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:4c6a586c73b6d58175e397ab9efaaaff5605233ef9ed823882845fae30f5760b",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: ID.AM-1, ID.AM-2, ID.SC-2\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: CM-8, PM-5, RA-9\n CISA, CDM Program Dashboard Ecosystem\nCISA, CDM Software Asset Management (SWAM) Capability\nCISA, Continuous Diagnostics and Mitigation Program: Asset Management – What is on the Network?\nCISA, Defending Against Software Supply Chain Attacks\nNIST, IR 8011 Vol. 3, Automation Support for Security Control Assessments: Software Asset Management\nNIST, SP 1800-5, IT Asset Management",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=14",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:e5669dc80eb74ae86ed4f525d9ca5787448088ee000bb628050302ab78668218",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=14"
+      }
+    },
+    {
+      "id": "SM-3.2",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Use patch management practices to maintain EO-critical software platforms and all software deployed to those platforms. Practices include:\nrapidly identify, document, and mitigate known vulnerabilities (e.g., patching, updating, upgrading software to supported version) to continuously reduce the exposure time\nmonitor the platforms and software to ensure the mitigations are not removed outside of change control processes",
+      "description": "Use patch management practices to maintain EO-critical software platforms and all software deployed to those platforms. Practices include:\nrapidly identify, document, and mitigate known vulnerabilities (e.g., patching, updating, upgrading software to supported version) to continuously reduce the exposure time\nmonitor the platforms and software to ensure the mitigations are not removed outside of change control processes",
+      "family": "Objective 3: Identify and maintain EO-critical software platforms and the software deployed to those platforms to protect the EO-critical software from exploitation.",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=15",
+      "metadata": {
+        "publisher_item_id": "SM 3.2",
+        "category": "3",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: ID.RA-1, ID.RA-2, ID.RA-6, PR.IP-12, DE.CM-8, RS.MI-3",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: CA-7, RA-5, SI-2, SI-5, SR-8",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Bad Practices",
+            "links": [
+              {
+                "title": "Bad Practices",
+                "url": "https://www.cisa.gov/BadPractices"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Capacity Enhancement Guide: Remote Vulnerability and Patch Management",
+            "links": [
+              {
+                "title": "Capacity Enhancement Guide: Remote Vulnerability and Patch Management",
+                "url": "https://www.cisa.gov/sites/default/files/publications/08.20.20_CISA_CEG_Remote_Patch_Management-508_1.pdf"
+              }
+            ]
+          },
+          {
+            "text": "CISA, CDM Program Dashboard Ecosystem",
+            "links": [
+              {
+                "title": "CDM Program Dashboard Ecosystem",
+                "url": "https://www.cisa.gov/publication/cdm-program-dashboard-ecosystem"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Continuous Diagnostics and Mitigation Program: Asset Management – What is on the Network?",
+            "links": [
+              {
+                "title": "Continuous Diagnostics and Mitigation Program: Asset Management – What is on the Network?",
+                "url": "https://www.cisa.gov/publication/cdm-capabilities-asset-management"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Defending Against Software Supply Chain Attacks",
+            "links": [
+              {
+                "title": "Defending Against Software Supply Chain Attacks",
+                "url": "https://www.cisa.gov/sites/default/files/publications/defending_against_software_supply_chain_attacks_508_1.pdf"
+              }
+            ]
+          },
+          {
+            "text": "NIST, IR 8011 Vol. 4, Automation Support for Security Control Assessments: Software Vulnerability Management",
+            "links": [
+              {
+                "title": "Automation Support for Security Control Assessments: Software Vulnerability Management",
+                "url": "https://doi.org/10.6028/NIST.IR.8011-4"
+              }
+            ]
+          },
+          {
+            "text": "NIST, Patching the Enterprise project",
+            "links": [
+              {
+                "title": "Patching the Enterprise project",
+                "url": "https://www.nccoe.nist.gov/projects/building-blocks/patching-enterprise"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-40 Rev. 3, Guide to Enterprise Patch Management Technologies",
+            "links": [
+              {
+                "title": "Guide to Enterprise Patch Management Technologies",
+                "url": "https://doi.org/10.6028/NIST.SP.800-40r3"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 3.2: Use patch management practices to maintain EO-critical software platforms and all software deployed to those platforms. Practices include:\nrapidly identify, document, and mitigate known vulnerabilities (e.g., patching, updating, upgrading software to supported version) to continuously reduce the exposure time\nmonitor the platforms and software to ensure the mitigations are not removed outside of change control processes",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=15",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:1708e27845cbbf764d1306ac0e2917d84a3e689614ff343e69aac82e19f00ba9",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 3: Identify and maintain EO-critical software platforms and the software deployed to those platforms to protect the EO-critical software from exploitation.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=15",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:4c6a586c73b6d58175e397ab9efaaaff5605233ef9ed823882845fae30f5760b",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: ID.RA-1, ID.RA-2, ID.RA-6, PR.IP-12, DE.CM-8, RS.MI-3\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: CA-7, RA-5, SI-2, SI-5, SR-8\n CISA, Bad Practices\nCISA, Capacity Enhancement Guide: Remote Vulnerability and Patch Management\nCISA, CDM Program Dashboard Ecosystem\nCISA, Continuous Diagnostics and Mitigation Program: Asset Management – What is on the Network?\nCISA, Defending Against Software Supply Chain Attacks\nNIST, IR 8011 Vol. 4, Automation Support for Security Control Assessments: Software Vulnerability Management\nNIST, Patching the Enterprise project\nNIST, SP 800-40 Rev. 3, Guide to Enterprise Patch Management Technologies",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=15",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:bf9c00dfc7535108a9a917529356600efa4c896d76441f2ccbf77a84eb46dc84",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=15"
+      }
+    },
+    {
+      "id": "SM-3.3",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Use configuration management practices to maintain EO-critical software platforms and all software deployed to those platforms. Practices include:\nidentify the proper hardened security configuration for each EO-critical software platform and all software deployed to that platform (hardened security configurations enforce the principles of least privilege, separation of duties, and least functionality)\nimplement the configurations for the platforms and software\ncontrol and monitor the platforms and software to ensure the configuration is not changed outside of change control processes",
+      "description": "Use configuration management practices to maintain EO-critical software platforms and all software deployed to those platforms. Practices include:\nidentify the proper hardened security configuration for each EO-critical software platform and all software deployed to that platform (hardened security configurations enforce the principles of least privilege, separation of duties, and least functionality)\nimplement the configurations for the platforms and software\ncontrol and monitor the platforms and software to ensure the configuration is not changed outside of change control processes",
+      "family": "Objective 3: Identify and maintain EO-critical software platforms and the software deployed to those platforms to protect the EO-critical software from exploitation.",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=16",
+      "metadata": {
+        "publisher_item_id": "SM 3.3",
+        "category": "3",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: ID.RA-1, ID.RA-2, ID.RA-6, PR.AC-4, PR.IP-1, PR.IP-3, PR.PT-3, DE.CM-8, RS.MI-3",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AC-5, AC-6, CA-7, CM-2, CM-3, CM-6, CM-7, RA-5, SI-5",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "CISA, CDM Program Dashboard Ecosystem",
+            "links": [
+              {
+                "title": "CDM Program Dashboard Ecosystem",
+                "url": "https://www.cisa.gov/publication/cdm-program-dashboard-ecosystem"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Continuous Diagnostics and Mitigation Program: Asset Management – What is on the Network?",
+            "links": [
+              {
+                "title": "Continuous Diagnostics and Mitigation Program: Asset Management – What is on the Network?",
+                "url": "https://www.cisa.gov/publication/cdm-capabilities-asset-management"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Defending Against Software Supply Chain Attacks",
+            "links": [
+              {
+                "title": "Defending Against Software Supply Chain Attacks",
+                "url": "https://www.cisa.gov/sites/default/files/publications/defending_against_software_supply_chain_attacks_508_1.pdf"
+              }
+            ]
+          },
+          {
+            "text": "DISA, STIGs Document Library",
+            "links": [
+              {
+                "title": "STIGs Document Library",
+                "url": "https://public.cyber.mil/stigs/downloads/"
+              }
+            ]
+          },
+          {
+            "text": "NIST, National Checklist Program (NCP) Checklist Repository",
+            "links": [
+              {
+                "title": "National Checklist Program (NCP) Checklist Repository",
+                "url": "https://ncp.nist.gov/repository"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-70 Rev. 4, National Checklist Program for IT Products: Guidelines for Checklist Users and Developers",
+            "links": [
+              {
+                "title": "National Checklist Program for IT Products: Guidelines for Checklist Users and Developers",
+                "url": "https://csrc.nist.gov/pubs/sp/800/70/r4/final"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-128, Guide for Security-Focused Configuration Management of Information Systems",
+            "links": [
+              {
+                "title": "Guide for Security-Focused Configuration Management of Information Systems",
+                "url": "https://csrc.nist.gov/publications/detail/sp/800-128/final"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 3.3: Use configuration management practices to maintain EO-critical software platforms and all software deployed to those platforms. Practices include:\nidentify the proper hardened security configuration for each EO-critical software platform and all software deployed to that platform (hardened security configurations enforce the principles of least privilege, separation of duties, and least functionality)\nimplement the configurations for the platforms and software\ncontrol and monitor the platforms and software to ensure the configuration is not changed outside of change control processes",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=16",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:4e8d7d563aa341922d5d8a08b794d6cefe6333783b382f8d22efc0dd68942738",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 3: Identify and maintain EO-critical software platforms and the software deployed to those platforms to protect the EO-critical software from exploitation.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=16",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:4c6a586c73b6d58175e397ab9efaaaff5605233ef9ed823882845fae30f5760b",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: ID.RA-1, ID.RA-2, ID.RA-6, PR.AC-4, PR.IP-1, PR.IP-3, PR.PT-3, DE.CM-8, RS.MI-3\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AC-5, AC-6, CA-7, CM-2, CM-3, CM-6, CM-7, RA-5, SI-5\n CISA, CDM Program Dashboard Ecosystem\nCISA, Continuous Diagnostics and Mitigation Program: Asset Management – What is on the Network?\nCISA, Defending Against Software Supply Chain Attacks\nDISA, STIGs Document Library\nNIST, National Checklist Program (NCP) Checklist Repository\nNIST, SP 800-70 Rev. 4, National Checklist Program for IT Products: Guidelines for Checklist Users and Developers\nNIST, SP 800-128, Guide for Security-Focused Configuration Management of Information Systems",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=16",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:063bc12edb5d942c9f5c06c00d9a7a634ef14df9a492bb80431b43efd4be90a2",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=16"
+      }
+    },
+    {
+      "id": "SM-4.1",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Configure logging to record the necessary information about security events involving EO-critical software platforms and all software running on those platforms.",
+      "description": "Configure logging to record the necessary information about security events involving EO-critical software platforms and all software running on those platforms.",
+      "family": "Objective 4: Quickly detect, respond to, and recover from threats and incidents involving EO-critical software and EO-critical software platforms.",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=18",
+      "metadata": {
+        "publisher_item_id": "SM 4.1",
+        "category": "4",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: PR.PT-1",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AU-2, AU-3, AU-4, AU-5, AU-8, AU-9, AU-11, AU-12",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Continuous Diagnostics and Mitigation Program: Network Security Management – What is Happening on the Network? How is the Network Protected?",
+            "links": [
+              {
+                "title": "Continuous Diagnostics and Mitigation Program: Network Security Management – What is Happening on the Network? How is the Network Protected?",
+                "url": "https://www.cisa.gov/publication/cdm-capabilities-network-security-management"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Technical Approaches to Uncovering and Remediating Malicious Activity",
+            "links": [
+              {
+                "title": "Technical Approaches to Uncovering and Remediating Malicious Activity",
+                "url": "https://us-cert.cisa.gov/ncas/alerts/aa20-245a"
+              }
+            ]
+          },
+          {
+            "text": "NIST, National Checklist Program (NCP) Checklist Repository",
+            "links": [
+              {
+                "title": "National Checklist Program (NCP) Checklist Repository",
+                "url": "https://ncp.nist.gov/repository"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-92, Guide to Computer Security Log Management",
+            "links": [
+              {
+                "title": "Guide to Computer Security Log Management",
+                "url": "https://doi.org/10.6028/NIST.SP.800-92"
+              }
+            ]
+          },
+          {
+            "text": "OMB, Circular A-130, Appendix I, 4. i. 7",
+            "links": [
+              {
+                "title": "Circular A-130",
+                "url": "https://www.federalregister.gov/documents/2016/07/28/2016-17872/revision-of-omb-circular-no-a-130-managing-information-as-a-strategic-resource"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 4.1: Configure logging to record the necessary information about security events involving EO-critical software platforms and all software running on those platforms.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=18",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:d6aff0d0708795874db7b933064b646d9443f0e6b72c9b273f574f7648877389",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 4: Quickly detect, respond to, and recover from threats and incidents involving EO-critical software and EO-critical software platforms.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=18",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:c9e7986d7cebf78a3a4e2dbb76660f2412d5e0732b7cab7d1331a61cb156973a",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: PR.PT-1\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AU-2, AU-3, AU-4, AU-5, AU-8, AU-9, AU-11, AU-12\n CISA, Continuous Diagnostics and Mitigation Program: Network Security Management – What is Happening on the Network? How is the Network Protected?\nCISA, Technical Approaches to Uncovering and Remediating Malicious Activity\nNIST, National Checklist Program (NCP) Checklist Repository\nNIST, SP 800-92, Guide to Computer Security Log Management\nOMB, Circular A-130, Appendix I, 4. i. 7",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=18",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:affdef598ad9f89a896d6cacf0cbefcf85cdaf9e77470948c58f9d6d3b1572da",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=18"
+      }
+    },
+    {
+      "id": "SM-4.2",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Continuously monitor the security of EO-critical software platforms and all software running on those platforms.",
+      "description": "Continuously monitor the security of EO-critical software platforms and all software running on those platforms.",
+      "family": "Objective 4: Quickly detect, respond to, and recover from threats and incidents involving EO-critical software and EO-critical software platforms.",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=19",
+      "metadata": {
+        "publisher_item_id": "SM 4.2",
+        "category": "4",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: DE.CM-7",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: CA-7, SI-4",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Continuous Diagnostics and Mitigation (CDM)",
+            "links": [
+              {
+                "title": "Continuous Diagnostics and Mitigation (CDM)",
+                "url": "https://www.cisa.gov/cdm"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Defending Against Software Supply Chain Attacks",
+            "links": [
+              {
+                "title": "Defending Against Software Supply Chain Attacks",
+                "url": "https://www.cisa.gov/sites/default/files/publications/defending_against_software_supply_chain_attacks_508_1.pdf"
+              }
+            ]
+          },
+          {
+            "text": "NIST, IR 8011 Vol. 3, Automation Support for Security Control Assessments: Software Asset Management",
+            "links": [
+              {
+                "title": "Automation Support for Security Control Assessments: Software Asset Management",
+                "url": "https://doi.org/10.6028/NIST.IR.8011-3"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-137, Information Security Continuous Monitoring (ISCM) for Federal Information Systems and Organizations",
+            "links": [
+              {
+                "title": "Information Security Continuous Monitoring (ISCM) for Federal Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-137"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 4.2: Continuously monitor the security of EO-critical software platforms and all software running on those platforms.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=19",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:a7fed32994ba46db834070862a74e9dc88f19b8831a953a515739322bc58b37c",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 4: Quickly detect, respond to, and recover from threats and incidents involving EO-critical software and EO-critical software platforms.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=19",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:c9e7986d7cebf78a3a4e2dbb76660f2412d5e0732b7cab7d1331a61cb156973a",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: DE.CM-7\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: CA-7, SI-4\n CISA, Continuous Diagnostics and Mitigation (CDM)\nCISA, Defending Against Software Supply Chain Attacks\nNIST, IR 8011 Vol. 3, Automation Support for Security Control Assessments: Software Asset Management\nNIST, SP 800-137, Information Security Continuous Monitoring (ISCM) for Federal Information Systems and Organizations",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=19",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:611de2fe88627cf7fd4230ba7b59274be5f8a54651d349f33c84a6e6f2222677",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=19"
+      }
+    },
+    {
+      "id": "SM-4.3",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Employ endpoint security protection on EO-critical software platforms to protect the platforms and all software running on them. Capabilities include:\nprotecting the software, data, and platform by identifying, reviewing, and minimizing the attack surface and exposure to known threats\npermitting only verified software to execute (e.g., file integrity verification, signed executables, allowlisting)\nproactively detecting threats and stopping them when possible\nresponding to and recovering from incidents\nproviding the necessary information for security operations, threat hunting, incident response, and other security needs",
+      "description": "Employ endpoint security protection on EO-critical software platforms to protect the platforms and all software running on them. Capabilities include:\nprotecting the software, data, and platform by identifying, reviewing, and minimizing the attack surface and exposure to known threats\npermitting only verified software to execute (e.g., file integrity verification, signed executables, allowlisting)\nproactively detecting threats and stopping them when possible\nresponding to and recovering from incidents\nproviding the necessary information for security operations, threat hunting, incident response, and other security needs",
+      "family": "Objective 4: Quickly detect, respond to, and recover from threats and incidents involving EO-critical software and EO-critical software platforms.",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=20",
+      "metadata": {
+        "publisher_item_id": "SM 4.3",
+        "category": "4",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: PR.DS-5, PR.DS-6, DE.AE-2, DE.CM-4, DE.CM-7, DE.DP-4",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: SI-3, SI-4, SI-7",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Continuous Diagnostics and Mitigation Program: Data Protection Management – How is Data Protected?",
+            "links": [
+              {
+                "title": "Continuous Diagnostics and Mitigation Program: Data Protection Management – How is Data Protected?",
+                "url": "https://www.cisa.gov/publication/cdm-capabilities-data-protection-management"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Defending Against Software Supply Chain Attacks",
+            "links": [
+              {
+                "title": "Defending Against Software Supply Chain Attacks",
+                "url": "https://www.cisa.gov/sites/default/files/publications/defending_against_software_supply_chain_attacks_508_1.pdf"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-61 Rev. 2, Computer Security Incident Handling Guide",
+            "links": [
+              {
+                "title": "Computer Security Incident Handling Guide",
+                "url": "https://doi.org/10.6028/NIST.SP.800-61r2"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-83 Rev. 1, Guide to Malware Incident Prevention and Handling for Desktops and Laptops",
+            "links": [
+              {
+                "title": "Guide to Malware Incident Prevention and Handling for Desktops and Laptops",
+                "url": "https://doi.org/10.6028/NIST.SP.800-83r1"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-150, Guide to Cyber Threat Information Sharing",
+            "links": [
+              {
+                "title": "Guide to Cyber Threat Information Sharing",
+                "url": "https://doi.org/10.6028/NIST.SP.800-150"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-167, Guide to Application Whitelisting",
+            "links": [
+              {
+                "title": "Guide to Application Whitelisting",
+                "url": "https://doi.org/10.6028/NIST.SP.800-167"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-184, Guide for Cybersecurity Event Recovery",
+            "links": [
+              {
+                "title": "Guide for Cybersecurity Event Recovery",
+                "url": "https://doi.org/10.6028/NIST.SP.800-184"
+              }
+            ]
+          },
+          {
+            "text": "NSA, Enforce Signed Software Execution Policies",
+            "links": [
+              {
+                "title": "Enforce Signed Software Execution Policies",
+                "url": "https://media.defense.gov/2019/Sep/09/2002180334/-1/-1/0/Enforce%20Signed%20Software%20Execution%20Policies%20-%20Copy.pdf"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 4.3: Employ endpoint security protection on EO-critical software platforms to protect the platforms and all software running on them. Capabilities include:\nprotecting the software, data, and platform by identifying, reviewing, and minimizing the attack surface and exposure to known threats\npermitting only verified software to execute (e.g., file integrity verification, signed executables, allowlisting)\nproactively detecting threats and stopping them when possible\nresponding to and recovering from incidents\nproviding the necessary information for security operations, threat hunting, incident response, and other security needs",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=20",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:c65f0bab5f07a5b61a88f824e82ce5aa9656ca183641797c8d2cfd33dbe37f36",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 4: Quickly detect, respond to, and recover from threats and incidents involving EO-critical software and EO-critical software platforms.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=20",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:c9e7986d7cebf78a3a4e2dbb76660f2412d5e0732b7cab7d1331a61cb156973a",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: PR.DS-5, PR.DS-6, DE.AE-2, DE.CM-4, DE.CM-7, DE.DP-4\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: SI-3, SI-4, SI-7\n CISA, Continuous Diagnostics and Mitigation Program: Data Protection Management – How is Data Protected?\nCISA, Defending Against Software Supply Chain Attacks\nNIST, SP 800-61 Rev. 2, Computer Security Incident Handling Guide\nNIST, SP 800-83 Rev. 1, Guide to Malware Incident Prevention and Handling for Desktops and Laptops\nNIST, SP 800-150, Guide to Cyber Threat Information Sharing\nNIST, SP 800-167, Guide to Application Whitelisting\nNIST, SP 800-184, Guide for Cybersecurity Event Recovery\nNSA, Enforce Signed Software Execution Policies",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=20",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:6e7fd381803472ee4784dae101bd007b495e1bc8d7c711091c9fba0a1bba99bc",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=20"
+      }
+    },
+    {
+      "id": "SM-4.4",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Employ network security protection to monitor the network traffic to and from EO-critical software platforms to protect the platforms and their software using networks. Capabilities include:\nproactively detecting threats at all layers of the stack, including the application layer, and stopping them when possible\nproviding the necessary information for security operations, threat hunting, incident response, and other security needs",
+      "description": "Employ network security protection to monitor the network traffic to and from EO-critical software platforms to protect the platforms and their software using networks. Capabilities include:\nproactively detecting threats at all layers of the stack, including the application layer, and stopping them when possible\nproviding the necessary information for security operations, threat hunting, incident response, and other security needs",
+      "family": "Objective 4: Quickly detect, respond to, and recover from threats and incidents involving EO-critical software and EO-critical software platforms.",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=21",
+      "metadata": {
+        "publisher_item_id": "SM 4.4",
+        "category": "4",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: PR.DS-5, DE.AE-1, DE.AE-3, DE.CM-1, DE.CM-4, DE.CM-7, DE.DP-4",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AU-13, AU-14, SC-7, SI-3",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Continuous Diagnostics and Mitigation Program: Data Protection Management – How is Data Protected?",
+            "links": [
+              {
+                "title": "Continuous Diagnostics and Mitigation Program: Data Protection Management – How is Data Protected?",
+                "url": "https://www.cisa.gov/publication/cdm-capabilities-data-protection-management"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Continuous Diagnostics and Mitigation Program: Network Security Management – What is Happening on the Network? How is the Network Protected?",
+            "links": [
+              {
+                "title": "Continuous Diagnostics and Mitigation Program: Network Security Management – What is Happening on the Network? How is the Network Protected?",
+                "url": "https://www.cisa.gov/publication/cdm-capabilities-network-security-management"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Defending Against Software Supply Chain Attacks",
+            "links": [
+              {
+                "title": "Defending Against Software Supply Chain Attacks",
+                "url": "https://www.cisa.gov/sites/default/files/publications/defending_against_software_supply_chain_attacks_508_1.pdf"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Securing Network Infrastructure Devices",
+            "links": [
+              {
+                "title": "Securing Network Infrastructure Devices",
+                "url": "https://www.cisa.gov/tips/st18-001"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Trusted Internet Connections 3.0: Traditional TIC Use Case",
+            "links": [
+              {
+                "title": "Trusted Internet Connections 3.0: Traditional TIC Use Case",
+                "url": "https://www.cisa.gov/sites/default/files/publications/CISA%20TIC%203.0%20Traditional%20TIC%20Use%20Case.pdf"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-41 Rev. 1, Guidelines on Firewalls and Firewall Policy",
+            "links": [
+              {
+                "title": "Guidelines on Firewalls and Firewall Policy",
+                "url": "https://doi.org/10.6028/NIST.SP.800-41r1"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-61 Rev. 2, Computer Security Incident Handling Guide",
+            "links": [
+              {
+                "title": "Computer Security Incident Handling Guide",
+                "url": "https://doi.org/10.6028/NIST.SP.800-61r2"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-94 Rev. 1, Guide to Intrusion Detection and Prevention Systems (IDPS)",
+            "links": [
+              {
+                "title": "Guide to Intrusion Detection and Prevention Systems (IDPS)",
+                "url": "https://csrc.nist.gov/CSRC/media/Publications/sp/800-94/rev-1/draft/documents/draft_sp800-94-rev1.pdf"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 4.4: Employ network security protection to monitor the network traffic to and from EO-critical software platforms to protect the platforms and their software using networks. Capabilities include:\nproactively detecting threats at all layers of the stack, including the application layer, and stopping them when possible\nproviding the necessary information for security operations, threat hunting, incident response, and other security needs",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=21",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:f093e91c166a6580aa4fa67793be0a7025774cd8f39c9fa6deb030ccf41c441b",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 4: Quickly detect, respond to, and recover from threats and incidents involving EO-critical software and EO-critical software platforms.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=21",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:c9e7986d7cebf78a3a4e2dbb76660f2412d5e0732b7cab7d1331a61cb156973a",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: PR.DS-5, DE.AE-1, DE.AE-3, DE.CM-1, DE.CM-4, DE.CM-7, DE.DP-4\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AU-13, AU-14, SC-7, SI-3\n CISA, Continuous Diagnostics and Mitigation Program: Data Protection Management – How is Data Protected?\nCISA, Continuous Diagnostics and Mitigation Program: Network Security Management – What is Happening on the Network? How is the Network Protected?\nCISA, Defending Against Software Supply Chain Attacks\nCISA, Securing Network Infrastructure Devices\nCISA, Trusted Internet Connections 3.0: Traditional TIC Use Case\nNIST, SP 800-41 Rev. 1, Guidelines on Firewalls and Firewall Policy\nNIST, SP 800-61 Rev. 2, Computer Security Incident Handling Guide\nNIST, SP 800-94 Rev. 1, Guide to Intrusion Detection and Prevention Systems (IDPS)",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=21",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:a6f5416a8560b7fc537f1689586a669e4e53b1fd61a38475218a8fbe85da251e",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=21"
+      }
+    },
+    {
+      "id": "SM-4.5",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Train all security operations personnel and incident response team members, based on their roles and responsibilities, on how to handle incidents involving EO-critical software or EO-critical software platforms.",
+      "description": "Train all security operations personnel and incident response team members, based on their roles and responsibilities, on how to handle incidents involving EO-critical software or EO-critical software platforms.",
+      "family": "Objective 4: Quickly detect, respond to, and recover from threats and incidents involving EO-critical software and EO-critical software platforms.",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=22",
+      "metadata": {
+        "publisher_item_id": "SM 4.5",
+        "category": "4",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: PR.AT-5, PR.IP-9, PR.IP-10",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AT-3, CP-3, IR-2",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Incident Response Training",
+            "links": [
+              {
+                "title": "Incident Response Training",
+                "url": "https://www.cisa.gov/incident-response-training"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-61 Rev. 2, Computer Security Incident Handling Guide",
+            "links": [
+              {
+                "title": "Computer Security Incident Handling Guide",
+                "url": "https://doi.org/10.6028/NIST.SP.800-61r2"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-181 Rev. 1, Workforce Framework for Cybersecurity (NICE Framework)",
+            "links": [
+              {
+                "title": "Workforce Framework for Cybersecurity (NICE Framework)",
+                "url": "https://doi.org/10.6028/NIST.SP.800-181r1"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 4.5: Train all security operations personnel and incident response team members, based on their roles and responsibilities, on how to handle incidents involving EO-critical software or EO-critical software platforms.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=22",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:6f5975cd230bf1af9f257a618448755faf65d243e92bc17b0c5ede2e0a2d406f",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 4: Quickly detect, respond to, and recover from threats and incidents involving EO-critical software and EO-critical software platforms.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=22",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:c9e7986d7cebf78a3a4e2dbb76660f2412d5e0732b7cab7d1331a61cb156973a",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: PR.AT-5, PR.IP-9, PR.IP-10\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AT-3, CP-3, IR-2\n CISA, Incident Response Training\nNIST, SP 800-61 Rev. 2, Computer Security Incident Handling Guide\nNIST, SP 800-181 Rev. 1, Workforce Framework for Cybersecurity (NICE Framework)",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=22",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:14955b24782b142175310c1280752e0a3ce6b0031f71dc59d9d2819e649b8b9c",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=22"
+      }
+    },
+    {
+      "id": "SM-5.1",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Train all users of EO-critical software, based on their roles and responsibilities, on how to securely use the software and the EO-critical software platforms.",
+      "description": "Train all users of EO-critical software, based on their roles and responsibilities, on how to securely use the software and the EO-critical software platforms.",
+      "family": "Objective 5: Strengthen the understanding and performance of humans’ actions that foster the security of EO-critical software and EO-critical software platforms.",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=24",
+      "metadata": {
+        "publisher_item_id": "SM 5.1",
+        "category": "5",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: PR.AT-1",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AT-2, AT-3",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "CISA, PCII Authorized User Training",
+            "links": [
+              {
+                "title": "PCII Authorized User Training",
+                "url": "https://www.cisa.gov/pcii-authorized-user-training"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-181 Rev. 1, Workforce Framework for Cybersecurity (NICE Framework)",
+            "links": [
+              {
+                "title": "Workforce Framework for Cybersecurity (NICE Framework)",
+                "url": "https://doi.org/10.6028/NIST.SP.800-181r1"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 5.1: Train all users of EO-critical software, based on their roles and responsibilities, on how to securely use the software and the EO-critical software platforms.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=24",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:fac5d26ecef74c6b872943121ffdbbb1987e06aaec9202506697fc641348ec68",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 5: Strengthen the understanding and performance of humans’ actions that foster the security of EO-critical software and EO-critical software platforms.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=24",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:ad27e8e962368af2855d7717cab31f01774c0551e50e13eea5dc83cb68487bcf",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: PR.AT-1\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AT-2, AT-3\n CISA, PCII Authorized User Training\nNIST, SP 800-181 Rev. 1, Workforce Framework for Cybersecurity (NICE Framework)",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=24",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:2f872c11dadd5e52e8130b0f90317426b18e0e6e91bc9c618b03ec3a92001f48",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=24"
+      }
+    },
+    {
+      "id": "SM-5.2",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Train all administrators of EO-critical software and EO-critical software platforms, based on their roles and responsibilities, on how to securely administer the software and/or platforms.",
+      "description": "Train all administrators of EO-critical software and EO-critical software platforms, based on their roles and responsibilities, on how to securely administer the software and/or platforms.",
+      "family": "Objective 5: Strengthen the understanding and performance of humans’ actions that foster the security of EO-critical software and EO-critical software platforms.",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=25",
+      "metadata": {
+        "publisher_item_id": "SM 5.2",
+        "category": "5",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: PR.AT-2",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AT-3, CP-3",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-181 Rev. 1, Workforce Framework for Cybersecurity (NICE Framework)",
+            "links": [
+              {
+                "title": "Workforce Framework for Cybersecurity (NICE Framework)",
+                "url": "https://doi.org/10.6028/NIST.SP.800-181r1"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 5.2: Train all administrators of EO-critical software and EO-critical software platforms, based on their roles and responsibilities, on how to securely administer the software and/or platforms.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=25",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:001e6952dd388e4d65e6c04b28d46cd982607c01f3d69ea6c5d3b69ec0040adb",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 5: Strengthen the understanding and performance of humans’ actions that foster the security of EO-critical software and EO-critical software platforms.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=25",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:ad27e8e962368af2855d7717cab31f01774c0551e50e13eea5dc83cb68487bcf",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: PR.AT-2\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AT-3, CP-3\n NIST, SP 800-181 Rev. 1, Workforce Framework for Cybersecurity (NICE Framework)",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=25",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:2e5f8243d1886e841841985d4738da2b11973dc25d67be93857d785b2837a5c5",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=25"
+      }
+    },
+    {
+      "id": "SM-5.3",
+      "type": "requirement",
+      "framework": "nist-critical-software",
+      "title": "Conduct frequent awareness activities to reinforce the training for all users and administrators of EO-critical software and platforms, and to measure the training’s effectiveness for continuous improvement purposes.",
+      "description": "Conduct frequent awareness activities to reinforce the training for all users and administrators of EO-critical software and platforms, and to measure the training’s effectiveness for continuous improvement purposes.",
+      "family": "Objective 5: Strengthen the understanding and performance of humans’ actions that foster the security of EO-critical software and EO-critical software platforms.",
+      "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=26",
+      "metadata": {
+        "publisher_item_id": "SM 5.3",
+        "category": "5",
+        "informative_references": [
+          {
+            "text": "NIST, Cybersecurity Framework: PR.AT-1, PR.AT-2",
+            "links": [
+              {
+                "title": "Cybersecurity Framework",
+                "url": "https://www.nist.gov/cyberframework/framework"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AT-3",
+            "links": [
+              {
+                "title": "Security and Privacy Controls for Information Systems and Organizations",
+                "url": "https://doi.org/10.6028/NIST.SP.800-53r5"
+              }
+            ]
+          },
+          {
+            "text": "CISA, Cyber Education and Awareness",
+            "links": [
+              {
+                "title": "Cyber Education and Awareness",
+                "url": "https://www.cisa.gov/cyber-education-and-awareness"
+              }
+            ]
+          },
+          {
+            "text": "NIST, SP 800-181 Rev. 1, Workforce Framework for Cybersecurity (NICE Framework)",
+            "links": [
+              {
+                "title": "Workforce Framework for Cybersecurity (NICE Framework)",
+                "url": "https://doi.org/10.6028/NIST.SP.800-181r1"
+              }
+            ]
+          }
+        ],
+        "source_fragments": [
+          {
+            "field": "description",
+            "text": "SM 5.3: Conduct frequent awareness activities to reinforce the training for all users and administrators of EO-critical software and platforms, and to measure the training’s effectiveness for continuous improvement purposes.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=26",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:7d0e678fe10c7e28a9433c99b3779ac3ee8e6211b17f07c1baa3b6643640702b",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "objective",
+            "text": "Objective 5: Strengthen the understanding and performance of humans’ actions that foster the security of EO-critical software and EO-critical software platforms.",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=26",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:ad27e8e962368af2855d7717cab31f01774c0551e50e13eea5dc83cb68487bcf",
+            "extraction_method": "nist-critical-software-html"
+          },
+          {
+            "field": "informative_references",
+            "text": "NIST, Cybersecurity Framework: PR.AT-1, PR.AT-2\nNIST, SP 800-53 Rev. 5, Security and Privacy Controls for Information Systems and Organizations: AT-3\n CISA, Cyber Education and Awareness\nNIST, SP 800-181 Rev. 1, Workforce Framework for Cybersecurity (NICE Framework)",
+            "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=26",
+            "source_key": "nist-critical-software",
+            "checksum": "sha256:8b971aabf1843101bbf7ed237638430d0e0d5c8b7f936ce0eeb526d60ee8f73d",
+            "extraction_method": "nist-critical-software-html"
+          }
+        ],
+        "primary_artifact_id": "artifact-nist-critical-software",
+        "publication_date": "2021-07-08"
+      },
+      "source": {
+        "key": "nist-critical-software",
+        "snapshot_date": "2026-10-18T21:08:58.966Z",
+        "version": "2021 guidance",
+        "locator": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=26"
+      }
+    }
+  ]
+}

@@ -289,3 +289,86 @@ export function dedupeDisaRecords(records) {
     return benchA.localeCompare(benchB) || a.id.localeCompare(b.id);
   });
 }
+
+/** One native connection per pair, with every distinct publisher citation retained. */
+export function dedupeDisaRelationships(relationships) {
+  const unique = new Map();
+  for (const relationship of relationships) {
+    const key = JSON.stringify([relationship.source_catalog, relationship.source_id, relationship.target_catalog, relationship.target_id, relationship.relationship_type]);
+    let entry = unique.get(key);
+    if (!entry) { entry = { ...relationship, source_citations: [] }; unique.set(key, entry); }
+    const native = { source_locator: relationship.source_locator, source_url: relationship.source_url || '', source_version: relationship.source_version || '',
+      checksum: relationship.source_checksum || '', native_rule_id: relationship.native_rule_id || '', benchmark_id: relationship.benchmark_id || '' };
+    if (!entry.source_citations.some((citation) => Object.keys(native).every((field) => citation[field] === native[field]))) entry.source_citations.push(native);
+  }
+  return [...unique.values()].map((entry) => {
+    const base = { ...entry }; for (const field of ['source_url', 'source_version', 'source_checksum', 'native_rule_id', 'benchmark_id']) delete base[field];
+    const citations = entry.source_citations.map((citation, index) => ({ ...citation, locator: index === 0 ? entry.source_locator : `${citation.source_url} | ${citation.source_locator}` }));
+    return { ...base, source_locators: citations.map((citation) => citation.locator), source_citations: citations };
+  });
+}
+
+/** Keep prior native editions and IDs; absence from a new snapshot never implies retirement. */
+const ABSENT_RECORD_WARNING = 'Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred.';
+const ABSENT_CONNECTION_WARNING = 'Recorded in a verified prior publisher edition and retained; absent from the latest selected snapshot. No current applicability is inferred.';
+
+export function preserveDisaRecordHistory(previous, current) {
+  const captureKey = (record) => {
+    const copy = { ...record, ...(record.source ? { source: { ...record.source } } : {}), ...(record.metadata ? { metadata: { ...record.metadata } } : {}) };
+    if (copy.source) delete copy.source.snapshot_date;
+    if (copy.metadata) {
+      delete copy.metadata.previous_editions; delete copy.metadata.current_snapshot_presence;
+      if (copy.metadata.source_warnings) {
+        copy.metadata.source_warnings = copy.metadata.source_warnings.filter((warning) => warning !== ABSENT_RECORD_WARNING);
+        if (!copy.metadata.source_warnings.length) delete copy.metadata.source_warnings;
+      }
+    }
+    const ordered = (value) => Array.isArray(value) ? value.map(ordered) : value && typeof value === 'object'
+      ? Object.fromEntries(Object.keys(value).sort().map((key) => [key, ordered(value[key])])) : value;
+    return JSON.stringify(ordered(copy));
+  };
+  const old = new Map(previous.map((record) => [record.id, record])); const next = new Map();
+  for (const record of current) {
+    if (next.has(record.id)) throw new Error(`Duplicate current DISA ID: ${record.id}`);
+    const copy = structuredClone(record); const prior = old.get(record.id);
+    if (copy.metadata?.source_warnings) copy.metadata.source_warnings = copy.metadata.source_warnings.filter((warning) => warning !== ABSENT_RECORD_WARNING);
+    const history = [...new Map([...(prior?.metadata?.previous_editions || []), ...(record.metadata?.previous_editions || [])].map((entry) => [captureKey(entry), entry])).values()];
+    if (prior && captureKey(prior) !== captureKey(record)) {
+      const historical = structuredClone(prior); if (historical.metadata) delete historical.metadata.previous_editions;
+      if (!history.some((entry) => captureKey(entry) === captureKey(historical))) history.push(historical);
+    }
+    copy.metadata = { ...copy.metadata, current_snapshot_presence: true, ...(history.length ? { previous_editions: history } : {}) };
+    next.set(copy.id, copy);
+  }
+  for (const record of previous) if (!next.has(record.id)) {
+    const copy = structuredClone(record); const warning = ABSENT_RECORD_WARNING;
+    copy.metadata = { ...copy.metadata, current_snapshot_presence: false, source_warnings: [...new Set([...(copy.metadata?.source_warnings || []), warning])] };
+    next.set(copy.id, copy);
+  }
+  return [...next.values()].sort((a,b) => a.id.localeCompare(b.id));
+}
+
+/** Stable legacy connection IDs survive inserted/new/withdrawn publisher rows. */
+export function preserveDisaConnectionIds(previous, current, stem = 'stig-srg-to-cci') {
+  const key = (row) => JSON.stringify([row.source_catalog,row.source_id,row.target_catalog,row.target_id,row.relationship_type]);
+  const existing = new Map(); const used = new Set(); let maximum = previous.length;
+  previous.forEach((row,index) => {
+    const id = row.atlas_connection_id || `edge:${stem}:${index+1}`;
+    if (!id.startsWith('edge:') || used.has(id) || existing.has(key(row))) throw new Error('Duplicate/invalid previous connection identity');
+    maximum = Math.max(maximum, Number(id.match(/:(\d+)$/)?.[1]) || 0); used.add(id); existing.set(key(row),id);
+  });
+  const currentKeys = new Set(current.map(key));
+  const seeds = [];
+  for (const row of [...previous,...current]) for (const citation of row.source_citations?.length ? row.source_citations : [{ source_locator:row.source_locator }]) {
+    seeds.push({ ...row, source_locator:citation.source_locator || citation.locator || row.source_locator, source_url:citation.source_url,
+      source_version:citation.source_version, source_checksum:citation.checksum, native_rule_id:citation.native_rule_id, benchmark_id:citation.benchmark_id });
+  }
+  const merged = dedupeDisaRelationships(seeds).sort((a,b) => key(a).localeCompare(key(b)));
+  for (const row of merged) {
+    let id = existing.get(key(row)); if (!id) { do { id = `edge:${stem}:${++maximum}`; } while (used.has(id)); used.add(id); }
+    row.atlas_connection_id = id; row.current_snapshot_presence = currentKeys.has(key(row));
+    if (row.current_snapshot_presence && row.warning === ABSENT_CONNECTION_WARNING) delete row.warning;
+    if (!row.current_snapshot_presence && !row.warning) row.warning = ABSENT_CONNECTION_WARNING;
+  }
+  return merged;
+}

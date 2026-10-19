@@ -226,7 +226,7 @@ test("runtime Atlas spine carries full L0-L3 structure and L4 summaries", () => 
     }
   }
   const catalogEntries = entries.filter((entry) => entry.node_type === "catalog");
-  assert.equal(catalogEntries.length, 28);
+  assert.equal(catalogEntries.length, 30);
   const publicationsByArea = new Map();
   for (const entry of catalogEntries) {
     publicationsByArea.set(
@@ -239,9 +239,9 @@ test("runtime Atlas spine carries full L0-L3 structure and L4 summaries", () => 
     assert.ok(entry.publication_type);
     assert.ok(entry.mandate_note);
   }
-  assert.equal(publicationsByArea.get("atlas:LIMB-COMPLIANCE"), 12);
+  assert.equal(publicationsByArea.get("atlas:LIMB-COMPLIANCE"), 13);
   assert.equal(publicationsByArea.get("atlas:LIMB-GOVERNANCE"), 3);
-  assert.equal(publicationsByArea.get("atlas:LIMB-IMPLEMENTATION"), 3);
+  assert.equal(publicationsByArea.get("atlas:LIMB-IMPLEMENTATION"), 4);
   assert.ok((publicationsByArea.get("atlas:LIMB-RISK") || 0) > 0);
   assert.ok((publicationsByArea.get("atlas:LIMB-ASSESSMENT") || 0) > 0);
   const assessmentCatalog = catalogEntries.find(

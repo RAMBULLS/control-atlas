@@ -623,6 +623,18 @@ def scan_report(mode, report, cwd="."):
     names = {"snapshot": "results.sarif", "history": "history-results.sarif"}
     if mode not in names or report != names[mode]:
         raise ValueError("Unsupported scan invocation")
+    report_path = cwd / report
+    report_path.unlink(missing_ok=True)
+    try:
+        return _scan_report(mode, report, cwd)
+    except (ValueError, TypeError, KeyError, OSError, subprocess.SubprocessError):
+        # Only a completed, verified report may reach the upload step. A held
+        # finding returns 1 normally and retains its report for investigation.
+        report_path.unlink(missing_ok=True)
+        raise
+
+
+def _scan_report(mode, report, cwd):
     config = cwd / ".gitleaks.toml"
     binary = cwd / "gitleaks"
     if _digest(config) != REPO_CONFIG_SHA:
@@ -633,7 +645,6 @@ def scan_report(mode, report, cwd="."):
         raise ValueError("Unexpected scanner version")
     before = _snapshot_identity(cwd) if mode == "snapshot" else None
     report_path = cwd / report
-    report_path.unlink(missing_ok=True)
     action = "dir" if mode == "snapshot" else "git"
     effective = _snapshot_config(config.read_bytes()) if mode == "snapshot" else config.read_bytes()
     temporary = None
@@ -697,6 +708,9 @@ def main():
         if len(sys.argv) != 3:
             raise ValueError("Expected scan mode and report")
         return scan_report(*sys.argv[1:])
+    except subprocess.TimeoutExpired:
+        print("Secret scan timed out; scan incomplete and publication held", file=sys.stderr)
+        return 1
     except (ValueError, TypeError, KeyError, OSError, subprocess.SubprocessError):
         print("Secret scan verification failed; publication held", file=sys.stderr)
         return 1

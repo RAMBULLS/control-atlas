@@ -2,6 +2,7 @@
 import copy
 import hashlib
 import importlib.util
+import io
 import json
 from pathlib import Path
 import re
@@ -241,10 +242,42 @@ class ScanReportTests(unittest.TestCase):
     def test_scanner_error_held(self):
         self.scan_exit = 2
         self.assertRaises(ValueError, self.run_gate)
+        self.assertFalse((self.cwd / "results.sarif").exists())
+
+    def test_timeout_removes_stale_and_partial_reports(self):
+        for mode in ("snapshot", "history"):
+            for stage in ("version", "scan"):
+                with self.subTest(mode=mode, stage=stage):
+                    report = "results.sarif" if mode == "snapshot" else "history-results.sarif"
+                    target = self.cwd / report
+                    target.write_text("stale report", encoding="utf-8")
+
+                    def timeout(args, **kwargs):
+                        if stage == "scan" and args[1] == "version":
+                            return self.run_process(args, **kwargs)
+                        if stage == "scan":
+                            target.write_text('{"runs": [', encoding="utf-8")
+                        raise gate.subprocess.TimeoutExpired(args, kwargs["timeout"], output=b"private scanner output")
+
+                    with mock.patch.object(gate.subprocess, "run", side_effect=timeout):
+                        self.assertRaises(gate.subprocess.TimeoutExpired, self.run_gate, mode)
+                    self.assertFalse(target.exists())
+                    self.assertFalse(any(self.cwd.glob(".publisher-snapshot-*")))
+
+    def test_timeout_reports_incomplete_failure_without_scanner_output(self):
+        output = io.StringIO()
+        with mock.patch.object(gate.sys, "argv", ["publisher-secret-gate.py", "history", "history-results.sarif"]), \
+                mock.patch.object(gate, "scan_report", side_effect=gate.subprocess.TimeoutExpired(["gitleaks"], 180, output=b"private scanner output")), \
+                mock.patch.object(gate.sys, "stderr", output):
+            self.assertEqual(gate.main(), 1)
+        self.assertIn("timed out; scan incomplete and publication held", output.getvalue())
+        self.assertNotIn("private scanner output", output.getvalue())
 
     def test_changed_config_held(self):
+        (self.cwd / "results.sarif").write_text("stale report", encoding="utf-8")
         (self.cwd / ".gitleaks.toml").write_bytes(b"changed policy\n")
         self.assertRaises(ValueError, self.run_gate)
+        self.assertFalse((self.cwd / "results.sarif").exists())
 
     def test_wrong_binary_version_held(self):
         self.version = b"9.0.0\n"

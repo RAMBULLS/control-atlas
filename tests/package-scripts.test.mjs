@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import test from 'node:test';
+import { runInNewContext } from 'node:vm';
 
 import { isAllowedLicenseExpression } from '../tools/check-licenses.mjs';
 import { parseGitHubRemote } from '../tools/detection.mjs';
@@ -110,10 +111,60 @@ test('security uses native GitHub controls without rebuilding the site', () => {
   assert.match(security, /python3 tools\/publisher-secret-gate\.py snapshot results\.sarif/);
   assert.match(security, /python3 tools\/publisher-secret-gate\.py history history-results\.sarif/);
   assert.match(security, /github\/codeql-action\/upload-sarif@[0-9a-f]{40}/);
+  for (const report of ['results.sarif', 'history-results.sarif']) {
+    const upload = security.split('      - uses: ').find(step =>
+      step.startsWith('github/codeql-action/upload-sarif@') && step.includes(`sarif_file: ${report}\n`));
+    assert.ok(upload, `Missing upload for ${report}`);
+    assert.ok(upload.includes('always()') && upload.includes(`hashFiles('${report}') != ''`),
+      `Upload ${report} must retain completed findings after failure and skip absent reports`);
+  }
   assert.equal((security.match(/fetch-depth: 0/g) ?? []).length, 1);
   assert.doesNotMatch(security, /npm ci|npm run build:site|npm run audit:deps/);
   assert.ok(existsSync('.gitleaks.toml'));
   assert.ok(existsSync('.github/dependabot.yml'));
+});
+
+test('secret report labeling preserves the complete original after write failures', () => {
+  for (const kind of ['snapshot', 'historical']) {
+    const step = security.split('      - name: ').find(value => value.startsWith(`Label ${kind} secret-scan results`));
+    const script = step?.match(/node <<'NODE'\n([\s\S]*?)\n\s+NODE/)?.[1];
+    assert.ok(script, `Missing ${kind} report labeling`);
+    const path = kind === 'snapshot' ? 'results.sarif' : 'history-results.sarif';
+    const original = JSON.stringify({ runs: [{ results: [{ ruleId: 'held-finding' }] }] });
+    for (const failure of [null, 'write', 'rename']) {
+      const files = new Map([[path, original]]);
+      const fs = {
+        existsSync: name => files.has(name),
+        readFileSync: name => files.get(name),
+        writeFileSync: (name, value) => {
+          if (failure === 'write') {
+            files.set(name, '{');
+            throw new Error('Simulated write failure');
+          }
+          files.set(name, value);
+        },
+        renameSync: (from, to) => {
+          if (failure === 'rename') throw new Error('Simulated rename failure');
+          files.set(to, files.get(from));
+          files.delete(from);
+        },
+      };
+      const label = () => runInNewContext(script, { require: name => {
+        assert.equal(name, 'node:fs');
+        return fs;
+      } });
+      if (failure) {
+        assert.throws(label, /Simulated/);
+        assert.equal(files.get(path), original);
+      } else {
+        label();
+        const report = JSON.parse(files.get(path));
+        assert.deepEqual(report.runs[0].results, [{ ruleId: 'held-finding' }]);
+        assert.ok(report.runs[0].automationDetails.id.endsWith(`secrets-${kind === 'historical' ? 'history' : kind}`));
+        assert.equal(files.has(`${path}.tmp`), false);
+      }
+    }
+  }
 });
 
 test('portable export reuses the qualified graph and retains only the validated delivery package', () => {

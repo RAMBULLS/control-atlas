@@ -516,6 +516,8 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
   const CATALOG_DISPLAY_NAMES = {
     "cmmc-2": { name: "CMMC 2.0", group: "Other" },
     "csf-2": { name: "NIST CSF 2.0", group: "NIST" },
+    "nist-csf-1.1": { name: "NIST CSF 1.1", group: "NIST" },
+    "nist-critical-software": { name: "NIST Critical Software Security Measures", group: "NIST" },
     "cui-policy": { name: "CUI Program", group: "Other" },
     "disa-cci": { name: "DISA CCI", group: "DISA" },
     "disa-srg": { name: "DISA SRG", group: "DISA" },

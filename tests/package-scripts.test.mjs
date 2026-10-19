@@ -110,6 +110,13 @@ test('security uses native GitHub controls without rebuilding the site', () => {
   assert.match(security, /python3 tools\/publisher-secret-gate\.py snapshot results\.sarif/);
   assert.match(security, /python3 tools\/publisher-secret-gate\.py history history-results\.sarif/);
   assert.match(security, /github\/codeql-action\/upload-sarif@[0-9a-f]{40}/);
+  for (const report of ['results.sarif', 'history-results.sarif']) {
+    const upload = security.split('      - uses: ').find(step =>
+      step.startsWith('github/codeql-action/upload-sarif@') && step.includes(`sarif_file: ${report}\n`));
+    assert.ok(upload, `Missing upload for ${report}`);
+    assert.ok(upload.includes('always()') && upload.includes(`hashFiles('${report}') != ''`),
+      `Upload ${report} must retain completed findings after failure and skip absent reports`);
+  }
   assert.equal((security.match(/fetch-depth: 0/g) ?? []).length, 1);
   assert.doesNotMatch(security, /npm ci|npm run build:site|npm run audit:deps/);
   assert.ok(existsSync('.gitleaks.toml'));

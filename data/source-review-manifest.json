@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "review_policy": {
     "minimum_samples_per_catalog": 3,
-    "statement": "A disposition records a human comparison of representative normalized records with publisher material and a separate official-source currentness check. It does not convert parser or count reconciliation into semantic proof, and it keeps known remediation visible."
+    "statement": "Automated source comparison and AI-assisted engineering review are accepted without a human-review prerequisite. Dispositions require source-linked evidence, separate currentness checks and explicit limits; parser or count reconciliation alone is not whole-corpus semantic proof."
   },
   "catalogs": [
     {
@@ -233,7 +233,7 @@
       "reviewed_at": "2026-08-13",
       "semantic_content_review": "reviewed_no_known_mismatch",
       "locator_only_review": "none",
-      "upstream_currentness_review": "current_as_checked",
+      "upstream_currentness_review": "blocked",
       "representative_samples": [
         {
           "record_id": "TENET-1",
@@ -259,7 +259,7 @@
         }
       ],
       "rationale": "Samples span architecture tenets, base activities, and the separate OT overlay with page, table, and row evidence retained.",
-      "follow_up": null
+      "follow_up": "Seven official PDFs freshly byte-verified from the current CIO library. Overlay original and migrated URLs return browser404; a383-page public archive exactly corroborates retained text, but publisher replacement/withdrawal/currentness remains UNKNOWN."
     },
     {
       "catalog_id": "fedramp-2026",
@@ -771,6 +771,64 @@
         }
       ],
       "rationale": "Samples span Govern, Map, and Measure. AI RMF 1.0 is under revision, but the current Playbook remains the publisher's live resource until that revision is released.",
+      "follow_up": null
+    },
+    {
+      "catalog_id": "nist-critical-software",
+      "reviewed_at": "2026-10-18",
+      "semantic_content_review": "reviewed_no_known_mismatch",
+      "locator_only_review": "none",
+      "upstream_currentness_review": "current_as_checked",
+      "representative_samples": [
+        {
+          "record_id": "SM-1.1",
+          "review_note": "AI-assisted comparison with official publisher content and automated source-text, identifier and hierarchy reconciliation. Source: https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=3"
+        },
+        {
+          "record_id": "SM-3.2",
+          "review_note": "AI-assisted comparison with official publisher content and automated source-text, identifier and hierarchy reconciliation. Source: https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=15"
+        },
+        {
+          "record_id": "SM-5.3",
+          "review_note": "AI-assisted comparison with official publisher content and automated source-text, identifier and hierarchy reconciliation. Source: https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security#table-row=26"
+        }
+      ],
+      "official_sources": [
+        {
+          "url": "https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/securing-critical-software/security",
+          "supports": "Official publication identity and catalog download or security-measure table."
+        }
+      ],
+      "rationale": "Official source bytes and source-linked content are compared with the normalized identifiers, captured text and publisher hierarchy. Automated regression checks retain the full inventory; the stated semantic samples do not establish unrelated catalog coverage.",
+      "follow_up": null
+    },
+    {
+      "catalog_id": "nist-csf-1.1",
+      "reviewed_at": "2026-10-18",
+      "semantic_content_review": "reviewed_no_known_mismatch",
+      "locator_only_review": "none",
+      "upstream_currentness_review": "superseded",
+      "representative_samples": [
+        {
+          "record_id": "ID.AM-1",
+          "review_note": "AI-assisted comparison with official publisher content and automated source-text, identifier and hierarchy reconciliation. Source: https://www.nist.gov/system/files/documents/2018/04/17/2018-04-16_framework_v1.1_core1.xlsx#sheet=Sheet1&row=2"
+        },
+        {
+          "record_id": "PR.IP-6",
+          "review_note": "AI-assisted comparison with official publisher content and automated source-text, identifier and hierarchy reconciliation. Source: https://www.nist.gov/system/files/documents/2018/04/17/2018-04-16_framework_v1.1_core1.xlsx#sheet=Sheet1&row=262"
+        },
+        {
+          "record_id": "RC.CO-3",
+          "review_note": "AI-assisted comparison with official publisher content and automated source-text, identifier and hierarchy reconciliation. Source: https://www.nist.gov/system/files/documents/2018/04/17/2018-04-16_framework_v1.1_core1.xlsx#sheet=Sheet1&row=503"
+        }
+      ],
+      "official_sources": [
+        {
+          "url": "https://www.nist.gov/cyberframework/csf-11-archive",
+          "supports": "Official publication identity and catalog download or security-measure table."
+        }
+      ],
+      "rationale": "Official source bytes and source-linked content are compared with the normalized identifiers, captured text and publisher hierarchy. Automated regression checks retain the full inventory; the stated semantic samples do not establish unrelated catalog coverage.",
       "follow_up": null
     },
     {

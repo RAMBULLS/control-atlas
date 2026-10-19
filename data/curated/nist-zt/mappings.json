@@ -13378,7 +13378,20 @@
         }
       ],
       "relationship_clauses": [],
-      "relationship_parse_status": "unresolved"
+      "relationship_parse_status": "unresolved",
+      "source_disposition": {
+        "status": "redundant_publisher_reference",
+        "reason": "The publisher explicitly references already-listed mapping content. This row supplies no new predicate; the earlier native assertions retain their own directions and properties.",
+        "mapping_ids": [
+          "MAP-eb047af33ef1d372",
+          "MAP-88d6c714de560db6"
+        ],
+        "source_locators": [
+          "https://pages.nist.gov/zero-trust-architecture/_downloads/01dfaff2b25f0a61f127f06906bc37cc/CSF2.0Mapping.xlsx#sheet=Broadcom%20(w%20Symantec%20product)&row=38",
+          "https://pages.nist.gov/zero-trust-architecture/_downloads/01dfaff2b25f0a61f127f06906bc37cc/CSF2.0Mapping.xlsx#sheet=Broadcom%20(w%20Symantec%20product)&row=33",
+          "https://pages.nist.gov/zero-trust-architecture/_downloads/01dfaff2b25f0a61f127f06906bc37cc/CSF2.0Mapping.xlsx#sheet=Broadcom%20(w%20Symantec%20product)&row=34"
+        ]
+      }
     },
     {
       "id": "MAP-794705b7c602fa5f",
@@ -13443,7 +13456,20 @@
         }
       ],
       "relationship_clauses": [],
-      "relationship_parse_status": "unresolved"
+      "relationship_parse_status": "unresolved",
+      "source_disposition": {
+        "status": "redundant_publisher_reference",
+        "reason": "The publisher explicitly references already-listed mapping content. This row supplies no new predicate; the earlier native assertions retain their own directions and properties.",
+        "mapping_ids": [
+          "MAP-eb047af33ef1d372",
+          "MAP-88d6c714de560db6"
+        ],
+        "source_locators": [
+          "https://pages.nist.gov/zero-trust-architecture/_downloads/01dfaff2b25f0a61f127f06906bc37cc/CSF2.0Mapping.xlsx#sheet=Broadcom%20(w%20Symantec%20product)&row=39",
+          "https://pages.nist.gov/zero-trust-architecture/_downloads/01dfaff2b25f0a61f127f06906bc37cc/CSF2.0Mapping.xlsx#sheet=Broadcom%20(w%20Symantec%20product)&row=33",
+          "https://pages.nist.gov/zero-trust-architecture/_downloads/01dfaff2b25f0a61f127f06906bc37cc/CSF2.0Mapping.xlsx#sheet=Broadcom%20(w%20Symantec%20product)&row=34"
+        ]
+      }
     },
     {
       "id": "MAP-07bd41358771b6e1",
@@ -15408,7 +15434,18 @@
         }
       ],
       "relationship_clauses": [],
-      "relationship_parse_status": "unresolved"
+      "relationship_parse_status": "unresolved",
+      "source_disposition": {
+        "status": "redundant_publisher_reference",
+        "reason": "The publisher explicitly references already-listed mapping content. This row supplies no new predicate; the earlier native assertions retain their own directions and properties.",
+        "mapping_ids": [
+          "MAP-ef14802def07fadd"
+        ],
+        "source_locators": [
+          "https://pages.nist.gov/zero-trust-architecture/_downloads/01dfaff2b25f0a61f127f06906bc37cc/CSF2.0Mapping.xlsx#sheet=Broadcom%20(w%20VMware)%20%26%20Omnissa&row=16",
+          "https://pages.nist.gov/zero-trust-architecture/_downloads/01dfaff2b25f0a61f127f06906bc37cc/CSF2.0Mapping.xlsx#sheet=Broadcom%20(w%20VMware)%20%26%20Omnissa&row=14"
+        ]
+      }
     },
     {
       "id": "MAP-97e1eb32e9cea849",
@@ -17035,7 +17072,18 @@
         }
       ],
       "relationship_clauses": [],
-      "relationship_parse_status": "unresolved"
+      "relationship_parse_status": "unresolved",
+      "source_disposition": {
+        "status": "redundant_publisher_reference",
+        "reason": "The publisher explicitly references already-listed mapping content. This row supplies no new predicate; the earlier native assertions retain their own directions and properties.",
+        "mapping_ids": [
+          "MAP-9551c984cf3fbec4"
+        ],
+        "source_locators": [
+          "https://pages.nist.gov/zero-trust-architecture/_downloads/01dfaff2b25f0a61f127f06906bc37cc/CSF2.0Mapping.xlsx#sheet=Broadcom%20(w%20VMware)%20%26%20Omnissa&row=40",
+          "https://pages.nist.gov/zero-trust-architecture/_downloads/01dfaff2b25f0a61f127f06906bc37cc/CSF2.0Mapping.xlsx#sheet=Broadcom%20(w%20VMware)%20%26%20Omnissa&row=34"
+        ]
+      }
     },
     {
       "id": "MAP-4cb9197790c04690",
@@ -25586,7 +25634,18 @@
         }
       ],
       "relationship_clauses": [],
-      "relationship_parse_status": "unresolved"
+      "relationship_parse_status": "unresolved",
+      "source_disposition": {
+        "status": "redundant_publisher_reference",
+        "reason": "The publisher explicitly references already-listed mapping content. This row supplies no new predicate; the earlier native assertions retain their own directions and properties.",
+        "mapping_ids": [
+          "MAP-b2c5058883e0f480"
+        ],
+        "source_locators": [
+          "https://pages.nist.gov/zero-trust-architecture/_downloads/01dfaff2b25f0a61f127f06906bc37cc/CSF2.0Mapping.xlsx#sheet=IBM&row=43",
+          "https://pages.nist.gov/zero-trust-architecture/_downloads/01dfaff2b25f0a61f127f06906bc37cc/CSF2.0Mapping.xlsx#sheet=IBM&row=42"
+        ]
+      }
     },
     {
       "id": "MAP-6439017650bb7ce9",
@@ -27107,7 +27166,20 @@
         }
       ],
       "relationship_clauses": [],
-      "relationship_parse_status": "unresolved"
+      "relationship_parse_status": "unresolved",
+      "source_disposition": {
+        "status": "redundant_publisher_reference",
+        "reason": "The publisher explicitly references already-listed mapping content. This row supplies no new predicate; the earlier native assertions retain their own directions and properties.",
+        "mapping_ids": [
+          "MAP-2446e37cdd131efa",
+          "MAP-434f8d49cffed6e3"
+        ],
+        "source_locators": [
+          "https://pages.nist.gov/zero-trust-architecture/_downloads/01dfaff2b25f0a61f127f06906bc37cc/CSF2.0Mapping.xlsx#sheet=IBM&row=64",
+          "https://pages.nist.gov/zero-trust-architecture/_downloads/01dfaff2b25f0a61f127f06906bc37cc/CSF2.0Mapping.xlsx#sheet=IBM&row=59",
+          "https://pages.nist.gov/zero-trust-architecture/_downloads/01dfaff2b25f0a61f127f06906bc37cc/CSF2.0Mapping.xlsx#sheet=IBM&row=60"
+        ]
+      }
     },
     {
       "id": "MAP-9cc193b12c1ec79d",

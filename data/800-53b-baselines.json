@@ -12,7 +12,12 @@
       "source": {
         "key": "nist-800-53b-baselines",
         "snapshot_date": "2026-09-23T12:46:34.238Z",
-        "locator": "sp800-53b#low"
+        "locator": "https://raw.githubusercontent.com/usnistgov/oscal-content/v1.5.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_LOW-baseline_profile.json",
+        "version": "5.2.0"
+      },
+      "metadata": {
+        "primary_artifact_id": "artifact-nist-800-53b-low-profile",
+        "publisher_baseline_title": "Electronic (OSCAL) Version of NIST Special Publication 800-53 Revision 5.2.0 LOW IMPACT BASELINE"
       }
     },
     {
@@ -25,7 +30,12 @@
       "source": {
         "key": "nist-800-53b-baselines",
         "snapshot_date": "2026-09-23T12:46:34.238Z",
-        "locator": "sp800-53b#moderate"
+        "locator": "https://raw.githubusercontent.com/usnistgov/oscal-content/v1.5.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json",
+        "version": "5.2.0"
+      },
+      "metadata": {
+        "primary_artifact_id": "artifact-nist-800-53b-baselines",
+        "publisher_baseline_title": "Electronic (OSCAL) Version of NIST Special Publication 800-53 Revision 5.2.0 MODERATE IMPACT BASELINE"
       }
     },
     {
@@ -38,7 +48,15 @@
       "source": {
         "key": "nist-800-53b-baselines",
         "snapshot_date": "2026-09-23T12:46:34.238Z",
-        "locator": "sp800-53b#high"
+        "locator": "https://raw.githubusercontent.com/usnistgov/oscal-content/v1.5.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_HIGH-baseline_profile.json",
+        "version": "5.2.0"
+      },
+      "metadata": {
+        "primary_artifact_id": "artifact-nist-800-53b-high-profile",
+        "publisher_baseline_title": "Electronic (OSCAL) Version of NIST Special Publication 800-53 Revision 5.1.1 HIGH IMPACT BASELINE",
+        "source_warnings": [
+          "Publisher profile title saysRevision5.1.1 while its metadata.version is5.2.0. Both native values are preserved; the downloadedHIGHmembership set matches all370recorded controls."
+        ]
       }
     },
     {
@@ -51,7 +69,12 @@
       "source": {
         "key": "nist-800-53b-baselines",
         "snapshot_date": "2026-09-23T12:46:34.238Z",
-        "locator": "sp800-53b#privacy"
+        "locator": "https://raw.githubusercontent.com/usnistgov/oscal-content/v1.5.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_PRIVACY-baseline_profile.json",
+        "version": "5.2.0"
+      },
+      "metadata": {
+        "primary_artifact_id": "artifact-nist-800-53b-privacy-profile",
+        "publisher_baseline_title": "Electronic (OSCAL) Version of NIST Special Publication 800-53 Revision 5.2.0 PRIVACY BASELINE"
       }
     }
   ]

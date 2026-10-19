@@ -8,7 +8,26 @@
       "byte_length": 6733190,
       "checksum": "sha256:b51eabcd5a41033164b701724ce40ac127f8eabda0826bb042761b508c8db799",
       "pages": 104,
-      "atlas_role": "primary_publication"
+      "atlas_role": "primary_publication",
+      "source_recovery": {
+        "source_id": "dod-zt-reference-architecture-v2",
+        "retain_last_good": true,
+        "mutate_items": false,
+        "mutate_connections": false,
+        "lifecycle": "active",
+        "status": "verified_relocation",
+        "accepted_url": "https://dowcio.war.gov/Portals/0/Documents/Library/(U)ZT_RA_v2.0(U)_Sep22.pdf",
+        "next_action": "reuse_existing_ids_and_captured_content",
+        "byte_evidence": {
+          "sha256": "sha256:b51eabcd5a41033164b701724ce40ac127f8eabda0826bb042761b508c8db799",
+          "bytes": 6733190
+        },
+        "inventory_url": "https://dowcio.war.gov/Library/",
+        "prior_url": "https://dodcio.defense.gov/Portals/0/Documents/Library/(U)ZT_RA_v2.0(U)_Sep22.pdf",
+        "retrieved_at": "2026-10-19T00:09:59.570Z",
+        "discovery_method": "Explicit live official library anchor read through in-app browser DOM",
+        "acquisition_method": "Native browser downloadMedia on that exact observed official link; direct strict HTTP client returned403"
+      }
     },
     {
       "source_key": "dod-zt-strategy",
@@ -17,7 +36,26 @@
       "byte_length": 6141341,
       "checksum": "sha256:cba8e6093fbfa2a33f75f5fd286dd604b3d3ba4212350d1b528fe63462dea635",
       "pages": 37,
-      "atlas_role": "primary_publication"
+      "atlas_role": "primary_publication",
+      "source_recovery": {
+        "source_id": "dod-zt-strategy",
+        "retain_last_good": true,
+        "mutate_items": false,
+        "mutate_connections": false,
+        "lifecycle": "active",
+        "status": "verified_relocation",
+        "accepted_url": "https://dowcio.war.gov/Portals/0/Documents/Library/DoD-ZTStrategy.pdf",
+        "next_action": "reuse_existing_ids_and_captured_content",
+        "byte_evidence": {
+          "sha256": "sha256:cba8e6093fbfa2a33f75f5fd286dd604b3d3ba4212350d1b528fe63462dea635",
+          "bytes": 6141341
+        },
+        "inventory_url": "https://dowcio.war.gov/Library/",
+        "prior_url": "https://dodcio.defense.gov/Portals/0/Documents/Library/DoD-ZTStrategy.pdf",
+        "retrieved_at": "2026-10-19T00:09:59.535Z",
+        "discovery_method": "Explicit live official library anchor read through in-app browser DOM",
+        "acquisition_method": "Native browser downloadMedia on that exact observed official link; direct strict HTTP client returned403"
+      }
     },
     {
       "source_key": "dod-zt-capabilities",
@@ -26,7 +64,26 @@
       "byte_length": 651809,
       "checksum": "sha256:756abc470d22dfddf399bcf3264b23c23fecedd8ac32b98b4f3461c96ed43be1",
       "pages": 26,
-      "atlas_role": "primary_publication"
+      "atlas_role": "primary_publication",
+      "source_recovery": {
+        "source_id": "dod-zt-capabilities",
+        "retain_last_good": true,
+        "mutate_items": false,
+        "mutate_connections": false,
+        "lifecycle": "active",
+        "status": "verified_relocation",
+        "accepted_url": "https://dowcio.war.gov/Portals/0/Documents/Library/ZT-CapabilitiesActivities.pdf",
+        "next_action": "reuse_existing_ids_and_captured_content",
+        "byte_evidence": {
+          "sha256": "sha256:756abc470d22dfddf399bcf3264b23c23fecedd8ac32b98b4f3461c96ed43be1",
+          "bytes": 651809
+        },
+        "inventory_url": "https://dowcio.war.gov/Library/",
+        "prior_url": "https://dodcio.defense.gov/Portals/0/Documents/Library/ZT-CapabilitiesActivities.pdf",
+        "retrieved_at": "2026-10-19T00:09:59.440Z",
+        "discovery_method": "Explicit live official library anchor read through in-app browser DOM",
+        "acquisition_method": "Native browser downloadMedia on that exact observed official link; direct strict HTTP client returned403"
+      }
     },
     {
       "source_key": "dod-zt-execution-roadmap",
@@ -35,7 +92,26 @@
       "byte_length": 3540044,
       "checksum": "sha256:cd25245394b6bf128425519f489468858ac8a4569226c046d0e4055283ca3774",
       "pages": 54,
-      "atlas_role": "primary_publication"
+      "atlas_role": "primary_publication",
+      "source_recovery": {
+        "source_id": "dod-zt-execution-roadmap",
+        "retain_last_good": true,
+        "mutate_items": false,
+        "mutate_connections": false,
+        "lifecycle": "active",
+        "status": "verified_relocation",
+        "accepted_url": "https://dowcio.war.gov/Portals/0/Documents/Library/ZT-ExecutionRoadmap-v1.1.pdf",
+        "next_action": "reuse_existing_ids_and_captured_content",
+        "byte_evidence": {
+          "sha256": "sha256:cd25245394b6bf128425519f489468858ac8a4569226c046d0e4055283ca3774",
+          "bytes": 3540044
+        },
+        "inventory_url": "https://dowcio.war.gov/Library/",
+        "prior_url": "https://dodcio.defense.gov/Portals/0/Documents/Library/ZT-ExecutionRoadmap-v1.1.pdf",
+        "retrieved_at": "2026-10-19T00:09:59.479Z",
+        "discovery_method": "Explicit live official library anchor read through in-app browser DOM",
+        "acquisition_method": "Native browser downloadMedia on that exact observed official link; direct strict HTTP client returned403"
+      }
     },
     {
       "source_key": "dod-zt-overlays-2024",
@@ -44,7 +120,33 @@
       "byte_length": 6398712,
       "checksum": "sha256:196d381b7e74a2dc7b88e7d7705cf64e4389f35019282332b97d5a575f05f3fc",
       "pages": 383,
-      "atlas_role": "primary_publication"
+      "atlas_role": "primary_publication",
+      "source_recovery": {
+        "status": "archive_content_verified",
+        "retain_last_good": true,
+        "lifecycle_currentness": "UNKNOWN",
+        "official_access_observations": [
+          {
+            "url": "https://dodcio.defense.gov/Portals/0/Documents/Library/ZeroTrustOverlays-2024Feb.pdf",
+            "status": 404
+          },
+          {
+            "url": "https://dowcio.war.gov/Portals/0/Documents/Library/ZeroTrustOverlays-2024Feb.pdf",
+            "status": 404
+          }
+        ],
+        "archival_corroboration": {
+          "url": "https://github.com/redhat-et/zero-trust-catalog/blob/ce7233237346fc1a1c536d12ef9fed372bc61f8b/doc/ZeroTrustOverlays-2024Feb.pdf",
+          "sha256": "sha256:4e2f5bc3059512b6cd2671d3faf4ca56085263ef76443f47bd2f6e709142085d",
+          "byte_length": 6398718,
+          "pages": 383,
+          "exact_page_text_matches": 383,
+          "retained_capture_sha256": "sha256:653d0c6baf7f18a8558824c7f1082524a4fa59d2a0a6a349ea111e7708c72d6e",
+          "acquisition_kind": "public_archival_mirror",
+          "publisher_currentness": "UNKNOWN",
+          "reason": "All383extractedpage texts match the retained official capture exactly. Archive PDF is6byteslonger with a different checksum; original official byte identity is preserved separately. No deprecation or replacement is inferred."
+        }
+      }
     },
     {
       "source_key": "dod-zt-operational-technology",
@@ -53,7 +155,26 @@
       "byte_length": 1602017,
       "checksum": "sha256:34ddda61b7078e45255d9df2e7ccfab8e8741f3e7713467feef2b8964434a152",
       "pages": 28,
-      "atlas_role": "primary_publication"
+      "atlas_role": "primary_publication",
+      "source_recovery": {
+        "source_id": "dod-zt-operational-technology",
+        "retain_last_good": true,
+        "mutate_items": false,
+        "mutate_connections": false,
+        "lifecycle": "active",
+        "status": "verified_relocation",
+        "accepted_url": "https://dowcio.war.gov/Portals/0/Documents/Library/ZT-OperationalTechnologyActivitiesOutcomes_v2.pdf",
+        "next_action": "reuse_existing_ids_and_captured_content",
+        "byte_evidence": {
+          "sha256": "sha256:34ddda61b7078e45255d9df2e7ccfab8e8741f3e7713467feef2b8964434a152",
+          "bytes": 1602017
+        },
+        "inventory_url": "https://dowcio.war.gov/Library/",
+        "prior_url": "https://dodcio.defense.gov/Portals/0/Documents/Library/ZT-OperationalTechnologyActivitiesOutcomes_v2.pdf",
+        "retrieved_at": "2026-10-19T00:09:59.489Z",
+        "discovery_method": "Explicit live official library anchor read through in-app browser DOM",
+        "acquisition_method": "Native browser downloadMedia on that exact observed official link; direct strict HTTP client returned403"
+      }
     },
     {
       "source_key": "dod-zt-newsletter-2024-11",
@@ -62,7 +183,26 @@
       "byte_length": 1902008,
       "checksum": "sha256:2be18eaf9c5b2c2d0aaf56d68514d49c5ea726f3540afb5fe81bb8b59fd3bc8b",
       "pages": 2,
-      "atlas_role": "supporting_resource"
+      "atlas_role": "supporting_resource",
+      "source_recovery": {
+        "source_id": "dod-zt-newsletter-2024-11",
+        "retain_last_good": true,
+        "mutate_items": false,
+        "mutate_connections": false,
+        "lifecycle": "active",
+        "status": "verified_relocation",
+        "accepted_url": "https://dowcio.war.gov/Portals/0/Documents/Library/ZT-NewsletterNov.pdf",
+        "next_action": "reuse_existing_ids_and_captured_content",
+        "byte_evidence": {
+          "sha256": "sha256:2be18eaf9c5b2c2d0aaf56d68514d49c5ea726f3540afb5fe81bb8b59fd3bc8b",
+          "bytes": 1902008
+        },
+        "inventory_url": "https://dowcio.war.gov/Library/",
+        "prior_url": "https://dodcio.defense.gov/Portals/0/Documents/Library/ZT-NewsletterNov.pdf",
+        "retrieved_at": "2026-10-19T00:09:59.498Z",
+        "discovery_method": "Explicit live official library anchor read through in-app browser DOM",
+        "acquisition_method": "Native browser downloadMedia on that exact observed official link; direct strict HTTP client returned403"
+      }
     },
     {
       "source_key": "dod-zt-strategy-placemats",
@@ -71,7 +211,26 @@
       "byte_length": 740009,
       "checksum": "sha256:453ba7af10d64034af963ef28da60b85c7a920d638388a4b153c8212113c85d3",
       "pages": 2,
-      "atlas_role": "supporting_resource"
+      "atlas_role": "supporting_resource",
+      "source_recovery": {
+        "source_id": "dod-zt-strategy-placemats",
+        "retain_last_good": true,
+        "mutate_items": false,
+        "mutate_connections": false,
+        "lifecycle": "active",
+        "status": "verified_relocation",
+        "accepted_url": "https://dowcio.war.gov/Portals/0/Documents/Library/ZT-StrategyPlacemats.pdf",
+        "next_action": "reuse_existing_ids_and_captured_content",
+        "byte_evidence": {
+          "sha256": "sha256:453ba7af10d64034af963ef28da60b85c7a920d638388a4b153c8212113c85d3",
+          "bytes": 740009
+        },
+        "inventory_url": "https://dowcio.war.gov/Library/",
+        "prior_url": "https://dodcio.defense.gov/Portals/0/Documents/Library/ZT-StrategyPlacemats.pdf",
+        "retrieved_at": "2026-10-19T00:09:59.506Z",
+        "discovery_method": "Explicit live official library anchor read through in-app browser DOM",
+        "acquisition_method": "Native browser downloadMedia on that exact observed official link; direct strict HTTP client returned403"
+      }
     }
   ],
   "reconciliation": {

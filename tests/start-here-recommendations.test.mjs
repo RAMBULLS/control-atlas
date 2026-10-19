@@ -12,6 +12,16 @@ import {
   startHereDestinationFor,
 } from "../src/app/start-here-compatibility.mjs";
 
+test("inherited bookmark keys never become product destinations", () => {
+  for (const key of ["toString", "constructor", "__proto__", "hasOwnProperty"]) {
+    assert.equal(startHereDestinationFor(key, "federal"), "/atlas", key);
+    assert.equal(startHereDestinationFor("assess", key), "/atlas?atlasJourney=assessment", key);
+    assert.equal(startHereDestinationFor("tools", key), "/resources", key);
+    assert.equal(startHereDestinationFor("document", key), "/build", key);
+    assert.equal(startHereDestinationFor("understand", key), "/atlas", key);
+  }
+});
+
 test("source navigator exposes fixed public starting points without a questionnaire", () => {
   assert.deepEqual(validateSourceStartingPoints(), []);
   assert.ok(

@@ -77,10 +77,19 @@ export function searchPublications(model: TerritoryModel, query: string, limit =
 }
 
 export type View = { x: number; y: number; w: number; h: number };
+export const territoryCameraProgress = (frameTime: number, startTime: number): number => Math.max(0, Math.min(1, (frameTime - startTime) / 460));
 export const fitView = (r: View, aspect: number): View => {
   let { x, y, w, h } = r;
   if (w / h < aspect) { const nw = h * aspect; x -= (nw - w) / 2; w = nw; } else { const nh = w / aspect; y -= (nh - h) / 2; h = nh; }
   return { x, y, w, h };
+};
+export const fitTerritoryCamera = (bounds: View, size: { w: number; h: number }, inspectorInset: number): View => {
+  const width = Math.max(1, size.w);
+  // A breakpoint and ResizeObserver can settle on different frames.
+  const inset = inspectorInset > 0 && inspectorInset < width ? inspectorInset : 0;
+  const availableWidth = width - inset;
+  const view = fitView(bounds, Math.max(0.5, availableWidth / Math.max(1, size.h)));
+  return { ...view, w: view.w * width / availableWidth };
 };
 export const boundsOf = (pts: readonly Pt[], pad: number, minW = 460, minH = 300): View => {
   const xs = pts.map((p) => p[0]); const ys = pts.map((p) => p[1]);

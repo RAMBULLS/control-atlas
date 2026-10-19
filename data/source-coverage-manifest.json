@@ -1,9 +1,9 @@
 {
   "schema_version": "4.0",
-  "generated_at": "2026-10-19T00:44:54.667Z",
+  "generated_at": "2026-10-19T12:09:02.049Z",
   "completeness": {
     "total_publications": 103,
-    "total_artifacts": 97,
+    "total_artifacts": 98,
     "total_catalog_bundles": 30,
     "manual_seed_artifacts": 0,
     "catalog_states": {
@@ -60,7 +60,7 @@
         "direct_file_import",
         "extracted_from_official_publication"
       ],
-      "last_refresh": "2026-09-10",
+      "last_refresh": "2026-10-08",
       "has_shard": true
     },
     {
@@ -175,7 +175,7 @@
       "methods": [
         "extracted_from_official_publication"
       ],
-      "last_refresh": "2026-09-10",
+      "last_refresh": "2026-10-08",
       "has_shard": true
     },
     {
@@ -221,7 +221,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-09-23",
+      "last_refresh": "2026-10-08",
       "has_shard": true
     },
     {
@@ -336,7 +336,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-09-23",
+      "last_refresh": "2026-10-08",
       "has_shard": true
     },
     {
@@ -359,7 +359,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-09-23",
+      "last_refresh": "2026-10-08",
       "has_shard": true
     },
     {
@@ -382,7 +382,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-09-23",
+      "last_refresh": "2026-10-08",
       "has_shard": true
     },
     {
@@ -498,7 +498,7 @@
         "extracted_from_official_publication",
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-18",
+      "last_refresh": "2026-10-08",
       "has_shard": true
     },
     {
@@ -539,7 +539,7 @@
       "imported_evidence": "data/generated/catalog-source-inventory.json#catalogs.nist-800-53b.normalized_records",
       "exclusions": [],
       "primary_artifacts": 4,
-      "supplemental_artifacts": 0,
+      "supplemental_artifacts": 1,
       "mapping_artifacts": 0,
       "methods": [
         "direct_file_import"

@@ -13,6 +13,15 @@ import { normalizeViewState } from "../../src/ui/lib/viewState";
 import { orbitalRouteContext } from "../../src/ui/components/OrbitalContextBar";
 import { START_HERE_ACCEPTANCE_MATRIX } from "../../src/app/start-here-compatibility.mjs";
 
+test("inherited guide and Start Here keys stay ordinary unknown bookmarks", () => {
+  for (const key of ["toString", "constructor", "__proto__", "hasOwnProperty"]) {
+    const guidePath = `/guides?pattern=${key}`;
+    assert.equal(canonicalizeHashLocation(guidePath).canonicalPath, guidePath, key);
+    assert.equal(canonicalizeHashLocation(`/learn?pattern=${key}`).canonicalPath, guidePath, key);
+    assert.equal(canonicalizeHashLocation(`/start?goal=${key}&context=federal`).canonicalPath, "/atlas", key);
+  }
+});
+
 test("all 28 old Start Here answer links replace with their safe product destination", () => {
   for (const row of START_HERE_ACCEPTANCE_MATRIX) {
     const original = `/start?goal=${row.goalId}&context=${row.contextId}`;
@@ -411,5 +420,39 @@ test("unrecognized retired aliases remain honest not-found routes", () => {
   ]) {
     assert.equal(canonicalizeHashLocation(path).canonicalPath, path);
     assert.equal(parseHashLocation(path, "").view, "not-found", path);
+  }
+});
+
+
+test("content comparison deep links survive canonicalization and state round trips", () => {
+  const path = "/compare/relationships";
+  const search = "?intent=content&source=nist-800-171-rev2&target=nist-800-171&compareRun=true";
+  const canonical = canonicalizeHashLocation(path + search);
+  assert.equal(canonical.recoveryMessage, "");
+  const parsed = parseHashLocation(path, search);
+  assert.equal(parsed.view, "matrix");
+  if (parsed.view !== "matrix") throw new Error("Expected Compare state");
+  assert.equal(parsed.intent, "content");
+  assert.equal(parsed.source, "nist-800-171-rev2");
+  assert.equal(parsed.target, "nist-800-171");
+  assert.equal(parsed.compareRun, "true");
+  assert.deepEqual(parseHashLocation(serializeHashLocation(parsed), ""), parsed);
+  const invalid = canonicalizeHashLocation(path + search.replace("intent=content", "intent=unpublished"));
+  assert.ok(invalid.recoveryMessage);
+  assert.ok(!invalid.canonicalPath.includes("intent=unpublished"));
+});
+
+
+test("Sources defaults to the complete register and preserves explicit category filters", () => {
+  const all = normalizeViewState("sources");
+  assert.equal(all.view, "sources");
+  if (all.view !== "sources") throw new Error("Expected Sources state");
+  assert.equal(all.layer, "all");
+  assert.equal(serializeHashLocation(all), "/sources");
+  for (const layer of ["publication", "policy"] as const) {
+    const route = `/sources?layer=${layer}`;
+    assert.equal(canonicalizeHashLocation(route).canonicalPath, route);
+    const filtered = parseHashLocation("/sources", `?layer=${layer}`);
+    assert.equal(serializeHashLocation(filtered), route);
   }
 });

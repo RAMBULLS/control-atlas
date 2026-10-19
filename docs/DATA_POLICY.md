@@ -67,6 +67,46 @@ Known remediation remains in the generated audit and must not be converted to a 
 
 `last_checked` is the source registry's check date. It is not interchangeable with `retrieved_at` or the governed publication review's `reviewed_at`. Product trust surfaces keep the three evidence classes under separate labels, make a missing source check date explicit on source detail, and show the bounded currentness disposition from the publication review without backfilling that date.
 
+Refresh check dates require successful publisher request receipts from the current
+accepted source transaction. The shared fetch adapter records consumed HTTP 200
+bytes, including publisher-revalidated cached bytes, only when that transaction
+explicitly enables its private receipt file. Local cache hits, failed requests,
+retained inputs and committed extractions do not establish a check. Receipt files
+belong to the source's rollback boundary and are cleared before each retry. The
+existing finalization and publication gates still decide whether candidate data
+can ship; a green run alone is never source-check evidence.
+
+`check_evidence` retains the exact public URLs, check timestamps and byte evidence
+for the source's required retrievals. Canonical publication aliases are explicit;
+references, mappings and shared bundles do not implicitly check another source.
+All owned artifacts must succeed before a multi-artifact publication advances.
+The DISA range exception remains labeled `publisher_range_probe` and requires its
+publisher index, validated compilation probe and every standalone package receipt.
+An admitted publication without evidence gets a null check date, never a date
+copied from `generated_at`, a review or a local import.
+
+A fixed eCFR date or pinned repository edition establishes only that edition's
+retrieval. It records `last_retrieval_checked` and `retrieval_evidence` with scope
+`pinned_edition_retrieval`, without advancing publication `last_checked`. A pinned
+artifact may support a publication revision check only alongside the adapter's
+current publisher revision discovery and complete required-artifact receipts.
+`last_imported` and its normalized content hash remain separate from these checks.
+
+The legacy `nist-800-53a-assessment-procedures` check was advanced from the
+SP 800-53 control catalog without an SP 800-53A procedure retrieval. Normal
+reconciliation preserves that date and its identity-mismatch reason in
+`unsupported_check_history`, then clears the valid check. Runtime loading applies
+the same correction before persistence, so existing trust surfaces show retrieval
+with no recorded check. An explicit null ledger check cannot fall back to a
+legacy source date. A later supported receipt-backed check can establish a valid
+date while the unsupported historical entry remains available for audit. That
+exception requires the exact official SP 800-53A Rev5 procedure PDF URL and a
+matching admitted, 53A-owned publisher artifact checksum and byte length; a
+similar document name, mapping, other host or control catalog does not qualify.
+A later rejected receipt keeps its own unsupported-artifact reason and evidence,
+separate from the original legacy proxy event. No 53A artifact is admitted by
+this historical correction.
+
 The platform gate considered OSCAL assessment-results for this register, but rejected it because that model represents system assessment findings rather than publication-source review. JSON Schema 2020-12 plus AJV is the existing MIT-licensed, maintained, repository-native validation path and avoids a semantically false OSCAL document.
 
 ## Reconciliation gates
@@ -101,3 +141,27 @@ Source recovery preserves stable source, item and connection identities. During 
 If explicit acquisition fails for a source with an established official recovery inventory, it makes one bounded rediscovery attempt against that inventory. Each inventory is requested at most once per command. Only a unique literal publisher link can become a candidate; an unchanged failed link is not requested again. The raw discovery snapshot, checksum and recovery decision are retained. Byte-identical recovery reuses the accepted identity; changed bytes stop as candidates. Missing or renamed files, ambiguous links, inaccessible inventories and unsupported formats remain visible for source-specific resolution. This mechanism does not infer replacement identities or rewrite mappings.
 
 Access and lifecycle are separate. HTTP403,404,410 or absence from a library cannot establish deprecation, retirement or replacement. Those transitions require an explicit attributable publisher statement; a replacement must resolve to a registered source identity. Prior editions and assertions remain accessible, and no replacement implies a new control mapping. Public archival copies retain their actual host, checksum and comparison method and never masquerade as current publisher bytes. The DoD CIO relocation and the unavailable original overlays binary are regression cases for these boundaries.
+
+## Literal content and complete inventory comparisons
+
+Compare's Content & revisions mode projects the existing public-record set,
+excluding structural and retired records. It retains each record's exact title,
+published sections and facts from its governed record-presentation contract,
+with source identity, edition, lifecycle, and locators. It does not compare
+editorial notes or infer uncaptured source text. Chunk counts, unique record IDs,
+catalog membership and source resolution must reconcile before results appear.
+
+Automatic alignment uses record type and publisher identifier, never a claim
+of semantic continuity between editions or equivalence between publications.
+Repeated identifiers require explicit record selection. Missing primary text is
+unavailable, not withdrawn. Only-in-A/B groups describe the selected inventories,
+not compliance or a publisher's formal change classification. Historical editions
+without imported content are unsupported.
+
+The published-mapping inventory uses every eligible mapping in the selected
+pair, before display filters, and lists records without a mapping to a public
+record in the other inventory. Mappings retain their publisher relationship and
+sources; they are not content equality. CSV includes every filtered result,
+complete inventory totals, compared fields, source URLs and locators. Pagination
+bounds rendering only. Content projections reuse the bounded compare-data
+transport and are disposable views of governed records, not a new source registry.

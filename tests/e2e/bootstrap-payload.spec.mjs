@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 
 import {
   attachPageDiagnostics,
+  clickAtlasPublication,
   dismissOnboarding,
   waitForAppReady,
 } from "./support.mjs";
@@ -44,7 +45,21 @@ test("home bootstrap avoids graph JSON artifacts", async ({ page }) => {
   // — it is not in test:e2e:smoke, so CI never runs it on a pull request. A
   // fixed count tracks the bundler's chunking, not the thing worth protecting.
   // The budget is what protects Home: no route chunk, no page code.
-  expect(scripts.length, `Home loaded ${scripts.length} scripts: ${scripts.join(", ")}`).toBeLessThanOrEqual(4);
+  const consentScripts = scripts.filter(
+    (url) => new URL(url).pathname === "/analytics-consent.js",
+  );
+  expect(consentScripts).toHaveLength(1);
+  const consentResponse = await page.request.get(consentScripts[0]);
+  expect(consentResponse.ok()).toBeTruthy();
+  expect((await consentResponse.body()).length).toBeLessThanOrEqual(14 * 1024);
+  expect(
+    scripts.filter((url) => !consentScripts.includes(url)).length,
+    "Home's application budget stays at four scripts",
+  ).toBeLessThanOrEqual(4);
+  expect(
+    scripts.some((url) => /cloudflareinsights\.com/.test(url)),
+    "The vendor SDK stays off on local/preview hosts",
+  ).toBe(false);
   for (const script of scripts) {
     expect(script, "Home must not load a route chunk").not.toMatch(
       /\/assets\/(?:AtlasTerritoryPage|ExplorePage|ComparePage|TemplatesPage|SourcesPage|CatalogDetailPage|ObjectDetailPage|CommonsPage|PlaybooksPage|AboutPage)-/,
@@ -107,14 +122,20 @@ test("the Atlas territory sheet uses its own small index without monolithic grap
   const sheet = page.locator(".terr");
   await expect(sheet).toBeVisible();
   expect(requested.some((url) => url.includes("atlas-territory"))).toBeTruthy();
-  expect(requested.some((url) => /atlas-network|atlas-spine|atlas-research\//.test(url))).toBe(false);
+  expect(
+    requested.some((url) =>
+      /atlas-network|atlas-spine|atlas-research\//.test(url),
+    ),
+  ).toBe(false);
   expect(graphArtifactUrls(requested)).toEqual([]);
 
   // Opening a territory and then a publication inside it needs no further artifact.
-  await sheet.locator('[data-district="atlas:LIMB-COMPLIANCE"] .district__shape').focus();
+  await sheet
+    .locator('[data-district="atlas:LIMB-COMPLIANCE"] .district__shape')
+    .focus();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/atlasLimb=/);
-  await sheet.locator('[data-landmark="nist-800-53"]').click();
+  await clickAtlasPublication(page, "nist-800-53");
   await expect(page).toHaveURL(/atlasFramework=nist-800-53/);
   expect(graphArtifactUrls(requested)).toEqual([]);
 });
@@ -142,12 +163,12 @@ test("focused Atlas loads one neighborhood without monolithic graph JSON", async
     if (url.includes("/data/generated/")) requested.push(url);
   });
 
-  await page.goto(
-    "/#/explore?node=nist-800-53%3AAC-2&relationshipView=map",
-  );
+  await page.goto("/#/explore?node=nist-800-53%3AAC-2&relationshipView=map");
   await waitForAppReady(page);
   await dismissOnboarding(page);
-  await expect(page.locator(".atl-inspector")).toContainText("AC-2", { timeout: 20000 });
+  await expect(page.locator(".atl-inspector")).toContainText("AC-2", {
+    timeout: 20000,
+  });
   await expect(page.locator(".terr")).toBeVisible();
 
   expect(graphArtifactUrls(requested)).toEqual([]);
@@ -165,15 +186,19 @@ test("focused Atlas loading state avoids a content-agnostic mobile minimum heigh
     releaseNeighborhood = () => resolve();
   });
 
-  await page.route("**/data/generated/atlas-neighborhood/32.json*", async (route) => {
-    await neighborhoodGate;
-    await route.continue();
-  });
-
-  await page.goto(
-    "/#/explore?node=nist-800-53%3AAC-2&relationshipView=map",
+  await page.route(
+    "**/data/generated/atlas-neighborhood/32.json*",
+    async (route) => {
+      await neighborhoodGate;
+      await route.continue();
+    },
   );
-  await expect(page.locator("#app")).toHaveAttribute("data-has-subject", "true");
+
+  await page.goto("/#/explore?node=nist-800-53%3AAC-2&relationshipView=map");
+  await expect(page.locator("#app")).toHaveAttribute(
+    "data-has-subject",
+    "true",
+  );
   // Re-baselined 2026-08-01: with the record's shard gated, the wait now
   // happens in the loader, so the shared skeleton holds the surface rather
   // than the page-level .atlas-loading block. The guarantee is unchanged —
@@ -186,17 +211,17 @@ test("focused Atlas loading state avoids a content-agnostic mobile minimum heigh
         .evaluate((element) => element.getBoundingClientRect().height),
     )
     .toBeGreaterThan(0);
-  const loadingHeight = await page.locator("#app").evaluate(
-    (element) => element.getBoundingClientRect().height,
-  );
+  const loadingHeight = await page
+    .locator("#app")
+    .evaluate((element) => element.getBoundingClientRect().height);
 
   releaseNeighborhood();
   await expect(page.locator("#atl-focus")).toContainText("AC-2", {
     timeout: 30000,
   });
-  const loadedHeight = await page.locator("#app").evaluate(
-    (element) => element.getBoundingClientRect().height,
-  );
+  const loadedHeight = await page
+    .locator("#app")
+    .evaluate((element) => element.getBoundingClientRect().height);
 
   expect(loadingHeight).toBeLessThanOrEqual(823);
   expect(loadedHeight).toBeGreaterThan(loadingHeight);
@@ -222,10 +247,14 @@ test("catalog identity renders before its full record payload arrives", async ({
   await expect(
     page.getByRole("heading", { level: 1, name: "SP 800-53 Rev. 5" }),
   ).toBeVisible({ timeout: 5000 });
-  await expect(page.getByText("Loading this publication's records…")).toBeVisible();
+  await expect(
+    page.getByText("Loading this publication's records…"),
+  ).toBeVisible();
 
   releaseRecords();
-  await expect(page.getByText("Loading this publication's records…")).toBeHidden({
+  await expect(
+    page.getByText("Loading this publication's records…"),
+  ).toBeHidden({
     timeout: 15000,
   });
   await expect(page.locator("#catalog-records-title")).toContainText(

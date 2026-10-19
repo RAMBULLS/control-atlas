@@ -7,6 +7,8 @@ import test, { after } from 'node:test';
 import { hydrateArtifacts, hydrationResolutions, countXlsxRows } from '../scripts/hydrate-artifacts.mjs';
 import { enrichCommonsDataset, repositoryResourceIds, repositoryIdentity } from '../scripts/enrich-commons-resources.mjs';
 import { sourceUnitsForTask, loadSourceUnitInventory } from '../scripts/lib/refresh-source-outputs.mjs';
+import { verifyNormalizedArtifactEvidence } from '../scripts/lib/normalized-artifact-evidence.mjs';
+import { artifactOrigin } from '../scripts/migrate-source-truth-profiles.mjs';
 
 const fixtures = join(dirname(fileURLToPath(import.meta.url)), '..', '.local', 'source-unit-tests');
 mkdirSync(fixtures, { recursive: true });
@@ -19,6 +21,31 @@ function setup(t) {
   return { root, put, get };
 }
 const checksum = (bytes) => `sha256:${createHash('sha256').update(bytes).digest('hex')}`;
+
+test('baseline hydration separates local payload evidence from its upstream reference', async (t) => {
+  const { root, put, get } = setup(t);
+  const resolution = hydrationResolutions().find((entry) => entry.id === 'artifact-nist-800-53b-baselines');
+  const payload = { schema_version: '1.0', source_key: 'baselines', records: ['LOW', 'MODERATE', 'HIGH', 'PRIVACY'].map((id) => ({ id, type: 'baseline', framework: 'nist', title: id, description: '' })) };
+  put(resolution.local, payload);
+  put('data/source-registry.json', { artifacts: [{ id: resolution.id, authority_class: 'publisher', record_count: 5, relationship_count: 902 }], catalog_source_bundles: [] });
+  await hydrateArtifacts({ root, only: resolution.id, resolutions: [resolution], fetchImpl: () => { throw new Error('local hydration must not fetch'); } });
+  const artifact = JSON.parse(get('data/source-registry.json')).artifacts[0];
+  const evidence = JSON.parse(get('data/artifact-hydration-manifest.json')).results[0];
+  assert.equal(artifact.record_count, 4);
+  assert.equal(artifactOrigin(artifact), 'publisher_normalized');
+  assert.equal(artifactOrigin({ id: 'artifact-nist-800-53', authority_class: 'publisher' }), 'publisher_exact');
+  assert.equal(artifactOrigin({ id: 'artifact-dod-rai-toolkit', authority_class: 'publisher' }), 'publisher_derived');
+  assert.equal(artifact.relationship_count, 0);
+  assert.equal(artifact.byte_length, Buffer.byteLength(get(resolution.local)));
+  assert.equal(artifact.artifact_url, resolution.url);
+  assert.notEqual(artifact.artifact_url, artifact.upstream_reference_url);
+  verifyNormalizedArtifactEvidence(artifact, evidence, root);
+  assert.throws(() => verifyNormalizedArtifactEvidence({ ...artifact, artifact_url: artifact.upstream_reference_url }, { ...evidence, url: artifact.upstream_reference_url }, root), /locator or scope mismatch/);
+  assert.throws(() => verifyNormalizedArtifactEvidence({ ...artifact, upstream_reference_url: undefined }, { ...evidence, upstream_reference_url: undefined }, root), /locator or scope mismatch/);
+  for (const patch of [{ byte_length: 1 }, { record_count: 5 }, { relationship_count: 902 }, { url: artifact.upstream_reference_url }, { local_path: '../outside.json' }]) {
+    assert.throws(() => verifyNormalizedArtifactEvidence(artifact, { ...evidence, ...patch }, root), /mismatch|locator/);
+  }
+});
 
 test('audited publisher repository transfers resolve before requesting API evidence', () => {
   assert.deepEqual(repositoryIdentity({ repositoryUrl: 'https://github.com/IBM/compliance-trestle' }), { owner: 'oscal-compass', repo: 'compliance-trestle', scope: 'repository' });

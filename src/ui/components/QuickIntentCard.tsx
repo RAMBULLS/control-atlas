@@ -17,13 +17,16 @@ export function QuickIntentCard(props: {
   view: ViewState["view"];
 }) {
   return (
-    <AppLink
-      className={`flex flex-col items-start text-left p-[24px] border rounded-[3px] transition-[border-color,background-color,box-shadow] duration-[120ms] group w-full cursor-pointer h-full ${
+    <div
+      className={`flex flex-col border rounded-[3px] transition-[border-color,background-color,box-shadow] duration-[120ms] w-full h-full ${
         props.selected
           ? "border-[var(--ca-secondary)] bg-[color-mix(in_srgb,var(--ca-secondary)_10%,transparent)] shadow-[0_0_0_1px_var(--ca-secondary)]"
           : "border-[var(--ca-border-strong)] bg-[var(--ca-surface)] hover:bg-[var(--ca-surface-raised)]"
       }`}
       data-selected={props.selected ? "true" : undefined}
+    >
+    <AppLink
+      className="flex flex-col flex-1 items-start text-left p-[24px] group w-full cursor-pointer"
       onClick={(event) => {
         if (shouldInterceptAppLink(event)) props.onBeforeNavigate?.();
       }}
@@ -39,9 +42,6 @@ export function QuickIntentCard(props: {
       {props.meta ? (
         <div className="flex flex-wrap gap-[6px] mb-[12px]">{props.meta}</div>
       ) : null}
-      {props.details ? (
-        <div className="template-card-details">{props.details}</div>
-      ) : null}
       {props.actionLabel ? (
         <span className="mt-auto text-[var(--ca-accent-text)] text-[12px] font-medium flex items-center gap-[4px] group-hover:translate-x-1 transition-transform">
           {props.actionLabel}
@@ -49,6 +49,13 @@ export function QuickIntentCard(props: {
         </span>
       ) : null}
     </AppLink>
+    {props.details ? (
+      <details className="template-card-disclosure">
+        <summary>Setup and use</summary>
+        <div className="template-card-details">{props.details}</div>
+      </details>
+    ) : null}
+    </div>
   );
 }
 
@@ -81,7 +88,9 @@ export function CatalogFilterBar(props: {
         role="group"
       >
         <button
-          className={`inline-flex items-center min-h-[44px] sm:min-h-[26px] px-[12px] py-[4px] border rounded font-mono text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
+          aria-pressed={props.category === ""}
+          type="button"
+          className={`inline-flex items-center min-h-[44px] px-[12px] py-[4px] border rounded font-mono text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
             props.category === ""
               ? "border-[var(--ca-info)] text-[var(--ca-text)] bg-[color-mix(in_srgb,var(--ca-info)_20%,transparent)]"
               : "border-[var(--ca-border-strong)] text-[var(--ca-text)] bg-[var(--ca-surface)] hover:bg-[var(--ca-surface-raised)]"
@@ -93,7 +102,9 @@ export function CatalogFilterBar(props: {
         {props.categoryOptions.map((option) => (
           <button
             key={option}
-            className={`inline-flex items-center min-h-[44px] sm:min-h-[26px] px-[12px] py-[4px] border rounded font-mono text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
+            aria-pressed={props.category === option}
+            type="button"
+            className={`inline-flex items-center min-h-[44px] px-[12px] py-[4px] border rounded font-mono text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
               props.category === option
                 ? "border-[var(--ca-info)] text-[var(--ca-text)] bg-[color-mix(in_srgb,var(--ca-info)_20%,transparent)]"
                 : "border-[var(--ca-border-strong)] text-[var(--ca-text)] bg-[var(--ca-surface)] hover:bg-[var(--ca-surface-raised)]"

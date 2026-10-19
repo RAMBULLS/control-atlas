@@ -19,6 +19,7 @@ import { fileURLToPath } from 'node:url';
 export const VOLATILE_KEYS = new Set([
   'generated_at', 'retrieved_at', 'retrieval_timestamp', 'snapshot_date', 'observed_at', 'last_checked',
   'last_imported', 'lastUpdated', 'attempted_at', 'started_at', 'completed_at', 'checked_at', 'duration_ms',
+  'last_retrieval_checked', 'check_evidence', 'retrieval_evidence',
 ]);
 // Whole files that record what this run did and nothing about the sources.
 export const TELEMETRY_FILES = new Set(['data/ingestion-pipeline-manifest.json']);

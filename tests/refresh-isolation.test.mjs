@@ -73,8 +73,38 @@ test('remote quarantine restores immediate shared state and allows the next sour
   assert.equal(result.results[1].status, 'quarantined');
   assert.equal(finalized.length, 3);
   const report = JSON.parse(get('.local/source-refresh-results.json'));
-  assert.deepEqual(report.results[1].quarantinedPaths, ['data/shared.json']);
+  assert.deepEqual(report.results[1].quarantinedPaths, ['data/shared.json', '.local/source-check-receipts/B--B.json']);
+  assert.equal(existsSync(join(root, report.results[1].checkReceiptPath)), false, 'quarantine removes rejected attempt receipts');
+  assert.equal(JSON.parse(get(report.results[0].checkReceiptPath)).source_id, 'A');
   assert.equal(report.results[1].error, 'offline');
+});
+
+test('retry starts with empty request receipts and local projections cannot inherit an active receipt sink', async (t) => {
+  const { root, put, get } = setup(t);
+  put('data/shared.json', 'accepted');
+  let attempts = 0;
+  await runRefreshPipeline({ ...gates, root, tasks: [{ ...task('remote'), retries: 2 }], describeSources: descriptor,
+    sleep: async () => {}, executor: (unit) => {
+      const receipt = JSON.parse(get(unit.checkReceiptPath));
+      assert.deepEqual(receipt.requests, [], 'each attempt starts empty');
+      assert.equal(unit.refreshStartedAt, JSON.parse(get('.local/source-refresh-results.json')).started_at);
+      attempts += 1;
+      if (attempts === 1) {
+        receipt.requests.push({ url: 'https://csrc.nist.gov/partial-attempt' });
+        put(unit.checkReceiptPath, JSON.stringify(receipt));
+        const error = new Error('connection reset');
+        error.code = 'ECONNRESET';
+        throw error;
+      }
+    },
+  });
+  assert.equal(attempts, 2);
+  const report = JSON.parse(get('.local/source-refresh-results.json'));
+  assert.deepEqual(JSON.parse(get(report.results[0].checkReceiptPath)).requests, []);
+  executeRefreshUnit({ script: 'local.mjs', args: [] }, root, (_exe, _args, options) => {
+    assert.equal(options.env.CONTROL_ATLAS_SOURCE_CHECK_RECEIPT, '');
+    return { status: 0 };
+  });
 });
 
 test('framework catalogs execute as independent only units followed by one local projection', async (t) => {
@@ -96,6 +126,19 @@ test('framework catalogs execute as independent only units followed by one local
   assert.deepEqual(seen[8], localProjectionForTask(framework).args);
   assert.deepEqual(units.at(-1).args, ['--public', 'fedramp-baselines']);
   assert.equal(result.results[0].status, 'partial');
+});
+
+test('quarantined NIST baseline refresh restores catalog and profile evidence together', async (t) => {
+  const { root, put, get } = setup(t);
+  const framework = INGESTION_TASKS.find((entry) => entry.id === 'fetch-framework-catalogs');
+  const unit = sourceUnitsForTask(framework).find((entry) => entry.sourceId === 'nist-800-53-rev5');
+  assert.deepEqual(unit.paths, ['data/controls-800-53.json', 'data/nist-800-53b-profile-manifest.json']);
+  for (const path of unit.paths) put(path, `accepted ${path}`);
+  const result = await runRefreshPipeline({ ...gates, root, tasks: [framework], describeSources: () => [unit],
+    executor: () => { for (const path of unit.paths) put(path, 'rejected partial update'); throw new Error('offline'); },
+  });
+  assert.equal(result.status, 'complete_with_quarantine');
+  for (const path of unit.paths) assert.equal(get(path), `accepted ${path}`);
 });
 
 test('unknown ownership fails before any task, manifest or source write', async (t) => {

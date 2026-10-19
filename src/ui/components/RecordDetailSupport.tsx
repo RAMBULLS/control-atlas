@@ -19,17 +19,18 @@ export function RecordRailSection(props: {
     const sync = () => {
       const details = element.current;
       if (!details) return;
-      if (media.matches && details.contains(document.activeElement)) {
+      const shouldOpen = Boolean(props.accent) || !media.matches;
+      if (!shouldOpen && details.contains(document.activeElement)) {
         details.querySelector<HTMLElement>("summary")?.focus();
       }
       // Do not mirror native toggle events into React state: delayed toggle
       // events can otherwise undo a rapid keyboard or breakpoint transition.
-      details.open = !media.matches;
+      details.open = shouldOpen;
     };
     sync();
     media.addEventListener("change", sync);
     return () => media.removeEventListener("change", sync);
-  }, []);
+  }, [props.accent]);
 
   return (
     <details

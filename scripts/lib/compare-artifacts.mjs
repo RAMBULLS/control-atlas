@@ -1,6 +1,7 @@
+import { isComparisonRecord, projectComparisonRecord } from "../../src/shared/content-comparison.mjs";
 import { createHash } from "node:crypto";
 import { comparisonPairKey, comparisonScopeForNodes } from "../../src/shared/compare-scope.mjs";
-import { isComparisonCapableEdge, mappingSourceIdsForEdge } from "../../src/shared/compare-capability.mjs";
+import { isBaselineSelection, isComparisonCapableEdge, mappingSourceIdsForEdge } from "../../src/shared/compare-capability.mjs";
 
 // A transport budget, not a result cap. Every published relationship is retained.
 // Chunking + the loader's bounded concurrency limit transfer/parse bursts.
@@ -18,13 +19,25 @@ function compactNode(node) {
 }
 
 /** A disposable read model of the governed graph, never a second mapping registry. */
-export function buildComparisonArtifacts(graph, budget = COMPARE_CHUNK_BYTES) {
+export function buildComparisonArtifacts(graph, budget = COMPARE_CHUNK_BYTES, includeContent = false) {
   const nodes = new Map(graph.nodes.map((node) => [node.id, node]));
   const evidence = new Map(graph.evidence.map((item) => [item.id, item]));
   const sourceIds = new Set(graph.sources.map((source) => source.id));
   const groups = new Map();
+  const baselines = new Map();
   const items = new Map();
   for (const edge of graph.edges) {
+    if (edge.publication_status === "published" && edge.relationship_type === "selects" &&
+      ["baseline", "baseline_profile"].includes(nodes.get(edge.source_node_id)?.node_type) && !nodes.has(edge.target_node_id)) {
+      throw new Error(`Baseline control missing: ${edge.id}`);
+    }
+    if (isBaselineSelection(edge, nodes.get(edge.source_node_id), nodes.get(edge.target_node_id))) {
+      const refs = mappingSourceIdsForEdge(edge);
+      if (!refs.length || refs.some((id) => !sourceIds.has(id))) throw new Error(`Baseline source missing: ${edge.id}`);
+      const values = baselines.get(edge.source_node_id) || [];
+      values.push(edge);
+      baselines.set(edge.source_node_id, values);
+    }
     if (!isComparisonCapableEdge(edge)) continue;
     const from = nodes.get(edge.source_node_id);
     const to = nodes.get(edge.target_node_id);
@@ -48,21 +61,24 @@ export function buildComparisonArtifacts(graph, budget = COMPARE_CHUNK_BYTES) {
   const files = new Map();
   const manifest = {};
   const itemManifest = {};
+  const baselineManifest = {};
   const emit = (name, value) => {
     const text = JSON.stringify(value);
     const path = `compare-data/${name}.${digest(text)}.json`;
     files.set(path, text + "\n");
     return { path, bytes: Buffer.byteLength(text) + 1 };
   };
-  for (const [key, edges] of [...groups].sort(([a], [b]) => a.localeCompare(b))) {
-    const pair = key.split("|");
+  for (const [key, edges] of [...groups, ...baselines].sort(([a], [b]) => a.localeCompare(b))) {
+    const baseline = baselines.has(key) ? nodes.get(key) : null;
+    const pair = baseline ? [key] : key.split("|");
+    const filename = baseline ? `baseline-${digest(key)}` : pair.join('--');
     const allNodes = new Set(edges.flatMap((edge) => [edge.source_node_id, edge.target_node_id]));
-    const scope = comparisonScopeForNodes([...allNodes].map((id) => nodes.get(id)));
+    const scope = baseline ? "baselines" : comparisonScopeForNodes([...allNodes].map((id) => nodes.get(id)));
     const chunks = [];
     let chunkNodes = new Map(), chunkEvidence = new Map(), chunkEdges = [], estimatedBytes = 128;
     const flush = () => {
       if (!chunkEdges.length) return;
-      const file = emit(`${pair.join('--')}-${chunks.length}`, {
+      const file = emit(`${filename}-${chunks.length}`, {
         pair, scope, nodes: sortById([...chunkNodes.values()]), edges: chunkEdges,
         evidence: sortById([...chunkEvidence.values()]),
       });
@@ -73,6 +89,9 @@ export function buildComparisonArtifacts(graph, budget = COMPARE_CHUNK_BYTES) {
     for (const edge of sortById(edges)) {
       const edgeEvidence = (edge.evidence_ids || [`evidence:${edge.id.slice(5)}`]).map((id) => evidence.get(id));
       if (edgeEvidence.some((item) => !item)) throw new Error(`Compare evidence missing: ${edge.id}`);
+      if (baseline && (!edgeEvidence.length || edgeEvidence.some((item) => !item.locator || !mappingSourceIdsForEdge(edge).includes(item.source_id)))) {
+        throw new Error(`Baseline selection evidence missing: ${edge.id}`);
+      }
       const edgeNodes = [nodes.get(edge.source_node_id), nodes.get(edge.target_node_id)].map(compactNode);
       // Conservative estimate includes duplicate endpoints and evidence. Actual
       // serialized size is checked at flush, not inferred from a record count.
@@ -87,7 +106,14 @@ export function buildComparisonArtifacts(graph, budget = COMPARE_CHUNK_BYTES) {
     }
     flush();
     const header = { schema_version: 1, pair, scope, edge_count: edges.length, node_count: allNodes.size, chunks };
-    manifest[key] = { scope, edge_count: edges.length, ...emit(`${pair.join('--')}-index`, header) };
+    const entry = { scope, edge_count: edges.length, ...emit(`${filename}-index`, header) };
+    if (baseline) {
+      const source = graph.sources.find((source) => source.id === baseline.source_id);
+      if (!source) throw new Error(`Baseline publication missing: ${key}`);
+      baselineManifest[key] = { ...entry, name: baseline.metadata?.title || baseline.label,
+        source_id: source.id, publication: source.display_name || source.name,
+        version: source.version || "", lifecycle_status: source.lifecycle_status || "" };
+    } else manifest[key] = entry;
   }
   for (const [catalog, byItem] of [...items].sort(([a], [b]) => a.localeCompare(b))) {
     itemManifest[catalog] = emit(`items-${catalog}`, {
@@ -95,5 +121,34 @@ export function buildComparisonArtifacts(graph, budget = COMPARE_CHUNK_BYTES) {
         .map(([id, targets]) => [id, [...targets].sort()])),
     }).path;
   }
-  return { manifest, itemManifest, files };
+  const contentManifest = {};
+  const inventories = new Map();
+  for (const node of (includeContent ? graph.nodes : []).filter(isComparisonRecord)) {
+    if (!sourceIds.has(node.source_id)) throw new Error(`Comparison record source missing: ${node.id}`);
+    const catalog = node.metadata.catalog_id;
+    const records = inventories.get(catalog) || [];
+    records.push(projectComparisonRecord(node));
+    inventories.set(catalog, records);
+  }
+  for (const [catalog, records] of [...inventories].sort(([a], [b]) => a.localeCompare(b))) {
+    const chunks = [];
+    let chunk = [], bytes = 128;
+    const flush = () => {
+      if (!chunk.length) return;
+      const file = emit(`content-${catalog}-${chunks.length}`, { catalog, records: chunk });
+      if (file.bytes > budget) throw new Error(`Content chunk exceeds transport budget: ${catalog}`);
+      chunks.push({ ...file, record_count: chunk.length });
+      chunk = []; bytes = 128;
+    };
+    for (const record of sortById(records)) {
+      const size = Buffer.byteLength(JSON.stringify(record)) + 2;
+      if (size + 128 > budget) throw new Error(`Comparison record exceeds transport budget: ${record.id}`);
+      if (bytes + size > budget) flush();
+      chunk.push(record); bytes += size;
+    }
+    flush();
+    contentManifest[catalog] = { record_count: records.length,
+      ...emit(`content-${catalog}-index`, { schema_version: 1, catalog, record_count: records.length, chunks }) };
+  }
+  return { manifest, itemManifest, baselineManifest, contentManifest, files };
 }

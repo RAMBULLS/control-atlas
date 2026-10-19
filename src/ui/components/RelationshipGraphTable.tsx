@@ -5,6 +5,8 @@ import { ProvenanceTerm } from "./ProvenanceTerm";
 import { ProvenanceBadge } from "../lib/compareHelpers";
 import { relationshipExplanation } from "../lib/relationshipProvenance";
 import { RecordLink } from "./RecordLink";
+import { ListPagination } from "./ListPagination";
+import { paginateRows } from "../lib/comparePagination";
 
 type TableRow = {
   edge: {
@@ -41,10 +43,10 @@ export function RelationshipGraphTable(props: {
   centerNodeId?: string;
 }) {
   const { rows, onOpenNode, conciseTrust = false, centerNodeId = "" } = props;
-  const [visibleCount, setVisibleCount] = useState(50);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    setVisibleCount(50);
+    setPage(1);
   }, [rows]);
 
   if (!rows.length) {
@@ -56,12 +58,13 @@ export function RelationshipGraphTable(props: {
     );
   }
 
-  const visibleRows = rows.slice(0, visibleCount);
+  const window = paginateRows(rows, String(page), 50);
+  const visibleRows = window.rows;
 
   return (
     <div className="relationship-graph-table-wrap">
       <p className="relationship-graph-table__count" role="status">
-        Showing {visibleRows.length.toLocaleString()} of {rows.length.toLocaleString()} connections.
+        Showing connections {window.start.toLocaleString()}-{window.end.toLocaleString()} of {rows.length.toLocaleString()}.
       </p>
       <div className="compare-table-scroll">
         <table
@@ -163,15 +166,7 @@ export function RelationshipGraphTable(props: {
         </tbody>
         </table>
       </div>
-      {visibleRows.length < rows.length ? (
-        <button
-          className="atlas-spatial-more"
-          onClick={() => setVisibleCount((count) => Math.min(count + 50, rows.length))}
-          type="button"
-        >
-          Show 50 more · {rows.length - visibleRows.length} remaining
-        </button>
-      ) : null}
+      <ListPagination label="Connection pages" noun="connections" {...window} total={rows.length} onPageChange={setPage} />
     </div>
   );
 }

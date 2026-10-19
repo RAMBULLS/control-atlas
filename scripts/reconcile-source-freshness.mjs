@@ -3,10 +3,12 @@ import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadSourceChecks } from './lib/source-check-receipts.mjs';
+import { sourceCheckFreshness } from '../tools/validators/source-registry.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const REGISTRY_PATH = join(ROOT, 'data', 'source-registry.json');
-const VOLATILE_KEYS = new Set(['generated_at', 'observed_at', 'retrieved_at', 'snapshot_date']);
+const VOLATILE_KEYS = new Set(['generated_at', 'observed_at', 'retrieved_at', 'snapshot_date', 'checked_at']);
 
 const ARTIFACTS = new Map([
   ['nist-oscal', ['data/controls-800-53.json', 'data/requirements-800-171.json', 'data/csf-subcategories.json']],
@@ -54,7 +56,7 @@ function artifactVersion(document) {
   return document.source_version || document.version || document.info?.version || document.source?.version || document.records?.[0]?.source?.version || null;
 }
 
-export function reconcileFreshness(registry, artifactDocuments, runDate, observedSourceIds = []) {
+export function reconcileFreshness(registry, artifactDocuments, runDate, sourceChecks = new Map()) {
   const sourceRecordsById = new Map();
   for (const collection of [registry.publications || [], registry.sources || []]) {
     for (const source of collection) {
@@ -63,22 +65,49 @@ export function reconcileFreshness(registry, artifactDocuments, runDate, observe
       sourceRecordsById.set(source.id, records);
     }
   }
-  const observations = new Set(observedSourceIds);
+  // Missing evidence stays missing. Admission and synchronization mode are
+  // unchanged; every admitted publication gets an explicit unknown check.
+  const freshnessIds = new Set(registry.freshness.sources.map((entry) => entry.source_id));
+  for (const sourceId of sourceRecordsById.keys()) {
+    if (freshnessIds.has(sourceId)) continue;
+    registry.freshness.sources.push({ source_id: sourceId, sync_model: 'curated',
+      last_checked: null, last_imported: null, hash: null });
+  }
   const quarantinedIds = new Set((registry.quarantine || [])
     .filter((entry) => entry.disposition === 'retained_last_good').map((entry) => entry.id));
   const quarantinedSources = new Set((registry.artifacts || [])
     .filter((artifact) => quarantinedIds.has(artifact.id)).map((artifact) => artifact.publication_source_id));
+  // This verified primary-artifact alias supplies the Rev. 3 publication,
+  // despite its historical mapping-oriented artifact ID.
+  if (quarantinedIds.has('artifact-nist-800-171-oscal-mappings')) quarantinedSources.add('nist-800-171');
+  for (const [alias, dependencies] of [
+    ['nist-oscal', ['nist-800-53', 'nist-800-171', 'nist-csf-2']],
+    ['nist-ssdf-oscal', ['nist-ssdf']],
+    ['disa-cci-nist-references', ['disa-cci-list']],
+  ]) {
+    if (dependencies.some((id) => quarantinedIds.has(id) || quarantinedSources.has(id))) quarantinedSources.add(alias);
+  }
   for (const freshness of registry.freshness.sources) {
+    Object.assign(freshness, sourceCheckFreshness(freshness, registry.artifacts));
     const quarantined = quarantinedIds.has(freshness.source_id) || quarantinedSources.has(freshness.source_id);
-    if (freshness.sync_model === 'link_out' && observations.has(freshness.source_id)) {
-      if (!quarantined) freshness.last_checked = runDate;
-      continue;
+    const check = sourceChecks.get(freshness.source_id);
+    if (!quarantined && check) {
+      const date = check.checked_at.slice(0, 10);
+      if (check.scope === 'pinned_edition_retrieval') {
+        if (!freshness.last_retrieval_checked || date >= freshness.last_retrieval_checked) {
+          freshness.last_retrieval_checked = date;
+          freshness.retrieval_evidence = check;
+        }
+      } else if (!freshness.last_checked || date >= freshness.last_checked) {
+        freshness.last_checked = date;
+        freshness.check_evidence = check;
+      }
     }
+    Object.assign(freshness, sourceCheckFreshness(freshness, registry.artifacts));
     if (freshness.sync_model !== 'auto_synced') continue;
     const document = artifactDocuments.get(freshness.source_id);
     if (!document) throw new Error(`Missing refreshed artifact for ${freshness.source_id}`);
     const nextHash = artifactHash(document);
-    if (!quarantined) freshness.last_checked = runDate;
     const contentChanged = freshness.hash !== nextHash;
     if (contentChanged) freshness.last_imported = runDate;
     freshness.hash = nextHash;
@@ -109,10 +138,7 @@ export function reconcileSourceFreshness(runDate = new Date().toISOString().slic
       ),
     ]),
   );
-  const observations = JSON.parse(
-    readFileSync(join(ROOT, 'data', 'stig-source-observations.json'), 'utf8'),
-  ).observations.map((entry) => entry.source_id);
-  const updated = reconcileFreshness(registry, documents, runDate, observations);
+  const updated = reconcileFreshness(registry, documents, runDate, loadSourceChecks(ROOT, registry));
   writeFileSync(REGISTRY_PATH, `${JSON.stringify(updated, null, 2)}\n`, 'utf8');
   return updated.freshness.sources;
 }

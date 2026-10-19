@@ -191,10 +191,11 @@ function readHashLocation() {
 function routeTransitionScope(state: ViewState): string {
   switch (state.view) {
     case "atlas-map":
+      // Territory zoom updates the existing map. Keep its controls active and
+      // focused; record, publication and research changes still orient the workspace.
       return [
         state.view,
         state.node,
-        state.atlasLimb,
         state.atlasFramework,
         state.atlasResearch,
       ].join(":");
@@ -661,6 +662,7 @@ export function App() {
     : canRenderWithoutBundle && viewState.view !== "search"
       ? "true"
     : bundle?.routeReady &&
+        (viewState.view !== "sources" || bundle.sourcesReady) &&
         (!requiresFullGraph(viewState) || bundle.graphReady)
       ? "true"
       : bundle
@@ -975,8 +977,9 @@ function AppContent(props: {
   }
 
   if (state.view === "sources") {
-    if (!bundle) {
-      return <DataPendingNotice onRetry={onRetryLoad} slow={loadSlow} />;
+    if (!bundle?.sourcesReady) {
+      if (loadError) return <LoadErrorPanel message={loadError} onRetry={onRetryLoad} />;
+      return <DataPendingNotice description="Loading recorded source versions, check dates, and status." onRetry={onRetryLoad} slow={loadSlow} title="Loading sources" />;
     }
     return (
       <SourcesPage bundle={bundle} onNavigate={onNavigate} state={state} />

@@ -9,6 +9,8 @@ import {
   recordedBasisFor,
 } from "../../src/ui/lib/publicationIdentity";
 import { publicationNextActions } from "../../src/ui/lib/publicationActions";
+import { loadSourceRegistry } from "../../tools/validators/source-registry.mjs";
+import { sourceFreshnessPresentation } from "../../src/ui/lib/sourcePresentation";
 
 const base = {
   id: "fixture-pub",
@@ -21,6 +23,24 @@ const base = {
   artifact_url: "https://example.gov/fixture",
   metadata: { identity_kind: "publication" },
 };
+
+test("unsupported 53A proxy checks use the existing retrieved-only labels", () => {
+  const id = "nist-800-53a-assessment-procedures";
+  const input = {
+    schema_version: "5.0",
+    sources: [{ ...base, id, last_checked: "2026-10-08", license_or_use: "Public domain" }],
+    freshness: { sources: [{ source_id: id, last_checked: "2026-10-08" }] },
+  };
+  const source = loadSourceRegistry(input).byId.get(id);
+  const trust = publicationTrustFor({ source });
+  assert.equal(trust.dates.checked, "");
+  assert.equal(trust.dates.retrieved, base.retrieved_at);
+  assert.equal(trust.freshness.state, "retrieved_only");
+  assert.equal(trust.freshness.label, "Retrieved (no check recorded)");
+  assert.equal(sourceFreshnessPresentation(source).state, "retrieved");
+  assert.equal(sourceFreshnessPresentation(source).label, "Source retrieved");
+  assert.equal(source.unsupported_check_history[0].last_checked, "2026-10-08");
+});
 
 test("the governed Atlas alias leads and the exact official title is kept beside it", () => {
   const trust = publicationTrustFor({ source: { ...base, id: "disa-stig-library", name: "DISA Public STIG Library", owner: "DISA" }, catalogId: "disa-stig" });

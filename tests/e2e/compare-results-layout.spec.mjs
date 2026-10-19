@@ -26,6 +26,46 @@ test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
 });
 
+test("published baseline selections reconcile, filter and export on desktop and mobile", async ({ page }, testInfo) => {
+  test.setTimeout(120_000);
+  const baselineRoute = "/#/compare/relationships?intent=baselines&source=nist-800-53b:MODERATE&target=fedramp-rev5:MODERATE&compareRun=true";
+  await gotoApp(page, baselineRoute);
+  await waitForAppReady(page); await dismissOnboarding(page);
+  await expect(page.locator("[data-baseline-result]").first()).toBeVisible({ timeout: 90_000 });
+  await expect(page.locator("#compare-results")).toContainText("historical");
+  await expect(page.locator("#compare-workspace")).toContainText("not a compliance failure");
+  const totals = await page.locator("#compare-results > p").nth(1).innerText();
+  const shared = Number(totals.match(/([\d,]+) shared/)[1].replaceAll(",", ""));
+  expect(shared).toBeGreaterThan(25);
+  await page.getByLabel("Result group").selectOption("shared");
+  expect(await page.locator("[data-baseline-result]").count()).toBeLessThanOrEqual(25);
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Download CSV" }).click();
+  const csv = await readFile(await (await downloadPromise).path(), "utf8");
+  expect(csv.split("\r\n")).toHaveLength(shared + 1);
+  expect(csv).toContain('"Shared"'); expect(csv).not.toContain('"Only in A"');
+  expect(csv).toContain("https://"); expect(csv).toContain("fedramp.gov");
+  await page.getByLabel("Search results by ID or title").fill("no-such-control-zzzz");
+  await expect(page.getByText("No controls match these filters.")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Download CSV" })).toBeDisabled();
+  await page.getByLabel("Search results by ID or title").fill("");
+  await page.getByLabel("Baseline B").selectOption("nist-800-53b:MODERATE");
+  await expect(page.locator("#compare-results")).toContainText(/0 only in A · [\d,]+ shared · 0 only in B/);
+  await page.goBack();
+  await expect(page.locator("#compare-results > p").nth(1)).toHaveText(totals);
+  for (const width of [1440, 390, 320]) {
+    await page.setViewportSize({ width, height: 900 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+    const scan = await new AxeBuilder({ page }).include("#compare-workspace").analyze();
+    expect(scan.violations.filter((v) => ["serious", "critical"].includes(v.impact))).toEqual([]);
+  }
+  await testInfo.attach("baseline-comparison-mobile", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" });
+  await page.getByRole("tab", { name: "Frameworks", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Choose a framework", exact: true })).toBeVisible();
+  await expect(page.getByPlaceholder("Search published frameworks", { exact: true })).toHaveValue("");
+  await expect(page.locator("[data-baseline-result]")).toHaveCount(0);
+});
+
 async function open(page, route, size = { width: 1440, height: 900 }) {
   await page.setViewportSize(size);
   await gotoApp(page, route);
@@ -232,15 +272,53 @@ test("export says what it covers and delivers every matching mapping, not the pa
   );
 });
 
+test("dense mapping evidence stays bounded and reaches the same final target by keyboard", async ({ page }) => {
+  test.setTimeout(120_000);
+  await open(page, DENSE);
+  await page.getByLabel("Search results by ID or title").fill("CCI-000366");
+  const rows = page.locator(ROWS);
+  await expect(rows).toHaveCount(1);
+  const row = rows.first();
+  const targets = row.locator(".target-window");
+  const total = Number((await targets.locator(".target-window-caption").innerText()).match(/All ([\d,]+) targets/)[1].replace(/,/g, ""));
+  expect(total).toBeGreaterThan(1000);
+  await targets.getByRole("region").focus();
+  await page.keyboard.press("End");
+  const finalTarget = targets.locator(`[aria-posinset="${total}"]`);
+  await expect(finalTarget).toBeVisible();
+  const finalIdentity = await finalTarget.locator("strong").innerText();
+  const evidence = row.locator(".mapping-row-details");
+  await evidence.locator("summary").focus();
+  await page.keyboard.press("Enter");
+  await expect(evidence.locator(".mapping-evidence-list > section")).toHaveCount(25);
+  expect(await row.evaluate(element => element.getElementsByTagName("*").length)).toBeLessThan(2000);
+  const sourceUrl = page.url();
+  const pager = evidence.getByRole("navigation", { name: "Evidence pages for CCI-000366" });
+  await pager.getByRole("button", { name: "Last page" }).focus();
+  await page.keyboard.press("Enter");
+  await expect(evidence.locator(".mapping-evidence-list > section")).toHaveCount(total % 25 || 25);
+  await expect(evidence.locator(".mapping-evidence-list > section > strong").last()).toHaveText(finalIdentity);
+  await expect(pager.getByRole("button", { name: "Previous page" })).toBeFocused();
+  await expect(page).toHaveURL(sourceUrl);
+  expect(await row.evaluate(element => element.getElementsByTagName("*").length)).toBeLessThan(2000);
+  await evidence.locator("summary").focus();
+  await page.keyboard.press("Enter");
+  await expect(evidence.locator(".mapping-evidence-list")).toHaveCount(0);
+  await page.keyboard.press("Enter");
+  await expect(evidence.locator(".mapping-evidence-list > section > strong").last()).toHaveText(finalIdentity);
+  await pager.getByRole("button", { name: "Previous page" }).click();
+  await expect(evidence.locator(".mapping-evidence-list > section")).toHaveCount(25);
+});
+
 test("filtering, the taxonomy disclosure and pagination work by keyboard and keep counts honest", async ({ page }) => {
   test.setTimeout(120_000);
   await open(page, PAIR);
-  const trigger = page.getByRole("button", { name: /Taxonomy context/ });
+  const trigger = page.getByRole("button", { name: /Related tags/ });
   await trigger.focus();
   await page.keyboard.press("Enter");
-  await expect(page.getByRole("region", { name: "Taxonomy context" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Related tags" })).toBeVisible();
   await page.keyboard.press("Enter");
-  await expect(page.getByRole("region", { name: "Taxonomy context" })).toHaveCount(0);
+  await expect(page.getByRole("region", { name: "Related tags" })).toHaveCount(0);
 
   const type = page.getByLabel("Connection type");
   const before = await mappingsIn(page);
@@ -279,5 +357,130 @@ test("the result has no serious or critical accessibility violations at desktop 
     await open(page, PAIR, size);
     const results = await new AxeBuilder({ page }).include("#compare-results").analyze();
     expect(results.violations.filter((v) => ["serious", "critical"].includes(v.impact))).toEqual([]);
+  }
+});
+
+
+test("content revisions compare complete inventories, source fields and CSV with safe unsupported states", async ({ page }, testInfo) => {
+  test.setTimeout(120_000);
+  await gotoApp(page, "/#/compare/relationships?intent=content&source=nist-800-171-rev2&target=nist-800-171&compareRun=true");
+  await waitForAppReady(page); await dismissOnboarding(page);
+  const rows = page.locator("[data-content-result]");
+  await expect(rows.first()).toBeVisible({ timeout: 90_000 });
+  await expect(page.locator("#compare-workspace")).toContainText("do not prove they describe the same requirement");
+  await expect(page.locator("[data-content-totals]")).toContainText("different content");
+  expect(await rows.count()).toBeLessThanOrEqual(25);
+  await rows.first().getByText("Compared fields and sources", { exact: true }).click();
+  await expect(rows.first().getByRole("link", { name: /official source/ }).first()).toBeVisible();
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Download CSV" }).click();
+  const csv = await readFile(await (await download).path(), "utf8");
+  expect(csv).toContain("Complete A records"); expect(csv).toContain("semantic equivalence");
+  expect(csv).toContain("https://");
+  expect(csv.split("\r\n").length).toBeGreaterThan(26);
+  await page.getByLabel("Search results by ID or title").fill("no-such-record-zzzz");
+  await expect(rows).toHaveCount(0); await expect(page.getByRole("button", { name: "Download CSV" })).toBeDisabled();
+  await page.getByLabel("Search results by ID or title").fill("");
+  await page.getByLabel("Publication B", { exact: true }).selectOption("nist-800-171-rev2");
+  await expect(page.locator('[data-content-result="shared"]').first()).toBeVisible();
+  await expect(page.locator('[data-content-result="only_a"], [data-content-result="only_b"], [data-content-result="different"]')).toHaveCount(0);
+  await page.getByText("Compare two specific records", { exact: true }).click();
+  await page.getByLabel("Exact record A (optional)").fill("3.1.1");
+  await page.getByLabel("Exact record B (optional)").fill("3.1.2");
+  await expect(rows).toHaveCount(1); await expect(rows.first()).toContainText("Explicit record selection");
+  await page.goBack();
+  await expect(page.getByLabel("Publication B", { exact: true })).toHaveValue("nist-800-171");
+  await expect(rows.first()).toBeVisible();
+  for (const width of [1440, 390, 320]) {
+    await page.setViewportSize({ width, height: 900 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+  }
+  const scan = await new AxeBuilder({ page }).include("#compare-workspace").analyze();
+  expect(scan.violations.filter((violation) => ["serious", "critical"].includes(violation.impact))).toEqual([]);
+  await testInfo.attach("content-comparison-mobile", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" });
+  await gotoApp(page, "/#/compare/relationships?intent=content&source=nist-800-53-rev4&target=nist-800-53&compareRun=true");
+  await expect(page.getByText("A selected edition has no supported content inventory. Choose an available publication above.")).toBeVisible();
+  await expect(rows).toHaveCount(0);
+});
+
+test("complete mapping inventories export every unmatched record and preserve published relationships", async ({ page }) => {
+  test.setTimeout(120_000);
+  await gotoApp(page, "/#/compare/relationships?intent=content&source=nist-800-53&target=csf-2&compareRun=true");
+  await waitForAppReady(page); await dismissOnboarding(page);
+  await expect(page.locator("[data-content-result]").first()).toBeVisible({ timeout: 90_000 });
+  await page.getByLabel("Comparison basis").selectOption("mappings");
+  await expect(page.locator("[data-content-totals]")).toContainText("published mapping");
+  await page.getByLabel("Result group").selectOption("only_a");
+  const rows = page.locator('[data-content-result="only_a"]');
+  await expect(rows.first()).toBeVisible();
+  await expect(page.locator('[data-content-result]:not([data-content-result="only_a"])')).toHaveCount(0);
+  const totalText = await page.locator("[data-content-totals]").innerText();
+  const count = Number(totalText.match(/([\d,]+) only in a/)[1].replaceAll(",", ""));
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Download CSV" }).click();
+  const csv = await readFile(await (await download).path(), "utf8");
+  expect(csv.split("\r\n")).toHaveLength(count + 1);
+  expect(csv).toContain("A inventory sources"); expect(csv).toContain("B inventory sources");
+  expect(csv).toContain('"only_a"'); expect(csv).not.toContain('"mapped"');
+  expect(csv).toContain("https://");
+  await page.getByLabel("Result group").selectOption("mapped");
+  await page.locator('[data-content-result="mapped"]').first().getByText("Compared fields and sources", { exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Publisher mapping", exact: true })).toBeVisible();
+});
+
+test("content comparison retains resolved ATT&CK publisher citation links", async ({ page }) => {
+  test.setTimeout(120_000);
+  await gotoApp(page, "/#/compare/relationships?intent=content&source=mitre-attack&target=mitre-attack&compareRun=true");
+  await waitForAppReady(page); await dismissOnboarding(page);
+  await expect(page.locator("[data-content-result]").first()).toBeVisible({ timeout: 90_000 });
+  await page.getByText("Compare two specific records", { exact: true }).click();
+  await page.getByLabel("Exact record A (optional)").fill("T1059.001");
+  await page.getByLabel("Exact record B (optional)").fill("T1059.001");
+  await expect(page.locator("[data-content-result]")).toHaveCount(1);
+  await page.getByText("Compared fields and sources", { exact: true }).click();
+  await expect(page.getByRole("link", { name: /Publisher reference:/ }).first()).toHaveAttribute("href", /^https?:\/\//);
+});
+
+test("FedRAMP content comparison renders and exports exact publisher lists and notes", async ({ page }) => {
+  test.setTimeout(120_000);
+  const catalog = JSON.parse(await readFile("data/fedramp-2026-catalog.json", "utf8"));
+  await gotoApp(page, "/#/compare/relationships?intent=content&source=fedramp-2026&target=fedramp-2026&compareRun=true");
+  await waitForAppReady(page); await dismissOnboarding(page);
+  await expect(page.locator("[data-content-result]").first()).toBeVisible({ timeout: 90_000 });
+  await page.getByText("Compare two specific records", { exact: true }).click();
+  for (const id of ["VER-EVA-EPA", "IEC-CSO-EFI"]) {
+    const record = catalog.records.find((entry) => entry.id === id);
+    await page.getByLabel("Exact record A (optional)").fill(id);
+    await page.getByLabel("Exact record B (optional)").fill(id);
+    const result = page.locator("[data-content-result]");
+    await expect(result).toHaveCount(1);
+    await expect(result).toContainText(id);
+    const details = result.locator("details");
+    if (!(await details.evaluate((element) => element.hasAttribute("open")))) {
+      await result.getByText("Compared fields and sources", { exact: true }).click();
+    }
+    const sides = result.locator(".compare-step-fields > section");
+    await expect(sides).toHaveCount(2);
+    for (const side of await sides.all()) {
+      const list = side.getByRole("heading", { name: "Following Information Bullets", exact: true }).locator("..");
+      await expect(list.locator("ul > li")).toHaveText(record.metadata.following_information_bullets.map((bullet) => bullet.replaceAll("**", "")));
+      if (record.discussion) {
+        await expect(side.getByRole("heading", { name: "Following Information", exact: true }).locator("..").locator("p")).toHaveText(record.discussion);
+      }
+    }
+    const download = page.waitForEvent("download");
+    await page.getByRole("button", { name: "Download CSV" }).click();
+    const csv = await readFile(await (await download).path(), "utf8");
+    const [header, ...exported] = csv.slice(1).split("\r\n").map((line) =>
+      Array.from(line.matchAll(/"((?:[^"]|"")*)"(?=,|$)/g), ([, cell]) => cell.replaceAll('""', '"')));
+    expect(exported).toHaveLength(1);
+    expect(exported[0]).toHaveLength(header.length);
+    for (const side of ["A", "B"]) {
+      expect(exported[0][header.indexOf(`${side} ID`)]).toBe(id);
+      const value = JSON.parse(exported[0][header.indexOf(`${side} compared fields and locators`)]);
+      expect(value.fields.following_information_bullets).toEqual(record.metadata.following_information_bullets);
+      expect(value.fields.discussion).toBe(record.discussion || null);
+      expect(value.locator).toBe(record.source.locator);
+    }
   }
 });

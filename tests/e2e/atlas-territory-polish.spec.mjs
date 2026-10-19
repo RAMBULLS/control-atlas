@@ -72,9 +72,16 @@ test("a route's far end keeps its name when a context dims other publications", 
 test("a tall inspector never covers the Other publications control", async ({ page }) => {
   await open(page, "/#/atlas?atlasLimb=atlas:LIMB-COMPLIANCE&atlasFramework=nist-800-53");
   await page.getByText("Filter by relationship type").click();
-  const inspector = await page.locator(".atl-inspector").boundingBox();
-  const pill = await page.locator(".atl-pill--other").boundingBox();
-  expect(inspector.y + inspector.height).toBeLessThanOrEqual(pill.y);
+  await expect(page.locator(".atl-inspector")).toBeVisible();
+  await expect(page.locator(".atl-pill--other")).toBeVisible();
+  // Both controls move with their parent while the page settles. Compare one frame.
+  const bounds = await page.evaluate(() => ({
+    inspectorBottom: document.querySelector(".atl-inspector").getBoundingClientRect().bottom,
+    pillTop: document.querySelector(".atl-pill--other").getBoundingClientRect().top,
+  }));
+  expect(bounds.inspectorBottom).toBeLessThanOrEqual(bounds.pillTop);
+  await page.locator(".atl-pill--other").click();
+  await expect(page.locator(".atl-pop--other")).toBeVisible();
 });
 
 test("a negative shared-ground answer says what was checked, not that nothing exists", async ({ page }) => {

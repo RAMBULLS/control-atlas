@@ -38,6 +38,10 @@ export type PublisherCitationEntry = { title: string; url: string };
  */
 const PublisherCitationContext = createContext<Record<string, PublisherCitationEntry>>({});
 
+export function PublisherCitationProvider(props: { citations: Record<string, PublisherCitationEntry>; children: ReactNode }) {
+  return <PublisherCitationContext.Provider value={props.citations}>{props.children}</PublisherCitationContext.Provider>;
+}
+
 function PublisherCitation(props: { citationKey: string }) {
   const citations = useContext(PublisherCitationContext);
   const resolved = citations[props.citationKey];
@@ -77,7 +81,7 @@ function PublisherCitation(props: { citationKey: string }) {
 
 const ODP_PATTERN = /\[(?:Assignment|Selection)[^\]]*\]/g;
 
-const PUBLISHER_INLINE_PATTERN = /(`[^`\n]+`|\[[^\]]+\]\(https?:\/\/[^)\s]+\)|\(Citation:\s*[^)]+\)|\[(?:Assignment|Selection)[^\]]*\])/g;
+const PUBLISHER_INLINE_PATTERN = /(`[^`\n]+`|\*\*[^*\n]+\*\*|\[[^\]]+\]\(https?:\/\/[^)\s]+\)|\(Citation:\s*[^)]+\)|\[(?:Assignment|Selection)[^\]]*\])/g;
 
 function renderOdpText(text: string): ReactNode {
   if (!text) return text;
@@ -108,6 +112,9 @@ function renderPublisherInlineText(text: string): ReactNode {
     }
     if (part.startsWith("`") && part.endsWith("`")) {
       return <code className="publisher-inline-code" key={`code-${index}`}>{part.slice(1, -1)}</code>;
+    }
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={`strong-${index}`}>{part.slice(2, -2)}</strong>;
     }
     const link = part.match(/^\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)$/);
     if (link) {

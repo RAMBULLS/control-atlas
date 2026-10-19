@@ -2,15 +2,15 @@
   "schema_version": "1.0",
   "source": {
     "url": "https://pages.nist.gov/pages-root/",
-    "retrieved_at": "2026-09-23T12:46:19.936Z",
-    "byte_length": 33179,
-    "sha256": "sha256:266513baf459a3098695b7d454eca4fb11b4aa9d6eae16c8537f7f24608ca9f6"
+    "retrieved_at": "2026-10-08T14:19:53.723Z",
+    "byte_length": 32648,
+    "sha256": "sha256:df1acd9aab1169145fc3f1eb091d91a4b5c3cd5fb1c1aee1343b21741b2762ec"
   },
   "reconciliation": {
-    "discovered_projects": 264,
-    "candidate_projects": 39,
-    "excluded_projects": 225,
-    "classified_projects": 264
+    "discovered_projects": 257,
+    "candidate_projects": 41,
+    "excluded_projects": 216,
+    "classified_projects": 257
   },
   "entries": [
     {
@@ -334,22 +334,6 @@
       "reason": "no-cybersecurity-or-governance-title-signal"
     },
     {
-      "repo_name": "2025-01-15-blackbird",
-      "url": "https://pages.nist.gov/2025-01-15-blackbird/",
-      "description": "NIST Gaithersburg: Jan 15-16, 2025",
-      "disposition": "excluded",
-      "topics": [],
-      "reason": "no-cybersecurity-or-governance-title-signal"
-    },
-    {
-      "repo_name": "2025-04-16-blackbird",
-      "url": "https://pages.nist.gov/2025-04-16-blackbird/",
-      "description": "NIST Boulder: Apr 16-17, 2025",
-      "disposition": "excluded",
-      "topics": [],
-      "reason": "no-cybersecurity-or-governance-title-signal"
-    },
-    {
       "repo_name": "800-157r1",
       "url": "https://pages.nist.gov/800-157r1/",
       "description": "NIST SP 800-157r1 Final Public Draft",
@@ -393,6 +377,17 @@
       "repo_name": "800-63-4",
       "url": "https://pages.nist.gov/800-63-4/",
       "description": "NIST SP 800-63 Digital Identity Guidelines",
+      "disposition": "candidate",
+      "topics": [
+        "security-controls",
+        "identity"
+      ],
+      "reason": "cybersecurity-or-governance-title-signal"
+    },
+    {
+      "repo_name": "800-63-4-Implementation-Resources",
+      "url": "https://pages.nist.gov/800-63-4-Implementation-Resources/",
+      "description": "Implementation Resources for SP 800-63 Revision 4 — Digital Identity Guidelines Implementation Resources  documentation",
       "disposition": "candidate",
       "topics": [
         "security-controls",
@@ -721,14 +716,6 @@
       "reason": "no-cybersecurity-or-governance-title-signal"
     },
     {
-      "repo_name": "digital-traceability-home",
-      "url": "https://pages.nist.gov/digital-traceability-home/",
-      "description": "Digital Traceability Home – NIST",
-      "disposition": "excluded",
-      "topics": [],
-      "reason": "no-cybersecurity-or-governance-title-signal"
-    },
-    {
       "repo_name": "dimspec",
       "url": "https://pages.nist.gov/dimspec/",
       "description": "",
@@ -739,7 +726,7 @@
     {
       "repo_name": "dioptra",
       "url": "https://pages.nist.gov/dioptra/",
-      "description": "Dioptra Overview — Dioptra 1.1.0 documentation",
+      "description": "Dioptra Overview — Dioptra 1.2.0 documentation",
       "disposition": "excluded",
       "topics": [],
       "reason": "no-cybersecurity-or-governance-title-signal"
@@ -934,14 +921,6 @@
       "reason": "no-cybersecurity-or-governance-title-signal"
     },
     {
-      "repo_name": "frif",
-      "url": "https://pages.nist.gov/frif/",
-      "description": "Friction Ridge Image and Features Technology Evaluations",
-      "disposition": "excluded",
-      "topics": [],
-      "reason": "no-cybersecurity-or-governance-title-signal"
-    },
-    {
       "repo_name": "frifte",
       "url": "https://pages.nist.gov/frifte/",
       "description": "Friction Ridge Image and Features Technology Evaluations",
@@ -985,14 +964,6 @@
       "repo_name": "git-novice-MSE",
       "url": "https://pages.nist.gov/git-novice-MSE/",
       "description": "Version Control with Git",
-      "disposition": "excluded",
-      "topics": [],
-      "reason": "no-cybersecurity-or-governance-title-signal"
-    },
-    {
-      "repo_name": "Golden-Datasets-for-AI-in-AM",
-      "url": "https://pages.nist.gov/Golden-Datasets-for-AI-in-AM/",
-      "description": "Agentic AI for AM",
       "disposition": "excluded",
       "topics": [],
       "reason": "no-cybersecurity-or-governance-title-signal"
@@ -1361,6 +1332,16 @@
       "reason": "no-cybersecurity-or-governance-title-signal"
     },
     {
+      "repo_name": "nccoe-ai-identity",
+      "url": "https://pages.nist.gov/nccoe-ai-identity/",
+      "description": "Introduction — NCCoE Agentic AI Identity and Authorization Project Resource Hub  documentation",
+      "disposition": "candidate",
+      "topics": [
+        "identity"
+      ],
+      "reason": "cybersecurity-or-governance-title-signal"
+    },
+    {
       "repo_name": "nccoe-devsecops",
       "url": "https://pages.nist.gov/nccoe-devsecops/",
       "description": "Secure Software Development, Security, and Operations (DevSecOps) Practices — Secure Software Development, Security, and Operations (DevSecOps) Practices  documentation",
@@ -1691,14 +1672,6 @@
       "reason": "no-cybersecurity-or-governance-title-signal"
     },
     {
-      "repo_name": "pf-recommended-practices",
-      "url": "https://pages.nist.gov/pf-recommended-practices/",
-      "description": "",
-      "disposition": "excluded",
-      "topics": [],
-      "reason": "no-cybersecurity-or-governance-title-signal"
-    },
-    {
       "repo_name": "pfhub",
       "url": "https://pages.nist.gov/pfhub/",
       "description": "PFHub: The Phase Field Community Hub",
@@ -1802,7 +1775,7 @@
     {
       "repo_name": "pySCATMECH",
       "url": "https://pages.nist.gov/pySCATMECH/",
-      "description": "pySCATMECH : A Python Interface to the SCATMECH Library — pySCATMECH 0.1.9 documentation",
+      "description": "pySCATMECH : A Python Interface to the SCATMECH Library — pySCATMECH 0.1.10 documentation",
       "disposition": "excluded",
       "topics": [],
       "reason": "no-cybersecurity-or-governance-title-signal"
@@ -1832,14 +1805,6 @@
       "reason": "no-cybersecurity-or-governance-title-signal"
     },
     {
-      "repo_name": "refprop",
-      "url": "https://pages.nist.gov/refprop/",
-      "description": "Welcome to Refprop’s documentation! — Refprop 11.0.0-a.1 documentation",
-      "disposition": "excluded",
-      "topics": [],
-      "reason": "no-cybersecurity-or-governance-title-signal"
-    },
-    {
       "repo_name": "REFPROP-docs",
       "url": "https://pages.nist.gov/REFPROP-docs/",
       "description": "NIST Pages",
@@ -1851,14 +1816,6 @@
       "repo_name": "remi",
       "url": "https://pages.nist.gov/remi/",
       "description": "Home - REMI",
-      "disposition": "excluded",
-      "topics": [],
-      "reason": "no-cybersecurity-or-governance-title-signal"
-    },
-    {
-      "repo_name": "REPO",
-      "url": "https://pages.nist.gov/REPO/",
-      "description": "Agentic AI for AM",
       "disposition": "excluded",
       "topics": [],
       "reason": "no-cybersecurity-or-governance-title-signal"
@@ -2144,14 +2101,6 @@
       "repo_name": "v2plusDemo",
       "url": "https://pages.nist.gov/v2plusDemo/",
       "description": "HL7 - REFACTORED",
-      "disposition": "excluded",
-      "topics": [],
-      "reason": "no-cybersecurity-or-governance-title-signal"
-    },
-    {
-      "repo_name": "vlincs",
-      "url": "https://pages.nist.gov/vlincs/",
-      "description": "",
       "disposition": "excluded",
       "topics": [],
       "reason": "no-cybersecurity-or-governance-title-signal"

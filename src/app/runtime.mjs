@@ -1,6 +1,7 @@
 import { orientedRelationshipType } from "../shared/compare-scope.mjs";
 import { csvCell } from "../shared/csv.mjs";
 import {
+  isBaselineSelection,
   isComparisonCapableEdge,
   mappingSourceIdsForEdge,
 } from "../shared/compare-capability.mjs";
@@ -1027,12 +1028,8 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
       dataset.edges
         .filter(
           (edge) =>
-            edge.publication_status === "published" &&
-            edge.relationship_class === "applicability" &&
-            edge.relationship_type === "selects" &&
             edge.source_node_id === baselineId &&
-            nodeById.get(edge.target_node_id)?.metadata?.catalog_id ===
-              "nist-800-53",
+            isBaselineSelection(edge, nodeById.get(baselineId), nodeById.get(edge.target_node_id)),
         )
         .map((edge) => ({
           control_node: nodeById.get(edge.target_node_id),
@@ -2063,7 +2060,10 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
         baseline_b: baselineB,
         baseline_a_source: resolveSourceForNode(baselineA),
         baseline_b_source: resolveSourceForNode(baselineB),
-        shared: controlsA.filter((entry) => idsB.has(entry.control_node.id)),
+        shared: controlsA.filter((entry) => idsB.has(entry.control_node.id)).map((entry) => ({
+          ...entry,
+          source_refs: [...entry.source_refs, ...controlsB.find((other) => other.control_node.id === entry.control_node.id).source_refs],
+        })),
         only_a: controlsA.filter((entry) => !idsB.has(entry.control_node.id)),
         only_b: controlsB.filter((entry) => !idsA.has(entry.control_node.id)),
       };

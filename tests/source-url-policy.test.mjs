@@ -7,6 +7,15 @@ import { assertOfficialSourceUrl } from '../scripts/lib/source-url-policy.mjs';
 import { fetchRangeWithCurl } from '../scripts/fetch-disa-stigs.mjs';
 import { check } from '../scripts/check-commons-health.mjs';
 
+test('baseline inventory admits only the documented NIST directory at an immutable revision', () => {
+  const directory = 'https://api.github.com/repos/usnistgov/oscal-content/contents/nist.gov/SP800-53/rev5/json';
+  const revision = 'a'.repeat(40); // Synthetic URL-policy fixture, not publisher evidence.
+  assert.equal(assertOfficialSourceUrl(`${directory}?ref=${revision}`).href, `${directory}?ref=${revision}`);
+  for (const url of [`${directory}?ref=main`, `${directory}?ref=${revision}&extra=1`, `${directory}/other?ref=${revision}`, directory.replace('usnistgov', 'evil') + `?ref=${revision}`]) {
+    assert.throws(() => assertOfficialSourceUrl(url), /source URL policy/);
+  }
+});
+
 test('Commons health reports denied destinations as unreachable without opening a connection', async () => {
   const result = await check({ id: 'unapproved', canonicalUrl: 'https://www.stigviewer.com/stigs' });
   assert.equal(result.ok, false);

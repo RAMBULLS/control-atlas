@@ -183,7 +183,7 @@ const OBSOLETE_COMPARE_PARAMS = [
 const LEARN_PARAMS = new Set(["pattern"]);
 const BUILD_PARAMS = new Set(["templateType", "framework", "format", "environment", "baseline", "controlFamily", "category", "q"]);
 const SOURCE_PARAMS = new Set(["layer", "q", "source", "publisher", "provenance", "eligibility", "lifecycle", "access"]);
-const SOURCE_LAYERS = new Set(["publication", "policy", "connection", "ingestion", "organization"]);
+const SOURCE_LAYERS = new Set(["all", "publication", "policy", "connection", "ingestion", "organization"]);
 const RESOURCE_PARAMS = new Set(["q", "resourceType", "collection", "owner", "sort", "showAll", "viewMode"]);
 const RETIRED_PARAMS = new Set(["q"]);
 
@@ -224,7 +224,7 @@ function permittedParams(params: URLSearchParams, permitted: Set<string>): { par
       discarded = true;
       continue;
     }
-    if (key === "intent" && !["frameworks", "implementation", "item-mapping"].includes(value)) {
+    if (key === "intent" && !["frameworks", "implementation", "item-mapping", "baselines", "content"].includes(value)) {
       discarded = true;
       continue;
     }
@@ -310,7 +310,9 @@ export function canonicalizeHashLocation(input: string): CanonicalRoute {
   // Keep bookmarked guide URLs useful after their jobs moved to existing pages.
   if (path === "/guides") {
     const guideId = params.get("pattern") || "";
-    const destination = GUIDE_REDIRECTS[guideId as keyof typeof GUIDE_REDIRECTS];
+    const destination = Object.hasOwn(GUIDE_REDIRECTS, guideId)
+      ? GUIDE_REDIRECTS[guideId as keyof typeof GUIDE_REDIRECTS]
+      : undefined;
     if (destination) {
       const canonicalPath = destination.path;
       return {

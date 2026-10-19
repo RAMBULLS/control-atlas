@@ -23,17 +23,20 @@ for (const unit of baselineProof.native_units) {
   const profile = JSON.parse(bytes).profile;
   const selected = controls.records.filter((record) => (record.metadata?.nist_800_53b_baselines || []).some((label) => new RegExp(`\\b${unit.id} (?:IMPACT )?BASELINE$`).test(label))).map((record) => record.id).sort();
   assert.deepEqual(selected, baselineProof.memberships[unit.id], `Wrong native ${unit.id} membership`);
-  const id = unit.id === 'MODERATE' ? originalArtifact.id : `artifact-nist-800-53b-${unit.id.toLowerCase()}-profile`;
+  const id = `artifact-nist-800-53b-${unit.id.toLowerCase()}-profile`;
   const prior = registry.artifacts.find((artifact) => artifact.id === id);
   const artifact = { ...(prior || originalArtifact), id, name: `NIST SP800-53B ${unit.id} OSCAL baseline profile`, display_name: `SP800-53B ${unit.id} profile`, version: profile.metadata.version,
+    format: 'oscal_json', profile_id: 'artifact.oscal_json', origin: 'publisher_exact', parser: 'oscal-profile', parser_version: '1.5.0',
     artifact_url: evidence.url, byte_length: bytes.length, sha256: evidence.sha256, retrieved_at: entry.retrieved_at.slice(0,10), record_count: 1, relationship_count: selected.length,
     metadata: { ...(prior?.metadata || {}), byte_evidence_kind: 'downloaded_publisher_bytes', native_baseline_id: unit.id } };
+  delete artifact.upstream_reference_url;
   if (prior) Object.assign(prior, artifact); else registry.artifacts.push(artifact);
   const receipt = { id, status: 'OK', http: 'verified-acquired-publisher-bytes', url: evidence.url, sha256: evidence.sha256, byte_length: bytes.length, record_count: 1, retrieved_at: artifact.retrieved_at };
   const oldReceipt = hydration.results.find((row) => row.id === id); if (oldReceipt) Object.assign(oldReceipt, receipt); else hydration.results.push(receipt);
   byBaseline.set(unit.id, { artifact, title: profile.metadata.title, edition: profile.metadata.version });
 }
 const bundle = registry.catalog_source_bundles.find((entry) => entry.catalog_id === 'nist-800-53b'); bundle.primary_artifact_ids = [...byBaseline.values()].map((entry) => entry.artifact.id).sort();
+bundle.enrichment_artifact_ids = [originalArtifact.id];
 for (const baseline of baselines.records) {
   const entry = byBaseline.get(baseline.id); assert.ok(entry);
   baseline.source = { ...baseline.source, locator: entry.artifact.artifact_url, version: entry.edition };
@@ -71,6 +74,15 @@ disa.reconciliation.publisher_citation_occurrences = citations;
 assert.equal(disa.reconciliation.compilation_ingested_files + disa.reconciliation.standalone_ingested_files, nativeFiles.length);
 
 const writes = new Map([['data/800-53b-baselines.json',baselines],['data/controls-800-53.json',controls],['maps/stig-srg-to-cci.json',map],['data/disa-artifact-manifest.json',disa]]);
+// The normalized summary keeps its existing artifact identity. Native profile
+// byte evidence has separate identities and must never replace this receipt.
+const summaryBytes = Buffer.from(encode(baselines));
+Object.assign(originalArtifact, { sha256: hash(summaryBytes), byte_length: summaryBytes.length,
+  record_count: baselines.records.length, relationship_count: baselines.relationships?.length || 0 });
+const summaryReceipt = hydration.results.find((entry) => entry.id === originalArtifact.id);
+assert.ok(summaryReceipt, 'Missing normalized baseline summary receipt');
+Object.assign(summaryReceipt, { sha256: originalArtifact.sha256, byte_length: originalArtifact.byte_length,
+  record_count: originalArtifact.record_count, relationship_count: originalArtifact.relationship_count });
 for (const [id, path] of [['artifact-disa-stig-library','data/stig-rules.json'],['artifact-disa-srg-library','data/srg-requirements.json'],['artifact-disa-stig-srg-cci-references','maps/stig-srg-to-cci.json']]) {
   const artifact = registry.artifacts.find((entry) => entry.id === id);
   const bytes = writes.has(path) ? Buffer.from(encode(writes.get(path))) : readFileSync(join(root,path));

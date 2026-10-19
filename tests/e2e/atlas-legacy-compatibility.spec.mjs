@@ -7,9 +7,8 @@
 // translated in routeIdentity.ts); these outcomes are what it must keep.
 //
 // Row count is asserted only as "more than a few" (>3), never an exact
-// count: RelationshipGraphTable currently paginates at 50 with a "Show 50
-// more" control, and whether that limit survives is #286's call, not this
-// test's.
+// count: the legacy handoff contract is independent of its current 50-row
+// replacement pages. The dense-list case below verifies those page bounds.
 import { expect, test } from "@playwright/test";
 import { attachPageDiagnostics, dismissOnboarding, gotoApp, waitForAppReady } from "./support.mjs";
 
@@ -27,6 +26,40 @@ function connectionResultsOf(page) {
     .getByRole("table", { name: "Relationship table" })
     .or(page.getByRole("list", { name: /connections/i }));
 }
+
+test("a dense full connection list replaces pages and keeps every connection reachable", async ({ page }) => {
+  await gotoApp(page, "/#/atlas?node=disa-cci%3ACCI-000366&relationshipView=list");
+  await waitForAppReady(page);
+  await dismissOnboarding(page);
+  const table = page.getByRole("table", { name: "Relationship table" });
+  await expect(table).toBeVisible({ timeout: 20000 });
+  const rows = table.locator("tbody tr");
+  await expect(rows).toHaveCount(50);
+  expect(await table.evaluate(element => element.getElementsByTagName("*").length)).toBeLessThan(4000);
+  const firstId = await rows.first().getAttribute("data-record-connection-id");
+  const pager = page.getByRole("navigation", { name: "Connection pages" });
+  const total = Number((await pager.innerText()).match(/of ([\d,]+)\./)[1].replace(/,/g, ""));
+  expect(total).toBeGreaterThan(1000);
+  const original = page.url();
+  await pager.getByRole("button", { name: "Next page" }).focus();
+  await page.keyboard.press("Enter");
+  await expect(pager).toContainText("connections 51-100");
+  await expect(rows).toHaveCount(50);
+  expect(await rows.first().getAttribute("data-record-connection-id")).not.toBe(firstId);
+  await pager.getByRole("button", { name: "Last page" }).focus();
+  await page.keyboard.press("Enter");
+  await expect(rows).toHaveCount(total % 50 || 50);
+  await expect(pager).toContainText(`-${total.toLocaleString()} of ${total.toLocaleString()}`);
+  await expect(pager.getByRole("button", { name: "Previous page" })).toBeFocused();
+  await expect(page).toHaveURL(original);
+  expect(await table.evaluate(element => element.getElementsByTagName("*").length)).toBeLessThan(4000);
+  const filter = page.getByRole("combobox", { name: "Relationship", exact: true });
+  await filter.selectOption({ index: 1 });
+  await expect(page.locator(".relationship-graph-table__count")).toContainText("connections 1-");
+  await filter.selectOption({ index: 0 });
+  await expect(rows).toHaveCount(50);
+  await expect(rows.first()).toHaveAttribute("data-record-connection-id", firstId);
+});
 
 test("a legacy scoped Atlas link lands on a working page with its scope intact", async ({ page }) => {
   await gotoApp(page, "/#/atlas?atlasAxis=framework&atlasFramework=mitre-attack");

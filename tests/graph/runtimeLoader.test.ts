@@ -49,6 +49,20 @@ test("Library index shards begin together and preserve manifest order", async ()
   assert.deepEqual(await result, [["first", "second"], ["First title", "Second title"]]);
 });
 
+test("Atlas global search includes resources and source publications only on request", () => {
+  const state = normalizeViewState("atlas-map");
+  const closed = runtimeArtifactPlan(state);
+  assert.equal(closed.commons, false);
+  assert.equal(closed.sources, false);
+  const open = runtimeArtifactPlan(state, { searchOverlayOpen: true });
+  assert.equal(open.commons, true);
+  assert.equal(open.sources, true);
+  assert.equal(open.librarySearch, true);
+  assert.equal(open.fullGraph, false);
+  assert.equal(open.atlasSpine, false);
+  assert.equal(open.registries, false);
+});
+
 test("route bootstrap loads only the smallest faithful artifact scope", () => {
   const resources = runtimeArtifactPlan(normalizeViewState("commons"));
   assert.equal(resources.commons, true);

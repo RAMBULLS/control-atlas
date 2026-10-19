@@ -44,6 +44,8 @@ concurrency:
 
 env:
   NODE_VERSION: '22'
+  ATLAS_RUNNER_TOKEN: ${{ github.token }}
+  ATLAS_RUNNER_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
   changes:
@@ -70,7 +72,7 @@ jobs:
       ui_review_routes: ${{ steps.review.outputs.ui_review_routes }}
       ui_review_reason: ${{ steps.review.outputs.ui_review_reason }}
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 1
           persist-credentials: false
@@ -129,7 +131,7 @@ jobs:
     if: ${{ needs.changes.outputs.evidence_only == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -139,13 +141,39 @@ jobs:
       - run: npm ci
       - run: node --test tests/change-scope.test.mjs tests/release-evidence.test.mjs
 
+  prepush:
+    name: Fresh checkout and push audit
+    needs: [changes, generated]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run validate:checkout
+      - run: npm run verify:local
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: generated-data
+          path: data/generated
+      - run: npm run prepush:audit
+      - name: Record hosted acceptance
+        run: |
+          echo "Fresh checkout and protected push audit passed for $GITHUB_SHA." >> "$GITHUB_STEP_SUMMARY"
+          echo "Runner: $RUNNER_NAME; image: $ImageOS; run: $GITHUB_RUN_ID." >> "$GITHUB_STEP_SUMMARY"
+
   automation:
     name: Automation contracts
     needs: changes
     if: ${{ needs.changes.outputs.automation_changed == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -162,7 +190,7 @@ jobs:
     if: ${{ needs.changes.outputs.content_changed == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -186,7 +214,7 @@ jobs:
           (needs.generated.result == 'success' || needs.generated.result == 'skipped') }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -213,12 +241,11 @@ jobs:
   generated:
     name: Prepare reproducible generated data
     needs: changes
-    if: >-
-      ${{ needs.changes.outputs.build_required == 'true' ||
-          needs.changes.outputs.unit_required == 'true' }}
+    # The required push audit checks corpus-wide brand metrics for every standard
+    # run. Prepare its shared data even when no product rebuild is selected.
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -235,14 +262,86 @@ jobs:
         with:
           path: data/generated
           key: generated-data-${{ runner.os }}-v3-${{ steps.generated-key.outputs.key }}
+      - name: Verify clean canonical FedRAMP input
+        run: git diff --exit-code HEAD -- data/fedramp-2026-catalog.json
       - name: Reproduce changed data from a clean state
+        id: reproduce-data
         if: ${{ needs.changes.outputs.data_required == 'true' }}
         run: npm run verify:generated-reproducibility
       - name: Generate data on a cold cache
+        id: generate-data
         if: >-
           ${{ needs.changes.outputs.data_required != 'true' &&
               steps.generated-cache.outputs.cache-hit != 'true' }}
         run: npm run generate:data
+      # Reproducibility cleanup restores data/generated, but intentionally leaves
+      # canonical inputs alone. Preserve this one generator output even when a
+      # later generator fails. This is diagnostic evidence, never gate approval.
+      - name: Preserve changed FedRAMP catalog for review
+        id: fedramp-diagnostic
+        if: >-
+          ${{ !cancelled() &&
+              (steps.reproduce-data.outcome == 'success' || steps.reproduce-data.outcome == 'failure' ||
+               steps.generate-data.outcome == 'success' || steps.generate-data.outcome == 'failure') }}
+        env:
+          REPRODUCE_OUTCOME: ${{ steps.reproduce-data.outcome }}
+          GENERATE_OUTCOME: ${{ steps.generate-data.outcome }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          catalog=data/fedramp-2026-catalog.json
+          if git diff --quiet HEAD -- "$catalog"; then
+            exit 0
+          else
+            [[ "$?" -eq 1 ]]
+          fi
+          [[ -f "$catalog" && ! -L "$catalog" ]]
+          [[ "$(git ls-files -s -- "$catalog" | cut -d' ' -f1)" == 100644 ]]
+          checkout_sha="$(git rev-parse HEAD)"
+          [[ "$checkout_sha" == "$GITHUB_SHA" ]]
+          [[ "$ATLAS_RUNNER_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]
+          output="$RUNNER_TEMP/fedramp-catalog-diagnostic"
+          mkdir "$output"
+          old_sha256="$(git show "HEAD:$catalog" | sha256sum | cut -d' ' -f1)"
+          cp -- "$catalog" "$output/fedramp-2026-catalog.json"
+          git diff --no-ext-diff --no-textconv --binary HEAD -- "$catalog" > "$output/catalog.patch"
+          new_sha256="$(sha256sum "$output/fedramp-2026-catalog.json" | cut -d' ' -f1)"
+          patch_sha256="$(sha256sum "$output/catalog.patch" | cut -d' ' -f1)"
+          raw_sha256="$(sha256sum data/fedramp-2026-rules.json | cut -d' ' -f1)"
+          generator_sha256="$(sha256sum scripts/build-fedramp-2026-catalog.mjs | cut -d' ' -f1)"
+          jq -n \
+            --arg path "$catalog" \
+            --arg repository "$GITHUB_REPOSITORY" \
+            --arg head_sha "$ATLAS_RUNNER_HEAD_SHA" \
+            --arg checkout_sha "$checkout_sha" \
+            --arg run_id "$GITHUB_RUN_ID" \
+            --arg run_attempt "$GITHUB_RUN_ATTEMPT" \
+            --arg run_url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT" \
+            --arg reproduce_outcome "$REPRODUCE_OUTCOME" \
+            --arg generate_outcome "$GENERATE_OUTCOME" \
+            --arg old_sha256 "$old_sha256" \
+            --arg new_sha256 "$new_sha256" \
+            --arg patch_sha256 "$patch_sha256" \
+            --arg raw_sha256 "$raw_sha256" \
+            --arg generator_sha256 "$generator_sha256" \
+            '{schema_version: 1, purpose: "Diagnostic only; generation and required gates may have failed",
+              path: $path, repository: $repository, head_sha: $head_sha, checkout_sha: $checkout_sha,
+              run_id: $run_id, run_attempt: $run_attempt, run_url: $run_url,
+              generation_steps: {reproduce: $reproduce_outcome, cold_cache: $generate_outcome},
+              old_sha256: $old_sha256, new_sha256: $new_sha256, patch_sha256: $patch_sha256,
+              raw_sha256: $raw_sha256, generator_sha256: $generator_sha256}' > "$output/receipt.json"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+      - name: Upload FedRAMP catalog diagnostic
+        if: ${{ !cancelled() && steps.fedramp-diagnostic.outputs.changed == 'true' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: fedramp-catalog-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/fedramp-catalog-diagnostic/fedramp-2026-catalog.json
+            ${{ runner.temp }}/fedramp-catalog-diagnostic/catalog.patch
+            ${{ runner.temp }}/fedramp-catalog-diagnostic/receipt.json
+          if-no-files-found: error
+          retention-days: 2
       - name: Reject generator writes outside derived output
         shell: bash
         run: |
@@ -266,7 +365,7 @@ jobs:
     if: ${{ needs.changes.outputs.build_required == 'true' }}
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -280,7 +379,7 @@ jobs:
     if: ${{ needs.changes.outputs.unit_required == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -300,7 +399,7 @@ jobs:
     if: ${{ needs.changes.outputs.build_required == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       # Pulse product events are derived from Git: merged pull requests on the
@@ -330,13 +429,46 @@ jobs:
           if-no-files-found: error
           retention-days: 2
 
+  analytics-candidate:
+    name: Analytics candidate qualification
+    needs: [changes, build]
+    if: ${{ github.event_name == 'pull_request' && github.head_ref == 'chore/rb-domain-t16-analytics' && needs.changes.outputs.build_required == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: site-build
+          path: dist/site
+      - name: Prepare hosted browser library
+        run: npm install --prefix "$RUNNER_TEMP/browser" --no-audit --no-fund --ignore-scripts playwright@1.64.0
+      - name: Qualify the immutable candidate with the official SDK and collector
+        env:
+          PLAYWRIGHT_MODULE: ${{ runner.temp }}/browser/node_modules/playwright/index.mjs
+          ANALYTICS_HOST: atlas.rambulls.dev
+          PUBLIC_ROOT: dist/site
+        run: node .github/analytics/candidate.mjs
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: always()
+        with:
+          name: analytics-candidate-${{ github.sha }}
+          path: ${{ runner.temp }}/analytics-candidate
+          if-no-files-found: error
+          retention-days: 3
+
   contracts:
     name: Static, data, and Guardian contracts
     needs: [changes, build]
     if: ${{ needs.changes.outputs.build_required == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -353,6 +485,18 @@ jobs:
           name: generated-data
           path: data/generated
       - run: npm run verify:contracts
+      - name: Validate portable reference package from the qualified graph
+        if: ${{ needs.changes.outputs.data_required == 'true' }}
+        run: npm run export:reference:compact && npm run verify:reference-export:compact
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: ${{ needs.changes.outputs.data_required == 'true' }}
+        with:
+          name: reference-export
+          path: |
+            .local-agent/reference-export/ControlAtlas_DoD_Reference.zip
+            .local-agent/reference-export/compact-validation.json
+          if-no-files-found: error
+          retention-days: 2
 
   browser:
     name: Browser shard ${{ matrix.shard }}/2
@@ -364,7 +508,7 @@ jobs:
       matrix:
         shard: [1, 2]
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -398,7 +542,7 @@ jobs:
     if: ${{ needs.changes.outputs.accessibility_required == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -419,7 +563,7 @@ jobs:
     if: ${{ needs.changes.outputs.browser_required == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -461,7 +605,7 @@ jobs:
     if: ${{ needs.changes.outputs.lighthouse_required == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -489,7 +633,7 @@ jobs:
     if: ${{ needs.changes.outputs.ui_review_required == 'true' && needs.changes.outputs.build_required == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -562,7 +706,7 @@ jobs:
           name: ui-review-${{ github.event.pull_request.number || github.run_id }}-${{ github.event.pull_request.head.sha || github.sha }}
           path: artifacts/ui-review
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 7
 
       - name: Say where the renders are and what they do not prove
         env:
@@ -597,7 +741,7 @@ jobs:
     if: ${{ needs.changes.outputs.workflow_lint_required == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - name: Validate workflows with actionlint 1.7.12
@@ -617,7 +761,7 @@ jobs:
   required:
     name: Required CI
     if: ${{ always() && needs.changes.result != 'skipped' }}
-    needs: [changes, evidence, automation, content, fast, generated, windows-process, unit, build, contracts, browser, accessibility, visual, lighthouse, workflow-lint, ui-review]
+    needs: [changes, prepush, evidence, automation, content, fast, generated, windows-process, unit, build, analytics-candidate, contracts, browser, accessibility, visual, lighthouse, workflow-lint, ui-review]
     runs-on: ubuntu-latest
     steps:
       - name: Require every selected gate
@@ -653,7 +797,7 @@ jobs:
       nightly_due: ${{ steps.nightly.outputs.due }}
       oscal_due: ${{ steps.oscal.outputs.due }}
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -677,7 +821,7 @@ jobs:
            (github.event_name == 'workflow_dispatch' && inputs.task == 'nightly')) }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -711,7 +855,7 @@ jobs:
         browser: [chromium, firefox, webkit]
         shard: [1, 2]
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -749,7 +893,7 @@ jobs:
     if: ${{ !cancelled() && needs.nightly-build.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -794,7 +938,7 @@ jobs:
       issues: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -823,7 +967,7 @@ jobs:
     needs: [sweep-gate, nightly-browser, nightly-accessibility]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -853,7 +997,7 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -875,7 +1019,7 @@ jobs:
       issues: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -961,23 +1105,27 @@ jobs:
            (github.event_name == 'workflow_dispatch' && inputs.task == 'oscal')) }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-      - uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
         with:
           distribution: temurin
           java-version: '17'
       - run: npm ci
       - run: npm run test:oscal:independent
+      - run: npm run check:normalized
+      - run: npm run check:oscal
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: oscal-cli-cross-check
-          path: artifacts/oscal-cli/cross-check.json
+          path: |
+            artifacts/oscal-cli/cross-check.json
+            artifacts/oscal-cli/upstream-check.json
 
   lighthouse-ab:
     name: Lighthouse A/B diagnostic
@@ -989,7 +1137,7 @@ jobs:
       MAX_MEDIAN_DROP: '3'
       ROUTE: '/#/explore?node=nist-800-53%3AAC-2&relationshipView=map'
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 1
           persist-credentials: false

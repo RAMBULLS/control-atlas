@@ -7,7 +7,34 @@ import { classifyCatalog, resolveExpectedLocator } from '../scripts/lib/complete
 import { recordPresentationContract, undeclaredCapturedRecordFields } from '../src/shared/record-presentation.mjs';
 import { iotMappingDisposition } from '../tools/importers/nist-structured-catalog-adapter.mjs';
 import { effectiveProfile, assertionProfileId } from '../src/shared/entity-profiles.mjs';
+import { verifyNormalizedArtifactEvidence } from '../scripts/lib/normalized-artifact-evidence.mjs';
+import { verifyBaselineManifest } from '../scripts/lib/nist-baseline-profiles.mjs';
 const read = (file) => JSON.parse(readFileSync(file, 'utf8'));
+
+test('baseline publisher profiles and normalized summary retain separate artifact identities and exact evidence', () => {
+  const registry = read('data/source-registry.json');
+  const hydration = read('data/artifact-hydration-manifest.json');
+  const baselines = read('data/800-53b-baselines.json').records;
+  const summaryId = 'artifact-nist-800-53b-baselines';
+  const summary = registry.artifacts.find((row) => row.id === summaryId);
+  assert.equal(verifyNormalizedArtifactEvidence(summary, hydration.results.find((row) => row.id === summaryId), process.cwd()).record_count, 4);
+  const bundle = registry.catalog_source_bundles.find((row) => row.catalog_id === 'nist-800-53b');
+  assert.deepEqual(bundle.enrichment_artifact_ids, [summaryId]);
+  for (const baseline of baselines) {
+    const id = `artifact-nist-800-53b-${baseline.id.toLowerCase()}-profile`;
+    const artifact = registry.artifacts.find((row) => row.id === id);
+    const receipt = hydration.results.find((row) => row.id === id);
+    assert.equal(baseline.metadata.primary_artifact_id, id);
+    assert.ok(bundle.primary_artifact_ids.includes(id));
+    assert.equal(artifact.format, 'oscal_json');
+    assert.equal(artifact.origin, 'publisher_exact');
+    assert.equal(artifact.sha256, receipt.sha256);
+    assert.equal(artifact.byte_length, receipt.byte_length);
+    assert.notEqual(artifact.sha256, summary.sha256);
+  }
+  const counts = verifyBaselineManifest(read('data/nist-800-53b-profile-manifest.json'), read('data/controls-800-53.json'));
+  assert.equal(counts.reduce((sum, row) => sum + row.ingested, 0), 902);
+});
 
 test('restored publisher equivalence resolves an active assertion profile without relabeling', () => {
   const profile = effectiveProfile(assertionProfileId('equivalent'));

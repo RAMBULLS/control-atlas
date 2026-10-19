@@ -22,12 +22,21 @@ export function paginateCompareRows<T>(
   rows: readonly T[],
   requestedPage: string,
 ): ComparePageWindow<T> {
-  const pageCount = Math.max(1, Math.ceil(rows.length / COMPARE_PAGE_SIZE));
+  return paginateRows(rows, requestedPage, COMPARE_PAGE_SIZE);
+}
+
+export function paginateRows<T>(
+  rows: readonly T[],
+  requestedPage: string,
+  pageSize: number,
+): ComparePageWindow<T> {
+  if (!Number.isSafeInteger(pageSize) || pageSize < 1) throw new Error("Invalid page size");
+  const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
   const parsedPage = requestedPage ? parseRequestedPage(requestedPage) : 1;
   const valid = parsedPage !== null && parsedPage <= pageCount;
   const page = Math.min(parsedPage || 1, pageCount);
-  const startIndex = (page - 1) * COMPARE_PAGE_SIZE;
-  const pageRows = rows.slice(startIndex, startIndex + COMPARE_PAGE_SIZE);
+  const startIndex = (page - 1) * pageSize;
+  const pageRows = rows.slice(startIndex, startIndex + pageSize);
 
   return {
     end: pageRows.length ? startIndex + pageRows.length : 0,

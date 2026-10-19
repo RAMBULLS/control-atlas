@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://rambulls.github.io/control-atlas/sitemap.xml
+Sitemap: https://atlas.rambulls.dev/sitemap.xml

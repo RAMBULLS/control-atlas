@@ -63,7 +63,7 @@ for (const sample of REPRESENTATIVES) {
       for (const card of await cards.all()) {
         const summary = card.locator(":scope > summary");
         await expect(summary).toBeVisible();
-        if (width <= 768) {
+        if (width <= 768 && (await card.getAttribute("data-rail-section")) !== "do-more") {
           await expect(card).not.toHaveAttribute("open", "");
           await expect(card.locator(".ca-record-rail__body")).toBeHidden();
         } else {
@@ -105,6 +105,13 @@ test("mobile disclosures expand with keyboard and reset correctly across breakpo
   const cards = page.locator(".record-template-sidebar > details[data-rail-section]");
   await expect(cards).toHaveCount(4);
   for (const card of await cards.all()) {
+    const isAction = (await card.getAttribute("data-rail-section")) === "do-more";
+    if (isAction) {
+      await expect(card).toHaveAttribute("open", "");
+      await expect(card.locator(".ca-record-rail__body")).toBeVisible();
+      await card.locator(":scope > summary").focus();
+      await page.keyboard.press("Enter");
+    }
     await expect(card).not.toHaveAttribute("open", "");
     await card.locator(":scope > summary").focus();
     await page.keyboard.press("Enter");
@@ -116,7 +123,12 @@ test("mobile disclosures expand with keyboard and reset correctly across breakpo
   await page.setViewportSize({ width: 1440, height: 1000 });
   for (const card of await cards.all()) await expect(card).toHaveAttribute("open", "");
   await page.setViewportSize({ width: 390, height: 844 });
-  for (const card of await cards.all()) await expect(card).not.toHaveAttribute("open", "");
+  for (const card of await cards.all()) {
+    if ((await card.getAttribute("data-rail-section")) === "do-more") {
+      await expect(card).toHaveAttribute("open", "");
+      await expect(card.locator(".ca-record-rail__body")).toBeVisible();
+    } else await expect(card).not.toHaveAttribute("open", "");
+  }
 });
 
 test("section jumps and related-CCI jumps do not destroy the record route", async ({ page }) => {

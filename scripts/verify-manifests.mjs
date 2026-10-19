@@ -18,6 +18,8 @@ import { resolveExpectedLocator, classifyCatalog, summarizeCompleteness } from '
 import { NON_CATALOG_TECHNICAL_SHARDS } from './sync-catalog-source-bundles.mjs';
 import { writeJsonAtomically } from './lib/write-json-atomically.mjs';
 import { restoreDisaHistory } from './lib/disa-record-history.mjs';
+import { verifyNormalizedArtifactEvidence } from './lib/normalized-artifact-evidence.mjs';
+import { verifyBaselineManifest } from './lib/nist-baseline-profiles.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SHA256_PREFIXED = /^sha256:[a-f0-9]{64}$/i;
@@ -74,6 +76,8 @@ function readJson(rel) {
 }
 
 const registry = readJson('data/source-registry.json');
+try { verifyBaselineManifest(readJson('data/nist-800-53b-profile-manifest.json'), readJson('data/controls-800-53.json')); }
+catch (error) { err(error.message); }
 if (!registry) {
   err('missing data/source-registry.json');
 } else {
@@ -201,6 +205,11 @@ if (!registry) {
     attested.set('artifact-nara-cui-registry', `sha256:${naraCui.list_page.sha256}`);
   }
   for (const art of artifacts) {
+    if (art.id === 'artifact-nist-800-53b-baselines') {
+      try {
+        verifyNormalizedArtifactEvidence(art, hydration?.results?.find((entry) => entry.id === art.id), ROOT);
+      } catch (error) { err(error.message); }
+    }
     const a = attested.get(art.id);
     if (!a) {
       err(`artifact ${art.id} evidence is UNATTESTED (no execution manifest entry proves its sha256)`);

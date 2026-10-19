@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
+import { verifyDependencyPatches } from './dependency-patches.mjs';
 
 const severityRank = new Map([
   ['info', 0],
@@ -12,6 +13,13 @@ const severityRank = new Map([
   ['high', 3],
   ['critical', 4],
 ]);
+
+export function assertAuditReport(report, status) {
+  assert.ok(status === 0 || status === 1, 'npm audit did not complete normally');
+  assert.ok(report && !report.error, 'npm audit returned a scanner error');
+  assert.ok(report.vulnerabilities && typeof report.vulnerabilities === 'object' && !Array.isArray(report.vulnerabilities), 'npm audit vulnerability report is missing');
+  assert.ok(report.metadata?.vulnerabilities, 'npm audit summary is missing');
+}
 
 export function evaluateAuditPolicy(report, config, today = new Date().toISOString().slice(0, 10)) {
   assert.equal(config.version, 1, 'unsupported audit exception schema version');
@@ -68,6 +76,7 @@ function reportFailures(result) {
 }
 
 function main() {
+  verifyDependencyPatches();
   const config = JSON.parse(readFileSync(new URL('../../security/npm-audit-exceptions.json', import.meta.url), 'utf8'));
   const threshold = config.threshold || 'high';
   const npmExecPath = process.env.npm_execpath;
@@ -87,6 +96,7 @@ function main() {
     throw error;
   }
 
+  assertAuditReport(report, audit.status);
   const result = evaluateAuditPolicy(report, config);
   if (result.remaining.length || result.expired.length || result.stale.length) {
     reportFailures(result);

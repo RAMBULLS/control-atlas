@@ -94,7 +94,7 @@ import {
 } from "../src/shared/data-trust-contracts.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const GENERATED = join(ROOT, "data", "generated");
+const DEFAULT_GENERATED = join(ROOT, "data", "generated");
 const RUNTIME_COLLECTIONS = [
   "sources",
   "nodes",
@@ -140,7 +140,6 @@ const GOVERNANCE_FILES = [
   "publication-identity-index.json",
   "publication-audit-report.json",
 ];
-const ATLAS_NEIGHBORHOOD_DIR = join(GENERATED, "atlas-neighborhood");
 
 const NON_RECORD_NODE_TYPES = new Set([
   "benchmark",
@@ -1318,7 +1317,13 @@ function buildNodes(registry) {
               ["benchmark_status_date", record.source?.snapshot_date, "The publisher source did not provide a benchmark status date."],
             ].filter(([, value]) => !value).map(([field, , reason]) => [field, reason])),
             superseded_by: record.metadata?.superseded_by || null,
-            discussion: record.metadata?.discussion || null,
+            discussion: record.metadata?.discussion
+              || (catalogId === "fedramp-2026" ? record.discussion : null)
+              || null,
+            ...(catalogId === "fedramp-2026" && Array.isArray(record.metadata?.following_information_bullets)
+              && record.metadata.following_information_bullets.length
+              ? { following_information_bullets: record.metadata.following_information_bullets }
+              : {}),
             related_controls: record.metadata?.related_controls || null,
             tactic_id: record.metadata?.tactic_id || null,
             tactic_title: record.metadata?.tactic_title || null,
@@ -1907,7 +1912,7 @@ function addBaselineMembershipEdges(state, registry, nodeIds) {
       addPublishedEdge(state, registry, nodeIds, {
         subjectId,
         sourceId: "nist-800-53b-baselines",
-        sourceArtifactId: baselineId === "MODERATE" ? "artifact-nist-800-53b-baselines" : `artifact-nist-800-53b-${baselineId.toLowerCase()}-profile`,
+        sourceArtifactId: `artifact-nist-800-53b-${baselineId.toLowerCase()}-profile`,
         sourceNodeId,
         targetNodeId,
         relationshipType: "selects",
@@ -3799,7 +3804,9 @@ function applyOrganizingSpine(nodeState, edgeState, registry) {
   );
 }
 
-export function buildFrameworkData() {
+export function buildFrameworkData({ generatedDirectory = DEFAULT_GENERATED } = {}) {
+  const GENERATED = generatedDirectory;
+  const ATLAS_NEIGHBORHOOD_DIR = join(GENERATED, "atlas-neighborhood");
   const registry = loadSourceRegistry(
     readJson(join(ROOT, "data", "source-registry.json")),
   );
@@ -3989,11 +3996,13 @@ export function buildFrameworkData() {
       mappingSourcesByPair.set(key, values);
     }
   }
-  const comparisons = buildComparisonArtifacts(graph);
+  const comparisons = buildComparisonArtifacts(graph, undefined, true);
   const catalogBootstrap = {
     catalogs,
     comparison_pairs: comparisons.manifest,
     comparison_items: comparisons.itemManifest,
+    comparison_baselines: comparisons.baselineManifest,
+    comparison_content: comparisons.contentManifest,
     mapping_sources: Object.fromEntries(
       [...mappingSourcesByPair.entries()].map(([key, sourceIds]) => [
         key,

@@ -76,6 +76,6 @@ const FALLBACK_BY_GOAL = Object.freeze({
 
 export function startHereDestinationFor(goalId, contextId) {
   return ROW_BY_PAIR.get(`${goalId}/${contextId}`)?.firstDestination
-    || FALLBACK_BY_GOAL[goalId]
+    || (Object.hasOwn(FALLBACK_BY_GOAL, goalId) ? FALLBACK_BY_GOAL[goalId] : undefined)
     || "/atlas";
 }

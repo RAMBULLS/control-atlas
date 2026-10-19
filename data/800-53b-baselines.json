@@ -34,7 +34,7 @@
         "version": "5.2.0"
       },
       "metadata": {
-        "primary_artifact_id": "artifact-nist-800-53b-baselines",
+        "primary_artifact_id": "artifact-nist-800-53b-moderate-profile",
         "publisher_baseline_title": "Electronic (OSCAL) Version of NIST Special Publication 800-53 Revision 5.2.0 MODERATE IMPACT BASELINE"
       }
     },

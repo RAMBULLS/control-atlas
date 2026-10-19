@@ -8,6 +8,7 @@ import addFormats from 'ajv-formats';
 import { parseFedrampBaselineWorkbookSheets } from '../tools/importers/catalog-adapters-ext.mjs';
 import { assertPublisherInventory } from '../scripts/lib/publisher-inventory.mjs';
 import { assertPublisherVolume } from './helpers/publisher-volume.mjs';
+import { buildFedramp2026FromBytes, normalizeFedramp2026 } from '../scripts/build-fedramp-2026-catalog.mjs';
 
 const rules = JSON.parse(readFileSync('data/fedramp-2026-rules.json', 'utf8'));
 const schema = JSON.parse(readFileSync('data/fedramp-2026-rules.schema.json', 'utf8'));
@@ -16,6 +17,73 @@ const artifacts = JSON.parse(readFileSync('data/official-artifact-registry.json'
 const catalog = JSON.parse(readFileSync('data/fedramp-2026-catalog.json', 'utf8'));
 const sourceRegistry = JSON.parse(readFileSync('data/source-registry.json', 'utf8'));
 const adapterRegistry = JSON.parse(readFileSync('data/profiles/source-adapter-registry.json', 'utf8'));
+
+function rawRuleEntries(document) {
+  return Object.entries(document.FRR).flatMap(([processId, process]) =>
+    Object.entries(process.data).flatMap(([applicability, subsets]) =>
+      Object.entries(subsets).flatMap(([subsetId, entries]) =>
+        Object.entries(entries).map(([id, rule]) => ({
+          id, rule, locator: `FRR.${processId}.data.${applicability}.${subsetId}.${id}`,
+        })))));
+}
+
+test('every FedRAMP following-information bullet survives normalization literally', () => {
+  const normalized = normalizeFedramp2026(rules);
+  const byId = new Map(normalized.records.map((record) => [record.id, record]));
+  const committed = new Map(catalog.records.map((record) => [record.id, record]));
+  const bulletIds = [];
+  for (const { id, rule, locator } of rawRuleEntries(rules)) {
+    const expected = rule.following_information_bullets?.length ? rule.following_information_bullets : undefined;
+    if (expected) bulletIds.push(id);
+    for (const record of [byId.get(id), committed.get(id)]) {
+      // Some publisher placeholders intentionally have no normalized record.
+      if (!record) {
+        assert.equal(expected, undefined, `${id} lost a published list`);
+        continue;
+      }
+      assert.deepEqual(record.metadata.following_information_bullets, expected, id);
+      assert.equal(record.source.locator, locator, id);
+      assert.equal(record.source.version, rules.info.version, id);
+      assert.equal(record.source.snapshot_date, rules.info.last_updated, id);
+    }
+  }
+  assert.deepEqual(bulletIds.sort(), ['IEC-CSO-EFI', 'VER-EVA-EPA']);
+  const labels = (id) => byId.get(id).metadata.following_information_bullets.map((bullet) => bullet.match(/^\*\*(N\d)\*\*/)?.[1]);
+  assert.deepEqual(labels('VER-EVA-EPA'), ['N0', 'N1', 'N2', 'N3', 'N4', 'N5']);
+  assert.deepEqual(labels('IEC-CSO-EFI'), ['N1', 'N2', 'N3', 'N4', 'N5']);
+  assert.deepEqual(normalized.source_inventory, catalog.source_inventory);
+  assert.equal(normalized.record_count, catalog.record_count);
+  assert.deepEqual(normalized.records.map((record) => record.id), catalog.records.map((record) => record.id));
+  assert.deepEqual(buildFedramp2026FromBytes(readFileSync('data/fedramp-2026-rules.json'), catalog).publisher_inventory, catalog.publisher_inventory);
+});
+
+test('every published FedRAMP following-information paragraph and note survives normalization', () => {
+  const byId = new Map(catalog.records.map((record) => [record.id, record]));
+  let discussions = 0;
+  for (const { id, rule } of rawRuleEntries(rules)) {
+    const record = byId.get(id);
+    const expected = [rule.following_information || [], rule.notes || [], rule.note || []]
+      .flat(Infinity).filter((value) => typeof value === 'string' && value.trim()).join('\n\n');
+    if (record) assert.equal(record.discussion, expected, id);
+    else assert.equal(expected, '', `${id} lost published discussion`);
+    if (expected) discussions += 1;
+  }
+  assert.equal(catalog.records.filter((record) => record.discussion).length, discussions);
+  assert.ok(discussions >= 108, 'retain the reviewed publisher discussion inventory');
+});
+
+test('FedRAMP lists retain whitespace and punctuation and stay absent on sparse rules', () => {
+  const input = structuredClone(rules);
+  const entries = rawRuleEntries(input);
+  const ver = entries.find((entry) => entry.id === 'VER-EVA-EPA').rule;
+  const iec = entries.find((entry) => entry.id === 'IEC-CSO-EFI').rule;
+  ver.following_information_bullets = ['  **N1**: Exact, "quoted" text.  ', '**N2**: Second; unchanged.'];
+  iec.following_information_bullets = [];
+  const records = normalizeFedramp2026(input).records;
+  assert.deepEqual(records.find((record) => record.id === 'VER-EVA-EPA').metadata.following_information_bullets, ver.following_information_bullets);
+  assert.equal(Object.hasOwn(records.find((record) => record.id === 'IEC-CSO-EFI').metadata, 'following_information_bullets'), false);
+  assert.equal(Object.hasOwn(records.find((record) => record.id === 'AFC-CSO-ACK').metadata, 'following_information_bullets'), false);
+});
 
 test('official FedRAMP 2026 rules validate against the official schema', () => {
   const ajv = new Ajv2020({ allErrors: true, strict: false });

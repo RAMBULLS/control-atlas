@@ -47,7 +47,7 @@ test('shell identifies Control Atlas and progressively boots the React workspace
   assert.match(html, /Control Atlas/);
   assert.match(html, /name="application-name" content="Control Atlas"/);
   assert.match(html, /CONTROL_ATLAS_PRODUCT_DESCRIPTION/);
-  assert.match(html, /rel="canonical" href="https:\/\/rambulls\.github\.io\/control-atlas\/"/);
+  assert.match(html, /rel="canonical" href="https:\/\/atlas\.rambulls\.dev\/"/);
   assert.match(html, /type="application\/ld\+json"/);
   assert.match(html, /A RAM\.BULLS project/);
   assert.equal(SITE_COPY.product.definition, 'Control Atlas is a public research tool for federal cybersecurity requirements, controls, techniques, and guidance.');
@@ -626,4 +626,19 @@ test('Guides remain source-bounded procedures while product help stays in About'
   assert.match(about, /Control Atlas is not a government system/);
   assert.match(about, /It does not decide what/);
   assert.doesNotMatch(playbooksPage, /Recommended for new users|No public playbooks are available yet/);
+});
+
+
+test('small Sources and Resources lists show every match while source metadata has explicit readiness', () => {
+  const sources = readFileSync('src/ui/pages/SourcesPage.tsx', 'utf8');
+  const resources = readFileSync('src/ui/pages/CommonsPage.tsx', 'utf8');
+  const app = readFileSync('src/ui/App.tsx', 'utf8');
+  const loader = readFileSync('src/ui/lib/runtimeLoader.ts', 'utf8');
+  assert.match(sources, /filteredPublicationRows\.map/);
+  assert.match(resources, /filtered\.map/);
+  assert.doesNotMatch(sources, /SOURCE_PAGE_SIZE|visibleLimit|more publications/);
+  assert.doesNotMatch(resources, /RESOURCE_LIST_STEP|visibleCount|Show.*more/);
+  assert.match(app, /if \(!bundle\?\.sourcesReady\)/);
+  assert.match(loader, /sourcesReady: false/);
+  assert.match(loader, /sourcesReady: Boolean\(sourcesArtifact\)/);
 });

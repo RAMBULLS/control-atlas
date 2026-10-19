@@ -18,7 +18,7 @@
  * context, which is the same path every recent change to main actually took.
  * So this script:
  *
- * 1. Runs the local gate (optional)
+ * 1. Runs lightweight source hygiene
  * 2. Pushes the task branch
  * 3. Opens a pull request, or reuses the open one
  * 4. Waits for Control Atlas CI on that commit
@@ -26,7 +26,7 @@
  * 6. Leaves the checkout on an up-to-date main
  *
  * Usage:
- *   node tools/ship-to-main.mjs [--skip-local] [--no-wait]
+ *   node tools/ship-to-main.mjs [--no-wait]
  */
 
 import { execFileSync, spawnSync } from 'node:child_process';
@@ -61,25 +61,6 @@ function ensureCleanTree() {
   if (status) {
     console.error('[error] Working tree is not clean. Commit or stash changes first.');
     process.exit(1);
-  }
-}
-
-function classifyShipScope() {
-  try {
-    const output = execFileSync(
-      process.execPath,
-      [
-        'tools/classify-change-scope.mjs',
-        '--base',
-        'origin/main',
-        '--head',
-        'HEAD',
-      ],
-      { encoding: 'utf8' },
-    );
-    return /^scope=evidence-only$/m.test(output) ? 'evidence-only' : 'full';
-  } catch {
-    return 'full';
   }
 }
 
@@ -125,25 +106,9 @@ async function main() {
   }
   const commitSha = resolveCommitSha('HEAD');
 
-  if (!skipLocal) {
-    console.log('[ship] Running local precommit gate...');
-    run('npm', ['run', 'precommit']);
-  } else {
-    console.log('[ship] Skipping local precommit (--skip-local).');
-  }
-
-  const scope = classifyShipScope();
-  if (scope === 'evidence-only') {
-    console.log('[ship] Running the focused release-evidence gate...');
-    run('node', [
-      '--test',
-      'tests/change-scope.test.mjs',
-      'tests/release-evidence.test.mjs',
-    ]);
-  } else {
-    console.log('[ship] Running the protected brand, copy, and disclaimer audit...');
-    run('npm', ['run', 'prepush:audit']);
-  }
+  if (skipLocal) throw new Error('--skip-local is retired. Source hygiene and required hosted gates cannot be skipped.');
+  console.log('[ship] Checking source hygiene; final validation runs on GitHub...');
+  run('npm', ['run', 'verify:local']);
 
   console.log(`[ship] Pushing ${taskBranch}...`);
   run('node', ['tools/git-push-with-retry.mjs', taskBranch]);
@@ -160,7 +125,7 @@ async function main() {
   console.log(`[ok] Remote checks passed: ${checksRun.url}`);
 
   console.log(`[ship] Squash-merging #${pullRequest}...`);
-  run('gh', ['pr', 'merge', String(pullRequest), '--squash', '--delete-branch']);
+  run('gh', ['pr', 'merge', String(pullRequest), '--squash', '--match-head-commit', commitSha]);
 
   git(['checkout', 'main']);
   git(['pull', '--ff-only', 'origin', 'main']);

@@ -95,10 +95,11 @@ const result = {
   generatedAt: new Date().toISOString(),
   oscalCliVersion: '1.0.3',
   fixtureOscalVersion: '1.1.2',
+  validationScope: 'committed fixtures only; no publisher artifacts validated',
   currentValidation,
   cli,
   conclusion:
-    'AJV rejects malformed OSCAL at the application boundary, and the independent NIST CLI confirms upstream conformance.',
+    'AJV and the independent NIST CLI accept the valid committed fixtures and reject the malformed fixtures. Publisher conformance requires check:oscal.',
 };
 await writeFile(outputPath, `${JSON.stringify(result, null, 2)}\n`);
 console.log(JSON.stringify(result, null, 2));

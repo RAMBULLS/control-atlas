@@ -95,6 +95,9 @@ test('nightly validation retains full cross-browser and data automation', () => 
   assert.match(ci, /npm run resources:health/);
   assert.match(ci, /peter-evans\/create-pull-request@[0-9a-f]{40}/);
   assert.match(ci, /npm run test:oscal:independent/);
+  assert.match(ci, /npm run check:normalized/);
+  assert.match(ci, /npm run check:oscal/);
+  assert.match(ci, /artifacts\/oscal-cli\/upstream-check\.json/);
   assert.match(ci, /node tools\/run-lighthouse-ab\.mjs/);
 });
 
@@ -103,12 +106,25 @@ test('security uses native GitHub controls without rebuilding the site', () => {
   assert.match(security, /github\/codeql-action\/init@[0-9a-f]{40}/);
   assert.match(security, /build-mode: none/);
   assert.match(security, /Install checksum-verified Gitleaks 8\.24\.3/);
-  assert.match(security, /\.\/gitleaks dir \./);
+  assert.match(security, /npm run test:publisher-secret-gate/);
+  assert.match(security, /python3 tools\/publisher-secret-gate\.py snapshot results\.sarif/);
+  assert.match(security, /python3 tools\/publisher-secret-gate\.py history history-results\.sarif/);
   assert.match(security, /github\/codeql-action\/upload-sarif@[0-9a-f]{40}/);
   assert.equal((security.match(/fetch-depth: 0/g) ?? []).length, 1);
   assert.doesNotMatch(security, /npm ci|npm run build:site|npm run audit:deps/);
   assert.ok(existsSync('.gitleaks.toml'));
   assert.ok(existsSync('.github/dependabot.yml'));
+});
+
+test('portable export reuses the qualified graph and retains only the validated delivery package', () => {
+  const contracts = ci.slice(ci.indexOf('  contracts:'), ci.indexOf('  browser:'));
+  assert.match(contracts, /name: generated-data[\s\S]*?run: npm run verify:contracts/);
+  assert.match(contracts, /if: \$\{\{ needs\.changes\.outputs\.data_required == 'true' \}\}\n\s+run: npm run export:reference:compact && npm run verify:reference-export:compact/);
+  assert.match(contracts, /name: reference-export/);
+  assert.match(contracts, /ControlAtlas_DoD_Reference\.zip/);
+  assert.match(contracts, /compact-validation\.json/);
+  assert.match(contracts, /if-no-files-found: error\n\s+retention-days: 2/);
+  assert.doesNotMatch(contracts, /npm run (?:build:data|generate:data|build:site)/);
 });
 
 test('deployment consumes the successful main CI artifact and never rebuilds it', () => {
@@ -216,7 +232,7 @@ test('browser projects are selected explicitly while accessibility remains separ
   assert.ok(packageJson.devDependencies['@axe-core/playwright']);
 });
 
-test('shipping helpers preserve focused local checks and exact remote verification', () => {
+test('shipping helpers preserve local source hygiene and exact required hosted verification', () => {
   for (const script of ['git:push', 'checks:wait', 'ship:main', 'prepush:audit']) {
     assert.equal(typeof packageJson.scripts[script], 'string', script);
   }
@@ -226,8 +242,33 @@ test('shipping helpers preserve focused local checks and exact remote verificati
     'tools/ship-to-main.mjs',
   ]) assert.ok(existsSync(file), file);
   const ship = readFileSync('tools/ship-to-main.mjs', 'utf8');
-  assert.match(ship, /classify-change-scope\.mjs/);
+  assert.match(ship, /run\('npm', \['run', 'verify:local'\]\)/);
+  assert.doesNotMatch(ship, /run\('npm', \['run', 'precommit'\]\)/);
+  assert.match(ship, /--match-head-commit/);
+  assert.equal(packageJson.scripts['pregit:push'], 'npm run verify:local');
+  assert.equal(packageJson.scripts['preprepush:audit'], 'node ./tools/validation-location.mjs');
+  assert.match(ci, /prepush:\n\s+name: Fresh checkout and push audit/);
+  assert.match(ci, /prepush:[\s\S]*?needs: \[changes, generated\]/);
+  assert.match(ci, /prepush:[\s\S]*?name: generated-data[\s\S]*?path: data\/generated[\s\S]*?run: npm run prepush:audit/);
+  const generatedJob = ci.slice(ci.indexOf('  generated:'), ci.indexOf('  windows-process:'));
+  assert.doesNotMatch(generatedJob.split('    steps:')[0], /if:/);
+  assert.match(ci, /needs: \[changes, prepush, evidence/);
+  assert.match(ci, /run: npm run validate:checkout/);
+  assert.match(ci, /run: npm run prepush:audit/);
   assert.match(ship, /Direct ship must start from a verified task branch, not main/);
+});
+
+test('heavy npm entrypoints fail before workload launch without admitted execution context', () => {
+  for (const task of ['build:data', 'build:site', 'build:site:incremental', 'generate:data',
+    'materialize:generated', 'verify:generated-reproducibility', 'test', 'test:ci-contracts',
+    'precommit', 'precommit:incremental', 'test:e2e:smoke', 'test:e2e:run',
+    'test:a11y:smoke', 'test:a11y:run', 'test:visual', 'test:performance:ci',
+    'lighthouse:production', 'refresh:data', 'verify:quality']) {
+    assert.equal(packageJson.scripts[`pre${task}`], 'node ./tools/validation-location.mjs', task);
+  }
+  for (const task of ['review:experience:contracts', 'review:experience:family', 'review:experience:full']) {
+    assert.equal(packageJson.scripts[`pre${task}`], 'node ./tools/validation-location.mjs', task);
+  }
 });
 
 test('Dependabot maintains npm packages and pinned GitHub Actions', () => {

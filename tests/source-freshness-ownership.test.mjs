@@ -51,7 +51,9 @@ function fixture(changed) {
       last_imported: previousImportDate,
     })) },
   };
-  reconcileFreshness(registry, documents, runDate);
+  reconcileFreshness(registry, documents, runDate, new Map(sourceIds.map((id) => [id, {
+    scope: 'publisher_artifact_retrieval', checked_at: `${runDate}T12:00:00Z`, requests: [],
+  }])));
   return { registry, catalogs };
 }
 

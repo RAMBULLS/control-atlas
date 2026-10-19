@@ -26,10 +26,10 @@ for (const width of [320, 390, 1440]) {
     await open(page, EXACT);
     if (width <= 480) {
       const tabList = page.getByRole("tablist", { name: "Comparison mode" });
-      await expect(tabList.getByRole("tab")).toHaveCount(3);
+      await expect(tabList.getByRole("tab")).toHaveCount(5);
       const tabs = await tabList.getByRole("tab").all();
       const bounds = await Promise.all(tabs.map((tab) => tab.boundingBox()));
-      expect(bounds).toHaveLength(3);
+      expect(bounds).toHaveLength(5);
       expect(bounds.every(Boolean)).toBe(true);
       expect(bounds[0].x + bounds[0].width).toBeLessThanOrEqual(bounds[1].x + 1);
       expect(bounds[2].y).toBeGreaterThanOrEqual(bounds[0].y + bounds[0].height - 1);
@@ -53,6 +53,12 @@ for (const width of [320, 390, 1440]) {
     expect(paths.every((path) => path.includes("/csf-2--nist-zt-"))).toBe(true);
     expect(await results(page).count()).toBeLessThanOrEqual(25);
     await expect(page.locator(".compare-results-table").getByText("Supported by", { exact: true }).first()).toBeVisible();
+    // Measure the link's content box; inline strong elements have clientWidth 0.
+    const overflowingLabels = await page.locator(".target-mapping-line a, .compare-answer button").evaluateAll(
+      (elements) => elements.filter((element) => element.scrollWidth > element.clientWidth + 1)
+        .map((element) => element.textContent),
+    );
+    expect(overflowingLabels, "component IDs and export labels fit their controls").toEqual([]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
     await page.reload();
     await expect(results(page).first()).toBeVisible({ timeout: 30_000 });

@@ -84,7 +84,8 @@ for (const [name, route] of records) {
       if (name === 'stig') {
         const rail = page.locator('.record-template-sidebar');
         if (width === 375) {
-          await expect(rail.locator('details[open]')).toHaveCount(0);
+          await expect(rail.locator('[data-rail-section="do-more"]')).toHaveAttribute('open', '');
+          await expect(rail.locator('details:not([data-rail-section="do-more"])[open]')).toHaveCount(0);
           await captureReviewImage(rail, 'record-stig-mobile-utilities.png');
           await rail.locator('[data-rail-section="about-this-record"] > summary').click();
           await captureReviewImage(rail, 'record-stig-mobile-utilities-expanded.png');

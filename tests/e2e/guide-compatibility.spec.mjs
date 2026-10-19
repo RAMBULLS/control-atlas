@@ -11,6 +11,51 @@ const RETIRED_GUIDES = [
   ["starter-documents-and-judgment", "/build"],
 ];
 
+for (const [guide, template, title] of [
+  ["managing-findings", "poam_starter", "POA&M Working Register"],
+  ["continuous-monitoring", "conmon_calendar", "Continuous Monitoring Delivery Calendar"],
+  ["inheritance-and-common-controls", "inheritance_worksheet", "Inheritance Worksheet"],
+  ["reciprocity", "reciprocity_checklist", "Reciprocity Package Review"],
+]) {
+  test(`${guide} opens the chosen working file and returns through Back`, async ({ page }) => {
+    await page.goto(`/#/guides?pattern=${guide}`);
+    await waitForAppReady(page);
+    await dismissOnboarding(page);
+    const action = page.getByRole("link", { name: `Open the ${title}`, exact: true });
+    const destination = `#/build/documents/${template}`;
+    await expect(action).toHaveAttribute("href", destination);
+
+    await action.click();
+    await expect.poll(() => new URL(page.url()).hash).toBe(destination);
+    await expect(page.locator("#app")).toHaveAttribute("data-view", "templates");
+    await waitForAppReady(page);
+    await expect(page.getByRole("complementary", { name: "Current document" })).toContainText(title);
+    await page.goBack();
+    await expect(page).toHaveURL(new RegExp(`pattern=${guide}$`));
+    await expect(page.locator("#app")).toHaveAttribute("data-view", "patterns");
+    await waitForAppReady(page);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  });
+
+  test(`${guide} opens the chosen working file in a new tab`, async ({ page, context }) => {
+    await page.goto(`/#/guides?pattern=${guide}`);
+    await waitForAppReady(page);
+    await dismissOnboarding(page);
+    const action = page.getByRole("link", { name: `Open the ${title}`, exact: true });
+    const destination = `#/build/documents/${template}`;
+    await expect(action).toHaveAttribute("href", destination);
+    const opened = context.waitForEvent("page");
+    await action.click({ modifiers: ["Control"] });
+    const newTab = await opened;
+    await expect(newTab.locator("#app")).toHaveAttribute("data-view", "templates");
+    await waitForAppReady(newTab);
+    await expect.poll(() => new URL(newTab.url()).hash).toBe(destination);
+    await expect(newTab.getByRole("complementary", { name: "Current document" })).toContainText(title);
+    await newTab.close();
+    await expect(page).toHaveURL(new RegExp(`pattern=${guide}$`));
+  });
+}
+
 test("saved explanatory guide links open their current destination", async ({ page }) => {
   for (const [guide, destination] of RETIRED_GUIDES) {
     await page.goto(`/#/learn?pattern=${guide}`);

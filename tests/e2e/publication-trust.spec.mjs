@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { AxeBuilder } from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-import { attachPageDiagnostics, dismissOnboarding, gotoApp, waitForAppReady } from "./support.mjs";
+import { attachPageDiagnostics, dismissOnboarding, gotoApp, roundCssPixels, waitForAppReady } from "./support.mjs";
 
 /* global document, window */
 
@@ -208,7 +208,7 @@ for (const width of WIDTHS) {
       expect(levels[0]).toBe(1);
       for (let index = 1; index < levels.length; index += 1) expect(levels[index] - levels[index - 1], `${catalogId} heading order`).toBeLessThanOrEqual(1);
       for (const action of await page.locator(".catalog-source-actions a, .catalog-source-actions button").all()) {
-        expect((await action.boundingBox()).height, catalogId).toBeGreaterThanOrEqual(44);
+        expect(roundCssPixels((await action.boundingBox()).height), catalogId).toBeGreaterThanOrEqual(44);
       }
       const hero = await page.locator(".catalog-detail-hero").boundingBox();
       const records = await page.locator(".catalog-records").boundingBox();
@@ -227,7 +227,7 @@ for (const width of WIDTHS) {
     const files = inspector.locator("details.source-inspector-section").filter({ hasText: /^Source files/ });
     expect(summary.y).toBeLessThan((await files.boundingBox()).y);
     await expect(files).not.toHaveAttribute("open", "");
-    expect((await inspector.getByRole("link", { name: /official publication/ }).boundingBox()).height).toBeGreaterThanOrEqual(44);
+    expect(roundCssPixels((await inspector.getByRole("link", { name: /official publication/ }).boundingBox()).height)).toBeGreaterThanOrEqual(44);
     expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(1);
     if (compact) {
       await expect(inspector.getByRole("button", { name: "Close inspector" })).toBeFocused();

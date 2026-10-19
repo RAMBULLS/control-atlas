@@ -334,10 +334,11 @@ const BASE_CONTRACTS = {
   rule: atomic(
     [
       section("description", "Rule Statement"),
+      section("following_information_bullets", "Following Information Bullets", "list", "rendered_secondary"),
       section("discussion", "Following Information", "text", "rendered_secondary"),
     ],
     ["description"],
-    ["discussion"],
+    ["discussion", "following_information_bullets"],
   ),
   srg_requirement: null,
   statute: authorityPublication("Authority Summary"),
@@ -602,7 +603,7 @@ export function recordPresentationContract(catalogId, nodeType) {
         entry.field,
         {
           disposition: entry.disposition,
-          origin: "publisher",
+          origin: base.field_dispositions[entry.field]?.origin || "publisher",
         },
       ]),
     ),

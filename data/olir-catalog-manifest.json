@@ -1,15 +1,159 @@
 {
-  "generated_at": "2026-09-23T12:46:42.843Z",
+  "generated_at": "2026-10-08T14:20:25.656Z",
   "source": "https://csrc.nist.gov/projects/olir/informative-reference-catalog",
   "api_endpoint": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog",
-  "total_entries": 102,
-  "final_count": 92,
-  "applicable_final_count": 51,
-  "ingested_count": 41,
-  "quarantined_count": 61,
+  "total_entries": 105,
+  "final_count": 93,
+  "applicable_final_count": 52,
+  "ingested_count": 42,
+  "quarantined_count": 63,
   "unresolved_count": 10,
-  "retained_count": 1,
+  "retained_count": 3,
   "processed_items": [
+    {
+      "id": 238,
+      "framework_version_identifier": "FiveLaws-AIGov-to-CSF-v2.0",
+      "name": "The Five Laws of AI Governance",
+      "focal_document": "NIST Cybersecurity Framework",
+      "resolved_catalog_id": "csf-2",
+      "reference_document_version": "Cybersecurity Framework v2.0",
+      "version": "1.0.0",
+      "status": "Draft",
+      "authority_description": "Owner",
+      "submission_category": "Private Sector",
+      "developer": "AAM Cyber",
+      "posted_date": "2026-10-06",
+      "reference_date": "2026-10-06",
+      "submission_artifact_url": "https://doi.org/10.5281/zenodo.21271750",
+      "authority_tier": 5,
+      "authority_tier_label": "Draft",
+      "mapping_model": null,
+      "ingested": false,
+      "availability": "not_final",
+      "map_file": null,
+      "artifact_id": null,
+      "artifact": null,
+      "quarantine_reason": "OLIR status is \"Draft\", not Final — held out of the published graph pending NIST finalization",
+      "retrieval_attempts": []
+    },
+    {
+      "id": 239,
+      "framework_version_identifier": "FiveLaws-AIGov-to-SP800-53r5",
+      "name": "The Five Laws of AI Governance",
+      "focal_document": "Security and Privacy Controls for Information Systems and Organizations",
+      "resolved_catalog_id": "nist-800-53",
+      "reference_document_version": "SP 800-53 Rev 5.2.0",
+      "version": "1.0.0",
+      "status": "Draft",
+      "authority_description": "Owner",
+      "submission_category": "Private Sector",
+      "developer": "AAM Cyber",
+      "posted_date": "2026-10-06",
+      "reference_date": "2026-10-06",
+      "submission_artifact_url": "https://doi.org/10.5281/zenodo.21271750",
+      "authority_tier": 5,
+      "authority_tier_label": "Draft",
+      "mapping_model": null,
+      "ingested": false,
+      "availability": "not_final",
+      "map_file": null,
+      "artifact_id": null,
+      "artifact": null,
+      "quarantine_reason": "OLIR status is \"Draft\", not Final — held out of the published graph pending NIST finalization",
+      "retrieval_attempts": []
+    },
+    {
+      "id": 240,
+      "framework_version_identifier": "FiveLaws-AIGov-to-AI-RMF-v1.0",
+      "name": "The Five Laws of AI Governance",
+      "focal_document": "Artificial Intelligence Risk Management Framework (AI RMF 1.0)",
+      "resolved_catalog_id": "nist-ai-rmf",
+      "reference_document_version": "AI RMF 1.0",
+      "version": "1.0.0",
+      "status": "Draft",
+      "authority_description": "Owner",
+      "submission_category": "Private Sector",
+      "developer": "AAM Cyber",
+      "posted_date": "2026-10-06",
+      "reference_date": "2026-10-06",
+      "submission_artifact_url": "https://doi.org/10.5281/zenodo.21271750",
+      "authority_tier": 5,
+      "authority_tier_label": "Draft",
+      "mapping_model": null,
+      "ingested": false,
+      "availability": "not_final",
+      "map_file": null,
+      "artifact_id": null,
+      "artifact": null,
+      "quarantine_reason": "OLIR status is \"Draft\", not Final — held out of the published graph pending NIST finalization",
+      "retrieval_attempts": []
+    },
+    {
+      "id": 236,
+      "framework_version_identifier": "Evidence Continuity-AI-RMF-1.0",
+      "name": "Evidence Continuity for AI Governance: Normative Concept Specification",
+      "focal_document": "Artificial Intelligence Risk Management Framework (AI RMF 1.0)",
+      "resolved_catalog_id": "nist-ai-rmf",
+      "reference_document_version": "AI RMF 1.0",
+      "version": "1.0.0",
+      "status": "Final",
+      "authority_description": "Owner",
+      "submission_category": "Private Sector",
+      "developer": "Yarion",
+      "posted_date": "2026-09-28",
+      "reference_date": "2026-09-28",
+      "submission_artifact_url": "https://drive.google.com/drive/folders/11qgNa4EavIN5YFh0gfTl9D-4VJISBe-p?usp=sharing",
+      "authority_tier": 4,
+      "authority_tier_label": "Validated third-party Final",
+      "mapping_model": "Supportive",
+      "ingested": true,
+      "availability": "structured_artifact",
+      "map_file": "maps/olir/236.json",
+      "artifact_id": null,
+      "artifact": {
+        "map_file": "maps/olir/236.json",
+        "artifact_url": "https://drive.usercontent.google.com/download?id=18UTb7Qzgt_hnNag9ijLX5-hQ9gfAUVkw&export=download",
+        "checksum": "sha256:cff884ec2744d5f37d09877ac5fb528a224135c94e0b29bf4c5ed4922e22d699",
+        "byte_length": 22584,
+        "parser": "olir-xlsx",
+        "extraction_scope": "structured_artifact",
+        "relationship_count": 29,
+        "relationship_semantics": [
+          "Supportive"
+        ]
+      },
+      "quarantine_reason": null,
+      "retrieval_attempts": [
+        {
+          "kind": "NIST catalog detail endpoint",
+          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/236",
+          "status": 200,
+          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/236",
+          "json_file_url": null,
+          "publisher_sha256": null,
+          "submission_url": "https://drive.google.com/drive/folders/11qgNa4EavIN5YFh0gfTl9D-4VJISBe-p?usp=sharing",
+          "reference_url": "https://drive.google.com/drive/folders/11qgNa4EavIN5YFh0gfTl9D-4VJISBe-p?usp=sharing",
+          "mapping_summary": "<p>Evidence Continuity for AI Governance defines characteristics of Governance Evidence that support independently verifiable Governance Assertions throughout the AI lifecycle. The informative reference maps Evidence Continuity Evidence Properties and the Governance Outcome of Verifiability to applicable NIST AI RMF 1.0 elements using Supportive Relationship Mapping.</p>",
+          "mapping_comment": "<p>Supportive Relationship Mapping is used to identify where Evidence Continuity elements materially support applicable AI RMF outcomes without asserting equivalence between the mapped elements.</p>"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://drive.google.com/drive/folders/11qgNa4EavIN5YFh0gfTl9D-4VJISBe-p?usp=sharing",
+          "status": 200,
+          "final_url": "https://drive.google.com/drive/folders/11qgNa4EavIN5YFh0gfTl9D-4VJISBe-p?usp=sharing",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 334606
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://drive.google.com/uc?export=download&id=18UTb7Qzgt_hnNag9ijLX5-hQ9gfAUVkw",
+          "status": 200,
+          "final_url": "https://drive.usercontent.google.com/download?id=18UTb7Qzgt_hnNag9ijLX5-hQ9gfAUVkw&export=download",
+          "content_type": "application/octet-stream",
+          "byte_length": 22584
+        }
+      ]
+    },
     {
       "id": 232,
       "framework_version_identifier": "NIST-SP800-53r5.2-to-NERC-CIP-OLIR-Mapping",
@@ -159,32 +303,6 @@
           "byte_length": 154777
         }
       ]
-    },
-    {
-      "id": 236,
-      "framework_version_identifier": "Evidence Continuity-AI-RMF-1.0",
-      "name": "Evidence Continuity for AI Governance: Normative Concept Specification",
-      "focal_document": "Artificial Intelligence Risk Management Framework (AI RMF 1.0)",
-      "resolved_catalog_id": "nist-ai-rmf",
-      "reference_document_version": "AI RMF 1.0",
-      "version": "1.0.0",
-      "status": "Draft",
-      "authority_description": "Owner",
-      "submission_category": "Private Sector",
-      "developer": "Yarion",
-      "posted_date": "2026-08-27",
-      "reference_date": "2026-08-27",
-      "submission_artifact_url": "https://drive.google.com/drive/folders/11qgNa4EavIN5YFh0gfTl9D-4VJISBe-p?usp=sharing",
-      "authority_tier": 5,
-      "authority_tier_label": "Draft",
-      "mapping_model": null,
-      "ingested": false,
-      "availability": "not_final",
-      "map_file": null,
-      "artifact_id": null,
-      "artifact": null,
-      "quarantine_reason": "OLIR status is \"Draft\", not Final — held out of the published graph pending NIST finalization",
-      "retrieval_attempts": []
     },
     {
       "id": 229,
@@ -365,7 +483,7 @@
           "status": 200,
           "final_url": "https://drive.google.com/drive/folders/1uqUpwlj7NeP-TDSPR2sHaVXHOQlabCCG?usp=sharing",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 315595
+          "byte_length": 322798
         },
         {
           "kind": "artifact download",
@@ -468,8 +586,8 @@
       "artifact": {
         "map_file": "maps/olir/215.json",
         "artifact_url": "https://aamcyber.com/sdos/reference/csf-2-0/",
-        "checksum": "sha256:1978caf386a3f2130c72c8dcab9e7b7a19df145a9520eddb04435b00619f83ff",
-        "byte_length": 120048,
+        "checksum": "sha256:fefa5ba2e51d463c9d71853b5168de0e026771e0fbf76a35e904ebd58d187518",
+        "byte_length": 126442,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
         "relationship_count": 183,
@@ -497,7 +615,7 @@
           "status": 200,
           "final_url": "https://aamcyber.com/sdos/reference/csf-2-0/",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 120048
+          "byte_length": 126442
         }
       ]
     },
@@ -526,8 +644,8 @@
       "artifact": {
         "map_file": "maps/olir/217.json",
         "artifact_url": "https://aamcyber.com/sdos/reference/sp-800-53/",
-        "checksum": "sha256:ab45deead3da957a12be550ecea73ab8c4df07bb3cbc1755a9408df7c42c696d",
-        "byte_length": 125064,
+        "checksum": "sha256:a34478cd70a27ed6cb5d4852d4d0255203ac3fc848deb91e816c295a3c5e384f",
+        "byte_length": 131372,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
         "relationship_count": 27,
@@ -555,7 +673,7 @@
           "status": 200,
           "final_url": "https://aamcyber.com/sdos/reference/sp-800-53/",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 125064
+          "byte_length": 131372
         }
       ]
     },
@@ -683,7 +801,7 @@
           "status": 200,
           "final_url": "https://cyberoon.com/research/ai-soc-v10-to-nist-csf-20-informative-reference-mapping",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 2093430
+          "byte_length": 2093101
         },
         {
           "kind": "artifact download",
@@ -691,7 +809,7 @@
           "status": 200,
           "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 288766
+          "byte_length": 293722
         },
         {
           "kind": "artifact download",
@@ -699,7 +817,7 @@
           "status": 200,
           "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/releases/tag/v1.0.0",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 208015
+          "byte_length": 197037
         },
         {
           "kind": "artifact download",
@@ -707,7 +825,7 @@
           "status": 200,
           "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/blob/main/docs/AI_SOC_Controls_Catalog_v1_0.pdf",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 249169
+          "byte_length": 236831
         },
         {
           "kind": "GitHub Contents API",
@@ -753,8 +871,8 @@
       "artifact": {
         "map_file": "maps/olir/220.json",
         "artifact_url": "https://aamcyber.com/sdos/reference/v1/",
-        "checksum": "sha256:6040f6ac3836ff39256ff0570681897c93ac24433fb210e7327f3b314325ee12",
-        "byte_length": 132616,
+        "checksum": "sha256:085276002fbba09cfd7fd64a2658710b020cc6ad053df81acead922a3c3fc1a3",
+        "byte_length": 139184,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
         "relationship_count": 44,
@@ -782,7 +900,7 @@
           "status": 200,
           "final_url": "https://aamcyber.com/sdos/reference/v1/",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 132616
+          "byte_length": 139184
         }
       ]
     },
@@ -913,7 +1031,7 @@
           "kind": "artifact download",
           "url": "https://docs.google.com/spreadsheets/d/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP/export?format=xlsx",
           "status": 200,
-          "final_url": "https://doc-0c-98-sheets.googleusercontent.com/export/f3kk9gtum31ktuqh54kn7i1e14/s1vk90lv59jb82v0o58eovkfa8/1790167605000/100790643046296837536/*/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP?format=xlsx",
+          "final_url": "https://doc-0c-98-sheets.googleusercontent.com/export/f3kk9gtum31ktuqh54kn7i1e14/bf0cpk2b510tt13mbuttvpuqkg/1791469225000/100790643046296837536/*/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP?format=xlsx",
           "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "byte_length": 21218
         }
@@ -938,7 +1056,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": "Set Theory: Superset, Supportive",
       "ingested": true,
-      "availability": "published_html_relationships",
+      "availability": "no_public_mapping_discovered",
       "map_file": "maps/olir/222.json",
       "artifact_id": null,
       "artifact": {
@@ -976,7 +1094,36 @@
           "content_type": "text/html; charset=UTF-8",
           "byte_length": 143534
         }
-      ]
+      ],
+      "refresh_status": "retained_last_good",
+      "refresh_error": "no public relationship mapping could be downloaded from the registered NIST submission locations",
+      "latest_retrieval_attempts": [
+        {
+          "kind": "NIST catalog detail endpoint",
+          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/222",
+          "status": 200,
+          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/222",
+          "json_file_url": null,
+          "publisher_sha256": null,
+          "submission_url": "https://bxaios.com/nist-alignment/",
+          "reference_url": "https://www.amazon.com/dp/B0FWBSDMVR",
+          "mapping_summary": "<p>A 9-step implementation framework for governed AI deployment, mapped to the NIST AI Risk Management Framework (AI RMF 1.0) using Set Theory Relationship Mapping per NISTIR 8278Ar1.</p>",
+          "mapping_comment": "<p>N/A</p>"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://bxaios.com/nist-alignment/",
+          "status": 202,
+          "final_url": "https://bxaios.com/nist-alignment/",
+          "content_type": "text/html",
+          "byte_length": 185
+        }
+      ],
+      "retention": {
+        "cause": "publisher_unavailable",
+        "first_retained_at": "2026-10-08T14:20:25.656Z",
+        "consecutive_refreshes": 1
+      }
     },
     {
       "id": 203,
@@ -997,7 +1144,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": "Set Theory: Superset, Supportive",
       "ingested": true,
-      "availability": "published_html_relationships",
+      "availability": "no_public_mapping_discovered",
       "map_file": "maps/olir/203.json",
       "artifact_id": null,
       "artifact": {
@@ -1035,7 +1182,36 @@
           "content_type": "text/html; charset=UTF-8",
           "byte_length": 143534
         }
-      ]
+      ],
+      "refresh_status": "retained_last_good",
+      "refresh_error": "no public relationship mapping could be downloaded from the registered NIST submission locations",
+      "latest_retrieval_attempts": [
+        {
+          "kind": "NIST catalog detail endpoint",
+          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/203",
+          "status": 200,
+          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/203",
+          "json_file_url": null,
+          "publisher_sha256": null,
+          "submission_url": "https://bxaios.com/nist-alignment/",
+          "reference_url": "https://www.amazon.com/dp/B0FWBSDMVR",
+          "mapping_summary": "<p>A 9-step implementation framework for governed AI deployment, mapped to the NIST Cybersecurity Framework (CSF 2.0) using Set Theory Relationship Mapping per NISTIR 8278Ar1.</p>",
+          "mapping_comment": "<p>N/A</p>"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://bxaios.com/nist-alignment/",
+          "status": 202,
+          "final_url": "https://bxaios.com/nist-alignment/",
+          "content_type": "text/html",
+          "byte_length": 185
+        }
+      ],
+      "retention": {
+        "cause": "publisher_unavailable",
+        "first_retained_at": "2026-10-08T14:20:25.656Z",
+        "consecutive_refreshes": 1
+      }
     },
     {
       "id": 205,
@@ -1080,7 +1256,7 @@
           "status": 200,
           "final_url": "https://www.infoblox.com/solutions/compliance/",
           "content_type": "text/html; charset=UTF-8",
-          "byte_length": 423862
+          "byte_length": 425156
         }
       ]
     },
@@ -1232,7 +1408,7 @@
       "retention": {
         "cause": "publisher_unavailable",
         "first_retained_at": "2026-09-21T15:12:54.460Z",
-        "consecutive_refreshes": 2
+        "consecutive_refreshes": 3
       }
     },
     {
@@ -1289,7 +1465,7 @@
           "status": 200,
           "final_url": "https://zenodo.org/records/18498447",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 95106
+          "byte_length": 95036
         },
         {
           "kind": "artifact download",
@@ -1457,7 +1633,7 @@
           "status": 200,
           "final_url": "https://www.cisecurity.org/insights/white-papers/cis-controls-v8-1-mapping-to-nist-csf-2-0",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 115977
+          "byte_length": 115929
         }
       ]
     },
@@ -1686,8 +1862,8 @@
       "artifact": {
         "map_file": "maps/olir/176.json",
         "artifact_url": "https://www.gov.uk/government/publications/cyber-governance-mapping/mapping-cyber-governance-code-to-nist-cyber-security-framework",
-        "checksum": "sha256:1c4d1e6f449fc04daac065f788d6fbb9304841ca619f529853af74241569f3c2",
-        "byte_length": 88297,
+        "checksum": "sha256:5ee94e324efd485ab95435cc9d83ecca2a44b97b1f7dc1ba4d027588cb9260f6",
+        "byte_length": 88370,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
         "relationship_count": 60,
@@ -1715,7 +1891,7 @@
           "status": 200,
           "final_url": "https://www.gov.uk/government/publications/cyber-governance-mapping/mapping-cyber-governance-code-to-nist-cyber-security-framework",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 88297
+          "byte_length": 88370
         }
       ]
     },
@@ -2776,7 +2952,7 @@
           "status": 200,
           "final_url": "https://www.cisecurity.org/controls",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 279742
+          "byte_length": 275364
         }
       ]
     },
@@ -3301,7 +3477,7 @@
           "status": 200,
           "final_url": "https://securecontrolsframework.com/free-content/scf-download",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 54182,
+          "byte_length": 56074,
           "availability": "artifact_replaced_by_html"
         }
       ]

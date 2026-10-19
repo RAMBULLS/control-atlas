@@ -24,6 +24,10 @@ const DEPENDENCY_FILES = new Set([
   'package-lock.json',
 ]);
 const AUTOMATION_FILES = new Set([
+  'tools/validation-location.mjs',
+  'tools/local-source-hygiene.mjs',
+  'tools/run-local-validation.mjs',
+  'tests/validation-location.test.mjs',
   'tools/automerge-source-refresh.mjs',
   'tools/report-refresh-alerts.mjs',
   'tools/verify-refresh-admission.mjs',

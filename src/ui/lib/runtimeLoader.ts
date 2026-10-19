@@ -1,5 +1,6 @@
+import { isComparisonRecord } from "../../shared/content-comparison.mjs";
 import { comparisonPairKey, comparisonScopeAllowed } from "../../shared/compare-scope.mjs";
-import { isComparisonCapableEdge, mappingSourceIdsForEdge } from "../../shared/compare-capability.mjs";
+import { isBaselineSelection, isComparisonCapableEdge, mappingSourceIdsForEdge } from "../../shared/compare-capability.mjs";
 import { createFederalGraphRuntime } from "../../app/runtime.mjs";
 import { atlasNeighborhoodShardId } from "../../app/atlas-neighborhood.mjs";
 import { RUNTIME_CACHE_VERSION } from "../../shared/runtime-cache-version.mjs";
@@ -154,6 +155,17 @@ export type ComparisonPair = {
   bytes: number;
 };
 
+export type ComparisonBaseline = Omit<ComparisonPair, "scope"> & {
+  scope: "baselines";
+  name: string;
+  source_id: string;
+  publication: string;
+  version: string;
+  lifecycle_status: string;
+};
+
+export type ComparisonContent = { record_count: number; path: string; bytes: number };
+
 export type RuntimeBundle = {
   runtime: ReturnType<typeof createFederalGraphRuntime>;
   templateRegistry: TemplateRegistry;
@@ -172,12 +184,18 @@ export type RuntimeBundle = {
   commonsSearchIndex?: CommonsSearchIndex;
   commonsDataset?: CommonsResourceDataset;
   mappingSources?: Record<string, Array<{ value: string; label: string }>>;
+  comparisonContent?: Record<string, ComparisonContent>;
+  comparisonMappingAvailable?: boolean;
+  comparisonInventoryMappings?: Array<Record<string, any>>;
   comparisonPairs?: Record<string, ComparisonPair>;
+  comparisonBaselines?: Record<string, ComparisonBaseline>;
   comparisonItems?: Record<string, string>;
   comparisonItemTargets?: Record<string, string[]>;
   comparisonStatus?: "idle" | "ready" | "unsupported" | "scope-mismatch" | "error";
   comparisonError?: string;
   librarySearchReady: boolean;
+  /** True only after the source ledger has loaded, even if it contains no rows. */
+  sourcesReady?: boolean;
   routeReady: boolean;
   graphReady: boolean;
 };
@@ -347,8 +365,8 @@ export function runtimeArtifactPlan(
   // network nor the hierarchy spine; a focused record adds only its own neighborhood shard.
   if (state.view === "atlas-map") {
     return { atlasSpine: false, catalogBootstrap: true, catalogId: "", catalogFamily: "",
-      commons: false, fullGraph: false, librarySearch: atlasRecordFocused || Boolean(state.atlasResearch) || Boolean(options.librarySearchRequested) || Boolean(options.searchOverlayOpen), recordNodeId: atlasRecordFocused ? state.node : "",
-      registries: false, sources: atlasRecordFocused || Boolean(state.atlasResearch) };
+      commons: Boolean(options.searchOverlayOpen), fullGraph: false, librarySearch: atlasRecordFocused || Boolean(state.atlasResearch) || Boolean(options.librarySearchRequested) || Boolean(options.searchOverlayOpen), recordNodeId: atlasRecordFocused ? state.node : "",
+      registries: false, sources: atlasRecordFocused || Boolean(state.atlasResearch) || Boolean(options.searchOverlayOpen) };
   }
   return {
     atlasSpine: state.view === "library-detail",
@@ -897,6 +915,7 @@ export async function loadLibrarySearchPhase(): Promise<RuntimeBundle> {
     commonsSearchIndex: (commonsSearchIndexRaw as CommonsSearchIndex) || undefined,
     commonsDataset: (commonsDatasetRaw as CommonsResourceDataset) || undefined,
     librarySearchReady: true,
+    sourcesReady: false,
     routeReady: true,
     graphReady: false,
   };
@@ -945,6 +964,7 @@ export async function loadFullGraphPhase(
     mappingSources,
     atlasSpine,
     librarySearchReady: true,
+    sourcesReady: true,
     routeReady: true,
     graphReady: true,
   };
@@ -984,6 +1004,8 @@ export async function loadRuntimeDataset(): Promise<RuntimeBundle> {
 }
 
 type CatalogBootstrap = {
+  comparison_content?: Record<string, ComparisonContent>;
+  comparison_baselines?: Record<string, ComparisonBaseline>;
   comparison_pairs?: Record<string, ComparisonPair>;
   comparison_items?: Record<string, string>;
   catalogs?: Array<Record<string, unknown>>;
@@ -1178,11 +1200,14 @@ async function loadRouteScopedPhase(
         (commonsDatasetRaw as CommonsResourceDataset) || undefined,
       mappingSources: catalogBootstrap.mapping_sources || {},
       comparisonPairs: catalogBootstrap.comparison_pairs,
+      comparisonBaselines: catalogBootstrap.comparison_baselines || {},
+      comparisonContent: catalogBootstrap.comparison_content || {},
       comparisonItems: catalogBootstrap.comparison_items || {},
       catalogSummaries: catalogBootstrap.catalogs || [],
       atlasSpine,
       catalogPublishedGroups,
       catalogRecordsReady: plan.catalogId ? true : undefined,
+      sourcesReady: Boolean(sourcesArtifact),
       librarySearchReady: plan.librarySearch,
       routeReady: true,
       graphReady: false,
@@ -1231,10 +1256,13 @@ async function loadCatalogShellPhase(
     templateRegistry: { templates: [] },
     mappingSources: catalogBootstrap.mapping_sources || {},
     comparisonPairs: catalogBootstrap.comparison_pairs,
+    comparisonBaselines: catalogBootstrap.comparison_baselines || {},
+      comparisonContent: catalogBootstrap.comparison_content || {},
     comparisonItems: catalogBootstrap.comparison_items || {},
     catalogSummaries: catalogBootstrap.catalogs || [],
     atlasSpine,
     catalogRecordsReady: false,
+    sourcesReady: true,
     librarySearchReady: false,
     routeReady: true,
     graphReady: false,
@@ -1358,44 +1386,98 @@ export async function loadComparePhase(
       } else base.comparisonItemTargets = {};
     }
     if (state.compareRun !== "true" || !state.source || !state.target) return base;
-    if (!bundle.comparisonPairs) throw new Error("Missing comparison capability metadata");
+    if (state.intent === "content") {
+      const ids = [...new Set([state.source, state.target])];
+      if (ids.some((id) => !bundle.comparisonContent?.[id])) return { ...base, comparisonStatus: "unsupported" };
+      const inventories = await mapBounded(ids, async (catalog) => {
+        const entry = bundle.comparisonContent![catalog];
+        const header = await checkedLoad(entry.path);
+        if (header.schema_version !== 1 || header.catalog !== catalog || header.record_count !== entry.record_count ||
+          !Array.isArray(header.chunks) || !header.chunks.length) throw new Error("Invalid content inventory");
+        const chunks = await mapBounded(header.chunks as Array<{ path: string; record_count: number }>, async (part) => {
+          const chunk = await checkedLoad(part.path);
+          if (chunk.catalog !== catalog || !Array.isArray(chunk.records) || chunk.records.length !== part.record_count) {
+            throw new Error("Incomplete content chunk");
+          }
+          return chunk.records;
+        });
+        const records = chunks.flat();
+        const unique = new Set(records.map((node) => node.id));
+        if (records.length !== entry.record_count || unique.size !== records.length || records.some((node) =>
+          !isComparisonRecord(node) || node.metadata.catalog_id !== catalog || !bundle.runtime.getSource(node.source_id))) {
+          throw new Error("Incomplete or unrelated content inventory");
+        }
+        return records;
+      }, 1);
+      const pair = bundle.comparisonPairs?.[comparisonPairKey(state.source, state.target)];
+      const mapped = pair ? await loadComparePhase({ ...state, intent: pair.scope }, bundle, signal, load) : null;
+      if (mapped && mapped.comparisonStatus !== "ready") throw new Error("Published mappings unavailable");
+      if (signal?.aborted) throw new Error("Comparison cancelled");
+      const records = inventories.flat();
+      const runtime = createFederalGraphRuntime({ sources: bundle.runtime.getSources(), catalogs: bundle.catalogSummaries || [],
+        nodes: records, edges: [], evidence: [], findings: [] });
+      const mappings = mapped?.runtime.buildRelationshipRows({ source_catalog: state.source, target_catalog: state.target,
+        comparisons_only: true, include_candidates: false }).rows || [];
+      return { ...base, runtime, comparisonStatus: "ready", comparisonMappingAvailable: Boolean(pair), comparisonInventoryMappings: mappings };
+    }
+    const baselineMode = state.intent === "baselines";
+    if (!baselineMode && !bundle.comparisonPairs) throw new Error("Missing comparison capability metadata");
     const key = comparisonPairKey(state.source, state.target);
-    const entry = bundle.comparisonPairs?.[key];
-    if (!entry || entry.edge_count < 1) return { ...base, comparisonStatus: "unsupported" };
-    if (!comparisonScopeAllowed(entry.scope, state.intent)) return { ...base, comparisonStatus: "scope-mismatch" };
-    const header = await checkedLoad(entry.path);
-    if (header.schema_version !== 1 || header.pair?.join("|") !== key || header.scope !== entry.scope
-      || header.edge_count !== entry.edge_count || !Array.isArray(header.chunks) || !header.chunks.length) {
-      throw new Error("Invalid comparison header");
-    }
-    const chunks = await mapBounded(header.chunks as Array<{ path: string; edge_count: number }>, async (part) => {
-      const chunk = await checkedLoad(part.path);
-      if (chunk.pair?.join("|") !== key || chunk.scope !== entry.scope || !Array.isArray(chunk.edges)
-        || chunk.edges.length !== part.edge_count || !Array.isArray(chunk.nodes) || !Array.isArray(chunk.evidence)) {
-        throw new Error("Invalid comparison chunk");
+    const requests: Array<{ key: string; entry: ComparisonPair | ComparisonBaseline | undefined }> = baselineMode
+      ? [...new Set([state.source, state.target])].map((id) => ({ key: id, entry: bundle.comparisonBaselines?.[id] }))
+      : [{ key, entry: bundle.comparisonPairs?.[key] }];
+    if (requests.some(({ entry }) => !entry || entry.edge_count < 1)) return { ...base, comparisonStatus: "unsupported" };
+    if (!baselineMode && !comparisonScopeAllowed(requests[0].entry!.scope, state.intent)) return { ...base, comparisonStatus: "scope-mismatch" };
+    const selections = await mapBounded(requests, async ({ key, entry: requestedEntry }) => {
+      const entry = requestedEntry!;
+      const header = await checkedLoad(entry.path);
+      if (header.schema_version !== 1 || header.pair?.join("|") !== key || header.scope !== entry.scope
+        || header.edge_count !== entry.edge_count || !Array.isArray(header.chunks) || !header.chunks.length) {
+        throw new Error("Invalid comparison header");
       }
-      return chunk;
-    });
+      const chunks = await mapBounded(header.chunks as Array<{ path: string; edge_count: number }>, async (part) => {
+        const chunk = await checkedLoad(part.path);
+        if (chunk.pair?.join("|") !== key || chunk.scope !== entry.scope || !Array.isArray(chunk.edges)
+          || chunk.edges.length !== part.edge_count || !Array.isArray(chunk.nodes) || !Array.isArray(chunk.evidence)) {
+          throw new Error("Invalid comparison chunk");
+        }
+        return chunk;
+      });
+      const nodes = new Map<string, any>(), edges = new Map<string, any>(), evidence = new Map<string, any>();
+      for (const chunk of chunks) {
+        for (const node of chunk.nodes) nodes.set(node.id, node);
+        for (const item of chunk.evidence) evidence.set(item.id, item);
+        for (const edge of chunk.edges) {
+          if (edges.has(edge.id)) throw new Error("Duplicate comparison relationship");
+          edges.set(edge.id, edge);
+        }
+      }
+      if (edges.size !== entry.edge_count || nodes.size !== header.node_count) throw new Error("Incomplete comparison");
+      const sourceIds = new Set(bundle.runtime.getSources().map((source: any) => source.id));
+      for (const edge of edges.values()) {
+        const refs = mappingSourceIdsForEdge(edge);
+        if (!refs.length || refs.some((id: string) => !sourceIds.has(id))) throw new Error("Unresolved comparison source");
+        const a = nodes.get(edge.source_node_id)?.metadata?.catalog_id;
+        const b = nodes.get(edge.target_node_id)?.metadata?.catalog_id;
+        if (baselineMode
+          ? edge.source_node_id !== key || !isBaselineSelection(edge, nodes.get(edge.source_node_id), nodes.get(edge.target_node_id))
+          : comparisonPairKey(a, b) !== key || !isComparisonCapableEdge(edge)) throw new Error("Unrelated comparison relationship");
+        for (const id of edge.evidence_ids || [`evidence:${edge.id.slice(5)}`]) {
+          if (!evidence.has(id)) throw new Error("Comparison source evidence missing");
+          if (baselineMode && (!evidence.get(id).locator || !refs.includes(evidence.get(id).source_id))) {
+            throw new Error("Baseline selection citation missing");
+          }
+        }
+        if (baselineMode && edge.evidence_ids?.length === 0) throw new Error("Baseline selection evidence missing");
+      }
+      if (signal?.aborted) throw new Error("Comparison cancelled");
+      return { nodes, edges, evidence };
+    }, 1);
     const nodes = new Map<string, any>(), edges = new Map<string, any>(), evidence = new Map<string, any>();
-    for (const chunk of chunks) {
-      for (const node of chunk.nodes) nodes.set(node.id, node);
-      for (const item of chunk.evidence) evidence.set(item.id, item);
-      for (const edge of chunk.edges) {
-        if (edges.has(edge.id)) throw new Error("Duplicate comparison relationship");
-        edges.set(edge.id, edge);
-      }
-    }
-    if (edges.size !== entry.edge_count || nodes.size !== header.node_count) throw new Error("Incomplete comparison");
-    const sourceIds = new Set(bundle.runtime.getSources().map((source: any) => source.id));
-    for (const edge of edges.values()) {
-      const refs = mappingSourceIdsForEdge(edge);
-      if (!refs.length || refs.some((id: string) => !sourceIds.has(id))) throw new Error("Unresolved comparison source");
-      const a = nodes.get(edge.source_node_id)?.metadata?.catalog_id;
-      const b = nodes.get(edge.target_node_id)?.metadata?.catalog_id;
-      if (comparisonPairKey(a, b) !== key || !isComparisonCapableEdge(edge)) throw new Error("Unrelated comparison relationship");
-      for (const id of edge.evidence_ids || [`evidence:${edge.id.slice(5)}`]) {
-        if (!evidence.has(id)) throw new Error("Comparison source evidence missing");
-      }
+    for (const selection of selections) {
+      for (const [id, node] of selection.nodes) nodes.set(id, node);
+      for (const [id, edge] of selection.edges) edges.set(id, edge);
+      for (const [id, item] of selection.evidence) evidence.set(id, item);
     }
     const runtime = createFederalGraphRuntime({
       sources: bundle.runtime.getSources(), catalogs: bundle.catalogSummaries || [],
@@ -1404,6 +1486,6 @@ export async function loadComparePhase(
     return { ...base, runtime, comparisonStatus: "ready" };
   } catch (error) {
     if (signal?.aborted) throw error;
-    return { ...base, comparisonStatus: "error", comparisonError: "These mappings could not be loaded. Try again, or choose another publication." };
+    return { ...base, comparisonStatus: "error", comparisonError: "This comparison could not be loaded. Try again, or choose another publication." };
   }
 }

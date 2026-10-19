@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { readFile } from "node:fs/promises";
 
 import {
   attachPageDiagnostics,
@@ -18,7 +19,14 @@ test("live smoke: current Home contract and AC-2 record path", async ({ page }) 
   await waitForAppReady(page);
   await dismissOnboarding(page);
   if (process.env.PLAYWRIGHT_BASE_URL) {
-    expect(page.url()).toContain("/control-atlas/");
+    const expectedSite = new URL(process.env.PLAYWRIGHT_BASE_URL);
+    const actualSite = new URL(page.url());
+    expect(actualSite.origin).toBe(expectedSite.origin);
+    expect(actualSite.pathname).toBe(
+      expectedSite.pathname.endsWith("/")
+        ? expectedSite.pathname
+        : `${expectedSite.pathname}/`,
+    );
   }
   await expect(
     page.getByRole("heading", {
@@ -91,6 +99,41 @@ test("live smoke: compare hub loads", async ({ page }) => {
   await expect(page.getByText("See how frameworks connect using published crosswalks.", { exact: true })).toBeVisible();
 });
 
+test("live smoke: baseline comparison filters and exports complete selections", async ({ page }) => {
+  test.setTimeout(120000);
+  await gotoApp(page, "/#/compare/relationships?intent=baselines&source=nist-800-53b:MODERATE&target=fedramp-rev5:MODERATE&compareRun=true");
+  await waitForAppReady(page);
+  await dismissOnboarding(page);
+  const rows = page.locator("[data-baseline-result]");
+  await expect(rows.first()).toBeVisible({ timeout: 90000 });
+  await expect(page.locator("#compare-results")).toContainText("historical");
+  await expect(page.locator("#compare-workspace")).toContainText("not a compliance failure");
+  const totals = await page.locator("#compare-results > p").nth(1).innerText();
+  const sharedMatch = totals.match(/([\d,]+) shared/);
+  expect(sharedMatch).not.toBeNull();
+  const shared = Number(sharedMatch[1].replaceAll(",", ""));
+  expect(shared).toBeGreaterThan(25);
+
+  await page.getByLabel("Result group").selectOption("shared");
+  await expect(page.locator('[data-baseline-result]:not([data-baseline-result="shared"])')).toHaveCount(0);
+  expect(await rows.count()).toBeLessThanOrEqual(25);
+  await rows.first().getByText("Selection evidence", { exact: true }).click();
+  await expect(rows.first().getByRole("link", { name: /official source/ })).toHaveCount(2);
+
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Download CSV" }).click();
+  const csv = await readFile(await (await downloadPromise).path(), "utf8");
+  expect(csv.split("\r\n")).toHaveLength(shared + 1);
+  expect(csv).toContain('"Shared"');
+  expect(csv).not.toContain('"Only in A"');
+  expect(csv).not.toContain('"Only in B"');
+  expect(csv).toContain("https://");
+  expect(csv).toContain("fedramp.gov");
+  await page.getByLabel("Search results by ID or title").fill("no-such-control-zzzz");
+  await expect(rows).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Download CSV" })).toBeDisabled();
+});
+
 test("live smoke: deployed runtime cache version matches source", async ({
   request,
 }) => {
@@ -121,4 +164,21 @@ test("live smoke: deployed artifact matches the expected commit", async ({
   expect(release).toMatchObject({ schema_version: "1.1", commit_sha: expectedSha });
   expect(release.released_at).toMatch(/^\d{4}-\d{2}-\d{2}T/);
   expect(release.source_data_generated_at).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+});
+
+
+
+test("live smoke: content inventories and sourced literal comparisons load", async ({ page }) => {
+  test.setTimeout(120000);
+  await gotoApp(page, "/#/compare/relationships?intent=content&source=nist-800-171-rev2&target=nist-800-171&compareRun=true");
+  await waitForAppReady(page); await dismissOnboarding(page);
+  const rows = page.locator("[data-content-result]");
+  await expect(rows.first()).toBeVisible({ timeout: 90000 });
+  await expect(page.locator("#compare-workspace")).toContainText("do not prove they describe the same requirement");
+  await rows.first().getByText("Compared fields and sources", { exact: true }).click();
+  await expect(rows.first().getByRole("link", { name: /official source/ }).first()).toBeVisible();
+  await page.getByLabel("Result group").selectOption("unavailable");
+  await expect(page.locator('[data-content-result]:not([data-content-result="unavailable"])')).toHaveCount(0);
+  await page.getByLabel("Search results by ID or title").fill("no-such-record-zzzz");
+  await expect(page.getByRole("button", { name: "Download CSV" })).toBeDisabled();
 });

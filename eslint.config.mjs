@@ -21,6 +21,14 @@ export default [
   },
   js.configs.recommended,
   {
+    files: ['src/public/analytics-consent.js'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'script',
+      globals: globals.browser,
+    },
+  },
+  {
     files: ['src/**/*.mjs'],
     languageOptions: {
       ecmaVersion: 'latest',

@@ -104,6 +104,12 @@ function evidenceLocator(resource, id, locatorType = "canonical_url", locator = 
   };
 }
 
+export function artifactOrigin(artifact) {
+  if (artifact.id === "artifact-nist-800-53b-baselines") return "publisher_normalized";
+  if (artifact.id === "artifact-dod-rai-toolkit") return "publisher_derived";
+  return artifact.authority_class === "publisher" ? "publisher_exact" : "publisher_normalized";
+}
+
 function claim(fieldPath, origin, evidenceRefs, transformation = null) {
   return {
     fieldPath,
@@ -376,9 +382,7 @@ export function migrateSourceRegistryDocument(registry, fedramp2026, mitreCatalo
       artifact.lifecycle_status = "active";
     }
     artifact.profile_id = artifactProfileId(artifact.format);
-    artifact.origin = artifact.id === "artifact-dod-rai-toolkit"
-      ? "publisher_derived"
-      : artifact.authority_class === "publisher" ? "publisher_exact" : "publisher_normalized";
+    artifact.origin = artifactOrigin(artifact);
   }
   for (const source of registry.sources || []) {
     if (source.id === "nist-800-171-oscal-mappings") {

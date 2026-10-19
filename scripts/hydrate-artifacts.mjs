@@ -17,6 +17,7 @@ import { fileURLToPath } from 'node:url';
 import { unzipSync } from 'fflate';
 import { strictConditionalFetch } from './lib/strict-conditional-fetch.mjs';
 import { writeJsonAtomically } from './lib/write-json-atomically.mjs';
+import { retrievalScope } from './lib/source-check-receipts.mjs';
 import readXlsxFile from 'read-excel-file/node';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -174,11 +175,14 @@ export const BASE_RESOLUTIONS = Object.freeze([
   { id: 'artifact-disa-stig-library', local: 'data/stig-rules.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0', count: 'json_records' },
   { id: 'artifact-disa-srg-library', local: 'data/srg-requirements.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0', count: 'json_records' },
   { id: 'artifact-disa-stig-srg-cci-references', local: 'maps/stig-srg-to-cci.json', url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_July_2026.zip', format: 'xccdf', parser: 'xccdf', parser_version: '1.0.0', count: 'json_relationships' },
-  // Hash each actual publisher profile, never the generated four-row summary.
+  // Keep actual publisher profiles distinct from the normalized summary artifact.
   ...['LOW','MODERATE','HIGH','PRIVACY'].map((baseline) => ({
-    id: baseline === 'MODERATE' ? 'artifact-nist-800-53b-baselines' : `artifact-nist-800-53b-${baseline.toLowerCase()}-profile`,
+    id: `artifact-nist-800-53b-${baseline.toLowerCase()}-profile`,
     url: `${OSCAL}/SP800-53/rev5/json/NIST_SP-800-53_rev5_${baseline}-baseline_profile.json`, format: 'oscal_json', parser: 'oscal-profile', parser_version: '1.5.0', count: 'oscal_profile_unit',
   })),
+  // 800-53B baselines: the generated baseline data (generated-from-download of
+  // the OSCAL rev5 baseline profiles), hashed from its committed copy.
+  { id: 'artifact-nist-800-53b-baselines', local: 'data/800-53b-baselines.json', url: 'https://github.com/RAMBULLS/control-atlas/blob/main/data/800-53b-baselines.json', format: 'json', parser: 'normalized-baseline-records', parser_version: '1.0.0', count: 'json_records', normalized: true, upstream_reference_url: `${OSCAL}/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json` },
   // Control Atlas's own editorial structure spine (hashed from the repo file).
   { id: 'artifact-control-atlas-structure', local: 'data/curated/tree-spine.json', url: 'https://github.com/rambulls/control-atlas/blob/main/data/curated/tree-spine.json', format: 'json', parser: 'control-atlas-spine', parser_version: '1.0.0', count: 'jsonld' },
 ].map((entry) => Object.freeze(entry)));
@@ -402,7 +406,10 @@ export async function hydrateArtifacts({ root = ROOT, only = null, onlyPrefix = 
       const recordCount = await countRecords(r.count, buf, root);
       const contentChanged = art.sha256 !== sha256;
       // Preserve retrieved_at when bytes are unchanged (stable re-runs).
-      const retrievedAt = contentChanged ? today : (art.retrieved_at && !/placeholder/i.test(art.retrieved_at) ? art.retrieved_at : today);
+      const priorEvidence = priorById.get(r.id);
+      const retrievedAt = !contentChanged && priorEvidence?.status === 'OK' && priorEvidence.sha256 === sha256
+        ? priorEvidence.retrieved_at
+        : (contentChanged ? today : (art.retrieved_at && !/placeholder/i.test(art.retrieved_at) ? art.retrieved_at : today));
 
       art.artifact_url = r.url;
       art.format = r.format;
@@ -411,6 +418,12 @@ export async function hydrateArtifacts({ root = ROOT, only = null, onlyPrefix = 
       art.sha256 = sha256;
       art.byte_length = byteLength;
       art.retrieved_at = retrievedAt;
+      if (r.normalized) {
+        art.profile_id = 'artifact.json';
+        art.origin = 'publisher_normalized';
+        art.upstream_reference_url = r.upstream_reference_url;
+        art.relationship_count = JSON.parse(buf.toString('utf8')).relationships?.length || 0;
+      }
       if (r.count === 'json_relationships') {
         art.relationship_count = JSON.parse(buf.toString('utf8')).relationships?.length || 0;
         art.record_count = 0;
@@ -422,7 +435,10 @@ export async function hydrateArtifacts({ root = ROOT, only = null, onlyPrefix = 
       if (r.count === 'oscal_profile_unit') art.relationship_count = countOscalProfileImports(JSON.parse(buf));
 
       changed += 1;
-      log.push({ id: r.id, status: 'OK', http: status, url: r.url, sha256, byte_length: byteLength, record_count: recordCount, retrieved_at: retrievedAt });
+      log.push({ id: r.id, status: 'OK', http: status, url: r.url, sha256, byte_length: byteLength, record_count: recordCount, retrieved_at: retrievedAt,
+        ...(!r.local && status === 200
+          ? { checked_at: new Date().toISOString(), check_scope: retrievalScope(r.url) } : {}),
+        ...(r.normalized ? { evidence_scope: 'local_normalized', local_path: r.local, format: r.format, relationship_count: art.relationship_count, upstream_reference_url: r.upstream_reference_url } : {}) });
       console.log(`OK  ${r.id}  ${byteLength}B  records=${recordCount}  ${sha256.slice(0, 22)}…`);
     } catch (e) {
       if (only) throw new Error(`Hydration ${r.id} failed: ${e.message || e}`, { cause: e });

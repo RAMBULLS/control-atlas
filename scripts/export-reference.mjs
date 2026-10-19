@@ -88,12 +88,14 @@ function* connectionRows() { for (const edge of edges) yield referenceConnection
 const escapeTable = (value) => String(value ?? 'UNKNOWN').replaceAll('|', '\\|').replace(/[\r\n]+/g, ' ');
 function readme(files) {
   const commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: ROOT, encoding: 'utf8' }).trim();
+  const dirty = execFileSync('git', ['status', '--porcelain', '--untracked-files=normal', '--', 'data', 'maps', 'scripts', 'src', 'tools', 'package.json', 'package-lock.json'], { cwd: ROOT, encoding: 'utf8' }).trim();
+  const sourceState = dirty ? 'Source inputs include uncommitted changes; the commit alone does not identify these bytes. Use the input hashes below.' : 'Source inputs are committed. The input hashes below identify the exported build bytes.';
   const catalogTable = coverage.catalogs.map((row) => `| ${row.catalog_id} | ${row.imported_records} | ${row.completeness_status} | ${row.inventory_evidence_class || 'unknown'} |`).join('\n');
   const typeCounts = new Map();
   for (const edge of edges) { const key = `${edge.relationship_class} / ${edge.relationship_type} / ${edge.publication_status}`; typeCounts.set(key, (typeCounts.get(key) || 0) + 1); }
   return `# Control Atlas portable reference export\n\n` +
     `This package contains public reference material and recorded relationships. It contains no organization assessments, operational evidence, findings, system inventories or compliance decisions. Publication-provenance citations are reference evidence.\n\n` +
-    `## Source build and files\n\nSource commit: ${commit}. This local package includes uncommitted source/data repairs; the commit alone is not its identity.\n\n` +
+    `## Source build and files\n\nSource commit: ${commit}. ${sourceState}\n\n` +
     `Canonical source build timestamp: ${read('data/generated/nodes.json').generated_at}. Export contract: 1.0.\n\nInput SHA-256 fingerprint: ${inputIdentity}. No network access or UI scraping occurs during export.\n\n` +
     `| File | Data rows | Bytes | SHA-256 |\n| --- | ---: | ---: | --- |\n${files.map((file) => `| ${file.name} | ${file.rows} | ${file.bytes} | ${file.sha256} |`).join('\n')}\n\n` +
     `Items: ${counts.graph_nodes} graph nodes plus ${counts.resources} Resources. Connections: ${counts.connections}. ${counts.catalog_items_without_correlation} catalog items have no correlation edge and are still included; hierarchy and editorial navigation do not make an item mapped.\n\n` +

@@ -149,9 +149,21 @@ test("artifact publishers resolve from their parent publications without fabrica
   const derived = [...layers.connection, ...layers.ingestion].filter(
     (row) => row.publicationSourceId,
   );
-  assert.equal(derived.length, 91);
+  assert.equal(derived.length, 97);
   assert.ok(derived.every((row) => row.publisher.value), "every parent-linked artifact resolves a publisher");
   assert.ok(derived.some((row) => row.publisher.state === "derived"));
+
+  for (const [id, publicationSourceId] of [
+    ["artifact-nist-csf-1.1", "nist-csf-1.1"],
+    ["artifact-nist-critical-software", "nist-critical-software"],
+    ...["low", "moderate", "high", "privacy"].map((level) => [
+      `artifact-nist-800-53b-${level}-profile`, "nist-800-53b-baselines",
+    ]),
+  ]) {
+    const artifact = derived.find((row) => row.id === id);
+    assert.equal(artifact?.publicationSourceId, publicationSourceId, id);
+    assert.equal(artifact?.publisher.value, "NIST", id);
+  }
 
   const cci = layers.ingestion.find((row) => row.id === "artifact-disa-cci-list");
   assert.equal(cci?.publisher.value, "DISA");

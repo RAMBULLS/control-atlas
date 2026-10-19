@@ -346,11 +346,11 @@ test('every catalog with a declared parent tier has all of its records parented'
   }
 });
 
-test('all 28 publication-native structure profiles reconcile with valid containment paths', () => {
+test('all 30 publication-native structure profiles reconcile with valid containment paths', () => {
   const nodes = generated('nodes').nodes;
   const edges = generated('edges').edges;
 
-  assert.equal(CATALOG_STRUCTURE_IDS.length, 28);
+  assert.equal(CATALOG_STRUCTURE_IDS.length, 30);
   assert.deepEqual(validatePublisherNativeContainment(nodes, edges), []);
   assert.deepEqual(
     catalogStructureProfile('disa-stig').paths,

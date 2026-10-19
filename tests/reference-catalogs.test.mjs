@@ -9,6 +9,7 @@ import { iotMappingDisposition } from '../tools/importers/nist-structured-catalo
 import { effectiveProfile, assertionProfileId } from '../src/shared/entity-profiles.mjs';
 import { verifyNormalizedArtifactEvidence } from '../scripts/lib/normalized-artifact-evidence.mjs';
 import { verifyBaselineManifest } from '../scripts/lib/nist-baseline-profiles.mjs';
+import { admittedOscalArtifacts } from '../scripts/check-oscal.mjs';
 const read = (file) => JSON.parse(readFileSync(file, 'utf8'));
 
 test('baseline publisher profiles and normalized summary retain separate artifact identities and exact evidence', () => {
@@ -17,6 +18,7 @@ test('baseline publisher profiles and normalized summary retain separate artifac
   const baselines = read('data/800-53b-baselines.json').records;
   const summaryId = 'artifact-nist-800-53b-baselines';
   const summary = registry.artifacts.find((row) => row.id === summaryId);
+  const admitted = new Set(admittedOscalArtifacts(registry, hydration).map((row) => row.id));
   assert.equal(verifyNormalizedArtifactEvidence(summary, hydration.results.find((row) => row.id === summaryId), process.cwd()).record_count, 4);
   const bundle = registry.catalog_source_bundles.find((row) => row.catalog_id === 'nist-800-53b');
   assert.deepEqual(bundle.enrichment_artifact_ids, [summaryId]);
@@ -28,12 +30,19 @@ test('baseline publisher profiles and normalized summary retain separate artifac
     assert.ok(bundle.primary_artifact_ids.includes(id));
     assert.equal(artifact.format, 'oscal_json');
     assert.equal(artifact.origin, 'publisher_exact');
+    assert.ok(admitted.has(id), `${id} requires actual successful HTTP acquisition evidence`);
     assert.equal(artifact.sha256, receipt.sha256);
     assert.equal(artifact.byte_length, receipt.byte_length);
     assert.notEqual(artifact.sha256, summary.sha256);
   }
   const counts = verifyBaselineManifest(read('data/nist-800-53b-profile-manifest.json'), read('data/controls-800-53.json'));
   assert.equal(counts.reduce((sum, row) => sum + row.ingested, 0), 902);
+  for (const http of ['verified-acquired-publisher-bytes', null]) {
+    const invalid = structuredClone(hydration);
+    const id = 'artifact-nist-800-53b-moderate-profile';
+    invalid.results.find((row) => row.id === id).http = http;
+    assert.throws(() => admittedOscalArtifacts(registry, invalid), new RegExp(id));
+  }
 });
 
 test('restored publisher equivalence resolves an active assertion profile without relabeling', () => {

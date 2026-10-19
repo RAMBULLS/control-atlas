@@ -544,12 +544,15 @@
     {
       "id": "artifact-nist-800-53b-moderate-profile",
       "status": "OK",
-      "http": "verified-acquired-publisher-bytes",
+      "http": 200,
       "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/v1.5.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json",
       "sha256": "sha256:9030dbf1f13169947eb97eb101b4bd2f00d3c151b100455a923ac75803f00ea1",
       "byte_length": 10498,
       "record_count": 1,
-      "retrieved_at": "2026-10-18"
+      "retrieved_at": "2026-10-18",
+      "checked_at": "2026-10-19T12:41:57.465Z",
+      "check_scope": "pinned_edition_retrieval",
+      "cache_status": "revalidated"
     },
     {
       "id": "artifact-control-atlas-structure",
@@ -964,32 +967,41 @@
     {
       "id": "artifact-nist-800-53b-low-profile",
       "status": "OK",
-      "http": "verified-acquired-publisher-bytes",
+      "http": 200,
       "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/v1.5.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_LOW-baseline_profile.json",
       "sha256": "sha256:8fd206017c8d718b44bdef612c2ff321a9fd84d97a515c8ec33c4619accbef6e",
       "byte_length": 7234,
       "record_count": 1,
-      "retrieved_at": "2026-10-18"
+      "retrieved_at": "2026-10-18",
+      "checked_at": "2026-10-19T12:41:57.249Z",
+      "check_scope": "pinned_edition_retrieval",
+      "cache_status": "revalidated"
     },
     {
       "id": "artifact-nist-800-53b-high-profile",
       "status": "OK",
-      "http": "verified-acquired-publisher-bytes",
+      "http": 200,
       "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/v1.5.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_HIGH-baseline_profile.json",
       "sha256": "sha256:60576970caef91b2cba56d46e5948b72e3b879434fc2a4840bc4179e5e75cfd7",
       "byte_length": 12492,
       "record_count": 1,
-      "retrieved_at": "2026-10-18"
+      "retrieved_at": "2026-10-18",
+      "checked_at": "2026-10-19T12:41:57.680Z",
+      "check_scope": "pinned_edition_retrieval",
+      "cache_status": "revalidated"
     },
     {
       "id": "artifact-nist-800-53b-privacy-profile",
       "status": "OK",
-      "http": "verified-acquired-publisher-bytes",
+      "http": 200,
       "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/v1.5.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_PRIVACY-baseline_profile.json",
       "sha256": "sha256:7e650c4397ad633eadeaf510baa523372849b1fa3e18207b6c6b70ed456224f9",
       "byte_length": 6064,
       "record_count": 1,
-      "retrieved_at": "2026-10-18"
+      "retrieved_at": "2026-10-18",
+      "checked_at": "2026-10-19T12:41:57.898Z",
+      "check_scope": "pinned_edition_retrieval",
+      "cache_status": "revalidated"
     },
     {
       "id": "artifact-nist-800-53b-baselines",

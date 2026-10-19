@@ -70,7 +70,10 @@ async function fetchBytes(url, maximum) {
     if (length > maximum) throw new Error('Source evidence exceeds its bounded acquisition allowance');
     chunks.push(bytes);
   }
-  return Buffer.concat(chunks);
+  const bytes = Buffer.concat(chunks);
+  bytes.acquisition_response = { http_status: response.status,
+    cache_status: response.headers?.get?.('x-local-cache-status') || null };
+  return bytes;
 }
 const fetchRecoveryBytes = (url, maximum) => {
   if (maximum !== 512 * 1024) return fetchBytes(url, maximum);
@@ -118,7 +121,9 @@ for (const source of sources.values()) {
     const disposition = classifyAcquiredSource(source, previous, { sha256, bytes: bytes.length });
     results.set(source.id, { ...source, ...disposition, url, path, sha256, bytes: bytes.length, ...(recovery ? { recovery } : {}),
       registered_bytes_match: source.registered_sha256 ? sha256 === source.registered_sha256 && bytes.length === source.registered_bytes : null,
-      retrieved_at: new Date().toISOString() });
+      retrieved_at: new Date().toISOString(),
+      http_status: bytes.acquisition_response?.http_status ?? null,
+      cache_status: bytes.acquisition_response?.cache_status ?? null });
     console.log(`${disposition.status} ${source.id}: ${bytes.length} bytes; registered bytes ${source.registered_sha256 ? sha256 === source.registered_sha256 ? 'MATCH' : 'DIFFER' : 'not declared'}`);
   } catch (error) {
     const http = Number(error.message.match(/^HTTP (\d{3})$/)?.[1]);

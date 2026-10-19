@@ -15,10 +15,15 @@ const acquisition = read('.local-agent/reference-export/inventory-acquisition.js
 const registry = read('data/source-registry.json'); const hydration = read('data/artifact-hydration-manifest.json');
 const baselines = read('data/800-53b-baselines.json'); const controls = read('data/controls-800-53.json');
 const baselineProof = proofs['nist-800-53b']; const originalArtifact = registry.artifacts.find((artifact) => artifact.id === 'artifact-nist-800-53b-baselines');
+assert.equal(originalArtifact?.origin, 'publisher_normalized', 'Preserve the existing normalized baseline summary identity');
+assert.equal(originalArtifact.format, 'json', 'Publisher profiles need their own artifact identities');
 const byBaseline = new Map();
 for (const unit of baselineProof.native_units) {
   const evidence = baselineProof.source_evidence.find((entry) => entry.url === unit.locator);
-  const entry = acquisition.sources.find((entry) => entry.sha256 === evidence.sha256 && entry.url === evidence.url);
+  const entry = acquisition.sources.filter((entry) => entry.status === 'ACQUIRED' && entry.sha256 === evidence.sha256 && entry.url === evidence.url && Number.isInteger(entry.http_status))
+    .sort((a, b) => Date.parse(b.retrieved_at) - Date.parse(a.retrieved_at))[0];
+  assert.ok(Number.isInteger(entry?.http_status) && entry.http_status >= 200 && entry.http_status < 300,
+    `Fresh acquisition with a recorded HTTP success is required for ${unit.id}`);
   const bytes = readFileSync(join(root, entry.path)); assert.equal(hash(bytes), evidence.sha256); assert.equal(bytes.length, evidence.byte_length);
   const profile = JSON.parse(bytes).profile;
   const selected = controls.records.filter((record) => (record.metadata?.nist_800_53b_baselines || []).some((label) => new RegExp(`\\b${unit.id} (?:IMPACT )?BASELINE$`).test(label))).map((record) => record.id).sort();
@@ -27,11 +32,15 @@ for (const unit of baselineProof.native_units) {
   const prior = registry.artifacts.find((artifact) => artifact.id === id);
   const artifact = { ...(prior || originalArtifact), id, name: `NIST SP800-53B ${unit.id} OSCAL baseline profile`, display_name: `SP800-53B ${unit.id} profile`, version: profile.metadata.version,
     format: 'oscal_json', profile_id: 'artifact.oscal_json', origin: 'publisher_exact', parser: 'oscal-profile', parser_version: '1.5.0',
-    artifact_url: evidence.url, byte_length: bytes.length, sha256: evidence.sha256, retrieved_at: entry.retrieved_at.slice(0,10), record_count: 1, relationship_count: selected.length,
+    artifact_url: evidence.url, byte_length: bytes.length, sha256: evidence.sha256,
+    retrieved_at: prior?.sha256 === evidence.sha256 && prior.byte_length === bytes.length ? prior.retrieved_at : entry.retrieved_at.slice(0,10),
+    record_count: 1, relationship_count: selected.length,
     metadata: { ...(prior?.metadata || {}), byte_evidence_kind: 'downloaded_publisher_bytes', native_baseline_id: unit.id } };
   delete artifact.upstream_reference_url;
   if (prior) Object.assign(prior, artifact); else registry.artifacts.push(artifact);
-  const receipt = { id, status: 'OK', http: 'verified-acquired-publisher-bytes', url: evidence.url, sha256: evidence.sha256, byte_length: bytes.length, record_count: 1, retrieved_at: artifact.retrieved_at };
+  const receipt = { id, status: 'OK', http: entry.http_status, url: evidence.url, sha256: evidence.sha256, byte_length: bytes.length,
+    record_count: 1, retrieved_at: artifact.retrieved_at, checked_at: entry.retrieved_at,
+    check_scope: 'pinned_edition_retrieval', cache_status: entry.cache_status ?? null };
   const oldReceipt = hydration.results.find((row) => row.id === id); if (oldReceipt) Object.assign(oldReceipt, receipt); else hydration.results.push(receipt);
   byBaseline.set(unit.id, { artifact, title: profile.metadata.title, edition: profile.metadata.version });
 }
@@ -47,6 +56,22 @@ for (const control of controls.records) if (control.metadata?.nist_800_53b_basel
   const id = [...byBaseline.keys()].find((id) => new RegExp(`\\b${id} (?:IMPACT )?BASELINE$`).test(label)); assert.ok(id, 'Unsupported existing baseline label');
   const title = byBaseline.get(id).title; if (title !== label) labelsCorrected += 1; return title;
 });
+
+// Refresh only the normalized summary's byte evidence after baseline edits.
+// Its artifact identity remains separate from all four publisher profiles.
+const summaryBytes = Buffer.from(encode(baselines));
+Object.assign(originalArtifact, { sha256: hash(summaryBytes), byte_length: summaryBytes.length,
+  record_count: baselines.records.length, relationship_count: baselines.relationships?.length || 0 });
+const summaryReceipt = hydration.results.find((entry) => entry.id === originalArtifact.id);
+assert.ok(summaryReceipt, 'Missing normalized baseline summary receipt');
+Object.assign(summaryReceipt, { sha256: originalArtifact.sha256, byte_length: originalArtifact.byte_length,
+  record_count: originalArtifact.record_count, relationship_count: originalArtifact.relationship_count });
+if (process.argv.includes('--baseline-only')) {
+  for (const [path, document] of [['data/800-53b-baselines.json', baselines], ['data/controls-800-53.json', controls],
+    ['data/source-registry.json', registry], ['data/artifact-hydration-manifest.json', hydration]]) writeFileSync(join(root, path), encode(document));
+  console.log(JSON.stringify({ baseline_profiles: byBaseline.size, baseline_memberships: baselineProof.native_units.reduce((n, unit) => n + unit.member_count, 0), baseline_labels_corrected: labelsCorrected, scope: 'baseline evidence only; no DISA catalog or connection-map files read or written' }));
+  process.exit(0);
+}
 
 const disa = read('data/disa-artifact-manifest.json'); const map = read('maps/stig-srg-to-cci.json');
 const evidenceByUrl = new Map(proofs['disa-stig'].source_evidence.map((entry) => [entry.url, entry]));
@@ -74,15 +99,6 @@ disa.reconciliation.publisher_citation_occurrences = citations;
 assert.equal(disa.reconciliation.compilation_ingested_files + disa.reconciliation.standalone_ingested_files, nativeFiles.length);
 
 const writes = new Map([['data/800-53b-baselines.json',baselines],['data/controls-800-53.json',controls],['maps/stig-srg-to-cci.json',map],['data/disa-artifact-manifest.json',disa]]);
-// The normalized summary keeps its existing artifact identity. Native profile
-// byte evidence has separate identities and must never replace this receipt.
-const summaryBytes = Buffer.from(encode(baselines));
-Object.assign(originalArtifact, { sha256: hash(summaryBytes), byte_length: summaryBytes.length,
-  record_count: baselines.records.length, relationship_count: baselines.relationships?.length || 0 });
-const summaryReceipt = hydration.results.find((entry) => entry.id === originalArtifact.id);
-assert.ok(summaryReceipt, 'Missing normalized baseline summary receipt');
-Object.assign(summaryReceipt, { sha256: originalArtifact.sha256, byte_length: originalArtifact.byte_length,
-  record_count: originalArtifact.record_count, relationship_count: originalArtifact.relationship_count });
 for (const [id, path] of [['artifact-disa-stig-library','data/stig-rules.json'],['artifact-disa-srg-library','data/srg-requirements.json'],['artifact-disa-stig-srg-cci-references','maps/stig-srg-to-cci.json']]) {
   const artifact = registry.artifacts.find((entry) => entry.id === id);
   const bytes = writes.has(path) ? Buffer.from(encode(writes.get(path))) : readFileSync(join(root,path));

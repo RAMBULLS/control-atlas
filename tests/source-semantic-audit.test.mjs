@@ -11,8 +11,8 @@ test("source semantic audit records reviewed dispositions without conflating the
     bootstrap.catalogs.map((catalog) => [catalog.id, catalog.source_review]),
   );
   assert.equal(report.schema_version, "2.0");
-  assert.equal(report.catalog_count, 28);
-  assert.equal(report.catalogs.length, 28);
+  assert.equal(report.catalog_count, 30);
+  assert.equal(report.catalogs.length, 30);
   for (const catalog of report.catalogs) {
     assert.equal(catalog.automated_evidence.status, "reconciled", catalog.catalog_id);
     assert.ok(catalog.declared_publisher_structure?.containment_paths.length, catalog.catalog_id);

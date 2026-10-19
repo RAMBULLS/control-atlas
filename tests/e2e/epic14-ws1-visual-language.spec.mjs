@@ -80,7 +80,7 @@ test("WS1 Atlas names every publication with its publisher and counts its author
   // Every publication is a landmark that states its name, publisher and territory
   // to assistive technology and never depends on hover.
   const labels = await map.locator(".lm").evaluateAll((els) => els.map((el) => el.getAttribute("aria-label") || ""));
-  expect(labels).toHaveLength(28);
+  expect(labels).toHaveLength(30);
   for (const label of labels) expect(label).toMatch(/, .+, .+, .+ territory/);
   for (const publisher of ["NIST", "DISA", "MITRE", "FedRAMP"]) {
     expect(labels.some((label) => label.includes(`, ${publisher}`)) || labels.some((label) => label.includes(publisher)), `${publisher} landmark`).toBe(true);

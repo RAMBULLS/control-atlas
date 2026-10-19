@@ -173,8 +173,13 @@ test('refresh reaches the build:data registry and inventory order in one pass', 
   const beforeBuild = ids.indexOf('migrate-source-truth-before-build');
   const synchronize = ids.indexOf('sync-inventory-contracts');
   const framework = ids.indexOf('build-framework-data');
+  const enrichment = ids.indexOf('enrich-commons-resources');
   const afterEnrichment = ids.indexOf('migrate-source-truth-profiles');
+  const projection = ids.indexOf('build-taxonomy-registry');
   const inventory = ids.indexOf('build-source-inventory');
+  const relationships = ids.indexOf('verify-reference-relationships');
+  assert.ok([beforeBuild, synchronize, framework, enrichment, afterEnrichment, projection, inventory, relationships].every((index) => index >= 0));
   assert.ok(beforeBuild < synchronize && synchronize < framework);
-  assert.ok(framework < afterEnrichment && afterEnrichment < inventory);
+  assert.ok(enrichment < afterEnrichment && afterEnrichment < projection);
+  assert.ok(projection < framework && framework < inventory && inventory < relationships);
 });

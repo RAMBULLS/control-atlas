@@ -42,6 +42,22 @@ test('failed subprocess reports the actual source diagnostic and has a finite de
   }), /HTTP 404: official publisher detail is missing/);
 });
 
+test('registered reference reconciliation fails the refresh before finalization', async (t) => {
+  const { root, get } = setup(t);
+  const reconciliation = INGESTION_TASKS.find((entry) => entry.id === 'verify-reference-relationships');
+  assert.equal(reconciliation?.script, 'verify-reference-relationships.mjs');
+  assert.equal(reconciliation.isolation, 'fail_fast');
+  const seen = [];
+  await assert.rejects(runRefreshPipeline({ ...gates, root, tasks: [reconciliation],
+    executor: (unit) => { seen.push(unit.script); throw new Error('Missing publisher assertion endpoint'); },
+    finalize: () => assert.fail('unreconciled relationships cannot finalize'),
+  }), /Missing publisher assertion endpoint/);
+  assert.deepEqual(seen, ['verify-reference-relationships.mjs']);
+  const manifest = JSON.parse(get('data/ingestion-pipeline-manifest.json'));
+  assert.equal(manifest.status, 'failed');
+  assert.equal(manifest.failed_task, 'verify-reference-relationships');
+});
+
 test('every production remote task has explicit outputs and local isolation cannot quarantine', () => {
   assert.deepEqual(validateIngestionPipelineDefinition(), []);
   const remote = INGESTION_TASKS.filter((entry) => entry.remote_fetch);

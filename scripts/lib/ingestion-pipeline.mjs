@@ -101,6 +101,7 @@ export const INGESTION_TASKS = Object.freeze([
   { id: 'build-publication-audit-report', script: 'build-publication-audit-report.mjs', stages: ['reconcile', 'publish'], scope: ['all-sources'], retries: 1 },
   { id: 'build-source-semantic-audit', script: 'build-source-semantic-audit.mjs', stages: ['reconcile', 'publish'], scope: ['all-catalogs'], retries: 1 },
   { id: 'build-discovery-index', script: 'build-discovery-index.mjs', stages: ['discover', 'publish'], scope: ['all-sources'], retries: 1 },
+  { id: 'verify-reference-relationships', script: 'verify-reference-relationships.mjs', stages: ['relationships', 'reconcile'], scope: ['all-catalogs'], retries: 1 },
   { id: 'verify-completeness', script: 'verify-completeness.mjs', stages: ['reconcile'], scope: ['all-catalogs'], retries: 1 },
   { id: 'verify-ingestion-contract', script: 'verify-ingestion-pipeline.mjs', stages: ['presentation', 'reconcile'], scope: ['all-sources', 'all-catalogs'], retries: 1 },
   { id: 'verify-resource-ingestion', script: 'verify-resource-ingestion.mjs', stages: ['discover', 'attest', 'presentation', 'reconcile'], scope: ['all-resources'], retries: 1 },

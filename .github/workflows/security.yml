@@ -93,7 +93,8 @@ jobs:
           for (const run of report.runs || []) {
             run.automationDetails = { ...(run.automationDetails || {}), id: '.github/workflows/security.yml:secrets-snapshot' };
           }
-          fs.writeFileSync(path, JSON.stringify(report));
+          fs.writeFileSync(`${path}.tmp`, JSON.stringify(report));
+          fs.renameSync(`${path}.tmp`, path);
           NODE
       - name: Scan complete history on the weekly schedule
         if: ${{ always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
@@ -110,7 +111,8 @@ jobs:
           for (const run of report.runs || []) {
             run.automationDetails = { ...(run.automationDetails || {}), id: '.github/workflows/security.yml:secrets-history' };
           }
-          fs.writeFileSync(path, JSON.stringify(report));
+          fs.writeFileSync(`${path}.tmp`, JSON.stringify(report));
+          fs.renameSync(`${path}.tmp`, path);
           NODE
       - name: Summarize historical findings without credential material
         if: ${{ always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}

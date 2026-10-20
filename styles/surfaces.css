@@ -5536,8 +5536,26 @@ a:focus-visible {
 
 .compare-step-fields {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--ca-space-4);
+  min-width: 0;
+  width: 100%;
   max-width: 42rem;
+}
+
+.compare-step-fields .field,
+.compare-step-fields select,
+.compare-step-fields input {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* WebKit can propagate long option labels into the page's scroll width even
+   when the closed native select fits its grid track. Clip only that control's
+   value; its full option labels and accessible name remain available. */
+.compare-step-fields select {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .compare-step-fields input,

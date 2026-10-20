@@ -655,10 +655,16 @@ def _scan_report(mode, report, cwd):
                 temporary = Path(stream.name)
                 stream.write(effective)
                 config_path = temporary
+        # History repeatedly diffs large publisher snapshots. Rename similarity
+        # matching adds quadratic work without helping secret detection: treating
+        # a rename as delete/add scans the entire destination instead. Retain
+        # Gitleaks' full-history/all-ref defaults explicitly when adding an option.
+        history_options = ["--log-opts=--full-history --all --no-renames"] if mode == "history" else []
         process = subprocess.run([
             str(binary), action, ".", "--redact=100", "--config=" + str(config_path),
             "--report-format=sarif", "--report-path=" + report,
-        ], capture_output=True, cwd=cwd, timeout=180)
+            *history_options,
+        ], capture_output=True, cwd=cwd, timeout=1200 if mode == "history" else 180)
         if _digest(config_path) != hashlib.sha256(effective).hexdigest():
             raise ValueError("Effective scanner policy changed")
     finally:

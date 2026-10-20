@@ -26,6 +26,13 @@ The final `checks` job mirrors `Required CI` for compatibility with the reposito
 
 Routine checkout uses depth 1 and fetches only the comparison base SHA. Full history is reserved for the scheduled deep secret scan.
 
+The deep secret scan retains all refs and full history. It disables rename
+similarity detection so renamed files are scanned as complete additions, and
+allows up to 20 minutes rather than the snapshot scan's three minutes. Timeout
+or incomplete verification removes the report and fails the scan. Main-only
+history incidents open on failure and close on a subsequent complete success;
+candidate-branch runs cannot close production incidents.
+
 ## Change-map policy
 
 - Runtime, style, data, dependency, and browser-test changes produce a site artifact and exercise the relevant browser gates.
@@ -89,6 +96,14 @@ prevents publication; routine successful refreshes require no human approval.
 
 - Pull requests use Chromium with two functional shards, axe accessibility checks, and three deliberate visual snapshots.
 - Nightly verification runs the complete functional suite in Chromium, Firefox, and WebKit.
+- A manually dispatched nightly first runs `npm run precommit` on the hosted
+  runner. Its one site build then feeds all six browser shards and accessibility.
+  Scheduled sweeps retain their existing build and quality gates.
+- Manual `nightly` dispatches may select `sweep_mode=reliability` to diagnose
+  the bounded Compare and connection-list regression set in WebKit. This mode
+  has a separate build name and concurrency group, runs no acceptance gate,
+  never satisfies the scheduled sweep's coverage check, and cannot close alerts.
+  Full mode remains the default and always runs for scheduled sweeps.
 - Every nightly browser shard and the accessibility suite write a unique blob
   report name and retain GitHub-readable failure output before reports merge.
 - Browser binaries are installed only for the engine each job needs. They are not cached until timing data justifies that complexity.

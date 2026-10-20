@@ -386,7 +386,7 @@
       "authority_class": "publisher",
       "provenance_class": "mandated",
       "mandate_basis": [
-        "Public Law 116-92 Â§ 1648"
+        "Public Law 116-92 § 1648"
       ],
       "license_or_use": "Official eCFR publication",
       "lifecycle_status": "active",
@@ -444,7 +444,7 @@
       "authority_class": "publisher",
       "provenance_class": "mandated",
       "mandate_basis": [
-        "41 U.S.C. Â§ 1303",
+        "41 U.S.C. § 1303",
         "Defense acquisition regulation"
       ],
       "license_or_use": "Official Acquisition.gov publication",
@@ -474,8 +474,8 @@
       "authority_class": "publisher",
       "provenance_class": "mandated",
       "mandate_basis": [
-        "Public Law 116-92 Â§ 1648",
-        "41 U.S.C. Â§ 1303"
+        "Public Law 116-92 § 1648",
+        "41 U.S.C. § 1303"
       ],
       "license_or_use": "Official Acquisition.gov publication",
       "lifecycle_status": "active",
@@ -678,7 +678,7 @@
       "authority_class": "publisher",
       "provenance_class": "mandated",
       "mandate_basis": [
-        "44 U.S.C. Â§ 3504"
+        "44 U.S.C. § 3504"
       ],
       "license_or_use": "Official OMB policy publication",
       "lifecycle_status": "active",
@@ -707,7 +707,7 @@
       "authority_class": "publisher",
       "provenance_class": "mandated",
       "mandate_basis": [
-        "44 U.S.C. Â§ 3614"
+        "44 U.S.C. § 3614"
       ],
       "license_or_use": "Official OMB policy publication hosted by FedRAMP",
       "lifecycle_status": "active",
@@ -756,8 +756,8 @@
     },
     {
       "id": "authority-pl-116-92-sec-1648",
-      "name": "Public Law 116-92 Â§ 1648",
-      "display_name": "Pub. L. 116-92 Â§ 1648",
+      "name": "Public Law 116-92 § 1648",
+      "display_name": "Pub. L. 116-92 § 1648",
       "display_group": "Public Laws",
       "owner": "United States Congress",
       "authority_class": "publisher",
@@ -785,8 +785,8 @@
     },
     {
       "id": "authority-usc-40-11331",
-      "name": "40 U.S.C. Â§ 11331",
-      "display_name": "40 U.S.C. Â§ 11331",
+      "name": "40 U.S.C. § 11331",
+      "display_name": "40 U.S.C. § 11331",
       "display_group": "United States Code",
       "owner": "Office of the Law Revision Counsel",
       "authority_class": "publisher",
@@ -814,8 +814,8 @@
     },
     {
       "id": "authority-usc-41-1303",
-      "name": "41 U.S.C. Â§ 1303",
-      "display_name": "41 U.S.C. Â§ 1303",
+      "name": "41 U.S.C. § 1303",
+      "display_name": "41 U.S.C. § 1303",
       "display_group": "United States Code",
       "owner": "Office of the Law Revision Counsel",
       "authority_class": "publisher",
@@ -843,8 +843,8 @@
     },
     {
       "id": "authority-usc-44-3504",
-      "name": "44 U.S.C. Â§ 3504",
-      "display_name": "44 U.S.C. Â§ 3504",
+      "name": "44 U.S.C. § 3504",
+      "display_name": "44 U.S.C. § 3504",
       "display_group": "United States Code",
       "owner": "Office of the Law Revision Counsel",
       "authority_class": "publisher",
@@ -872,8 +872,8 @@
     },
     {
       "id": "authority-usc-44-3554",
-      "name": "44 U.S.C. Â§ 3554",
-      "display_name": "44 U.S.C. Â§ 3554",
+      "name": "44 U.S.C. § 3554",
+      "display_name": "44 U.S.C. § 3554",
       "display_group": "United States Code",
       "owner": "Office of the Law Revision Counsel",
       "authority_class": "publisher",
@@ -901,8 +901,8 @@
     },
     {
       "id": "authority-usc-44-3608",
-      "name": "44 U.S.C. Â§ 3608",
-      "display_name": "44 U.S.C. Â§ 3608",
+      "name": "44 U.S.C. § 3608",
+      "display_name": "44 U.S.C. § 3608",
       "display_group": "United States Code",
       "owner": "Office of the Law Revision Counsel",
       "authority_class": "publisher",
@@ -930,8 +930,8 @@
     },
     {
       "id": "authority-usc-44-3614",
-      "name": "44 U.S.C. Â§ 3614",
-      "display_name": "44 U.S.C. Â§ 3614",
+      "name": "44 U.S.C. § 3614",
+      "display_name": "44 U.S.C. § 3614",
       "display_group": "United States Code",
       "owner": "Office of the Law Revision Counsel",
       "authority_class": "publisher",
@@ -1641,7 +1641,7 @@
     },
     {
       "id": "dod-zt-newsletter-2024-11",
-      "name": "DoD Zero Trust PfMO Newsletter â€” November 2024",
+      "name": "DoD Zero Trust PfMO Newsletter — November 2024",
       "display_name": "DoD Zero Trust Newsletter",
       "display_group": "DoD CIO",
       "owner": "Department of Defense Chief Information Officer",
@@ -1980,7 +1980,7 @@
       "authority_class": "government_mapping",
       "provenance_class": "federal_program",
       "mandate_basis": [
-        "44 U.S.C. Â§Â§ 3608 and 3614",
+        "44 U.S.C. §§ 3608 and 3614",
         "OMB M-24-15 (legacy Rev. 5 transition)"
       ],
       "license_or_use": "GSA FedRAMP Open Source License / Public Domain",
@@ -3929,8 +3929,8 @@
     {
       "id": "artifact-dod-zt-newsletter-2024-11",
       "publication_source_id": "dod-zt-newsletter-2024-11",
-      "name": "DoD Zero Trust PfMO Newsletter â€” November 2024",
-      "display_name": "DoD Zero Trust PfMO Newsletter â€” November 2024",
+      "name": "DoD Zero Trust PfMO Newsletter — November 2024",
+      "display_name": "DoD Zero Trust PfMO Newsletter — November 2024",
       "source_role": "enrichment",
       "authority_class": "publisher",
       "format": "pdf",
@@ -7926,7 +7926,7 @@
       "owner": "FedRAMP",
       "provenance_class": "federal_program",
       "mandate_basis": [
-        "44 U.S.C. Â§Â§ 3608 and 3614",
+        "44 U.S.C. §§ 3608 and 3614",
         "OMB M-24-15 (legacy Rev. 5 transition)"
       ],
       "version": "Legacy Rev5 security controls baseline workbook",

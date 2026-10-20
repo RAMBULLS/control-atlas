@@ -6,6 +6,19 @@ import { assertPublisherVolume } from './helpers/publisher-volume.mjs';
 
 const registry = JSON.parse(readFileSync('data/source-registry.json', 'utf8'));
 
+test('statutory publication names retain the section sign without an encoding artifact', () => {
+  assert.doesNotMatch(JSON.stringify(registry), /\u00c2\u00a7|\u00e2\u20ac/,
+    'source names and their public references must not carry corrupted section signs or dashes');
+  const statutes = registry.publications.filter((entry) => /^authority-(?:usc-|pl-)/.test(entry.id));
+  assert.ok(statutes.length > 0);
+  for (const entry of statutes) {
+    for (const field of ['name', 'display_name']) {
+      assert.ok(entry[field].includes('\u00a7'), `${entry.id} ${field} must identify its section`);
+      assert.ok(!entry[field].includes('\u00c2'), `${entry.id} ${field} contains a corrupted section sign`);
+    }
+  }
+});
+
 test('source registry schema 5.0 validates the federal source contract', () => {
   const errors = validateSourceRegistry(registry);
   assert.deepEqual(errors, []);

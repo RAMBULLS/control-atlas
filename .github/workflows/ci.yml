@@ -18,6 +18,12 @@ on:
         default: standard
         type: choice
         options: [standard, nightly, refresh, recover-refresh-pr, oscal, lighthouse-ab]
+      sweep_mode:
+        description: Full acceptance or a focused WebKit reliability diagnostic
+        required: false
+        default: full
+        type: choice
+        options: [full, reliability]
       refresh_run_id:
         description: Completed refresh run whose data and repository gates passed
         required: false
@@ -39,7 +45,7 @@ permissions:
 concurrency:
   group: >-
     ci-${{ github.event_name == 'pull_request' && github.event.pull_request.number ||
-      github.event.schedule || inputs.task || github.ref }}
+      github.event.schedule || inputs.task || github.ref }}-${{ inputs.sweep_mode || 'full' }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
@@ -813,7 +819,7 @@ jobs:
         run: node tools/sweep-due.mjs
 
   nightly-build:
-    name: Nightly build and contracts
+    name: ${{ inputs.sweep_mode == 'reliability' && 'Focused browser diagnostic build' || 'Nightly build and contracts' }}
     needs: sweep-gate
     if: >-
       ${{ !cancelled() &&
@@ -830,10 +836,22 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run generate:data
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.sweep_mode == 'reliability' }}
       - run: npm run build:site:incremental
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.sweep_mode == 'reliability' }}
         env:
           CONTROL_ATLAS_COMMIT_SHA: ${{ github.sha }}
       - run: npm run verify:quality
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+      - name: Install the browser for the manual final integration gate
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.sweep_mode != 'reliability' }}
+        run: npx playwright install --with-deps chromium
+      - name: Run the full final integration gate before the manual sweep
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.sweep_mode != 'reliability' }}
+        env:
+          CONTROL_ATLAS_COMMIT_SHA: ${{ github.sha }}
+          PLAYWRIGHT_WORKERS: '2'
+        run: npm run precommit
       - run: npm run verify:site-artifact -- --sha "$GITHUB_SHA"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
@@ -852,7 +870,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: [chromium, firefox, webkit]
+        browser: ${{ inputs.sweep_mode == 'reliability' && fromJSON('["webkit"]') || fromJSON('["chromium","firefox","webkit"]') }}
         shard: [1, 2]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -874,9 +892,17 @@ jobs:
           PLAYWRIGHT_BLOB_OUTPUT_NAME: report-${{ matrix.browser }}-${{ matrix.shard }}.zip
           PLAYWRIGHT_FULLY_PARALLEL: '1'
           PLAYWRIGHT_WORKERS: '2'
+          SWEEP_MODE: ${{ inputs.sweep_mode }}
         # One retry. WebKit on a shared runner fails a different interaction spec each run (each passes when
         # rerun), so a spec must fail twice to fail the sweep. Flaky specs are still listed in the report.
-        run: npm run test:e2e:run -- --shard=${{ matrix.shard }}/2 --retries=1 --reporter=blob,github
+        shell: bash
+        run: |
+          focused=()
+          if [[ "$SWEEP_MODE" == 'reliability' ]]; then
+            focused=(tests/e2e/compare-results-layout.spec.mjs tests/e2e/epic12-qa-backlog-verify.spec.mjs tests/e2e/release-readiness-visual.spec.mjs
+              --grep 'published baseline selections|content revisions compare|route semantic polish|full connection list')
+          fi
+          npm run test:e2e:run -- "${focused[@]}" --shard=${{ matrix.shard }}/2 --retries=1 --reporter=blob,github
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         if: ${{ !cancelled() }}
         with:
@@ -890,7 +916,7 @@ jobs:
     needs: nightly-build
     # Explicit: a skipped sweep-gate upstream of nightly-build would otherwise skip this job
     # silently, and a browser suite that did not run must never look like a pass.
-    if: ${{ !cancelled() && needs.nightly-build.result == 'success' }}
+    if: ${{ !cancelled() && inputs.sweep_mode != 'reliability' && needs.nightly-build.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -926,7 +952,7 @@ jobs:
     # indistinguishable from a newly broken one. A job the sweep schedules that
     # was skipped counts as red, so a sweep that did not run cannot look green.
     if: >-
-      ${{ !cancelled() &&
+      ${{ !cancelled() && inputs.sweep_mode != 'reliability' && github.ref == 'refs/heads/main' &&
           ((github.event.schedule == '37 6 * * 0' && needs.sweep-gate.outputs.nightly_due == 'true') ||
            github.event.schedule == '17 7 * * 3' ||
            (github.event_name == 'workflow_dispatch'

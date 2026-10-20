@@ -42,7 +42,9 @@ test("source register, inspector, catalog, and record use one official publicati
   const sourceDetails = page.locator("[data-record-source-details]");
   await expect(sourceDetails).not.toHaveAttribute("open", "");
   await sourceDetails.locator("summary").click();
-  await expect(sourceDetails.locator("dl")).toContainText("PublicationDISA Public STIG Library · V3R7");
+  // Publisher refreshes advance the benchmark version; identity and a complete
+  // version stay required without freezing an otherwise valid source update.
+  await expect(sourceDetails.locator("dl")).toContainText(/PublicationDISA Public STIG Library · V\d+R\d+/);
   await expect(sourceDetails.getByRole("link", { name: "Open source record" })).toBeVisible();
 });
 
@@ -98,7 +100,7 @@ test("V-256609 preserves publisher procedures, commands, paths, and mobile readi
   await expect(fix.locator(".source-procedure-list")).toHaveCount(2);
   await expect(fix.locator("[data-source-code-snippet]")).toHaveCount(2);
   await expect(fix).toContainText("/etc/vmware-syslog/vmware-services-vmware-vpostgres.conf");
-  expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+  expect(await page.evaluate(() => globalThis.document.documentElement.scrollWidth - globalThis.document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
 });
 
 test("representative publisher-native records expose official identity and source facts", async ({ page }) => {
@@ -123,7 +125,7 @@ test("representative publisher-native records expose official identity and sourc
     await expect(about.locator(".record-source-facts"), route).toContainText("Publication");
     await expect(about.getByRole("link", { name: "View source details" }), route).toBeVisible();
     expect(
-      await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth),
+      await page.evaluate(() => globalThis.document.documentElement.scrollWidth - globalThis.document.documentElement.clientWidth),
       route,
     ).toBeLessThanOrEqual(1);
   }

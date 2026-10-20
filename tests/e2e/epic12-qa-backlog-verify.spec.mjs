@@ -141,13 +141,13 @@ test('B14: every Library select exposes a non-empty accessible name', async ({ p
   expect(unnamed).toBe(0);
 });
 
-test('B16: Compare exposes all four supported modes', async ({ page }) => {
+test('B16: Compare exposes all five supported modes', async ({ page }) => {
   await page.goto('/#/compare');
   const modes = page.getByRole('tablist', { name: 'Comparison mode' });
   await expect(modes).toBeVisible({ timeout: 15000 });
   const choices = modes.getByRole('tab');
-  await expect(choices).toHaveCount(4);
-  await expect(choices).toHaveText(['Frameworks', 'Implementation', 'Specific item', 'Baselines']);
+  await expect(choices).toHaveCount(5);
+  await expect(choices).toHaveText(['Frameworks', 'Implementation', 'Specific item', 'Baselines', 'Content & revisions']);
   await expect(choices.first()).toHaveAttribute('aria-selected', 'true');
 });
 
@@ -165,8 +165,8 @@ test('route semantic polish holds at all required viewport widths', async ({ pag
 
     await page.goto('/#/compare');
     const choices = page.getByRole('tablist', { name: 'Comparison mode' }).getByRole('tab');
-    await expect(choices).toHaveCount(4);
-    await expect(choices).toHaveText(['Frameworks', 'Implementation', 'Specific item', 'Baselines']);
+    await expect(choices).toHaveCount(5);
+    await expect(choices).toHaveText(['Frameworks', 'Implementation', 'Specific item', 'Baselines', 'Content & revisions']);
     for (const choice of await choices.all()) {
       expect(roundCssPixels(await choice.evaluate((element) => element.getBoundingClientRect().height))).toBeGreaterThanOrEqual(44);
     }
@@ -174,7 +174,12 @@ test('route semantic polish holds at all required viewport widths', async ({ pag
 
     await page.goto('/#/about');
     await expect(page.locator('main article.learn-article')).toHaveCount(1);
-    await expect(page.locator('main article.learn-article h2')).toHaveCount(5);
+    await expect(page.locator('main article.learn-article h2')).toHaveText([
+      'Trace federal cybersecurity requirements to their sources',
+      'From publication to next action',
+      'Check the source before you act',
+      'Built in the open',
+    ]);
     await expect(page.locator('footer')).toContainText('Product release');
     await expect(page.locator('footer')).toContainText('Source data built');
     expect(await page.evaluate(() => globalThis.document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);

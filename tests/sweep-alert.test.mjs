@@ -124,3 +124,20 @@ test('source, aggregate refresh and nightly alerts are separate states and must 
   // Aggregate refresh is red whenever the refresh job fails, even if every source was individually accepted.
   assert.equal(assessSweep('refresh', { ...green, refresh: 'failure' }).red, true);
 });
+
+test('complete history has its own idempotent failure and recovery incident', () => {
+  const opened = fakeGh({ issues: [] });
+  runSweepAlert(env({ SWEEP_KIND: 'history', RESULT_HISTORY: 'failure' }), opened);
+  const posted = opened.calls.find((call) => call.args.includes('POST') && call.args.includes('repos/RAMBULLS/control-atlas/issues'));
+  const payload = JSON.parse(posted.input);
+  assert.deepEqual(payload.labels, ['sweep-red-history']);
+  const existing = issue({ ...payload });
+  const quiet = fakeGh({ issues: [existing] });
+  assert.equal(runSweepAlert(env({ SWEEP_KIND: 'history', RESULT_HISTORY: 'failure' }), quiet).plans.length, 0);
+  const recovery = fakeGh({ issues: [existing] });
+  runSweepAlert(env({ SWEEP_KIND: 'history', RESULT_HISTORY: 'success' }), recovery);
+  assert.ok(recovery.calls.some((call) => call.args.includes('PATCH') && JSON.parse(call.input).state === 'closed'));
+  for (const result of ['skipped', 'cancelled', undefined]) {
+    assert.equal(assessSweep('history', { history: result }).red, true);
+  }
+});

@@ -297,6 +297,7 @@ export default defineConfig(({ command }) => ({
             html: inlineArrivalDelivery(inlineOrbitalFontStyles(_html, orbitalFonts.css), context.bundle, rootDir,
               { version: RUNTIME_CACHE_VERSION, shardCount: ATLAS_NEIGHBORHOOD_SHARD_COUNT },
               readFileSync(resolve(rootDir, 'src/public/progressive-shell.js'), 'utf8')),
+            tags: [],
           };
         },
       },

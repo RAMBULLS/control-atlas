@@ -208,6 +208,42 @@ test('inline delivery admits only its exact bytes and starts the renderer first 
   }
 });
 
+test('actual Vite HTML hook returns iterable tags and the bound pinned font and CSP source', () => {
+  const config = ts.createSourceFile('vite.config.ts', readFileSync(new URL('../vite.config.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
+  let handler;
+  const visit = node => {
+    if (ts.isObjectLiteralExpression(node) && node.properties.some(property => ts.isPropertyAssignment(property) && property.name.getText(config) === 'name' && property.initializer.getText(config) === "'record-delivery-boundaries'")) {
+      const transform = node.properties.find(property => property.name.getText(config) === 'transformIndexHtml');
+      handler = transform.initializer.properties.find(property => property.name.getText(config) === 'handler');
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(config);
+  assert.ok(handler);
+  const current = bundle();
+  current['renderer.js'] = chunk('renderer.js', ['node_modules/react/index.js']);
+  current['data-warmup.js'] = { ...current['loader.js'], fileName: 'data-warmup.js', name: 'data-warmup' };
+  delete current['loader.js'];
+  current['interactive-shell.js'] = chunk('interactive-shell.js', ['src/ui/App.tsx']);
+  current['resources-detail.js'] = chunk('resources-detail.js', ['src/ui/pages/CommonsDetailPage.tsx']);
+  const environment = { result: null, inlineArrivalDelivery, inlineOrbitalFontStyles, rootDir: root,
+    RUNTIME_CACHE_VERSION: 'fixture', ATLAS_NEIGHBORHOOD_SHARD_COUNT,
+    orbitalFonts: externalizeOrbitalFonts(css), context: { bundle: current },
+    html: '<meta http-equiv="Content-Security-Policy" content="script-src \'self\';"><title>Control Atlas</title>',
+    resolve: (...parts) => parts.join('/'),
+    readFileSync: path => { assert.equal(path, `${root}/src/public/progressive-shell.js`); return progressiveShell; } };
+  const execute = () => runInNewContext(`result = (function(_html, context) ${handler.body.getText(config)})(html, context);`, environment);
+  execute();
+  assert.ok(Array.isArray(environment.result.tags));
+  assert.deepEqual([...environment.result.tags], [], 'Vite iterates tags even when only HTML was changed');
+  assert.match(environment.result.html, /<style data-orbital-fonts>/);
+  assert.match(environment.result.html, /<script data-arrival-delivery>/);
+  assert.match(environment.result.html, /document\.fonts\.load/);
+  environment.context = {};
+  execute();
+  assert.deepEqual([...environment.result], [], 'development retains its ordinary stylesheet');
+});
+
 test('early route requests reuse exact cached responses and preserve Home and mirror paths', async () => {
   const config = { modules: ['assets/data-warmup.js', 'assets/interactive-shell.js'], routeModules: { record: ['assets/record.js', 'assets/interactive-shell.js'], 'resource-detail': ['assets/resource-detail.js'] }, version: 'fixture', shardCount: ATLAS_NEIGHBORHOOD_SHARD_COUNT };
   const links = [], requests = [];

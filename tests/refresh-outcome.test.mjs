@@ -5,10 +5,43 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import { HEARTBEAT_DAYS, classifyRefresh, isMaterialChange, oldestCheckedDay } from '../tools/classify-refresh-outcome.mjs';
+import { refreshSourceRows } from '../scripts/lib/refresh-report.mjs';
 
 const json = (value) => Buffer.from(JSON.stringify(value));
 const registry = (lastChecked) => ({ freshness: { sources: [{ source_id: 'a', sync_model: 'auto_synced', last_checked: lastChecked }, { source_id: 'curated', sync_model: 'curated', last_checked: '2020-01-01' }] } });
 const now = new Date('2026-09-23T00:00:00Z');
+
+test('refresh reports resolve canonical-only publications and prefer their reviewed identity', () => {
+  const previous = { publications: [{ id: 'canonical', version: 'Revision 5, Release 5.1.0' }],
+    freshness: { sources: [{ source_id: 'canonical', hash: 'old' }] } };
+  const current = { sources: [{ id: 'canonical', version: 'parser-version' }],
+    publications: [{ id: 'canonical', version: 'Revision 5, Release 5.2.0' }],
+    freshness: { sources: [{ source_id: 'canonical', hash: 'new', last_checked: '2026-10-20' }] } };
+  assert.deepEqual(refreshSourceRows(current, previous), [
+    '| `canonical` | Revision 5, Release 5.1.0 → Revision 5, Release 5.2.0 | yes | 2026-10-20 |',
+  ]);
+  delete current.sources;
+  assert.equal(refreshSourceRows(current, previous).length, 1);
+  assert.deepEqual(refreshSourceRows(current, current), []);
+});
+
+test('initializing unknown check metadata is not a verified content change', () => {
+  const previous = { publications: [{ id: 'publication', version: null }] };
+  const current = { ...previous, freshness: { sources: [{ source_id: 'publication',
+    hash: null, last_checked: null, last_imported: null }] } };
+  assert.deepEqual(refreshSourceRows(current, previous), []);
+  const added = { publications: [{ id: 'new', version: null }],
+    freshness: { sources: [{ source_id: 'new', hash: null, last_checked: null }] } };
+  assert.deepEqual(refreshSourceRows(added, {}), ['| `new` | — → — | yes | not verified |']);
+});
+
+test('refresh reports retain legacy sources and reject unregistered freshness identities', () => {
+  const current = { sources: [{ id: 'legacy', version: '1' }],
+    freshness: { sources: [{ source_id: 'legacy', last_checked: '2026-10-20' }] } };
+  assert.deepEqual(refreshSourceRows(current, {}), ['| `legacy` | — → 1 | yes | 2026-10-20 |']);
+  assert.throws(() => refreshSourceRows({ freshness: { sources: [{ source_id: 'missing' }] } }, {}),
+    /no registered identity: missing/);
+});
 
 test('dates and run timings are bookkeeping, records and versions are not', () => {
   const before = json({ generated_at: '2026-09-16', snapshot_date: '2026-09-16', records: [{ id: 'A', retrieved_at: '2026-09-16', title: 'Same' }] });

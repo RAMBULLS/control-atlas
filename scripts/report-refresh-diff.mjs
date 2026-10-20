@@ -2,6 +2,7 @@
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import '../tools/verify-refresh-admission.mjs';
+import { refreshSourceRows } from './lib/refresh-report.mjs';
 
 const outputPath = process.argv[2] || 'refresh-pr-body.md';
 const current = JSON.parse(readFileSync('data/source-registry.json', 'utf8'));
@@ -9,27 +10,7 @@ const previous = JSON.parse(
   execFileSync('git', ['show', 'HEAD:data/source-registry.json'], { encoding: 'utf8' }),
 );
 
-const sources = new Map(current.sources.map((source) => [source.id, source]));
-const oldSources = new Map(previous.sources.map((source) => [source.id, source]));
-const oldFreshness = new Map(
-  (previous.freshness?.sources || []).map((entry) => [entry.source_id, entry]),
-);
-
-const rows = current.freshness.sources
-  .map((entry) => {
-    const before = oldFreshness.get(entry.source_id) || {};
-    const source = sources.get(entry.source_id);
-    const oldSource = oldSources.get(entry.source_id) || {};
-    if (
-      before.last_checked === entry.last_checked &&
-      before.last_imported === entry.last_imported &&
-      before.hash === entry.hash &&
-      oldSource.version === source.version
-    ) return null;
-    const contentChanged = before.hash !== entry.hash || oldSource.version !== source.version;
-    return `| \`${entry.source_id}\` | ${oldSource.version || '—'} → ${source.version || '—'} | ${contentChanged ? 'yes' : 'no'} | ${entry.last_checked} |`;
-  })
-  .filter(Boolean);
+const rows = refreshSourceRows(current, previous);
 
 const readHead = (path) => {
   try { return JSON.parse(execFileSync('git', ['show', `HEAD:${path}`], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 64 * 1024 * 1024 })); } catch { return null; }

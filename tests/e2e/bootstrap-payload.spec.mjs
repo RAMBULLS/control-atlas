@@ -20,6 +20,42 @@ test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
 });
 
+test("semantic button recipes retain sizing, keyboard focus, disabled state and caller overrides", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate(() => {
+    const host = document.createElement("section");
+    host.id = "button-contract";
+    host.style.cssText = "position:fixed;inset:100px auto auto 10px;z-index:99999;display:grid;gap:8px";
+    for (const variant of ["primary", "secondary", "secondary-quiet", "destructive", "editorial"]) {
+      const button = document.createElement("button");
+      button.className = `ca-button ca-button-${variant}`;
+      button.textContent = variant;
+      host.append(button);
+    }
+    document.body.append(host);
+  });
+  const buttons = page.locator("#button-contract button");
+  for (const button of await buttons.all()) {
+    const values = await button.evaluate(element => {
+      const style = globalThis.getComputedStyle(element);
+      return { display: style.display, minHeight: style.minHeight, padding: style.paddingInlineStart,
+        border: style.borderTopWidth, radius: style.borderTopLeftRadius, weight: style.fontWeight, transform: style.textTransform };
+    });
+    expect(values).toEqual({ display: "inline-flex", minHeight: "44px", padding: "16px", border: "1px", radius: "3px", weight: "700", transform: "uppercase" });
+  }
+  await page.keyboard.press("Tab");
+  await buttons.first().focus();
+  await expect(buttons.first()).toHaveCSS("outline-width", "2px");
+  await expect(buttons.first()).toHaveCSS("outline-offset", "2px");
+  await buttons.first().evaluate(element => { element.disabled = true; });
+  await expect(buttons.first()).toHaveCSS("opacity", "0.5");
+  await expect(buttons.first()).toHaveCSS("cursor", "not-allowed");
+  await page.addStyleTag({ content: "@layer utilities { .button-contract-override { padding-inline: 0 !important; font-weight: 400 !important; } }" });
+  await buttons.nth(1).evaluate(element => element.classList.add("button-contract-override"));
+  await expect(buttons.nth(1)).toHaveCSS("padding-inline-start", "0px");
+  await expect(buttons.nth(1)).toHaveCSS("font-weight", "400");
+});
+
 async function useLegacyRecordBootstrap(page) {
   // Omit only the new register field to exercise the admitted older staging
   // format. Publisher/source contents and the source-record index stay exact.

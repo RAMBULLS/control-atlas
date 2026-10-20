@@ -108,7 +108,8 @@ test("a missing publication identity fails closed without guessed attribution", 
   });
 
   await gotoApp(page, "/#/record/csf-2/CATEGORY-DE.AE");
-  await waitForAppReady(page);
+  // This fixture deliberately rejects the atomic register before data readiness.
+  // Wait for the explicit fail-closed surface below, never a successful load.
   await dismissOnboarding(page);
 
   const identityUnavailable = page.getByText("Source identity unavailable", { exact: true });

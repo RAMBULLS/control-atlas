@@ -241,6 +241,41 @@ test('static directory enhancement yields frame opportunities and has a backgrou
   assert.equal(timers.size, 0);
 });
 
+test('static enhancement observes real content paint, buffered paint and deadline cleanup', async () => {
+  for (const mode of ['pending', 'buffered', 'deadline']) {
+    const frames = new Map(), timers = new Map();
+    let nextId = 0, notify, disconnected = 0;
+    class PaintObserver {
+      static supportedEntryTypes = ['paint'];
+      constructor(callback) { notify = callback; }
+      observe(options) { assert.deepEqual(options, { type: 'paint', buffered: true }); }
+      disconnect() { disconnected += 1; }
+    }
+    const environment = { PerformanceObserver: PaintObserver,
+      performance: { getEntriesByName: name => { assert.equal(name, 'first-contentful-paint'); return mode === 'buffered' ? [{}] : []; } },
+      requestAnimationFrame: callback => { const id = ++nextId; frames.set(id, callback); return id; },
+      cancelAnimationFrame: id => frames.delete(id),
+      setTimeout: callback => { const id = ++nextId; timers.set(id, callback); return id; }, clearTimeout: id => timers.delete(id) };
+    const paint = waitForStaticRoutePaint(environment);
+    if (mode === 'deadline') {
+      [...timers.values()][0](); await paint;
+      notify({ getEntries: () => [{ name: 'first-contentful-paint' }] });
+      assert.equal(frames.size, 0, 'late paint cannot revive an expired observer');
+    } else {
+      if (mode === 'pending') {
+        assert.equal(frames.size, 0);
+        notify({ getEntries: () => [{ name: 'first-paint' }] }); assert.equal(frames.size, 0);
+        notify({ getEntries: () => [{ name: 'first-contentful-paint' }] });
+      }
+      for (let index = 0; index < 2; index += 1) { const callbacks = [...frames.values()]; frames.clear(); callbacks.forEach(callback => callback()); }
+      await paint;
+    }
+    assert.equal(timers.size, 0);
+    assert.equal(frames.size, 0);
+    assert.ok(mode === 'buffered' ? disconnected === 0 : disconnected > 0);
+  }
+});
+
 test('early responses retain the consuming loader deadline after their headers resolve', async () => {
   let aborts = 0;
   let failBody;

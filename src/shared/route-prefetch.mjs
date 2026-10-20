@@ -49,19 +49,34 @@ export function startRoutePrefetch(config, environment = /** @type {typeof globa
 export function waitForStaticRoutePaint(environment = globalThis) {
   return new Promise(resolve => {
     let frame = 0;
+    let observer;
     let settled = false;
     const finish = () => {
       if (settled) return;
       settled = true;
       environment.cancelAnimationFrame(frame);
       environment.clearTimeout(timer);
+      observer?.disconnect();
       resolve(undefined);
     };
     // Background tabs can suspend rAF. Keep directory startup bounded there.
     const timer = environment.setTimeout(finish, 1_000);
-    frame = environment.requestAnimationFrame(() => {
-      frame = environment.requestAnimationFrame(finish);
-    });
+    const frames = () => {
+      if (settled || frame) return;
+      observer?.disconnect();
+      frame = environment.requestAnimationFrame(() => {
+        frame = environment.requestAnimationFrame(finish);
+      });
+    };
+    // rAF callbacks alone can run before the first useful text is painted.
+    // Prefer the actual paint notification, retaining the bounded portable path.
+    if (environment.PerformanceObserver?.supportedEntryTypes?.includes('paint') &&
+        !environment.performance.getEntriesByName('first-contentful-paint').length) {
+      observer = new environment.PerformanceObserver(list => {
+        if (list.getEntries().some(entry => entry.name === 'first-contentful-paint')) frames();
+      });
+      observer.observe({ type: 'paint', buffered: true });
+    } else frames();
   });
 }
 

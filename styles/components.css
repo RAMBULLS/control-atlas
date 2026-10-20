@@ -1,7 +1,65 @@
 .ca-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  min-height: 44px !important;
+  padding-inline: 16px !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-radius: 3px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  cursor: pointer !important;
+  transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to !important;
+  transition-timing-function: var(--default-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1)) !important;
+  transition-duration: var(--default-transition-duration, 0.15s) !important;
   line-height: 1.2;
   text-align: center;
 }
+
+/* Important caller utilities in Tailwind's utilities layer retain precedence
+   over this unlayered recipe, matching the previous merged utility contract. */
+.ca-button:focus-visible {
+  outline-style: solid !important;
+  outline-width: 2px !important;
+  outline-color: var(--ca-primary) !important;
+  outline-offset: 2px !important;
+}
+
+.ca-button:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+.ca-button-secondary,
+.ca-button-secondary-quiet {
+  background-color: transparent !important;
+  color: var(--ca-text) !important;
+  border-color: var(--ca-border-strong) !important;
+}
+.ca-button-secondary:hover { background-color: color-mix(in srgb, var(--ca-primary) 13%, transparent) !important; }
+.ca-button-secondary-quiet {
+  color: var(--ca-text-muted) !important;
+  border-color: color-mix(in srgb, var(--ca-border-strong) 60%, transparent) !important;
+}
+.ca-button-secondary-quiet:hover {
+  background-color: color-mix(in srgb, var(--ca-primary) 10%, transparent) !important;
+  color: var(--ca-text) !important;
+}
+.ca-button-destructive {
+  background-color: color-mix(in srgb, var(--ca-danger) 14%, transparent) !important;
+  color: var(--ca-danger) !important;
+  border-color: color-mix(in srgb, var(--ca-danger) 54%, transparent) !important;
+}
+.ca-button-destructive:hover { background-color: color-mix(in srgb, var(--ca-danger) 22%, transparent) !important; }
+.ca-button-editorial {
+  background-color: var(--ca-editorial) !important;
+  color: var(--ca-surface-deep) !important;
+  border-color: var(--ca-editorial) !important;
+}
+.ca-button-editorial:hover { background-color: color-mix(in srgb, var(--ca-editorial) 84%, white) !important; }
 
 .ca-button > svg {
   flex: 0 0 auto;

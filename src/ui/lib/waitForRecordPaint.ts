@@ -14,6 +14,10 @@ export function recordCommitToken(runtime: object): string {
 export function waitForRecordPaint(nodeId: string, runtime: object, signal: AbortSignal, timeoutMs = 12_000): Promise<void> {
   if (signal.aborted) return Promise.resolve();
   const token = recordCommitToken(runtime);
+  const mark = (name: string) => {
+    performance.clearMarks(name);
+    performance.mark(name, { detail: { nodeId, commitToken: token } });
+  };
   return new Promise((resolve, reject) => {
     let frame = 0;
     let settled = false;
@@ -41,6 +45,7 @@ export function waitForRecordPaint(nodeId: string, runtime: object, signal: Abor
       const content = workspace?.querySelector<HTMLElement>("[data-record-content]");
       if (!matches(content)) return;
       if (frame) return;
+      mark("atlas:record-surface-visible");
       // The first frame prepares the committed record; the next lets supporting
       // work begin after its paint opportunity rather than after setState.
       frame = requestAnimationFrame(() => {
@@ -49,7 +54,10 @@ export function waitForRecordPaint(nodeId: string, runtime: object, signal: Abor
           const currentWorkspace = document.getElementById("workspace");
           const current = currentWorkspace?.querySelector<HTMLElement>("[data-record-content]");
           if (currentWorkspace?.querySelector("[data-route-render-error]")) check();
-          else if (matches(current)) finish();
+          else if (matches(current)) {
+            mark("atlas:record-paint-opportunity");
+            finish();
+          }
         });
       });
     };

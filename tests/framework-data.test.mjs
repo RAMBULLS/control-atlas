@@ -48,20 +48,6 @@ test("record source files are complete exact projections and share the admitted 
   const { sources } = generated("sources");
   assert.equal(bootstrap.atlas_neighborhood.shard_count, manifest.shard_count);
   assert.equal(bootstrap.atlas_neighborhood.hash_algorithm, manifest.hash_algorithm);
-  assert.equal(bootstrap.atlas_neighborhood.initial_records, true);
-  for (const entry of manifest.shards) {
-    const complete = JSON.parse(readFileSync(join(generatedDirectory, entry.path), "utf8")).atlas_neighborhood_shard;
-    const initial = JSON.parse(readFileSync(join(generatedDirectory, "record-content", `${entry.shard_id}.json`), "utf8")).atlas_neighborhood_shard;
-    assert.equal(initial.record_count, complete.record_count);
-    assert.deepEqual(Object.keys(initial.records), Object.keys(complete.records));
-    for (const [id, record] of Object.entries(initial.records)) {
-      assert.deepEqual(record.center_node, complete.records[id].center_node);
-      assert.deepEqual(record.structural_paths, complete.records[id].structural_paths);
-      assert.deepEqual(record.edges, complete.records[id].edges);
-      const primary = new Set([id, ...record.edges.filter(edge => ["structural", "applicability"].includes(edge[4]) || edge[3] === "describes").flatMap(edge => [edge[1], edge[2]])]);
-      assert.deepEqual(record.nodes, complete.records[id].nodes.map(node => primary.has(node[0]) ? node : [...node.slice(0, 8), "", ...node.slice(9)]));
-    }
-  }
   assert.deepEqual(Object.keys(bootstrap.source_records).sort(), sources.map(source => source.id).sort());
   for (const source of sources) {
     const path = bootstrap.source_records[source.id];

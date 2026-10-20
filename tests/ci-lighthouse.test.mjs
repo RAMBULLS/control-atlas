@@ -279,6 +279,11 @@ test('record pairing rejects pooled final URLs, different navigation and fetch t
   assert.doesNotThrow(() => assertCapturePair(report, capture, { identity }, identity));
   assert.throws(() => assertCapturePair({ ...report, requestedUrl: config.ci.collect.url[1] }, capture, { identity }, identity), /URL\/fetchTime/);
   assert.throws(() => assertCapturePair(report, { ...capture, fetchTime: 'other' }, { identity }, identity), /URL\/fetchTime/);
+  const resourceReport = { ...report, requestedUrl: config.ci.collect.url[1], finalDisplayedUrl: config.ci.collect.url[1] };
+  const resourceCapture = { ...capture, URL: { ...capture.URL, requestedUrl: resourceReport.requestedUrl, finalDisplayedUrl: resourceReport.finalDisplayedUrl } };
+  assert.doesNotThrow(() => assertCapturePair(resourceReport, resourceCapture, { identity }, identity, '#/resources'));
+  assert.throws(() => assertCapturePair(resourceReport, capture, { identity }, identity, '#/resources'), /URL\/fetchTime/);
+  assert.throws(() => assertCapturePair(resourceReport, resourceCapture, { identity }, identity, ''), /Unsupported requested route/);
   assert.throws(() => assertCapturePair(report, capture, { identity }, { ...identity, navigationId: 'different' }), /navigation identity/);
   assert.equal(reproduction(4323.0362, 4323.5).accepted, true);
   assert.equal(reproduction(4323.0362, 4168.8635).accepted, false);

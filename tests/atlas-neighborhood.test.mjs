@@ -5,7 +5,6 @@ import test from "node:test";
 
 import {
   ATLAS_NEIGHBORHOOD_SHARD_COUNT,
-  initialRecordShard,
   atlasNeighborhoodShardId,
   buildAtlasNeighborhoodShards,
 } from "../src/app/atlas-neighborhood.mjs";
@@ -80,30 +79,6 @@ test("Atlas neighborhood sharding is deterministic and preserves canonical edges
     .records.c;
   assert.equal(zeroRecord.published_connection_count, 0);
   assert.equal(zeroRecord.candidate_connection_count, 1);
-});
-
-test("initial records retain complete publisher text, hierarchy and selections while deferring correlations", () => {
-  const graph = { nodes: [
-    { id: "a", node_type: "baseline", metadata: { title: "Published baseline", description: "Every publisher word." } },
-    { id: "b", node_type: "control", metadata: { title: "Selected control", description: "Complete selected text." } },
-    { id: "c", node_type: "control", metadata: { title: "Related control", description: "Secondary publisher text." } },
-  ], edges: [
-    { id: "selection", source_node_id: "a", target_node_id: "b", relationship_type: "selects", relationship_class: "applicability", publication_status: "published", source_refs: [] },
-    { id: "mapping", source_node_id: "a", target_node_id: "c", relationship_type: "maps_to", relationship_class: "correlation", publication_status: "published", source_refs: [] },
-  ] };
-  const shard = buildAtlasNeighborhoodShards(graph, 1)[0];
-  const before = structuredClone(shard);
-  const initial = initialRecordShard(shard);
-  assert.deepEqual(shard, before, "complete artifacts remain unchanged");
-  for (const [id, record] of Object.entries(initial.records)) {
-    assert.deepEqual(record.center_node, shard.records[id].center_node);
-    assert.deepEqual(record.structural_paths, shard.records[id].structural_paths);
-  }
-  assert.deepEqual(initial.records.a.edges, shard.records.a.edges);
-  assert.deepEqual(initial.records.a.nodes.map(node => node[0]), ["a", "b", "c"]);
-  assert.equal(initial.records.a.nodes.find(node => node[0] === "b")[8], "Complete selected text.");
-  assert.equal(initial.records.a.nodes.find(node => node[0] === "c")[8], "");
-  assert.equal(shard.records.a.edges.length, 2);
 });
 
 test("Atlas neighborhood records carry the canonical structural path for cold deep links", () => {

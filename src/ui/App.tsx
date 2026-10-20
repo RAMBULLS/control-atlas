@@ -73,17 +73,19 @@ import {
  * Wraps a lazy route so a chunk 404 left behind by a deploy reloads the page
  * instead of reporting that the workspace stopped. See chunkRecovery.
  */
+function recoverRouteLoad<T>(pending: Promise<T>): Promise<T> {
+  return pending.catch((error: unknown) => {
+    if (isChunkLoadFailure(error) && claimChunkReload(browserReloadClock())) {
+      window.location.reload();
+      // The reload replaces this document, so this promise never settles.
+      return new Promise<T>(() => {});
+    }
+    throw error;
+  });
+}
+
 function lazyRoute<T extends ComponentType<any>>(load: () => Promise<{ default: T }>) {
-  return lazy(() =>
-    load().catch((error: unknown) => {
-      if (isChunkLoadFailure(error) && claimChunkReload(browserReloadClock())) {
-        window.location.reload();
-        // The reload replaces this document, so this promise never settles.
-        return new Promise<{ default: T }>(() => {});
-      }
-      throw error;
-    }),
-  );
+  return lazy(() => recoverRouteLoad(load()));
 }
 
 const HomePage = lazyRoute(() =>
@@ -386,7 +388,11 @@ export function App() {
           onRecordRendered: runtimeState.view === "library-detail"
             ? (result) => waitForRecordPaint(runtimeState.node, result.runtime, loadController.signal)
             : undefined,
-          onSearchReady: (result) => {
+          onSearchReady: async (result) => {
+            // The matching record module may still be waiting for its CSS.
+            // Commit it once prepared instead of entering a timed Suspense
+            // fallback while complete publisher data is already available.
+            if (runtimeState.view === "library-detail") await recoverRouteLoad(recordRouteModule.load());
             if (!cancelled) {
               // A delivered stage proves the connection works: cancel the hard
               // load timers so slow full-graph fetches degrade to the partial

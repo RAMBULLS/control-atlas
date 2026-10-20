@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import test from 'node:test';
-import { startRoutePrefetch } from '../src/shared/route-prefetch.mjs';
+import { startRoutePrefetch, takeRouteResponse } from '../src/shared/route-prefetch.mjs';
 import { atlasNeighborhoodShardId, ATLAS_NEIGHBORHOOD_SHARD_COUNT } from '../src/app/atlas-neighborhood.mjs';
 import { externalizeOrbitalFonts, HOME_SHELL_MODULES, ORBITAL_FONT_HASHES, orbitalFontPreloads, planInteractiveDelivery, recordChunkGroups, RECORD_UI_MODULES, verifyRecordDelivery } from '../tools/record-delivery.mjs';
 
@@ -76,7 +76,7 @@ test('early route requests reuse exact cached responses and preserve Home and mi
   startRoutePrefetch(config, environment);
   assert.deepEqual(requests, [
     'https://example.test/control-atlas/data/generated/catalog-bootstrap.json.gz?v=fixture',
-    `https://example.test/control-atlas/data/generated/record-content/${atlasNeighborhoodShardId('nist-800-53:AC-2')}.json.gz?v=fixture`,
+    `https://example.test/control-atlas/data/generated/atlas-neighborhood/${atlasNeighborhoodShardId('nist-800-53:AC-2')}.json.gz?v=fixture`,
   ]);
   assert.ok(links.every(link => link.rel === 'modulepreload' && link.crossOrigin === 'anonymous'));
   assert.equal(links.length, 3, 'the selected route closure is hinted without duplicate shared modules');
@@ -93,6 +93,28 @@ test('early route requests reuse exact cached responses and preserve Home and mi
   environment.location.hash = '#/record/%invalid/AC-2';
   startRoutePrefetch(config, environment);
   assert.equal(requests.length, 3);
+});
+
+test('early responses retain the consuming loader deadline after their headers resolve', async () => {
+  let aborts = 0;
+  let failBody;
+  const body = new ReadableStream({ start(controller) { failBody = () => controller.error(new Error('body aborted')); } });
+  const response = Object.assign(Promise.resolve(new Response(body)), { abort: () => { aborts += 1; failBody(); } });
+  const pending = new Map([['fixture', response]]);
+  const controller = new AbortController();
+  assert.equal(takeRouteResponse(pending, 'missing', controller.signal), null);
+  assert.equal(takeRouteResponse(pending, 'fixture', controller.signal), response);
+  assert.equal(pending.size, 0);
+  const reading = (await response).text();
+  controller.abort();
+  await assert.rejects(reading, /body aborted/);
+  assert.equal(aborts, 1);
+  const expired = new AbortController();
+  expired.abort();
+  let expiredAborts = 0;
+  const already = Object.assign(Promise.resolve(new Response('fixture')), { abort: () => { expiredAborts += 1; } });
+  takeRouteResponse(new Map([['fixture', already]]), 'fixture', expired.signal);
+  assert.equal(expiredAborts, 1);
 });
 
 test('finite groups coalesce shared record UI and exact icons without capturing dependencies', () => {

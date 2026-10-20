@@ -15,7 +15,7 @@ export function startRoutePrefetch(config, environment = /** @type {typeof globa
     let hash = 0x811c9dc5;
     for (const character of id) { hash ^= character.codePointAt(0) ?? 0; hash = Math.imul(hash, 0x01000193) >>> 0; }
     const shard = (hash % config.shardCount).toString(16).padStart(2, '0');
-    paths.push(`data/generated/catalog-bootstrap.json.gz?v=${config.version}`, `data/generated/record-content/${shard}.json.gz?v=${config.version}`);
+    paths.push(`data/generated/catalog-bootstrap.json.gz?v=${config.version}`, `data/generated/atlas-neighborhood/${shard}.json.gz?v=${config.version}`);
   } else if (segments[0] === 'resources' && segments.length === 1) {
     paths.push('data/generated/commons-search-index.json.gz');
   }
@@ -25,7 +25,9 @@ export function startRoutePrefetch(config, environment = /** @type {typeof globa
     if (pending.has(url)) continue;
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 12_000);
-    const response = environment.fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timer));
+    const response = Object.assign(environment.fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timer)), {
+      abort: () => controller.abort(),
+    });
     // The normal loader still validates bytes and owns fallback/retry/error UI.
     // Observe rejection while it waits for that consumer.
     response.catch(() => undefined);
@@ -39,4 +41,21 @@ export function startRoutePrefetch(config, environment = /** @type {typeof globa
     link.crossOrigin = 'anonymous';
     document.head.appendChild(link);
   }
+}
+
+/**
+ * Preserve the normal consumer's body-read deadline after early headers arrive.
+ * @param {Map<string, Promise<Response> & {abort?: () => void}> | undefined} pending
+ * @param {string} url
+ * @param {AbortSignal} signal
+ */
+export function takeRouteResponse(pending, url, signal) {
+  const response = pending?.get(url);
+  if (!response) return null;
+  pending.delete(url);
+  if (response.abort) {
+    if (signal.aborted) response.abort();
+    else signal.addEventListener('abort', () => response.abort(), { once: true });
+  }
+  return response;
 }

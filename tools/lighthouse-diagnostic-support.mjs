@@ -30,8 +30,9 @@ export function traceIdentity(processed) {
   };
 }
 
-export function assertCapturePair(report, capture, reference, identity) {
-  if (!report.requestedUrl?.endsWith(RECORD_HASH) ||
+export function assertCapturePair(report, capture, reference, identity, expectedHash = RECORD_HASH) {
+  if (![RECORD_HASH, '#/resources'].includes(expectedHash)) throw new Error('Unsupported requested route identity.');
+  if (!report.requestedUrl?.endsWith(expectedHash) ||
       capture.URL?.requestedUrl !== report.requestedUrl ||
       capture.fetchTime !== report.fetchTime || !report.fetchTime ||
       capture.URL?.mainDocumentUrl !== report.finalUrl ||

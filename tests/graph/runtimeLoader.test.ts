@@ -14,7 +14,7 @@ import {
   runtimeArtifactPlan,
 } from "../../src/ui/lib/runtimeLoader";
 import type { RuntimeBundle } from "../../src/ui/lib/runtimeLoader";
-import { ATLAS_NEIGHBORHOOD_SHARD_COUNT, atlasNeighborhoodShardId, buildAtlasNeighborhoodShards, initialRecordShard } from "../../src/app/atlas-neighborhood.mjs";
+import { ATLAS_NEIGHBORHOOD_SHARD_COUNT, atlasNeighborhoodShardId, buildAtlasNeighborhoodShards } from "../../src/app/atlas-neighborhood.mjs";
 import { RUNTIME_CACHE_VERSION } from "../../src/shared/runtime-cache-version.mjs";
 import { requiresFullGraph } from "../../src/ui/lib/navigationState";
 import { normalizeViewState } from "../../src/ui/lib/viewState";
@@ -146,9 +146,7 @@ function recordStageFixture(compact = false) {
     relationship_type: "selects", relationship_class: "applicability", publication_status: "published",
     provenance_class: "federal_published", confidence: "direct",
     source_refs: [{ source_id: source.id, ref_type: "primary", locator: "Fixture row 1" }] };
-  const related = { id: "fixture:related", node_type: "control", source_id: source.id, metadata: { item_id: "Related", title: "Related publisher record", description: "Complete related publisher text." } };
-  const relatedEdge = { ...edge, id: "fixture:correlation", source_node_id: id, target_node_id: related.id, relationship_type: "maps_to", relationship_class: "correlation" };
-  const shards = buildAtlasNeighborhoodShards({ nodes: compact ? [...nodes, related] : nodes, edges: compact ? [edge, relatedEdge] : [edge] }, 8);
+  const shards = buildAtlasNeighborhoodShards({ nodes, edges: [edge] }, 8);
   const requests: string[] = [];
   const fetchFixture = (async (input: Parameters<typeof fetch>[0]) => {
     const url = String(input);
@@ -156,16 +154,15 @@ function recordStageFixture(compact = false) {
     if (url.includes(".json.gz")) return new Response("", { status: 404 });
     let body: unknown;
     if (url.includes("atlas-neighborhood-manifest")) body = { atlas_neighborhood_manifest: { shard_count: 8 } };
-    else if (/atlas-neighborhood\/|record-content\//.test(url)) {
-      if (!url.includes(`/${atlasNeighborhoodShardId(id, 8)}.json`)) {
+    else if (url.includes("atlas-neighborhood/")) {
+      if (!url.includes(`atlas-neighborhood/${atlasNeighborhoodShardId(id, 8)}.json`)) {
         return new Response("", { status: 404 });
       }
-      const shard = shards.find(shard => shard.shard_id === atlasNeighborhoodShardId(id, 8))!;
-      body = { atlas_neighborhood_shard: url.includes("record-content/") ? initialRecordShard(shard) : shard };
+      body = { atlas_neighborhood_shard: shards.find(shard => shard.shard_id === atlasNeighborhoodShardId(id, 8)) };
     }
     else if (url.includes("catalog-bootstrap")) body = { catalog_bootstrap: {
       catalogs: [{ id: "nist-800-53", name: "Fixture publication", source_id: source.id }],
-      ...(compact ? { source_records: { [source.id]: "source-records/000.json" }, atlas_neighborhood: { shard_count: 8, hash_algorithm: "fnv1a-32", initial_records: true } } : {}),
+      ...(compact ? { source_records: { [source.id]: "source-records/000.json" }, atlas_neighborhood: { shard_count: 8, hash_algorithm: "fnv1a-32" } } : {}),
     } };
     else if (url.includes("source-records/000.json")) body = { schema_version: "1.0", sources: [source] };
     else if (url.includes("sources.json")) body = { schema_version: "1.0", sources: [source] };
@@ -192,9 +189,6 @@ test("record first paint uses its exact source artifact and defers the full regi
       onRecordRendered: async bundle => {
         assert.deepEqual(bundle.runtime.getSource(fixture.source.id), fixture.source);
         assert.equal(bundle.sourcesReady, false);
-        assert.equal(bundle.recordRelationshipsReady, false);
-        assert.equal(bundle.runtime.getNode("fixture:related").metadata.description, "");
-        assert.equal(fixture.requests.some(url => url.includes("atlas-neighborhood/")), false);
         assert.ok(fixture.requests.some(url => url.includes("source-records/000.json")));
         assert.equal(fixture.requests.some(url => url.includes("sources.json")), false);
         assert.equal(fixture.requests.some(url => url.includes("atlas-neighborhood-manifest")), false);
@@ -205,9 +199,6 @@ test("record first paint uses its exact source artifact and defers the full regi
     assert.equal(stages.length, 2);
     assert.equal(stages[1].sourcesReady, true);
     assert.equal(stages[1].recordContextReady, true);
-    assert.equal(stages[1].recordRelationshipsReady, true);
-    assert.equal(stages[1].runtime.getNode("fixture:related").metadata.description, "Complete related publisher text.");
-    assert.ok(fixture.requests.some(url => url.includes("atlas-neighborhood/")));
     assert.ok(fixture.requests.some(url => url.includes("sources.json")));
   } finally {
     globalThis.fetch = originalFetch;
@@ -337,6 +328,30 @@ test("new record cohorts bypass a cached manifest from the previous deployment",
     globalThis.fetch = originalFetch;
     clearRuntimeArtifactCache();
   }
+});
+
+test("record rendering acknowledgement waits for asynchronous renderer preparation", async () => {
+  const originalFetch = globalThis.fetch;
+  const fixture = recordStageFixture();
+  globalThis.fetch = fixture.fetchFixture;
+  clearRuntimeArtifactCache();
+  let release = () => {};
+  const prepared = new Promise<void>(resolve => { release = resolve; });
+  let delivered = false, rendered = false, completed = false;
+  try {
+    const staging = loadRuntimeDatasetStaged({ state: fixture.state,
+      onSearchReady: async () => { delivered = true; await prepared; },
+      onRecordRendered: async () => { rendered = true; },
+      onFullReady: () => { completed = true; }, onError: error => { throw error; } });
+    await new Promise(resolve => setTimeout(resolve, 0));
+    assert.equal(delivered, true);
+    assert.equal(rendered, false);
+    assert.equal(completed, false);
+    release();
+    await staging;
+    assert.equal(rendered, true);
+    assert.equal(completed, true);
+  } finally { release(); globalThis.fetch = originalFetch; clearRuntimeArtifactCache(); }
 });
 
 test("record first delivery preserves publisher content and edges through rendering", async () => {

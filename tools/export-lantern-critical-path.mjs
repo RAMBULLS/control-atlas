@@ -90,19 +90,21 @@ export function timerEdges(events, estimates) {
   return edges;
 }
 
-export async function exportLanternCriticalPath({ cwd = process.cwd() } = {}) {
+export async function exportLanternCriticalPath({ cwd = process.cwd(), route = 'record' } = {}) {
+  const requestedHash = route === 'record' ? RECORD_HASH : route === 'resources' ? '#/resources' : null;
+  if (!requestedHash) throw new Error('Unknown diagnostic route.');
   const reportDirectory = join(cwd, '.lighthouseci');
-  const output = join(cwd, 'artifacts/lighthouse-ci/lantern');
+  const output = join(cwd, 'artifacts/lighthouse-ci/lantern', route === 'record' ? '' : 'resources');
   const reports = readdirSync(reportDirectory).filter(name => /^lhr-\d+\.json$/.test(name)).map(name => {
     const bytes = readFileSync(join(reportDirectory, name));
     return { name, bytes, report: JSON.parse(bytes) };
-  }).filter(({ report }) => report.requestedUrl?.endsWith(RECORD_HASH));
+  }).filter(({ report }) => report.requestedUrl?.endsWith(requestedHash));
   // Failed collection still exports the ordinary route/assertion evidence.
   if (!reports.length) return;
   mkdirSync(output, { recursive: true });
   const result = { status: 'unavailable', gaps: [], graphSource: 'devtools-log', versions: null };
   try {
-    if (reports.length !== 1) throw new Error('Ambiguous requested record reports.');
+    if (reports.length !== 1) throw new Error('Ambiguous requested route reports.');
     const { report, bytes, name } = reports[0];
     writeFileSync(join(output, 'report.json'), bytes);
     result.report = { requestedUrl: report.requestedUrl, fetchTime: report.fetchTime, filename: name, exportedFile: 'report.json', sha256: sha256(bytes) };
@@ -144,7 +146,7 @@ export async function exportLanternCriticalPath({ cwd = process.cwd() } = {}) {
     const context = { computedCache: new Map() };
     const processed = await ProcessedTrace.request(saved.trace, context);
     const identity = traceIdentity(processed);
-    assertCapturePair(report, capture, reference, identity);
+    assertCapturePair(report, capture, reference, identity, requestedHash);
     result.identity = identity;
     const input = { trace: saved.trace, devtoolsLog: saved.devtoolsLog, gatherContext: capture.gatherContext,
       settings: capture.settings, URL: capture.URL, SourceMaps: capture.SourceMaps, HostDPR: capture.HostDPR, simulator: capture.simulator };
@@ -167,21 +169,23 @@ export async function exportLanternCriticalPath({ cwd = process.cwd() } = {}) {
       timersBeforeLcp: traceEvents.filter(event => /^(TimerInstall|TimerFire)$/.test(event.name)).map(eventSummary),
       timerEdges: timerEdges(traceEvents, { optimistic: result.optimistic, pessimistic: result.pessimistic }),
       userTimingBeforeLcp: traceEvents.filter(event => event.cat?.includes('blink.user_timing')).map(eventSummary) };
-    if (!capture.TraceElements) result.gaps.push('Original TraceElements were unavailable; the captured LCP event is not a verified official-paragraph element mapping.');
-    result.gaps.push('No explicit official-record commit marker or component-to-Lantern-node mapping was captured; modeled nodes alone cannot prove paragraph or removed retry-gap causality.');
+    if (!capture.TraceElements) result.gaps.push('Original TraceElements were unavailable; the captured LCP event has no verified element mapping.');
+    result.gaps.push('Modeled nodes alone do not establish component causality; inspect the captured element identity and user timing before attributing a delay.');
     if (!result.reproduction.accepted) result.gaps.push('Reproduced LCP differs from the original audit by more than 1 ms; no explanatory causal claim is accepted.');
     result.status = result.reproduction.accepted ? 'reproduced' : 'discrepancy';
   } catch (error) {
     result.gaps.push(error.message);
   }
-  writeFileSync(join(output, 'ac2-critical-path.json'), `${JSON.stringify(result, null, 2)}\n`);
+  writeFileSync(join(output, route === 'record' ? 'ac2-critical-path.json' : 'resources-critical-path.json'), `${JSON.stringify(result, null, 2)}\n`);
   return result;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
-    const result = await exportLanternCriticalPath();
-    if (result) console.log(`Lantern diagnostic: ${result.status}; ${result.gaps.join(' ')}`);
+    for (const route of ['record', 'resources']) {
+      const result = await exportLanternCriticalPath({ route });
+      if (result) console.log(`Lantern ${route} diagnostic: ${result.status}; ${result.gaps.join(' ')}`);
+    }
   } catch (error) {
     console.error(`Lantern diagnostic unavailable: ${error.message}`);
     process.exitCode = 1;

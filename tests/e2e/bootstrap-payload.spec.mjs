@@ -28,7 +28,7 @@ test("record navigation waits for its own neighborhood and never announces stale
   let held = false;
   let release = () => {};
   const released = new Promise(resolve => { release = () => resolve(undefined); });
-  await page.route(`**/data/generated/record-content/${nextShard}.json*`, async route => {
+  await page.route(`**/data/generated/atlas-neighborhood/${nextShard}.json*`, async route => {
     held = true;
     await released;
     await route.continue();
@@ -74,7 +74,7 @@ test("record arrival data starts before selected-page hints and overlaps the she
     await expect(page.locator('[data-record-content]')).toHaveCount(0);
     releaseLoader();
     await expect(page.locator('[data-record-section="official-text"]')).toContainText("Define and document the types of accounts allowed");
-    const shardIndex = requested.findIndex(url => /record-content\/[0-9a-f]+\.json\.gz/.test(url));
+    const shardIndex = requested.findIndex(url => /atlas-neighborhood\/[0-9a-f]+\.json\.gz/.test(url));
     const firstUiIndex = requested.findIndex(routeScript);
     expect(shardIndex).toBeGreaterThanOrEqual(0);
     expect(firstUiIndex).toBeGreaterThan(shardIndex);
@@ -117,8 +117,7 @@ test("returning Home during the initial loader wait never commits the stale reco
     expect(await page.evaluate(() => globalThis.__recordModuleExecuted === true)).toBe(false);
     // The classic arrival script may already have requested its one compact
     // cohort before React's loader was held. Returning Home must add no more.
-    expect(requested.filter(url => /record-content/.test(url)).length).toBeLessThanOrEqual(1);
-    expect(requested.filter(url => /atlas-neighborhood/.test(url))).toEqual([]);
+    expect(requested.filter(url => /atlas-neighborhood/.test(url)).length).toBeLessThanOrEqual(1);
     await page.getByRole("link", { name: "All records", exact: true }).click();
     await waitForAppReady(page);
     await expect(page).toHaveURL(/#\/library/);
@@ -226,6 +225,7 @@ test("Resources exposes recovery when a delayed page module fails", async ({ pag
 });
 
 test("record commits official content without a whole-tree or Resources download, then supports search", async ({ page }) => {
+  await page.setViewportSize({ width: 412, height: 823 });
   const resourceRequests = [];
   const sourceRequests = [];
   const sourceRecordRequests = [];
@@ -240,21 +240,36 @@ test("record commits official content without a whole-tree or Resources download
   });
   let releaseRecord = () => {};
   const recordReleased = new Promise(resolve => { releaseRecord = () => resolve(undefined); });
+  let releaseSupporting = () => {};
+  const supportingReleased = new Promise(resolve => { releaseSupporting = () => resolve(undefined); });
+  await page.route(/\/data\/generated\/sources\.json(?:\.gz)?(?:\?|$)/, async route => {
+    await supportingReleased;
+    await route.continue();
+  });
   await page.route(/\/assets\/ObjectDetailPage-[^/]+\.js$/, async route => {
     await recordReleased;
     await route.continue();
   });
-  const neighborhood = page.waitForResponse(response => /record-content\/[0-9a-f]+\.json\.gz/.test(response.url()));
+  const neighborhood = page.waitForResponse(response => /atlas-neighborhood\/[0-9a-f]+\.json\.gz/.test(response.url()));
   try {
     await page.goto("/#/record/nist-800-53/AC-2", { waitUntil: "domcontentloaded" });
     await neighborhood;
-    await expect(page.locator('[data-route-suspense-pending="true"]')).toHaveCount(1);
+    await expect(page.locator('[data-route-suspense-pending="true"]')).toHaveCount(0);
+    await expect(page.locator('[data-record-content]')).toHaveCount(0);
     await expect.poll(() => sourceRecordRequests.length).toBeGreaterThan(0);
     expect(sourceRequests, "the source register waits for published record paint").toEqual([]);
     expect(manifestRequests, "the admitted partition metadata is already in the catalog bootstrap").toEqual([]);
     expect(spineRequests).toBe(0);
     releaseRecord();
+    const published = page.locator('[data-record-section="official-text"]');
+    await expect(published).toBeVisible();
+    await expect.poll(() => sourceRequests.length).toBeGreaterThan(0);
+    await page.evaluate(() => document.fonts.ready);
+    const before = await published.boundingBox();
+    releaseSupporting();
     await expect(page.locator('[data-record-content="nist-800-53:AC-2"]')).toHaveAttribute("data-record-context-ready", "true");
+    const after = await published.boundingBox();
+    for (const axis of ["x", "y", "width", "height"]) expect(Math.abs(after[axis] - before[axis]), `Published text ${axis} stays stable through supporting metadata`).toBeLessThanOrEqual(1);
     await expect(page.locator('[data-record-content="nist-800-53:AC-2"]')).toHaveAttribute("data-record-commit", /^\d+$/);
     await expect(page.locator('[data-record-section="official-text"]')).toContainText("Define and document the types of accounts allowed");
     expect(spineRequests, "the complete record authority chain needs no whole-tree download").toBe(0);
@@ -263,12 +278,12 @@ test("record commits official content without a whole-tree or Resources download
       const entries = /** @type {PerformanceResourceTiming[]} */ (performance.getEntriesByType("resource"));
       return {
         totalEncodedBytes: entries.reduce((total, entry) => total + entry.encodedBodySize, 0),
-        recordArtifacts: entries.filter(entry => /atlas-neighborhood|record-content/.test(entry.name))
+        recordArtifacts: entries.filter(entry => /atlas-neighborhood/.test(entry.name))
           .map(entry => ({ path: new URL(entry.name).pathname, encodedBytes: entry.encodedBodySize })),
       };
     });
     console.log(`[record-cold-transfer] ${JSON.stringify(coldTransfer)}`);
-    expect(coldTransfer.recordArtifacts).toHaveLength(2);
+    expect(coldTransfer.recordArtifacts).toHaveLength(1);
     expect(coldTransfer.recordArtifacts.every(entry => entry.encodedBytes > 0)).toBe(true);
     await page.getByRole("button", { name: "Open search" }).click();
     await page.getByRole("searchbox", { name: "Search Control Atlas" }).fill("NISTControls");
@@ -279,13 +294,14 @@ test("record commits official content without a whole-tree or Resources download
     expect(resourceRequests.some(url => url.includes("commons-resource-dataset"))).toBe(true);
   } finally {
     releaseRecord();
+    releaseSupporting();
   }
 });
 
 test("a fulfilled record warm-up renders accepted text without another route fallback", async ({ page }) => {
   let releaseData = () => {};
   const dataReleased = new Promise(resolve => { releaseData = () => resolve(undefined); });
-  await page.route(/\/data\/generated\/(?:record-content|atlas-neighborhood)\/[^/]+\.json/, async route => {
+  await page.route(/\/data\/generated\/atlas-neighborhood\/[^/]+\.json/, async route => {
     await dataReleased;
     await route.continue();
   });
@@ -355,7 +371,7 @@ test("a failed required record source can retry without inventing official text"
   const retryReleased = new Promise(resolve => { releaseRetry = () => resolve(undefined); });
   let observeRetry = () => {};
   const retryRequested = new Promise(resolve => { observeRetry = () => resolve(undefined); });
-  await page.route(/\/data\/generated\/(?:record-content|atlas-neighborhood)\/[^/]+\.json/, async route => {
+  await page.route(/\/data\/generated\/atlas-neighborhood\/[^/]+\.json/, async route => {
     if (failContext) await route.abort();
     else {
       observeRetry();
@@ -368,7 +384,7 @@ test("a failed required record source can retry without inventing official text"
   await expect(page.getByText("Unable to load data", { exact: true })).toBeVisible();
   await expect(published).toHaveCount(0);
   failContext = false;
-  const recoveredRecord = page.waitForResponse(response => /record-content\/[0-9a-f]+\.json\.gz/.test(response.url()) && response.status() === 200);
+  const recoveredRecord = page.waitForResponse(response => /atlas-neighborhood\/[0-9a-f]+\.json\.gz/.test(response.url()) && response.status() === 200);
   await page.getByRole("button", { name: "Try loading again" }).click();
   await retryRequested;
   await expect(published).toHaveCount(0);
@@ -403,7 +419,7 @@ test("a bounded render handoff failure retains accepted record text during retry
   const retryReleased = new Promise(resolve => { releaseRetry = () => resolve(undefined); });
   let observeRetry = () => {};
   const retryRequested = new Promise(resolve => { observeRetry = () => resolve(undefined); });
-  await page.route(/\/data\/generated\/(?:record-content|atlas-neighborhood)\/[^/]+\.json/, async route => {
+  await page.route(/\/data\/generated\/atlas-neighborhood\/[^/]+\.json/, async route => {
     observeRetry();
     await retryReleased;
     await route.continue();

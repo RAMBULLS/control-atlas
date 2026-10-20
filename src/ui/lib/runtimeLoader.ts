@@ -6,6 +6,7 @@ import { ATLAS_NEIGHBORHOOD_SHARD_COUNT, atlasNeighborhoodShardId, atlasNeighbor
 import { RUNTIME_CACHE_VERSION } from "../../shared/runtime-cache-version.mjs";
 import { takeRouteResponse } from "../../shared/route-prefetch.mjs";
 import { recordBootstrapSources } from "../../shared/record-source-bootstrap.mjs";
+import { decompressArtifactResponse } from "../../shared/gzip-response.mjs";
 import type {
   CommonsResourceDataset,
   CommonsSearchIndex,
@@ -508,12 +509,10 @@ export async function fetchArtifact(path: string, options: ArtifactFetchOptions 
           "artifact_timeout",
           async (signal) => {
             const response = await fetchRouteArtifact(compressedArtifactPath(path), signal);
-            if (!response.ok || typeof DecompressionStream === "undefined" || !response.body) {
+            if (!response.ok || !response.body) {
               throw new RuntimeLoadError("artifact_unavailable", "The compressed data is unavailable.");
             }
-            const ds = new DecompressionStream("gzip");
-            const decompressedStream = response.body.pipeThrough(ds);
-            const decompressedResponse = new Response(decompressedStream);
+            const decompressedResponse = await decompressArtifactResponse(response);
             return parseOffThread
               ? await parseJsonResponseOffThread(decompressedResponse)
               : await decompressedResponse.json();

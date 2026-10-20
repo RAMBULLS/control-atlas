@@ -352,6 +352,26 @@ and small logs instead of downloading a full site or corpus to the laptop.
 
 ### Production performance measurement
 
+Published storage is measured separately from Lighthouse arrival bytes and the
+compressed Actions ZIP. The built site must stay within 1,000,000,000 bytes,
+following the [GitHub Pages published-site limit](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits).
+The builder verifies byte-identical gzip pairs before omitting duplicate raw JSON
+from `atlas-neighborhood`, `graph-data`, `compare-data` and `catalog-records` in
+the staged package. Full generated source/evidence artifacts remain available to
+validation and reproducible builds. Registries, native-encoded search data and
+the research worker's verified payload retain their existing delivery.
+Manifest `.json` paths identify decoded artifacts; runtime loading resolves their
+existing `.json.gz` representations. Deployment checks the storage limit again,
+including when selecting an older artifact for recovery.
+
+Modern browsers use native gzip decoding. Browsers without that API lazily use
+the already installed `fflate` decoder; they must not require the omitted raw
+duplicates. Existing raw-file fallback remains available for retained and legacy
+layouts. Published collection smoke checks explicitly opt into compressed shards;
+source-generation checks still require their raw inputs and exact record counts.
+The independent site-artifact check counts actual published files and rejects
+symbolic links, leftover duplicate large JSON and storage over the hosting limit.
+
 CI's `npm run test:performance:ci` serves the unchanged built site over
 localhost HTTPS with HTTP/2, matching the public deployment transport. It uses
 an ephemeral one-day localhost certificate and admits only that certificate's

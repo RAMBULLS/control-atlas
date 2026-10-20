@@ -24,9 +24,9 @@ const required = [
 for (const path of required) assert.ok(existsSync(path), `${path} is required`);
 
 const registry = loadSourceRegistry(JSON.parse(readFileSync('dist/site/data/source-registry.json', 'utf8')));
-const nodes = readGeneratedCollection('dist/site', 'nodes').nodes;
-const edges = readGeneratedCollection('dist/site', 'edges').edges;
-const evidence = readGeneratedCollection('dist/site', 'evidence').evidence;
+const nodes = readGeneratedCollection('dist/site', 'nodes', { compressed: true }).nodes;
+const edges = readGeneratedCollection('dist/site', 'edges', { compressed: true }).edges;
+const evidence = readGeneratedCollection('dist/site', 'evidence', { compressed: true }).evidence;
 const findings = JSON.parse(readFileSync('dist/site/data/generated/graph-health.json', 'utf8')).findings;
 const buildManifest = JSON.parse(readFileSync('dist/site/data/generated/build-manifest.json', 'utf8')).build_manifest;
 const sourceManifests = JSON.parse(readFileSync('dist/site/data/generated/source-manifests.json', 'utf8')).source_manifests;

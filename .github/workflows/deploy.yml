@@ -114,6 +114,12 @@ jobs:
             echo "Site artifact SHA mismatch: expected $EXPECTED_SHA, found ${actual_sha:-missing}."
             exit 1
           fi
+          site_bytes="$(du --bytes --summarize dist/site | cut -f1)"
+          if ! [[ "$site_bytes" =~ ^[0-9]+$ ]] || (( site_bytes > 1000000000 )); then
+            echo "Published site exceeds the GitHub Pages 1 GB limit: $site_bytes bytes."
+            exit 1
+          fi
+          echo "Published site storage verified: $site_bytes/1000000000 bytes."
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:

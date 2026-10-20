@@ -16,6 +16,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { generatedDataIsIdentical } from "./lib/generated-data-digest.mjs";
 import { gzipSync } from "node:zlib";
+import { compactPublishedJson, verifyPublishedSite } from "./lib/site-payload.mjs";
 import { runNodeSync } from "./lib/process-runner.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -225,4 +226,8 @@ for (const file of getFiles(DIST)) {
   }
 }
 
+const compacted = compactPublishedJson(DIST);
+const published = verifyPublishedSite(DIST);
+console.log(`Published JSON compaction: ${compacted.removedFiles} exact gzip pairs; removed ${compacted.removedBytes} duplicate bytes.`);
+console.log(`Published site: ${published.files} files, ${published.bytes}/${published.maxBytes} bytes.`);
 console.log(`Built staged static site at ${DIST}`);

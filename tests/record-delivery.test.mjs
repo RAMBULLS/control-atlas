@@ -4,9 +4,11 @@ import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import test from 'node:test';
 import { runInNewContext } from 'node:vm';
+import { gzipSync } from 'node:zlib';
 import ts from 'typescript';
 import { startRoutePrefetch, takeRouteResponse, waitForStaticRoutePaint, warmOrbitalFonts } from '../src/shared/route-prefetch.mjs';
 import { recordBootstrapSources } from '../src/shared/record-source-bootstrap.mjs';
+import { decompressArtifactResponse } from '../src/shared/gzip-response.mjs';
 import { buildRouteChoices } from '../src/shared/build-route-choices.mjs';
 import { atlasNeighborhoodShardId, ATLAS_NEIGHBORHOOD_SHARD_COUNT } from '../src/app/atlas-neighborhood.mjs';
 import { externalizeOrbitalFonts, inlineArrivalDelivery, inlineOrbitalFontStyles, HOME_SHELL_MODULES, ORBITAL_FONT_HASHES, planInteractiveDelivery, recordChunkGroups, RECORD_UI_MODULES, verifyRecordDelivery } from '../tools/record-delivery.mjs';
@@ -15,6 +17,33 @@ const require = createRequire(import.meta.url);
 const css = readFileSync(require.resolve('orbital-archive-no-01/fonts.css'), 'utf8');
 const progressiveShell = readFileSync(new URL('../src/public/progressive-shell.js', import.meta.url), 'utf8');
 const root = '/workspace/control-atlas';
+
+test('native and installed fallback gzip decoders retain complete artifact bytes', async () => {
+  assert.equal(typeof DecompressionStream, 'function');
+  const native = Object.getOwnPropertyDescriptor(globalThis, 'DecompressionStream');
+  const bytes = Buffer.from(JSON.stringify({ fixture: ['Complete publisher text', { evidence: 'Exact reference', unknown: null }] }));
+  try {
+    for (const fallback of [false, true]) {
+      if (fallback) Object.defineProperty(globalThis, 'DecompressionStream', { configurable: true, value: undefined });
+      const response = await decompressArtifactResponse(new Response(new Uint8Array(gzipSync(bytes))));
+      assert.deepEqual(Buffer.from(await response.arrayBuffer()), bytes);
+    }
+  } finally {
+    if (native) Object.defineProperty(globalThis, 'DecompressionStream', native);
+    else Reflect.deleteProperty(globalThis, 'DecompressionStream');
+  }
+});
+
+test('installed fallback rejects unavailable gzip contents rather than inventing data', async () => {
+  const native = Object.getOwnPropertyDescriptor(globalThis, 'DecompressionStream');
+  try {
+    Object.defineProperty(globalThis, 'DecompressionStream', { configurable: true, value: undefined });
+    await assert.rejects(decompressArtifactResponse(new Response(new Uint8Array([1, 2, 3]))));
+  } finally {
+    if (native) Object.defineProperty(globalThis, 'DecompressionStream', native);
+    else Reflect.deleteProperty(globalThis, 'DecompressionStream');
+  }
+});
 const fontAssets = () => Object.fromEntries([...externalizeOrbitalFonts(css).fonts].map(([digest, bytes]) => [
   `${digest}.woff2`, { type: 'asset', fileName: `${digest}.woff2`, source: bytes },
 ]));

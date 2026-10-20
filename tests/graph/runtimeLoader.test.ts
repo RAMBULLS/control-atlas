@@ -852,6 +852,27 @@ test("arrival response promises feed the validating loader without a second down
   }
 });
 
+test("artifact loading needs no raw duplicate when native gzip decoding is unavailable", async () => {
+  const originalFetch = globalThis.fetch;
+  const native = Object.getOwnPropertyDescriptor(globalThis, "DecompressionStream");
+  const requests: string[] = [];
+  clearRuntimeArtifactCache();
+  Object.defineProperty(globalThis, "DecompressionStream", { configurable: true, value: undefined });
+  globalThis.fetch = (async input => {
+    requests.push(String(input));
+    return new Response(new Uint8Array(gzipSync('{"fixture":"complete"}')));
+  }) as typeof fetch;
+  try {
+    assert.deepEqual(await fetchArtifact("./no-native.json", { compressedTimeoutMs: 2000 }), { fixture: "complete" });
+    assert.deepEqual(requests, ["./no-native.json.gz"]);
+  } finally {
+    globalThis.fetch = originalFetch;
+    if (native) Object.defineProperty(globalThis, "DecompressionStream", native);
+    else Reflect.deleteProperty(globalThis, "DecompressionStream");
+    clearRuntimeArtifactCache();
+  }
+});
+
 test("artifact loading falls back from compressed to uncompressed data", async () => {
   const originalFetch = globalThis.fetch;
   const requests: string[] = [];

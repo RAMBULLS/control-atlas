@@ -73,6 +73,7 @@ The focused Atlas adds normalized read models generated from those canonical art
 
 - `data/generated/atlas-neighborhood-manifest.json`
 - `data/generated/atlas-neighborhood/*.json` (8192 deterministic self-contained incident-edge shards)
+- `data/generated/record-content/*.json` (the same complete publisher records and their hierarchy, selections and attached parameters, before wider correlations load)
 
 These are delivery optimizations, not a second relationship truth. Each stored edge remains canonical and incident to the selected record.
 
@@ -92,6 +93,7 @@ Blocked relationships remain graph-health findings and never become displayable 
 - `src/` is the source-of-truth application tree and `tools/build-static-site.mjs` stages the deployable site into `dist/site`.
 - React + Vite render the translation-first UI while existing runtime/data contracts remain reusable.
 - The existing classic first-paint shell starts bounded module hints and compact arrival data before stylesheet completion. The runtime consumes those exact response promises and retains validation, timeout, fallback and retry behavior; Home requests no interactive code.
+- Record first delivery contains the complete center record, its publisher hierarchy and its own structural/applicability contents. After matching record paint, the complete incident-edge shard and source register fill supporting connections. Their explicit readiness state prevents an incomplete phase from claiming absence.
 - The Resources directory consumes the generated search projection, including exact summary provenance, access flags and review dates. Resource detail pages load the complete dataset and source evidence.
 - The Atlas route uses React Flow and ELK only for the bounded area/publication overview, then switches to semantic DOM for publisher-native levels.
 - Focused Atlas routes load the compact node index plus one incident-edge shard; they do not fetch monolithic `nodes`, `edges`, or `evidence` artifacts.

@@ -210,7 +210,7 @@ function getBuildSha(): string {
   }
 }
 
-const interactiveDelivery = { interactive: new Set(), warmup: new Set(), renderer: new Set() };
+const interactiveDelivery = { interactive: new Set(), warmup: new Set() };
 
 export default defineConfig({
   resolve: { alias: [{ find: /^orbital-archive-no-01\/fonts\.css$/, replacement: orbitalFonts }] },
@@ -268,7 +268,6 @@ export default defineConfig({
         const plan = planInteractiveDelivery(this.getModuleIds(), id => this.getModuleInfo(id), rootDir);
         interactiveDelivery.interactive = plan.interactive;
         interactiveDelivery.warmup = plan.warmup;
-        interactiveDelivery.renderer = plan.renderer;
       },
       transformIndexHtml: {
         order: 'post',
@@ -287,9 +286,22 @@ export default defineConfig({
       generateBundle(_options, bundle) {
         const report = verifyRecordDelivery(bundle, rootDir);
         const modules = Object.values(bundle).filter(output => output.type === 'chunk' &&
-          ['interactive-shell', 'renderer', 'data-warmup'].includes(output.name)).map(output => output.fileName);
-        if (modules.length !== 3) throw new Error('Early route delivery requires the admitted shell, renderer and data chunks.');
-        const config = { modules, version: RUNTIME_CACHE_VERSION, shardCount: ATLAS_NEIGHBORHOOD_SHARD_COUNT };
+          ['interactive-shell', 'data-warmup'].includes(output.name)).map(output => output.fileName);
+        if (modules.length !== 2) throw new Error('Early route delivery requires the admitted shell and data chunks.');
+        const routeModules = Object.fromEntries([['record', 'ObjectDetailPage.tsx'], ['resources', 'CommonsPage.tsx'], ['resource-detail', 'CommonsDetailPage.tsx']].map(([route, page]) => {
+          const entry = report.pages.find(entry => entry.id.endsWith(`/pages/${page}`));
+          if (!entry) throw new Error(`Initial route entry is missing: ${page}`);
+          const files = new Set<string>();
+          const visit = (file: string) => {
+            if (files.has(file)) return;
+            files.add(file);
+            const chunk = bundle[file];
+            if (chunk?.type === 'chunk') chunk.imports.forEach(visit);
+          };
+          visit(entry.file);
+          return [route, [...files]];
+        }));
+        const config = { modules, routeModules, version: RUNTIME_CACHE_VERSION, shardCount: ATLAS_NEIGHBORHOOD_SHARD_COUNT };
         this.emitFile({ type: 'asset', fileName: 'progressive-shell-delivery.js', source:
           `(${startRoutePrefetch.toString()})(${JSON.stringify(config)});\n` + readFileSync(resolve(rootDir, 'src/public/progressive-shell.js'), 'utf8') +
           '\ndocument.addEventListener("DOMContentLoaded", window.controlAtlasSyncFirstPaintShell, {once:true});\n' });

@@ -28,7 +28,7 @@ test("record navigation waits for its own neighborhood and never announces stale
   let held = false;
   let release = () => {};
   const released = new Promise(resolve => { release = () => resolve(undefined); });
-  await page.route(`**/data/generated/atlas-neighborhood/${nextShard}.json*`, async route => {
+  await page.route(`**/data/generated/record-content/${nextShard}.json*`, async route => {
     held = true;
     await released;
     await route.continue();
@@ -55,7 +55,7 @@ test("record navigation waits for its own neighborhood and never announces stale
   }
 });
 
-test("record data and shell modules overlap before the selected page imports", async ({ page }) => {
+test("record arrival data starts before selected-page hints and overlaps the shell", async ({ page }) => {
   const requested = [];
   page.on("request", request => requested.push(request.url()));
   let loaderWaiting = false;
@@ -71,10 +71,10 @@ test("record data and shell modules overlap before the selected page imports", a
     await page.goto("/#/record/nist-800-53/AC-2", { waitUntil: "domcontentloaded" });
     await expect.poll(() => loaderWaiting).toBe(true);
     await expect.poll(() => requested.some(url => /\/assets\/interactive-shell-[^/]+\.js$/.test(url)), { message: "The shell download overlaps the data module" }).toBe(true);
-    expect(requested.filter(routeScript), "The selected page waits for the data loader module").toEqual([]);
+    await expect(page.locator('[data-record-content]')).toHaveCount(0);
     releaseLoader();
     await expect(page.locator('[data-record-section="official-text"]')).toContainText("Define and document the types of accounts allowed");
-    const shardIndex = requested.findIndex(url => /atlas-neighborhood\/[0-9a-f]+\.json\.gz/.test(url));
+    const shardIndex = requested.findIndex(url => /record-content\/[0-9a-f]+\.json\.gz/.test(url));
     const firstUiIndex = requested.findIndex(routeScript);
     expect(shardIndex).toBeGreaterThanOrEqual(0);
     expect(firstUiIndex).toBeGreaterThan(shardIndex);
@@ -95,6 +95,10 @@ test("returning Home during the initial loader wait never commits the stale reco
     await route.continue();
   });
   const loaderResponse = page.waitForResponse(response => /\/assets\/(?:runtimeLoader|data-warmup)-[^/]+\.js$/.test(response.url()));
+  await page.route(/\/assets\/ObjectDetailPage-[^/]+\.js$/, async route => {
+    const response = await route.fetch();
+    await route.fulfill({ response, body: `globalThis.__recordModuleExecuted = true;\n${await response.text()}` });
+  });
   try {
     await page.goto("/#/record/nist-800-53/AC-2", { waitUntil: "domcontentloaded" });
     await expect.poll(() => loaderWaiting).toBe(true);
@@ -110,10 +114,11 @@ test("returning Home during the initial loader wait never commits the stale reco
     await expect(page.locator('[data-static-home]')).toBeVisible();
     await expect(page.locator('[data-record-content]')).toHaveCount(0);
     await expect(page.locator('[data-route-suspense-pending="true"]')).toHaveCount(0);
-    expect(requested.filter(url => /\/assets\/ObjectDetailPage-/.test(url))).toEqual([]);
+    expect(await page.evaluate(() => globalThis.__recordModuleExecuted === true)).toBe(false);
     // The classic arrival script may already have requested its one compact
     // cohort before React's loader was held. Returning Home must add no more.
-    expect(requested.filter(url => /atlas-neighborhood/.test(url)).length).toBeLessThanOrEqual(1);
+    expect(requested.filter(url => /record-content/.test(url)).length).toBeLessThanOrEqual(1);
+    expect(requested.filter(url => /atlas-neighborhood/.test(url))).toEqual([]);
     await page.getByRole("link", { name: "All records", exact: true }).click();
     await waitForAppReady(page);
     await expect(page).toHaveURL(/#\/library/);
@@ -239,7 +244,7 @@ test("record commits official content without a whole-tree or Resources download
     await recordReleased;
     await route.continue();
   });
-  const neighborhood = page.waitForResponse(response => /atlas-neighborhood\/[0-9a-f]+\.json\.gz/.test(response.url()));
+  const neighborhood = page.waitForResponse(response => /record-content\/[0-9a-f]+\.json\.gz/.test(response.url()));
   try {
     await page.goto("/#/record/nist-800-53/AC-2", { waitUntil: "domcontentloaded" });
     await neighborhood;
@@ -258,12 +263,12 @@ test("record commits official content without a whole-tree or Resources download
       const entries = /** @type {PerformanceResourceTiming[]} */ (performance.getEntriesByType("resource"));
       return {
         totalEncodedBytes: entries.reduce((total, entry) => total + entry.encodedBodySize, 0),
-        recordArtifacts: entries.filter(entry => /atlas-neighborhood/.test(entry.name))
+        recordArtifacts: entries.filter(entry => /atlas-neighborhood|record-content/.test(entry.name))
           .map(entry => ({ path: new URL(entry.name).pathname, encodedBytes: entry.encodedBodySize })),
       };
     });
     console.log(`[record-cold-transfer] ${JSON.stringify(coldTransfer)}`);
-    expect(coldTransfer.recordArtifacts).toHaveLength(1);
+    expect(coldTransfer.recordArtifacts).toHaveLength(2);
     expect(coldTransfer.recordArtifacts.every(entry => entry.encodedBytes > 0)).toBe(true);
     await page.getByRole("button", { name: "Open search" }).click();
     await page.getByRole("searchbox", { name: "Search Control Atlas" }).fill("NISTControls");
@@ -280,7 +285,7 @@ test("record commits official content without a whole-tree or Resources download
 test("a fulfilled record warm-up renders accepted text without another route fallback", async ({ page }) => {
   let releaseData = () => {};
   const dataReleased = new Promise(resolve => { releaseData = () => resolve(undefined); });
-  await page.route("**/data/generated/atlas-neighborhood/*.json*", async route => {
+  await page.route(/\/data\/generated\/(?:record-content|atlas-neighborhood)\/[^/]+\.json/, async route => {
     await dataReleased;
     await route.continue();
   });
@@ -350,7 +355,7 @@ test("a failed required record source can retry without inventing official text"
   const retryReleased = new Promise(resolve => { releaseRetry = () => resolve(undefined); });
   let observeRetry = () => {};
   const retryRequested = new Promise(resolve => { observeRetry = () => resolve(undefined); });
-  await page.route("**/data/generated/atlas-neighborhood/*.json*", async route => {
+  await page.route(/\/data\/generated\/(?:record-content|atlas-neighborhood)\/[^/]+\.json/, async route => {
     if (failContext) await route.abort();
     else {
       observeRetry();
@@ -363,7 +368,7 @@ test("a failed required record source can retry without inventing official text"
   await expect(page.getByText("Unable to load data", { exact: true })).toBeVisible();
   await expect(published).toHaveCount(0);
   failContext = false;
-  const recoveredRecord = page.waitForResponse(response => /atlas-neighborhood\/[0-9a-f]+\.json\.gz/.test(response.url()) && response.status() === 200);
+  const recoveredRecord = page.waitForResponse(response => /record-content\/[0-9a-f]+\.json\.gz/.test(response.url()) && response.status() === 200);
   await page.getByRole("button", { name: "Try loading again" }).click();
   await retryRequested;
   await expect(published).toHaveCount(0);
@@ -398,7 +403,7 @@ test("a bounded render handoff failure retains accepted record text during retry
   const retryReleased = new Promise(resolve => { releaseRetry = () => resolve(undefined); });
   let observeRetry = () => {};
   const retryRequested = new Promise(resolve => { observeRetry = () => resolve(undefined); });
-  await page.route("**/data/generated/atlas-neighborhood/*.json*", async route => {
+  await page.route(/\/data\/generated\/(?:record-content|atlas-neighborhood)\/[^/]+\.json/, async route => {
     observeRetry();
     await retryReleased;
     await route.continue();

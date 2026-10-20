@@ -24,6 +24,7 @@ import { loadSourceRegistry } from "../tools/validators/source-registry.mjs";
 import {
   ATLAS_NEIGHBORHOOD_SHARD_COUNT,
   buildAtlasNeighborhoodShards,
+  initialRecordShard,
 } from "../src/app/atlas-neighborhood.mjs";
 import {
   catalogIdOf,
@@ -2882,6 +2883,7 @@ function createBuildManifest(graph) {
       "library-search.json",
       "atlas-neighborhood-manifest.json",
       "atlas-neighborhood/",
+      "record-content/",
       "catalog-bootstrap.json",
       "catalog-records/",
       "source-records/",
@@ -4001,7 +4003,7 @@ export function buildFrameworkData({ generatedDirectory = DEFAULT_GENERATED } = 
   const recordSources = [...graph.sources].sort((left, right) => left.id.localeCompare(right.id));
   const catalogBootstrap = {
     catalogs,
-    atlas_neighborhood: { shard_count: ATLAS_NEIGHBORHOOD_SHARD_COUNT, hash_algorithm: "fnv1a-32" },
+    atlas_neighborhood: { shard_count: ATLAS_NEIGHBORHOOD_SHARD_COUNT, hash_algorithm: "fnv1a-32", initial_records: true },
     source_records: Object.fromEntries(recordSources.map(source => [source.id, `source-records/${Buffer.from(source.id, "utf8").toString("base64url")}.json`])),
     comparison_pairs: comparisons.manifest,
     comparison_items: comparisons.itemManifest,
@@ -4048,6 +4050,7 @@ const catalogRecords = new Map();
       entry === "atlas-neighborhood" ||
       entry === "catalog-records" ||
       entry === "source-records" ||
+      entry === "record-content" ||
       entry === "compare-data" ||
       entry === "graph-data"
     ) {
@@ -4330,9 +4333,12 @@ const catalogRecords = new Map();
     nodes: strippedGraphNodes,
   });
   mkdirSync(ATLAS_NEIGHBORHOOD_DIR, { recursive: true });
+  mkdirSync(join(GENERATED, "record-content"), { recursive: true });
   const atlasShardManifest = [];
   for (const shard of atlasNeighborhoodShards) {
     const shardPath = `atlas-neighborhood/${shard.shard_id}.json`;
+    writeFileSync(join(GENERATED, "record-content", `${shard.shard_id}.json`),
+      `${JSON.stringify(artifact("atlas_neighborhood_shard", initialRecordShard(shard), generatedAt))}\n`, "utf8");
     writeFileSync(
       join(GENERATED, shardPath),
       `${JSON.stringify(

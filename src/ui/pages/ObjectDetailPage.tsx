@@ -367,10 +367,10 @@ export function ObjectDetailPage(props: {
             </li>)}</ul>
             {structuralChildren.length > 25 ? <AppLink onNavigate={onNavigate} patch={{ node: node.id }} view="atlas-map">Browse all contents in Atlas</AppLink> : null}
           </section> : null}
-          {bundle.sourcesReady === false ? (
+          {bundle.sourcesReady === false || bundle.recordRelationshipsReady === false ? (
             <section className="record-connections" data-record-section="related-records" id="section-related-records">
               <h2>Connections</h2>
-              <p role="status">{props.contextUnavailable ? "The source information for related records did not load." : "Loading source information for related records."}</p>
+              <p role="status">{props.contextUnavailable ? "The source information and connections did not load." : "Loading source information and connections."}</p>
             </section>
           ) : visibleConnectionGroups.length > 0 ? (
             <section className="record-connections record-connections--related" data-record-section="related-records" id="section-related-records">

@@ -179,6 +179,7 @@ export type ComparisonContent = { record_count: number; path: string; bytes: num
 export type RuntimeBundle = {
   runtime: ReturnType<typeof createFederalGraphRuntime>;
   recordContextReady?: boolean;
+  recordRelationshipsReady?: boolean;
   templateRegistry: TemplateRegistry;
   atlasSpine?: AtlasSpine;
   catalogSummaries?: Array<Record<string, any>>;
@@ -283,6 +284,7 @@ export type AtlasNeighborhoodEdge = {
 };
 
 export type AtlasNeighborhoodRecord = {
+  relationships_ready?: boolean;
   center_node: AtlasNeighborhoodNode;
   nodes: AtlasNeighborhoodNode[];
   edges: AtlasNeighborhoodEdge[];
@@ -336,6 +338,7 @@ export type RuntimeArtifactPlan = {
   fullGraph: boolean;
   librarySearch: boolean;
   recordNodeId: string;
+  initialRecord?: boolean;
   registries: boolean;
   sources: boolean;
 };
@@ -455,7 +458,7 @@ export async function preloadRuntimeArtifacts(state: ViewState) {
   if (plan.recordNodeId) {
     const nodeId = plan.recordNodeId;
     const catalog = fetchArtifact(artifactPath("catalog-bootstrap.json")) as Promise<{ catalog_bootstrap?: CatalogBootstrap }>;
-    requests.push(loadAtlasNeighborhood(nodeId, catalog));
+    requests.push(loadAtlasNeighborhood(nodeId, catalog, state.view === "library-detail"));
     requests.push(catalog.then(artifact => {
       const bootstrap = artifact.catalog_bootstrap || {};
       const publication = bootstrap.catalogs?.find(entry => entry.id === nodeId.split(":")[0]);
@@ -670,16 +673,18 @@ function artifactPath(name: string) {
 export async function loadAtlasNeighborhood(
   nodeId: string,
   bootstrap?: Promise<{ catalog_bootstrap?: CatalogBootstrap }>,
+  initial = false,
 ): Promise<AtlasNeighborhoodRecord | null> {
   // The release's expected cohort can download while its manifest is read.
   // Only the manifest-selected cohort is admitted; a different publication
   // layout discards this bounded prediction and loads its authoritative path.
   const expectedShardId = atlasNeighborhoodShardId(nodeId);
+  const expectedPrefix = initial ? "record-content" : "atlas-neighborhood";
   const expectedShard = fetchArtifact(
-    artifactPath(`atlas-neighborhood/${expectedShardId}.json`),
+    artifactPath(`${expectedPrefix}/${expectedShardId}.json`),
   ).then(value => ({ value }), error => ({ error }));
   const topology = (await bootstrap)?.catalog_bootstrap?.atlas_neighborhood;
-  if (topology && (!Number.isInteger(topology.shard_count) || topology.shard_count < 1 || topology.hash_algorithm !== "fnv1a-32")) {
+  if (topology && (!Number.isInteger(topology.shard_count) || topology.shard_count < 1 || topology.hash_algorithm !== "fnv1a-32" || (topology.initial_records !== undefined && typeof topology.initial_records !== "boolean"))) {
     throw new Error("Record partition metadata is invalid.");
   }
   const manifestArtifact = topology
@@ -688,9 +693,10 @@ export async function loadAtlasNeighborhood(
   const shardCount =
     manifestArtifact.atlas_neighborhood_manifest?.shard_count || ATLAS_NEIGHBORHOOD_SHARD_COUNT;
   const shardId = atlasNeighborhoodShardId(nodeId, shardCount);
-  const selectedShard = shardId === expectedShardId
+  const prefix = initial && topology?.initial_records === true ? "record-content" : "atlas-neighborhood";
+  const selectedShard = shardId === expectedShardId && prefix === expectedPrefix
     ? await expectedShard
-    : { value: await fetchArtifact(artifactPath(`atlas-neighborhood/${shardId}.json`)) };
+    : { value: await fetchArtifact(artifactPath(`${prefix}/${shardId}.json`)) };
   if ("error" in selectedShard) throw selectedShard.error;
   const shardArtifact = selectedShard.value as {
     atlas_neighborhood_shard?: {
@@ -809,6 +815,7 @@ export async function loadAtlasNeighborhood(
       }),
   ];
   return {
+    relationships_ready: prefix === "atlas-neighborhood",
     center_node: centerNode,
     nodes,
     edges,
@@ -1040,7 +1047,7 @@ export async function loadRuntimeDataset(): Promise<RuntimeBundle> {
 }
 
 type CatalogBootstrap = {
-  atlas_neighborhood?: { shard_count: number; hash_algorithm: string };
+  atlas_neighborhood?: { shard_count: number; hash_algorithm: string; initial_records?: boolean };
   source_records?: Record<string, string>;
   comparison_content?: Record<string, ComparisonContent>;
   comparison_baselines?: Record<string, ComparisonBaseline>;
@@ -1140,7 +1147,7 @@ async function loadRouteScopedPhase(
         )
       : Promise.resolve(null),
     plan.recordNodeId
-      ? loadAtlasNeighborhood(plan.recordNodeId, fetchArtifact(artifactPath("catalog-bootstrap.json")) as Promise<{ catalog_bootstrap?: CatalogBootstrap }>)
+      ? loadAtlasNeighborhood(plan.recordNodeId, fetchArtifact(artifactPath("catalog-bootstrap.json")) as Promise<{ catalog_bootstrap?: CatalogBootstrap }>, plan.initialRecord)
       : Promise.resolve(null),
     plan.registries
       ? optionalArtifact<TemplateRegistry>("./data/template-registry.json", { templates: [] })
@@ -1264,6 +1271,7 @@ async function loadRouteScopedPhase(
       catalogPublishedGroups,
       catalogRecordsReady: plan.catalogId ? true : undefined,
       sourcesReady: completeSources,
+      recordRelationshipsReady: record?.relationships_ready !== false,
       librarySearchReady: plan.librarySearch,
       routeReady: true,
       graphReady: false,
@@ -1354,6 +1362,7 @@ export async function loadRuntimeDatasetStaged(handlers: {
     if (handlers.state.view === "library-detail") {
       const officialPhase = await loadRouteScopedPhase({
         ...plan,
+        initialRecord: true,
         sources: false,
         atlasSpine: false,
         commons: false,
@@ -1373,7 +1382,7 @@ export async function loadRuntimeDatasetStaged(handlers: {
         plan.commons
           ? optionalArtifact<CommonsResourceDataset | null>("./data/commons-resource-dataset.json", null)
           : Promise.resolve(null),
-        officialPhase.bundle.sourcesReady
+        officialPhase.bundle.sourcesReady && officialPhase.bundle.recordRelationshipsReady
           ? Promise.resolve(officialPhase)
           : loadRouteScopedPhase({ ...plan, sources: true, atlasSpine: false, commons: false }),
       ]);

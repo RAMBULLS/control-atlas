@@ -80,6 +80,9 @@ function assertGeneratedDataComplete() {
     if (!existsSync(join(ROOT, path))) {
       throw new Error(`Generated data cache is incomplete: ${path}`);
     }
+    if (catalogBootstrap?.atlas_neighborhood?.initial_records && !existsSync(join(ROOT, "data/generated/record-content", `${shard.shard_id}.json`))) {
+      throw new Error(`Generated initial record is missing: ${shard.shard_id}`);
+    }
   }
 }
 

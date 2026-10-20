@@ -2,6 +2,17 @@
 // records off a cold record's download path.
 export const ATLAS_NEIGHBORHOOD_SHARD_COUNT = 8192;
 
+// Preserve complete publisher contents and every edge on arrival. Descriptions
+// belonging only to correlated records wait for supporting context; identifiers,
+// labels, provenance and counts stay stable through both stages.
+export function initialRecordShard(shard) {
+  return { ...shard, records: Object.fromEntries(Object.entries(shard.records).map(([id, record]) => {
+    const primaryEdges = record.edges.filter(edge => ["structural", "applicability"].includes(edge[4]) || edge[3] === "describes");
+    const primaryIds = new Set([id, ...primaryEdges.flatMap(edge => [edge[1], edge[2]])]);
+    return [id, { ...record, nodes: record.nodes.map(node => primaryIds.has(node[0]) ? node : [...node.slice(0, 8), "", ...node.slice(9)]) }];
+  })) };
+}
+
 export function atlasNeighborhoodShardId(
   nodeId,
   shardCount = ATLAS_NEIGHBORHOOD_SHARD_COUNT,

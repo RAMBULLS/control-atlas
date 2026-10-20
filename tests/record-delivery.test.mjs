@@ -42,10 +42,9 @@ test('resolved static graph batches interactive code while preserving Home, warm
   const shell = groups.find(group => group.name === 'interactive-shell');
   const warmup = groups.find(group => group.name === 'data-warmup');
   for (const path of ['src/ui/App.tsx', 'src/ui/components/TopNav.tsx', 'node_modules/@tabler/icons-react/dist/esm/icons/IconBook2.mjs']) assert.equal(shell.test(id(path)), true, path);
-  const renderer = groups.find(group => group.name === 'renderer');
+  assert.equal(groups.some(group => group.name === 'renderer'), false);
   for (const path of ['node_modules/react-dom/client.js', 'node_modules/react/index.js']) {
-    assert.equal(shell.test(id(path)), false, path);
-    assert.equal(renderer.test(id(path)), true, path);
+    assert.equal(shell.test(id(path)), true, path);
   }
   for (const path of ['src/main.tsx', 'src/shared/navigation-events.ts', 'src/ui/lib/runtimeLoader.ts', 'src/ui/lib/hashRoutes.ts', 'src/ui/lib/recordRouteModule.ts', 'src/ui/pages/ObjectDetailPage.tsx', 'src/ui/pages/ComparePage.tsx']) assert.equal(shell.test(id(path)), false, path);
   assert.equal(warmup.test(id('src/ui/lib/runtimeLoader.ts')), true);
@@ -64,7 +63,7 @@ test('first-paint font hints reference only the exact emitted normal-face bytes'
 });
 
 test('early route requests reuse exact cached responses and preserve Home and mirror paths', async () => {
-  const config = { modules: ['assets/data-warmup.js', 'assets/interactive-shell.js'], version: 'fixture', shardCount: ATLAS_NEIGHBORHOOD_SHARD_COUNT };
+  const config = { modules: ['assets/data-warmup.js', 'assets/interactive-shell.js'], routeModules: { record: ['assets/record.js', 'assets/interactive-shell.js'], resources: ['assets/resources.js'] }, version: 'fixture', shardCount: ATLAS_NEIGHBORHOOD_SHARD_COUNT };
   const links = [], requests = [];
   const environment = { location: { hash: '#/' }, document: {
     currentScript: { src: 'https://example.test/control-atlas/progressive-shell-delivery.js' },
@@ -77,15 +76,18 @@ test('early route requests reuse exact cached responses and preserve Home and mi
   startRoutePrefetch(config, environment);
   assert.deepEqual(requests, [
     'https://example.test/control-atlas/data/generated/catalog-bootstrap.json.gz?v=fixture',
-    `https://example.test/control-atlas/data/generated/atlas-neighborhood/${atlasNeighborhoodShardId('nist-800-53:AC-2')}.json.gz?v=fixture`,
+    `https://example.test/control-atlas/data/generated/record-content/${atlasNeighborhoodShardId('nist-800-53:AC-2')}.json.gz?v=fixture`,
   ]);
   assert.ok(links.every(link => link.rel === 'modulepreload' && link.crossOrigin === 'anonymous'));
+  assert.equal(links.length, 3, 'the selected route closure is hinted without duplicate shared modules');
+  assert.equal(links.at(-1).href, 'https://example.test/control-atlas/assets/record.js');
   const responses = [...environment.__ATLAS_ROUTE_PREFETCH__.values()];
   startRoutePrefetch(config, environment);
   assert.equal(requests.length, 2);
   assert.equal(await (await responses[0]).text(), 'fixture');
   environment.location.hash = '#/resources';
   startRoutePrefetch(config, environment);
+  assert.equal(links.at(-1).href, 'https://example.test/control-atlas/assets/resources.js');
   assert.equal(requests.at(-1), 'https://example.test/control-atlas/data/generated/commons-search-index.json.gz');
   await Promise.all(environment.__ATLAS_ROUTE_PREFETCH__.values());
   environment.location.hash = '#/record/%invalid/AC-2';

@@ -666,7 +666,8 @@ async function warmInteractiveRoute() {
         .catch(() => undefined);
       break;
     case 'resources':
-      void import('./ui/pages/CommonsPage').catch(() => undefined);
+      if (routeUrl.pathname.split('/')[2]) void import('./ui/pages/CommonsDetailPage').catch(() => undefined);
+      else void import('./ui/pages/CommonsPage').catch(() => undefined);
       break;
   }
 
@@ -714,6 +715,18 @@ async function start() {
   // The classic progressive shell has already revealed the route identity.
   // Start the cached data requests before route/framework imports compete for
   // the connection. Data and UI then download together behind that stable shell.
+  // Resources keeps this same useful header when React takes over. Give its
+  // committed static identity a paint opportunity before evaluating the page;
+  // arrival data and module downloads have already started in the classic shell.
+  if (/^#\/resources(?:[?]|$)/.test(window.location.hash)) {
+    await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+  }
+  if (isHomeHash() && !reactBoot) {
+    connectStaticHome();
+    window.addEventListener('hashchange', onLocationChange);
+    window.addEventListener('popstate', onLocationChange);
+    return;
+  }
   await warmInteractiveRoute();
   if (isHomeHash() && !reactBoot) {
     connectStaticHome();

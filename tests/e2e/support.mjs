@@ -11,7 +11,13 @@ export async function clickAtlasPublication(page, publicationId) {
   // camera to settle, then use the publication's actual 48px pointer target.
   const map = page.locator('.terr');
   await expect(map).toHaveAttribute('aria-busy', 'false');
-  await map.locator(`[data-landmark=${JSON.stringify(publicationId)}] .lm__hit`).click();
+  const publication = map.locator(`[data-landmark=${JSON.stringify(publicationId)}]`);
+  const hit = publication.locator('.lm__hit');
+  await expect(hit).toBeInViewport();
+  // Pointer retries otherwise scroll this already-visible SVG into a different
+  // alignment. With smooth scrolling the point moves between press and release.
+  await hit.click({ scroll: 'none' });
+  await expect(publication).toHaveAttribute('aria-pressed', 'true');
 }
 
 function emitDiagnostic(event, detail) {
@@ -91,9 +97,9 @@ export async function waitForAppReady(page, options = {}) {
     await expect(page.locator('main#workspace')).not.toHaveAttribute('inert', '', { timeout: 60000 });
   } catch (error) {
     const startupSnapshot = await page.evaluate(() => {
-      const app = document.querySelector('#app');
+      const app = globalThis.document.querySelector('#app');
       return {
-        href: location.href,
+        href: globalThis.location.href,
         ready: app?.getAttribute('data-app-ready') || '<missing>',
         busy: app?.getAttribute('aria-busy') || '<missing>',
         text: app?.textContent?.trim().slice(0, 400) || '',

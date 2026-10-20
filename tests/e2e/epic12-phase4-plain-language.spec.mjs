@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 import {
+  appUrl,
   attachPageDiagnostics,
   gotoApp,
   waitForAppReady,
@@ -185,8 +186,24 @@ test("Phase 4 keeps the product boundary contextual and reports freshness from v
   await gotoApp(page, FRESHNESS_RECORD);
   await waitForRenderedRoute(page, FRESHNESS_RECORD);
   const sourceSupport = page.locator(".record-template-sidebar");
-  // Source freshness renders as a reading date, not the stored ISO value.
-  await expect(sourceSupport).toContainText("Jun 13, 2026");
+  // Read the served artifact: refresh candidates can differ from checkout data.
+  const response = await page.request.get(appUrl("/data/generated/sources.json"));
+  expect(response.ok()).toBe(true);
+  const { sources } = await response.json();
+  const checkedSources = sources.filter((source) => source.id === "nist-fips-200");
+  expect(checkedSources).toHaveLength(1);
+  const checked = checkedSources[0].last_checked;
+  expect(checked).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  const date = new Date(`${checked}T00:00:00.000Z`);
+  expect(Number.isNaN(date.getTime())).toBe(false);
+  expect(date.toISOString().slice(0, 10)).toBe(checked);
+  const formatted = new Intl.DateTimeFormat("en-US", {
+    month: "short", day: "numeric", year: "numeric", timeZone: "UTC",
+  }).format(date);
+  const displayedDate = sourceSupport.locator(".record-source-facts > div")
+    .filter({ has: page.getByText("Source last checked", { exact: true }) }).locator("time");
+  await expect(displayedDate).toHaveAttribute("datetime", checked);
+  await expect(displayedDate).toHaveText(formatted);
   await expect(sourceSupport).not.toContainText(/overdue|pipeline age/i);
   await expect(sourceSupport).toContainText("FIPS 200");
 });

@@ -7,6 +7,9 @@ export function startRoutePrefetch(config, environment = /** @type {typeof globa
   if (!script) return;
   const segments = location.hash.replace(/^#/, '').split('?')[0].split('/').filter(Boolean);
   if (!segments.length) return;
+  // Resources already has a useful, persistent native masthead. Its directory
+  // starts after that first paint; record text needs the renderer immediately.
+  if (segments[0] === 'resources' && segments.length === 1) return;
   const paths = [];
   if (segments[0] === 'record' && segments.length === 3) {
     let id;
@@ -16,8 +19,6 @@ export function startRoutePrefetch(config, environment = /** @type {typeof globa
     for (const character of id) { hash ^= character.codePointAt(0) ?? 0; hash = Math.imul(hash, 0x01000193) >>> 0; }
     const shard = (hash % config.shardCount).toString(16).padStart(2, '0');
     paths.push(`data/generated/catalog-bootstrap.json.gz?v=${config.version}`, `data/generated/atlas-neighborhood/${shard}.json.gz?v=${config.version}`);
-  } else if (segments[0] === 'resources' && segments.length === 1) {
-    paths.push('data/generated/commons-search-index.json.gz');
   }
   const pending = environment.__ATLAS_ROUTE_PREFETCH__ ||= new Map();
   for (const path of paths) {
@@ -41,6 +42,26 @@ export function startRoutePrefetch(config, environment = /** @type {typeof globa
     link.crossOrigin = 'anonymous';
     document.head.appendChild(link);
   }
+}
+
+/** Yield two frame opportunities before enhancing an already usable static route. */
+export function waitForStaticRoutePaint(environment = globalThis) {
+  return new Promise(resolve => {
+    let frame = 0;
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      environment.cancelAnimationFrame(frame);
+      environment.clearTimeout(timer);
+      resolve(undefined);
+    };
+    // Background tabs can suspend rAF. Keep directory startup bounded there.
+    const timer = environment.setTimeout(finish, 1_000);
+    frame = environment.requestAnimationFrame(() => {
+      frame = environment.requestAnimationFrame(finish);
+    });
+  });
 }
 
 /**

@@ -11,6 +11,7 @@ export const HOME_SHELL_MODULES = Object.freeze([
   'src/shared/atlas-presentation.ts',
   'src/shared/brand-rotation.ts',
   'src/shared/navigation-events.ts',
+  'src/shared/route-prefetch.mjs',
   'src/ui/lib/homeDisclosure.ts',
 ]);
 
@@ -35,13 +36,18 @@ export const RECORD_ICON_MODULES = Object.freeze([
   'IconTool', 'IconFlag', 'IconFileText',
 ].map(name => `/node_modules/@tabler/icons-react/dist/esm/icons/${name}.mjs`));
 
+/** @param {Iterable<string>} moduleIds
+ * @param {(id: string) => {importedIds?: readonly string[]} | null | undefined} info
+ * @param {string} rootDir */
 export function planInteractiveDelivery(moduleIds, info, rootDir) {
   const ids = [...moduleIds];
   const source = path => ids.find(id => normalized(id) === `${normalized(rootDir)}/${path}`);
   for (const path of ['src/main.tsx', 'src/ui/App.tsx', 'src/ui/lib/runtimeLoader.ts', 'src/ui/lib/hashRoutes.ts', 'src/ui/pages/ObjectDetailPage.tsx', 'src/ui/lib/recordRouteModule.ts']) {
     if (!source(path)) throw new Error(`Interactive delivery graph is missing ${path}.`);
   }
+  /** @param {(string | undefined)[]} entries */
   const closure = entries => {
+    /** @type {Set<string>} */
     const seen = new Set();
     const visit = id => {
       if (!id || seen.has(id)) return;

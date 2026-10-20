@@ -132,6 +132,10 @@ for (const width of [412, 1440]) {
 test(`Resources keeps its identity and heading geometry at ${width}px until the lazy directory is usable`, async ({ page }) => {
   await page.setViewportSize({ width, height: 823 });
   await page.clock.install();
+  const directoryRequests = [];
+  page.on("request", request => {
+    if (/commons-search-index|\/assets\/(?:data-warmup|interactive-shell|CommonsPage)-/.test(request.url())) directoryRequests.push(request.url());
+  });
   let releaseEntry = () => {};
   const entryReleased = new Promise(resolve => { releaseEntry = () => resolve(undefined); });
   await page.route(/\/assets\/index-[^/]+\.js$/, async route => {
@@ -152,9 +156,10 @@ test(`Resources keeps its identity and heading geometry at ${width}px until the 
     await expect(shell.getByRole("navigation", { name: "Resource companions" })).toBeVisible();
     await expect(page.locator("#root")).toHaveAttribute("data-static-route-kind", "resources");
     await expect(page.locator("#root")).not.toHaveAttribute("data-react-active", "true");
-    await expect(shell).toHaveCSS("min-height", "0px");
+    await expect(shell).toHaveCSS("position", "relative");
     await page.evaluate(() => document.fonts.ready);
     const beforeHeading = await shell.getByRole("heading", { level: 1 }).boundingBox();
+    expect(directoryRequests, "the native masthead is usable before directory delivery starts").toEqual([]);
     releaseEntry();
     await expect(page.locator('[data-route-suspense-pending="true"]')).toHaveCount(1);
     await expect(page.locator('[data-route-suspense-pending="true"]')).not.toBeVisible();

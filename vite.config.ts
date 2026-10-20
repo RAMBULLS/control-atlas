@@ -210,7 +210,10 @@ function getBuildSha(): string {
   }
 }
 
-const interactiveDelivery = { interactive: new Set(), warmup: new Set() };
+const interactiveDelivery = {
+  interactive: new Set<string>(), warmup: new Set<string>(),
+  recordSupport: new Set<string>(), resourceSupport: new Set<string>(),
+};
 
 export default defineConfig({
   resolve: { alias: [{ find: /^orbital-archive-no-01\/fonts\.css$/, replacement: orbitalFonts }] },
@@ -268,6 +271,8 @@ export default defineConfig({
         const plan = planInteractiveDelivery(this.getModuleIds(), id => this.getModuleInfo(id), rootDir);
         interactiveDelivery.interactive = plan.interactive;
         interactiveDelivery.warmup = plan.warmup;
+        interactiveDelivery.recordSupport = plan.recordSupport;
+        interactiveDelivery.resourceSupport = plan.resourceSupport;
       },
       transformIndexHtml: {
         order: 'post',
@@ -288,7 +293,7 @@ export default defineConfig({
         const modules = Object.values(bundle).filter(output => output.type === 'chunk' &&
           ['interactive-shell', 'data-warmup'].includes(output.name)).map(output => output.fileName);
         if (modules.length !== 2) throw new Error('Early route delivery requires the admitted shell and data chunks.');
-        const routeModules = Object.fromEntries([['record', 'ObjectDetailPage.tsx'], ['resources', 'CommonsPage.tsx'], ['resource-detail', 'CommonsDetailPage.tsx']].map(([route, page]) => {
+        const routeModules = Object.fromEntries([['record', 'ObjectDetailPage.tsx'], ['resource-detail', 'CommonsDetailPage.tsx']].map(([route, page]) => {
           const entry = report.pages.find(entry => entry.id.endsWith(`/pages/${page}`));
           if (!entry) throw new Error(`Initial route entry is missing: ${page}`);
           const files = new Set<string>();

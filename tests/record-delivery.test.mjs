@@ -4,7 +4,8 @@ import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import test from 'node:test';
 import { runInNewContext } from 'node:vm';
-import { startRoutePrefetch, takeRouteResponse } from '../src/shared/route-prefetch.mjs';
+import ts from 'typescript';
+import { startRoutePrefetch, takeRouteResponse, waitForStaticRoutePaint } from '../src/shared/route-prefetch.mjs';
 import { atlasNeighborhoodShardId, ATLAS_NEIGHBORHOOD_SHARD_COUNT } from '../src/app/atlas-neighborhood.mjs';
 import { externalizeOrbitalFonts, HOME_SHELL_MODULES, ORBITAL_FONT_HASHES, orbitalFontPreloads, planInteractiveDelivery, recordChunkGroups, RECORD_UI_MODULES, verifyRecordDelivery } from '../tools/record-delivery.mjs';
 
@@ -83,6 +84,26 @@ test('resolved static graph batches interactive code while preserving Home, warm
   ]);
   const ids = new Set([...imports.keys(), ...[...imports.values()].flat()]);
   const plan = planInteractiveDelivery(ids, key => ({ importedIds: imports.get(key) ?? [] }), root);
+  // Exercise the real Vite hook without running a site build. A correct helper
+  // plan is insufficient if the configuration drops a new cohort on the floor.
+  const config = ts.createSourceFile('vite.config.ts', readFileSync(new URL('../vite.config.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
+  let initializer;
+  let hook;
+  const visit = node => {
+    if (ts.isVariableStatement(node) && node.declarationList.declarations.some(declaration => declaration.name.getText(config) === 'interactiveDelivery')) initializer = node;
+    if (ts.isMethodDeclaration(node) && node.name.getText(config) === 'buildEnd') hook = node;
+    ts.forEachChild(node, visit);
+  };
+  visit(config);
+  assert.ok(initializer && hook, 'the actual Vite delivery initializer and hook must exist');
+  const context = { rootDir: root, planInteractiveDelivery, result: null,
+    graph: { getModuleIds: () => ids.values(), getModuleInfo: key => ({ importedIds: imports.get(key) ?? [] }) } };
+  const code = `${initializer.getText(config)}\n(function (${hook.parameters.map(parameter => parameter.getText(config)).join(', ')}) ${hook.body.getText(config)}).call(graph);\nresult = interactiveDelivery;`;
+  runInNewContext(ts.transpileModule(code, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText, context);
+  for (const key of ['interactive', 'warmup', 'recordSupport', 'resourceSupport']) {
+    assert.ok(context.result[key] instanceof Set || context.result[key]?.[Symbol.iterator], key);
+    assert.deepEqual([...context.result[key]], [...plan[key]], `Vite must retain the resolved ${key} cohort`);
+  }
   const groups = recordChunkGroups(root, plan);
   const shell = groups.find(group => group.name === 'interactive-shell');
   const warmup = groups.find(group => group.name === 'data-warmup');
@@ -120,7 +141,7 @@ test('first-paint font hints reference only the exact emitted normal-face bytes'
 });
 
 test('early route requests reuse exact cached responses and preserve Home and mirror paths', async () => {
-  const config = { modules: ['assets/data-warmup.js', 'assets/interactive-shell.js'], routeModules: { record: ['assets/record.js', 'assets/interactive-shell.js'], resources: ['assets/resources.js'] }, version: 'fixture', shardCount: ATLAS_NEIGHBORHOOD_SHARD_COUNT };
+  const config = { modules: ['assets/data-warmup.js', 'assets/interactive-shell.js'], routeModules: { record: ['assets/record.js', 'assets/interactive-shell.js'], 'resource-detail': ['assets/resource-detail.js'] }, version: 'fixture', shardCount: ATLAS_NEIGHBORHOOD_SHARD_COUNT };
   const links = [], requests = [];
   const environment = { location: { hash: '#/' }, document: {
     currentScript: { src: 'https://example.test/control-atlas/progressive-shell-delivery.js' },
@@ -142,14 +163,46 @@ test('early route requests reuse exact cached responses and preserve Home and mi
   startRoutePrefetch(config, environment);
   assert.equal(requests.length, 2);
   assert.equal(await (await responses[0]).text(), 'fixture');
+  const priorLinks = links.length;
   environment.location.hash = '#/resources';
   startRoutePrefetch(config, environment);
-  assert.equal(links.at(-1).href, 'https://example.test/control-atlas/assets/resources.js');
-  assert.equal(requests.at(-1), 'https://example.test/control-atlas/data/generated/commons-search-index.json.gz');
+  assert.equal(links.length, priorLinks, 'directory enhancement cannot compete with its existing first-paint masthead');
+  assert.equal(requests.length, 2);
+  environment.location.hash = '#/resources/resource/fixture';
+  startRoutePrefetch(config, environment);
+  assert.equal(links.at(-1).href, 'https://example.test/control-atlas/assets/resource-detail.js');
   await Promise.all(environment.__ATLAS_ROUTE_PREFETCH__.values());
   environment.location.hash = '#/record/%invalid/AC-2';
   startRoutePrefetch(config, environment);
-  assert.equal(requests.length, 3);
+  assert.equal(requests.length, 2);
+});
+
+test('static directory enhancement yields frame opportunities and has a background-tab deadline', async () => {
+  const frames = new Map(), timers = new Map();
+  let nextId = 0;
+  const environment = {
+    requestAnimationFrame: callback => { const id = ++nextId; frames.set(id, callback); return id; },
+    cancelAnimationFrame: id => frames.delete(id),
+    setTimeout: (callback, timeout) => { assert.equal(timeout, 1_000); const id = ++nextId; timers.set(id, callback); return id; },
+    clearTimeout: id => timers.delete(id),
+  };
+  const advanceFrame = () => { const callbacks = [...frames.values()]; frames.clear(); callbacks.forEach(callback => callback()); };
+  let ready = false;
+  const paint = waitForStaticRoutePaint(environment).then(() => { ready = true; });
+  advanceFrame();
+  await Promise.resolve();
+  assert.equal(ready, false);
+  advanceFrame();
+  await paint;
+  assert.equal(ready, true);
+  assert.equal(frames.size, 0);
+  assert.equal(timers.size, 0);
+  const background = waitForStaticRoutePaint(environment);
+  const finish = [...timers.values()][0];
+  finish();
+  await background;
+  assert.equal(frames.size, 0, 'the deadline cancels suspended frame callbacks');
+  assert.equal(timers.size, 0);
 });
 
 test('early responses retain the consuming loader deadline after their headers resolve', async () => {

@@ -20,7 +20,6 @@ export function waitForRecordPaint(nodeId: string, runtime: object, signal: Abor
   };
   return new Promise((resolve, reject) => {
     let frame = 0;
-    let idle = 0;
     let settled = false;
     let deadline: ReturnType<typeof setTimeout>;
     const cleanup = () => {
@@ -28,7 +27,6 @@ export function waitForRecordPaint(nodeId: string, runtime: object, signal: Abor
       settled = true;
       observer.disconnect();
       cancelAnimationFrame(frame);
-      if (idle) cancelIdleCallback(idle);
       clearTimeout(deadline);
       signal.removeEventListener("abort", finish);
     };
@@ -36,17 +34,6 @@ export function waitForRecordPaint(nodeId: string, runtime: object, signal: Abor
     const matches = (content: HTMLElement | null | undefined) =>
       content?.dataset.recordContent === nodeId && content.dataset.recordCommit === token &&
       content.getClientRects().length > 0 && getComputedStyle(content).visibility !== "hidden";
-    const acknowledge = () => {
-      idle = 0;
-      if (settled) return;
-      const currentWorkspace = document.getElementById("workspace");
-      const current = currentWorkspace?.querySelector<HTMLElement>("[data-record-content]");
-      if (currentWorkspace?.querySelector("[data-route-render-error]")) check();
-      else if (matches(current)) {
-        mark("atlas:record-paint-opportunity");
-        finish();
-      }
-    };
     const check = () => {
       if (settled) return;
       const workspace = document.getElementById("workspace");
@@ -57,18 +44,20 @@ export function waitForRecordPaint(nodeId: string, runtime: object, signal: Abor
       }
       const content = workspace?.querySelector<HTMLElement>("[data-record-content]");
       if (!matches(content)) return;
-      if (frame || idle) return;
+      if (frame) return;
       mark("atlas:record-surface-visible");
       // The first frame prepares the committed record; the next lets supporting
       // work begin after its paint opportunity rather than after setState.
       frame = requestAnimationFrame(() => {
         frame = requestAnimationFrame(() => {
           frame = 0;
-          // rAF callbacks run before rendering. Give the browser's rendering
-          // and input work priority before starting supplemental source work.
-          // The timeout bounds that preference; the renderer deadline remains.
-          if (typeof requestIdleCallback === "function") idle = requestIdleCallback(acknowledge, { timeout: 1_000 });
-          else acknowledge();
+          const currentWorkspace = document.getElementById("workspace");
+          const current = currentWorkspace?.querySelector<HTMLElement>("[data-record-content]");
+          if (currentWorkspace?.querySelector("[data-route-render-error]")) check();
+          else if (matches(current)) {
+            mark("atlas:record-paint-opportunity");
+            finish();
+          }
         });
       });
     };

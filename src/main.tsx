@@ -12,6 +12,7 @@ import {
   SEARCH_RESULTS_FOCUS_EVENT,
 } from './shared/navigation-events';
 import { connectHomeDisclosure } from './ui/lib/homeDisclosure';
+import { waitForStaticRoutePaint } from './shared/route-prefetch.mjs';
 // Orbital Archive No. 01 is the visual authority, not a copied palette. The
 // official release supplies the base recipes, DTCG tokens, and embedded fonts;
 // Control Atlas styles below are semantic/product adapters only.
@@ -707,6 +708,10 @@ async function start() {
     window.addEventListener('popstate', onLocationChange);
     return;
   }
+
+  // Resources' real masthead and companion links can paint independently of
+  // the directory. Do not let directory downloads/evaluation compete with it.
+  if (progressiveRouteIdentity()?.kind === 'resources') await waitForStaticRoutePaint();
 
   // Start fetching the interactive route immediately behind the stable
   // first-paint shell. Waiting for window.load created a full network

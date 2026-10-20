@@ -2,8 +2,8 @@
   "schema_version": "1.0",
   "olir_id": 217,
   "source_artifact": "https://aamcyber.com/sdos/reference/sp-800-53/",
-  "sha256": "sha256:a34478cd70a27ed6cb5d4852d4d0255203ac3fc848deb91e816c295a3c5e384f",
-  "byte_length": 131372,
+  "sha256": "sha256:332a6660b44ec84abff84f5fc3db36cfd550a04782755518998271ddbbad147b",
+  "byte_length": 131919,
   "parser": "olir-html",
   "extraction_scope": "published_html_relationships",
   "relationships": [

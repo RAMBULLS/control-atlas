@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T14:20:25.656Z",
+  "generated_at": "2026-10-20T05:56:41.072Z",
   "source": "https://csrc.nist.gov/projects/olir/informative-reference-catalog",
   "api_endpoint": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog",
   "total_entries": 105,
@@ -8,7 +8,7 @@
   "ingested_count": 42,
   "quarantined_count": 63,
   "unresolved_count": 10,
-  "retained_count": 3,
+  "retained_count": 1,
   "processed_items": [
     {
       "id": 238,
@@ -142,7 +142,7 @@
           "status": 200,
           "final_url": "https://drive.google.com/drive/folders/11qgNa4EavIN5YFh0gfTl9D-4VJISBe-p?usp=sharing",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 334606
+          "byte_length": 337239
         },
         {
           "kind": "artifact download",
@@ -483,7 +483,7 @@
           "status": 200,
           "final_url": "https://drive.google.com/drive/folders/1uqUpwlj7NeP-TDSPR2sHaVXHOQlabCCG?usp=sharing",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 322798
+          "byte_length": 324990
         },
         {
           "kind": "artifact download",
@@ -586,8 +586,8 @@
       "artifact": {
         "map_file": "maps/olir/215.json",
         "artifact_url": "https://aamcyber.com/sdos/reference/csf-2-0/",
-        "checksum": "sha256:fefa5ba2e51d463c9d71853b5168de0e026771e0fbf76a35e904ebd58d187518",
-        "byte_length": 126442,
+        "checksum": "sha256:2e9fc1708ed1d556bcc3909c3c93a2cfc70a05c9ca6a32dd8f689fdb9a77ec52",
+        "byte_length": 126989,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
         "relationship_count": 183,
@@ -615,7 +615,7 @@
           "status": 200,
           "final_url": "https://aamcyber.com/sdos/reference/csf-2-0/",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 126442
+          "byte_length": 126989
         }
       ]
     },
@@ -644,8 +644,8 @@
       "artifact": {
         "map_file": "maps/olir/217.json",
         "artifact_url": "https://aamcyber.com/sdos/reference/sp-800-53/",
-        "checksum": "sha256:a34478cd70a27ed6cb5d4852d4d0255203ac3fc848deb91e816c295a3c5e384f",
-        "byte_length": 131372,
+        "checksum": "sha256:332a6660b44ec84abff84f5fc3db36cfd550a04782755518998271ddbbad147b",
+        "byte_length": 131919,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
         "relationship_count": 27,
@@ -673,7 +673,7 @@
           "status": 200,
           "final_url": "https://aamcyber.com/sdos/reference/sp-800-53/",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 131372
+          "byte_length": 131919
         }
       ]
     },
@@ -801,7 +801,7 @@
           "status": 200,
           "final_url": "https://cyberoon.com/research/ai-soc-v10-to-nist-csf-20-informative-reference-mapping",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 2093101
+          "byte_length": 2093012
         },
         {
           "kind": "artifact download",
@@ -809,7 +809,7 @@
           "status": 200,
           "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 293722
+          "byte_length": 291358
         },
         {
           "kind": "artifact download",
@@ -817,7 +817,7 @@
           "status": 200,
           "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/releases/tag/v1.0.0",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 197037
+          "byte_length": 195234
         },
         {
           "kind": "artifact download",
@@ -825,7 +825,7 @@
           "status": 200,
           "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/blob/main/docs/AI_SOC_Controls_Catalog_v1_0.pdf",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 236831
+          "byte_length": 231790
         },
         {
           "kind": "GitHub Contents API",
@@ -871,8 +871,8 @@
       "artifact": {
         "map_file": "maps/olir/220.json",
         "artifact_url": "https://aamcyber.com/sdos/reference/v1/",
-        "checksum": "sha256:085276002fbba09cfd7fd64a2658710b020cc6ad053df81acead922a3c3fc1a3",
-        "byte_length": 139184,
+        "checksum": "sha256:843dfdab0cbddeb48bb52c9309c3f472f92bcdd5296091be6da6ff7fa7df1c94",
+        "byte_length": 139731,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
         "relationship_count": 44,
@@ -900,7 +900,7 @@
           "status": 200,
           "final_url": "https://aamcyber.com/sdos/reference/v1/",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 139184
+          "byte_length": 139731
         }
       ]
     },
@@ -1031,7 +1031,7 @@
           "kind": "artifact download",
           "url": "https://docs.google.com/spreadsheets/d/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP/export?format=xlsx",
           "status": 200,
-          "final_url": "https://doc-0c-98-sheets.googleusercontent.com/export/f3kk9gtum31ktuqh54kn7i1e14/bf0cpk2b510tt13mbuttvpuqkg/1791469225000/100790643046296837536/*/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP?format=xlsx",
+          "final_url": "https://doc-0c-98-sheets.googleusercontent.com/export/f3kk9gtum31ktuqh54kn7i1e14/4uhho90iajc2jqlq7dj6i2rcpc/1792475800000/100790643046296837536/*/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP?format=xlsx",
           "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "byte_length": 21218
         }
@@ -1056,14 +1056,14 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": "Set Theory: Superset, Supportive",
       "ingested": true,
-      "availability": "no_public_mapping_discovered",
+      "availability": "published_html_relationships",
       "map_file": "maps/olir/222.json",
       "artifact_id": null,
       "artifact": {
         "map_file": "maps/olir/222.json",
         "artifact_url": "https://bxaios.com/nist-alignment/",
-        "checksum": "sha256:1f473525fe1df687746535bcffe9e20c0ebe7fad2cff1ef94f8dcc58dd0ffcde",
-        "byte_length": 143534,
+        "checksum": "sha256:a5ad3c769e72b1e48afdebf684e57127e79f1dbf454554c875c9fd7dd788bb27",
+        "byte_length": 143570,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
         "relationship_count": 7,
@@ -1092,38 +1092,9 @@
           "status": 200,
           "final_url": "https://bxaios.com/nist-alignment/",
           "content_type": "text/html; charset=UTF-8",
-          "byte_length": 143534
+          "byte_length": 143570
         }
-      ],
-      "refresh_status": "retained_last_good",
-      "refresh_error": "no public relationship mapping could be downloaded from the registered NIST submission locations",
-      "latest_retrieval_attempts": [
-        {
-          "kind": "NIST catalog detail endpoint",
-          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/222",
-          "status": 200,
-          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/222",
-          "json_file_url": null,
-          "publisher_sha256": null,
-          "submission_url": "https://bxaios.com/nist-alignment/",
-          "reference_url": "https://www.amazon.com/dp/B0FWBSDMVR",
-          "mapping_summary": "<p>A 9-step implementation framework for governed AI deployment, mapped to the NIST AI Risk Management Framework (AI RMF 1.0) using Set Theory Relationship Mapping per NISTIR 8278Ar1.</p>",
-          "mapping_comment": "<p>N/A</p>"
-        },
-        {
-          "kind": "artifact download",
-          "url": "https://bxaios.com/nist-alignment/",
-          "status": 202,
-          "final_url": "https://bxaios.com/nist-alignment/",
-          "content_type": "text/html",
-          "byte_length": 185
-        }
-      ],
-      "retention": {
-        "cause": "publisher_unavailable",
-        "first_retained_at": "2026-10-08T14:20:25.656Z",
-        "consecutive_refreshes": 1
-      }
+      ]
     },
     {
       "id": 203,
@@ -1144,14 +1115,14 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": "Set Theory: Superset, Supportive",
       "ingested": true,
-      "availability": "no_public_mapping_discovered",
+      "availability": "published_html_relationships",
       "map_file": "maps/olir/203.json",
       "artifact_id": null,
       "artifact": {
         "map_file": "maps/olir/203.json",
         "artifact_url": "https://bxaios.com/nist-alignment/",
-        "checksum": "sha256:1f473525fe1df687746535bcffe9e20c0ebe7fad2cff1ef94f8dcc58dd0ffcde",
-        "byte_length": 143534,
+        "checksum": "sha256:a5ad3c769e72b1e48afdebf684e57127e79f1dbf454554c875c9fd7dd788bb27",
+        "byte_length": 143570,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
         "relationship_count": 6,
@@ -1180,38 +1151,9 @@
           "status": 200,
           "final_url": "https://bxaios.com/nist-alignment/",
           "content_type": "text/html; charset=UTF-8",
-          "byte_length": 143534
+          "byte_length": 143570
         }
-      ],
-      "refresh_status": "retained_last_good",
-      "refresh_error": "no public relationship mapping could be downloaded from the registered NIST submission locations",
-      "latest_retrieval_attempts": [
-        {
-          "kind": "NIST catalog detail endpoint",
-          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/203",
-          "status": 200,
-          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/203",
-          "json_file_url": null,
-          "publisher_sha256": null,
-          "submission_url": "https://bxaios.com/nist-alignment/",
-          "reference_url": "https://www.amazon.com/dp/B0FWBSDMVR",
-          "mapping_summary": "<p>A 9-step implementation framework for governed AI deployment, mapped to the NIST Cybersecurity Framework (CSF 2.0) using Set Theory Relationship Mapping per NISTIR 8278Ar1.</p>",
-          "mapping_comment": "<p>N/A</p>"
-        },
-        {
-          "kind": "artifact download",
-          "url": "https://bxaios.com/nist-alignment/",
-          "status": 202,
-          "final_url": "https://bxaios.com/nist-alignment/",
-          "content_type": "text/html",
-          "byte_length": 185
-        }
-      ],
-      "retention": {
-        "cause": "publisher_unavailable",
-        "first_retained_at": "2026-10-08T14:20:25.656Z",
-        "consecutive_refreshes": 1
-      }
+      ]
     },
     {
       "id": 205,
@@ -1256,7 +1198,7 @@
           "status": 200,
           "final_url": "https://www.infoblox.com/solutions/compliance/",
           "content_type": "text/html; charset=UTF-8",
-          "byte_length": 425156
+          "byte_length": 532625
         }
       ]
     },
@@ -1408,7 +1350,7 @@
       "retention": {
         "cause": "publisher_unavailable",
         "first_retained_at": "2026-09-21T15:12:54.460Z",
-        "consecutive_refreshes": 3
+        "consecutive_refreshes": 4
       }
     },
     {
@@ -1465,7 +1407,7 @@
           "status": 200,
           "final_url": "https://zenodo.org/records/18498447",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 95036
+          "byte_length": 93965
         },
         {
           "kind": "artifact download",
@@ -1633,7 +1575,7 @@
           "status": 200,
           "final_url": "https://www.cisecurity.org/insights/white-papers/cis-controls-v8-1-mapping-to-nist-csf-2-0",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 115929
+          "byte_length": 116738
         }
       ]
     },
@@ -1862,7 +1804,7 @@
       "artifact": {
         "map_file": "maps/olir/176.json",
         "artifact_url": "https://www.gov.uk/government/publications/cyber-governance-mapping/mapping-cyber-governance-code-to-nist-cyber-security-framework",
-        "checksum": "sha256:5ee94e324efd485ab95435cc9d83ecca2a44b97b1f7dc1ba4d027588cb9260f6",
+        "checksum": "sha256:9b8f1540bb27ba3c276bafd6f68106afce334809cf0fde4f9f78f0c04ba79f64",
         "byte_length": 88370,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
@@ -2090,7 +2032,7 @@
           "status": 200,
           "final_url": "https://cyberriskinstitute.org/the-profile/",
           "content_type": "text/html; charset=UTF-8",
-          "byte_length": 83308
+          "byte_length": 83404
         }
       ]
     },
@@ -2590,7 +2532,7 @@
           "status": 401,
           "final_url": "https://docs.google.com/spreadsheets/d/1UrlVUnmAvaaoddMntklZzHZhemLqn7l8/export?format=xlsx",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 9122
+          "byte_length": 9090
         }
       ]
     },
@@ -2905,7 +2847,7 @@
           "status": 200,
           "final_url": "https://cyberriskinstitute.org/The-Profile/",
           "content_type": "text/html; charset=UTF-8",
-          "byte_length": 83308
+          "byte_length": 83404
         }
       ]
     },
@@ -2952,7 +2894,7 @@
           "status": 200,
           "final_url": "https://www.cisecurity.org/controls",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 275364
+          "byte_length": 274661
         }
       ]
     },
@@ -3477,7 +3419,7 @@
           "status": 200,
           "final_url": "https://securecontrolsframework.com/free-content/scf-download",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 56074,
+          "byte_length": 58881,
           "availability": "artifact_replaced_by_html"
         }
       ]

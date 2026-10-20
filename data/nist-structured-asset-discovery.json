@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "source_inventory": "data/nist-pages-discovery.json",
-  "source_inventory_sha256": "sha256:df1acd9aab1169145fc3f1eb091d91a4b5c3cd5fb1c1aee1343b21741b2762ec",
+  "source_inventory_sha256": "sha256:2e9b4b049d827adea2443d9b5dc22cbda40a5f1b67066dc59faa85560c0bb0e2",
   "reconciliation": {
     "projects_discovered": 257,
     "project_landing_pages_attempted": 257,
@@ -519,9 +519,9 @@
       "structured_assets": 3
     },
     {
-      "requested_url": "https://pages.nist.gov/Agentic-AI-in-AM/",
-      "url": "https://pages.nist.gov/Agentic-AI-in-AM/",
-      "project": "Agentic-AI-in-AM",
+      "requested_url": "https://pages.nist.gov/Agentic-SI-in-AM/",
+      "url": "https://pages.nist.gov/Agentic-SI-in-AM/",
+      "project": "Agentic-SI-in-AM",
       "depth": 0,
       "status": "fetched",
       "structured_assets": 0

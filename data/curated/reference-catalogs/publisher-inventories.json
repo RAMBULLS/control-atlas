@@ -13602,7 +13602,7 @@
       ]
     },
     "disa-stig": {
-      "scope": "Union of independently byte-verified July and October 2026 public manual source snapshots, including native standalone publications. Current snapshot IDs are listed separately; previously recorded IDs absent from October remain explicitly historical. Every native edition occurrence remains in this inventory. No retirement or applicability is inferred.",
+      "scope": "Union of independently verified publisher snapshots. Current identities are listed separately; prior native editions and citations remain retained without inferred retirement.",
       "record_count": 27430,
       "record_ids": [
         "V-1010",
@@ -664244,6 +664244,942 @@
           "byte_length": 2414060,
           "evidence_kind": "downloaded_publisher_bytes",
           "retrieved_at": "2026-10-18T23:51:23.233Z"
+        },
+        {
+          "source_id": "artifact-disa-compilation-zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
+          "sha256": "sha256:399f3caa237d111073a792e397c1944291ffb1767eb9ec8d2e59f0f0e317f88d",
+          "byte_length": 375803537,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_A10_Networks_ADC_Y24M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_A10_Networks_ADC_Y24M07_STIG.zip",
+          "sha256": "sha256:a4cd46131e83ecd6b183d451d6084beb38d04b8956eba89c17a59ba2d72c61f1",
+          "byte_length": 1232830,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Adobe_Acrobat_Pro_DC_Classic_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Adobe_Acrobat_Pro_DC_Classic_V2R1_STIG.zip",
+          "sha256": "sha256:c0ebb815d799c964f8176c5e4b040c5ebaf85b77463ff64a3990ea9d2b6c2457",
+          "byte_length": 680792,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Akamai_KSD_Service_IL2_Y26M10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Akamai_KSD_Service_IL2_Y26M10_STIG.zip",
+          "sha256": "sha256:4ef842ea65bbf79acee2b94f40db05870e7b1a8afe825a26b26ebb17086f6400",
+          "byte_length": 1376229,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_15_V1R4_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_15_V1R4_STIG.zip",
+          "sha256": "sha256:2052c6c2ee82a9c11a2b43087fa19a5c0267ec8429208a203872d5fda254692e",
+          "byte_length": 2286773,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_16_BYOAD_Y25M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_16_BYOAD_Y25M07_STIG.zip",
+          "sha256": "sha256:dfc74e74fb7f7c8a8485cc6d7c978b3b4f52c8e9e4b5cf22b303db73a1dab3fd",
+          "byte_length": 2626655,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_16_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_16_V2R2_STIG.zip",
+          "sha256": "sha256:5429186c2f84ed484d08b763fea8ea0047dc2d1bb77c777552a46aeb465e4a3e",
+          "byte_length": 3053980,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_17_BYOAD_Y25M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_17_BYOAD_Y25M07_STIG.zip",
+          "sha256": "sha256:c5b0d11532b3cc3e32499d1a45c245f2661aa87b5507aea08f6d15b1a15f9c26",
+          "byte_length": 2969174,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_17_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_17_V2R2_STIG.zip",
+          "sha256": "sha256:93bde138e3da6984a730aa8ff8700ee1a370e7a348388ee3fc5b6bebc1341a53",
+          "byte_length": 2998595,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_18_V2R4_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_18_V2R4_STIG.zip",
+          "sha256": "sha256:4f647b9c60607d4898e13d2e1f954a256d7707aecab890f0081928b4d92c0693",
+          "byte_length": 2074166,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_27_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_27_V1R1_STIG.zip",
+          "sha256": "sha256:db83ad391f6545abce7b3c8b50c13fe7b0d9041710e77e24627c1f7ca62de6ce",
+          "byte_length": 2501445,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_macOS_12_V1R9_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_12_V1R9_STIG.zip",
+          "sha256": "sha256:c40028a7cc77b985c1e0047a10e3aee677339bbe931bc3ea561a0c6ca76fe62d",
+          "byte_length": 1906480,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_macOS_13_V1R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_13_V1R5_STIG.zip",
+          "sha256": "sha256:cf438542be4945ec408a3fac87df2822d50463a28a459f6222039514c8b62141",
+          "byte_length": 2960732,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_macOS_14_V2R4_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_14_V2R4_STIG.zip",
+          "sha256": "sha256:d25991aba59c1fd7ec245ba915138c97be4078fc10aded852cb04f8708855f65",
+          "byte_length": 3042314,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_ArcGIS_Server_10-3_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_ArcGIS_Server_10-3_V2R1_STIG.zip",
+          "sha256": "sha256:b6295ed734a2bf8917c338727b457e5ae941c612f378e96ad30d2f93eaa6e0e3",
+          "byte_length": 1156915,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Arista_MLS_DCS-7000_Series_Y24M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Arista_MLS_DCS-7000_Series_Y24M07_STIG.zip",
+          "sha256": "sha256:b1e87ac50fc8a9abd3f0f948056f1ecbfc4fbc53d54c3dbbacee21c6c4d6387d",
+          "byte_length": 1346570,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_CA_API_Gateway_Y24M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_CA_API_Gateway_Y24M07_STIG.zip",
+          "sha256": "sha256:63633174c7739d5a8d317e8e8d447c944d2582dc97ff2f6e58b4838e3886a1df",
+          "byte_length": 1180737,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_CAN_Ubuntu_18-04_LTS_V2R15_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_CAN_Ubuntu_18-04_LTS_V2R15_STIG.zip",
+          "sha256": "sha256:1e00d9de2f31f8960ab8b6a104d4f17dd7e3ad5eb6de6846d8df025fd3e1cded",
+          "byte_length": 1292734,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_CAN_Ubuntu_20-04_LTS_V2R4_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_CAN_Ubuntu_20-04_LTS_V2R4_STIG.zip",
+          "sha256": "sha256:3efd167f182f5827ed691be6d98874fe011cf36f86baea4c3bacc2165ec75bbc",
+          "byte_length": 2094492,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_CD_PGSQL_V3R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_CD_PGSQL_V3R2_STIG.zip",
+          "sha256": "sha256:b73a6f3492a1f365bb82f01a29727df9236b9960c001aac4701fbe99ec67815c",
+          "byte_length": 3340216,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Citrix_VAD_7-x_Y25M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Citrix_VAD_7-x_Y25M07_STIG.zip",
+          "sha256": "sha256:3bc7e31f3597760ca09a172d5584d9afec0a71bf9a421581eec8d217f742a8d5",
+          "byte_length": 1679943,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Citrix_XenDesktop_7-x_Y25M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Citrix_XenDesktop_7-x_Y25M07_STIG.zip",
+          "sha256": "sha256:58a032eedb6e01d04602dc753c395bc0abffab0702f946187329eeeb8235d6cd",
+          "byte_length": 1534585,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_DBN-6300_Y24M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_DBN-6300_Y24M07_STIG.zip",
+          "sha256": "sha256:5306e9cf13de6299f311bf4dd0caafa77a7b1fd85a3889c7d48b54f44613e23a",
+          "byte_length": 1380041,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Docker_Enterprise_2-x_Linux-Unix_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Docker_Enterprise_2-x_Linux-Unix_V2R2_STIG.zip",
+          "sha256": "sha256:c126f1ac8559cae38ba12e0ab4ff235976bfef556e0d29953fe427076a864642",
+          "byte_length": 1661228,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_EDB_PGS_Advanced_Server_v11_Windows_V2R4_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_EDB_PGS_Advanced_Server_v11_Windows_V2R4_STIG.zip",
+          "sha256": "sha256:8fadfca7346d209ee5905f668451bb74c38be5bcffb5e28732e1e5efb9857f32",
+          "byte_length": 1454457,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_EDB_PGS_Advanced_Server_v9-6_V2R3_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_EDB_PGS_Advanced_Server_v9-6_V2R3_STIG.zip",
+          "sha256": "sha256:e9eebd1e818338f76d32e87121504dfa163a3a1f9c9ecf4131eee1e1e2a8728a",
+          "byte_length": 1894832,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_F5_BIG-IP_Y25M01_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_F5_BIG-IP_Y25M01_STIG.zip",
+          "sha256": "sha256:9fa7382e5fc3a6e09ebcdf01be065b5710454e7ca138a760776a89b515f285ad",
+          "byte_length": 1583695,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_ForeScout_CounterACT_ALG_V1R3_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_ForeScout_CounterACT_ALG_V1R3_STIG.zip",
+          "sha256": "sha256:835dc8aa6fa336a98542204218d28e76d09eb3b2238e3b3e112d36a490f5ab9e",
+          "byte_length": 1084743,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_ForeScout_CounterACT_NDM_V1R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_ForeScout_CounterACT_NDM_V1R2_STIG.zip",
+          "sha256": "sha256:14a386fd9dfca2d1f2ff6fa54e194e5de2aa8b6cffd9d6233b4c76c1971ecc4c",
+          "byte_length": 1082647,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_GDIT_PitBull_8_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GDIT_PitBull_8_V1R1_STIG.zip",
+          "sha256": "sha256:3cb60f48dad62851b3c814f27e9ba1c3727a63f45af1880b0bc16884a7c1a67a",
+          "byte_length": 1593911,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Google_Android_13_BYOAD_Y25M10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Google_Android_13_BYOAD_Y25M10_STIG.zip",
+          "sha256": "sha256:8047732743d90959c8fe65e0eb38d476e1ec4615b386710e1e1873cd269e24f0",
+          "byte_length": 2430664,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Google_Android_13_Y25M10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Google_Android_13_Y25M10_STIG.zip",
+          "sha256": "sha256:4b6ba5ff0eafc5470511964fd9ea0b0622424fccdb68a2f8050afa2c6b5be22d",
+          "byte_length": 4416188,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_HPE_3PAR_StoreServ_3-2-x_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_HPE_3PAR_StoreServ_3-2-x_V2R2_STIG.zip",
+          "sha256": "sha256:daaf96a76ff84a93b8efab7d886081ca9c61baf798d4b2f15a99174a8280610b",
+          "byte_length": 984171,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_HPE_3PAR_StoreServ_OS_Y26M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_HPE_3PAR_StoreServ_OS_Y26M07_STIG.zip",
+          "sha256": "sha256:8cb712f585e285181fdda29d065b15053201ed6b740d74a83498d10e3f331c90",
+          "byte_length": 1478971,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_HW_Android_9-x_Y24M01_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_HW_Android_9-x_Y24M01_STIG.zip",
+          "sha256": "sha256:9349fcbd429d87eed80122f60951697d005fc3152621b14cad3b886190064958",
+          "byte_length": 1360705,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_IBM_Aspera_Platform_4-2_V1R3_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_IBM_Aspera_Platform_4-2_V1R3_STIG.zip",
+          "sha256": "sha256:44da94dcc5b3e62cc72002b9d0da239c4d8b0f4d2778c4d3c2661abbeb331699",
+          "byte_length": 1069919,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_IBM_HMC_Y23M04_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_IBM_HMC_Y23M04_STIG.zip",
+          "sha256": "sha256:174c814004587456adc037066ed5c7a9b9b8dd2d3b02c670364e30d57c6d97ff",
+          "byte_length": 1710325,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_IBM_MQ_Appliance_v9-0_Y24M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_IBM_MQ_Appliance_v9-0_Y24M07_STIG.zip",
+          "sha256": "sha256:63917b30d4bb2e39c94d94f265de6db6738ea6beb83ebae3c2bd30d3650204ae",
+          "byte_length": 1279556,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Infoblox_7-x_DNS_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Infoblox_7-x_DNS_V2R2_STIG.zip",
+          "sha256": "sha256:5122b5665fcddd4ce972b4a75f74d64d7591daf77a25e8cd44994435e1349468",
+          "byte_length": 1020554,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Ivanti_MI_Core_MDM_Server_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Ivanti_MI_Core_MDM_Server_V1R1_STIG.zip",
+          "sha256": "sha256:0b121ab940481462c37fc59a376d88ecf3717d378d01e8ad4465d0bc909a5834",
+          "byte_length": 1912956,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Ivanti_MI_Sentry_9-x_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Ivanti_MI_Sentry_9-x_STIG.zip",
+          "sha256": "sha256:d475138c15716b9f5cf6a714c34a2b857b44d2cec873d38b1c49d492eb070217",
+          "byte_length": 1598889,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MariaDB_Enterprise_Server_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MariaDB_Enterprise_Server_V1R1_STIG.zip",
+          "sha256": "sha256:74fe9de236eaa1d02b2190837c0e2197655dbe78eef430f94d02d4c5aa247201",
+          "byte_length": 1804041,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MarkLogic_Server_v9_V3R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MarkLogic_Server_v9_V3R2_STIG.zip",
+          "sha256": "sha256:752789f15547e6fbf77dcb66f640bb2033eb1094e6b7e2dd777a23b52bd5e801",
+          "byte_length": 1432611,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_McAfee_Application_Control_7-x_V1R4_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_McAfee_Application_Control_7-x_V1R4_STIG.zip",
+          "sha256": "sha256:5b4e75f3472023dc6f4b484f880aeecbf7ce32a665f56adcfc4ca547bf5e01b1",
+          "byte_length": 1105990,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MDB_Enterprise_Advanced_3-x_V2R3_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MDB_Enterprise_Advanced_3-x_V2R3_STIG.zip",
+          "sha256": "sha256:42823e11a55c0aade0855a36dfc27afb14928e9c90c7a7c34d05c57b2eed9c3c",
+          "byte_length": 1054660,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MDB_Enterprise_Advanced_4-x_V1R4_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MDB_Enterprise_Advanced_4-x_V1R4_STIG.zip",
+          "sha256": "sha256:6e11a25fec08e8d0d6d4083475f11da72d84fb44e2c2962dee0d651ff5c29dc9",
+          "byte_length": 2058222,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Microsoft_Access_2016_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Microsoft_Access_2016_V1R1_STIG.zip",
+          "sha256": "sha256:d50c7524c814fbef36255864c402e464cfd38a1736eb50bc993859ffbbbab6fe",
+          "byte_length": 365378,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Microsoft_OneNote_2016_V1R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Microsoft_OneNote_2016_V1R2_STIG.zip",
+          "sha256": "sha256:0cff06732fa26adf552d2888d7a317f80ed2bb66889724d91d83f466059ec884",
+          "byte_length": 347204,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Microsoft_Project_2016_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Microsoft_Project_2016_V1R1_STIG.zip",
+          "sha256": "sha256:3c0080642e359b704a7c20035c6f00a760f6a0d2b76986f289571dadf9e40499",
+          "byte_length": 364625,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Microsoft_Skype_for_Business_2016_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Microsoft_Skype_for_Business_2016_V1R1_STIG.zip",
+          "sha256": "sha256:f35dc2c91a26fd3147b661a6f35b50ec9841d88dc457280ea20c6f15bd454315",
+          "byte_length": 360653,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Microsoft_Visio_2016_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Microsoft_Visio_2016_V1R1_STIG.zip",
+          "sha256": "sha256:c82a66419f6d90816933fa965d8adfa587f77c3dd19618b493875d3bd936e742",
+          "byte_length": 364318,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Microsoft_Word_2016_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Microsoft_Word_2016_V1R1_STIG.zip",
+          "sha256": "sha256:0772f0ba75f60b9120343d226892602b148bf25e66d584c9375e2abf46108242",
+          "byte_length": 370523,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MOT_Solutions_Android_13_Y25M03_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MOT_Solutions_Android_13_Y25M03_STIG.zip",
+          "sha256": "sha256:497720d0953aef9308cc6bc41738487eb18eda5ce8cbdab921bdd69345891f4a",
+          "byte_length": 2257014,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Access_2016_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Access_2016_V2R1_STIG.zip",
+          "sha256": "sha256:3464062414dfa2200428e6b2d7da69d162c80d42a20c292aca618eefa08c5720",
+          "byte_length": 1048796,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_DotNet_Framework_4-0_V2R9_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_DotNet_Framework_4-0_V2R9_STIG.zip",
+          "sha256": "sha256:a546d14c66603ef8a8eaacb4447d2deb1cbe7def4875f5fbda85d47f2ccc8c65",
+          "byte_length": 1183354,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Excel_2010_V1R12_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Excel_2010_V1R12_STIG.zip",
+          "sha256": "sha256:7b12d973a85a8b7b4ba8d2604ed562a84eb5c44a587726f1dae3820b047a01ae",
+          "byte_length": 912905,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Excel_2016_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Excel_2016_V2R2_STIG.zip",
+          "sha256": "sha256:f89b13179a442f559734fc79e590726718bcc4427919b74efbe40ee1ec10ee18",
+          "byte_length": 1141845,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Exchange_2016_Y26M10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Exchange_2016_Y26M10_STIG.zip",
+          "sha256": "sha256:bdb41c917e29499e8f6123fdb23d82ee34692b74746f34be253ded1c7cf27fd6",
+          "byte_length": 1399360,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Exchange_2019_Y26M10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Exchange_2019_Y26M10_STIG.zip",
+          "sha256": "sha256:16cb9e61f37faba3357f372c417c4e9e627a6a04aa5752bd0794d2cd5e738e7f",
+          "byte_length": 2243403,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_IE11_V2R7_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_IE11_V2R7_STIG.zip",
+          "sha256": "sha256:44f2dca102061c04b46c3994fa604272db38bea4cb878a0354487c4214d65e28",
+          "byte_length": 1186117,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Office_System_2016_V2R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Office_System_2016_V2R5_STIG.zip",
+          "sha256": "sha256:fc1020aabfa0f5720bb875650744bf86a959111589758bd5566bc733077fe5c3",
+          "byte_length": 1128985,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_OneNote_2016_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_OneNote_2016_V2R1_STIG.zip",
+          "sha256": "sha256:0ef015f329cace450c753afc9628ef3dddb71bff1bf89a0f37b4fe933ae3df2f",
+          "byte_length": 1049942,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Outlook_2016_V2R4_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Outlook_2016_V2R4_STIG.zip",
+          "sha256": "sha256:b25043d3154203d2f3aa438685577aebc5b757fc0bf47c4db6d50a7c725452fe",
+          "byte_length": 1108169,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_PowerPoint_2016_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_PowerPoint_2016_V2R1_STIG.zip",
+          "sha256": "sha256:cefa1af5ae430cc85c6ea29ac849b8ebd5efac066fe98d4d377bdb8f75d67f83",
+          "byte_length": 1054990,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Project_2016_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Project_2016_V2R1_STIG.zip",
+          "sha256": "sha256:66151af032c8186d401d950924b0c70ed0ac318dd4ac0c9d09c21a9b0b61fd63",
+          "byte_length": 816078,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Publisher_2016_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Publisher_2016_V2R1_STIG.zip",
+          "sha256": "sha256:ee1452c20c4c2ea3d7879f8290abf28014aa9d713ad761e50e929e2c090b865c",
+          "byte_length": 858805,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_SCOM_V1R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_SCOM_V1R2_STIG.zip",
+          "sha256": "sha256:00c06774520bfc1c520b7c967a6f462fba517802be13e8f2bd9c18dc115af88a",
+          "byte_length": 2014856,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Skype_for_Business_2016_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Skype_for_Business_2016_V2R1_STIG.zip",
+          "sha256": "sha256:894d1284a4dfee9dffdbf62b46a1625416b21839db4fa3486f4da8b074b54137",
+          "byte_length": 1092913,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_SQL_Server_2014_Y24M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_SQL_Server_2014_Y24M07_STIG.zip",
+          "sha256": "sha256:b6afab96797665f6753e849b5b514d1548359249efa0ac6556192843789f18f0",
+          "byte_length": 1337047,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Visio_2016_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Visio_2016_V2R1_STIG.zip",
+          "sha256": "sha256:0ca344fa2862c1b6a49610b15d49217d669311c4bc784b29730c3c5359d2d508",
+          "byte_length": 814444,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Windows_10_V3R6_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Windows_10_V3R6_STIG.zip",
+          "sha256": "sha256:bee65d971714589e58963be80fbe3e8ca04493e040fc94cf87336a06f9e882f5",
+          "byte_length": 1347897,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Windows_2012_Server_DNS_V2R7_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Windows_2012_Server_DNS_V2R7_STIG.zip",
+          "sha256": "sha256:5323a3017d0526a8900a9776a84260377ae3db06c2946bc0d926c0f1539f4404",
+          "byte_length": 1217792,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Windows_Server_2016_V2R10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Windows_Server_2016_V2R10_STIG.zip",
+          "sha256": "sha256:46fd732925b9c4073b72d5c6536d1bf8b93a6307133ab604e4be28377e767139",
+          "byte_length": 1199256,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Windows_Server_2019_V3R9_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Windows_Server_2019_V3R9_STIG.zip",
+          "sha256": "sha256:b8b1ab26fcf08ddfe99cc1e5faece4638770c7236ae69b860336ca9e217c5812",
+          "byte_length": 1203321,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Word_2010_V1R11_Manual_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Word_2010_V1R11_Manual_STIG.zip",
+          "sha256": "sha256:3b7488ee8da5d391d201d1f13f9af201977dc56278fff73a2590fb20a7972e80",
+          "byte_length": 678141,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Word_2016_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Word_2016_V2R1_STIG.zip",
+          "sha256": "sha256:d5e6f8e0fbc54618aff17677d663cbc67aa0802dd4b5960e94ce5aec43379821",
+          "byte_length": 821308,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Multifunction_Device_and_Network_Printers_V2R15_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Multifunction_Device_and_Network_Printers_V2R15_STIG.zip",
+          "sha256": "sha256:5107dd51f918bceb5313ca701acb1b46ec72f4713c369917ec54e659e0df3f2a",
+          "byte_length": 1130500,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Nutanix_AOS_5-20-x_Y24M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Nutanix_AOS_5-20-x_Y24M07_STIG.zip",
+          "sha256": "sha256:1e7c1bc1bfbd0dcfd3307ef668711f5e327c0dd038eedf6e44dd3298ffbbb777",
+          "byte_length": 1224972,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Omnissa_Horizon_Y26M09_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Omnissa_Horizon_Y26M09_STIG.zip",
+          "sha256": "sha256:a93d2fc2ee3795567e51751c036d40cecbf04b491a207f484690041ab37907e6",
+          "byte_length": 2145645,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Oracle_Database_11-2g_V2R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Oracle_Database_11-2g_V2R5_STIG.zip",
+          "sha256": "sha256:7ca77839d8973d046bd1d09982585df3c9f04679f7de6f69577118e014e14d1d",
+          "byte_length": 1827388,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Oracle_Database_12c_V3R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Oracle_Database_12c_V3R5_STIG.zip",
+          "sha256": "sha256:75398ae44f48578c74cb566ede9347b9af432ef642cf41a237c3dba377d5e8bc",
+          "byte_length": 1683866,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Oracle_HTTP_Server_12-1-3_V2R3_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Oracle_HTTP_Server_12-1-3_V2R3_STIG.zip",
+          "sha256": "sha256:8fa754d39cd73289d1d4a1b1e427cbb0a2ca8c6dcec6d6c65b971f8b1ceb7a06",
+          "byte_length": 1219898,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Oracle_Linux_7_V3R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Oracle_Linux_7_V3R5_STIG.zip",
+          "sha256": "sha256:aa97204b562f75c59d4593cd7bed5c4831e2bb86aac34cf0ef52beb6551c2af0",
+          "byte_length": 1206660,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Oracle_WebLogic_Server_12c_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Oracle_WebLogic_Server_12c_V2R2_STIG.zip",
+          "sha256": "sha256:381bde2e2c41b2b24dce8cbb91a2cd6505907f8d3cc95ef55504a25de4242949",
+          "byte_length": 1393950,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_PAN_Y26M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Y26M07_STIG.zip",
+          "sha256": "sha256:6d955317ad3f7c5bd797fbdde07eefb0c84d0087d749b2b73082cfa9e8ea5109",
+          "byte_length": 1343986,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_PGS_SQL_9-x_V2R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PGS_SQL_9-x_V2R5_STIG.zip",
+          "sha256": "sha256:4088023d34ba6aedee1ad7eb77b9625c5a89ce2eb5bfd8c0b13cb78a6434401d",
+          "byte_length": 1745616,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_RH_OpenShift_Container_Platform_4-12_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_RH_OpenShift_Container_Platform_4-12_V2R2_STIG.zip",
+          "sha256": "sha256:54406217f5de732285650f12f202af62b283f63e8f34c028921db24cc571a50f",
+          "byte_length": 2460743,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_RHEL_6_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_RHEL_6_V2R2_STIG.zip",
+          "sha256": "sha256:d4e97af229a93d0f255caa5501eb4fb82aaa55ef6eed79c97a08f32e45ca2f5a",
+          "byte_length": 994424,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_RHEL_7_V3R15_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_RHEL_7_V3R15_STIG.zip",
+          "sha256": "sha256:89cf7d04b1ca6536b51cad2fe7ff5b729c9022a77522156f8a9c7b6967e6c52f",
+          "byte_length": 1178303,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_RHEL_8_V2R9_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_RHEL_8_V2R9_STIG.zip",
+          "sha256": "sha256:620bdff4d4a5b07b58817297dd5255a3f8f981a7227405c07b098588fe55cdee",
+          "byte_length": 1536948,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Riverbed_SteelHead_CX_v8_Y24M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Riverbed_SteelHead_CX_v8_Y24M07_STIG.zip",
+          "sha256": "sha256:88ed1f85d819cfc2b70f36cd58b3959dd91946eb955b7a72d3dc85d63d36dab9",
+          "byte_length": 1024940,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_SDN_Controller_V2R2_SRG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SDN_Controller_V2R2_SRG.zip",
+          "sha256": "sha256:fac876148377cf553ae631563fd3ca37a2425309f8c23086bef7c99da149d926",
+          "byte_length": 1233865,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_SDN_NV_V1R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SDN_NV_V1R2_STIG.zip",
+          "sha256": "sha256:69f43b7f4981995d8245f02333bebe959c20152518022d2512dc63a3e9a1a010",
+          "byte_length": 1531925,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_SLES_12_V3R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SLES_12_V3R5_STIG.zip",
+          "sha256": "sha256:32f360f67333a00b070464334512b152383d76e7cb73e7f6c889d7906c06bf09",
+          "byte_length": 1173329,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_SLES_V11_for_System_z_V1R12_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SLES_V11_for_System_z_V1R12_STIG.zip",
+          "sha256": "sha256:4a849e95ae5c5186500b20f145717aa69e7b5b3a74ec6d6b2eea25a0c71e7689",
+          "byte_length": 582292,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Splunk_Enterprise_7-x_for_Windows_V3R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Splunk_Enterprise_7-x_for_Windows_V3R2_STIG.zip",
+          "sha256": "sha256:9d2e1797403adcef606a6a787906af93f72d205fbda98e6486ca53b444bc9ea2",
+          "byte_length": 3857027,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Splunk_Enterprise_8-x_for_Linux_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Splunk_Enterprise_8-x_for_Linux_V2R2_STIG.zip",
+          "sha256": "sha256:ac8e804e8f4fdd69f3a4cd5935f2507c3e46723c2d669778d41da322f527238b",
+          "byte_length": 3628431,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Splunk_Enterprise_8-x_for-Linux_V1R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Splunk_Enterprise_8-x_for-Linux_V1R5_STIG.zip",
+          "sha256": "sha256:37822e750fbd9c76cc0c3efb1c23672ee842b20e75087fa9c67733a488ae52ec",
+          "byte_length": 4004355,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Splunk_Enterprise_8-x_for%20Linux_V2R3_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Splunk_Enterprise_8-x_for%20Linux_V2R3_STIG.zip",
+          "sha256": "sha256:0a97d694c3d9c6ff1c5a66609f251238a7c2abe1e35bb5a36cb61394cf7e9d5f",
+          "byte_length": 3661259,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_SS_Android_14_BYOAD_Y26M04_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SS_Android_14_BYOAD_Y26M04_STIG.zip",
+          "sha256": "sha256:51661f2d91efa161cf0c0fb13242fef31a76ec4e67d7d20def84589c625e4f45",
+          "byte_length": 2570792,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_SS_Android_15_BYOAD_Y26M04_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SS_Android_15_BYOAD_Y26M04_STIG.zip",
+          "sha256": "sha256:e9bcea9e354944cc968b2de23df7ae74c1b51b08f192e9758e9b6e2a5acfbc78",
+          "byte_length": 2540782,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_SS_Android_15_KPE_3-x_Y26M04_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SS_Android_15_KPE_3-x_Y26M04_STIG.zip",
+          "sha256": "sha256:7668c219f9c013d3934c2b4651e4fbe04992d39648d8292f426bd3e0a2c4eb2a",
+          "byte_length": 2717798,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_SS_Android_OS_13_KPE_3-x_Y25M10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SS_Android_OS_13_KPE_3-x_Y25M10_STIG.zip",
+          "sha256": "sha256:6c76e11e0f953888a70404929dec32955a2c59d6932423e851dfb5d9fb4ac34c",
+          "byte_length": 1988565,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_SS_Android_OS_14_KPE_3-x_Y26M04_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SS_Android_OS_14_KPE_3-x_Y26M04_STIG.zip",
+          "sha256": "sha256:1a31a25ab22398932f7c3bb4b9f639e4c7dc820ab8e39c4aa4283e28ed08dfb9",
+          "byte_length": 2745788,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Storage_Area_Network_V2R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Storage_Area_Network_V2R5_STIG.zip",
+          "sha256": "sha256:c2e4eb43a962020e63d39edc9af259dc265585cf5c109b7ecf8cc5f5f0b73da6",
+          "byte_length": 1208320,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Tanium_7-0_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Tanium_7-0_V2R1_STIG.zip",
+          "sha256": "sha256:df17134ac4b787c2117d0fa06f9d46505a83d779439490f697287f1a3063ebdf",
+          "byte_length": 1425844,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Tanium_7-3_V2R3_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Tanium_7-3_V2R3_STIG.zip",
+          "sha256": "sha256:86b4456bd9c7ca516453d494a0fc9a58daeb558f694339df7092f086747ac2fc",
+          "byte_length": 2274314,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Trend_Micro_Deep_Security_9-x_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Trend_Micro_Deep_Security_9-x_V2R1_STIG.zip",
+          "sha256": "sha256:33224e19d14e49ac299d9c0e6c827ad7b242fcf6fc1f41963435dcea5aa61b04",
+          "byte_length": 1081208,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_VMW_Horizon_7-13_Y24M04_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMW_Horizon_7-13_Y24M04_STIG.zip",
+          "sha256": "sha256:985f12769518a1d0758f25efe993316f8f74368e1fd65df70bfb96146f835863",
+          "byte_length": 1485781,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_VMW_vRealize_Automation_7-x_Y23M10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMW_vRealize_Automation_7-x_Y23M10_STIG.zip",
+          "sha256": "sha256:bc3107bb9d07db70af8d4897ad0a0c98765c5aef844e21bf7cf4f6f2f1198c67",
+          "byte_length": 1889071,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_VMW_vRealize_Ops_6-x_Y23M10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMW_vRealize_Ops_6-x_Y23M10_STIG.zip",
+          "sha256": "sha256:2d14e32d284af4d5168e320e6217f3c4d9ec170f6d34799377e3aab6e6eecf4e",
+          "byte_length": 1424437,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_VMW_vRealize_Ops_Mgr_Cassandra_V1R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMW_vRealize_Ops_Mgr_Cassandra_V1R2_STIG.zip",
+          "sha256": "sha256:2337ed584d1204df002356fa81d14757b31b30fb9fbedc46b71093f1a4d660fd",
+          "byte_length": 1109555,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_VMW_WS1_UEM_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMW_WS1_UEM_V2R2_STIG.zip",
+          "sha256": "sha256:b8bf68f088b61aa88f9d4ccc27c59b78b1a78da0d4f4587998870b3cbbefedf4",
+          "byte_length": 1667830,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_VMware_NSX_Distributed_Logical_Router_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMware_NSX_Distributed_Logical_Router_V1R1_STIG.zip",
+          "sha256": "sha256:cc641aa051b2a375cde80c2f35aa85bda7b8f72b58a0d9a31156b575ac8edc79",
+          "byte_length": 256563,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_VMware_NSX_Manager_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMware_NSX_Manager_V1R1_STIG.zip",
+          "sha256": "sha256:54b8ccaa5e9031192833bce674faaf6c35e0c4fe0754fd98035ddfcd640a7d78",
+          "byte_length": 267808,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Zebra_Android_11_COBO_V1R4_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Zebra_Android_11_COBO_V1R4_STIG.zip",
+          "sha256": "sha256:87ee7a37a11820c1531360c7889d06de3013783b350788537cd281bc9062e029",
+          "byte_length": 1456796,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Zebra_Android_13_Y26M10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Zebra_Android_13_Y26M10_STIG.zip",
+          "sha256": "sha256:ef2cf81bb7f9586121fa0aff4beeea1ed3772b96a088aa51ae2205eca20113ac",
+          "byte_length": 2414060,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
         }
       ],
       "native_files": [
@@ -698297,7 +699233,7 @@
       "native_occurrences": 46111
     },
     "disa-srg": {
-      "scope": "Union of independently byte-verified July and October 2026 public manual source snapshots, including native standalone publications. Current snapshot IDs are listed separately; previously recorded IDs absent from October remain explicitly historical. Every native edition occurrence remains in this inventory. No retirement or applicability is inferred.",
+      "scope": "Union of independently verified publisher snapshots. Current identities are listed separately; prior native editions and citations remain retained without inferred retirement.",
       "record_count": 2551,
       "record_ids": [
         "V-202013",
@@ -769381,6 +770317,942 @@
           "byte_length": 2414060,
           "evidence_kind": "downloaded_publisher_bytes",
           "retrieved_at": "2026-10-18T23:51:23.233Z"
+        },
+        {
+          "source_id": "artifact-disa-compilation-zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
+          "sha256": "sha256:399f3caa237d111073a792e397c1944291ffb1767eb9ec8d2e59f0f0e317f88d",
+          "byte_length": 375803537,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_A10_Networks_ADC_Y24M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_A10_Networks_ADC_Y24M07_STIG.zip",
+          "sha256": "sha256:a4cd46131e83ecd6b183d451d6084beb38d04b8956eba89c17a59ba2d72c61f1",
+          "byte_length": 1232830,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Adobe_Acrobat_Pro_DC_Classic_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Adobe_Acrobat_Pro_DC_Classic_V2R1_STIG.zip",
+          "sha256": "sha256:c0ebb815d799c964f8176c5e4b040c5ebaf85b77463ff64a3990ea9d2b6c2457",
+          "byte_length": 680792,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Akamai_KSD_Service_IL2_Y26M10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Akamai_KSD_Service_IL2_Y26M10_STIG.zip",
+          "sha256": "sha256:4ef842ea65bbf79acee2b94f40db05870e7b1a8afe825a26b26ebb17086f6400",
+          "byte_length": 1376229,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_15_V1R4_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_15_V1R4_STIG.zip",
+          "sha256": "sha256:2052c6c2ee82a9c11a2b43087fa19a5c0267ec8429208a203872d5fda254692e",
+          "byte_length": 2286773,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_16_BYOAD_Y25M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_16_BYOAD_Y25M07_STIG.zip",
+          "sha256": "sha256:dfc74e74fb7f7c8a8485cc6d7c978b3b4f52c8e9e4b5cf22b303db73a1dab3fd",
+          "byte_length": 2626655,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_16_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_16_V2R2_STIG.zip",
+          "sha256": "sha256:5429186c2f84ed484d08b763fea8ea0047dc2d1bb77c777552a46aeb465e4a3e",
+          "byte_length": 3053980,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_17_BYOAD_Y25M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_17_BYOAD_Y25M07_STIG.zip",
+          "sha256": "sha256:c5b0d11532b3cc3e32499d1a45c245f2661aa87b5507aea08f6d15b1a15f9c26",
+          "byte_length": 2969174,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_17_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_17_V2R2_STIG.zip",
+          "sha256": "sha256:93bde138e3da6984a730aa8ff8700ee1a370e7a348388ee3fc5b6bebc1341a53",
+          "byte_length": 2998595,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_18_V2R4_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_18_V2R4_STIG.zip",
+          "sha256": "sha256:4f647b9c60607d4898e13d2e1f954a256d7707aecab890f0081928b4d92c0693",
+          "byte_length": 2074166,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_27_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_27_V1R1_STIG.zip",
+          "sha256": "sha256:db83ad391f6545abce7b3c8b50c13fe7b0d9041710e77e24627c1f7ca62de6ce",
+          "byte_length": 2501445,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_macOS_12_V1R9_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_12_V1R9_STIG.zip",
+          "sha256": "sha256:c40028a7cc77b985c1e0047a10e3aee677339bbe931bc3ea561a0c6ca76fe62d",
+          "byte_length": 1906480,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_macOS_13_V1R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_13_V1R5_STIG.zip",
+          "sha256": "sha256:cf438542be4945ec408a3fac87df2822d50463a28a459f6222039514c8b62141",
+          "byte_length": 2960732,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_macOS_14_V2R4_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_14_V2R4_STIG.zip",
+          "sha256": "sha256:d25991aba59c1fd7ec245ba915138c97be4078fc10aded852cb04f8708855f65",
+          "byte_length": 3042314,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_ArcGIS_Server_10-3_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_ArcGIS_Server_10-3_V2R1_STIG.zip",
+          "sha256": "sha256:b6295ed734a2bf8917c338727b457e5ae941c612f378e96ad30d2f93eaa6e0e3",
+          "byte_length": 1156915,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Arista_MLS_DCS-7000_Series_Y24M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Arista_MLS_DCS-7000_Series_Y24M07_STIG.zip",
+          "sha256": "sha256:b1e87ac50fc8a9abd3f0f948056f1ecbfc4fbc53d54c3dbbacee21c6c4d6387d",
+          "byte_length": 1346570,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_CA_API_Gateway_Y24M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_CA_API_Gateway_Y24M07_STIG.zip",
+          "sha256": "sha256:63633174c7739d5a8d317e8e8d447c944d2582dc97ff2f6e58b4838e3886a1df",
+          "byte_length": 1180737,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_CAN_Ubuntu_18-04_LTS_V2R15_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_CAN_Ubuntu_18-04_LTS_V2R15_STIG.zip",
+          "sha256": "sha256:1e00d9de2f31f8960ab8b6a104d4f17dd7e3ad5eb6de6846d8df025fd3e1cded",
+          "byte_length": 1292734,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_CAN_Ubuntu_20-04_LTS_V2R4_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_CAN_Ubuntu_20-04_LTS_V2R4_STIG.zip",
+          "sha256": "sha256:3efd167f182f5827ed691be6d98874fe011cf36f86baea4c3bacc2165ec75bbc",
+          "byte_length": 2094492,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_CD_PGSQL_V3R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_CD_PGSQL_V3R2_STIG.zip",
+          "sha256": "sha256:b73a6f3492a1f365bb82f01a29727df9236b9960c001aac4701fbe99ec67815c",
+          "byte_length": 3340216,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Citrix_VAD_7-x_Y25M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Citrix_VAD_7-x_Y25M07_STIG.zip",
+          "sha256": "sha256:3bc7e31f3597760ca09a172d5584d9afec0a71bf9a421581eec8d217f742a8d5",
+          "byte_length": 1679943,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Citrix_XenDesktop_7-x_Y25M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Citrix_XenDesktop_7-x_Y25M07_STIG.zip",
+          "sha256": "sha256:58a032eedb6e01d04602dc753c395bc0abffab0702f946187329eeeb8235d6cd",
+          "byte_length": 1534585,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_DBN-6300_Y24M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_DBN-6300_Y24M07_STIG.zip",
+          "sha256": "sha256:5306e9cf13de6299f311bf4dd0caafa77a7b1fd85a3889c7d48b54f44613e23a",
+          "byte_length": 1380041,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Docker_Enterprise_2-x_Linux-Unix_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Docker_Enterprise_2-x_Linux-Unix_V2R2_STIG.zip",
+          "sha256": "sha256:c126f1ac8559cae38ba12e0ab4ff235976bfef556e0d29953fe427076a864642",
+          "byte_length": 1661228,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_EDB_PGS_Advanced_Server_v11_Windows_V2R4_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_EDB_PGS_Advanced_Server_v11_Windows_V2R4_STIG.zip",
+          "sha256": "sha256:8fadfca7346d209ee5905f668451bb74c38be5bcffb5e28732e1e5efb9857f32",
+          "byte_length": 1454457,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_EDB_PGS_Advanced_Server_v9-6_V2R3_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_EDB_PGS_Advanced_Server_v9-6_V2R3_STIG.zip",
+          "sha256": "sha256:e9eebd1e818338f76d32e87121504dfa163a3a1f9c9ecf4131eee1e1e2a8728a",
+          "byte_length": 1894832,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_F5_BIG-IP_Y25M01_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_F5_BIG-IP_Y25M01_STIG.zip",
+          "sha256": "sha256:9fa7382e5fc3a6e09ebcdf01be065b5710454e7ca138a760776a89b515f285ad",
+          "byte_length": 1583695,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_ForeScout_CounterACT_ALG_V1R3_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_ForeScout_CounterACT_ALG_V1R3_STIG.zip",
+          "sha256": "sha256:835dc8aa6fa336a98542204218d28e76d09eb3b2238e3b3e112d36a490f5ab9e",
+          "byte_length": 1084743,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_ForeScout_CounterACT_NDM_V1R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_ForeScout_CounterACT_NDM_V1R2_STIG.zip",
+          "sha256": "sha256:14a386fd9dfca2d1f2ff6fa54e194e5de2aa8b6cffd9d6233b4c76c1971ecc4c",
+          "byte_length": 1082647,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_GDIT_PitBull_8_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GDIT_PitBull_8_V1R1_STIG.zip",
+          "sha256": "sha256:3cb60f48dad62851b3c814f27e9ba1c3727a63f45af1880b0bc16884a7c1a67a",
+          "byte_length": 1593911,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Google_Android_13_BYOAD_Y25M10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Google_Android_13_BYOAD_Y25M10_STIG.zip",
+          "sha256": "sha256:8047732743d90959c8fe65e0eb38d476e1ec4615b386710e1e1873cd269e24f0",
+          "byte_length": 2430664,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Google_Android_13_Y25M10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Google_Android_13_Y25M10_STIG.zip",
+          "sha256": "sha256:4b6ba5ff0eafc5470511964fd9ea0b0622424fccdb68a2f8050afa2c6b5be22d",
+          "byte_length": 4416188,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_HPE_3PAR_StoreServ_3-2-x_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_HPE_3PAR_StoreServ_3-2-x_V2R2_STIG.zip",
+          "sha256": "sha256:daaf96a76ff84a93b8efab7d886081ca9c61baf798d4b2f15a99174a8280610b",
+          "byte_length": 984171,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_HPE_3PAR_StoreServ_OS_Y26M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_HPE_3PAR_StoreServ_OS_Y26M07_STIG.zip",
+          "sha256": "sha256:8cb712f585e285181fdda29d065b15053201ed6b740d74a83498d10e3f331c90",
+          "byte_length": 1478971,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_HW_Android_9-x_Y24M01_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_HW_Android_9-x_Y24M01_STIG.zip",
+          "sha256": "sha256:9349fcbd429d87eed80122f60951697d005fc3152621b14cad3b886190064958",
+          "byte_length": 1360705,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_IBM_Aspera_Platform_4-2_V1R3_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_IBM_Aspera_Platform_4-2_V1R3_STIG.zip",
+          "sha256": "sha256:44da94dcc5b3e62cc72002b9d0da239c4d8b0f4d2778c4d3c2661abbeb331699",
+          "byte_length": 1069919,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_IBM_HMC_Y23M04_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_IBM_HMC_Y23M04_STIG.zip",
+          "sha256": "sha256:174c814004587456adc037066ed5c7a9b9b8dd2d3b02c670364e30d57c6d97ff",
+          "byte_length": 1710325,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_IBM_MQ_Appliance_v9-0_Y24M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_IBM_MQ_Appliance_v9-0_Y24M07_STIG.zip",
+          "sha256": "sha256:63917b30d4bb2e39c94d94f265de6db6738ea6beb83ebae3c2bd30d3650204ae",
+          "byte_length": 1279556,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Infoblox_7-x_DNS_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Infoblox_7-x_DNS_V2R2_STIG.zip",
+          "sha256": "sha256:5122b5665fcddd4ce972b4a75f74d64d7591daf77a25e8cd44994435e1349468",
+          "byte_length": 1020554,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Ivanti_MI_Core_MDM_Server_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Ivanti_MI_Core_MDM_Server_V1R1_STIG.zip",
+          "sha256": "sha256:0b121ab940481462c37fc59a376d88ecf3717d378d01e8ad4465d0bc909a5834",
+          "byte_length": 1912956,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Ivanti_MI_Sentry_9-x_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Ivanti_MI_Sentry_9-x_STIG.zip",
+          "sha256": "sha256:d475138c15716b9f5cf6a714c34a2b857b44d2cec873d38b1c49d492eb070217",
+          "byte_length": 1598889,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MariaDB_Enterprise_Server_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MariaDB_Enterprise_Server_V1R1_STIG.zip",
+          "sha256": "sha256:74fe9de236eaa1d02b2190837c0e2197655dbe78eef430f94d02d4c5aa247201",
+          "byte_length": 1804041,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MarkLogic_Server_v9_V3R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MarkLogic_Server_v9_V3R2_STIG.zip",
+          "sha256": "sha256:752789f15547e6fbf77dcb66f640bb2033eb1094e6b7e2dd777a23b52bd5e801",
+          "byte_length": 1432611,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_McAfee_Application_Control_7-x_V1R4_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_McAfee_Application_Control_7-x_V1R4_STIG.zip",
+          "sha256": "sha256:5b4e75f3472023dc6f4b484f880aeecbf7ce32a665f56adcfc4ca547bf5e01b1",
+          "byte_length": 1105990,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MDB_Enterprise_Advanced_3-x_V2R3_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MDB_Enterprise_Advanced_3-x_V2R3_STIG.zip",
+          "sha256": "sha256:42823e11a55c0aade0855a36dfc27afb14928e9c90c7a7c34d05c57b2eed9c3c",
+          "byte_length": 1054660,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MDB_Enterprise_Advanced_4-x_V1R4_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MDB_Enterprise_Advanced_4-x_V1R4_STIG.zip",
+          "sha256": "sha256:6e11a25fec08e8d0d6d4083475f11da72d84fb44e2c2962dee0d651ff5c29dc9",
+          "byte_length": 2058222,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Microsoft_Access_2016_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Microsoft_Access_2016_V1R1_STIG.zip",
+          "sha256": "sha256:d50c7524c814fbef36255864c402e464cfd38a1736eb50bc993859ffbbbab6fe",
+          "byte_length": 365378,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Microsoft_OneNote_2016_V1R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Microsoft_OneNote_2016_V1R2_STIG.zip",
+          "sha256": "sha256:0cff06732fa26adf552d2888d7a317f80ed2bb66889724d91d83f466059ec884",
+          "byte_length": 347204,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Microsoft_Project_2016_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Microsoft_Project_2016_V1R1_STIG.zip",
+          "sha256": "sha256:3c0080642e359b704a7c20035c6f00a760f6a0d2b76986f289571dadf9e40499",
+          "byte_length": 364625,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Microsoft_Skype_for_Business_2016_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Microsoft_Skype_for_Business_2016_V1R1_STIG.zip",
+          "sha256": "sha256:f35dc2c91a26fd3147b661a6f35b50ec9841d88dc457280ea20c6f15bd454315",
+          "byte_length": 360653,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Microsoft_Visio_2016_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Microsoft_Visio_2016_V1R1_STIG.zip",
+          "sha256": "sha256:c82a66419f6d90816933fa965d8adfa587f77c3dd19618b493875d3bd936e742",
+          "byte_length": 364318,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Microsoft_Word_2016_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Microsoft_Word_2016_V1R1_STIG.zip",
+          "sha256": "sha256:0772f0ba75f60b9120343d226892602b148bf25e66d584c9375e2abf46108242",
+          "byte_length": 370523,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MOT_Solutions_Android_13_Y25M03_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MOT_Solutions_Android_13_Y25M03_STIG.zip",
+          "sha256": "sha256:497720d0953aef9308cc6bc41738487eb18eda5ce8cbdab921bdd69345891f4a",
+          "byte_length": 2257014,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Access_2016_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Access_2016_V2R1_STIG.zip",
+          "sha256": "sha256:3464062414dfa2200428e6b2d7da69d162c80d42a20c292aca618eefa08c5720",
+          "byte_length": 1048796,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_DotNet_Framework_4-0_V2R9_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_DotNet_Framework_4-0_V2R9_STIG.zip",
+          "sha256": "sha256:a546d14c66603ef8a8eaacb4447d2deb1cbe7def4875f5fbda85d47f2ccc8c65",
+          "byte_length": 1183354,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Excel_2010_V1R12_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Excel_2010_V1R12_STIG.zip",
+          "sha256": "sha256:7b12d973a85a8b7b4ba8d2604ed562a84eb5c44a587726f1dae3820b047a01ae",
+          "byte_length": 912905,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Excel_2016_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Excel_2016_V2R2_STIG.zip",
+          "sha256": "sha256:f89b13179a442f559734fc79e590726718bcc4427919b74efbe40ee1ec10ee18",
+          "byte_length": 1141845,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Exchange_2016_Y26M10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Exchange_2016_Y26M10_STIG.zip",
+          "sha256": "sha256:bdb41c917e29499e8f6123fdb23d82ee34692b74746f34be253ded1c7cf27fd6",
+          "byte_length": 1399360,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Exchange_2019_Y26M10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Exchange_2019_Y26M10_STIG.zip",
+          "sha256": "sha256:16cb9e61f37faba3357f372c417c4e9e627a6a04aa5752bd0794d2cd5e738e7f",
+          "byte_length": 2243403,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_IE11_V2R7_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_IE11_V2R7_STIG.zip",
+          "sha256": "sha256:44f2dca102061c04b46c3994fa604272db38bea4cb878a0354487c4214d65e28",
+          "byte_length": 1186117,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Office_System_2016_V2R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Office_System_2016_V2R5_STIG.zip",
+          "sha256": "sha256:fc1020aabfa0f5720bb875650744bf86a959111589758bd5566bc733077fe5c3",
+          "byte_length": 1128985,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_OneNote_2016_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_OneNote_2016_V2R1_STIG.zip",
+          "sha256": "sha256:0ef015f329cace450c753afc9628ef3dddb71bff1bf89a0f37b4fe933ae3df2f",
+          "byte_length": 1049942,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Outlook_2016_V2R4_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Outlook_2016_V2R4_STIG.zip",
+          "sha256": "sha256:b25043d3154203d2f3aa438685577aebc5b757fc0bf47c4db6d50a7c725452fe",
+          "byte_length": 1108169,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_PowerPoint_2016_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_PowerPoint_2016_V2R1_STIG.zip",
+          "sha256": "sha256:cefa1af5ae430cc85c6ea29ac849b8ebd5efac066fe98d4d377bdb8f75d67f83",
+          "byte_length": 1054990,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Project_2016_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Project_2016_V2R1_STIG.zip",
+          "sha256": "sha256:66151af032c8186d401d950924b0c70ed0ac318dd4ac0c9d09c21a9b0b61fd63",
+          "byte_length": 816078,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Publisher_2016_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Publisher_2016_V2R1_STIG.zip",
+          "sha256": "sha256:ee1452c20c4c2ea3d7879f8290abf28014aa9d713ad761e50e929e2c090b865c",
+          "byte_length": 858805,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_SCOM_V1R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_SCOM_V1R2_STIG.zip",
+          "sha256": "sha256:00c06774520bfc1c520b7c967a6f462fba517802be13e8f2bd9c18dc115af88a",
+          "byte_length": 2014856,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Skype_for_Business_2016_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Skype_for_Business_2016_V2R1_STIG.zip",
+          "sha256": "sha256:894d1284a4dfee9dffdbf62b46a1625416b21839db4fa3486f4da8b074b54137",
+          "byte_length": 1092913,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_SQL_Server_2014_Y24M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_SQL_Server_2014_Y24M07_STIG.zip",
+          "sha256": "sha256:b6afab96797665f6753e849b5b514d1548359249efa0ac6556192843789f18f0",
+          "byte_length": 1337047,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Visio_2016_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Visio_2016_V2R1_STIG.zip",
+          "sha256": "sha256:0ca344fa2862c1b6a49610b15d49217d669311c4bc784b29730c3c5359d2d508",
+          "byte_length": 814444,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Windows_10_V3R6_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Windows_10_V3R6_STIG.zip",
+          "sha256": "sha256:bee65d971714589e58963be80fbe3e8ca04493e040fc94cf87336a06f9e882f5",
+          "byte_length": 1347897,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Windows_2012_Server_DNS_V2R7_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Windows_2012_Server_DNS_V2R7_STIG.zip",
+          "sha256": "sha256:5323a3017d0526a8900a9776a84260377ae3db06c2946bc0d926c0f1539f4404",
+          "byte_length": 1217792,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Windows_Server_2016_V2R10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Windows_Server_2016_V2R10_STIG.zip",
+          "sha256": "sha256:46fd732925b9c4073b72d5c6536d1bf8b93a6307133ab604e4be28377e767139",
+          "byte_length": 1199256,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Windows_Server_2019_V3R9_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Windows_Server_2019_V3R9_STIG.zip",
+          "sha256": "sha256:b8b1ab26fcf08ddfe99cc1e5faece4638770c7236ae69b860336ca9e217c5812",
+          "byte_length": 1203321,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Word_2010_V1R11_Manual_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Word_2010_V1R11_Manual_STIG.zip",
+          "sha256": "sha256:3b7488ee8da5d391d201d1f13f9af201977dc56278fff73a2590fb20a7972e80",
+          "byte_length": 678141,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_MS_Word_2016_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MS_Word_2016_V2R1_STIG.zip",
+          "sha256": "sha256:d5e6f8e0fbc54618aff17677d663cbc67aa0802dd4b5960e94ce5aec43379821",
+          "byte_length": 821308,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Multifunction_Device_and_Network_Printers_V2R15_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Multifunction_Device_and_Network_Printers_V2R15_STIG.zip",
+          "sha256": "sha256:5107dd51f918bceb5313ca701acb1b46ec72f4713c369917ec54e659e0df3f2a",
+          "byte_length": 1130500,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Nutanix_AOS_5-20-x_Y24M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Nutanix_AOS_5-20-x_Y24M07_STIG.zip",
+          "sha256": "sha256:1e7c1bc1bfbd0dcfd3307ef668711f5e327c0dd038eedf6e44dd3298ffbbb777",
+          "byte_length": 1224972,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Omnissa_Horizon_Y26M09_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Omnissa_Horizon_Y26M09_STIG.zip",
+          "sha256": "sha256:a93d2fc2ee3795567e51751c036d40cecbf04b491a207f484690041ab37907e6",
+          "byte_length": 2145645,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Oracle_Database_11-2g_V2R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Oracle_Database_11-2g_V2R5_STIG.zip",
+          "sha256": "sha256:7ca77839d8973d046bd1d09982585df3c9f04679f7de6f69577118e014e14d1d",
+          "byte_length": 1827388,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Oracle_Database_12c_V3R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Oracle_Database_12c_V3R5_STIG.zip",
+          "sha256": "sha256:75398ae44f48578c74cb566ede9347b9af432ef642cf41a237c3dba377d5e8bc",
+          "byte_length": 1683866,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Oracle_HTTP_Server_12-1-3_V2R3_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Oracle_HTTP_Server_12-1-3_V2R3_STIG.zip",
+          "sha256": "sha256:8fa754d39cd73289d1d4a1b1e427cbb0a2ca8c6dcec6d6c65b971f8b1ceb7a06",
+          "byte_length": 1219898,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Oracle_Linux_7_V3R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Oracle_Linux_7_V3R5_STIG.zip",
+          "sha256": "sha256:aa97204b562f75c59d4593cd7bed5c4831e2bb86aac34cf0ef52beb6551c2af0",
+          "byte_length": 1206660,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Oracle_WebLogic_Server_12c_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Oracle_WebLogic_Server_12c_V2R2_STIG.zip",
+          "sha256": "sha256:381bde2e2c41b2b24dce8cbb91a2cd6505907f8d3cc95ef55504a25de4242949",
+          "byte_length": 1393950,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_PAN_Y26M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Y26M07_STIG.zip",
+          "sha256": "sha256:6d955317ad3f7c5bd797fbdde07eefb0c84d0087d749b2b73082cfa9e8ea5109",
+          "byte_length": 1343986,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_PGS_SQL_9-x_V2R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PGS_SQL_9-x_V2R5_STIG.zip",
+          "sha256": "sha256:4088023d34ba6aedee1ad7eb77b9625c5a89ce2eb5bfd8c0b13cb78a6434401d",
+          "byte_length": 1745616,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_RH_OpenShift_Container_Platform_4-12_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_RH_OpenShift_Container_Platform_4-12_V2R2_STIG.zip",
+          "sha256": "sha256:54406217f5de732285650f12f202af62b283f63e8f34c028921db24cc571a50f",
+          "byte_length": 2460743,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_RHEL_6_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_RHEL_6_V2R2_STIG.zip",
+          "sha256": "sha256:d4e97af229a93d0f255caa5501eb4fb82aaa55ef6eed79c97a08f32e45ca2f5a",
+          "byte_length": 994424,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_RHEL_7_V3R15_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_RHEL_7_V3R15_STIG.zip",
+          "sha256": "sha256:89cf7d04b1ca6536b51cad2fe7ff5b729c9022a77522156f8a9c7b6967e6c52f",
+          "byte_length": 1178303,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_RHEL_8_V2R9_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_RHEL_8_V2R9_STIG.zip",
+          "sha256": "sha256:620bdff4d4a5b07b58817297dd5255a3f8f981a7227405c07b098588fe55cdee",
+          "byte_length": 1536948,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Riverbed_SteelHead_CX_v8_Y24M07_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Riverbed_SteelHead_CX_v8_Y24M07_STIG.zip",
+          "sha256": "sha256:88ed1f85d819cfc2b70f36cd58b3959dd91946eb955b7a72d3dc85d63d36dab9",
+          "byte_length": 1024940,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_SDN_Controller_V2R2_SRG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SDN_Controller_V2R2_SRG.zip",
+          "sha256": "sha256:fac876148377cf553ae631563fd3ca37a2425309f8c23086bef7c99da149d926",
+          "byte_length": 1233865,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_SDN_NV_V1R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SDN_NV_V1R2_STIG.zip",
+          "sha256": "sha256:69f43b7f4981995d8245f02333bebe959c20152518022d2512dc63a3e9a1a010",
+          "byte_length": 1531925,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_SLES_12_V3R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SLES_12_V3R5_STIG.zip",
+          "sha256": "sha256:32f360f67333a00b070464334512b152383d76e7cb73e7f6c889d7906c06bf09",
+          "byte_length": 1173329,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_SLES_V11_for_System_z_V1R12_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SLES_V11_for_System_z_V1R12_STIG.zip",
+          "sha256": "sha256:4a849e95ae5c5186500b20f145717aa69e7b5b3a74ec6d6b2eea25a0c71e7689",
+          "byte_length": 582292,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Splunk_Enterprise_7-x_for_Windows_V3R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Splunk_Enterprise_7-x_for_Windows_V3R2_STIG.zip",
+          "sha256": "sha256:9d2e1797403adcef606a6a787906af93f72d205fbda98e6486ca53b444bc9ea2",
+          "byte_length": 3857027,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Splunk_Enterprise_8-x_for_Linux_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Splunk_Enterprise_8-x_for_Linux_V2R2_STIG.zip",
+          "sha256": "sha256:ac8e804e8f4fdd69f3a4cd5935f2507c3e46723c2d669778d41da322f527238b",
+          "byte_length": 3628431,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Splunk_Enterprise_8-x_for-Linux_V1R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Splunk_Enterprise_8-x_for-Linux_V1R5_STIG.zip",
+          "sha256": "sha256:37822e750fbd9c76cc0c3efb1c23672ee842b20e75087fa9c67733a488ae52ec",
+          "byte_length": 4004355,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Splunk_Enterprise_8-x_for%20Linux_V2R3_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Splunk_Enterprise_8-x_for%20Linux_V2R3_STIG.zip",
+          "sha256": "sha256:0a97d694c3d9c6ff1c5a66609f251238a7c2abe1e35bb5a36cb61394cf7e9d5f",
+          "byte_length": 3661259,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_SS_Android_14_BYOAD_Y26M04_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SS_Android_14_BYOAD_Y26M04_STIG.zip",
+          "sha256": "sha256:51661f2d91efa161cf0c0fb13242fef31a76ec4e67d7d20def84589c625e4f45",
+          "byte_length": 2570792,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_SS_Android_15_BYOAD_Y26M04_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SS_Android_15_BYOAD_Y26M04_STIG.zip",
+          "sha256": "sha256:e9bcea9e354944cc968b2de23df7ae74c1b51b08f192e9758e9b6e2a5acfbc78",
+          "byte_length": 2540782,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_SS_Android_15_KPE_3-x_Y26M04_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SS_Android_15_KPE_3-x_Y26M04_STIG.zip",
+          "sha256": "sha256:7668c219f9c013d3934c2b4651e4fbe04992d39648d8292f426bd3e0a2c4eb2a",
+          "byte_length": 2717798,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_SS_Android_OS_13_KPE_3-x_Y25M10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SS_Android_OS_13_KPE_3-x_Y25M10_STIG.zip",
+          "sha256": "sha256:6c76e11e0f953888a70404929dec32955a2c59d6932423e851dfb5d9fb4ac34c",
+          "byte_length": 1988565,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_SS_Android_OS_14_KPE_3-x_Y26M04_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SS_Android_OS_14_KPE_3-x_Y26M04_STIG.zip",
+          "sha256": "sha256:1a31a25ab22398932f7c3bb4b9f639e4c7dc820ab8e39c4aa4283e28ed08dfb9",
+          "byte_length": 2745788,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Storage_Area_Network_V2R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Storage_Area_Network_V2R5_STIG.zip",
+          "sha256": "sha256:c2e4eb43a962020e63d39edc9af259dc265585cf5c109b7ecf8cc5f5f0b73da6",
+          "byte_length": 1208320,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Tanium_7-0_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Tanium_7-0_V2R1_STIG.zip",
+          "sha256": "sha256:df17134ac4b787c2117d0fa06f9d46505a83d779439490f697287f1a3063ebdf",
+          "byte_length": 1425844,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Tanium_7-3_V2R3_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Tanium_7-3_V2R3_STIG.zip",
+          "sha256": "sha256:86b4456bd9c7ca516453d494a0fc9a58daeb558f694339df7092f086747ac2fc",
+          "byte_length": 2274314,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Trend_Micro_Deep_Security_9-x_V2R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Trend_Micro_Deep_Security_9-x_V2R1_STIG.zip",
+          "sha256": "sha256:33224e19d14e49ac299d9c0e6c827ad7b242fcf6fc1f41963435dcea5aa61b04",
+          "byte_length": 1081208,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_VMW_Horizon_7-13_Y24M04_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMW_Horizon_7-13_Y24M04_STIG.zip",
+          "sha256": "sha256:985f12769518a1d0758f25efe993316f8f74368e1fd65df70bfb96146f835863",
+          "byte_length": 1485781,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_VMW_vRealize_Automation_7-x_Y23M10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMW_vRealize_Automation_7-x_Y23M10_STIG.zip",
+          "sha256": "sha256:bc3107bb9d07db70af8d4897ad0a0c98765c5aef844e21bf7cf4f6f2f1198c67",
+          "byte_length": 1889071,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_VMW_vRealize_Ops_6-x_Y23M10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMW_vRealize_Ops_6-x_Y23M10_STIG.zip",
+          "sha256": "sha256:2d14e32d284af4d5168e320e6217f3c4d9ec170f6d34799377e3aab6e6eecf4e",
+          "byte_length": 1424437,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_VMW_vRealize_Ops_Mgr_Cassandra_V1R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMW_vRealize_Ops_Mgr_Cassandra_V1R2_STIG.zip",
+          "sha256": "sha256:2337ed584d1204df002356fa81d14757b31b30fb9fbedc46b71093f1a4d660fd",
+          "byte_length": 1109555,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_VMW_WS1_UEM_V2R2_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMW_WS1_UEM_V2R2_STIG.zip",
+          "sha256": "sha256:b8bf68f088b61aa88f9d4ccc27c59b78b1a78da0d4f4587998870b3cbbefedf4",
+          "byte_length": 1667830,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_VMware_NSX_Distributed_Logical_Router_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMware_NSX_Distributed_Logical_Router_V1R1_STIG.zip",
+          "sha256": "sha256:cc641aa051b2a375cde80c2f35aa85bda7b8f72b58a0d9a31156b575ac8edc79",
+          "byte_length": 256563,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_VMware_NSX_Manager_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMware_NSX_Manager_V1R1_STIG.zip",
+          "sha256": "sha256:54b8ccaa5e9031192833bce674faaf6c35e0c4fe0754fd98035ddfcd640a7d78",
+          "byte_length": 267808,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Zebra_Android_11_COBO_V1R4_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Zebra_Android_11_COBO_V1R4_STIG.zip",
+          "sha256": "sha256:87ee7a37a11820c1531360c7889d06de3013783b350788537cd281bc9062e029",
+          "byte_length": 1456796,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
+        },
+        {
+          "source_id": "disa-package:U_Zebra_Android_13_Y26M10_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Zebra_Android_13_Y26M10_STIG.zip",
+          "sha256": "sha256:ef2cf81bb7f9586121fa0aff4beeea1ed3772b96a088aa51ae2205eca20113ac",
+          "byte_length": 2414060,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-10-20T05:57:16.464Z"
         }
       ],
       "native_files": [

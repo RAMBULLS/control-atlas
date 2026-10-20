@@ -70,11 +70,11 @@
       "records": 489,
       "mapped_records": 341,
       "published_mapping_assertions": 986,
-      "graph_eligible_80053_relationships": 450,
-      "synthetic_records": 0,
-      "graph_eligible_csf11_relationships": 535,
       "published_csf11_relationships": 536,
-      "unresolved_mapping_assertions": 1
+      "unresolved_mapping_assertions": 1,
+      "graph_eligible_80053_relationships": 450,
+      "graph_eligible_csf11_relationships": 535,
+      "synthetic_records": 0
     },
     "mobile_threats": {
       "json_rows_discovered": 243,

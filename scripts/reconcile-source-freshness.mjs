@@ -111,10 +111,15 @@ export function reconcileFreshness(registry, artifactDocuments, runDate, sourceC
     const contentChanged = freshness.hash !== nextHash;
     if (contentChanged) freshness.last_imported = runDate;
     freshness.hash = nextHash;
+    // This document is an SP 800-53 control-catalog proxy, not evidence for
+    // the assessment publication's own edition or retrieval date.
+    if (freshness.source_id === 'nist-800-53a-assessment-procedures') continue;
     const nextVersion = artifactVersion(document);
     if (nextVersion) {
       for (const source of sourceRecordsById.get(freshness.source_id) || []) {
-        source.version = String(nextVersion);
+        source.version = freshness.source_id === 'nist-800-53b-baselines'
+          ? `Revision 5, Release ${nextVersion}`
+          : String(nextVersion);
         if (contentChanged) source.retrieved_at = runDate;
       }
       for (const artifact of registry.artifacts || []) {

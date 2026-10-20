@@ -644,6 +644,7 @@ test('small Sources and Resources lists show every match while source metadata h
   assert.match(app, /if \(!bundle\?\.sourcesReady\)/);
   assert.match(loader, /sourcesReady: false/);
   assert.match(loader, /let completeSources = Boolean\(sourcesArtifact\)/);
-  assert.match(loader, /sourcesReady: completeSources/);
+  assert.match(loader, /sourcesReady: Boolean\(sourcesArtifact\) \|\| \(completeSources && catalogBootstrap\.record_source_delivery !== "neighborhood-v1"\)/);
+  assert.match(loader, /recordContextReady: plan\.recordNodeId \? completeSources : undefined/);
   assert.match(loader, /completeSources = recordSources\.complete/);
 });

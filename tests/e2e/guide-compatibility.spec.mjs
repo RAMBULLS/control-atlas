@@ -47,8 +47,8 @@ for (const [guide, template, title] of [
     const opened = context.waitForEvent("page");
     await action.click({ modifiers: ["Control"] });
     const newTab = await opened;
-    await expect(newTab.locator("#app")).toHaveAttribute("data-view", "templates");
     await waitForAppReady(newTab);
+    await expect(newTab.locator("#app")).toHaveAttribute("data-view", "templates");
     await expect.poll(() => new URL(newTab.url()).hash).toBe(destination);
     await expect(newTab.getByRole("complementary", { name: "Current document" })).toContainText(title);
     await newTab.close();

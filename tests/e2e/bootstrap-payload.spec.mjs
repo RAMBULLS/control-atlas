@@ -23,6 +23,7 @@ test.beforeEach(async ({ page }) => {
 async function assertSingleFontTransfers(page, files) {
   const urls = [...new Set(files.map(file => file.url))];
   const timings = await page.evaluate(() => performance.getEntriesByType("resource")
+    .filter(entry => entry instanceof PerformanceResourceTiming)
     .filter(entry => /\/fonts\/[a-f0-9]{64}\.woff2/.test(entry.name))
     .map(entry => ({ url: entry.name, transfer: entry.transferSize, decoded: entry.decodedBodySize })));
   for (const url of urls) {

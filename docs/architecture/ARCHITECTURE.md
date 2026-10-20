@@ -2,7 +2,7 @@
 
 - **Owner:** Forge
 - **Status:** Canonical
-- **Last reviewed:** 2026-08-12
+- **Last reviewed:** 2026-10-20
 - **Supersession:** Approved architecture changes replace the affected section here and update executable contracts in the same change.
 
 ## Product Identity
@@ -75,6 +75,8 @@ The focused Atlas adds normalized read models generated from those canonical art
 - `data/generated/atlas-neighborhood/*.json` (2048 deterministic self-contained incident-edge shards)
 
 These are delivery optimizations, not a second relationship truth. Each stored edge remains canonical and incident to the selected record.
+
+Record first paint uses the catalog bootstrap's admitted partition layout and an exact source projection from `data/generated/source-records/`. Every projection retains the complete canonical source object. The full source register and supporting context load after the published text has painted; related records wait for their source metadata. Home's React page stays lazy, and interactive shell code downloads alongside the pure data module without adding React to Home's static entry.
 
 Every displayable relationship separates:
 

@@ -367,7 +367,12 @@ export function ObjectDetailPage(props: {
             </li>)}</ul>
             {structuralChildren.length > 25 ? <AppLink onNavigate={onNavigate} patch={{ node: node.id }} view="atlas-map">Browse all contents in Atlas</AppLink> : null}
           </section> : null}
-          {visibleConnectionGroups.length > 0 ? (
+          {bundle.sourcesReady === false ? (
+            <section className="record-connections" data-record-section="related-records" id="section-related-records">
+              <h2>Connections</h2>
+              <p role="status">{props.contextUnavailable ? "The source information for related records did not load." : "Loading source information for related records."}</p>
+            </section>
+          ) : visibleConnectionGroups.length > 0 ? (
             <section className="record-connections record-connections--related" data-record-section="related-records" id="section-related-records">
               <div className="section-header"><div><h2>Related records</h2><p>Formal published links to other publications.</p></div><Badge tone="info">{visibleConnectionCount}</Badge></div>
               <div className="record-connection-groups">

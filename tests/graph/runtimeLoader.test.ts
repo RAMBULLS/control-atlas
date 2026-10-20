@@ -134,7 +134,7 @@ test("record rendering acknowledgment binds visible runtime identity and bounds 
 });
 
 // Synthetic publisher fixtures exercise staging without network or generated data.
-function recordStageFixture() {
+function recordStageFixture(compact = false) {
   const id = "nist-800-53:AC-2";
   const source = { id: "fixture-source", owner: "Fixture publisher", title: "Fixture publication" };
   const nodes = [
@@ -159,7 +159,11 @@ function recordStageFixture() {
       }
       body = { atlas_neighborhood_shard: shards.find(shard => shard.shard_id === atlasNeighborhoodShardId(id, 8)) };
     }
-    else if (url.includes("catalog-bootstrap")) body = { catalog_bootstrap: { catalogs: [{ id: "nist-800-53", name: "Fixture publication" }] } };
+    else if (url.includes("catalog-bootstrap")) body = { catalog_bootstrap: {
+      catalogs: [{ id: "nist-800-53", name: "Fixture publication", source_id: source.id }],
+      ...(compact ? { source_records: { [source.id]: "source-records/000.json" }, atlas_neighborhood: { shard_count: 8, hash_algorithm: "fnv1a-32" } } : {}),
+    } };
+    else if (url.includes("source-records/000.json")) body = { sources: [source] };
     else if (url.includes("sources.json")) body = { sources: [source] };
     else if (url.includes("library-search-index")) body = { library_search_index: { format: "columns-v1", fields: ["id"], columns: [] } };
     else if (url.includes("library-search.json")) body = { library_search: { documents: [] } };
@@ -170,6 +174,61 @@ function recordStageFixture() {
   }) as typeof fetch;
   return { id, edge, source, requests, fetchFixture, state: normalizeViewState("library-detail", { node: id }) };
 }
+
+test("record first paint uses its exact source artifact and defers the full register until paint acknowledgement", async () => {
+  const originalFetch = globalThis.fetch;
+  const fixture = recordStageFixture(true);
+  globalThis.fetch = fixture.fetchFixture;
+  clearRuntimeArtifactCache();
+  const stages: RuntimeBundle[] = [];
+  try {
+    await loadRuntimeDatasetStaged({
+      state: fixture.state,
+      onSearchReady: bundle => { stages.push(bundle); },
+      onRecordRendered: async bundle => {
+        assert.deepEqual(bundle.runtime.getSource(fixture.source.id), fixture.source);
+        assert.equal(bundle.sourcesReady, false);
+        assert.ok(fixture.requests.some(url => url.includes("source-records/000.json")));
+        assert.equal(fixture.requests.some(url => url.includes("sources.json")), false);
+        assert.equal(fixture.requests.some(url => url.includes("atlas-neighborhood-manifest")), false);
+      },
+      onFullReady: bundle => { stages.push(bundle); },
+      onError: error => { throw error; },
+    });
+    assert.equal(stages.length, 2);
+    assert.equal(stages[1].sourcesReady, true);
+    assert.equal(stages[1].recordContextReady, true);
+    assert.ok(fixture.requests.some(url => url.includes("sources.json")));
+  } finally {
+    globalThis.fetch = originalFetch;
+    clearRuntimeArtifactCache();
+  }
+});
+
+test("record source artifact mismatch cannot become official content or a silent full-register fallback", async () => {
+  const originalFetch = globalThis.fetch;
+  const fixture = recordStageFixture(true);
+  globalThis.fetch = (async input => {
+    if (String(input).includes("source-records/000.json") && !String(input).includes(".json.gz")) {
+      return new Response(JSON.stringify({ sources: [{ ...fixture.source, id: "wrong-source" }] }));
+    }
+    return fixture.fetchFixture(input);
+  }) as typeof fetch;
+  clearRuntimeArtifactCache();
+  const errors: unknown[] = [];
+  let delivered = false;
+  try {
+    await loadRuntimeDatasetStaged({ state: fixture.state,
+      onSearchReady: () => { delivered = true; }, onFullReady: () => { delivered = true; },
+      onError: error => { errors.push(error); } });
+    assert.equal(delivered, false);
+    assert.match(String(errors[0]), /identity does not match/);
+    assert.equal(fixture.requests.some(url => url.includes("sources.json")), false);
+  } finally {
+    globalThis.fetch = originalFetch;
+    clearRuntimeArtifactCache();
+  }
+});
 
 for (const earlyFailure of [false, true]) {
 test(`record cohort overlaps its manifest without premature admission (${earlyFailure ? "early rejection and retry" : "shared request"})`, async () => {

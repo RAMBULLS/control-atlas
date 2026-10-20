@@ -60,6 +60,11 @@ function assertGeneratedDataComplete() {
   const catalogBootstrap = readGeneratedArtifact(
     "data/generated/catalog-bootstrap.json",
   ).catalog_bootstrap;
+  for (const sourcePath of Object.values(catalogBootstrap?.source_records ?? {})) {
+    if (!/^source-records\/[A-Za-z0-9_-]+\.json$/.test(sourcePath) || !existsSync(join(ROOT, "data/generated", sourcePath))) {
+      throw new Error(`Generated source cache is incomplete: ${sourcePath}`);
+    }
+  }
   for (const catalog of catalogBootstrap?.catalogs ?? []) {
     const path = `data/generated/catalog-records/${catalog.id}.json`;
     if (!existsSync(join(ROOT, path))) {

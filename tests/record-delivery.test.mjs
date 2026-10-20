@@ -50,9 +50,9 @@ test('resolved static graph batches interactive code while preserving Home, warm
 
 test('first-paint font hints reference only the exact emitted normal-face bytes', () => {
   const tags = orbitalFontPreloads(fontAssets());
-  assert.equal(tags.length, 3);
-  assert.ok(tags.every(tag => tag.attrs.rel === 'preload' && tag.attrs.as === 'font' && tag.attrs.crossorigin === ''));
-  assert.deepEqual(tags.map(tag => tag.attrs.href), [...new Set(ORBITAL_FONT_HASHES.slice(0, 3))].map(digest => `./${digest}.woff2`));
+  assert.equal(tags.length, 2);
+  assert.ok(tags.every(tag => tag.attrs.rel === 'preload' && tag.attrs.as === 'font' && tag.attrs.crossorigin === 'anonymous'));
+  assert.deepEqual(tags.map(tag => tag.attrs.href), [ORBITAL_FONT_HASHES[0], ORBITAL_FONT_HASHES[2]].map(digest => `./${digest}.woff2`));
   assert.throws(() => orbitalFontPreloads({}), /missing/);
 });
 
@@ -164,7 +164,9 @@ test('existing data preloader is queued before the record route import and every
   const main = readFileSync('src/main.tsx', 'utf8');
   const warm = main.slice(main.indexOf('function warmInteractiveRoute()'), main.indexOf('async function start()'));
   assert.ok(warm.indexOf("import('./ui/lib/runtimeLoader')") < warm.indexOf('recordRouteModule.load()'));
-  assert.match(warm, /preloader = await Promise\.all/);
+  assert.match(warm, /const dataModules = Promise\.all/);
+  assert.ok(warm.indexOf("import('./ui/lib/runtimeLoader')") < warm.indexOf('void loadReactModules()'));
+  assert.ok(warm.indexOf('void loadReactModules()') < warm.indexOf('preloader = await dataModules'));
   assert.match(warm, /void runtime\.preloadRuntimeArtifacts/);
   assert.doesNotMatch(warm, /await runtime\.preloadRuntimeArtifacts/);
   assert.doesNotMatch(main, /import \{ recordRouteModule \} from/);

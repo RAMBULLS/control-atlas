@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { expect, test } from '@playwright/test';
+import { csvRows } from '../../scripts/lib/publisher-inventory.mjs';
 import { appUrl, dismissOnboarding, gotoApp, waitForAppReady } from './support.mjs';
 
 async function open(page, route) {
@@ -103,9 +104,11 @@ test('production acceptance: current FedRAMP mappings export with source evidenc
   const download = await event;
   expect(await download.failure()).toBeNull();
   const text = await readFile(await download.path(), 'utf8');
-  expect(text).toContain('Evidence / Locator');
-  expect(text).toContain('Published Source ID');
-  expect(text.trim().split(/\r?\n/)).toHaveLength(count + 1);
+  const rows = csvRows(text);
+  expect(rows[0]).toContain('Evidence / Locator');
+  expect(rows[0]).toContain('Published Source ID');
+  expect(rows).toHaveLength(count + 1);
+  for (const row of rows) expect(row).toHaveLength(rows[0].length);
 });
 
 test('production acceptance: ATT&CK connects to a published defensive countermeasure', async ({ page }) => {

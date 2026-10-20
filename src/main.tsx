@@ -618,18 +618,21 @@ function onLocationChange() {
 }
 
 async function warmInteractiveRoute() {
-  // Wait only for the data-loader modules, not their network requests. Merely
-  // scheduling these imports before React lets the UI request burst overtake
-  // the loader and leaves the record shard queued behind unrelated scripts.
+  // Queue the pure data module first. Its network work and the bounded shell
+  // can overlap; selected page imports still follow the data request setup.
   let preloader: [
     typeof import('./ui/lib/hashRoutes'),
     typeof import('./ui/lib/runtimeLoader'),
   ] | undefined;
   try {
-    preloader = await Promise.all([
+    const dataModules = Promise.all([
       import('./ui/lib/hashRoutes'),
       import('./ui/lib/runtimeLoader'),
     ]);
+    // The bounded shell is now one request. Queue the pure data module first,
+    // then overlap its download with React instead of serializing both bundles.
+    void loadReactModules().catch(() => undefined);
+    preloader = await dataModules;
   } catch {
     // The interactive loader still owns error and retry presentation.
   }
@@ -644,9 +647,8 @@ async function warmInteractiveRoute() {
       routes.parseHashLocation(routeUrl.pathname, routeUrl.search),
     ).catch(() => undefined);
   }
-  // Data requests have started. Give the cached framework/App imports their
-  // place in the queue before the route helper starts its own import burst.
-  void loadReactModules().catch(() => undefined);
+  // The selected record starts after its data requests, while the shell's
+  // already-started download continues in parallel.
   switch (routeUrl.pathname.split('/')[1]) {
     case 'search':
       void import('./ui/pages/ExplorePage').catch(() => undefined);

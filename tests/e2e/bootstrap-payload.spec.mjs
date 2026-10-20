@@ -55,22 +55,23 @@ test("record navigation waits for its own neighborhood and never announces stale
   }
 });
 
-test("record data requests start before the route import burst after the loader becomes available", async ({ page }) => {
+test("record data and shell modules overlap before the selected page imports", async ({ page }) => {
   const requested = [];
   page.on("request", request => requested.push(request.url()));
   let loaderWaiting = false;
   let releaseLoader = () => {};
   const loaderReleased = new Promise(resolve => { releaseLoader = () => resolve(undefined); });
-  await page.route(/\/assets\/runtimeLoader-[^/]+\.js$/, async route => {
+  await page.route(/\/assets\/(?:runtimeLoader|data-warmup)-[^/]+\.js$/, async route => {
     loaderWaiting = true;
     await loaderReleased;
     await route.continue();
   });
-  const routeScript = url => /\/assets\/(?:App|ObjectDetailPage|record-ui|client)-[^/]+\.js$/.test(url);
+  const routeScript = url => /\/assets\/ObjectDetailPage-[^/]+\.js$/.test(url);
   try {
     await page.goto("/#/record/nist-800-53/AC-2", { waitUntil: "domcontentloaded" });
     await expect.poll(() => loaderWaiting).toBe(true);
-    expect(requested.filter(routeScript), "UI imports must wait for the data loader module").toEqual([]);
+    await expect.poll(() => requested.some(url => /\/assets\/interactive-shell-[^/]+\.js$/.test(url)), { message: "The shell download overlaps the data module" }).toBe(true);
+    expect(requested.filter(routeScript), "The selected page waits for the data loader module").toEqual([]);
     releaseLoader();
     await expect(page.locator('[data-record-section="official-text"]')).toContainText("Define and document the types of accounts allowed");
     const shardIndex = requested.findIndex(url => /atlas-neighborhood\/[0-9a-f]+\.json\.gz/.test(url));
@@ -88,12 +89,12 @@ test("returning Home during the initial loader wait never commits the stale reco
   let loaderWaiting = false;
   let releaseLoader = () => {};
   const loaderReleased = new Promise(resolve => { releaseLoader = () => resolve(undefined); });
-  await page.route(/\/assets\/runtimeLoader-[^/]+\.js$/, async route => {
+  await page.route(/\/assets\/(?:runtimeLoader|data-warmup)-[^/]+\.js$/, async route => {
     loaderWaiting = true;
     await loaderReleased;
     await route.continue();
   });
-  const loaderResponse = page.waitForResponse(response => /\/assets\/runtimeLoader-[^/]+\.js$/.test(response.url()));
+  const loaderResponse = page.waitForResponse(response => /\/assets\/(?:runtimeLoader|data-warmup)-[^/]+\.js$/.test(response.url()));
   try {
     await page.goto("/#/record/nist-800-53/AC-2", { waitUntil: "domcontentloaded" });
     await expect.poll(() => loaderWaiting).toBe(true);
@@ -218,10 +219,16 @@ test("Resources exposes recovery when a delayed page module fails", async ({ pag
 
 test("record commits official content without a whole-tree or Resources download, then supports search", async ({ page }) => {
   const resourceRequests = [];
+  const sourceRequests = [];
+  const sourceRecordRequests = [];
+  const manifestRequests = [];
   let spineRequests = 0;
   page.on("request", request => {
     if (/commons-search-index|commons-resource-dataset/.test(request.url())) resourceRequests.push(request.url());
     if (/atlas-spine/.test(request.url())) spineRequests += 1;
+    if (/\/sources\.json(?:\.gz)?(?:\?|$)/.test(request.url())) sourceRequests.push(request.url());
+    if (/\/source-records\//.test(request.url())) sourceRecordRequests.push(request.url());
+    if (/atlas-neighborhood-manifest/.test(request.url())) manifestRequests.push(request.url());
   });
   let releaseRecord = () => {};
   const recordReleased = new Promise(resolve => { releaseRecord = () => resolve(undefined); });
@@ -234,6 +241,9 @@ test("record commits official content without a whole-tree or Resources download
     await page.goto("/#/record/nist-800-53/AC-2", { waitUntil: "domcontentloaded" });
     await neighborhood;
     await expect(page.locator('[data-route-suspense-pending="true"]')).toHaveCount(1);
+    await expect.poll(() => sourceRecordRequests.length).toBeGreaterThan(0);
+    expect(sourceRequests, "the source register waits for published record paint").toEqual([]);
+    expect(manifestRequests, "the admitted partition metadata is already in the catalog bootstrap").toEqual([]);
     expect(spineRequests).toBe(0);
     releaseRecord();
     await expect(page.locator('[data-record-content="nist-800-53:AC-2"]')).toHaveAttribute("data-record-context-ready", "true");

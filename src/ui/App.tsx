@@ -33,7 +33,6 @@ import {
 } from "./components/OrbitalContextBar";
 import { userFacingLoadError } from "../app/display-names.mjs";
 import type { RuntimeBundle } from "./lib/runtimeLoader";
-import { HomePage } from "./pages/HomePage";
 import {
   browserReloadClock,
   claimChunkReload,
@@ -87,6 +86,9 @@ function lazyRoute<T extends ComponentType<any>>(load: () => Promise<{ default: 
   );
 }
 
+const HomePage = lazyRoute(() =>
+  import("./pages/HomePage").then(module => ({ default: module.HomePage })),
+);
 const AboutPage = lazyRoute(() =>
   import("./pages/AboutPage").then((module) => ({
     default: module.AboutPage,

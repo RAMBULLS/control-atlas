@@ -114,7 +114,7 @@ test("WS0 restores an interactive Home landmark when React boot fails", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.route(/\/assets\/App-[^/]+\.js$/, (route) => route.abort());
+  await page.route(/\/assets\/(?:App|interactive-shell)-[^/]+\.js$/, (route) => route.abort());
   await gotoApp(page, "/#/");
   await page.reload();
 
@@ -138,7 +138,7 @@ test("WS0 keeps the Sources identity visible until React owns the route", async 
   const appBundleReleased = new Promise((resolve) => {
     releaseAppBundle = () => resolve(undefined);
   });
-  await page.route(/\/assets\/App-[^/]+\.js$/, async (route) => {
+  await page.route(/\/assets\/(?:App|interactive-shell)-[^/]+\.js$/, async (route) => {
     await appBundleReleased;
     await route.continue();
   });

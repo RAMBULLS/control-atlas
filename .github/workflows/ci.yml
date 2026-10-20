@@ -19,11 +19,17 @@ on:
         type: choice
         options: [standard, nightly, refresh, recover-refresh-pr, oscal, lighthouse-ab]
       sweep_mode:
-        description: Full acceptance or a focused WebKit reliability diagnostic
+        description: Full acceptance or a focused reliability diagnostic
         required: false
         default: full
         type: choice
         options: [full, reliability]
+      reliability_focus:
+        description: Regression set for manual reliability diagnostics
+        required: false
+        default: compare
+        type: choice
+        options: [compare, atlas]
       refresh_run_id:
         description: Completed refresh run whose data and repository gates passed
         required: false
@@ -871,7 +877,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: ${{ inputs.sweep_mode == 'reliability' && fromJSON('["webkit"]') || fromJSON('["chromium","firefox","webkit"]') }}
+        browser: ${{ inputs.sweep_mode == 'reliability' && (inputs.reliability_focus == 'atlas' && fromJSON('["firefox"]') || fromJSON('["webkit"]')) || fromJSON('["chromium","firefox","webkit"]') }}
         shard: [1, 2]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -894,16 +900,23 @@ jobs:
           PLAYWRIGHT_FULLY_PARALLEL: '1'
           PLAYWRIGHT_WORKERS: '2'
           SWEEP_MODE: ${{ inputs.sweep_mode }}
+          RELIABILITY_FOCUS: ${{ inputs.reliability_focus }}
         # One retry. WebKit on a shared runner fails a different interaction spec each run (each passes when
         # rerun), so a spec must fail twice to fail the sweep. Flaky specs are still listed in the report.
         shell: bash
         run: |
           focused=()
-          if [[ "$SWEEP_MODE" == 'reliability' ]]; then
-            focused=(tests/e2e/compare-results-layout.spec.mjs tests/e2e/epic12-qa-backlog-verify.spec.mjs tests/e2e/release-readiness-visual.spec.mjs
-              --grep 'published baseline selections|content revisions compare|route semantic polish|full connection list')
+          if [[ "$SWEEP_MODE" == 'reliability' && "$RELIABILITY_FOCUS" == 'atlas' ]]; then
+            focused=(tests/e2e/atlas-territory.spec.mjs tests/e2e/atlas-territory-context.spec.mjs
+              --grep 'record pins share ground|context \+ a selected publication' --repeat-each=5 --trace=retain-on-failure)
+            npm run test:e2e:run -- "${focused[@]}" --shard=${{ matrix.shard }}/2 --retries=0 --global-timeout=600000 --reporter=blob,github,line
+          else
+            if [[ "$SWEEP_MODE" == 'reliability' ]]; then
+              focused=(tests/e2e/compare-results-layout.spec.mjs tests/e2e/epic12-qa-backlog-verify.spec.mjs tests/e2e/release-readiness-visual.spec.mjs
+                --grep 'published baseline selections|content revisions compare|route semantic polish|full connection list')
+            fi
+            npm run test:e2e:run -- "${focused[@]}" --shard=${{ matrix.shard }}/2 --retries=1 --global-timeout=1500000 --reporter=blob,github,line
           fi
-          npm run test:e2e:run -- "${focused[@]}" --shard=${{ matrix.shard }}/2 --retries=1 --global-timeout=1500000 --reporter=blob,github,line
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         if: ${{ !cancelled() }}
         with:

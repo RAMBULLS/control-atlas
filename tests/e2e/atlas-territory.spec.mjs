@@ -237,7 +237,27 @@ test("record pins share ground through the CCI, and mixing pin kinds is refused 
   await goHash(page, `#/atlas?atlasResearch=shared&atlasPins=${encodeURIComponent(JSON.stringify([START, end.id]))}`);
   await expect(page.locator(".atl-inspector")).toContainText("CCI-000185", { timeout: 90000 });
   await expect(page.locator(".atl").getByRole("link", { name: /^Compare/ })).toHaveCount(0);
+  await page.evaluate(() => {
+    globalThis.__atlasPointerEvents = [];
+    for (const type of ["pointerdown", "pointerup"]) {
+      document.addEventListener(type, (event) => {
+        globalThis.__atlasPointerEvents.push({
+          type, scrollY: globalThis.scrollY,
+          landmark: event.target instanceof globalThis.Element
+            ? event.target.closest("[data-landmark]")?.getAttribute("data-landmark") || ""
+            : "",
+        });
+      }, { capture: true, once: true });
+    }
+  });
   await clickAtlasPublication(page, "csf-2");
+  await expect(page).toHaveURL(/atlasFramework=csf-2/);
+  await expect(page.locator('[data-landmark="csf-2"]')).toHaveAttribute("aria-pressed", "true");
+  const pointerEvents = await page.evaluate(() => globalThis.__atlasPointerEvents);
+  expect(pointerEvents.map(({ type, landmark }) => [type, landmark])).toEqual([
+    ["pointerdown", "csf-2"], ["pointerup", "csf-2"],
+  ]);
+  expect(pointerEvents[1].scrollY).toBe(pointerEvents[0].scrollY);
   await page.getByRole("button", { name: "Pin CSF 2.0" }).click();
   await expect(page.getByText(/Pin publications together or records together/).first()).toBeVisible();
 });

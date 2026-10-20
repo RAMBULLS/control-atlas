@@ -5550,6 +5550,14 @@ a:focus-visible {
   max-width: 100%;
 }
 
+/* WebKit can propagate long option labels into the page's scroll width even
+   when the closed native select fits its grid track. Clip only that control's
+   value; its full option labels and accessible name remain available. */
+.compare-step-fields select {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .compare-step-fields input,
 .compare-flow-task select,
 .compare-refine select {

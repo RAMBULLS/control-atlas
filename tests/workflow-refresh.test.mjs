@@ -66,7 +66,7 @@ test('nightly browser shards keep parallelism visible and allow exactly one retr
   assert.match(workflow, /PLAYWRIGHT_WORKERS: '2'/);
   assert.match(
     workflow,
-    /npm run test:e2e:run -- --shard=\$\{\{ matrix\.shard \}\}\/2 --retries=1 --reporter=blob,github/,
+    /npm run test:e2e:run -- "\$\{focused\[@\]\}" --shard=\$\{\{ matrix\.shard \}\}\/2 --retries=1 --reporter=blob,github/,
   );
 });
 

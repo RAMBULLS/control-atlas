@@ -243,7 +243,9 @@ test("record pins share ground through the CCI, and mixing pin kinds is refused 
       document.addEventListener(type, (event) => {
         globalThis.__atlasPointerEvents.push({
           type, scrollY: globalThis.scrollY,
-          landmark: event.target.closest?.("[data-landmark]")?.getAttribute("data-landmark") || "",
+          landmark: event.target instanceof globalThis.Element
+            ? event.target.closest("[data-landmark]")?.getAttribute("data-landmark") || ""
+            : "",
         });
       }, { capture: true, once: true });
     }

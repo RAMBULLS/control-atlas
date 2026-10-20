@@ -61,13 +61,18 @@ test('source refresh runs weekly and remains manually dispatchable', () => {
   assert.match(workflow, /github\.event\.schedule \|\| inputs\.task \|\| github\.ref/);
 });
 
-test('nightly browser shards keep parallelism visible and allow exactly one retry', () => {
+test('nightly browser shards retain coverage, one retry and a bounded report-producing deadline', () => {
   assert.match(workflow, /PLAYWRIGHT_FULLY_PARALLEL: '1'/);
   assert.match(workflow, /PLAYWRIGHT_WORKERS: '2'/);
   assert.match(
     workflow,
-    /npm run test:e2e:run -- "\$\{focused\[@\]\}" --shard=\$\{\{ matrix\.shard \}\}\/2 --retries=1 --reporter=blob,github/,
+    /npm run test:e2e:run -- "\$\{focused\[@\]\}" --shard=\$\{\{ matrix\.shard \}\}\/2 --retries=1 --global-timeout=1500000 --reporter=blob,github,line/,
   );
+  const job = parse(workflow).jobs['nightly-browser'];
+  const suite = job.steps.find((step) => step.name === 'Run complete browser suite');
+  assert.equal(job['timeout-minutes'], 35);
+  assert.notEqual(suite['continue-on-error'], true);
+  assert.doesNotMatch(suite.run, /--max-failures|--pass-with-no-tests|\|\| true/);
 });
 
 test('source refresh opens one App PR after the full gate and requires independent admission', () => {

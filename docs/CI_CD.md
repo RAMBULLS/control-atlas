@@ -106,6 +106,10 @@ prevents publication; routine successful refreshes require no human approval.
   Full mode remains the default and always runs for scheduled sweeps.
 - Every nightly browser shard and the accessibility suite write a unique blob
   report name and retain GitHub-readable failure output before reports merge.
+- Complete browser shards have a 25-minute Playwright deadline and a 35-minute
+  job deadline. A deadline fails the run; it cannot turn incomplete coverage
+  into a pass. Per-test progress is logged alongside GitHub annotations and
+  the retained blob report so a stalled browser can be diagnosed.
 - Browser binaries are installed only for the engine each job needs. They are not cached until timing data justifies that complexity.
 
 ## Deployment guarantees

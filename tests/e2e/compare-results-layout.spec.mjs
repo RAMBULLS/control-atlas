@@ -26,7 +26,7 @@ async function assertViewportFits(page) {
   const dimensions = await page.evaluate(() => {
     const root = document.documentElement;
     const overflow = root.scrollWidth - root.clientWidth;
-    const offenders = overflow > 1 ? [...document.querySelectorAll("main *")].map((element) => {
+    const offenders = overflow > 1 ? [...document.querySelectorAll("*")].map((element) => {
       const box = element.getBoundingClientRect();
       const style = getComputedStyle(element);
       return { element: `${element.tagName}.${element.className}`, right: Math.round(box.right),
@@ -34,8 +34,21 @@ async function assertViewportFits(page) {
         display: style.display, columns: style.gridTemplateColumns,
         text: element.textContent?.trim().slice(0, 80) };
     }).filter((item) => item.right > root.clientWidth + 1).slice(0, 24) : [];
-    return { overflow, viewport: root.clientWidth, offenders };
+    const internalOverflow = overflow > 1 ? [...document.querySelectorAll("*")]
+      .filter((element) => element.scrollWidth > element.clientWidth + 1)
+      .slice(0, 20).map((element) => ({ element: `${element.tagName}.${element.className}`,
+        scrollWidth: element.scrollWidth, clientWidth: element.clientWidth,
+        overflow: getComputedStyle(element).overflowX, position: getComputedStyle(element).position })) : [];
+    return { overflow, viewport: root.clientWidth, afterMeasurement: root.scrollWidth - root.clientWidth, offenders, internalOverflow };
   });
+  if (dimensions.overflow > 1) {
+    dimensions.nextFrame = await page.evaluate(async () => {
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const root = document.documentElement;
+      return { overflow: root.scrollWidth - root.clientWidth, width: root.clientWidth,
+        bodyWidth: document.body.clientWidth, bodyScrollWidth: document.body.scrollWidth };
+    });
+  }
   expect(dimensions.overflow, JSON.stringify(dimensions)).toBeLessThanOrEqual(1);
 }
 

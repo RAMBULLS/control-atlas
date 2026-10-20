@@ -655,7 +655,7 @@ test("arrival response promises feed the validating loader without a second down
   const originalDocument = Object.getOwnPropertyDescriptor(globalThis, "document");
   const originalPrefetch = Object.getOwnPropertyDescriptor(globalThis, "__ATLAS_ROUTE_PREFETCH__");
   const originalFetch = globalThis.fetch;
-  const pending = new Map([["https://fixture.test/mirror/data/fixture.json.gz", Promise.resolve(new Response(gzipSync('{"ready":true}')))] ]);
+  const pending = new Map([["https://fixture.test/mirror/data/fixture.json.gz", Promise.resolve(new Response(new Uint8Array(gzipSync('{"ready":true}'))))]]);
   Object.defineProperty(globalThis, "document", { configurable: true, value: { baseURI: "https://fixture.test/mirror/" } });
   Object.defineProperty(globalThis, "__ATLAS_ROUTE_PREFETCH__", { configurable: true, value: pending });
   globalThis.fetch = async () => { throw new Error("duplicate network request"); };

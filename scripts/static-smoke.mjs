@@ -30,6 +30,10 @@ const buildManifest = JSON.parse(readFileSync('dist/site/data/generated/build-ma
 const sourceManifests = JSON.parse(readFileSync('dist/site/data/generated/source-manifests.json', 'utf8')).source_manifests;
 const indexHtml = readFileSync('dist/site/index.html', 'utf8');
 const assets = readdirSync('dist/site/assets');
+const policyPosition = indexHtml.indexOf('http-equiv="Content-Security-Policy"');
+const firstScriptPosition = indexHtml.search(/<script\b/i);
+assert.ok(policyPosition >= 0 && firstScriptPosition > policyPosition, 'the security policy must precede every executable script');
+assert.equal((indexHtml.match(/<script[^>]+src="\.\/progressive-shell-delivery\.js"/g) || []).length, 1, 'arrival delivery uses one classic first-paint script');
 
 assert.equal(registry.registry.schema_version, '5.0');
 assert.ok(nodes.length > 6000, 'normalized federal graph nodes required');

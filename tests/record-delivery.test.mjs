@@ -41,7 +41,12 @@ test('resolved static graph batches interactive code while preserving Home, warm
   const groups = recordChunkGroups(root, plan);
   const shell = groups.find(group => group.name === 'interactive-shell');
   const warmup = groups.find(group => group.name === 'data-warmup');
-  for (const path of ['src/ui/App.tsx', 'src/ui/components/TopNav.tsx', 'node_modules/react-dom/client.js', 'node_modules/react/index.js', 'node_modules/@tabler/icons-react/dist/esm/icons/IconBook2.mjs']) assert.equal(shell.test(id(path)), true, path);
+  for (const path of ['src/ui/App.tsx', 'src/ui/components/TopNav.tsx', 'node_modules/@tabler/icons-react/dist/esm/icons/IconBook2.mjs']) assert.equal(shell.test(id(path)), true, path);
+  const renderer = groups.find(group => group.name === 'renderer');
+  for (const path of ['node_modules/react-dom/client.js', 'node_modules/react/index.js']) {
+    assert.equal(shell.test(id(path)), false, path);
+    assert.equal(renderer.test(id(path)), true, path);
+  }
   for (const path of ['src/main.tsx', 'src/shared/navigation-events.ts', 'src/ui/lib/runtimeLoader.ts', 'src/ui/lib/hashRoutes.ts', 'src/ui/lib/recordRouteModule.ts', 'src/ui/pages/ObjectDetailPage.tsx', 'src/ui/pages/ComparePage.tsx']) assert.equal(shell.test(id(path)), false, path);
   assert.equal(warmup.test(id('src/ui/lib/runtimeLoader.ts')), true);
   assert.equal(warmup.test(id('src/app/runtime.mjs')), true);

@@ -1373,7 +1373,9 @@ export async function loadRuntimeDatasetStaged(handlers: {
         plan.commons
           ? optionalArtifact<CommonsResourceDataset | null>("./data/commons-resource-dataset.json", null)
           : Promise.resolve(null),
-        loadRouteScopedPhase({ ...plan, sources: true, atlasSpine: false, commons: false }),
+        officialPhase.bundle.sourcesReady
+          ? Promise.resolve(officialPhase)
+          : loadRouteScopedPhase({ ...plan, sources: true, atlasSpine: false, commons: false }),
       ]);
       if (handlers.signal?.aborted) return;
       const atlasSpine = (spineArtifact as AtlasSpineArtifact | null)?.atlas_spine;

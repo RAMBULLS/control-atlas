@@ -55,7 +55,7 @@ export function planInteractiveDelivery(moduleIds, info, rootDir) {
   // and shared Home/data modules cannot acquire a dependency on React.
   const home = closure([source('src/main.tsx')]);
   const warmup = closure([source('src/ui/lib/runtimeLoader.ts'), source('src/ui/lib/hashRoutes.ts')]);
-  const renderer = ids.filter(id => /\/node_modules\/(?:react(?:-dom)?|scheduler)\//.test(normalized(id)));
+  const renderer = new Set(ids.filter(id => /\/node_modules\/(?:react(?:-dom)?|scheduler)\//.test(normalized(id))));
   const interactive = closure([source('src/ui/App.tsx'), ...renderer]);
   const record = closure([source('src/ui/pages/ObjectDetailPage.tsx')]);
   for (const id of record) {
@@ -65,12 +65,13 @@ export function planInteractiveDelivery(moduleIds, info, rootDir) {
   }
   for (const id of home) { interactive.delete(id); warmup.delete(id); }
   for (const id of warmup) interactive.delete(id);
+  for (const id of renderer) interactive.delete(id);
   // This tiny route import must remain available before the renderer arrives.
   interactive.delete(source('src/ui/lib/recordRouteModule.ts'));
-  return { interactive, warmup };
+  return { interactive, warmup, renderer };
 }
 
-export function recordChunkGroups(rootDir, delivery = { interactive: new Set(), warmup: new Set() }) {
+export function recordChunkGroups(rootDir, delivery = { interactive: new Set(), warmup: new Set(), renderer: new Set() }) {
   const ui = new Set(RECORD_UI_MODULES.map(path => `${normalized(rootDir)}/${path}`));
   const home = new Set(HOME_SHELL_MODULES.map(path => `${normalized(rootDir)}/${path}`));
   return [
@@ -84,6 +85,8 @@ export function recordChunkGroups(rootDir, delivery = { interactive: new Set(), 
     { name: 'home-shell', test: id => home.has(normalized(id)) || id === '\0vite/preload-helper.js', priority: 10,
       minShareCount: 1, entriesAware: false, includeDependenciesRecursively: false },
     { name: 'interactive-shell', test: id => delivery.interactive.has(id), priority: 40,
+      minShareCount: 1, entriesAware: false, includeDependenciesRecursively: false },
+    { name: 'renderer', test: id => delivery.renderer.has(id), priority: 45,
       minShareCount: 1, entriesAware: false, includeDependenciesRecursively: false },
     { name: 'data-warmup', test: id => delivery.warmup.has(id), priority: 50,
       minShareCount: 1, entriesAware: false, includeDependenciesRecursively: false },
@@ -202,7 +205,8 @@ export function verifyRecordDelivery(bundle, rootDir) {
   return { home: home.fileName, runtimeLoader: loader.fileName, pages,
     homeEntryClosures: homeEntries.map(entry => ({ entry: entry.fileName, chunks: describeClosure(entry) })),
     runtimeLoaderClosure: describeClosure(loader),
-    groups: chunks.filter(chunk => ['record-ui', 'record-icons', 'interactive-shell', 'data-warmup'].includes(chunk.name)).map(chunk => ({ name: chunk.name, file: chunk.fileName, modules: Object.keys(chunk.modules).map(normalized), imports: chunk.imports })),
+    groups: chunks.filter(chunk => ['record-ui', 'record-icons', 'interactive-shell', 'renderer', 'data-warmup'].includes(chunk.name)).map(chunk => ({ name: chunk.name, file: chunk.fileName, bytes: Buffer.byteLength(chunk.code),
+      modules: Object.keys(chunk.modules).map(normalized), moduleBytes: Object.entries(chunk.modules).map(([id, module]) => ({ id: normalized(id), renderedBytes: Number.isFinite(module.renderedLength) ? module.renderedLength : null })), imports: chunk.imports })),
     fontHashes: [...new Set(ORBITAL_FONT_HASHES)],
   };
 }

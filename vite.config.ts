@@ -210,7 +210,7 @@ function getBuildSha(): string {
   }
 }
 
-const interactiveDelivery = { interactive: new Set(), warmup: new Set() };
+const interactiveDelivery = { interactive: new Set(), warmup: new Set(), renderer: new Set() };
 
 export default defineConfig({
   resolve: { alias: [{ find: /^orbital-archive-no-01\/fonts\.css$/, replacement: orbitalFonts }] },
@@ -268,6 +268,7 @@ export default defineConfig({
         const plan = planInteractiveDelivery(this.getModuleIds(), id => this.getModuleInfo(id), rootDir);
         interactiveDelivery.interactive = plan.interactive;
         interactiveDelivery.warmup = plan.warmup;
+        interactiveDelivery.renderer = plan.renderer;
       },
       transformIndexHtml: {
         order: 'post',
@@ -275,10 +276,10 @@ export default defineConfig({
           if (!context.bundle) return [];
           return {
             html: _html.replace('<script src="./progressive-shell.js"></script>', '')
-              .replace('<link rel="preload" href="./progressive-shell.js" as="script">', ''),
+              .replace('<link rel="preload" href="./progressive-shell.js" as="script">', '')
+              .replace('<title>Control Atlas</title>', '<title>Control Atlas</title>\n  <script src="./progressive-shell-delivery.js"></script>'),
             tags: [
               ...orbitalFontPreloads(context.bundle).map(tag => ({ ...tag, injectTo: 'head-prepend' as const })),
-              { tag: 'script', attrs: { src: './progressive-shell-delivery.js' }, injectTo: 'head-prepend' as const },
             ],
           };
         },
@@ -286,8 +287,8 @@ export default defineConfig({
       generateBundle(_options, bundle) {
         const report = verifyRecordDelivery(bundle, rootDir);
         const modules = Object.values(bundle).filter(output => output.type === 'chunk' &&
-          (output.name === 'interactive-shell' || output.name === 'data-warmup')).map(output => output.fileName);
-        if (modules.length !== 2) throw new Error('Early route delivery requires the admitted shell and data chunks.');
+          ['interactive-shell', 'renderer', 'data-warmup'].includes(output.name)).map(output => output.fileName);
+        if (modules.length !== 3) throw new Error('Early route delivery requires the admitted shell, renderer and data chunks.');
         const config = { modules, version: RUNTIME_CACHE_VERSION, shardCount: ATLAS_NEIGHBORHOOD_SHARD_COUNT };
         this.emitFile({ type: 'asset', fileName: 'progressive-shell-delivery.js', source:
           `(${startRoutePrefetch.toString()})(${JSON.stringify(config)});\n` + readFileSync(resolve(rootDir, 'src/public/progressive-shell.js'), 'utf8') +

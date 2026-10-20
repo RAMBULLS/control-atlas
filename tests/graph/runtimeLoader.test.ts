@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { gzipSync } from "node:zlib";
 
 import {
   clearRuntimeArtifactCache,
@@ -13,7 +14,7 @@ import {
   runtimeArtifactPlan,
 } from "../../src/ui/lib/runtimeLoader";
 import type { RuntimeBundle } from "../../src/ui/lib/runtimeLoader";
-import { atlasNeighborhoodShardId, buildAtlasNeighborhoodShards } from "../../src/app/atlas-neighborhood.mjs";
+import { ATLAS_NEIGHBORHOOD_SHARD_COUNT, atlasNeighborhoodShardId, buildAtlasNeighborhoodShards } from "../../src/app/atlas-neighborhood.mjs";
 import { RUNTIME_CACHE_VERSION } from "../../src/shared/runtime-cache-version.mjs";
 import { requiresFullGraph } from "../../src/ui/lib/navigationState";
 import { normalizeViewState } from "../../src/ui/lib/viewState";
@@ -163,8 +164,8 @@ function recordStageFixture(compact = false) {
       catalogs: [{ id: "nist-800-53", name: "Fixture publication", source_id: source.id }],
       ...(compact ? { source_records: { [source.id]: "source-records/000.json" }, atlas_neighborhood: { shard_count: 8, hash_algorithm: "fnv1a-32" } } : {}),
     } };
-    else if (url.includes("source-records/000.json")) body = { sources: [source] };
-    else if (url.includes("sources.json")) body = { sources: [source] };
+    else if (url.includes("source-records/000.json")) body = { schema_version: "1.0", sources: [source] };
+    else if (url.includes("sources.json")) body = { schema_version: "1.0", sources: [source] };
     else if (url.includes("library-search-index")) body = { library_search_index: { format: "columns-v1", fields: ["id"], columns: [] } };
     else if (url.includes("library-search.json")) body = { library_search: { documents: [] } };
     else if (url.includes("commons-search-index")) body = { resources: [] };
@@ -210,7 +211,7 @@ test("record source artifact mismatch cannot become official content or a silent
   const fixture = recordStageFixture(true);
   globalThis.fetch = (async input => {
     if (String(input).includes("source-records/000.json") && !String(input).includes(".json.gz")) {
-      return new Response(JSON.stringify({ sources: [{ ...fixture.source, id: "wrong-source" }] }));
+      return new Response(JSON.stringify({ schema_version: "1.0", sources: [{ ...fixture.source, id: "wrong-source" }] }));
     }
     return fixture.fetchFixture(input);
   }) as typeof fetch;
@@ -251,7 +252,7 @@ test(`record cohort overlaps its manifest without premature admission (${earlyFa
     if (url.includes(".json.gz")) return new Response("", { status: 404 });
     if (url.includes("atlas-neighborhood-manifest")) {
       await manifestReady;
-      return new Response(JSON.stringify({ atlas_neighborhood_manifest: { shard_count: 2048 } }));
+      return new Response(JSON.stringify({ atlas_neighborhood_manifest: { shard_count: ATLAS_NEIGHBORHOOD_SHARD_COUNT } }));
     }
     assert.ok(url.includes(`atlas-neighborhood/${shardId}.json`));
     cohortRequests += 1;
@@ -496,6 +497,8 @@ test("Atlas global search includes resources and source publications only on req
 test("route bootstrap loads only the smallest faithful artifact scope", () => {
   const resources = runtimeArtifactPlan(normalizeViewState("commons"));
   assert.equal(resources.commons, true);
+  assert.equal(resources.commonsDirectory, true);
+  assert.equal(runtimeArtifactPlan(normalizeViewState("commons"), { searchOverlayOpen: true }).commonsDirectory, false);
   assert.equal(resources.librarySearch, false);
   assert.equal(resources.fullGraph, false);
 
@@ -508,6 +511,7 @@ test("route bootstrap loads only the smallest faithful artifact scope", () => {
     "resource replacement links resolve publication targets from the source register",
   );
   assert.equal(resourceDetail.fullGraph, false);
+  assert.equal(resourceDetail.commonsDirectory, false);
 
   const recordDetail = runtimeArtifactPlan(
     normalizeViewState("library-detail"),
@@ -645,6 +649,29 @@ test("expensive graph scope begins only after an explicit graph-dependent action
     }).fullGraph,
     true,
   );
+});
+
+test("arrival response promises feed the validating loader without a second download", async () => {
+  const originalDocument = Object.getOwnPropertyDescriptor(globalThis, "document");
+  const originalPrefetch = Object.getOwnPropertyDescriptor(globalThis, "__ATLAS_ROUTE_PREFETCH__");
+  const originalFetch = globalThis.fetch;
+  const pending = new Map([["https://fixture.test/mirror/data/fixture.json.gz", Promise.resolve(new Response(gzipSync('{"ready":true}')))] ]);
+  Object.defineProperty(globalThis, "document", { configurable: true, value: { baseURI: "https://fixture.test/mirror/" } });
+  Object.defineProperty(globalThis, "__ATLAS_ROUTE_PREFETCH__", { configurable: true, value: pending });
+  globalThis.fetch = async () => { throw new Error("duplicate network request"); };
+  clearRuntimeArtifactCache();
+  try {
+    assert.deepEqual(await fetchArtifact("./data/fixture.json"), { ready: true });
+    assert.equal(pending.size, 0);
+    assert.deepEqual(await fetchArtifact("./data/fixture.json"), { ready: true });
+  } finally {
+    globalThis.fetch = originalFetch;
+    for (const [name, descriptor] of [["document", originalDocument], ["__ATLAS_ROUTE_PREFETCH__", originalPrefetch]] as const) {
+      if (descriptor) Object.defineProperty(globalThis, name, descriptor);
+      else Reflect.deleteProperty(globalThis, name);
+    }
+    clearRuntimeArtifactCache();
+  }
 });
 
 test("artifact loading falls back from compressed to uncompressed data", async () => {

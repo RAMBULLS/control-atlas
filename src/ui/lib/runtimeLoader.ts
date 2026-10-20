@@ -14,6 +14,16 @@ import { expandLibrarySearchTransport } from "./librarySearchTransport";
 
 const CACHE_VERSION = RUNTIME_CACHE_VERSION;
 const artifactCache = new Map<string, Promise<unknown>>();
+function fetchRouteArtifact(path: string, signal: AbortSignal): Promise<Response> {
+  const pending = (globalThis as typeof globalThis & {
+    __ATLAS_ROUTE_PREFETCH__?: Map<string, Promise<Response>>;
+  }).__ATLAS_ROUTE_PREFETCH__;
+  const url = typeof document === "undefined" ? path : new URL(path, document.baseURI).href;
+  const prefetched = pending?.get(url);
+  if (!prefetched) return fetch(path, { signal });
+  pending!.delete(url);
+  return prefetched;
+}
 // A cold CDN fetch of a multi-megabyte artifact regularly needs more than four
 // seconds, and the uncompressed fallback is strictly larger than the
 // compressed file it replaces. The old budgets turned ordinary slow responses
@@ -322,6 +332,7 @@ export type RuntimeArtifactPlan = {
   catalogFamily: string;
   catalogId: string;
   commons: boolean;
+  commonsDirectory?: boolean;
   fullGraph: boolean;
   librarySearch: boolean;
   recordNodeId: string;
@@ -386,6 +397,7 @@ export function runtimeArtifactPlan(
       state.view === "search" ||
       buildContextRequested ||
       Boolean(options.searchOverlayOpen),
+    commonsDirectory: state.view === "commons" && !options.searchOverlayOpen,
     fullGraph,
     librarySearch:
       state.view === "search" ||
@@ -459,7 +471,7 @@ export async function preloadRuntimeArtifacts(state: ViewState) {
   }
   if (plan.commons && state.view !== "library-detail") {
     add("./data/generated/commons-search-index.json");
-    add("./data/commons-resource-dataset.json");
+    if (!plan.commonsDirectory) add("./data/commons-resource-dataset.json");
   }
   if (plan.fullGraph) {
     add(artifactPath("nodes.json"));
@@ -492,7 +504,7 @@ export async function fetchArtifact(path: string, options: ArtifactFetchOptions 
           options.compressedTimeoutMs ?? COMPRESSED_ARTIFACT_TIMEOUT_MS,
           "artifact_timeout",
           async (signal) => {
-            const response = await fetch(compressedArtifactPath(path), { signal });
+            const response = await fetchRouteArtifact(compressedArtifactPath(path), signal);
             if (!response.ok || typeof DecompressionStream === "undefined" || !response.body) {
               throw new RuntimeLoadError("artifact_unavailable", "The compressed data is unavailable.");
             }
@@ -1148,7 +1160,7 @@ async function loadRouteScopedPhase(
     plan.commons
       ? optionalArtifact<CommonsSearchIndex | null>("./data/generated/commons-search-index.json", null)
       : Promise.resolve(null),
-    plan.commons
+    plan.commons && !plan.commonsDirectory
       ? optionalArtifact<CommonsResourceDataset | null>("./data/commons-resource-dataset.json", null)
       : Promise.resolve(null),
   ]);

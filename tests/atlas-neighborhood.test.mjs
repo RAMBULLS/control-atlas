@@ -4,6 +4,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 import {
+  ATLAS_NEIGHBORHOOD_SHARD_COUNT,
   atlasNeighborhoodShardId,
   buildAtlasNeighborhoodShards,
 } from "../src/app/atlas-neighborhood.mjs";
@@ -47,13 +48,13 @@ test("Atlas neighborhood sharding is deterministic and preserves canonical edges
   const first = buildAtlasNeighborhoodShards(graph, 8);
   const second = buildAtlasNeighborhoodShards(graph, 8);
   assert.deepEqual(first, second);
-  const finer = buildAtlasNeighborhoodShards(graph, 2048);
+  const finer = buildAtlasNeighborhoodShards(graph, ATLAS_NEIGHBORHOOD_SHARD_COUNT);
   const records = (shards) => Object.fromEntries(shards.flatMap(shard => Object.entries(shard.records)));
   assert.deepEqual(records(finer), records(first), "finer shards preserve every complete record and edge");
   assert.equal(finer.reduce((count, shard) => count + shard.record_count, 0), graph.nodes.length);
   for (const shard of finer) {
     for (const id of Object.keys(shard.records)) {
-      assert.equal(shard.shard_id, atlasNeighborhoodShardId(id, 2048));
+      assert.equal(shard.shard_id, atlasNeighborhoodShardId(id));
     }
   }
   const record = first

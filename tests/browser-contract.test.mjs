@@ -643,5 +643,7 @@ test('small Sources and Resources lists show every match while source metadata h
   assert.doesNotMatch(resources, /RESOURCE_LIST_STEP|visibleCount|Show.*more/);
   assert.match(app, /if \(!bundle\?\.sourcesReady\)/);
   assert.match(loader, /sourcesReady: false/);
-  assert.match(loader, /sourcesReady: Boolean\(sourcesArtifact\)/);
+  assert.match(loader, /let completeSources = Boolean\(sourcesArtifact\)/);
+  assert.match(loader, /sourcesReady: completeSources/);
+  assert.match(loader, /completeSources = recordSources\.complete/);
 });

@@ -3,6 +3,8 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import test from 'node:test';
+import { startRoutePrefetch } from '../src/shared/route-prefetch.mjs';
+import { atlasNeighborhoodShardId, ATLAS_NEIGHBORHOOD_SHARD_COUNT } from '../src/app/atlas-neighborhood.mjs';
 import { externalizeOrbitalFonts, HOME_SHELL_MODULES, ORBITAL_FONT_HASHES, orbitalFontPreloads, planInteractiveDelivery, recordChunkGroups, RECORD_UI_MODULES, verifyRecordDelivery } from '../tools/record-delivery.mjs';
 
 const require = createRequire(import.meta.url);
@@ -50,10 +52,40 @@ test('resolved static graph batches interactive code while preserving Home, warm
 
 test('first-paint font hints reference only the exact emitted normal-face bytes', () => {
   const tags = orbitalFontPreloads(fontAssets());
-  assert.equal(tags.length, 2);
+  assert.equal(tags.length, 1);
   assert.ok(tags.every(tag => tag.attrs.rel === 'preload' && tag.attrs.as === 'font' && tag.attrs.crossorigin === 'anonymous'));
-  assert.deepEqual(tags.map(tag => tag.attrs.href), [ORBITAL_FONT_HASHES[0], ORBITAL_FONT_HASHES[2]].map(digest => `./${digest}.woff2`));
+  assert.deepEqual(tags.map(tag => tag.attrs.href), [ORBITAL_FONT_HASHES[0]].map(digest => `./${digest}.woff2`));
   assert.throws(() => orbitalFontPreloads({}), /missing/);
+});
+
+test('early route requests reuse exact cached responses and preserve Home and mirror paths', async () => {
+  const config = { modules: ['assets/data-warmup.js', 'assets/interactive-shell.js'], version: 'fixture', shardCount: ATLAS_NEIGHBORHOOD_SHARD_COUNT };
+  const links = [], requests = [];
+  const environment = { location: { hash: '#/' }, document: {
+    currentScript: { src: 'https://example.test/control-atlas/progressive-shell-delivery.js' },
+    createElement: () => ({}), head: { appendChild: link => links.push(link) },
+  }, fetch: async url => { requests.push(url); return new Response('fixture'); } };
+  startRoutePrefetch(config, environment);
+  assert.equal(links.length, 0);
+  assert.equal(requests.length, 0);
+  environment.location.hash = '#/record/nist-800-53/AC-2';
+  startRoutePrefetch(config, environment);
+  assert.deepEqual(requests, [
+    'https://example.test/control-atlas/data/generated/catalog-bootstrap.json.gz?v=fixture',
+    `https://example.test/control-atlas/data/generated/atlas-neighborhood/${atlasNeighborhoodShardId('nist-800-53:AC-2')}.json.gz?v=fixture`,
+  ]);
+  assert.ok(links.every(link => link.rel === 'modulepreload' && link.crossOrigin === 'anonymous'));
+  const responses = [...environment.__ATLAS_ROUTE_PREFETCH__.values()];
+  startRoutePrefetch(config, environment);
+  assert.equal(requests.length, 2);
+  assert.equal(await (await responses[0]).text(), 'fixture');
+  environment.location.hash = '#/resources';
+  startRoutePrefetch(config, environment);
+  assert.equal(requests.at(-1), 'https://example.test/control-atlas/data/generated/commons-search-index.json.gz');
+  await Promise.all(environment.__ATLAS_ROUTE_PREFETCH__.values());
+  environment.location.hash = '#/record/%invalid/AC-2';
+  startRoutePrefetch(config, environment);
+  assert.equal(requests.length, 3);
 });
 
 test('finite groups coalesce shared record UI and exact icons without capturing dependencies', () => {

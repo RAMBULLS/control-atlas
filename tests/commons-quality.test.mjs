@@ -22,6 +22,13 @@ assert.ok(existsSync(SCHEMA_PATH), "JSON schema exists");
 const dataset = JSON.parse(readFileSync(DATASET_PATH, "utf-8"));
 const manifest = JSON.parse(readFileSync(MANIFEST_PATH, "utf-8"));
 const index = JSON.parse(readFileSync(INDEX_PATH, "utf-8"));
+for (const resource of dataset.resources) {
+  const document = index.documents.find(entry => entry.id === resource.id);
+  assert.ok(document, `Directory projection contains ${resource.id}`);
+  for (const field of ['name', 'publisher', 'resourceType', 'cardPurpose', 'summary', 'accessType', 'maintenanceStatus', 'lastCheckedAt', 'accountRequired', 'authenticationRequired', 'origin', 'claimEvidence']) {
+    assert.deepStrictEqual(document[field], resource[field], `Directory preserves ${resource.id} ${field}`);
+  }
+}
 const schema = JSON.parse(readFileSync(SCHEMA_PATH, "utf-8"));
 
 // 2. Validate against JSON Schema with AJV

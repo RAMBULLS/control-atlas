@@ -101,7 +101,7 @@ export const ORBITAL_FONT_HASHES = Object.freeze([
 ]);
 
 export function orbitalFontPreloads(bundle) {
-  return [ORBITAL_FONT_HASHES[0], ORBITAL_FONT_HASHES[2]].map(digest => {
+  return [ORBITAL_FONT_HASHES[0]].map(digest => {
     const asset = Object.values(bundle).find(output => output.type === 'asset' && output.fileName.endsWith('.woff2') && hash(output.source) === digest);
     if (!asset) throw new Error('A first-paint Orbital font asset is missing.');
     return { tag: 'link', attrs: { rel: 'preload', as: 'font', type: 'font/woff2', href: `./${asset.fileName}`, crossorigin: 'anonymous' }, injectTo: 'head-prepend' };

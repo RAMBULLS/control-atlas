@@ -12,6 +12,41 @@ const sourceIds = [
 const runDate = '2026-09-09';
 const previousImportDate = '2026-09-01';
 
+test('control-catalog proxy versions cannot overwrite reviewed assessment publication identity', () => {
+  const id = 'nist-800-53a-assessment-procedures';
+  const reviewed = { id, version: 'Revision 5, Release 5.2.0', retrieved_at: previousImportDate };
+  const document = [{ source_version: '5.3.0', records: [{ id: 'AC-1' }] }];
+  const registry = {
+    publications: [{ ...reviewed }], sources: [{ ...reviewed }],
+    artifacts: [{ id: 'procedure-artifact', publication_source_id: id, version: '5.2.0', retrieved_at: previousImportDate }],
+    freshness: { sources: [{ source_id: id, sync_model: 'auto_synced', hash: artifactHash([]), last_checked: null }] },
+  };
+  reconcileFreshness(registry, new Map([[id, document]]), runDate);
+  assert.deepEqual(registry.publications[0], reviewed);
+  assert.deepEqual(registry.sources[0], reviewed);
+  assert.equal(registry.artifacts[0].version, '5.2.0');
+  assert.equal(registry.artifacts[0].retrieved_at, previousImportDate);
+  assert.equal(registry.freshness.sources[0].hash, artifactHash(document));
+  assert.equal(registry.freshness.sources[0].last_imported, runDate);
+  assert.equal(registry.freshness.sources[0].last_checked, null);
+});
+
+test('baseline publication labels retain revision context while native artifact releases advance', () => {
+  const id = 'nist-800-53b-baselines';
+  const registry = {
+    publications: [{ id, version: 'Revision 5, Release 5.2.0' }],
+    sources: [{ id, version: 'Revision 5, Release 5.2.0' }],
+    artifacts: [{ id: 'baseline-profile', publication_source_id: id, version: '5.2.0' }],
+    freshness: { sources: [{ source_id: id, sync_model: 'auto_synced', hash: artifactHash([]), last_checked: null }] },
+  };
+  reconcileFreshness(registry, new Map([[id, [{ records: [{ id: 'LOW', source: { version: '5.3.0' } }] }]]]), runDate);
+  assert.equal(registry.publications[0].version, 'Revision 5, Release 5.3.0');
+  assert.equal(registry.sources[0].version, 'Revision 5, Release 5.3.0');
+  assert.equal(registry.artifacts[0].version, '5.3.0');
+  assert.equal(registry.freshness.sources[0].last_imported, runDate);
+  assert.equal(registry.freshness.sources[0].last_checked, null);
+});
+
 test('quarantine preserves last checked while hashing accepted shared-source changes', () => {
   const document = [{ records: [{ id: 'accepted' }] }];
   const registry = {

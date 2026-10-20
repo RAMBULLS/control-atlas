@@ -174,7 +174,12 @@ test('route semantic polish holds at all required viewport widths', async ({ pag
 
     await page.goto('/#/about');
     await expect(page.locator('main article.learn-article')).toHaveCount(1);
-    await expect(page.locator('main article.learn-article h2')).toHaveCount(5);
+    await expect(page.locator('main article.learn-article h2')).toHaveText([
+      'Trace federal cybersecurity requirements to their sources',
+      'From publication to next action',
+      'Check the source before you act',
+      'Built in the open',
+    ]);
     await expect(page.locator('footer')).toContainText('Product release');
     await expect(page.locator('footer')).toContainText('Source data built');
     expect(await page.evaluate(() => globalThis.document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);

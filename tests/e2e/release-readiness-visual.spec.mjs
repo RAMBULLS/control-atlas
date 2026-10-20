@@ -81,7 +81,9 @@ test("release evidence: the full connection list is one bounded table on desktop
   await dismissOnboarding(page);
 
   await expect(page.getByRole("table", { name: "Relationship table" })).toBeVisible({ timeout: 20000 });
-  await expect(page.getByRole("status").filter({ hasText: /Showing connections [\d,]+-[\d,]+ of [\d,]+/ })).toBeVisible();
+  const count = page.locator(".relationship-graph-table__count");
+  await expect(count).toBeVisible();
+  await expect(count).toHaveText(/^Showing connections [\d,]+-[\d,]+ of [\d,]+\.$/);
   await assertNoPageOverflow(page);
   await page.screenshot({
     fullPage: true,

@@ -22,6 +22,23 @@ const DENSE = "/#/compare/relationships?intent=frameworks&source=disa-cci&target
 const PHONE_ROW_MAX = 1266;
 const COMPACT_INLINE_LIMIT = 8;
 
+async function assertViewportFits(page) {
+  const dimensions = await page.evaluate(() => {
+    const root = document.documentElement;
+    const overflow = root.scrollWidth - root.clientWidth;
+    const offenders = overflow > 1 ? [...document.querySelectorAll("main *")].map((element) => {
+      const box = element.getBoundingClientRect();
+      const style = getComputedStyle(element);
+      return { element: `${element.tagName}.${element.className}`, right: Math.round(box.right),
+        width: Math.round(box.width), minWidth: style.minWidth, maxWidth: style.maxWidth,
+        display: style.display, columns: style.gridTemplateColumns,
+        text: element.textContent?.trim().slice(0, 80) };
+    }).filter((item) => item.right > root.clientWidth + 1).slice(0, 24) : [];
+    return { overflow, viewport: root.clientWidth, offenders };
+  });
+  expect(dimensions.overflow, JSON.stringify(dimensions)).toBeLessThanOrEqual(1);
+}
+
 test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
 });
@@ -55,7 +72,7 @@ test("published baseline selections reconcile, filter and export on desktop and 
   await expect(page.locator("#compare-results > p").nth(1)).toHaveText(totals);
   for (const width of [1440, 390, 320]) {
     await page.setViewportSize({ width, height: 900 });
-    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+    await assertViewportFits(page);
     const scan = await new AxeBuilder({ page }).include("#compare-workspace").analyze();
     expect(scan.violations.filter((v) => ["serious", "critical"].includes(v.impact))).toEqual([]);
   }
@@ -393,7 +410,7 @@ test("content revisions compare complete inventories, source fields and CSV with
   await expect(rows.first()).toBeVisible();
   for (const width of [1440, 390, 320]) {
     await page.setViewportSize({ width, height: 900 });
-    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+    await assertViewportFits(page);
   }
   const scan = await new AxeBuilder({ page }).include("#compare-workspace").analyze();
   expect(scan.violations.filter((violation) => ["serious", "critical"].includes(violation.impact))).toEqual([]);

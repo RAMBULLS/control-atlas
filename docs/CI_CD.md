@@ -99,6 +99,11 @@ prevents publication; routine successful refreshes require no human approval.
 - A manually dispatched nightly first runs `npm run precommit` on the hosted
   runner. Its one site build then feeds all six browser shards and accessibility.
   Scheduled sweeps retain their existing build and quality gates.
+- Manual `nightly` dispatches may select `sweep_mode=reliability` to diagnose
+  the bounded Compare and connection-list regression set in WebKit. This mode
+  has a separate build name and concurrency group, runs no acceptance gate,
+  never satisfies the scheduled sweep's coverage check, and cannot close alerts.
+  Full mode remains the default and always runs for scheduled sweeps.
 - Every nightly browser shard and the accessibility suite write a unique blob
   report name and retain GitHub-readable failure output before reports merge.
 - Browser binaries are installed only for the engine each job needs. They are not cached until timing data justifies that complexity.

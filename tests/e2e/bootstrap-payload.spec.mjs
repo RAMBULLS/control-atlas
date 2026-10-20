@@ -20,6 +20,25 @@ test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
 });
 
+test("first-paint fonts load the exact pinned faces without duplicate file requests", async ({ page }) => {
+  const files = [];
+  page.on("response", response => { if (/\/fonts\/[a-f0-9]{64}\.woff2/.test(response.url())) files.push({ url: response.url(), ok: response.ok() }); });
+  await page.goto("/");
+  const faces = await page.evaluate(async () => {
+    await document.fonts.ready;
+    const result = [];
+    document.fonts.forEach(face => result.push({ family: face.family.replace(/["']/g, ""), weight: face.weight, status: face.status }));
+    return result;
+  });
+  expect(faces).toHaveLength(5);
+  for (const [family, weight] of [["IBM Plex Mono", "400"], ["IBM Plex Mono", "600"], ["Oswald", "600"], ["Oswald", "700"]]) {
+    expect(faces).toContainEqual({ family, weight, status: "loaded" });
+  }
+  expect(files.every(file => file.ok)).toBe(true);
+  expect(files.length).toBe(new Set(files.map(file => file.url)).size);
+  expect(files).toHaveLength(3);
+});
+
 test("semantic button recipes retain sizing, keyboard focus, disabled state and caller overrides", async ({ page }) => {
   await page.goto("/");
   await page.evaluate(() => {
@@ -30,7 +49,9 @@ test("semantic button recipes retain sizing, keyboard focus, disabled state and 
       const button = document.createElement("button");
       button.className = `ca-button ca-button-${variant}`;
       button.textContent = variant;
-      host.append(button);
+      const row = document.createElement("div");
+      row.append(button);
+      host.append(row);
     }
     document.body.append(host);
   });
@@ -47,7 +68,7 @@ test("semantic button recipes retain sizing, keyboard focus, disabled state and 
   await buttons.first().focus();
   await expect(buttons.first()).toHaveCSS("outline-width", "2px");
   await expect(buttons.first()).toHaveCSS("outline-offset", "2px");
-  await buttons.first().evaluate(element => { element.disabled = true; });
+  await buttons.first().evaluate(element => element.setAttribute("disabled", ""));
   await expect(buttons.first()).toHaveCSS("opacity", "0.5");
   await expect(buttons.first()).toHaveCSS("cursor", "not-allowed");
   await page.addStyleTag({ content: "@layer utilities { .button-contract-override { padding-inline: 0 !important; font-weight: 400 !important; } }" });

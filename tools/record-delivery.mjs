@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
-import { startRoutePrefetch } from '../src/shared/route-prefetch.mjs';
+import { startRoutePrefetch, warmOrbitalFonts } from '../src/shared/route-prefetch.mjs';
 
 const require = createRequire(import.meta.url);
 const normalized = value => value.replace(/\\/g, '/').split('?')[0].replace(/\/$/, '');
@@ -34,7 +34,7 @@ export function inlineArrivalDelivery(html, bundle, rootDir, options, shell) {
     visit(entry.file);
     return [route, [...files]];
   }));
-  const source = `(${startRoutePrefetch.toString()})(${JSON.stringify({ ...options, modules, routeModules })});\n${shell}\ndocument.addEventListener("DOMContentLoaded", window.controlAtlasSyncFirstPaintShell, {once:true});\n`;
+  const source = `(${startRoutePrefetch.toString()})(${JSON.stringify({ ...options, modules, routeModules })});\n(${warmOrbitalFonts.toString()})(document);\n${shell}\ndocument.addEventListener("DOMContentLoaded", window.controlAtlasSyncFirstPaintShell, {once:true});\n`;
   if (/<\/script/i.test(source)) throw new Error('Arrival source cannot contain a script end tag.');
   const digest = createHash('sha256').update(source).digest('base64');
   if (!html.includes("script-src 'self'") || !html.includes('<title>Control Atlas</title>')) throw new Error('Arrival delivery requires the existing CSP and title.');
@@ -168,12 +168,11 @@ export const ORBITAL_FONT_HASHES = Object.freeze([
   'e6c72ea4702249202bcdd79d3343057e4e25ef1f04e3fcffd8602ab53b40b4cc',
 ]);
 
-export function orbitalFontPreloads(bundle) {
-  return [ORBITAL_FONT_HASHES[0]].map(digest => {
-    const asset = Object.values(bundle).find(output => output.type === 'asset' && output.fileName.endsWith('.woff2') && hash(output.source) === digest);
-    if (!asset) throw new Error('A first-paint Orbital font asset is missing.');
-    return { tag: 'link', attrs: { rel: 'preload', as: 'font', type: 'font/woff2', href: `./${asset.fileName}`, crossorigin: 'anonymous' }, injectTo: 'head-prepend' };
-  });
+export function inlineOrbitalFontStyles(html, css) {
+  if (/<\/style/i.test(css)) throw new Error('Font declarations cannot contain a style end tag.');
+  const output = css.replace(/\.\/([a-f0-9]{64})\.woff2\?no-inline/g, './fonts/$1.woff2');
+  if ((output.match(/@font-face/g) || []).length !== 5 || /data:|no-inline/.test(output)) throw new Error('Incomplete pinned font declarations.');
+  return html.replace('<title>Control Atlas</title>', `<style data-orbital-fonts>${output}</style>\n<title>Control Atlas</title>`);
 }
 
 export function externalizeOrbitalFonts(css) {
@@ -202,7 +201,7 @@ export function materializeOrbitalFonts(rootDir) {
   for (const [digest, bytes] of fonts) writeFileSync(resolve(directory, `${digest}.woff2`), bytes);
   const stylesheet = resolve(directory, 'fonts.css');
   writeFileSync(stylesheet, css);
-  return stylesheet;
+  return { stylesheet, css, fonts };
 }
 
 export function verifyRecordDelivery(bundle, rootDir) {
@@ -263,7 +262,8 @@ export function verifyRecordDelivery(bundle, rootDir) {
   if (new Set(pages.map(page => page.file)).size !== pages.length) throw new Error('Page entries were coalesced.');
   const emittedFontHashes = new Set(Object.values(bundle).filter(output => output.type === 'asset' && output.fileName.endsWith('.woff2'))
     .map(output => hash(output.source)));
-  if (ORBITAL_FONT_HASHES.some(digest => !emittedFontHashes.has(digest))) throw new Error('An exact Orbital font asset was omitted or changed.');
+  if (Object.values(bundle).filter(output => output.type === 'asset' && output.fileName.endsWith('.woff2')).length !== 4 ||
+      emittedFontHashes.size !== 4 || ORBITAL_FONT_HASHES.some(digest => !emittedFontHashes.has(digest))) throw new Error('An exact Orbital font asset was omitted, duplicated or changed.');
   const describeClosure = entry => closure(entry).map(chunk => ({
     file: chunk.fileName, name: chunk.name, bytes: Buffer.byteLength(chunk.code), imports: chunk.imports,
     modules: Object.keys(chunk.modules).map(id => normalized(id).replace(`${normalized(rootDir)}/`, '')),

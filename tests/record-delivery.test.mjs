@@ -5,11 +5,11 @@ import { createRequire } from 'node:module';
 import test from 'node:test';
 import { runInNewContext } from 'node:vm';
 import ts from 'typescript';
-import { startRoutePrefetch, takeRouteResponse, waitForStaticRoutePaint } from '../src/shared/route-prefetch.mjs';
+import { startRoutePrefetch, takeRouteResponse, waitForStaticRoutePaint, warmOrbitalFonts } from '../src/shared/route-prefetch.mjs';
 import { recordBootstrapSources } from '../src/shared/record-source-bootstrap.mjs';
 import { buildRouteChoices } from '../src/shared/build-route-choices.mjs';
 import { atlasNeighborhoodShardId, ATLAS_NEIGHBORHOOD_SHARD_COUNT } from '../src/app/atlas-neighborhood.mjs';
-import { externalizeOrbitalFonts, inlineArrivalDelivery, HOME_SHELL_MODULES, ORBITAL_FONT_HASHES, orbitalFontPreloads, planInteractiveDelivery, recordChunkGroups, RECORD_UI_MODULES, verifyRecordDelivery } from '../tools/record-delivery.mjs';
+import { externalizeOrbitalFonts, inlineArrivalDelivery, inlineOrbitalFontStyles, HOME_SHELL_MODULES, ORBITAL_FONT_HASHES, planInteractiveDelivery, recordChunkGroups, RECORD_UI_MODULES, verifyRecordDelivery } from '../tools/record-delivery.mjs';
 
 const require = createRequire(import.meta.url);
 const css = readFileSync(require.resolve('orbital-archive-no-01/fonts.css'), 'utf8');
@@ -138,12 +138,44 @@ test('resolved static graph batches interactive code while preserving Home, warm
   assert.throws(() => planInteractiveDelivery([], () => null, root), /missing/);
 });
 
-test('first-paint font hint preserves the exact body face without competing duplicate faces', () => {
-  const tags = orbitalFontPreloads(fontAssets());
-  assert.equal(tags.length, 1);
-  assert.ok(tags.every(tag => tag.attrs.rel === 'preload' && tag.attrs.as === 'font' && tag.attrs.crossorigin === 'anonymous'));
-  assert.deepEqual(tags.map(tag => tag.attrs.href), [ORBITAL_FONT_HASHES[0]].map(digest => `./${digest}.woff2`));
-  assert.throws(() => orbitalFontPreloads({}), /missing/);
+test('first-paint fonts retain every declaration and warm their actual faces without new bytes', async () => {
+  const external = externalizeOrbitalFonts(css);
+  const html = inlineOrbitalFontStyles('<title>Control Atlas</title>', external.css);
+  const inline = html.match(/<style data-orbital-fonts>([\s\S]*?)<\/style>/)[1];
+  assert.equal(inline.replace(/\.\/fonts\/([a-f0-9]{64})\.woff2/g, './$1.woff2?no-inline'), external.css);
+  assert.equal((inline.match(/@font-face/g) || []).length, 5);
+  assert.throws(() => inlineOrbitalFontStyles('<title>Control Atlas</title>', '</style>'), /end tag/);
+  assert.throws(() => inlineOrbitalFontStyles('<title>Control Atlas</title>', ''), /Incomplete/);
+  const loads = [];
+  warmOrbitalFonts({ fonts: { load: face => { loads.push(face); return face.startsWith('700') ? Promise.reject(new Error('fixture font retrieval failure')) : Promise.resolve([]); } } });
+  warmOrbitalFonts({});
+  await Promise.resolve();
+  assert.deepEqual(loads, ['400 1em "IBM Plex Mono"', '600 1em "IBM Plex Mono"', '600 1em "Oswald"', '700 1em "Oswald"']);
+});
+
+test('actual Vite build hook emits exactly four pinned font assets and keeps dev emission off', () => {
+  const config = ts.createSourceFile('vite.config.ts', readFileSync(new URL('../vite.config.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
+  let plugin;
+  const visit = node => {
+    if (ts.isObjectLiteralExpression(node) && node.properties.some(property => ts.isPropertyAssignment(property) && property.name.getText(config) === 'name' && property.initializer.getText(config) === "'record-delivery-boundaries'")) plugin = node;
+    ts.forEachChild(node, visit);
+  };
+  visit(config);
+  assert.ok(plugin);
+  const method = name => plugin.properties.find(property => ts.isMethodDeclaration(property) && property.name.getText(config) === name);
+  for (const command of ['build', 'serve']) {
+    const emitted = [];
+    const context = { command, orbitalFonts: externalizeOrbitalFonts(css), graph: { emitFile: file => emitted.push(file) }, result: null };
+    const hook = method('buildStart');
+    runInNewContext(ts.transpileModule(`(function() ${hook.body.getText(config)}).call(graph);`, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText, context);
+    assert.equal(emitted.length, command === 'build' ? 4 : 0);
+    for (const asset of emitted) assert.equal(asset.fileName, `fonts/${createHash('sha256').update(asset.source).digest('hex')}.woff2`);
+    for (const name of ['resolveId', 'load']) {
+      const hook = method(name);
+      runInNewContext(`result = (function(id) ${hook.body.getText(config)})(${JSON.stringify('\0control-atlas-inline-fonts.css')});`, context);
+      assert.equal(context.result, name === 'resolveId' ? '\0control-atlas-inline-fonts.css' : '');
+    }
+  }
 });
 
 test('inline delivery admits only its exact bytes and starts the renderer first on mirror record routes', async () => {

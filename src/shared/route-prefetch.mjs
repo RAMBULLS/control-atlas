@@ -1,4 +1,4 @@
-// Serialized into the existing classic shell so requests can start before the
+// Serialized into the existing progressive shell so requests can start before the
 // stylesheet and React entry finish. No module executes and Home stays static.
 /** @param {{modules: string[], routeModules?: Record<string, string[]>, version: string, shardCount: number}} config */
 export function startRoutePrefetch(config, environment = /** @type {typeof globalThis & {__ATLAS_ROUTE_PREFETCH__?: Map<string, Promise<Response>>}} */ (globalThis)) {
@@ -42,6 +42,14 @@ export function startRoutePrefetch(config, environment = /** @type {typeof globa
     link.href = new URL(path, base).href;
     link.crossOrigin = 'anonymous';
     document.head.appendChild(link);
+  }
+}
+
+/** Start the same visible text faces through their real FontFace objects. */
+export function warmOrbitalFonts(document) {
+  if (!document.fonts?.load) return;
+  for (const face of ['400 1em "IBM Plex Mono"', '600 1em "IBM Plex Mono"', '600 1em "Oswald"', '700 1em "Oswald"']) {
+    document.fonts.load(face).catch(() => undefined);
   }
 }
 

@@ -80,6 +80,8 @@ Record first paint uses `data/generated/catalog-bootstrap-record.json`: the admi
 
 Home's React page stays lazy. The renderer, interactive shell and pure data module download separately without adding React to Home's static entry. The bounded arrival script is inline and admitted by its exact generated CSP hash, so selected-route requests need no preparatory script round trip. Route validation uses names, supported formats and task IDs computed from the canonical registries at build time; full descriptions remain with their publication/task consumers. The emitted graph rejects full task descriptions in the data preloader.
 
+Production delivers Orbital's five original font-face declarations before the arrival script, backed by four exact pinned WOFF2 files. Required text faces warm through the browser's FontFaceSet rather than waiting for the full stylesheet. Development retains the ordinary font stylesheet. Build and browser guards verify declarations, bytes, loaded faces and duplicate-free requests.
+
 Every displayable relationship separates:
 
 - `relationship_type`: what the relationship means

@@ -8,8 +8,16 @@ export type ButtonVariant = 'primary' | 'secondary' | 'secondary-quiet' | 'destr
  * existing important layer, so they override the semantic recipe without a
  * general Tailwind conflict engine on every initial record load.
  */
+const BUTTON_CLASSES: Record<ButtonVariant, string> = {
+  primary: "ca-button-primary",
+  secondary: "ca-button-secondary",
+  "secondary-quiet": "ca-button-secondary-quiet",
+  destructive: "ca-button-destructive",
+  editorial: "ca-button-editorial",
+};
+
 export function buttonClassName(variant: ButtonVariant = 'primary', className = '') {
-  return `ca-button ca-button-${variant}${className ? ` ${className}` : ''}`;
+  return `ca-button ${BUTTON_CLASSES[variant]}${className ? ` ${className}` : ''}`;
 }
 
 interface ButtonProps

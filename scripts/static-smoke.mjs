@@ -40,6 +40,10 @@ assert.equal(arrivalScripts.length, 1, 'arrival delivery uses one exact inline f
 const arrivalHash = createHash('sha256').update(arrivalScripts[0][1]).digest('base64');
 assert.ok(indexHtml.includes(`'sha256-${arrivalHash}'`), 'CSP must admit the exact arrival bytes');
 assert.doesNotMatch(indexHtml.match(/script-src [^;]+;/)[0], /unsafe-inline/, 'executable inline scripts still require exact hashes');
+const fontStyles = indexHtml.match(/<style data-orbital-fonts>([\s\S]*?)<\/style>/)?.[1];
+assert.ok(fontStyles, 'pinned font declarations must precede the stylesheet and arrival script');
+assert.equal((fontStyles.match(/@font-face/g) || []).length, 5);
+assert.ok(indexHtml.indexOf('<style data-orbital-fonts>') < indexHtml.indexOf('<script data-arrival-delivery>'));
 
 assert.equal(registry.registry.schema_version, '5.0');
 assert.ok(nodes.length > 6000, 'normalized federal graph nodes required');

@@ -8,7 +8,7 @@ import { resolve } from 'node:path';
 import { RUNTIME_CACHE_VERSION } from './src/shared/runtime-cache-version.mjs';
 import { ATLAS_NEIGHBORHOOD_SHARD_COUNT } from './src/app/atlas-neighborhood.mjs';
 import { buildRouteChoices } from './src/shared/build-route-choices.mjs';
-import { inlineArrivalDelivery, materializeOrbitalFonts, orbitalFontPreloads, planInteractiveDelivery, recordChunkGroups, verifyRecordDelivery } from './tools/record-delivery.mjs';
+import { inlineArrivalDelivery, inlineOrbitalFontStyles, materializeOrbitalFonts, planInteractiveDelivery, recordChunkGroups, verifyRecordDelivery } from './tools/record-delivery.mjs';
 import { HOME_CONTENT, HOME_TOOLS } from './src/shared/home-content.mjs';
 import { FIRST_PAINT_ROUTE_COPY, SITE_COPY } from './src/shared/site-copy.mjs';
 import {
@@ -216,8 +216,8 @@ const interactiveDelivery = {
   recordSupport: new Set<string>(), resourceSupport: new Set<string>(),
 };
 
-export default defineConfig({
-  resolve: { alias: [{ find: /^orbital-archive-no-01\/fonts\.css$/, replacement: orbitalFonts }] },
+export default defineConfig(({ command }) => ({
+  resolve: { alias: [{ find: /^orbital-archive-no-01\/fonts\.css$/, replacement: command === 'build' ? '\0control-atlas-inline-fonts.css' : orbitalFonts.stylesheet }] },
   base: './',
   root: resolve(rootDir, 'src'),
   define: {
@@ -272,6 +272,14 @@ export default defineConfig({
     },
     {
       name: 'record-delivery-boundaries',
+      resolveId(id) { if (id === '\0control-atlas-inline-fonts.css') return id; },
+      load(id) { if (id === '\0control-atlas-inline-fonts.css') return ''; },
+      buildStart() {
+        if (command !== 'build') return;
+        for (const [digest, bytes] of orbitalFonts.fonts) {
+          this.emitFile({ type: 'asset', fileName: `fonts/${digest}.woff2`, source: bytes });
+        }
+      },
       buildEnd(error) {
         if (error) return;
         const plan = planInteractiveDelivery(this.getModuleIds(), id => this.getModuleInfo(id), rootDir);
@@ -286,12 +294,9 @@ export default defineConfig({
         handler(_html, context) {
           if (!context.bundle) return [];
           return {
-            html: inlineArrivalDelivery(_html, context.bundle, rootDir,
+            html: inlineArrivalDelivery(inlineOrbitalFontStyles(_html, orbitalFonts.css), context.bundle, rootDir,
               { version: RUNTIME_CACHE_VERSION, shardCount: ATLAS_NEIGHBORHOOD_SHARD_COUNT },
               readFileSync(resolve(rootDir, 'src/public/progressive-shell.js'), 'utf8')),
-            tags: [
-              ...orbitalFontPreloads(context.bundle).map(tag => ({ ...tag, injectTo: 'head-prepend' as const })),
-            ],
           };
         },
       },
@@ -316,4 +321,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));

@@ -15838,5 +15838,13 @@
         "reason": "not an XML/XCCDF file"
       }
     ]
+  },
+  "inventory_check": {
+    "checked_at": "2026-10-20T06:25:13.670Z",
+    "status": "no_declared_inventory_change",
+    "content_checksum": "sha256:62a1332dc289a5ae5b55e21315c0a5651b426696ecdef3bbe643649b21c07d13",
+    "check_tier": "publisher_directory_inventory",
+    "publisher_bytes_retrieved": false,
+    "retained_content_retrieved_at": "2026-10-20T05:57:16.464Z"
   }
 }

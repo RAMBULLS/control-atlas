@@ -13236,7 +13236,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-09-30T04:14:02Z",
-          "latestRepositoryUpdateAt": "2026-10-20T05:31:58Z",
+          "latestRepositoryUpdateAt": "2026-10-20T06:00:56Z",
           "license": "MIT",
           "description": "Find secrets with Gitleaks 🔑"
         }
@@ -25516,7 +25516,7 @@
             "security-tools"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-19T20:05:28Z",
+          "lastPushedAt": "2026-10-20T06:05:38Z",
           "latestRepositoryUpdateAt": "2026-10-20T05:43:11Z",
           "license": "Apache-2.0",
           "description": "Prowler is the world’s most widely used open-source cloud security platform that automates security and compliance across any cloud environment."
@@ -25554,7 +25554,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-19T20:05:28Z.",
+          "text": "Latest repository push: 2026-10-20T06:05:38Z.",
           "sourceUrl": "https://api.github.com/repos/prowler-cloud/prowler"
         },
         "release": {
@@ -25567,7 +25567,7 @@
         }
       },
       "lastReleaseAt": "2026-10-15T10:43:19Z",
-      "lastCommitAt": "2026-10-19T20:05:28Z",
+      "lastCommitAt": "2026-10-20T06:05:38Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",

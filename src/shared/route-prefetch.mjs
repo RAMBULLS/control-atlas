@@ -1,6 +1,6 @@
 // Serialized into the existing progressive shell so requests can start before the
 // stylesheet and React entry finish. No module executes and Home stays static.
-/** @param {{modules: string[], priorityModule?: string, routeModules?: Record<string, string[]>, version: string, shardCount: number}} config */
+/** @param {{modules: string[], routeModules?: Record<string, string[]>, version: string, shardCount: number}} config */
 export function startRoutePrefetch(config, environment = /** @type {typeof globalThis & {__ATLAS_ROUTE_PREFETCH__?: Map<string, Promise<Response>>}} */ (globalThis)) {
   const { document, location } = environment;
   const script = /** @type {HTMLScriptElement} */ (document.currentScript);
@@ -21,20 +21,6 @@ export function startRoutePrefetch(config, environment = /** @type {typeof globa
     const shard = (hash % config.shardCount).toString(16).padStart(2, '0');
     paths.push(`data/generated/catalog-bootstrap-record.json.gz?v=${config.version}`, `data/generated/atlas-neighborhood/${shard}.json.gz?v=${config.version}`);
   }
-  const hinted = new Set();
-  const hint = path => {
-    if (hinted.has(path)) return;
-    hinted.add(path);
-    const link = document.createElement('link');
-    link.rel = 'modulepreload';
-    link.href = new URL(path, base).href;
-    link.crossOrigin = 'anonymous';
-    if (path === config.priorityModule) link.fetchPriority = 'high';
-    document.head.appendChild(link);
-  };
-  // The largest required script gets a connection before data and small
-  // support modules fill the queue; no module executes before its consumer.
-  if (config.priorityModule) hint(config.priorityModule);
   const pending = environment.__ATLAS_ROUTE_PREFETCH__ ||= new Map();
   for (const path of paths) {
     const url = new URL(path, base).href;
@@ -51,7 +37,11 @@ export function startRoutePrefetch(config, environment = /** @type {typeof globa
   }
   const route = segments[0] === 'resources' && segments.length > 1 ? 'resource-detail' : segments[0];
   for (const path of new Set([...config.modules, ...(config.routeModules?.[route] || [])])) {
-    hint(path);
+    const link = document.createElement('link');
+    link.rel = 'modulepreload';
+    link.href = new URL(path, base).href;
+    link.crossOrigin = 'anonymous';
+    document.head.appendChild(link);
   }
 }
 

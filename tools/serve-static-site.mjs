@@ -3,6 +3,7 @@
 import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import { extname, join, normalize } from 'node:path';
 import { createServer } from 'node:http';
+import { createSecureServer } from 'node:http2';
 import { gzipSync } from 'node:zlib';
 
 const ROOT = join(process.cwd(), 'dist', 'site');
@@ -38,7 +39,7 @@ function compressedFile(filePath) {
   return compressed;
 }
 
-const server = createServer((request, response) => {
+const handler = (request, response) => {
   if (testServer && request.url?.split('?')[0] === '/__control-atlas-test-shutdown') {
     response.writeHead(204, { 'cache-control': 'no-store' });
     response.end();
@@ -80,8 +81,15 @@ const server = createServer((request, response) => {
   } else {
     createReadStream(filePath).pipe(response);
   }
-});
+};
+
+const http2 = process.argv.includes('--http2');
+const server = http2 ? createSecureServer({
+  allowHTTP1: true,
+  key: readFileSync(join(process.cwd(), '.lighthouseci/tls/localhost.key')),
+  cert: readFileSync(join(process.cwd(), '.lighthouseci/tls/localhost.crt')),
+}, handler) : createServer(handler);
 
 server.listen(PORT, 'localhost', () => {
-  console.log(`Control Atlas static site available at http://localhost:${PORT}`);
+  console.log(`Control Atlas static site available at ${http2 ? 'https' : 'http'}://localhost:${PORT}`);
 });

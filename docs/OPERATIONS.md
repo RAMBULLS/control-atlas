@@ -352,6 +352,17 @@ and small logs instead of downloading a full site or corpus to the laptop.
 
 ### Production performance measurement
 
+CI's `npm run test:performance:ci` serves the unchanged built site over
+localhost HTTPS with HTTP/2, matching the public deployment transport. It uses
+an ephemeral one-day localhost certificate and admits only that certificate's
+SPKI hash in Chrome. No system trust or general certificate exception changes.
+Measured documents and transferred same-origin assets must report `h2`.
+The static server's ordinary browser-test mode remains HTTP/1.1.
+The optional `--compare-http1` runner flag retains a fixed HTTP/1 reference
+before the HTTP/2 measurement, with the same build identities, routes, cold
+samples, host warmups, throttling and assertions. Reference failures remain in
+the comparison artifact; they are not production-transport passes.
+
 `npm run lighthouse:production` uses two fixed host warmups followed by three
 measured cold-browser runs. All three measured runs enter the median; scores do
 not trigger retries or selective sampling. LCP, TBT and CLS budgets remain

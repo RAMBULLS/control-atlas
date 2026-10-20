@@ -147,13 +147,15 @@ function recordStageFixture(compact = false, atomic = false) {
     provenance_class: "federal_published", confidence: "direct",
     source_refs: [{ source_id: source.id, ref_type: "primary", locator: "Fixture row 1" }] };
   const shards = buildAtlasNeighborhoodShards({ nodes, edges: [edge] }, 8);
+  const manifest = { shard_count: 8, hash_algorithm: "fnv1a-32", records: nodes.length,
+    shards: shards.map(shard => ({ shard_id: shard.shard_id, record_count: shard.record_count, path: `atlas-neighborhood/${shard.shard_id}.json` })) };
   const requests: string[] = [];
   const fetchFixture = (async (input: Parameters<typeof fetch>[0]) => {
     const url = String(input);
     requests.push(url);
     if (url.includes(".json.gz")) return new Response("", { status: 404 });
     let body: unknown;
-    if (url.includes("atlas-neighborhood-manifest")) body = { atlas_neighborhood_manifest: { shard_count: 8 } };
+    if (url.includes("atlas-neighborhood-manifest")) body = { atlas_neighborhood_manifest: manifest };
     else if (url.includes("atlas-neighborhood/")) {
       if (!url.includes(`atlas-neighborhood/${atlasNeighborhoodShardId(id, 8)}.json`)) {
         return new Response("", { status: 404 });
@@ -174,8 +176,36 @@ function recordStageFixture(compact = false, atomic = false) {
     else throw new Error(`Unexpected fixture request: ${url}`);
     return new Response(JSON.stringify(body), { status: 200 });
   }) as typeof fetch;
-  return { id, edge, source, requests, fetchFixture, state: normalizeViewState("library-detail", { node: id }) };
+  return { id, edge, source, requests, fetchFixture, manifest, state: normalizeViewState("library-detail", { node: id }) };
 }
+
+test("unoccupied record cohorts require a complete manifest; missing registered cohorts stay unavailable", async () => {
+  const originalFetch = globalThis.fetch;
+  const fixture = recordStageFixture(true);
+  const occupied = new Set(fixture.manifest.shards.map(shard => shard.shard_id));
+  const unknown = Array.from({ length: 64 }, (_, index) => `fixture:missing-${index}`)
+    .find(id => !occupied.has(atlasNeighborhoodShardId(id, 8)))!;
+  const bootstrap = Promise.resolve({ catalog_bootstrap: { atlas_neighborhood: { shard_count: 8, hash_algorithm: "fnv1a-32" } } });
+  let manifest = fixture.manifest;
+  globalThis.fetch = (async input => String(input).includes("atlas-neighborhood-manifest.json?")
+    ? new Response(JSON.stringify({ atlas_neighborhood_manifest: manifest }))
+    : new Response("", { status: 404 })) as typeof fetch;
+  try {
+    clearRuntimeArtifactCache();
+    assert.equal(await loadAtlasNeighborhood(unknown, bootstrap), null);
+    clearRuntimeArtifactCache();
+    await assert.rejects(loadAtlasNeighborhood(fixture.id, bootstrap), { code: "artifact_unavailable" });
+    for (const invalid of [
+      { ...fixture.manifest, records: fixture.manifest.records + 1 },
+      { ...fixture.manifest, shards: [...fixture.manifest.shards, fixture.manifest.shards[0]] },
+      { ...fixture.manifest, shards: fixture.manifest.shards.map(shard => ({ ...shard, path: "wrong.json" })) },
+    ]) {
+      clearRuntimeArtifactCache();
+      manifest = invalid;
+      await assert.rejects(loadAtlasNeighborhood(unknown, bootstrap), { code: "artifact_unavailable" });
+    }
+  } finally { globalThis.fetch = originalFetch; clearRuntimeArtifactCache(); }
+});
 
 test("atomic record arrival shares its complete admitted register and runtime with the full stage", async () => {
   const originalFetch = globalThis.fetch;

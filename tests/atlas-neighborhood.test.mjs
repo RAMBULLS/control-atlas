@@ -14,33 +14,6 @@ import {
 } from "../src/app/ancestor-path.mjs";
 import { readGeneratedCollection } from "../scripts/lib/generated-graph-artifacts.mjs";
 
-test("Atlas neighborhood repartitioning changes delivery cohorts without changing complete records", () => {
-  const prior = new Map();
-  let pair;
-  for (let index = 0; index < 2048 && !pair; index += 1) {
-    const id = `fixture:record-${index}`;
-    const key = atlasNeighborhoodShardId(id, 8192);
-    const other = prior.get(key);
-    if (other && atlasNeighborhoodShardId(other, ATLAS_NEIGHBORHOOD_SHARD_COUNT) !== atlasNeighborhoodShardId(id, ATLAS_NEIGHBORHOOD_SHARD_COUNT)) pair = [other, id];
-    else prior.set(key, id);
-  }
-  assert.ok(pair, "the bounded fixture must find a split cohort");
-  const graph = {
-    nodes: pair.map((id, index) => ({ id, node_type: "control", source_id: "fixture-source", metadata: {
-      item_id: String(index), title: `Fixture record ${index}`, description: `Complete fixture text ${index}.`,
-    } })),
-    edges: [{ id: "edge:fixture", source_node_id: pair[0], target_node_id: pair[1],
-      relationship_type: "maps_to", relationship_class: "correlation", publication_status: "published",
-      provenance_class: "federal_published", source_refs: [{ source_id: "fixture-source", locator: "Fixture row" }] }],
-  };
-  const before = buildAtlasNeighborhoodShards(graph, 8192);
-  const after = buildAtlasNeighborhoodShards(graph);
-  assert.equal(before.length, 1);
-  assert.equal(after.length, 2, "empty partition slots must not become files");
-  const records = shards => Object.assign({}, ...shards.map(shard => shard.records));
-  assert.deepEqual(records(after), records(before), "publisher text, context, paths, edge counts and evidence stay complete");
-});
-
 test("Atlas neighborhood sharding is deterministic and preserves canonical edges", () => {
   const graph = {
     nodes: [

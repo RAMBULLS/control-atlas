@@ -9,6 +9,7 @@ import { inventoryCiReports, runCiLighthouse as runLighthouse } from '../tools/r
 import diagnosticConfig from '../tools/lighthouse-diagnostic.config.mjs';
 import { assertCapturePair, lighthouseRuntime, reproduction } from '../tools/lighthouse-diagnostic-support.mjs';
 import { exportLanternCriticalPath, flattenEstimate, timerEdges } from '../tools/export-lantern-critical-path.mjs';
+import { assertHttp2Report, http2LighthouseConfig } from '../tools/lighthouse-http2.mjs';
 
 // Assertion-runner fixtures do not contain original browser metric inputs.
 const runCiLighthouse = options => runLighthouse({ exportDiagnostics() {}, warmupRuns: 0, ...options });
@@ -16,6 +17,34 @@ const runCiLighthouse = options => runLighthouse({ exportDiagnostics() {}, warmu
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const config = JSON.parse(readFileSync(join(root, '.lighthouserc.ci.json'), 'utf8'));
 const cli = join(root, 'node_modules/@lhci/cli/src/cli.js');
+
+test('production transport changes only localhost scheme, server TLS and exact certificate admission', () => {
+  const pin = Buffer.alloc(32, 7).toString('base64');
+  const transformed = http2LighthouseConfig(config, root, pin);
+  assert.deepEqual(transformed.ci.assert, config.ci.assert);
+  assert.deepEqual(transformed.ci.upload, config.ci.upload);
+  assert.equal(transformed.ci.collect.startServerCommand, 'npm run serve:static -- --http2');
+  assert.deepEqual(transformed.ci.collect.url.map(url => url.replace(/^https:/, 'http:')), config.ci.collect.url);
+  assert.equal(transformed.ci.collect.numberOfRuns, config.ci.collect.numberOfRuns);
+  const expected = { ...config.ci.collect.settings, configPath: resolve(root, config.ci.collect.settings.configPath),
+    chromeFlags: `${config.ci.collect.settings.chromeFlags} --ignore-certificate-errors-spki-list=${pin}` };
+  assert.deepEqual(transformed.ci.collect.settings, expected);
+  assert.equal(config.ci.collect.startServerCommand, 'npm run serve:static');
+  assert.throws(() => http2LighthouseConfig(config, root, 'invalid'), /pin/);
+  const external = structuredClone(config); external.ci.collect.url[0] = 'https://example.test/';
+  assert.throws(() => http2LighthouseConfig(external, root, pin), /configuration/);
+});
+
+test('production measurements reject silent HTTP/1 fallback and absent protocol proof', () => {
+  const document = { url: 'https://localhost:4317/', resourceType: 'Document', transferSize: 1000, protocol: 'h2' };
+  const script = { ...document, url: 'https://localhost:4317/assets/main.js', resourceType: 'Script' };
+  const report = items => ({ requestedUrl: 'https://localhost:4317/#/record/nist-800-53/AC-2',
+    audits: { 'network-requests': { details: { items } } } });
+  assert.deepEqual(assertHttp2Report(report([document, script])), { protocol: 'h2', transferredRequests: 2 });
+  assert.throws(() => assertHttp2Report(report([document, { ...script, protocol: 'http/1.1' }])));
+  assert.throws(() => assertHttp2Report(report([script])));
+  assert.throws(() => assertHttp2Report(report([])));
+});
 
 test('normal hosted collection retains raw trace evidence without changing budgets', () => {
   assert.equal(config.ci.collect.settings.saveAssets, true);

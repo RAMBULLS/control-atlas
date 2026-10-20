@@ -691,8 +691,33 @@ export async function loadAtlasNeighborhood(
   const shardId = atlasNeighborhoodShardId(nodeId, shardCount);
   const selectedShard = shardId === expectedShardId
     ? await expectedShard
-    : { value: await fetchArtifact(artifactPath(`atlas-neighborhood/${shardId}.json`)) };
-  if ("error" in selectedShard) throw selectedShard.error;
+    : await fetchArtifact(artifactPath(`atlas-neighborhood/${shardId}.json`))
+      .then(value => ({ value }), error => ({ error }));
+  if ("error" in selectedShard) {
+    if (!(selectedShard.error instanceof RuntimeLoadError) || selectedShard.error.code !== "artifact_unavailable") throw selectedShard.error;
+    // Empty cohorts have no file. Only the complete publisher manifest can
+    // distinguish that absence from a missing required delivery artifact.
+    const fullManifest = topology
+      ? await fetchArtifact(artifactPath("atlas-neighborhood-manifest.json"))
+      : manifestArtifact;
+    const manifest = fullManifest.atlas_neighborhood_manifest;
+    const entries = manifest?.shards;
+    if (!manifest || manifest.shard_count !== shardCount || manifest.hash_algorithm !== "fnv1a-32" ||
+        !Number.isInteger(manifest.records) || manifest.records < 0 || !Array.isArray(entries)) throw selectedShard.error;
+    const occupied = new Set<string>();
+    let records = 0;
+    for (const entry of entries) {
+      const index = typeof entry.shard_id === "string" ? Number.parseInt(entry.shard_id, 16) : NaN;
+      if (!Number.isInteger(index) || index < 0 || index >= shardCount ||
+          entry.shard_id !== index.toString(16).padStart(2, "0") || occupied.has(entry.shard_id) ||
+          entry.path !== `atlas-neighborhood/${entry.shard_id}.json` ||
+          !Number.isInteger(entry.record_count) || entry.record_count < 1) throw selectedShard.error;
+      occupied.add(entry.shard_id);
+      records += entry.record_count;
+    }
+    if (records !== manifest.records || occupied.has(shardId)) throw selectedShard.error;
+    return null;
+  }
   const shardArtifact = selectedShard.value as {
     atlas_neighborhood_shard?: {
       records?: Record<string, AtlasNeighborhoodShardRecord>;

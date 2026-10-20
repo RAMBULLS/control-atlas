@@ -3,6 +3,7 @@ import { lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, wr
 import { resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { runNodeSync } from './lib/process-runner.mjs';
+import { assertHttp2Report, prepareLighthouseHttp2 } from './lighthouse-http2.mjs';
 
 const REPORT_FILE = /^lhr-\d+\.json$/;
 const RAW_ASSET_FILE = /_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}-\d+\.(trace|devtoolslog)\.json$/;
@@ -29,9 +30,9 @@ export function inventoryCiReports(config, reports) {
   return { urls, runs };
 }
 
-export function runCiLighthouse({ cwd = process.cwd(), runCommand, exportDiagnostics, warmupRuns = 2 } = {}) {
+export function runCiLighthouse({ cwd = process.cwd(), runCommand, exportDiagnostics, warmupRuns = 2,
+  configPath = resolve(cwd, '.lighthouserc.ci.json'), requireHttp2 = false } = {}) {
   if (![0, 2].includes(warmupRuns)) throw new Error('Use the fixed two-run host warmup.');
-  const configPath = resolve(cwd, '.lighthouserc.ci.json');
   const config = JSON.parse(readFileSync(configPath, 'utf8'));
   const reportDirectory = join(cwd, '.lighthouseci');
   const assertionPath = join(reportDirectory, 'assertion-results.json');
@@ -104,6 +105,7 @@ export function runCiLighthouse({ cwd = process.cwd(), runCommand, exportDiagnos
       .sort().map(filename => ({ filename, report: JSON.parse(readFileSync(join(reportDirectory, filename), 'utf8')) }));
     inventoryCiReports(config, reports);
     for (const { filename, report } of reports) {
+      const transport = requireHttp2 ? assertHttp2Report(report) : undefined;
       rmSync(assertionPath, { force: true });
       console.log(`Checking Lighthouse route ${report.requestedUrl} (${filename})`);
       // LHCI groups by finalUrl, which drops SPA hashes. A single-file assertion
@@ -117,7 +119,7 @@ export function runCiLighthouse({ cwd = process.cwd(), runCommand, exportDiagnos
         failures.push(`${report.requestedUrl}: ${error.message}`);
         assertions = [];
       }
-      routes.push({ requestedUrl: report.requestedUrl, ...(typeof report.fetchTime === 'string' ? { fetchTime: report.fetchTime } : {}), filename, passed: passed && assertions.length > 0, assertions });
+      routes.push({ requestedUrl: report.requestedUrl, ...(typeof report.fetchTime === 'string' ? { fetchTime: report.fetchTime } : {}), ...(transport ? { transport } : {}), filename, passed: passed && assertions.length > 0, assertions });
     }
   } catch (error) {
     failures.push(`report inventory: ${error.message}`);
@@ -177,9 +179,43 @@ export function runCiLighthouse({ cwd = process.cwd(), runCommand, exportDiagnos
   return evidence;
 }
 
+export function runProductionTransport({ cwd = process.cwd(), compareHttp1 = false } = {}) {
+  const output = join(cwd, 'artifacts/lighthouse-ci');
+  const reference = join(cwd, 'artifacts/lighthouse-http1-reference');
+  const identity = () => Object.fromEntries(['release.json', 'record-delivery-chunks.json'].map(name =>
+    [name, createHash('sha256').update(readFileSync(join(cwd, 'dist/site', name))).digest('hex')]));
+  const before = identity();
+  let http1;
+  if (compareHttp1) {
+    http1 = runCiLighthouse({ cwd });
+    if (http1.routes.length !== 3 || http1.failures.some(failure => !failure.startsWith('assert:'))) {
+      throw new Error('HTTP/1 reference collection is incomplete; retain its failures before retrying.');
+    }
+    rmSync(reference, { recursive: true, force: true });
+    renameSync(output, reference);
+  }
+  const config = JSON.parse(readFileSync(join(cwd, '.lighthouserc.ci.json'), 'utf8'));
+  const tls = prepareLighthouseHttp2(config, cwd);
+  try {
+    const evidence = runCiLighthouse({ cwd, configPath: tls.path, requireHttp2: true });
+    const after = identity();
+    if (JSON.stringify(before) !== JSON.stringify(after)) evidence.failures.push('Built artifact identity changed between transport measurements.');
+    if (compareHttp1) {
+      renameSync(reference, join(output, 'http1-reference'));
+      writeFileSync(join(output, 'transport-comparison.json'), JSON.stringify({
+        before, after, reference: { directory: 'http1-reference', failures: http1.failures, routes: http1.routes },
+        production: { failures: evidence.failures, routes: evidence.routes },
+        method: 'Same build, fixed HTTP/1 reference then production HTTP/2; two host warmups and one cold measurement per route per transport. Original assertions retained.',
+      }, null, 2));
+    }
+    writeFileSync(join(output, 'route-assertions.json'), JSON.stringify(evidence, null, 2));
+    return evidence;
+  } finally { tls.cleanup(); }
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
-    const evidence = runCiLighthouse();
+    const evidence = runProductionTransport({ compareHttp1: process.argv.includes('--compare-http1') });
     if (evidence.failures.length) {
       console.error(evidence.failures.join('\n'));
       process.exitCode = 1;

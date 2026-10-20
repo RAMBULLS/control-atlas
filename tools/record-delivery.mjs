@@ -34,7 +34,7 @@ export function inlineArrivalDelivery(html, bundle, rootDir, options, shell) {
     visit(entry.file);
     return [route, [...files]];
   }));
-  const source = `(${startRoutePrefetch.toString()})(${JSON.stringify({ ...options, modules, priorityModule: modules[0], routeModules })});\n(${warmOrbitalFonts.toString()})(document);\n${shell}\ndocument.addEventListener("DOMContentLoaded", window.controlAtlasSyncFirstPaintShell, {once:true});\n`;
+  const source = `(${startRoutePrefetch.toString()})(${JSON.stringify({ ...options, modules, routeModules })});\n(${warmOrbitalFonts.toString()})(document);\n${shell}\ndocument.addEventListener("DOMContentLoaded", window.controlAtlasSyncFirstPaintShell, {once:true});\n`;
   if (/<\/script/i.test(source)) throw new Error('Arrival source cannot contain a script end tag.');
   const digest = createHash('sha256').update(source).digest('base64');
   if (!html.includes("script-src 'self'") || !html.includes('<title>Control Atlas</title>')) throw new Error('Arrival delivery requires the existing CSP and title.');

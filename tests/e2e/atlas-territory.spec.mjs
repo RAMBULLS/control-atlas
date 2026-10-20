@@ -237,7 +237,11 @@ test("record pins share ground through the CCI, and mixing pin kinds is refused 
   await goHash(page, `#/atlas?atlasResearch=shared&atlasPins=${encodeURIComponent(JSON.stringify([START, end.id]))}`);
   await expect(page.locator(".atl-inspector")).toContainText("CCI-000185", { timeout: 90000 });
   await expect(page.locator(".atl").getByRole("link", { name: /^Compare/ })).toHaveCount(0);
+  const scrollBeforeSelection = await page.evaluate(() => globalThis.scrollY);
   await clickAtlasPublication(page, "csf-2");
+  await expect(page).toHaveURL(/atlasFramework=csf-2/);
+  await expect(page.locator('[data-landmark="csf-2"]')).toHaveAttribute("aria-pressed", "true");
+  expect(await page.evaluate(() => globalThis.scrollY)).toBe(scrollBeforeSelection);
   await page.getByRole("button", { name: "Pin CSF 2.0" }).click();
   await expect(page.getByText(/Pin publications together or records together/).first()).toBeVisible();
 });

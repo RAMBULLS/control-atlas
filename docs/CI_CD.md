@@ -104,6 +104,10 @@ prevents publication; routine successful refreshes require no human approval.
   has a separate build name and concurrency group, runs no acceptance gate,
   never satisfies the scheduled sweep's coverage check, and cannot close alerts.
   Full mode remains the default and always runs for scheduled sweeps.
+- Within manual reliability mode, `reliability_focus=atlas` runs the two Atlas
+  pointer-selection regressions in Firefox, five times each, with zero retries
+  and a ten-minute deadline. It retains failure traces and cannot qualify a
+  release or close a scheduled incident. The default focus remains Compare.
 - Every nightly browser shard and the accessibility suite write a unique blob
   report name and retain GitHub-readable failure output before reports merge.
 - Complete browser shards have a 25-minute Playwright deadline and a 35-minute

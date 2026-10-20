@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent } from "react";
 import { areaCssVariables, AREA_PRESENTATIONS } from "../../lib/areaVisualLanguage";
 import type { Pt } from "../../lib/atlasTerritoryGeography";
 import { boundsOf, fitView, fitTerritoryCamera, territoryCameraProgress, type TerritoryModel, type View } from "../../lib/atlasTerritoryModel";
@@ -38,6 +38,15 @@ export type MapProps = {
 };
 
 const onKey = (run: () => void) => (e: KeyboardEvent) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); run(); } };
+const focusMapControl = (event: MouseEvent<SVGSVGElement>) => {
+  if (event.button !== 0 || !(event.target instanceof Element)) return;
+  const control = event.target.closest<SVGElement>('[tabindex="0"]');
+  if (!control || !event.currentTarget.contains(control)) return;
+  // Firefox can scroll a focused SVG group between mouse press and release,
+  // moving the target out from under the pointer before its click is dispatched.
+  event.preventDefault();
+  control.focus({ preventScroll: true });
+};
 const PIN = "M0,0 C-5,-9 -9,-13 -9,-19 a9,9 0 1 1 18,0 c0,6 -4,10 -9,19 z";
 const d = (pts: readonly Pt[]) => `M${pts.map((p) => p.join(" ")).join("L")}Z`;
 const centroid = (pts: readonly Pt[]): Pt => [pts.reduce((s, p) => s + p[0], 0) / pts.length, pts.reduce((s, p) => s + p[1], 0) / pts.length];
@@ -143,7 +152,7 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
   const isHoverDistrict = (id: string) => (hover?.kind === "district" && hover.id === id) || (hoverPublication && model.areaOf(hoverPublication).id === id);
 
   return (
-    <svg aria-busy={cameraMoving} aria-label="Control Atlas territory map. Territories organize the material for navigation; they do not imply authority, applicability or equivalence." className={`terr${dimming ? " is-dimming" : ""}`} role="group" viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}>
+    <svg aria-busy={cameraMoving} aria-label="Control Atlas territory map. Territories organize the material for navigation; they do not imply authority, applicability or equivalence." className={`terr${dimming ? " is-dimming" : ""}`} onMouseDown={focusMapControl} role="group" viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}>
       <defs>
         <filter height="120%" id="terr-lift" width="120%" x="-10%" y="-10%"><feDropShadow dx="0" dy={5 * u} floodOpacity="0.55" style={{ floodColor: "var(--ca-surface-deep)" }} stdDeviation={9 * u} /></filter>
         <filter height="110%" id="terr-glow" width="110%" x="-5%" y="-5%"><feGaussianBlur stdDeviation={16 * u} /></filter>

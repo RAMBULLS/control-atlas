@@ -1,6 +1,6 @@
 {
   "schema_version": "4.0",
-  "generated_at": "2026-10-19T12:09:02.049Z",
+  "generated_at": "2026-10-20T06:00:23.596Z",
   "completeness": {
     "total_publications": 103,
     "total_artifacts": 98,
@@ -60,7 +60,7 @@
         "direct_file_import",
         "extracted_from_official_publication"
       ],
-      "last_refresh": "2026-10-08",
+      "last_refresh": "2026-10-20",
       "has_shard": true
     },
     {
@@ -83,7 +83,7 @@
       "methods": [
         "extracted_from_official_publication"
       ],
-      "last_refresh": "2026-10-18",
+      "last_refresh": "2026-10-20",
       "has_shard": true
     },
     {
@@ -106,7 +106,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-18",
+      "last_refresh": "2026-10-20",
       "has_shard": true
     },
     {
@@ -119,7 +119,7 @@
       "imported_records": 2551,
       "excluded_records": 0,
       "missing_records": 0,
-      "expected_basis": "Union of independently byte-verified July and October 2026 public manual source snapshots, including native standalone publications. Current snapshot IDs are listed separately; previously recorded IDs absent from October remain explicitly historical. Every native edition occurrence remains in this inventory. No retirement or applicability is inferred.",
+      "expected_basis": "Union of independently verified publisher snapshots. Current identities are listed separately; prior native editions and citations remain retained without inferred retirement.",
       "expected_evidence": "data/curated/reference-catalogs/publisher-inventories.json#catalogs.disa-srg.record_count",
       "imported_evidence": "data/generated/catalog-source-inventory.json#catalogs.disa-srg.normalized_records",
       "exclusions": [],
@@ -129,7 +129,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-18",
+      "last_refresh": "2026-10-20",
       "has_shard": true
     },
     {
@@ -142,7 +142,7 @@
       "imported_records": 27430,
       "excluded_records": 0,
       "missing_records": 0,
-      "expected_basis": "Union of independently byte-verified July and October 2026 public manual source snapshots, including native standalone publications. Current snapshot IDs are listed separately; previously recorded IDs absent from October remain explicitly historical. Every native edition occurrence remains in this inventory. No retirement or applicability is inferred.",
+      "expected_basis": "Union of independently verified publisher snapshots. Current identities are listed separately; prior native editions and citations remain retained without inferred retirement.",
       "expected_evidence": "data/curated/reference-catalogs/publisher-inventories.json#catalogs.disa-stig.record_count",
       "imported_evidence": "data/generated/catalog-source-inventory.json#catalogs.disa-stig.normalized_records",
       "exclusions": [],
@@ -152,7 +152,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-18",
+      "last_refresh": "2026-10-20",
       "has_shard": true
     },
     {
@@ -175,7 +175,7 @@
       "methods": [
         "extracted_from_official_publication"
       ],
-      "last_refresh": "2026-10-08",
+      "last_refresh": "2026-10-20",
       "has_shard": true
     },
     {
@@ -198,17 +198,17 @@
       "methods": [
         "extracted_from_official_publication"
       ],
-      "last_refresh": "2026-10-19",
+      "last_refresh": "2026-08-12",
       "has_shard": true
     },
     {
       "catalog_id": "fedramp-2026",
       "completeness_status": "reconciled",
-      "expected_records": 449,
+      "expected_records": 448,
       "snapshot_expected_records": null,
       "inventory_evidence_class": "publisher_inventory",
       "independent_inventory": true,
-      "imported_records": 449,
+      "imported_records": 448,
       "excluded_records": 0,
       "missing_records": 0,
       "expected_basis": "Eligible publisher identities from an independently reconciled raw inventory when present. Accepted older snapshots explicitly use tracked reviewed counts; the inventory entry declares which evidence applies.",
@@ -221,7 +221,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-08",
+      "last_refresh": "2026-10-20",
       "has_shard": true
     },
     {
@@ -319,11 +319,11 @@
     {
       "catalog_id": "mitre-attack",
       "completeness_status": "reconciled",
-      "expected_records": 858,
+      "expected_records": 867,
       "snapshot_expected_records": null,
       "inventory_evidence_class": "publisher_inventory",
       "independent_inventory": true,
-      "imported_records": 858,
+      "imported_records": 867,
       "excluded_records": 0,
       "missing_records": 0,
       "expected_basis": "Eligible publisher identities from an independently reconciled raw inventory when present. Accepted older snapshots explicitly use tracked reviewed counts; the inventory entry declares which evidence applies.",
@@ -336,17 +336,17 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-08",
+      "last_refresh": "2026-10-20",
       "has_shard": true
     },
     {
       "catalog_id": "mitre-attack-ics",
       "completeness_status": "reconciled",
-      "expected_records": 118,
+      "expected_records": 127,
       "snapshot_expected_records": null,
       "inventory_evidence_class": "publisher_inventory",
       "independent_inventory": true,
-      "imported_records": 118,
+      "imported_records": 127,
       "excluded_records": 0,
       "missing_records": 0,
       "expected_basis": "Eligible publisher identities from an independently reconciled raw inventory when present. Accepted older snapshots explicitly use tracked reviewed counts; the inventory entry declares which evidence applies.",
@@ -359,7 +359,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-08",
+      "last_refresh": "2026-10-20",
       "has_shard": true
     },
     {
@@ -382,7 +382,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-08",
+      "last_refresh": "2026-10-20",
       "has_shard": true
     },
     {
@@ -498,7 +498,7 @@
         "extracted_from_official_publication",
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-08",
+      "last_refresh": "2026-10-20",
       "has_shard": true
     },
     {
@@ -544,7 +544,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-18",
+      "last_refresh": "2026-10-20",
       "has_shard": true
     },
     {

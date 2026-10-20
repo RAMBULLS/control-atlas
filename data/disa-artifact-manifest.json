@@ -4,8 +4,10 @@
   "compilation_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
   "artifact_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
   "byte_length": 375803537,
-  "retrieval_timestamp": "2026-10-18T23:51:23.233Z",
+  "retrieval_timestamp": "2026-10-20T05:57:16.464Z",
   "checksum": "sha256:399f3caa237d111073a792e397c1944291ffb1767eb9ec8d2e59f0f0e317f88d",
+  "discovery_content_checksum": "sha256:62a1332dc289a5ae5b55e21315c0a5651b426696ecdef3bbe643649b21c07d13",
+  "discovery_checksum_kind": "decoded_utf8_publisher_directory_snapshot",
   "publications": {
     "total_discovered_archives": 1022,
     "expected_canonical_publications": 298,
@@ -15836,32 +15838,5 @@
         "reason": "not an XML/XCCDF file"
       }
     ]
-  },
-  "retained_snapshot_union": {
-    "catalogs": [
-      {
-        "catalog_id": "disa-stig",
-        "previous": 26988,
-        "current": 27333,
-        "retained_total": 27430,
-        "retained_absent_current": 97,
-        "previous_edition_records": 11725
-      },
-      {
-        "catalog_id": "disa-srg",
-        "previous": 2550,
-        "current": 2549,
-        "retained_total": 2551,
-        "retained_absent_current": 2,
-        "previous_edition_records": 1520
-      }
-    ],
-    "connections": {
-      "previous": 41576,
-      "current": 42068,
-      "retained_total": 42233,
-      "citations": 73105,
-      "retained_absent_current": 165
-    }
   }
 }

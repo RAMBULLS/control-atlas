@@ -2,9 +2,9 @@
   "schema_version": "1.0",
   "source": {
     "url": "https://pages.nist.gov/pages-root/",
-    "retrieved_at": "2026-10-08T14:19:53.723Z",
+    "retrieved_at": "2026-10-20T05:56:14.094Z",
     "byte_length": 32648,
-    "sha256": "sha256:df1acd9aab1169145fc3f1eb091d91a4b5c3cd5fb1c1aee1343b21741b2762ec"
+    "sha256": "sha256:2e9b4b049d827adea2443d9b5dc22cbda40a5f1b67066dc59faa85560c0bb0e2"
   },
   "reconciliation": {
     "discovered_projects": 257,
@@ -470,9 +470,9 @@
       "reason": "no-cybersecurity-or-governance-title-signal"
     },
     {
-      "repo_name": "Agentic-AI-in-AM",
-      "url": "https://pages.nist.gov/Agentic-AI-in-AM/",
-      "description": "Agentic AI for AM",
+      "repo_name": "Agentic-SI-in-AM",
+      "url": "https://pages.nist.gov/Agentic-SI-in-AM/",
+      "description": "Agentic SI for AM",
       "disposition": "excluded",
       "topics": [],
       "reason": "no-cybersecurity-or-governance-title-signal"
@@ -666,7 +666,7 @@
     {
       "repo_name": "cookiecutter-nist-python",
       "url": "https://pages.nist.gov/cookiecutter-nist-python/",
-      "description": "cookiecutter-nist-python — cookiecutter-nist-python 0.14.3 documentation",
+      "description": "cookiecutter-nist-python — cookiecutter-nist-python 0.15.1 documentation",
       "disposition": "excluded",
       "topics": [],
       "reason": "no-cybersecurity-or-governance-title-signal"
@@ -726,7 +726,7 @@
     {
       "repo_name": "dioptra",
       "url": "https://pages.nist.gov/dioptra/",
-      "description": "Dioptra Overview — Dioptra 1.2.0 documentation",
+      "description": "Dioptra Overview — Dioptra 1.2.1 documentation",
       "disposition": "excluded",
       "topics": [],
       "reason": "no-cybersecurity-or-governance-title-signal"
@@ -870,7 +870,7 @@
     {
       "repo_name": "feasst",
       "url": "https://pages.nist.gov/feasst/",
-      "description": "FEASST: Free Energy and Advanced Sampling Simulation Toolkit — FEASST 0.25.20 0.25.20 documentation",
+      "description": "FEASST: Free Energy and Advanced Sampling Simulation Toolkit — FEASST 0.25.21 0.25.21 documentation",
       "disposition": "excluded",
       "topics": [],
       "reason": "no-cybersecurity-or-governance-title-signal"

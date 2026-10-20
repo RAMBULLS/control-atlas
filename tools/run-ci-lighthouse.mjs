@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { runNodeSync } from './lib/process-runner.mjs';
@@ -179,7 +179,8 @@ export function runCiLighthouse({ cwd = process.cwd(), runCommand, exportDiagnos
   return evidence;
 }
 
-export function runProductionTransport({ cwd = process.cwd(), compareHttp1 = false } = {}) {
+export function runProductionTransport({ cwd = process.cwd(), compareHttp1 = false,
+  runCollection = runCiLighthouse, prepareTransport = prepareLighthouseHttp2 } = {}) {
   const output = join(cwd, 'artifacts/lighthouse-ci');
   const reference = join(cwd, 'artifacts/lighthouse-http1-reference');
   const identity = () => Object.fromEntries(['release.json', 'record-delivery-chunks.json'].map(name =>
@@ -187,7 +188,7 @@ export function runProductionTransport({ cwd = process.cwd(), compareHttp1 = fal
   const before = identity();
   let http1;
   if (compareHttp1) {
-    http1 = runCiLighthouse({ cwd });
+    http1 = runCollection({ cwd });
     if (http1.routes.length !== 3 || http1.failures.some(failure => !failure.startsWith('assert:'))) {
       throw new Error('HTTP/1 reference collection is incomplete; retain its failures before retrying.');
     }
@@ -195,13 +196,13 @@ export function runProductionTransport({ cwd = process.cwd(), compareHttp1 = fal
     renameSync(output, reference);
   }
   const config = JSON.parse(readFileSync(join(cwd, '.lighthouserc.ci.json'), 'utf8'));
-  const tls = prepareLighthouseHttp2(config, cwd);
+  let tls;
   try {
-    const evidence = runCiLighthouse({ cwd, configPath: tls.path, requireHttp2: true });
+    tls = prepareTransport(config, cwd);
+    const evidence = runCollection({ cwd, configPath: tls.path, requireHttp2: true });
     const after = identity();
     if (JSON.stringify(before) !== JSON.stringify(after)) evidence.failures.push('Built artifact identity changed between transport measurements.');
     if (compareHttp1) {
-      renameSync(reference, join(output, 'http1-reference'));
       writeFileSync(join(output, 'transport-comparison.json'), JSON.stringify({
         before, after, reference: { directory: 'http1-reference', failures: http1.failures, routes: http1.routes },
         production: { failures: evidence.failures, routes: evidence.routes },
@@ -210,7 +211,16 @@ export function runProductionTransport({ cwd = process.cwd(), compareHttp1 = fal
     }
     writeFileSync(join(output, 'route-assertions.json'), JSON.stringify(evidence, null, 2));
     return evidence;
-  } finally { tls.cleanup(); }
+  } finally {
+    // Even certificate setup or collection failure must leave the completed
+    // reference inside the existing always-uploaded evidence directory.
+    try {
+      if (compareHttp1 && existsSync(reference)) {
+        mkdirSync(output, { recursive: true });
+        renameSync(reference, join(output, 'http1-reference'));
+      }
+    } finally { tls?.cleanup(); }
+  }
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

@@ -43,7 +43,7 @@ const handler = (request, response) => {
   if (testServer && request.url?.split('?')[0] === '/__control-atlas-test-shutdown') {
     response.writeHead(204, { 'cache-control': 'no-store' });
     response.end();
-    server.closeAllConnections?.();
+    if ('closeAllConnections' in server) server.closeAllConnections();
     server.close(() => process.exit(0));
     setTimeout(() => process.exit(0), 1_000).unref();
     return;

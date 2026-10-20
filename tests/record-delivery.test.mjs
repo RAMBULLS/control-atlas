@@ -195,16 +195,18 @@ test('inline delivery admits only its exact bytes and starts the renderer first 
   assert.doesNotMatch(output, /src="\.\/progressive-shell/);
   assert.throws(() => inlineArrivalDelivery(html, current, root, { version: 'fixture', shardCount: 8 }, '</script>'), /end tag/);
   for (const hash of ['#/', '#/resources', '#/record/nist-800-53/AC-2']) {
-    const links = [], requests = [];
+    const links = [], requests = [], fonts = [];
     const document = { currentScript: { src: '' }, baseURI: 'https://example.test/mirror/',
+      fonts: { load: face => { fonts.push(face); return Promise.resolve([]); } },
       createElement: () => ({}), head: { appendChild: link => links.push(link) }, addEventListener: () => {} };
     const environment = { document, location: { hash }, fetch: async url => { requests.push(url); return new Response('fixture'); } };
     runInNewContext(source, { ...environment, globalThis: environment, window: {}, URL, AbortController, setTimeout, clearTimeout });
     await Promise.resolve();
     if (hash.startsWith('#/record/')) {
+      assert.equal(fonts.length, 0, 'record CSS chooses its actually used faces without forced weight requests');
       assert.equal(links[0].href, 'https://example.test/mirror/renderer.js');
       assert.ok(requests.every(url => url.startsWith('https://example.test/mirror/data/')));
-    } else { assert.equal(links.length, 0); assert.equal(requests.length, 0); }
+    } else { assert.equal(links.length, 0); assert.equal(requests.length, 0); assert.equal(fonts.length, 4); }
   }
 });
 

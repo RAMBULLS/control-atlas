@@ -5,7 +5,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, 
 import { dirname, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
-import { inventoryCiReports, runCiLighthouse as runLighthouse } from '../tools/run-ci-lighthouse.mjs';
+import { inventoryCiReports, runCiLighthouse as runLighthouse, runProductionTransport } from '../tools/run-ci-lighthouse.mjs';
 import diagnosticConfig from '../tools/lighthouse-diagnostic.config.mjs';
 import { assertCapturePair, lighthouseRuntime, reproduction } from '../tools/lighthouse-diagnostic-support.mjs';
 import { exportLanternCriticalPath, flattenEstimate, timerEdges } from '../tools/export-lantern-critical-path.mjs';
@@ -85,12 +85,39 @@ function fixture(t) {
   });
   writeFileSync(join(cwd, '.lighthouserc.ci.json'), JSON.stringify(config));
   mkdirSync(join(cwd, 'dist/site'), { recursive: true });
+  writeFileSync(join(cwd, 'dist/site/release.json'), JSON.stringify({ commit_sha: 'synthetic-fixture' }));
   writeFileSync(join(cwd, 'dist/site/record-delivery-chunks.json'), JSON.stringify({
     home: 'synthetic-main.js', runtimeLoader: 'synthetic-loader.js',
     homeEntryClosures: [], runtimeLoaderClosure: [],
   }));
   return cwd;
 }
+
+test('transport comparison retains reference failures and cleans TLS after collection failure', t => {
+  for (const failSetup of [false, true]) {
+    const cwd = fixture(t);
+    const directory = join(cwd, 'artifacts/lighthouse-ci');
+    let calls = 0, cleaned = false;
+    assert.throws(() => runProductionTransport({ cwd, compareHttp1: true,
+      runCollection(options) {
+        calls += 1;
+        if (calls > 1) { assert.equal(options.requireHttp2, true); throw new Error('synthetic collection failure'); }
+        mkdirSync(directory, { recursive: true });
+        const reference = { routes: reportsFor().map(row => ({ requestedUrl: row.report.requestedUrl, passed: false })), failures: ['assert: original reference failure'] };
+        writeFileSync(join(directory, 'route-assertions.json'), JSON.stringify(reference));
+        return reference;
+      },
+      prepareTransport() {
+        if (failSetup) throw new Error('synthetic setup failure');
+        return { path: 'synthetic-config.json', cleanup() { cleaned = true; } };
+      },
+    }), /synthetic (setup|collection) failure/);
+    assert.equal(calls, failSetup ? 1 : 2);
+    assert.equal(cleaned, !failSetup);
+    const saved = JSON.parse(readFileSync(join(directory, 'http1-reference/route-assertions.json'), 'utf8'));
+    assert.deepEqual(saved.failures, ['assert: original reference failure']);
+  }
+});
 
 function writeReports(cwd, reports) {
   const directory = join(cwd, '.lighthouseci');

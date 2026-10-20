@@ -39,6 +39,33 @@ test("first-paint fonts load the exact pinned faces without duplicate file reque
   expect(files).toHaveLength(3);
 });
 
+test("record text loads its used pinned faces through CSS without duplicate font requests", async ({ page }) => {
+  const files = [];
+  page.on("response", response => { if (/\/fonts\/[a-f0-9]{64}\.woff2/.test(response.url())) files.push({ url: response.url(), ok: response.ok() }); });
+  await page.goto("/#/record/nist-800-53/AC-2");
+  const record = page.locator('[data-record-content="nist-800-53:AC-2"]');
+  await expect(record).toBeVisible();
+  const fonts = await record.evaluate(async element => {
+    await document.fonts.ready;
+    const faces = [];
+    document.fonts.forEach(face => faces.push({ family: face.family, status: face.status }));
+    const text = [...element.querySelectorAll("h1,h2,p")].filter(node => node.getClientRects().length).map(node => {
+      const style = globalThis.getComputedStyle(node);
+      return { family: style.fontFamily, loaded: document.fonts.check(`${style.fontWeight} ${style.fontSize} ${style.fontFamily}`, node.textContent) };
+    });
+    return { faces, text };
+  });
+  expect(fonts.faces).toHaveLength(5);
+  expect(fonts.faces.every(face => face.status !== "error")).toBe(true);
+  expect(fonts.text.some(text => text.family.includes("Oswald"))).toBe(true);
+  expect(fonts.text.some(text => text.family.includes("IBM Plex Mono"))).toBe(true);
+  expect(fonts.text.every(text => text.loaded)).toBe(true);
+  expect(files.every(file => file.ok)).toBe(true);
+  expect(files.length).toBe(new Set(files.map(file => file.url)).size);
+  expect(files.length).toBeGreaterThan(0);
+  expect(files.length).toBeLessThanOrEqual(3);
+});
+
 test("semantic button recipes retain sizing, keyboard focus, disabled state and caller overrides", async ({ page }) => {
   await page.goto("/");
   await page.evaluate(() => {

@@ -43,7 +43,7 @@ async function assertViewportFits(page) {
   });
   if (dimensions.overflow > 1) {
     dimensions.nextFrame = await page.evaluate(async () => {
-      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await new Promise((resolve) => globalThis.requestAnimationFrame(() => globalThis.requestAnimationFrame(resolve)));
       const root = document.documentElement;
       return { overflow: root.scrollWidth - root.clientWidth, width: root.clientWidth,
         bodyWidth: document.body.clientWidth, bodyScrollWidth: document.body.scrollWidth };

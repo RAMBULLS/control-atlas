@@ -41,6 +41,8 @@ test('control atlas source of truth builds through Vite into the staged static o
   assert.match(siteBuilder, /Reusing unchanged staged data/);
   assert.match(viteConfig, /CONTROL_ATLAS_REUSE_STAGED_DATA/);
   assert.match(packageJson.scripts.precommit, /npm run build:site/);
+  assert.match(packageJson.scripts.precommit, /^npm run generate:data && npm run build:site:incremental && npm run verify:quality/,
+    'the full precommit gate must generate clean-checkout prerequisites once before building the site');
   assert.match(ciWorkflow, /npm run build:site:incremental/);
   assert.match(ciWorkflow, /name:\s*site-build/);
   assert.match(ciWorkflow, /path:\s*dist\/site/);

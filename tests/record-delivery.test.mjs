@@ -195,14 +195,17 @@ test('inline delivery admits only its exact bytes and starts the renderer first 
   assert.doesNotMatch(output, /src="\.\/progressive-shell/);
   assert.throws(() => inlineArrivalDelivery(html, current, root, { version: 'fixture', shardCount: 8 }, '</script>'), /end tag/);
   for (const hash of ['#/', '#/resources', '#/record/nist-800-53/AC-2']) {
-    const links = [], requests = [];
+    const links = [], requests = [], order = [];
     const document = { currentScript: { src: '' }, baseURI: 'https://example.test/mirror/',
-      createElement: () => ({}), head: { appendChild: link => links.push(link) }, addEventListener: () => {} };
-    const environment = { document, location: { hash }, fetch: async url => { requests.push(url); return new Response('fixture'); } };
+      createElement: () => ({}), head: { appendChild: link => { links.push(link); order.push(`module:${link.href}`); } }, addEventListener: () => {} };
+    const environment = { document, location: { hash }, fetch: async url => { requests.push(url); order.push(`data:${url}`); return new Response('fixture'); } };
     runInNewContext(source, { ...environment, globalThis: environment, window: {}, URL, AbortController, setTimeout, clearTimeout });
     await Promise.resolve();
     if (hash.startsWith('#/record/')) {
       assert.equal(links[0].href, 'https://example.test/mirror/renderer.js');
+      assert.equal(links[0].fetchPriority, 'high');
+      assert.equal(order[0], 'module:https://example.test/mirror/renderer.js');
+      assert.match(order[1], /^data:.*catalog-bootstrap-record/);
       assert.ok(requests.every(url => url.startsWith('https://example.test/mirror/data/')));
     } else { assert.equal(links.length, 0); assert.equal(requests.length, 0); }
   }

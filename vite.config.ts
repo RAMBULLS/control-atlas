@@ -6,7 +6,7 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { resolve } from 'node:path';
 import { RUNTIME_CACHE_VERSION } from './src/shared/runtime-cache-version.mjs';
-import { materializeOrbitalFonts, recordChunkGroups, verifyRecordDelivery } from './tools/record-delivery.mjs';
+import { materializeOrbitalFonts, orbitalFontPreloads, planInteractiveDelivery, recordChunkGroups, verifyRecordDelivery } from './tools/record-delivery.mjs';
 import { HOME_CONTENT, HOME_TOOLS } from './src/shared/home-content.mjs';
 import { FIRST_PAINT_ROUTE_COPY, SITE_COPY } from './src/shared/site-copy.mjs';
 import {
@@ -208,6 +208,8 @@ function getBuildSha(): string {
   }
 }
 
+const interactiveDelivery = { interactive: new Set(), warmup: new Set() };
+
 export default defineConfig({
   resolve: { alias: [{ find: /^orbital-archive-no-01\/fonts\.css$/, replacement: orbitalFonts }] },
   base: './',
@@ -259,6 +261,18 @@ export default defineConfig({
     },
     {
       name: 'record-delivery-boundaries',
+      buildEnd(error) {
+        if (error) return;
+        const plan = planInteractiveDelivery(this.getModuleIds(), id => this.getModuleInfo(id), rootDir);
+        interactiveDelivery.interactive = plan.interactive;
+        interactiveDelivery.warmup = plan.warmup;
+      },
+      transformIndexHtml: {
+        order: 'post',
+        handler(_html, context) {
+          return context.bundle ? orbitalFontPreloads(context.bundle).map(tag => ({ ...tag, injectTo: 'head-prepend' as const })) : [];
+        },
+      },
       generateBundle(_options, bundle) {
         const report = verifyRecordDelivery(bundle, rootDir);
         this.emitFile({ type: 'asset', fileName: 'record-delivery-chunks.json', source: JSON.stringify(report, null, 2) });
@@ -276,7 +290,7 @@ export default defineConfig({
       preserveEntrySignatures: false,
       output: {
         strictExecutionOrder: true,
-        codeSplitting: { groups: recordChunkGroups(rootDir) },
+        codeSplitting: { groups: recordChunkGroups(rootDir, interactiveDelivery) },
       },
     },
   },

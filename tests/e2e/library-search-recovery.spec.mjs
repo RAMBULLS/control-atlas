@@ -14,7 +14,7 @@ test("Library waits for its own index instead of announcing a previous route's r
   await open(page, "/#/record/nist-800-53/AC-2");
   let held = false;
   let release = () => {};
-  const gate = new Promise(resolve => { release = resolve; });
+  const gate = new Promise(resolve => { release = () => resolve(undefined); });
   await page.route(/\/data\/generated\/library-search(?:-index)?\.json(?:\.gz)?(?:\?|$)/, async route => {
     held = true;
     await gate;

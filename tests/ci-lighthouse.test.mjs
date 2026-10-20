@@ -11,7 +11,7 @@ import { assertCapturePair, lighthouseRuntime, reproduction } from '../tools/lig
 import { exportLanternCriticalPath, flattenEstimate, timerEdges } from '../tools/export-lantern-critical-path.mjs';
 
 // Assertion-runner fixtures do not contain original browser metric inputs.
-const runCiLighthouse = options => runLighthouse({ exportDiagnostics() {}, ...options });
+const runCiLighthouse = options => runLighthouse({ exportDiagnostics() {}, warmupRuns: 0, ...options });
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const config = JSON.parse(readFileSync(join(root, '.lighthouserc.ci.json'), 'utf8'));
@@ -73,6 +73,36 @@ function assertWithCli(cwd, args = []) {
   return spawnSync(process.execPath, [cli, 'assert', `--config=${join(cwd, '.lighthouserc.ci.json')}`,
     '--includePassedAssertions', ...args], { cwd, encoding: 'utf8' });
 }
+
+test('two fixed host warmups are retained separately and never enter measured assertions', t => {
+  const cwd = fixture(t);
+  const calls = [];
+  const evidence = runLighthouse({ cwd, exportDiagnostics() {}, runCommand(command, args) {
+    calls.push([command, args]);
+    if (command === 'collect') {
+      const reports = reportsFor();
+      if (args.includes('--numberOfRuns=2')) {
+        reports.push(...reportsFor({ lcp: 9999 }).map(({ filename, report }) => ({ filename: filename.replace('.json', '0.json'), report })));
+      }
+      writeReports(cwd, reports);
+    }
+    if (command === 'assert') {
+      const report = JSON.parse(readFileSync(args.find(arg => arg.startsWith('--lhr=')).slice(6), 'utf8'));
+      assert.ok(report.audits['largest-contentful-paint'].numericValue <= 2500);
+      writeFileSync(join(cwd, '.lighthouseci/assertion-results.json'), JSON.stringify(
+        Object.keys(config.ci.assert.assertions).map(id => ({ id, passed: true })),
+      ));
+    }
+  } });
+  assert.equal(evidence.failures.length, 0);
+  assert.deepEqual(calls.filter(([command]) => command === 'collect').map(([, args]) => args), [['--numberOfRuns=2'], []]);
+  assert.equal(evidence.warmups.reports.length, 6);
+  assert.equal(evidence.routes.length, 3);
+  assert.ok(evidence.routes.every(route => route.passed));
+  assert.equal(readdirSync(join(cwd, config.ci.upload.outputDir, 'warmups')).filter(name => REPORT_FILE_FOR_TEST.test(name)).length, 6);
+});
+
+const REPORT_FILE_FOR_TEST = /^lhr-\d+\.json$/;
 
 test('requested-route inventory rejects missing, duplicate, unexpected and failed reports', () => {
   const reports = reportsFor();

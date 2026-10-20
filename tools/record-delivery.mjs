@@ -35,7 +35,42 @@ export const RECORD_ICON_MODULES = Object.freeze([
   'IconTool', 'IconFlag', 'IconFileText',
 ].map(name => `/node_modules/@tabler/icons-react/dist/esm/icons/${name}.mjs`));
 
-export function recordChunkGroups(rootDir) {
+export function planInteractiveDelivery(moduleIds, info, rootDir) {
+  const ids = [...moduleIds];
+  const source = path => ids.find(id => normalized(id) === `${normalized(rootDir)}/${path}`);
+  for (const path of ['src/main.tsx', 'src/ui/App.tsx', 'src/ui/lib/runtimeLoader.ts', 'src/ui/lib/hashRoutes.ts', 'src/ui/pages/ObjectDetailPage.tsx', 'src/ui/lib/recordRouteModule.ts']) {
+    if (!source(path)) throw new Error(`Interactive delivery graph is missing ${path}.`);
+  }
+  const closure = entries => {
+    const seen = new Set();
+    const visit = id => {
+      if (!id || seen.has(id)) return;
+      seen.add(id);
+      for (const dependency of info(id)?.importedIds ?? []) visit(dependency);
+    };
+    entries.forEach(visit);
+    return seen;
+  };
+  // Use the bundler's resolved static graph. Dynamic page imports stay separate,
+  // and shared Home/data modules cannot acquire a dependency on React.
+  const home = closure([source('src/main.tsx')]);
+  const warmup = closure([source('src/ui/lib/runtimeLoader.ts'), source('src/ui/lib/hashRoutes.ts')]);
+  const renderer = ids.filter(id => /\/node_modules\/(?:react(?:-dom)?|scheduler)\//.test(normalized(id)));
+  const interactive = closure([source('src/ui/App.tsx'), ...renderer]);
+  const record = closure([source('src/ui/pages/ObjectDetailPage.tsx')]);
+  for (const id of record) {
+    if (/\/node_modules\/@tabler\/icons-react\//.test(normalized(id))) {
+      for (const dependency of closure([id])) interactive.add(dependency);
+    }
+  }
+  for (const id of home) { interactive.delete(id); warmup.delete(id); }
+  for (const id of warmup) interactive.delete(id);
+  // This tiny route import must remain available before the renderer arrives.
+  interactive.delete(source('src/ui/lib/recordRouteModule.ts'));
+  return { interactive, warmup };
+}
+
+export function recordChunkGroups(rootDir, delivery = { interactive: new Set(), warmup: new Set() }) {
   const ui = new Set(RECORD_UI_MODULES.map(path => `${normalized(rootDir)}/${path}`));
   const home = new Set(HOME_SHELL_MODULES.map(path => `${normalized(rootDir)}/${path}`));
   return [
@@ -47,6 +82,10 @@ export function recordChunkGroups(rootDir) {
     // entry facade and a cycle through the HTML/CSS entry. The shared preload
     // helper belongs with these finite non-React shell dependencies.
     { name: 'home-shell', test: id => home.has(normalized(id)) || id === '\0vite/preload-helper.js', priority: 10,
+      minShareCount: 1, entriesAware: false, includeDependenciesRecursively: false },
+    { name: 'interactive-shell', test: id => delivery.interactive.has(id), priority: 40,
+      minShareCount: 1, entriesAware: false, includeDependenciesRecursively: false },
+    { name: 'data-warmup', test: id => delivery.warmup.has(id), priority: 50,
       minShareCount: 1, entriesAware: false, includeDependenciesRecursively: false },
   ];
 }
@@ -60,6 +99,14 @@ export const ORBITAL_FONT_HASHES = Object.freeze([
   '571f3457dab507b6f2ce5394d593ca015251b69fea81ab7a546bd2368e9fc3ed',
   'e6c72ea4702249202bcdd79d3343057e4e25ef1f04e3fcffd8602ab53b40b4cc',
 ]);
+
+export function orbitalFontPreloads(bundle) {
+  return [...new Set(ORBITAL_FONT_HASHES.slice(0, 3))].map(digest => {
+    const asset = Object.values(bundle).find(output => output.type === 'asset' && output.fileName.endsWith('.woff2') && hash(output.source) === digest);
+    if (!asset) throw new Error('A first-paint Orbital font asset is missing.');
+    return { tag: 'link', attrs: { rel: 'preload', as: 'font', type: 'font/woff2', href: `./${asset.fileName}`, crossorigin: '' }, injectTo: 'head-prepend' };
+  });
+}
 
 export function externalizeOrbitalFonts(css) {
   const fonts = new Map();
@@ -155,7 +202,7 @@ export function verifyRecordDelivery(bundle, rootDir) {
   return { home: home.fileName, runtimeLoader: loader.fileName, pages,
     homeEntryClosures: homeEntries.map(entry => ({ entry: entry.fileName, chunks: describeClosure(entry) })),
     runtimeLoaderClosure: describeClosure(loader),
-    groups: chunks.filter(chunk => ['record-ui', 'record-icons'].includes(chunk.name)).map(chunk => ({ name: chunk.name, file: chunk.fileName, modules: Object.keys(chunk.modules).map(normalized), imports: chunk.imports })),
+    groups: chunks.filter(chunk => ['record-ui', 'record-icons', 'interactive-shell', 'data-warmup'].includes(chunk.name)).map(chunk => ({ name: chunk.name, file: chunk.fileName, modules: Object.keys(chunk.modules).map(normalized), imports: chunk.imports })),
     fontHashes: [...new Set(ORBITAL_FONT_HASHES)],
   };
 }

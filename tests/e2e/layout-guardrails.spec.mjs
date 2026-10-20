@@ -158,11 +158,15 @@ for (const route of UI_REVIEW_ROUTES) {
       expect(navBox.y, `${route.id}: primary navigation starts at ${Math.round(navBox.y)}px on a phone`)
         .toBeLessThanOrEqual(PHONE.height);
     }
-    for (const action of (await page.locator("main a[class*='button'], main button:visible").all()).slice(0, 10)) {
-      const box = await action.boundingBox();
-      if (!box || box.height === 0) continue;
-      const name = (await action.textContent() || "").trim().slice(0, 40);
-      expect(roundCssPixels(box.height), `${route.id}: "${name}" is ${box.height}px tall`).toBeGreaterThanOrEqual(44);
+    // Supporting record context can finish between async locator reads. Measure
+    // the first ten current actions atomically, preserving the same touch limit.
+    const actions = await page.locator("main a[class*='button'], main button:visible").evaluateAll(nodes => nodes.slice(0, 10).map(action => ({
+      height: action.getBoundingClientRect().height,
+      name: (action.textContent || "").trim().slice(0, 40),
+    })));
+    for (const { height, name } of actions) {
+      if (height === 0) continue;
+      expect(roundCssPixels(height), `${route.id}: "${name}" is ${height}px tall`).toBeGreaterThanOrEqual(44);
     }
   });
 }

@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import test from 'node:test';
-import { externalizeOrbitalFonts, HOME_SHELL_MODULES, ORBITAL_FONT_HASHES, recordChunkGroups, RECORD_UI_MODULES, verifyRecordDelivery } from '../tools/record-delivery.mjs';
+import { externalizeOrbitalFonts, HOME_SHELL_MODULES, ORBITAL_FONT_HASHES, orbitalFontPreloads, planInteractiveDelivery, recordChunkGroups, RECORD_UI_MODULES, verifyRecordDelivery } from '../tools/record-delivery.mjs';
 
 const require = createRequire(import.meta.url);
 const css = readFileSync(require.resolve('orbital-archive-no-01/fonts.css'), 'utf8');
@@ -21,6 +21,39 @@ const bundle = () => ({
   'compare.js': chunk('compare.js', ['src/ui/pages/ComparePage.tsx']),
   'record-ui.js': chunk('record-ui.js', ['src/ui/components/AppLink.tsx']),
   ...fontAssets(),
+});
+
+test('resolved static graph batches interactive code while preserving Home, warm-up and lazy page boundaries', () => {
+  const id = path => `${root}/${path}`;
+  const imports = new Map([
+    [id('src/main.tsx'), [id('src/shared/navigation-events.ts')]],
+    [id('src/ui/App.tsx'), [id('src/shared/navigation-events.ts'), id('src/ui/lib/hashRoutes.ts'), id('src/ui/components/TopNav.tsx'), id('src/ui/lib/recordRouteModule.ts')]],
+    [id('src/ui/lib/runtimeLoader.ts'), [id('src/app/runtime.mjs')]],
+    [id('src/ui/lib/hashRoutes.ts'), [id('src/shared/navigation-events.ts')]],
+    [id('src/ui/pages/ObjectDetailPage.tsx'), [id('node_modules/@tabler/icons-react/dist/esm/icons/IconBook2.mjs')]],
+    [id('node_modules/react-dom/client.js'), [id('node_modules/react/index.js')]],
+    [id('node_modules/@tabler/icons-react/dist/esm/icons/IconBook2.mjs'), [id('node_modules/react/index.js')]],
+  ]);
+  const ids = new Set([...imports.keys(), ...[...imports.values()].flat()]);
+  const plan = planInteractiveDelivery(ids, key => ({ importedIds: imports.get(key) ?? [] }), root);
+  const groups = recordChunkGroups(root, plan);
+  const shell = groups.find(group => group.name === 'interactive-shell');
+  const warmup = groups.find(group => group.name === 'data-warmup');
+  for (const path of ['src/ui/App.tsx', 'src/ui/components/TopNav.tsx', 'node_modules/react-dom/client.js', 'node_modules/react/index.js', 'node_modules/@tabler/icons-react/dist/esm/icons/IconBook2.mjs']) assert.equal(shell.test(id(path)), true, path);
+  for (const path of ['src/main.tsx', 'src/shared/navigation-events.ts', 'src/ui/lib/runtimeLoader.ts', 'src/ui/lib/hashRoutes.ts', 'src/ui/lib/recordRouteModule.ts', 'src/ui/pages/ObjectDetailPage.tsx', 'src/ui/pages/ComparePage.tsx']) assert.equal(shell.test(id(path)), false, path);
+  assert.equal(warmup.test(id('src/ui/lib/runtimeLoader.ts')), true);
+  assert.equal(warmup.test(id('src/app/runtime.mjs')), true);
+  assert.equal(warmup.test(id('src/shared/navigation-events.ts')), false);
+  assert.equal(warmup.test(id('node_modules/react/index.js')), false);
+  assert.throws(() => planInteractiveDelivery([], () => null, root), /missing/);
+});
+
+test('first-paint font hints reference only the exact emitted normal-face bytes', () => {
+  const tags = orbitalFontPreloads(fontAssets());
+  assert.equal(tags.length, 3);
+  assert.ok(tags.every(tag => tag.attrs.rel === 'preload' && tag.attrs.as === 'font' && tag.attrs.crossorigin === ''));
+  assert.deepEqual(tags.map(tag => tag.attrs.href), [...new Set(ORBITAL_FONT_HASHES.slice(0, 3))].map(digest => `./${digest}.woff2`));
+  assert.throws(() => orbitalFontPreloads({}), /missing/);
 });
 
 test('finite groups coalesce shared record UI and exact icons without capturing dependencies', () => {

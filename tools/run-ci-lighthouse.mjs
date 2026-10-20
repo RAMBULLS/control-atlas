@@ -29,7 +29,8 @@ export function inventoryCiReports(config, reports) {
   return { urls, runs };
 }
 
-export function runCiLighthouse({ cwd = process.cwd(), runCommand, exportDiagnostics } = {}) {
+export function runCiLighthouse({ cwd = process.cwd(), runCommand, exportDiagnostics, warmupRuns = 2 } = {}) {
+  if (![0, 2].includes(warmupRuns)) throw new Error('Use the fixed two-run host warmup.');
   const configPath = resolve(cwd, '.lighthouserc.ci.json');
   const config = JSON.parse(readFileSync(configPath, 'utf8'));
   const reportDirectory = join(cwd, '.lighthouseci');
@@ -68,7 +69,35 @@ export function runCiLighthouse({ cwd = process.cwd(), runCommand, exportDiagnos
       rmSync(join(reportDirectory, filename));
     }
   }
-  if (attempt('healthcheck', ['--fatal'])) attempt('collect');
+  const warmups = { runsPerRoute: warmupRuns, reports: [], directory: 'warmups' };
+  if (attempt('healthcheck', ['--fatal'])) {
+    let warmed = !warmupRuns;
+    if (warmupRuns) {
+      const collected = attempt('collect', [`--numberOfRuns=${warmupRuns}`]);
+      const warmupDirectory = join(outputDirectory, 'warmups');
+      mkdirSync(warmupDirectory, { recursive: true });
+      try {
+        const reports = readdirSync(reportDirectory).filter(filename => REPORT_FILE.test(filename))
+          .map(filename => ({ filename, report: JSON.parse(readFileSync(join(reportDirectory, filename), 'utf8')) }));
+        inventoryCiReports({ ci: { collect: { ...config.ci.collect, numberOfRuns: warmupRuns } } }, reports);
+        warmups.reports = reports.map(({ filename, report }) => ({ filename, requestedUrl: report.requestedUrl }));
+        warmed = collected;
+      } catch (error) {
+        failures.push(`host warmup: ${error.message}`);
+      }
+      // Fixed before any scores exist. Retain all warmups separately, then
+      // collect new cold-browser measurements with every original assertion.
+      for (const filename of readdirSync(reportDirectory)) {
+        if (/^lhr-\d+\.(json|html)$/.test(filename) || filename === 'metric-inputs') {
+          renameSync(join(reportDirectory, filename), join(warmupDirectory, filename));
+        }
+      }
+      for (const filename of readdirSync(cwd).filter(filename => RAW_ASSET_FILE.test(filename) && !existingAssets.has(filename))) {
+        renameSync(join(cwd, filename), join(warmupDirectory, filename));
+      }
+    }
+    if (warmed) attempt('collect');
+  }
 
   try {
     const reports = readdirSync(reportDirectory).filter(filename => REPORT_FILE.test(filename))
@@ -125,6 +154,7 @@ export function runCiLighthouse({ cwd = process.cwd(), runCommand, exportDiagnos
     for (const filename of rawAssets) renameSync(join(cwd, filename), join(assetDirectory, filename));
   }
   const evidence = {
+    warmups,
     expectedRoutes: config.ci.collect.url,
     numberOfRuns: config.ci.collect.numberOfRuns,
     routes,

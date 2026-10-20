@@ -508,7 +508,7 @@ export function App() {
   // A previous route's neighborhood cannot prove a record or Library search
   // is empty. Keep it available to shared search, but let each workspace wait
   // for its own requested data before rendering or announcing readiness.
-  const routeBundle = routeScopePending ? null : bundle;
+  const routeBundle = routeScopePending && (viewState.view === "library-detail" || viewState.view === "search") ? null : bundle;
   const routeEntityName = (() => {
     if (recordScopePending) return "";
     const activeNodeId =

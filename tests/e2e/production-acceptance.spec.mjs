@@ -151,7 +151,9 @@ for (const width of [320, 375, 390, 768, 1024, 1440]) {
       await test.step(route, async () => {
         await open(page, route);
         expect(await page.evaluate(() => globalThis.innerWidth)).toBe(width);
-        await expect(page.locator('main h1').first()).toBeVisible();
+        const heading = page.getByRole('heading', { level: 1 });
+        await expect(heading).toHaveCount(1);
+        await expect(heading).toBeVisible();
         expect(await page.evaluate(() => globalThis.document.documentElement.scrollWidth - globalThis.document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
       });
     }

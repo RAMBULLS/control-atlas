@@ -71,20 +71,29 @@ export function planInteractiveDelivery(moduleIds, info, rootDir) {
   }
   for (const id of home) { interactive.delete(id); warmup.delete(id); }
   for (const id of warmup) interactive.delete(id);
+  for (const id of renderer) interactive.delete(id);
   // This tiny route import must remain available before the renderer arrives.
   interactive.delete(source('src/ui/lib/recordRouteModule.ts'));
   const support = entries => new Set([...closure(entries)].filter(id =>
-    !home.has(id) && !warmup.has(id) && !interactive.has(id) &&
+    !home.has(id) && !warmup.has(id) && !interactive.has(id) && !renderer.has(id) &&
     id !== source('src/ui/lib/recordRouteModule.ts') &&
     !/\/src\/ui\/pages\/[^/]+Page\.tsx$/.test(normalized(id))));
   const recordSupport = support([source('src/ui/pages/ObjectDetailPage.tsx')]);
   const resourceSupport = support([source('src/ui/pages/CommonsPage.tsx')]);
   for (const id of recordSupport) resourceSupport.delete(id);
-  return { interactive, warmup, recordSupport, resourceSupport };
+  // Their real publication/task consumers still own the full descriptions.
+  // Route validation's build-time names/formats/ids must not pin those source
+  // authorities into an arrival group after its fallback branch is folded.
+  for (const path of ['data/template-registry.json', 'data/compliance-workflows.json']) {
+    const id = source(path);
+    if (!id) continue;
+    for (const group of [warmup, interactive, recordSupport, resourceSupport]) group.delete(id);
+  }
+  return { interactive, warmup, renderer, recordSupport, resourceSupport };
 }
 
 /** @param {string} rootDir
- * @param {{interactive: Set<string>, warmup: Set<string>, recordSupport?: Set<string>, resourceSupport?: Set<string>}} delivery */
+ * @param {{interactive: Set<string>, warmup: Set<string>, renderer?: Set<string>, recordSupport?: Set<string>, resourceSupport?: Set<string>}} delivery */
 export function recordChunkGroups(rootDir, delivery = { interactive: new Set(), warmup: new Set() }) {
   const ui = new Set(RECORD_UI_MODULES.map(path => `${normalized(rootDir)}/${path}`));
   const home = new Set(HOME_SHELL_MODULES.map(path => `${normalized(rootDir)}/${path}`));
@@ -105,6 +114,8 @@ export function recordChunkGroups(rootDir, delivery = { interactive: new Set(), 
       minShareCount: 1, entriesAware: false, includeDependenciesRecursively: false },
     { name: 'interactive-shell', test: id => delivery.interactive.has(id), priority: 40,
       minShareCount: 1, entriesAware: false, includeDependenciesRecursively: false },
+    { name: 'renderer', test: id => delivery.renderer?.has(id) ?? false, priority: 45,
+      minShareCount: 1, entriesAware: false, includeDependenciesRecursively: false },
     { name: 'data-warmup', test: id => delivery.warmup.has(id), priority: 50,
       minShareCount: 1, entriesAware: false, includeDependenciesRecursively: false },
   ];
@@ -121,7 +132,7 @@ export const ORBITAL_FONT_HASHES = Object.freeze([
 ]);
 
 export function orbitalFontPreloads(bundle) {
-  return [ORBITAL_FONT_HASHES[0]].map(digest => {
+  return ORBITAL_FONT_HASHES.slice(0, 3).map(digest => {
     const asset = Object.values(bundle).find(output => output.type === 'asset' && output.fileName.endsWith('.woff2') && hash(output.source) === digest);
     if (!asset) throw new Error('A first-paint Orbital font asset is missing.');
     return { tag: 'link', attrs: { rel: 'preload', as: 'font', type: 'font/woff2', href: `./${asset.fileName}`, crossorigin: 'anonymous' }, injectTo: 'head-prepend' };
@@ -184,6 +195,9 @@ export function verifyRecordDelivery(bundle, rootDir) {
       if (['record-ui', 'record-icons'].includes(chunk.name) || Object.keys(chunk.modules).some(id => forbidden.test(normalized(id)))) {
         throw new Error(`${name} statically imports route UI or React through ${chunk.fileName}.`);
       }
+      if (Object.entries(chunk.modules).some(([id, module]) => /\/data\/(?:template-registry|compliance-workflows)\.json$/.test(normalized(id)) && module.renderedLength > 0)) {
+        throw new Error(`${name} includes full task descriptions instead of compiled route choices.`);
+      }
     }
   }
   // The classic progressive-shell script is the fourth allowed request.
@@ -226,7 +240,7 @@ export function verifyRecordDelivery(bundle, rootDir) {
       page: normalized(page.id).replace(`${normalized(rootDir)}/`, ''),
       chunks: closure(byName.get(page.file)).map(chunk => ({ file: chunk.fileName, bytes: Buffer.byteLength(chunk.code) })),
     })),
-    groups: chunks.filter(chunk => ['record-ui', 'resources-ui', 'record-icons', 'interactive-shell', 'data-warmup'].includes(chunk.name)).map(chunk => ({ name: chunk.name, file: chunk.fileName, bytes: Buffer.byteLength(chunk.code),
+    groups: chunks.filter(chunk => ['record-ui', 'resources-ui', 'record-icons', 'interactive-shell', 'renderer', 'data-warmup'].includes(chunk.name)).map(chunk => ({ name: chunk.name, file: chunk.fileName, bytes: Buffer.byteLength(chunk.code),
       modules: Object.keys(chunk.modules).map(normalized), moduleLengths: Object.entries(chunk.modules).map(([id, module]) => ({ id: normalized(id), renderedLength: Number.isFinite(module.renderedLength) ? module.renderedLength : null })), imports: chunk.imports })),
     fontHashes: [...new Set(ORBITAL_FONT_HASHES)],
   };

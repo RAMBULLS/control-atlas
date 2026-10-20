@@ -76,7 +76,9 @@ The focused Atlas adds normalized read models generated from those canonical art
 
 These are delivery optimizations, not a second relationship truth. Each stored edge remains canonical and incident to the selected record.
 
-Record first paint uses the catalog bootstrap's admitted partition layout and an exact source projection from `data/generated/source-records/`. Every projection retains the complete canonical source object. The full source register and supporting context load after the published text has painted; related records wait for their source metadata. Home's React page stays lazy, and interactive shell code downloads alongside the pure data module without adding React to Home's static entry.
+Record first paint uses `data/generated/catalog-bootstrap-record.json`: the admitted catalog/partition layout and complete canonical source register in one request. Its source IDs must exactly match the admitted source-record index. Its compressed size cannot exceed the combined catalog bootstrap and source-register inputs it replaces. Related-source evidence therefore arrives with the publisher text, without another register/runtime loading pass. Older bootstrap shapes retain the exact `data/generated/source-records/` projection and bounded supporting-register path.
+
+Home's React page stays lazy. The renderer, interactive shell and pure data module download separately without adding React to Home's static entry. Route validation uses names, supported formats and task IDs computed from the canonical registries at build time; full descriptions remain with their publication/task consumers. The emitted graph rejects full task descriptions in the data preloader.
 
 Every displayable relationship separates:
 

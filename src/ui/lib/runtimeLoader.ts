@@ -5,6 +5,7 @@ import { createFederalGraphRuntime } from "../../app/runtime.mjs";
 import { ATLAS_NEIGHBORHOOD_SHARD_COUNT, atlasNeighborhoodShardId } from "../../app/atlas-neighborhood.mjs";
 import { RUNTIME_CACHE_VERSION } from "../../shared/runtime-cache-version.mjs";
 import { takeRouteResponse } from "../../shared/route-prefetch.mjs";
+import { recordBootstrapSources } from "../../shared/record-source-bootstrap.mjs";
 import type {
   CommonsResourceDataset,
   CommonsSearchIndex,
@@ -444,7 +445,7 @@ export async function preloadRuntimeArtifacts(state: ViewState) {
     add(artifactPath("sources.json"));
   }
   if (plan.catalogBootstrap) {
-    add(artifactPath("catalog-bootstrap.json"));
+    requests.push(loadCatalogBootstrapArtifact(Boolean(plan.recordNodeId && !plan.sources && !plan.fullGraph)));
   }
   if (plan.atlasSpine) {
     add(artifactPath("atlas-spine.json"));
@@ -560,7 +561,7 @@ export async function fetchArtifact(path: string, options: ArtifactFetchOptions 
   try {
     return await request;
   } catch (error) {
-    artifactCache.delete(path);
+    if (artifactCache.get(path) === request) artifactCache.delete(path);
     throw error;
   }
 }
@@ -1040,6 +1041,8 @@ export async function loadRuntimeDataset(): Promise<RuntimeBundle> {
 }
 
 type CatalogBootstrap = {
+  record_bootstrap?: string;
+  sources?: Array<Record<string, unknown>>;
   atlas_neighborhood?: { shard_count: number; hash_algorithm: string };
   source_records?: Record<string, string>;
   comparison_content?: Record<string, ComparisonContent>;
@@ -1053,7 +1056,28 @@ type CatalogBootstrap = {
   >;
 };
 
+async function loadCatalogBootstrapArtifact(record = false) {
+  if (!record) return fetchArtifact(artifactPath("catalog-bootstrap.json"));
+  const path = artifactPath("catalog-bootstrap-record.json");
+  const primary = fetchArtifact(path);
+  const compatible: Promise<unknown> = primary.catch(async error => {
+    if (!(error instanceof RuntimeLoadError) || error.code !== "artifact_unavailable") throw error;
+    // An older published layout can lack this file. A current layout declaring
+    // it cannot hide a missing required register behind that compatibility path.
+    const legacy = await fetchArtifact(artifactPath("catalog-bootstrap.json"), { bypassCache: true }) as { catalog_bootstrap?: CatalogBootstrap };
+    if (!legacy.catalog_bootstrap || legacy.catalog_bootstrap.record_bootstrap !== undefined) throw error;
+    return legacy;
+  }).catch(error => {
+    if (artifactCache.get(path) === compatible) artifactCache.delete(path);
+    throw error;
+  });
+  artifactCache.set(path, compatible);
+  return compatible;
+}
+
 async function loadRecordSources(sourceId: string, bootstrap: CatalogBootstrap) {
+  const complete = recordBootstrapSources(bootstrap, sourceId);
+  if (complete) return { sources: complete, complete: true };
   if (!bootstrap.source_records) {
     return { sources: await fetchCollection(artifactPath("sources.json"), "sources"), complete: true };
   }
@@ -1107,6 +1131,9 @@ async function loadRouteScopedPhase(
   complianceToolRegistry: ComplianceToolRegistry;
   fedrampTransitionIndex: FedrampTransitionIndex;
 }> {
+  const bootstrapArtifact = plan.catalogBootstrap || plan.recordNodeId
+    ? loadCatalogBootstrapArtifact(Boolean(plan.recordNodeId && !plan.sources && !plan.fullGraph))
+    : Promise.resolve(null);
   const [
     libraryBootstrap,
     sourcesArtifact,
@@ -1129,7 +1156,7 @@ async function loadRouteScopedPhase(
       ? fetchArtifact(artifactPath("sources.json"))
       : Promise.resolve(null),
     plan.catalogBootstrap
-      ? fetchArtifact(artifactPath("catalog-bootstrap.json"))
+      ? bootstrapArtifact
       : Promise.resolve(null),
     plan.atlasSpine
       ? fetchArtifact(artifactPath("atlas-spine.json"))
@@ -1140,7 +1167,7 @@ async function loadRouteScopedPhase(
         )
       : Promise.resolve(null),
     plan.recordNodeId
-      ? loadAtlasNeighborhood(plan.recordNodeId, fetchArtifact(artifactPath("catalog-bootstrap.json")) as Promise<{ catalog_bootstrap?: CatalogBootstrap }>)
+      ? loadAtlasNeighborhood(plan.recordNodeId, bootstrapArtifact as Promise<{ catalog_bootstrap?: CatalogBootstrap }>)
       : Promise.resolve(null),
     plan.registries
       ? optionalArtifact<TemplateRegistry>("./data/template-registry.json", { templates: [] })
@@ -1264,6 +1291,7 @@ async function loadRouteScopedPhase(
       catalogPublishedGroups,
       catalogRecordsReady: plan.catalogId ? true : undefined,
       sourcesReady: completeSources,
+      recordContextReady: plan.recordNodeId ? completeSources : undefined,
       librarySearchReady: plan.librarySearch,
       routeReady: true,
       graphReady: false,

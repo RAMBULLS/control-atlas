@@ -8,6 +8,7 @@ import { resolve } from 'node:path';
 import { RUNTIME_CACHE_VERSION } from './src/shared/runtime-cache-version.mjs';
 import { ATLAS_NEIGHBORHOOD_SHARD_COUNT } from './src/app/atlas-neighborhood.mjs';
 import { startRoutePrefetch } from './src/shared/route-prefetch.mjs';
+import { buildRouteChoices } from './src/shared/build-route-choices.mjs';
 import { materializeOrbitalFonts, orbitalFontPreloads, planInteractiveDelivery, recordChunkGroups, verifyRecordDelivery } from './tools/record-delivery.mjs';
 import { HOME_CONTENT, HOME_TOOLS } from './src/shared/home-content.mjs';
 import { FIRST_PAINT_ROUTE_COPY, SITE_COPY } from './src/shared/site-copy.mjs';
@@ -212,6 +213,7 @@ function getBuildSha(): string {
 
 const interactiveDelivery = {
   interactive: new Set<string>(), warmup: new Set<string>(),
+  renderer: new Set<string>(),
   recordSupport: new Set<string>(), resourceSupport: new Set<string>(),
 };
 
@@ -220,6 +222,11 @@ export default defineConfig({
   base: './',
   root: resolve(rootDir, 'src'),
   define: {
+    __CONTROL_ATLAS_BUILD_ROUTE_CHOICES_COMPILED__: 'true',
+    __CONTROL_ATLAS_BUILD_ROUTE_CHOICES__: JSON.stringify(buildRouteChoices(
+      JSON.parse(readFileSync(resolve(rootDir, 'data/template-registry.json'), 'utf8')),
+      JSON.parse(readFileSync(resolve(rootDir, 'data/compliance-workflows.json'), 'utf8')),
+    )),
     'globalThis.__ATLAS_BRAND_SIGNALS__': JSON.stringify(atlasBrandSignals),
     'globalThis.__ATLAS_SCOPE_METRICS__': JSON.stringify(atlasScopeMetrics),
     'globalThis.__HOME_SURFACE__': JSON.stringify(homeSurface),
@@ -271,6 +278,7 @@ export default defineConfig({
         const plan = planInteractiveDelivery(this.getModuleIds(), id => this.getModuleInfo(id), rootDir);
         interactiveDelivery.interactive = plan.interactive;
         interactiveDelivery.warmup = plan.warmup;
+        interactiveDelivery.renderer = plan.renderer;
         interactiveDelivery.recordSupport = plan.recordSupport;
         interactiveDelivery.resourceSupport = plan.resourceSupport;
       },
@@ -291,8 +299,8 @@ export default defineConfig({
       generateBundle(_options, bundle) {
         const report = verifyRecordDelivery(bundle, rootDir);
         const modules = Object.values(bundle).filter(output => output.type === 'chunk' &&
-          ['interactive-shell', 'data-warmup'].includes(output.name)).map(output => output.fileName);
-        if (modules.length !== 2) throw new Error('Early route delivery requires the admitted shell and data chunks.');
+          ['renderer', 'interactive-shell', 'data-warmup'].includes(output.name)).map(output => output.fileName);
+        if (modules.length !== 3) throw new Error('Early route delivery requires the admitted renderer, shell and data chunks.');
         const routeModules = Object.fromEntries([['record', 'ObjectDetailPage.tsx'], ['resource-detail', 'CommonsDetailPage.tsx']].map(([route, page]) => {
           const entry = report.pages.find(entry => entry.id.endsWith(`/pages/${page}`));
           if (!entry) throw new Error(`Initial route entry is missing: ${page}`);

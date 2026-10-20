@@ -2883,6 +2883,7 @@ function createBuildManifest(graph) {
       "atlas-neighborhood-manifest.json",
       "atlas-neighborhood/",
       "catalog-bootstrap.json",
+      "catalog-bootstrap-record.json",
       "catalog-records/",
       "source-records/",
       "compare-data/",
@@ -4000,6 +4001,7 @@ export function buildFrameworkData({ generatedDirectory = DEFAULT_GENERATED } = 
   const comparisons = buildComparisonArtifacts(graph, undefined, true);
   const recordSources = [...graph.sources].sort((left, right) => left.id.localeCompare(right.id));
   const catalogBootstrap = {
+    record_bootstrap: "catalog-bootstrap-record.json",
     catalogs,
     atlas_neighborhood: { shard_count: ATLAS_NEIGHBORHOOD_SHARD_COUNT, hash_algorithm: "fnv1a-32" },
     source_records: Object.fromEntries(recordSources.map(source => [source.id, `source-records/${Buffer.from(source.id, "utf8").toString("base64url")}.json`])),
@@ -4239,6 +4241,11 @@ const catalogRecords = new Map();
     )}\n`,
     "utf8",
   );
+  // A record needs the same complete source register that its related-source
+  // evidence will use. Deliver it with the admitted bootstrap once, rather
+  // than repainting the record after a second register/runtime loading pass.
+  writeFileSync(join(GENERATED, "catalog-bootstrap-record.json"),
+    `${JSON.stringify(artifact("catalog_bootstrap", { ...catalogBootstrap, sources: recordSources }, generatedAt))}\n`, "utf8");
 
   const catalogRecordsDir = join(GENERATED, "catalog-records");
   mkdirSync(catalogRecordsDir, { recursive: true });

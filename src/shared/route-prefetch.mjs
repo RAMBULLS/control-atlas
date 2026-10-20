@@ -18,7 +18,7 @@ export function startRoutePrefetch(config, environment = /** @type {typeof globa
     let hash = 0x811c9dc5;
     for (const character of id) { hash ^= character.codePointAt(0) ?? 0; hash = Math.imul(hash, 0x01000193) >>> 0; }
     const shard = (hash % config.shardCount).toString(16).padStart(2, '0');
-    paths.push(`data/generated/catalog-bootstrap.json.gz?v=${config.version}`, `data/generated/atlas-neighborhood/${shard}.json.gz?v=${config.version}`);
+    paths.push(`data/generated/catalog-bootstrap-record.json.gz?v=${config.version}`, `data/generated/atlas-neighborhood/${shard}.json.gz?v=${config.version}`);
   }
   const pending = environment.__ATLAS_ROUTE_PREFETCH__ ||= new Map();
   for (const path of paths) {

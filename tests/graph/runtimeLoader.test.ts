@@ -135,7 +135,7 @@ test("record rendering acknowledgment binds visible runtime identity and bounds 
 });
 
 // Synthetic publisher fixtures exercise staging without network or generated data.
-function recordStageFixture(compact = false) {
+function recordStageFixture(compact = false, atomic = false) {
   const id = "nist-800-53:AC-2";
   const source = { id: "fixture-source", owner: "Fixture publisher", title: "Fixture publication" };
   const nodes = [
@@ -163,6 +163,7 @@ function recordStageFixture(compact = false) {
     else if (url.includes("catalog-bootstrap")) body = { catalog_bootstrap: {
       catalogs: [{ id: "nist-800-53", name: "Fixture publication", source_id: source.id }],
       ...(compact ? { source_records: { [source.id]: "source-records/000.json" }, atlas_neighborhood: { shard_count: 8, hash_algorithm: "fnv1a-32" } } : {}),
+      ...(atomic ? { sources: [source] } : {}),
     } };
     else if (url.includes("source-records/000.json")) body = { schema_version: "1.0", sources: [source] };
     else if (url.includes("sources.json")) body = { schema_version: "1.0", sources: [source] };
@@ -175,6 +176,28 @@ function recordStageFixture(compact = false) {
   }) as typeof fetch;
   return { id, edge, source, requests, fetchFixture, state: normalizeViewState("library-detail", { node: id }) };
 }
+
+test("atomic record arrival shares its complete admitted register and runtime with the full stage", async () => {
+  const originalFetch = globalThis.fetch;
+  const fixture = recordStageFixture(true, true);
+  globalThis.fetch = fixture.fetchFixture;
+  clearRuntimeArtifactCache();
+  const stages: RuntimeBundle[] = [];
+  try {
+    await loadRuntimeDatasetStaged({ state: fixture.state,
+      onSearchReady: bundle => { stages.push(bundle); },
+      onRecordRendered: async bundle => {
+        assert.equal(bundle.sourcesReady, true);
+        assert.equal(bundle.recordContextReady, true);
+        assert.deepEqual(bundle.runtime.getSource(fixture.source.id), fixture.source);
+      },
+      onFullReady: bundle => { stages.push(bundle); }, onError: error => { throw error; },
+    });
+    assert.equal(stages.length, 2);
+    assert.equal(stages[0].runtime, stages[1].runtime);
+    assert.equal(fixture.requests.some(url => /\/sources\.json|\/source-records\//.test(url)), false);
+  } finally { globalThis.fetch = originalFetch; clearRuntimeArtifactCache(); }
+});
 
 test("record first paint uses its exact source artifact and defers the full register until paint acknowledgement", async () => {
   const originalFetch = globalThis.fetch;
@@ -204,6 +227,59 @@ test("record first paint uses its exact source artifact and defers the full regi
     globalThis.fetch = originalFetch;
     clearRuntimeArtifactCache();
   }
+});
+
+test("missing atomic file reuses an admitted legacy bootstrap without repeated failed requests", async () => {
+  const originalFetch = globalThis.fetch;
+  const fixture = recordStageFixture(true);
+  let missingRequests = 0;
+  globalThis.fetch = (async input => {
+    if (String(input).includes("catalog-bootstrap-record")) {
+      missingRequests += 1;
+      return new Response("", { status: 404 });
+    }
+    return fixture.fetchFixture(input);
+  }) as typeof fetch;
+  clearRuntimeArtifactCache();
+  try {
+    await preloadRuntimeArtifacts(fixture.state);
+    await preloadRuntimeArtifacts(fixture.state);
+    let delivered = false;
+    await loadRuntimeDatasetStaged({ state: fixture.state,
+      onSearchReady: () => {},
+      onFullReady: () => { delivered = true; }, onError: error => { throw error; } });
+    assert.equal(delivered, true);
+    assert.equal(missingRequests, 2, "only the initial compressed and raw attempts are needed");
+  } finally { globalThis.fetch = originalFetch; clearRuntimeArtifactCache(); }
+});
+
+test("a declared atomic file cannot silently fall back when missing and can recover after retry", async () => {
+  const originalFetch = globalThis.fetch;
+  const fixture = recordStageFixture(true, true);
+  let missing = true;
+  globalThis.fetch = (async input => {
+    const url = String(input);
+    if (missing && url.includes("catalog-bootstrap-record")) return new Response("", { status: 404 });
+    const response = await fixture.fetchFixture(input);
+    if (!url.includes("catalog-bootstrap") || !response.ok) return response;
+    const body = await response.json();
+    body.catalog_bootstrap.record_bootstrap = "catalog-bootstrap-record.json";
+    return new Response(JSON.stringify(body));
+  }) as typeof fetch;
+  clearRuntimeArtifactCache();
+  try {
+    const errors: unknown[] = [];
+    let deliveries = 0;
+    const options = { state: fixture.state, onSearchReady: () => {}, onFullReady: () => { deliveries += 1; },
+      onError: (error: unknown) => { errors.push(error); } };
+    await loadRuntimeDatasetStaged(options);
+    assert.equal(deliveries, 0);
+    assert.equal(errors.length, 1);
+    missing = false;
+    await loadRuntimeDatasetStaged(options);
+    assert.equal(deliveries, 1);
+    assert.equal(errors.length, 1, "the rejected compatibility request must not poison retry");
+  } finally { globalThis.fetch = originalFetch; clearRuntimeArtifactCache(); }
 });
 
 test("record source artifact mismatch cannot become official content or a silent full-register fallback", async () => {

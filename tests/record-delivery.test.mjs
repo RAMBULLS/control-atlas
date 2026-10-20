@@ -6,6 +6,8 @@ import test from 'node:test';
 import { runInNewContext } from 'node:vm';
 import ts from 'typescript';
 import { startRoutePrefetch, takeRouteResponse, waitForStaticRoutePaint } from '../src/shared/route-prefetch.mjs';
+import { recordBootstrapSources } from '../src/shared/record-source-bootstrap.mjs';
+import { buildRouteChoices } from '../src/shared/build-route-choices.mjs';
 import { atlasNeighborhoodShardId, ATLAS_NEIGHBORHOOD_SHARD_COUNT } from '../src/app/atlas-neighborhood.mjs';
 import { externalizeOrbitalFonts, HOME_SHELL_MODULES, ORBITAL_FONT_HASHES, orbitalFontPreloads, planInteractiveDelivery, recordChunkGroups, RECORD_UI_MODULES, verifyRecordDelivery } from '../tools/record-delivery.mjs';
 
@@ -75,7 +77,7 @@ test('resolved static graph batches interactive code while preserving Home, warm
     [id('src/main.tsx'), [id('src/shared/navigation-events.ts')]],
     [id('src/ui/App.tsx'), [id('src/shared/navigation-events.ts'), id('src/ui/lib/hashRoutes.ts'), id('src/ui/components/TopNav.tsx'), id('src/ui/lib/recordRouteModule.ts')]],
     [id('src/ui/lib/runtimeLoader.ts'), [id('src/app/runtime.mjs')]],
-    [id('src/ui/lib/hashRoutes.ts'), [id('src/shared/navigation-events.ts')]],
+    [id('src/ui/lib/hashRoutes.ts'), [id('src/shared/navigation-events.ts'), id('data/template-registry.json'), id('data/compliance-workflows.json')]],
     [id('src/ui/pages/ObjectDetailPage.tsx'), [id('node_modules/@tabler/icons-react/dist/esm/icons/IconBook2.mjs'), id('src/ui/components/RecordPublishedText.tsx')]],
     [id('src/ui/components/RecordPublishedText.tsx'), [id('src/ui/lib/publisherName.ts')]],
     [id('src/ui/pages/CommonsPage.tsx'), [id('src/ui/lib/commonsPresentation.ts'), id('src/ui/lib/publisherName.ts')]],
@@ -100,13 +102,14 @@ test('resolved static graph batches interactive code while preserving Home, warm
     graph: { getModuleIds: () => ids.values(), getModuleInfo: key => ({ importedIds: imports.get(key) ?? [] }) } };
   const code = `${initializer.getText(config)}\n(function (${hook.parameters.map(parameter => parameter.getText(config)).join(', ')}) ${hook.body.getText(config)}).call(graph);\nresult = interactiveDelivery;`;
   runInNewContext(ts.transpileModule(code, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText, context);
-  for (const key of ['interactive', 'warmup', 'recordSupport', 'resourceSupport']) {
+  for (const key of ['interactive', 'warmup', 'renderer', 'recordSupport', 'resourceSupport']) {
     assert.ok(context.result[key] instanceof Set || context.result[key]?.[Symbol.iterator], key);
     assert.deepEqual([...context.result[key]], [...plan[key]], `Vite must retain the resolved ${key} cohort`);
   }
   const groups = recordChunkGroups(root, plan);
   const shell = groups.find(group => group.name === 'interactive-shell');
   const warmup = groups.find(group => group.name === 'data-warmup');
+  const renderer = groups.find(group => group.name === 'renderer');
   const recordUi = groups.find(group => group.name === 'record-ui');
   const resourcesUi = groups.find(group => group.name === 'resources-ui');
   for (const path of ['src/ui/components/RecordPublishedText.tsx', 'src/ui/lib/publisherName.ts']) {
@@ -120,9 +123,12 @@ test('resolved static graph batches interactive code while preserving Home, warm
     }
   }
   for (const path of ['src/ui/App.tsx', 'src/ui/components/TopNav.tsx', 'node_modules/@tabler/icons-react/dist/esm/icons/IconBook2.mjs']) assert.equal(shell.test(id(path)), true, path);
-  assert.equal(groups.some(group => group.name === 'renderer'), false);
   for (const path of ['node_modules/react-dom/client.js', 'node_modules/react/index.js']) {
-    assert.equal(shell.test(id(path)), true, path);
+    assert.equal(shell.test(id(path)), false, path);
+    assert.equal(renderer.test(id(path)), true, path);
+  }
+  for (const path of ['data/template-registry.json', 'data/compliance-workflows.json']) {
+    for (const group of [warmup, shell, recordUi, resourcesUi]) assert.equal(group.test(id(path)), false, path);
   }
   for (const path of ['src/main.tsx', 'src/shared/navigation-events.ts', 'src/ui/lib/runtimeLoader.ts', 'src/ui/lib/hashRoutes.ts', 'src/ui/lib/recordRouteModule.ts', 'src/ui/pages/ObjectDetailPage.tsx', 'src/ui/pages/ComparePage.tsx']) assert.equal(shell.test(id(path)), false, path);
   assert.equal(warmup.test(id('src/ui/lib/runtimeLoader.ts')), true);
@@ -132,11 +138,11 @@ test('resolved static graph batches interactive code while preserving Home, warm
   assert.throws(() => planInteractiveDelivery([], () => null, root), /missing/);
 });
 
-test('first-paint font hints reference only the exact emitted normal-face bytes', () => {
+test('first-paint font hints reference the exact three faces already used by the measured routes', () => {
   const tags = orbitalFontPreloads(fontAssets());
-  assert.equal(tags.length, 1);
+  assert.equal(tags.length, 3);
   assert.ok(tags.every(tag => tag.attrs.rel === 'preload' && tag.attrs.as === 'font' && tag.attrs.crossorigin === 'anonymous'));
-  assert.deepEqual(tags.map(tag => tag.attrs.href), [ORBITAL_FONT_HASHES[0]].map(digest => `./${digest}.woff2`));
+  assert.deepEqual(tags.map(tag => tag.attrs.href), ORBITAL_FONT_HASHES.slice(0, 3).map(digest => `./${digest}.woff2`));
   assert.throws(() => orbitalFontPreloads({}), /missing/);
 });
 
@@ -153,7 +159,7 @@ test('early route requests reuse exact cached responses and preserve Home and mi
   environment.location.hash = '#/record/nist-800-53/AC-2';
   startRoutePrefetch(config, environment);
   assert.deepEqual(requests, [
-    'https://example.test/control-atlas/data/generated/catalog-bootstrap.json.gz?v=fixture',
+    'https://example.test/control-atlas/data/generated/catalog-bootstrap-record.json.gz?v=fixture',
     `https://example.test/control-atlas/data/generated/atlas-neighborhood/${atlasNeighborhoodShardId('nist-800-53:AC-2')}.json.gz?v=fixture`,
   ]);
   assert.ok(links.every(link => link.rel === 'modulepreload' && link.crossOrigin === 'anonymous'));
@@ -225,6 +231,51 @@ test('early responses retain the consuming loader deadline after their headers r
   const already = Object.assign(Promise.resolve(new Response('fixture')), { abort: () => { expiredAborts += 1; } });
   takeRouteResponse(new Map([['fixture', already]]), 'fixture', expired.signal);
   assert.equal(expiredAborts, 1);
+});
+
+test('atomic record bootstrap preserves every complete admitted source and legacy absence', () => {
+  const sources = [{ id: 'one', title: 'Fixture', metadata: { currentness: null, reason: 'Not published' } }, { id: 'two', retained: ['full', 'metadata'] }];
+  const bootstrap = { source_records: { one: 'one.json', two: 'two.json' }, sources };
+  assert.equal(recordBootstrapSources(bootstrap, 'one'), sources);
+  assert.equal(recordBootstrapSources(bootstrap, 'two')[1], sources[1]);
+  assert.equal(recordBootstrapSources({ source_records: bootstrap.source_records }, 'one'), null);
+  for (const invalid of [
+    { ...bootstrap, sources: {} },
+    { ...bootstrap, source_records: undefined },
+    { ...bootstrap, sources: [sources[0]] },
+    { ...bootstrap, sources: [sources[0], sources[0]] },
+    { ...bootstrap, sources: [sources[0], { id: 'unadmitted' }] },
+    { ...bootstrap, sources: undefined, record_bootstrap: 'catalog-bootstrap-record.json' },
+    { ...bootstrap, record_bootstrap: 'unadmitted.json' },
+  ]) assert.throws(() => recordBootstrapSources(invalid, 'one'), /Record bootstrap source register/);
+  assert.throws(() => recordBootstrapSources(bootstrap, 'unadmitted'), /incomplete/);
+});
+
+test('compiled route choices preserve the real validator behavior without publication descriptions', () => {
+  const templates = { templates: [{ name: 'Fixture form', supported_formats: ['xlsx', 'csv'], description: 'Not routing data' }] };
+  const workflows = { workflows: [{ workflow_id: 'fixture-task', description: 'Not routing data' }] };
+  const choices = buildRouteChoices(templates, workflows);
+  assert.deepEqual(choices, { templates: [{ name: 'Fixture form', supported_formats: ['xlsx', 'csv'] }], workflowIds: ['fixture-task'] });
+  const source = readFileSync(new URL('../src/ui/lib/buildRouteState.ts', import.meta.url), 'utf8');
+  const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
+  const run = compiled => {
+    const exports = {};
+    const context = { exports, require: name => name.includes('template-registry') ? { __esModule: true, default: templates }
+      : name.includes('compliance-workflows') ? { __esModule: true, default: workflows } : { buildRouteChoices },
+    };
+    if (compiled) {
+      context.__CONTROL_ATLAS_BUILD_ROUTE_CHOICES__ = choices;
+      context.__CONTROL_ATLAS_BUILD_ROUTE_CHOICES_COMPILED__ = true;
+    }
+    runInNewContext(code, context);
+    return exports;
+  };
+  const baseline = run(false), compiled = run(true);
+  for (const value of ['', 'Fixture form', 'unknown']) {
+    assert.equal(compiled.isKnownBuildDocument(value), baseline.isKnownBuildDocument(value));
+    for (const format of ['', 'csv', 'xlsx', 'unknown']) assert.equal(compiled.isValidBuildFormat(format, value), baseline.isValidBuildFormat(format, value));
+  }
+  for (const value of ['', 'fixture-task', 'unknown']) assert.equal(compiled.isKnownBuildTask(value), baseline.isKnownBuildTask(value));
 });
 
 test('finite groups coalesce shared record UI and exact icons without capturing dependencies', () => {
@@ -325,6 +376,9 @@ test('emitted graph rejects UI in Home or data warm-up, merged pages, and change
     react[name].imports.push('react.js');
     react['react.js'] = chunk('react.js', ['node_modules/react/index.js']);
     assert.throws(() => verifyRecordDelivery(react, root), /statically imports route UI/);
+    const descriptions = bundle();
+    descriptions[name].modules[`${root}/data/compliance-workflows.json`] = { renderedLength: 100 };
+    assert.throws(() => verifyRecordDelivery(descriptions, root), /includes full task descriptions/);
   }
   const merged = bundle();
   merged['record.js'].modules[`${root}/src/ui/pages/ComparePage.tsx`] = {};

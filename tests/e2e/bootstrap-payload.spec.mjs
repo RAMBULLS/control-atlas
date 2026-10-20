@@ -1,6 +1,7 @@
 /* global document, Element, MutationObserver */
 import { expect, test } from "@playwright/test";
 import { atlasNeighborhoodShardId } from "../../src/app/atlas-neighborhood.mjs";
+import { gzipSync, gunzipSync } from "node:zlib";
 
 import {
   attachPageDiagnostics,
@@ -18,6 +19,24 @@ function graphArtifactUrls(urls) {
 test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
 });
+
+async function useLegacyRecordBootstrap(page) {
+  // Omit only the new register field to exercise the admitted older staging
+  // format. Publisher/source contents and the source-record index stay exact.
+  await page.route(/\/catalog-bootstrap-record\.json(?:\.gz)?(?:\?|$)/, async route => {
+    const response = await route.fetch();
+    const compressed = new URL(route.request().url()).pathname.endsWith(".gz");
+    const bytes = await response.body();
+    const artifact = JSON.parse((compressed ? gunzipSync(bytes) : bytes).toString("utf8"));
+    delete artifact.catalog_bootstrap.sources;
+    delete artifact.catalog_bootstrap.record_bootstrap;
+    const json = Buffer.from(JSON.stringify(artifact));
+    const body = compressed ? gzipSync(json) : json;
+    const headers = { ...response.headers(), "content-length": String(body.length) };
+    delete headers["content-encoding"];
+    await route.fulfill({ response, headers, body });
+  });
+}
 
 test("record navigation waits for its own neighborhood and never announces stale absence", async ({ page }) => {
   const firstId = "nist-800-53:AC-2";
@@ -242,7 +261,8 @@ test("Resources exposes recovery when a delayed page module fails", async ({ pag
   }
 });
 
-test("record commits official content without a whole-tree or Resources download, then supports search", async ({ page }) => {
+test("legacy record staging commits official content without a whole-tree or Resources download, then supports search", async ({ page }) => {
+  await useLegacyRecordBootstrap(page);
   await page.setViewportSize({ width: 412, height: 823 });
   const resourceRequests = [];
   const sourceRequests = [];
@@ -317,6 +337,21 @@ test("record commits official content without a whole-tree or Resources download
     releaseRecord();
     releaseSupporting();
   }
+});
+
+test("atomic record arrival includes complete source context without another source fetch", async ({ page }) => {
+  await page.setViewportSize({ width: 412, height: 823 });
+  const sourceRequests = [];
+  page.on("request", request => {
+    if (/\/sources\.json(?:\.gz)?(?:\?|$)|\/source-records\//.test(request.url())) sourceRequests.push(request.url());
+  });
+  await page.goto("/#/record/nist-800-53/AC-2");
+  const record = page.locator('[data-record-content="nist-800-53:AC-2"]');
+  await expect(record).toHaveAttribute("data-record-context-ready", "true");
+  await expect(record.locator('[data-record-section="official-text"]')).toContainText("Define and document the types of accounts allowed");
+  await expect(record.locator('[data-record-section="related-records"] details.record-relationship-disclosure').first()).toBeAttached();
+  await expect(record).not.toContainText("Loading source information for related records.");
+  expect(sourceRequests).toEqual([]);
 });
 
 test("a fulfilled record warm-up renders accepted text without another route fallback", async ({ page }) => {

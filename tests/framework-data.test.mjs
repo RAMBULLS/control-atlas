@@ -47,8 +47,9 @@ test("record source files are complete exact projections and share the admitted 
   const manifest = JSON.parse(readFileSync(join(generatedDirectory, "atlas-neighborhood-manifest.json"), "utf8")).atlas_neighborhood_manifest;
   const { sources } = generated("sources");
   const recordBootstrap = generated("catalog-bootstrap-record").catalog_bootstrap;
-  const expected = { ...bootstrap, source_ids: Object.keys(bootstrap.source_records), sources: [...sources].sort((left, right) => left.id.localeCompare(right.id)) };
+  const expected = { ...bootstrap, source_ids: Object.keys(bootstrap.source_records), record_source_delivery: "neighborhood-v1" };
   delete expected.source_records;
+  for (const key of ["comparison_pairs", "comparison_items", "comparison_baselines", "comparison_content", "mapping_sources"]) delete expected[key];
   assert.deepEqual(recordBootstrap, expected);
   assert.equal(bootstrap.atlas_neighborhood.shard_count, manifest.shard_count);
   assert.equal(bootstrap.atlas_neighborhood.hash_algorithm, manifest.hash_algorithm);

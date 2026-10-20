@@ -358,10 +358,36 @@ an ephemeral one-day localhost certificate and admits only that certificate's
 SPKI hash in Chrome. No system trust or general certificate exception changes.
 Measured documents and transferred same-origin assets must report `h2`.
 The static server's ordinary browser-test mode remains HTTP/1.1.
+CI collects three fixed cold-browser samples per requested route after two host
+warmups. LHCI calculates each metric's median within that route; SPA routes must
+never be pooled by their shared final URL. Other audit and byte limits use the
+worst sample. Every sample must have valid metrics and transport evidence.
 The optional `--compare-http1` runner flag retains a fixed HTTP/1 reference
 before the HTTP/2 measurement, with the same build identities, routes, cold
 samples, host warmups, throttling and assertions. Reference failures remain in
 the comparison artifact; they are not production-transport passes.
+
+Control Atlas is a reference and analysis tool with large connected source data.
+Its first useful guidance and publisher text should load promptly; complete
+search, comparison and graph context may load progressively with truthful loading
+states. Optimize measured bottlenecks without removing source evidence or moving
+unbounded work into the first view. A perfect Lighthouse score is not required:
+the performance score remains advisory, while task completion, accessibility,
+loading stability and the explicit metric/byte budgets are required.
+
+CI and deployed checks target LCP <= 2500 ms, TBT <= 200 ms and CLS <= 0.1 using
+the fixed route medians. These are synthetic mobile regression gates, not proof
+that every device, connection or visit meets those times. The 400,000-byte script
+and 1,800,000-byte total arrival caps are project budgets, not industry standards.
+Changing them requires measured task benefit and an explicit tradeoff; a failed
+run alone does not justify raising a limit.
+
+[Core Web Vitals](https://web.dev/articles/vitals) defines good real-user LCP
+<= 2500 ms, INP <= 200 ms and CLS <= 0.1 at the 75th percentile, with mobile and
+desktop assessed separately. Field compliance remains unverified without that
+visit data. TBT is a lab diagnostic, not INP. Functional keyboard/search/journey
+checks remain necessary alongside loading measurements. Interpret differences
+using the documented [lab and field distinction](https://web.dev/articles/lab-and-field-data-differences).
 
 `npm run lighthouse:production` uses two fixed host warmups followed by three
 measured cold-browser runs. All three measured runs enter the median; scores do

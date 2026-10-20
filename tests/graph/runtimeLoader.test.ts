@@ -14,7 +14,7 @@ import {
   runtimeArtifactPlan,
 } from "../../src/ui/lib/runtimeLoader";
 import type { RuntimeBundle } from "../../src/ui/lib/runtimeLoader";
-import { ATLAS_NEIGHBORHOOD_SHARD_COUNT, atlasNeighborhoodShardId, buildAtlasNeighborhoodShards } from "../../src/app/atlas-neighborhood.mjs";
+import { ATLAS_NEIGHBORHOOD_SHARD_COUNT, atlasNeighborhoodShardId, atlasNeighborhoodSourceIds, buildAtlasNeighborhoodShards } from "../../src/app/atlas-neighborhood.mjs";
 import { RUNTIME_CACHE_VERSION } from "../../src/shared/runtime-cache-version.mjs";
 import { requiresFullGraph } from "../../src/ui/lib/navigationState";
 import { normalizeViewState } from "../../src/ui/lib/viewState";
@@ -135,7 +135,7 @@ test("record rendering acknowledgment binds visible runtime identity and bounds 
 });
 
 // Synthetic publisher fixtures exercise staging without network or generated data.
-function recordStageFixture(compact = false, atomic = false) {
+function recordStageFixture(compact = false, atomic = false, scoped = false) {
   const id = "nist-800-53:AC-2";
   const source = { id: "fixture-source", owner: "Fixture publisher", title: "Fixture publication" };
   const nodes = [
@@ -160,12 +160,14 @@ function recordStageFixture(compact = false, atomic = false) {
       if (!url.includes(`atlas-neighborhood/${atlasNeighborhoodShardId(id, 8)}.json`)) {
         return new Response("", { status: 404 });
       }
-      body = { atlas_neighborhood_shard: shards.find(shard => shard.shard_id === atlasNeighborhoodShardId(id, 8)) };
+      const shard = shards.find(shard => shard.shard_id === atlasNeighborhoodShardId(id, 8))!;
+      body = { atlas_neighborhood_shard: { ...shard, ...(scoped ? { source_ids: atlasNeighborhoodSourceIds(shard.records), sources: [source] } : {}) } };
     }
     else if (url.includes("catalog-bootstrap")) body = { catalog_bootstrap: {
       catalogs: [{ id: "nist-800-53", name: "Fixture publication", source_id: source.id }],
       ...(compact ? { source_records: { [source.id]: "source-records/000.json" }, atlas_neighborhood: { shard_count: 8, hash_algorithm: "fnv1a-32" } } : {}),
       ...(atomic ? { sources: [source], source_ids: [source.id], source_records: undefined } : {}),
+      ...(scoped ? { sources: undefined, source_ids: [source.id], record_source_delivery: "neighborhood-v1", record_bootstrap: "catalog-bootstrap-record.json" } : {}),
     } };
     else if (url.includes("source-records/000.json")) body = { schema_version: "1.0", sources: [source] };
     else if (url.includes("sources.json")) body = { schema_version: "1.0", sources: [source] };
@@ -204,6 +206,50 @@ test("unoccupied record cohorts require a complete manifest; missing registered 
       manifest = invalid;
       await assert.rejects(loadAtlasNeighborhood(unknown, bootstrap), { code: "artifact_unavailable" });
     }
+  } finally { globalThis.fetch = originalFetch; clearRuntimeArtifactCache(); }
+});
+
+test("cohort record arrival shares complete source context with warm-up and its full stage", async () => {
+  const originalFetch = globalThis.fetch;
+  const fixture = recordStageFixture(true, true, true);
+  globalThis.fetch = fixture.fetchFixture;
+  clearRuntimeArtifactCache();
+  const stages: RuntimeBundle[] = [];
+  try {
+    await preloadRuntimeArtifacts(fixture.state);
+    await loadRuntimeDatasetStaged({ state: fixture.state,
+      onSearchReady: bundle => { stages.push(bundle); },
+      onRecordRendered: bundle => { assert.equal(bundle.sourcesReady, false); assert.equal(bundle.recordContextReady, true); },
+      onFullReady: bundle => { stages.push(bundle); }, onError: error => { throw error; },
+    });
+    assert.equal(stages.length, 2);
+    assert.equal(stages[0].runtime, stages[1].runtime);
+    assert.deepEqual(stages[0].runtime.getSource(fixture.source.id), fixture.source);
+    assert.equal(fixture.requests.some(url => /sources\.json|source-records\//.test(url)), false);
+    assert.equal(fixture.requests.some(url => /catalog-bootstrap\.json/.test(url)), false);
+  } finally { globalThis.fetch = originalFetch; clearRuntimeArtifactCache(); }
+});
+
+test("opening global search from a cohort record loads the full source ledger", async () => {
+  const originalFetch = globalThis.fetch;
+  const fixture = recordStageFixture(true, true, true);
+  const unrelated = { id: "unrelated-source", title: "Outside the record cohort" };
+  globalThis.fetch = (async input => String(input).includes("/sources.json?")
+    ? (fixture.requests.push(String(input)), new Response(JSON.stringify({ sources: [fixture.source, unrelated] })))
+    : fixture.fetchFixture(input)) as typeof fetch;
+  clearRuntimeArtifactCache();
+  const stages: RuntimeBundle[] = [];
+  try {
+    await loadRuntimeDatasetStaged({ state: fixture.state, searchOverlayOpen: true,
+      onSearchReady: bundle => { stages.push(bundle); assert.equal(bundle.sourcesReady, false); },
+      onFullReady: bundle => { stages.push(bundle); }, onError: error => { throw error; },
+    });
+    assert.equal(stages.length, 2);
+    assert.equal(stages[1].sourcesReady, true);
+    assert.equal(stages[1].recordContextReady, true);
+    assert.deepEqual(stages[1].runtime.getSource(unrelated.id), unrelated);
+    assert.ok(fixture.requests.some(url => url.includes("/sources.json?")));
+    assert.ok(fixture.requests.some(url => url.includes("commons-resource-dataset")));
   } finally { globalThis.fetch = originalFetch; clearRuntimeArtifactCache(); }
 });
 

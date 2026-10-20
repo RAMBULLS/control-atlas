@@ -1,9 +1,10 @@
 import { createHash } from 'node:crypto';
-import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { runNodeSync } from './lib/process-runner.mjs';
 import { assertHttp2Report, prepareLighthouseHttp2 } from './lighthouse-http2.mjs';
+import { validateLighthouseReport } from './lighthouse-metrics.mjs';
 
 const REPORT_FILE = /^lhr-\d+\.json$/;
 const RAW_ASSET_FILE = /_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}-\d+\.(trace|devtoolslog)\.json$/;
@@ -22,6 +23,7 @@ export function inventoryCiReports(config, reports) {
       throw new Error(`Missing or unexpected requested URL in ${filename}.`);
     }
     if (report.runtimeError) throw new Error(`Lighthouse runtime failure in ${filename}.`);
+    validateLighthouseReport(report);
     counts.set(report.requestedUrl, counts.get(report.requestedUrl) + 1);
   }
   for (const [url, count] of counts) {
@@ -104,22 +106,39 @@ export function runCiLighthouse({ cwd = process.cwd(), runCommand, exportDiagnos
     const reports = readdirSync(reportDirectory).filter(filename => REPORT_FILE.test(filename))
       .sort().map(filename => ({ filename, report: JSON.parse(readFileSync(join(reportDirectory, filename), 'utf8')) }));
     inventoryCiReports(config, reports);
-    for (const { filename, report } of reports) {
-      const transport = requireHttp2 ? assertHttp2Report(report) : undefined;
+    for (const { report } of reports) {
+      if (requireHttp2) assertHttp2Report(report);
+    }
+    for (const [routeIndex, requestedUrl] of config.ci.collect.url.entries()) {
+      const samples = reports.filter(({ report }) => report.requestedUrl === requestedUrl);
+      const assertionDirectory = join(reportDirectory, `route-${routeIndex + 1}`);
+      rmSync(assertionDirectory, { recursive: true, force: true });
+      mkdirSync(assertionDirectory);
+      for (const { filename } of samples) copyFileSync(join(reportDirectory, filename), join(assertionDirectory, filename));
       rmSync(assertionPath, { force: true });
-      console.log(`Checking Lighthouse route ${report.requestedUrl} (${filename})`);
-      // LHCI groups by finalUrl, which drops SPA hashes. A single-file assertion
-      // retains every configured audit and severity without pooling other routes.
-      const passed = attempt('assert', [`--lhr=${join(reportDirectory, filename)}`, '--includePassedAssertions']);
+      console.log(`Checking Lighthouse route ${requestedUrl} (${samples.length} cold samples)`);
+      // LHCI groups by finalUrl, which drops SPA hashes. Isolate each requested
+      // route, then reuse LHCI's native metric median and worst-case other audits.
+      let passed;
+      try {
+        passed = attempt('assert', [`--lhr=${assertionDirectory}`, '--includePassedAssertions']);
+      } finally {
+        rmSync(assertionDirectory, { recursive: true, force: true });
+      }
       let assertions = [];
       try {
         assertions = JSON.parse(readFileSync(assertionPath, 'utf8'));
         if (!Array.isArray(assertions) || !assertions.length) throw new Error('No assertion results.');
       } catch (error) {
-        failures.push(`${report.requestedUrl}: ${error.message}`);
+        failures.push(`${requestedUrl}: ${error.message}`);
         assertions = [];
       }
-      routes.push({ requestedUrl: report.requestedUrl, ...(typeof report.fetchTime === 'string' ? { fetchTime: report.fetchTime } : {}), ...(transport ? { transport } : {}), filename, passed: passed && assertions.length > 0, assertions });
+      const sampleEvidence = samples.map(({ filename, report }) => ({ filename,
+        ...(typeof report.fetchTime === 'string' ? { fetchTime: report.fetchTime } : {}),
+        ...(requireHttp2 ? { transport: assertHttp2Report(report) } : {}),
+      }));
+      routes.push({ requestedUrl, samples: sampleEvidence, ...(samples.length === 1 ? sampleEvidence[0] : {}),
+        passed: passed && assertions.length > 0, assertions });
     }
   } catch (error) {
     failures.push(`report inventory: ${error.message}`);
@@ -127,7 +146,7 @@ export function runCiLighthouse({ cwd = process.cwd(), runCommand, exportDiagnos
 
   // LHCI overwrites its assertion file. Preserve all route results for upload.
   writeFileSync(assertionPath, JSON.stringify(routes.flatMap(route => route.assertions.map(assertion => ({
-    ...assertion, requestedUrl: route.requestedUrl, reportFile: route.filename,
+    ...assertion, requestedUrl: route.requestedUrl, reportFiles: route.samples.map(sample => sample.filename),
   }))), null, 2));
   attempt('upload');
   mkdirSync(outputDirectory, { recursive: true });
@@ -206,7 +225,7 @@ export function runProductionTransport({ cwd = process.cwd(), compareHttp1 = fal
       writeFileSync(join(output, 'transport-comparison.json'), JSON.stringify({
         before, after, reference: { directory: 'http1-reference', failures: http1.failures, routes: http1.routes },
         production: { failures: evidence.failures, routes: evidence.routes },
-        method: 'Same build, fixed HTTP/1 reference then production HTTP/2; two host warmups and one cold measurement per route per transport. Original assertions retained.',
+        method: `Same build, fixed HTTP/1 reference then production HTTP/2; two host warmups and ${config.ci.collect.numberOfRuns} cold measurements per route per transport. Original assertions retained.`,
       }, null, 2));
     }
     writeFileSync(join(output, 'route-assertions.json'), JSON.stringify(evidence, null, 2));

@@ -104,8 +104,16 @@ export async function exportLanternCriticalPath({ cwd = process.cwd(), route = '
   mkdirSync(output, { recursive: true });
   const result = { status: 'unavailable', gaps: [], graphSource: 'devtools-log', versions: null };
   try {
-    if (reports.length !== 1) throw new Error('Ambiguous requested route reports.');
-    const { report, bytes, name } = reports[0];
+    if (![1, 3].includes(reports.length)) throw new Error('Incomplete requested route diagnostic samples.');
+    for (const { report } of reports) {
+      if (!Number.isFinite(report.audits?.['largest-contentful-paint']?.numericValue)) throw new Error('Missing diagnostic LCP metric.');
+    }
+    // Explain the fixed LCP median, never the fastest report. Other metric
+    // medians are calculated independently by the native assertion runner.
+    reports.sort((left, right) => left.report.audits['largest-contentful-paint'].numericValue - right.report.audits['largest-contentful-paint'].numericValue || left.name.localeCompare(right.name));
+    const { report, bytes, name } = reports[Math.floor(reports.length / 2)];
+    result.samples = reports.map(sample => ({ filename: sample.name, lcpMs: sample.report.audits['largest-contentful-paint'].numericValue, sha256: sha256(sample.bytes) }));
+    result.selection = 'Middle LCP sample from the fixed requested-route collection; original reports and captures retained.';
     writeFileSync(join(output, 'report.json'), bytes);
     result.report = { requestedUrl: report.requestedUrl, fetchTime: report.fetchTime, filename: name, exportedFile: 'report.json', sha256: sha256(bytes) };
     if (process.env.INTERNAL_LANTERN_USE_TRACE !== undefined) throw new Error('INTERNAL_LANTERN_USE_TRACE must be absent.');

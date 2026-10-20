@@ -2,6 +2,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { gzipSync } from "node:zlib";
+import { atlasNeighborhoodShardId } from "../src/app/atlas-neighborhood.mjs";
 
 const MAX_FILE_BYTES = 20 * 1024 * 1024;
 const MAX_COMPLETE_SEARCH_GZIP_BYTES = 320_000;
@@ -58,6 +59,21 @@ const separateArrivalBytes = compressedBytes("catalog-bootstrap.json") + compres
 console.log(`Record bootstrap: ${recordArrivalBytes} gzip bytes; separate input cap: ${separateArrivalBytes}`);
 if (recordArrivalBytes > separateArrivalBytes) {
   throw new Error("Record bootstrap exceeds the combined catalog/source gzip budget");
+}
+// Include the full scoped source objects in the representative record arrival,
+// so moving bytes between the bootstrap and cohort cannot hide a regression.
+const recordBootstrap = JSON.parse(readFileSync(join("data", "generated", "catalog-bootstrap-record.json"), "utf8")).catalog_bootstrap;
+if (recordBootstrap.record_source_delivery === "neighborhood-v1") {
+  const shardId = atlasNeighborhoodShardId("nist-800-53:AC-2", recordBootstrap.atlas_neighborhood.shard_count);
+  const cohortName = `atlas-neighborhood/${shardId}.json`;
+  const cohort = JSON.parse(readFileSync(join("data", "generated", cohortName), "utf8"));
+  delete cohort.atlas_neighborhood_shard.sources;
+  delete cohort.atlas_neighborhood_shard.source_ids;
+  const previousCohortBytes = gzipSync(JSON.stringify(cohort), { level: 9 }).byteLength;
+  const arrivalBytes = recordArrivalBytes + compressedBytes(cohortName);
+  const previousArrivalBytes = separateArrivalBytes + previousCohortBytes;
+  console.log(`AC-2 complete arrival: ${arrivalBytes} gzip bytes; separate input cap: ${previousArrivalBytes}`);
+  if (arrivalBytes > previousArrivalBytes) throw new Error("Scoped record arrival exceeds the complete catalog/source/cohort gzip budget");
 }
 
 console.log(

@@ -368,6 +368,28 @@ test('early responses retain the consuming loader deadline after their headers r
   assert.equal(expiredAborts, 1);
 });
 
+test('cohort source registration requires all actual references and exact global admission', () => {
+  const sources = [{ id: 'one', title: 'Full selected publisher text' }, { id: 'two', title: 'Full related publisher text' }];
+  const bootstrap = { record_bootstrap: 'catalog-bootstrap-record.json', record_source_delivery: 'neighborhood-v1', source_ids: ['one', 'two', 'unrelated'] };
+  const cohort = { source_ids: ['one', 'two'], expected_source_ids: ['one', 'two'], sources };
+  assert.equal(recordBootstrapSources(bootstrap, 'one', cohort), sources);
+  assert.deepEqual(recordBootstrapSources(bootstrap, '', { source_ids: [], expected_source_ids: [], sources: [] }), []);
+  for (const invalid of [
+    undefined,
+    { ...cohort, sources: sources.slice(0, 1) },
+    { ...cohort, source_ids: ['one'], sources: sources.slice(0, 1) },
+    { ...cohort, source_ids: ['one', 'one'] },
+    { ...cohort, source_ids: ['one', 'unrelated'] },
+    { ...cohort, expected_source_ids: ['one', 'one'] },
+    { ...cohort, sources: [sources[0], { id: 'unadmitted' }] },
+  ]) assert.throws(() => recordBootstrapSources(bootstrap, 'one', invalid), /Record bootstrap source register/);
+  assert.throws(() => recordBootstrapSources({ ...bootstrap, source_ids: ['one'] }, 'one', cohort), /scope/);
+  assert.throws(() => recordBootstrapSources({ ...bootstrap, record_source_delivery: 'unrecognized' }, 'one', cohort), /capability/);
+  for (const invalid of [{ ...bootstrap, record_bootstrap: undefined }, { ...bootstrap, sources }, { ...bootstrap, source_records: {} }]) {
+    assert.throws(() => recordBootstrapSources(invalid, 'one', cohort), /capability/);
+  }
+});
+
 test('atomic record bootstrap preserves every complete admitted source and legacy absence', () => {
   const sources = [{ id: 'one', title: 'Fixture', metadata: { currentness: null, reason: 'Not published' } }, { id: 'two', retained: ['full', 'metadata'] }];
   const bootstrap = { source_records: { one: 'one.json', two: 'two.json' }, sources };
@@ -538,8 +560,9 @@ test('existing data preloader is queued before the record route import and every
   assert.doesNotMatch(main, /import \{ recordRouteModule \} from/);
   assert.match(main, /await warmInteractiveRoute\(\);[\s\S]*void bootReactApp\(\);/);
   const config = JSON.parse(readFileSync('.lighthouserc.ci.json', 'utf8'));
-  assert.equal(config.ci.collect.numberOfRuns, 1);
+  assert.equal(config.ci.collect.numberOfRuns, 3);
   assert.equal(config.ci.collect.url.length, 3);
-  assert.deepEqual(config.ci.assert.assertions['largest-contentful-paint'], ['error', { maxNumericValue: 2500 }]);
-  assert.deepEqual(config.ci.assert.assertions['cumulative-layout-shift'], ['error', { maxNumericValue: 0.1 }]);
+  assert.deepEqual(config.ci.assert.assertions['largest-contentful-paint'], ['error', { maxNumericValue: 2500, aggregationMethod: 'median' }]);
+  assert.deepEqual(config.ci.assert.assertions['total-blocking-time'], ['error', { maxNumericValue: 200, aggregationMethod: 'median' }]);
+  assert.deepEqual(config.ci.assert.assertions['cumulative-layout-shift'], ['error', { maxNumericValue: 0.1, aggregationMethod: 'median' }]);
 });

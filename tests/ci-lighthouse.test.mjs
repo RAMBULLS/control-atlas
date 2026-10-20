@@ -4,6 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
 import test from 'node:test';
 import { inventoryCiReports, runCiLighthouse as runLighthouse, runProductionTransport } from '../tools/run-ci-lighthouse.mjs';
 import diagnosticConfig from '../tools/lighthouse-diagnostic.config.mjs';
@@ -15,8 +16,11 @@ import { assertHttp2Report, http2LighthouseConfig } from '../tools/lighthouse-ht
 const runCiLighthouse = options => runLighthouse({ exportDiagnostics() {}, warmupRuns: 0, ...options });
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const config = JSON.parse(readFileSync(join(root, '.lighthouserc.ci.json'), 'utf8'));
-const cli = join(root, 'node_modules/@lhci/cli/src/cli.js');
+const productionConfig = JSON.parse(readFileSync(join(root, '.lighthouserc.ci.json'), 'utf8'));
+// Most harness failure fixtures need one report per route; production uses three.
+const config = structuredClone(productionConfig);
+config.ci.collect.numberOfRuns = 1;
+const cli = createRequire(import.meta.url).resolve('@lhci/cli/src/cli.js');
 
 test('production transport changes only localhost scheme, server TLS and exact certificate admission', () => {
   const pin = Buffer.alloc(32, 7).toString('base64');
@@ -143,7 +147,8 @@ test('two fixed host warmups are retained separately and never enter measured as
       writeReports(cwd, reports);
     }
     if (command === 'assert') {
-      const report = JSON.parse(readFileSync(args.find(arg => arg.startsWith('--lhr=')).slice(6), 'utf8'));
+      const reportDirectory = args.find(arg => arg.startsWith('--lhr=')).slice(6);
+      const report = JSON.parse(readFileSync(join(reportDirectory, readdirSync(reportDirectory)[0]), 'utf8'));
       assert.ok(report.audits['largest-contentful-paint'].numericValue <= 2500);
       writeFileSync(join(cwd, '.lighthouseci/assertion-results.json'), JSON.stringify(
         Object.keys(config.ci.assert.assertions).map(id => ({ id, passed: true })),
@@ -169,6 +174,32 @@ test('requested-route inventory rejects missing, duplicate, unexpected and faile
   assert.throws(() => inventoryCiReports(config, [{ filename: 'lhr-1.json', report: {} }]), /Missing/);
   assert.throws(() => inventoryCiReports(config, [{ ...reports[0], report: { ...reports[0].report, runtimeError: { code: 'SYNTHETIC_FAILURE' } } }]), /runtime failure/);
   assert.throws(() => inventoryCiReports({ ci: { collect: { url: [], numberOfRuns: 1 } } }, []), /distinct configured URLs/);
+});
+
+test('fixed route medians reject two slow samples without selecting the best run or pooling hashes', t => {
+  assert.equal(productionConfig.ci.collect.numberOfRuns, 3);
+  assert.equal(productionConfig.ci.assert.aggregationMethod, 'pessimistic');
+  for (const [values, fails] of [[[1800, 1900, 3100], false], [[1800, 3100, 3200], true]]) {
+    const cwd = fixture(t);
+    writeFileSync(join(cwd, '.lighthouserc.ci.json'), JSON.stringify(productionConfig));
+    const reports = productionConfig.ci.collect.url.flatMap((url, route) => values.map((lcp, sample) => ({
+      filename: `lhr-${route * 3 + sample}.json`, report: reportFixture(url, { lcp: route === 1 ? lcp : 1700 }),
+    })));
+    const evidence = runCiLighthouse({ cwd, runCommand(command, args) {
+      if (command === 'collect') writeReports(cwd, reports);
+      if (command === 'assert') {
+        const result = assertWithCli(cwd, args);
+        if (result.status !== 0) throw new Error(`assert exit ${result.status}`);
+      }
+    } });
+    assert.equal(evidence.failures.length > 0, fails);
+    assert.equal(evidence.routes.length, 3);
+    assert.ok(evidence.routes.every(route => route.samples.length === 3));
+    assert.equal(evidence.routes[1].passed, !fails);
+    const invalid = structuredClone(reports);
+    delete invalid[0].report.audits['total-blocking-time'];
+    assert.throws(() => inventoryCiReports(productionConfig, invalid), /metric/);
+  }
 });
 
 for (const scenario of [
@@ -206,6 +237,20 @@ for (const scenario of [
     assert.deepEqual(JSON.parse(readFileSync(join(cwd, config.ci.upload.outputDir, 'route-assertions.json'), 'utf8')), evidence);
   });
 }
+
+test('diagnostic export selects the middle LCP sample and preserves all original identities', async t => {
+  const cwd = fixture(t);
+  const reports = [3100, 1800, 2300].map((lcp, index) => ({
+    filename: `lhr-${index}.json`, report: reportFixture(config.ci.collect.url[2], { lcp }),
+  }));
+  writeReports(cwd, reports);
+  const result = await exportLanternCriticalPath({ cwd });
+  assert.equal(result.report.filename, 'lhr-2.json');
+  assert.equal(result.samples.length, 3);
+  assert.deepEqual(result.samples.map(sample => sample.lcpMs), [1800, 2300, 3100]);
+  assert.ok(result.samples.every(sample => /^[a-f0-9]{64}$/.test(sample.sha256)));
+  assert.equal(readdirSync(join(cwd, '.lighthouseci')).filter(name => /^lhr-\d+\.json$/.test(name)).length, 3);
+});
 
 test('raw assets belong to this collection and enter its existing artifact export', t => {
   const cwd = fixture(t);

@@ -102,11 +102,14 @@ test("a missing publication identity fails closed without guessed attribution", 
     const response = await route.fetch();
     const artifact = await response.json();
     const register = artifact.catalog_bootstrap || artifact;
-    expect(register.sources.some(source => source.id === "nist-csf-2")).toBe(true);
+    if (register.record_source_delivery === "neighborhood-v1") {
+      expect(register.source_ids).toContain("nist-csf-2");
+      register.source_ids = register.source_ids.filter(id => id !== "nist-csf-2");
+    } else {
+      expect(register.sources.some(source => source.id === "nist-csf-2")).toBe(true);
+      register.sources = register.sources.filter(source => source.id !== "nist-csf-2");
+    }
     corruptedPublication = true;
-    register.sources = register.sources.filter(
-      (source) => source.id !== "nist-csf-2",
-    );
     await route.fulfill({ response, json: artifact });
   });
 

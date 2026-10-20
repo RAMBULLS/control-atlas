@@ -827,7 +827,7 @@ export function App() {
         <RouteErrorBoundary onNavigate={navigate} resetKey={`search:${runtimeScopeKey}:${loadAttempt}`}>
           <Suspense fallback={null}>
             <SearchOverlay
-              bundle={bundle}
+              bundle={bundle?.librarySearchReady && bundle.sourcesReady ? bundle : null}
               onNavigate={navigate}
               onOpenChange={setSearchOverlayOpen}
               onOpenNode={openNode}

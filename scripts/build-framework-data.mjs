@@ -24,6 +24,7 @@ import { loadSourceRegistry } from "../tools/validators/source-registry.mjs";
 import {
   ATLAS_NEIGHBORHOOD_SHARD_COUNT,
   buildAtlasNeighborhoodShards,
+  atlasNeighborhoodSourceIds,
 } from "../src/app/atlas-neighborhood.mjs";
 import {
   catalogIdOf,
@@ -4241,13 +4242,13 @@ const catalogRecords = new Map();
     )}\n`,
     "utf8",
   );
-  // A record needs the same complete source register that its related-source
-  // evidence will use. Deliver it with the admitted bootstrap once, rather
-  // than repainting the record after a second register/runtime loading pass.
+  // Keep global source admission here; each complete neighborhood carries all
+  // of its exact referenced source objects. Other pages retain the full index.
   const recordBootstrap = { ...catalogBootstrap };
   delete recordBootstrap.source_records;
+  for (const key of ['comparison_pairs', 'comparison_items', 'comparison_baselines', 'comparison_content', 'mapping_sources']) delete recordBootstrap[key];
   writeFileSync(join(GENERATED, "catalog-bootstrap-record.json"),
-    `${JSON.stringify(artifact("catalog_bootstrap", { ...recordBootstrap, source_ids: recordSources.map(source => source.id), sources: recordSources }, generatedAt))}\n`, "utf8");
+    `${JSON.stringify(artifact("catalog_bootstrap", { ...recordBootstrap, source_ids: recordSources.map(source => source.id), record_source_delivery: "neighborhood-v1" }, generatedAt))}\n`, "utf8");
 
   const catalogRecordsDir = join(GENERATED, "catalog-records");
   mkdirSync(catalogRecordsDir, { recursive: true });
@@ -4343,6 +4344,7 @@ const catalogRecords = new Map();
   const atlasShardManifest = [];
   for (const shard of atlasNeighborhoodShards) {
     const shardPath = `atlas-neighborhood/${shard.shard_id}.json`;
+    const sourceIds = atlasNeighborhoodSourceIds(shard.records);
     writeFileSync(
       join(GENERATED, shardPath),
       `${JSON.stringify(
@@ -4352,6 +4354,12 @@ const catalogRecords = new Map();
             shard_id: shard.shard_id,
             record_count: shard.record_count,
             records: shard.records,
+            source_ids: sourceIds,
+            sources: sourceIds.map(id => {
+              const source = sourceById.get(id);
+              if (!source) throw new Error(`Neighborhood references an unregistered source: ${id}`);
+              return source;
+            }),
           },
           generatedAt,
         ),

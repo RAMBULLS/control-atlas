@@ -6,6 +6,7 @@ import test from "node:test";
 import {
   ATLAS_NEIGHBORHOOD_SHARD_COUNT,
   atlasNeighborhoodShardId,
+  atlasNeighborhoodSourceIds,
   buildAtlasNeighborhoodShards,
 } from "../src/app/atlas-neighborhood.mjs";
 import {
@@ -13,6 +14,14 @@ import {
   buildAncestorGraph,
 } from "../src/app/ancestor-path.mjs";
 import { readGeneratedCollection } from "../scripts/lib/generated-graph-artifacts.mjs";
+
+test("cohort source admission includes centers, structural nodes, siblings and every edge publisher", () => {
+  const records = {
+    one: { center_node: { source_id: "center" }, nodes: [["a", "control", "A", "Alpha", "catalog", "ancestor"]], edges: [["edge", "a", "b", "maps_to", "correlation", "published", "published", "direct", [["mapping", "primary", "row"]]]] },
+    two: { center_node: { source_id: "sibling" }, nodes: [["b", "control", "B", "Beta", "catalog", "center"]], edges: [] },
+  };
+  assert.deepEqual(atlasNeighborhoodSourceIds(records), ["ancestor", "center", "mapping", "sibling"]);
+});
 
 test("Atlas neighborhood sharding is deterministic and preserves canonical edges", () => {
   const graph = {
@@ -261,11 +270,18 @@ test("generated Atlas shards contain only incident canonical edges", () => {
     canonicalNodes.map((node) => [node.id, node]),
   );
   const canonicalNodeIds = new Set(canonicalNodeById.keys());
+  const canonicalSources = new Map(readGeneratedCollection(".", "sources").sources.map(source => [source.id, source]));
   const shardDir = "data/generated/atlas-neighborhood";
   const shardedNodeIds = new Set();
   let recordCount = 0;
   for (const filename of readdirSync(shardDir)) {
     const artifact = JSON.parse(readFileSync(join(shardDir, filename), "utf8"));
+    const cohort = artifact.atlas_neighborhood_shard;
+    assert.deepEqual(cohort.source_ids, atlasNeighborhoodSourceIds(cohort.records));
+    assert.deepEqual(cohort.sources, cohort.source_ids.map(id => {
+      assert.ok(canonicalSources.has(id), `${filename} has an admitted publisher for every reference`);
+      return canonicalSources.get(id);
+    }), `${filename} retains every full canonical source object`);
     for (const [nodeId, record] of Object.entries(artifact.atlas_neighborhood_shard.records)) {
       recordCount += 1;
       shardedNodeIds.add(nodeId);

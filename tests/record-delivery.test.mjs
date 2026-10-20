@@ -9,7 +9,7 @@ import { startRoutePrefetch, takeRouteResponse, waitForStaticRoutePaint } from '
 import { recordBootstrapSources } from '../src/shared/record-source-bootstrap.mjs';
 import { buildRouteChoices } from '../src/shared/build-route-choices.mjs';
 import { atlasNeighborhoodShardId, ATLAS_NEIGHBORHOOD_SHARD_COUNT } from '../src/app/atlas-neighborhood.mjs';
-import { externalizeOrbitalFonts, HOME_SHELL_MODULES, ORBITAL_FONT_HASHES, orbitalFontPreloads, planInteractiveDelivery, recordChunkGroups, RECORD_UI_MODULES, verifyRecordDelivery } from '../tools/record-delivery.mjs';
+import { externalizeOrbitalFonts, inlineArrivalDelivery, HOME_SHELL_MODULES, ORBITAL_FONT_HASHES, orbitalFontPreloads, planInteractiveDelivery, recordChunkGroups, RECORD_UI_MODULES, verifyRecordDelivery } from '../tools/record-delivery.mjs';
 
 const require = createRequire(import.meta.url);
 const css = readFileSync(require.resolve('orbital-archive-no-01/fonts.css'), 'utf8');
@@ -138,12 +138,42 @@ test('resolved static graph batches interactive code while preserving Home, warm
   assert.throws(() => planInteractiveDelivery([], () => null, root), /missing/);
 });
 
-test('first-paint font hints reference the exact three faces already used by the measured routes', () => {
+test('first-paint font hint preserves the exact body face without competing duplicate faces', () => {
   const tags = orbitalFontPreloads(fontAssets());
-  assert.equal(tags.length, 3);
+  assert.equal(tags.length, 1);
   assert.ok(tags.every(tag => tag.attrs.rel === 'preload' && tag.attrs.as === 'font' && tag.attrs.crossorigin === 'anonymous'));
-  assert.deepEqual(tags.map(tag => tag.attrs.href), ORBITAL_FONT_HASHES.slice(0, 3).map(digest => `./${digest}.woff2`));
+  assert.deepEqual(tags.map(tag => tag.attrs.href), [ORBITAL_FONT_HASHES[0]].map(digest => `./${digest}.woff2`));
   assert.throws(() => orbitalFontPreloads({}), /missing/);
+});
+
+test('inline delivery admits only its exact bytes and starts the renderer first on mirror record routes', async () => {
+  const current = bundle();
+  current['renderer.js'] = chunk('renderer.js', ['node_modules/react/index.js']);
+  current['data-warmup.js'] = { ...current['loader.js'], fileName: 'data-warmup.js', name: 'data-warmup' };
+  delete current['loader.js'];
+  current['interactive-shell.js'] = chunk('interactive-shell.js', ['src/ui/App.tsx']);
+  current['resources-detail.js'] = chunk('resources-detail.js', ['src/ui/pages/CommonsDetailPage.tsx']);
+  const html = '<meta http-equiv="Content-Security-Policy" content="script-src \'self\'; style-src \'self\' \'unsafe-inline\';"><title>Control Atlas</title><script src="./progressive-shell.js"></script>';
+  const shell = 'window.controlAtlasSyncFirstPaintShell = () => {};';
+  const output = inlineArrivalDelivery(html, current, root, { version: 'fixture', shardCount: ATLAS_NEIGHBORHOOD_SHARD_COUNT }, shell);
+  const source = output.match(/<script data-arrival-delivery>([\s\S]*?)<\/script>/)[1];
+  const digest = createHash('sha256').update(source).digest('base64');
+  assert.ok(output.includes(`'sha256-${digest}'`));
+  assert.doesNotMatch(output.match(/script-src [^;]+;/)[0], /unsafe-inline/);
+  assert.doesNotMatch(output, /src="\.\/progressive-shell/);
+  assert.throws(() => inlineArrivalDelivery(html, current, root, { version: 'fixture', shardCount: 8 }, '</script>'), /end tag/);
+  for (const hash of ['#/', '#/resources', '#/record/nist-800-53/AC-2']) {
+    const links = [], requests = [];
+    const document = { currentScript: { src: '' }, baseURI: 'https://example.test/mirror/',
+      createElement: () => ({}), head: { appendChild: link => links.push(link) }, addEventListener: () => {} };
+    const environment = { document, location: { hash }, fetch: async url => { requests.push(url); return new Response('fixture'); } };
+    runInNewContext(source, { ...environment, globalThis: environment, window: {}, URL, AbortController, setTimeout, clearTimeout });
+    await Promise.resolve();
+    if (hash.startsWith('#/record/')) {
+      assert.equal(links[0].href, 'https://example.test/mirror/renderer.js');
+      assert.ok(requests.every(url => url.startsWith('https://example.test/mirror/data/')));
+    } else { assert.equal(links.length, 0); assert.equal(requests.length, 0); }
+  }
 });
 
 test('early route requests reuse exact cached responses and preserve Home and mirror paths', async () => {
@@ -238,9 +268,11 @@ test('atomic record bootstrap preserves every complete admitted source and legac
   const bootstrap = { source_records: { one: 'one.json', two: 'two.json' }, sources };
   assert.equal(recordBootstrapSources(bootstrap, 'one'), sources);
   assert.equal(recordBootstrapSources(bootstrap, 'two')[1], sources[1]);
+  assert.equal(recordBootstrapSources({ source_ids: ['one', 'two'], sources }, 'one'), sources);
   assert.equal(recordBootstrapSources({ source_records: bootstrap.source_records }, 'one'), null);
   for (const invalid of [
     { ...bootstrap, sources: {} },
+    { sources, source_ids: ['one', 'one'] },
     { ...bootstrap, source_records: undefined },
     { ...bootstrap, sources: [sources[0]] },
     { ...bootstrap, sources: [sources[0], sources[0]] },

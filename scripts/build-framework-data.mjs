@@ -4244,8 +4244,10 @@ const catalogRecords = new Map();
   // A record needs the same complete source register that its related-source
   // evidence will use. Deliver it with the admitted bootstrap once, rather
   // than repainting the record after a second register/runtime loading pass.
+  const recordBootstrap = { ...catalogBootstrap };
+  delete recordBootstrap.source_records;
   writeFileSync(join(GENERATED, "catalog-bootstrap-record.json"),
-    `${JSON.stringify(artifact("catalog_bootstrap", { ...catalogBootstrap, sources: recordSources }, generatedAt))}\n`, "utf8");
+    `${JSON.stringify(artifact("catalog_bootstrap", { ...recordBootstrap, source_ids: recordSources.map(source => source.id), sources: recordSources }, generatedAt))}\n`, "utf8");
 
   const catalogRecordsDir = join(GENERATED, "catalog-records");
   mkdirSync(catalogRecordsDir, { recursive: true });

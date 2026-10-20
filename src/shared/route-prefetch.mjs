@@ -5,6 +5,7 @@ export function startRoutePrefetch(config, environment = /** @type {typeof globa
   const { document, location } = environment;
   const script = /** @type {HTMLScriptElement} */ (document.currentScript);
   if (!script) return;
+  const base = script.src || document.baseURI;
   const segments = location.hash.replace(/^#/, '').split('?')[0].split('/').filter(Boolean);
   if (!segments.length) return;
   // Resources already has a useful, persistent native masthead. Its directory
@@ -22,7 +23,7 @@ export function startRoutePrefetch(config, environment = /** @type {typeof globa
   }
   const pending = environment.__ATLAS_ROUTE_PREFETCH__ ||= new Map();
   for (const path of paths) {
-    const url = new URL(path, script.src).href;
+    const url = new URL(path, base).href;
     if (pending.has(url)) continue;
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 12_000);
@@ -38,7 +39,7 @@ export function startRoutePrefetch(config, environment = /** @type {typeof globa
   for (const path of new Set([...config.modules, ...(config.routeModules?.[route] || [])])) {
     const link = document.createElement('link');
     link.rel = 'modulepreload';
-    link.href = new URL(path, script.src).href;
+    link.href = new URL(path, base).href;
     link.crossOrigin = 'anonymous';
     document.head.appendChild(link);
   }

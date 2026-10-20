@@ -2,10 +2,47 @@ import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
+import { startRoutePrefetch } from '../src/shared/route-prefetch.mjs';
 
 const require = createRequire(import.meta.url);
 const normalized = value => value.replace(/\\/g, '/').split('?')[0].replace(/\/$/, '');
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+
+/** Keep the exact arrival script in the document, admitted by its own CSP hash.
+ * @param {string} html
+ * @param {Record<string, any>} bundle
+ * @param {string} rootDir
+ * @param {{version: string, shardCount: number}} options
+ * @param {string} shell */
+export function inlineArrivalDelivery(html, bundle, rootDir, options, shell) {
+  const report = verifyRecordDelivery(bundle, rootDir);
+  const modules = ['renderer', 'data-warmup', 'interactive-shell'].map(name => {
+    const chunk = Object.values(bundle).find(output => output.type === 'chunk' && output.name === name);
+    if (!chunk) throw new Error(`Early route delivery is missing ${name}.`);
+    return chunk.fileName;
+  });
+  const routeModules = Object.fromEntries([['record', 'ObjectDetailPage.tsx'], ['resource-detail', 'CommonsDetailPage.tsx']].map(([route, page]) => {
+    const entry = report.pages.find(entry => entry.id.endsWith(`/pages/${page}`));
+    if (!entry) throw new Error(`Initial route entry is missing: ${page}`);
+    const files = new Set();
+    const visit = file => {
+      if (files.has(file)) return;
+      files.add(file);
+      const chunk = bundle[file];
+      if (chunk?.type === 'chunk') chunk.imports.forEach(visit);
+    };
+    visit(entry.file);
+    return [route, [...files]];
+  }));
+  const source = `(${startRoutePrefetch.toString()})(${JSON.stringify({ ...options, modules, routeModules })});\n${shell}\ndocument.addEventListener("DOMContentLoaded", window.controlAtlasSyncFirstPaintShell, {once:true});\n`;
+  if (/<\/script/i.test(source)) throw new Error('Arrival source cannot contain a script end tag.');
+  const digest = createHash('sha256').update(source).digest('base64');
+  if (!html.includes("script-src 'self'") || !html.includes('<title>Control Atlas</title>')) throw new Error('Arrival delivery requires the existing CSP and title.');
+  return html.replace('<script src="./progressive-shell.js"></script>', '')
+    .replace('<link rel="preload" href="./progressive-shell.js" as="script">', '')
+    .replace(/script-src ([^;]+);/, `script-src $1 'sha256-${digest}';`)
+    .replace('<title>Control Atlas</title>', `<title>Control Atlas</title>\n<script data-arrival-delivery>${source}</script>`);
+}
 
 export const HOME_SHELL_MODULES = Object.freeze([
   'src/shared/atlas-presentation.ts',
@@ -132,7 +169,7 @@ export const ORBITAL_FONT_HASHES = Object.freeze([
 ]);
 
 export function orbitalFontPreloads(bundle) {
-  return ORBITAL_FONT_HASHES.slice(0, 3).map(digest => {
+  return [ORBITAL_FONT_HASHES[0]].map(digest => {
     const asset = Object.values(bundle).find(output => output.type === 'asset' && output.fileName.endsWith('.woff2') && hash(output.source) === digest);
     if (!asset) throw new Error('A first-paint Orbital font asset is missing.');
     return { tag: 'link', attrs: { rel: 'preload', as: 'font', type: 'font/woff2', href: `./${asset.fileName}`, crossorigin: 'anonymous' }, injectTo: 'head-prepend' };

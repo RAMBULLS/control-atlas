@@ -7,9 +7,8 @@ import tailwindcss from '@tailwindcss/vite';
 import { resolve } from 'node:path';
 import { RUNTIME_CACHE_VERSION } from './src/shared/runtime-cache-version.mjs';
 import { ATLAS_NEIGHBORHOOD_SHARD_COUNT } from './src/app/atlas-neighborhood.mjs';
-import { startRoutePrefetch } from './src/shared/route-prefetch.mjs';
 import { buildRouteChoices } from './src/shared/build-route-choices.mjs';
-import { materializeOrbitalFonts, orbitalFontPreloads, planInteractiveDelivery, recordChunkGroups, verifyRecordDelivery } from './tools/record-delivery.mjs';
+import { inlineArrivalDelivery, materializeOrbitalFonts, orbitalFontPreloads, planInteractiveDelivery, recordChunkGroups, verifyRecordDelivery } from './tools/record-delivery.mjs';
 import { HOME_CONTENT, HOME_TOOLS } from './src/shared/home-content.mjs';
 import { FIRST_PAINT_ROUTE_COPY, SITE_COPY } from './src/shared/site-copy.mjs';
 import {
@@ -287,9 +286,9 @@ export default defineConfig({
         handler(_html, context) {
           if (!context.bundle) return [];
           return {
-            html: _html.replace('<script src="./progressive-shell.js"></script>', '')
-              .replace('<link rel="preload" href="./progressive-shell.js" as="script">', '')
-              .replace('<title>Control Atlas</title>', '<title>Control Atlas</title>\n  <script src="./progressive-shell-delivery.js"></script>'),
+            html: inlineArrivalDelivery(_html, context.bundle, rootDir,
+              { version: RUNTIME_CACHE_VERSION, shardCount: ATLAS_NEIGHBORHOOD_SHARD_COUNT },
+              readFileSync(resolve(rootDir, 'src/public/progressive-shell.js'), 'utf8')),
             tags: [
               ...orbitalFontPreloads(context.bundle).map(tag => ({ ...tag, injectTo: 'head-prepend' as const })),
             ],
@@ -298,26 +297,6 @@ export default defineConfig({
       },
       generateBundle(_options, bundle) {
         const report = verifyRecordDelivery(bundle, rootDir);
-        const modules = Object.values(bundle).filter(output => output.type === 'chunk' &&
-          ['renderer', 'interactive-shell', 'data-warmup'].includes(output.name)).map(output => output.fileName);
-        if (modules.length !== 3) throw new Error('Early route delivery requires the admitted renderer, shell and data chunks.');
-        const routeModules = Object.fromEntries([['record', 'ObjectDetailPage.tsx'], ['resource-detail', 'CommonsDetailPage.tsx']].map(([route, page]) => {
-          const entry = report.pages.find(entry => entry.id.endsWith(`/pages/${page}`));
-          if (!entry) throw new Error(`Initial route entry is missing: ${page}`);
-          const files = new Set<string>();
-          const visit = (file: string) => {
-            if (files.has(file)) return;
-            files.add(file);
-            const chunk = bundle[file];
-            if (chunk?.type === 'chunk') chunk.imports.forEach(visit);
-          };
-          visit(entry.file);
-          return [route, [...files]];
-        }));
-        const config = { modules, routeModules, version: RUNTIME_CACHE_VERSION, shardCount: ATLAS_NEIGHBORHOOD_SHARD_COUNT };
-        this.emitFile({ type: 'asset', fileName: 'progressive-shell-delivery.js', source:
-          `(${startRoutePrefetch.toString()})(${JSON.stringify(config)});\n` + readFileSync(resolve(rootDir, 'src/public/progressive-shell.js'), 'utf8') +
-          '\ndocument.addEventListener("DOMContentLoaded", window.controlAtlasSyncFirstPaintShell, {once:true});\n' });
         this.emitFile({ type: 'asset', fileName: 'record-delivery-chunks.json', source: JSON.stringify(report, null, 2) });
       },
     },

@@ -89,7 +89,7 @@ test("a missing publication identity fails closed without guessed attribution", 
   page,
 }) => {
   attachPageDiagnostics(page);
-  await page.route("**/data/generated/sources.json*", async (route) => {
+  await page.route(/\/data\/generated\/(?:sources|catalog-bootstrap-record)\.json/, async (route) => {
     if (route.request().url().includes(".json.gz")) {
       await route.fulfill({
         status: 200,
@@ -100,7 +100,8 @@ test("a missing publication identity fails closed without guessed attribution", 
     }
     const response = await route.fetch();
     const artifact = await response.json();
-    artifact.sources = artifact.sources.filter(
+    const register = artifact.catalog_bootstrap || artifact;
+    register.sources = register.sources.filter(
       (source) => source.id !== "nist-csf-2",
     );
     await route.fulfill({ response, json: artifact });
@@ -110,10 +111,12 @@ test("a missing publication identity fails closed without guessed attribution", 
   await waitForAppReady(page);
   await dismissOnboarding(page);
 
-  await expect(
-    page.getByText("Source identity unavailable", { exact: true }),
-  ).toBeVisible();
-  await expect(
+  const identityUnavailable = page.getByText("Source identity unavailable", { exact: true });
+  const rejectedRegister = page.getByRole("heading", { name: "Unable to load data", exact: true });
+  await expect(identityUnavailable.or(rejectedRegister)).toBeVisible();
+  if (await rejectedRegister.isVisible()) {
+    await expect(page.locator("main")).toContainText("Record bootstrap source register is incomplete.");
+  } else await expect(
     page.getByText(
       "Can't confirm which publisher this came from, so it isn't shown as official yet.",
       { exact: true },

@@ -24,7 +24,7 @@ async function useLegacyRecordBootstrap(page) {
   // Omit only the new register field to exercise the admitted older staging
   // format. Publisher/source contents and the source-record index stay exact.
   await page.route(/\/catalog-bootstrap-record\.json(?:\.gz)?(?:\?|$)/, async route => {
-    const response = await route.fetch();
+    const response = await route.fetch({ url: route.request().url().replace('catalog-bootstrap-record.json', 'catalog-bootstrap.json') });
     const compressed = new URL(route.request().url()).pathname.endsWith(".gz");
     const bytes = await response.body();
     const artifact = JSON.parse((compressed ? gunzipSync(bytes) : bytes).toString("utf8"));

@@ -163,7 +163,7 @@ function recordStageFixture(compact = false, atomic = false) {
     else if (url.includes("catalog-bootstrap")) body = { catalog_bootstrap: {
       catalogs: [{ id: "nist-800-53", name: "Fixture publication", source_id: source.id }],
       ...(compact ? { source_records: { [source.id]: "source-records/000.json" }, atlas_neighborhood: { shard_count: 8, hash_algorithm: "fnv1a-32" } } : {}),
-      ...(atomic ? { sources: [source] } : {}),
+      ...(atomic ? { sources: [source], source_ids: [source.id], source_records: undefined } : {}),
     } };
     else if (url.includes("source-records/000.json")) body = { schema_version: "1.0", sources: [source] };
     else if (url.includes("sources.json")) body = { schema_version: "1.0", sources: [source] };
@@ -184,6 +184,7 @@ test("atomic record arrival shares its complete admitted register and runtime wi
   clearRuntimeArtifactCache();
   const stages: RuntimeBundle[] = [];
   try {
+    await preloadRuntimeArtifacts(fixture.state);
     await loadRuntimeDatasetStaged({ state: fixture.state,
       onSearchReady: bundle => { stages.push(bundle); },
       onRecordRendered: async bundle => {
@@ -196,6 +197,7 @@ test("atomic record arrival shares its complete admitted register and runtime wi
     assert.equal(stages.length, 2);
     assert.equal(stages[0].runtime, stages[1].runtime);
     assert.equal(fixture.requests.some(url => /\/sources\.json|\/source-records\//.test(url)), false);
+    assert.equal(fixture.requests.some(url => /\/catalog-bootstrap\.json/.test(url)), false);
   } finally { globalThis.fetch = originalFetch; clearRuntimeArtifactCache(); }
 });
 

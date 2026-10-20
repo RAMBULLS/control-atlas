@@ -455,7 +455,7 @@ export async function preloadRuntimeArtifacts(state: ViewState) {
   // the files needed for orientation.
   if (plan.recordNodeId) {
     const nodeId = plan.recordNodeId;
-    const catalog = fetchArtifact(artifactPath("catalog-bootstrap.json")) as Promise<{ catalog_bootstrap?: CatalogBootstrap }>;
+    const catalog = loadCatalogBootstrapArtifact(!plan.sources && !plan.fullGraph) as Promise<{ catalog_bootstrap?: CatalogBootstrap }>;
     requests.push(loadAtlasNeighborhood(nodeId, catalog));
     requests.push(catalog.then(artifact => {
       const bootstrap = artifact.catalog_bootstrap || {};
@@ -1045,6 +1045,7 @@ type CatalogBootstrap = {
   sources?: Array<Record<string, unknown>>;
   atlas_neighborhood?: { shard_count: number; hash_algorithm: string };
   source_records?: Record<string, string>;
+  source_ids?: string[];
   comparison_content?: Record<string, ComparisonContent>;
   comparison_baselines?: Record<string, ComparisonBaseline>;
   comparison_pairs?: Record<string, ComparisonPair>;

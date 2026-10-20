@@ -7,10 +7,12 @@ export function recordBootstrapSources(bootstrap, sourceId = '') {
     if (bootstrap.record_bootstrap) throw new Error('Record bootstrap source register is incomplete.');
     return null;
   }
-  if (!Array.isArray(bootstrap.sources) || !bootstrap.source_records || typeof bootstrap.source_records !== 'object') {
+  const ids = bootstrap.source_ids ?? (bootstrap.source_records && Object.keys(bootstrap.source_records));
+  if (!Array.isArray(bootstrap.sources) || !Array.isArray(ids) || ids.some(id => typeof id !== 'string')) {
     throw new Error('Record bootstrap source register is invalid.');
   }
-  const admitted = new Set(Object.keys(bootstrap.source_records));
+  const admitted = new Set(ids);
+  if (admitted.size !== ids.length) throw new Error('Record bootstrap source register index is duplicated.');
   const seen = new Set();
   for (const source of bootstrap.sources) {
     if (!source || typeof source.id !== 'string' || !admitted.has(source.id) || seen.has(source.id)) {

@@ -1,3 +1,4 @@
+/* global document, Element, MutationObserver */
 import { expect, test } from "@playwright/test";
 import { atlasNeighborhoodShardId } from "../../src/app/atlas-neighborhood.mjs";
 
@@ -131,6 +132,12 @@ for (const width of [412, 1440]) {
 test(`Resources keeps its identity and heading geometry at ${width}px until the lazy directory is usable`, async ({ page }) => {
   await page.setViewportSize({ width, height: 823 });
   await page.clock.install();
+  let releaseEntry = () => {};
+  const entryReleased = new Promise(resolve => { releaseEntry = () => resolve(undefined); });
+  await page.route(/\/assets\/index-[^/]+\.js$/, async route => {
+    await entryReleased;
+    await route.continue();
+  });
   let releaseDirectory = () => {};
   const directoryReleased = new Promise(resolve => { releaseDirectory = () => resolve(undefined); });
   await page.route(/\/assets\/CommonsPage-[^/]+\.js$/, async route => {
@@ -138,12 +145,16 @@ test(`Resources keeps its identity and heading geometry at ${width}px until the 
     await route.continue();
   });
   try {
-    await page.goto("/#/resources");
+    await page.goto("/#/resources", { waitUntil: "commit" });
     const shell = page.locator("[data-static-route]");
     await expect(shell).toBeVisible();
     await expect(shell.getByRole("heading", { level: 1 })).toHaveText("Resources");
     await expect(shell.getByRole("navigation", { name: "Resource companions" })).toBeVisible();
+    await expect(page.locator("#root")).toHaveAttribute("data-static-route-kind", "resources");
+    await expect(page.locator("#root")).not.toHaveAttribute("data-react-active", "true");
+    await page.evaluate(() => document.fonts.ready);
     const beforeHeading = await shell.getByRole("heading", { level: 1 }).boundingBox();
+    releaseEntry();
     await expect(page.locator('[data-route-suspense-pending="true"]')).toHaveCount(1);
     await expect(page.locator('[data-route-suspense-pending="true"]')).not.toBeVisible();
     await page.clock.fastForward(16_000);
@@ -187,6 +198,7 @@ test(`Resources keeps its identity and heading geometry at ${width}px until the 
     await expect(page.getByRole("searchbox", { name: "Find resources" })).toHaveValue("zero trust");
     await expect(page.getByRole("heading", { name: "Resources", exact: true, level: 1 })).toHaveCount(1);
   } finally {
+    releaseEntry();
     releaseDirectory();
   }
 });
@@ -266,9 +278,12 @@ test("record commits official content without a whole-tree or Resources download
     await expect.poll(() => sourceRequests.length).toBeGreaterThan(0);
     await page.evaluate(() => document.fonts.ready);
     const before = await published.boundingBox();
+    const acceptedParagraph = await published.locator("p").first().elementHandle();
     releaseSupporting();
     await expect(page.locator('[data-record-content="nist-800-53:AC-2"]')).toHaveAttribute("data-record-context-ready", "true");
     const after = await published.boundingBox();
+    expect(await acceptedParagraph.evaluate(node => node.isConnected)).toBe(true);
+    expect(await published.locator("p").first().evaluate((node, accepted) => node === accepted, acceptedParagraph)).toBe(true);
     for (const axis of ["x", "y", "width", "height"]) expect(Math.abs(after[axis] - before[axis]), `Published text ${axis} stays stable through supporting metadata`).toBeLessThanOrEqual(1);
     await expect(page.locator('[data-record-content="nist-800-53:AC-2"]')).toHaveAttribute("data-record-commit", /^\d+$/);
     await expect(page.locator('[data-record-section="official-text"]')).toContainText("Define and document the types of accounts allowed");

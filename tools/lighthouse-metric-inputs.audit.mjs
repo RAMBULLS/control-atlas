@@ -18,7 +18,7 @@ export default class MetricInputs extends Audit {
   }
 
   static async audit(artifacts, context) {
-    if (!artifacts.URL?.requestedUrl?.endsWith(RECORD_HASH)) return { score: null, notApplicable: true };
+    if (![RECORD_HASH, '#/resources'].some(hash => artifacts.URL?.requestedUrl?.endsWith(hash))) return { score: null, notApplicable: true };
     try {
       if (process.env.INTERNAL_LANTERN_USE_TRACE !== undefined) throw new Error('Alternative trace graph is unsupported.');
       if (runtime.version !== '13.4.1') throw new Error(`Expected Lighthouse 13.4.1, found ${runtime.version}.`);

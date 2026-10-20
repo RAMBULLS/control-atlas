@@ -244,5 +244,17 @@
 
   window.controlAtlasProgressiveRouteIdentity = routeIdentity;
   window.controlAtlasSyncFirstPaintShell = syncFirstPaintShell;
-  syncFirstPaintShell();
+  // Production delivery starts this script in <head> so route requests can
+  // overlap CSS. Initialize the actual shell after parsing, before deferred
+  // modules execute; otherwise the head invocation has no root to configure.
+  if (document.readyState === "loading") {
+    var onParsed = function () {
+      if (document.readyState === "loading") return;
+      document.removeEventListener("readystatechange", onParsed);
+      syncFirstPaintShell();
+    };
+    document.addEventListener("readystatechange", onParsed);
+  } else {
+    syncFirstPaintShell();
+  }
 })();

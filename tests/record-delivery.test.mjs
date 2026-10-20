@@ -3,12 +3,14 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import test from 'node:test';
+import { runInNewContext } from 'node:vm';
 import { startRoutePrefetch, takeRouteResponse } from '../src/shared/route-prefetch.mjs';
 import { atlasNeighborhoodShardId, ATLAS_NEIGHBORHOOD_SHARD_COUNT } from '../src/app/atlas-neighborhood.mjs';
 import { externalizeOrbitalFonts, HOME_SHELL_MODULES, ORBITAL_FONT_HASHES, orbitalFontPreloads, planInteractiveDelivery, recordChunkGroups, RECORD_UI_MODULES, verifyRecordDelivery } from '../tools/record-delivery.mjs';
 
 const require = createRequire(import.meta.url);
 const css = readFileSync(require.resolve('orbital-archive-no-01/fonts.css'), 'utf8');
+const progressiveShell = readFileSync(new URL('../src/public/progressive-shell.js', import.meta.url), 'utf8');
 const root = '/workspace/control-atlas';
 const fontAssets = () => Object.fromEntries([...externalizeOrbitalFonts(css).fonts].map(([digest, bytes]) => [
   `${digest}.woff2`, { type: 'asset', fileName: `${digest}.woff2`, source: bytes },
@@ -23,6 +25,47 @@ const bundle = () => ({
   'compare.js': chunk('compare.js', ['src/ui/pages/ComparePage.tsx']),
   'record-ui.js': chunk('record-ui.js', ['src/ui/components/AppLink.tsx']),
   ...fontAssets(),
+});
+
+test('head delivery configures the parsed route shell before deferred modules, without waiting for DOMContentLoaded', () => {
+  for (const hash of ['#/resources', '#/record/nist-800-53/AC-2', '#/']) {
+    const listeners = new Map();
+    const nodes = new Map();
+    const element = () => ({ dataset: {}, hidden: false, textContent: '',
+      querySelector(selector) {
+        if (!nodes.has(selector)) nodes.set(selector, element());
+        return nodes.get(selector);
+      },
+      toggleAttribute(name, value) { this[name] = value; },
+      removeAttribute(name) { this[name] = false; },
+      remove() { this.removed = true; },
+    });
+    const root = element();
+    let parsed = false;
+    const document = {
+      readyState: 'loading',
+      getElementById: id => id === 'root' && parsed ? root : null,
+      addEventListener: (name, listener) => listeners.set(name, listener),
+      removeEventListener: name => listeners.delete(name),
+    };
+    runInNewContext(progressiveShell, { document, window: { location: { hash, origin: 'https://example.test' } }, URL, URLSearchParams });
+    assert.equal(root.dataset.staticRouteKind, undefined);
+    assert.deepEqual([...listeners.keys()], ['readystatechange']);
+    listeners.get('readystatechange')();
+    assert.equal(listeners.size, 1, 'loading events must not consume the initialization');
+    parsed = true;
+    document.readyState = 'interactive';
+    listeners.get('readystatechange')();
+    assert.equal(listeners.size, 0, 'the parser listener is removed after one initialization');
+    if (hash === '#/') {
+      assert.equal(nodes.get('[data-static-route]').removed, true);
+      assert.equal(nodes.get('[data-static-search]').removed, true);
+    } else {
+      assert.equal(root.dataset.staticRouteKind, hash === '#/resources' ? 'resources' : 'record');
+      assert.equal(nodes.get('[data-static-route-title]').textContent, hash === '#/resources' ? 'Resources' : 'AC-2');
+      assert.equal(nodes.get('[data-static-resource-companions]').hidden, hash !== '#/resources');
+    }
+  }
 });
 
 test('resolved static graph batches interactive code while preserving Home, warm-up and lazy page boundaries', () => {

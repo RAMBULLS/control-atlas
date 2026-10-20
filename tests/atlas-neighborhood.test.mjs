@@ -47,6 +47,15 @@ test("Atlas neighborhood sharding is deterministic and preserves canonical edges
   const first = buildAtlasNeighborhoodShards(graph, 8);
   const second = buildAtlasNeighborhoodShards(graph, 8);
   assert.deepEqual(first, second);
+  const finer = buildAtlasNeighborhoodShards(graph, 2048);
+  const records = (shards) => Object.fromEntries(shards.flatMap(shard => Object.entries(shard.records)));
+  assert.deepEqual(records(finer), records(first), "finer shards preserve every complete record and edge");
+  assert.equal(finer.reduce((count, shard) => count + shard.record_count, 0), graph.nodes.length);
+  for (const shard of finer) {
+    for (const id of Object.keys(shard.records)) {
+      assert.equal(shard.shard_id, atlasNeighborhoodShardId(id, 2048));
+    }
+  }
   const record = first
     .find((shard) => shard.shard_id === atlasNeighborhoodShardId("a", 8))
     .records.a;
@@ -238,6 +247,14 @@ test("generated Atlas shards contain only incident canonical edges", () => {
   const canonicalEdges = new Map(
     readGeneratedCollection(".", "edges").edges.map((edge) => [edge.id, edge]),
   );
+  const incidentEdges = new Map();
+  for (const edge of canonicalEdges.values()) {
+    for (const id of new Set([edge.source_node_id, edge.target_node_id])) {
+      const ids = incidentEdges.get(id) || [];
+      ids.push(edge.id);
+      incidentEdges.set(id, ids);
+    }
+  }
   const canonicalNodes = readGeneratedCollection(".", "nodes").nodes;
   const canonicalNodeById = new Map(
     canonicalNodes.map((node) => [node.id, node]),
@@ -251,6 +268,8 @@ test("generated Atlas shards contain only incident canonical edges", () => {
     for (const [nodeId, record] of Object.entries(artifact.atlas_neighborhood_shard.records)) {
       recordCount += 1;
       shardedNodeIds.add(nodeId);
+      assert.equal(artifact.atlas_neighborhood_shard.shard_id, atlasNeighborhoodShardId(nodeId));
+      assert.deepEqual(record.edges.map(edge => edge[0]).sort(), (incidentEdges.get(nodeId) || []).sort(), `${nodeId} keeps every incident relationship`);
       // ancestor_path is attached to the shard copy on purpose: it is how the
       // record page draws the chain to the trunk without loading the graph. It
       // is stripped from nodes.json to stay inside the 20 MiB artifact budget,

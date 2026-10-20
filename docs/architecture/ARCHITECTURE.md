@@ -72,7 +72,7 @@ Generated runtime graph artifacts remain:
 The focused Atlas adds normalized read models generated from those canonical artifacts:
 
 - `data/generated/atlas-neighborhood-manifest.json`
-- `data/generated/atlas-neighborhood/*.json` (128 deterministic self-contained incident-edge shards)
+- `data/generated/atlas-neighborhood/*.json` (2048 deterministic self-contained incident-edge shards)
 
 These are delivery optimizations, not a second relationship truth. Each stored edge remains canonical and incident to the selected record.
 

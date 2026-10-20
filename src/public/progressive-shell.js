@@ -90,6 +90,16 @@
             title: libraryCopy.title
           };
     }
+    if (route === "resources") {
+      if (segments.length > 1) return null;
+      var resourcesCopy = sharedCopy("resources") || { eyebrow: "", summary: "Find tools, training, and guidance for federal cybersecurity work.", title: "Resources" };
+      return {
+        eyebrow: resourcesCopy.eyebrow || "",
+        kind: "resources",
+        summary: resourcesCopy.summary,
+        title: resourcesCopy.title
+      };
+    }
     if (route === "record") {
       var recordCopy = sharedCopy("record") || { eyebrow: "", summary: "Read the published text and record details.", title: "Record" };
       return {
@@ -187,10 +197,12 @@
       remove(root.querySelector("[data-static-route]"));
       remove(root.querySelector("[data-static-search]"));
     } else if (search) {
-      remove(root.querySelector("[data-static-home]"));
+      setHidden(root.querySelector("[data-static-home]"), true);
       remove(root.querySelector("[data-static-route]"));
     } else {
-      remove(root.querySelector("[data-static-home]"));
+      // The initial route can return Home while its data-loader module is
+      // pending. Keep that recovery surface until React actually starts.
+      setHidden(root.querySelector("[data-static-home]"), true);
       remove(root.querySelector("[data-static-search]"));
     }
 
@@ -212,6 +224,7 @@
       }
       shell.querySelector("[data-static-route-title]").textContent = identity.title;
       shell.querySelector("[data-static-route-summary]").textContent = identity.summary;
+      setHidden(shell.querySelector("[data-static-resource-companions]"), identity.kind !== "resources");
       shell.removeAttribute("hidden");
     } else if (shell) {
       setHidden(shell, true);

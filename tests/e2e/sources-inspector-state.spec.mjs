@@ -1,6 +1,8 @@
 import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
 
+import { readServedArtifact } from "./support.mjs";
+
 async function gotoApp(page, path) {
   await page.goto(path);
   await page.locator("#app").waitFor({ state: "attached" });
@@ -11,12 +13,6 @@ async function waitForAppReady(page) {
     state: "attached",
     timeout: 30_000,
   });
-}
-
-async function readServedArtifact(page, filename) {
-  const response = await page.request.get(`/data/generated/${filename}`);
-  expect(response.ok()).toBe(true);
-  return response.json();
 }
 
 test.describe("Sources Inspector State & Trust Workflow", () => {

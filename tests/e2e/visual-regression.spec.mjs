@@ -21,8 +21,19 @@ async function openStableWorkspace(page, route, viewport) {
 
 test('resource directory desktop composition', async ({ page }) => {
   await openStableWorkspace(page, '#/resources', { width: 1440, height: 1000 });
+  await waitForAppReady(page);
+  await expect(page.getByRole('heading', { name: 'Resources', exact: true, level: 1 })).toHaveCount(1);
+  await expect(page.getByRole('heading', { name: 'Resources', exact: true, level: 1 })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Browse by Collection' })).toBeVisible();
-  await expect(page.locator('#workspace')).toHaveScreenshot('resources-desktop.png');
+  const masthead = await page.locator('[data-static-route]').boundingBox();
+  const workspace = await page.locator('#workspace').boundingBox();
+  expect(masthead).not.toBeNull();
+  expect(workspace).not.toBeNull();
+  const x = Math.floor(Math.min(masthead.x, workspace.x));
+  const y = Math.floor(Math.min(masthead.y, workspace.y));
+  const right = Math.ceil(Math.max(masthead.x + masthead.width, workspace.x + workspace.width));
+  const bottom = Math.ceil(Math.max(masthead.y + masthead.height, workspace.y + workspace.height));
+  await expect(page).toHaveScreenshot('resources-desktop.png', { fullPage: true, clip: { x, y, width: right - x, height: bottom - y } });
 });
 
 test('source register desktop composition', async ({ page }) => {

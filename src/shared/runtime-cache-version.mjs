@@ -1,1 +1,1 @@
-export const RUNTIME_CACHE_VERSION = "20261008-compare-content-1";
+export const RUNTIME_CACHE_VERSION = "20261008-record-delivery-1";

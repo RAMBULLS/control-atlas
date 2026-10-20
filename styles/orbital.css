@@ -208,7 +208,7 @@ body {
 }
 
 .static-route-shell {
-  min-height: max(620px, calc(100svh - 200px));
+  min-height: calc(100svh - var(--ca-header-height, 68px));
   padding-top: var(--ca-space-8);
   position: relative;
   z-index: 0;
@@ -220,7 +220,7 @@ body {
 }
 
 #root[data-static-route-active="true"] [data-react-root] #workspace {
-  min-height: max(620px, calc(100svh - 200px));
+  min-height: calc(100svh - var(--ca-header-height, 68px));
   position: relative;
   visibility: hidden;
   z-index: 1;
@@ -236,6 +236,61 @@ body {
 /* On hydration, React fully owns the route masthead and workspace geometry. */
 #root[data-route-hydrated="true"] > [data-react-root] #workspace {
   min-height: 0;
+}
+
+/* Resources keeps its real first-paint masthead, as Library does. The directory
+   becomes interactive beneath it without repainting identical title and copy. */
+#root[data-static-route-kind="resources"] > [data-static-route] {
+  min-height: 0;
+  max-width: var(--ca-workspace-max);
+  width: min(var(--ca-workspace-max), calc(100vw - clamp(2rem, 5vw, 5rem)));
+  padding-inline: 0;
+}
+
+@media (max-width: 640px) {
+  #root[data-static-route-kind="resources"] > [data-static-route] > header {
+    width: calc(100% - 1.5rem);
+    margin-inline: auto;
+  }
+}
+
+#root[data-static-route-kind="resources"] .static-route-summary {
+  min-height: 0;
+}
+
+#root[data-route-hydrated="true"][data-static-route-kind="resources"]
+  > [data-react-root] #workspace {
+  grid-row: 4;
+  padding-top: 0;
+}
+
+#root[data-route-hydrated="true"][data-static-route-kind="resources"]
+  > [data-react-root] footer {
+  grid-row: 5;
+}
+
+#root[data-static-route-kind="resources"]:has(> [data-static-route]:not([hidden]))
+  > [data-react-root] .workspace-template > .page-header {
+  display: none;
+}
+
+#root[data-static-route-kind="resources"]:has(> [data-static-route]:not([hidden]))
+  > [data-react-root] .workspace-template {
+  padding-top: 0;
+}
+
+/* A record identifier is already known from its URL. Use the reader's type
+   scale without reserving blank space for publisher content not yet admitted. */
+#root[data-static-route-kind="record"] .static-route-summary {
+  min-height: 0;
+}
+
+#root[data-static-route-kind="record"] [data-static-route-title] {
+  font-family: var(--ca-font-mono);
+  font-size: clamp(1.55rem, 3vw, 2.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  text-transform: none;
 }
 
 .static-search-form {

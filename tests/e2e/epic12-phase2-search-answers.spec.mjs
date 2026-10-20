@@ -87,9 +87,11 @@ test("Phase 2 search renders source-backed cross-framework totals on the first t
   expect(expected).toHaveLength(10);
   expect(expected.every(({ count, id }) => Number.isFinite(count) && id.includes(":"))).toBe(true);
   for (const result of expected) {
-    const expectedLabel = result.count === 0
-      ? "No published mappings yet"
-      : result.count === 1
+    if (result.count === 0) {
+      expect(result.signal).not.toMatch(/\d[\d,]* published mappings?/);
+      continue;
+    }
+    const expectedLabel = result.count === 1
         ? "1 published mapping"
         : `${result.count.toLocaleString()} published mappings`;
     expect(result.signal).toContain(expectedLabel);

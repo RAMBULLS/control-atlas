@@ -5536,8 +5536,18 @@ a:focus-visible {
 
 .compare-step-fields {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--ca-space-4);
+  min-width: 0;
+  width: 100%;
   max-width: 42rem;
+}
+
+.compare-step-fields .field,
+.compare-step-fields select,
+.compare-step-fields input {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .compare-step-fields input,

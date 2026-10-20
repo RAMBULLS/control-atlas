@@ -4,6 +4,7 @@ import hashlib
 import importlib.util
 import io
 import json
+import os
 from pathlib import Path
 import re
 import tempfile
@@ -223,6 +224,22 @@ class ScanReportTests(unittest.TestCase):
         self.assertEqual(self.run_gate("history"), 0)
         self.assertEqual(self.effective_policy, POLICY)
 
+    def test_history_scans_all_refs_without_rename_similarity_work(self):
+        self.report["runs"][0]["results"] = [sarif_result(f, history=True) for f in FINDINGS]
+        self.assertEqual(self.run_gate("history"), 0)
+        call = gate.subprocess.run.call_args
+        self.assertIn("--log-opts=--full-history --all --no-renames", call.args[0])
+        self.assertEqual(call.kwargs["timeout"], 1200)
+        self.assertIn("--redact=100", call.args[0])
+        self.assertNotIn("--max-count", " ".join(call.args[0]))
+
+    def test_snapshot_retains_its_short_deadline_and_directory_scope(self):
+        self.assertEqual(self.run_gate(), 0)
+        call = gate.subprocess.run.call_args
+        self.assertEqual(call.args[0][1:3], ["dir", "."])
+        self.assertEqual(call.kwargs["timeout"], 180)
+        self.assertFalse(any(arg.startswith("--log-opts") for arg in call.args[0]))
+
     def test_unapproved_result_still_fails_and_remains_visible(self):
         self.report["runs"][0]["results"].append({**sarif_result(FINDINGS[0]), "ruleId": "github-oauth", "suppressions": [{"kind": "external"}]})
         self.assertEqual(self.run_gate(), 1)
@@ -302,6 +319,45 @@ class ScanReportTests(unittest.TestCase):
         result = self.report["runs"][0]["results"][0]
         result["locations"].append(copy.deepcopy(result["locations"][0]))
         self.assertEqual(self.run_gate(), 1)
+
+
+class HistoryCoverageTests(unittest.TestCase):
+    def test_real_scanner_keeps_deleted_renamed_and_other_branch_content(self):
+        binary = ROOT / ("gitleaks.exe" if os.name == "nt" else "gitleaks")
+        if not binary.is_file():
+            if os.environ.get("CI"):
+                self.fail("Checksum-verified Gitleaks is required for hosted history coverage")
+            self.skipTest("Real scanner coverage runs on the hosted security runner")
+        with tempfile.TemporaryDirectory(prefix="history-coverage-", dir=OUT) as directory:
+            repo = Path(directory).resolve()
+            def git(*args):
+                return gate.subprocess.run(["git", *args], cwd=repo, capture_output=True, timeout=10, check=True)
+            git("init", "-b", "main")
+            git("config", "user.name", "History coverage fixture")
+            git("config", "user.email", "fixture@example.invalid")
+            (repo / "removed.txt").write_text("reliability-marker-deleted\n", encoding="utf-8")
+            git("add", ".")
+            git("commit", "-m", "Fixture before removal")
+            git("branch", "other")
+            git("mv", "removed.txt", "renamed.txt")
+            git("commit", "-m", "Fixture rename")
+            git("rm", "renamed.txt")
+            git("commit", "-m", "Fixture removal")
+            git("switch", "other")
+            (repo / "branch.txt").write_text("reliability-marker-branch\n", encoding="utf-8")
+            git("add", ".")
+            git("commit", "-m", "Fixture on another branch")
+            git("switch", "main")
+            config = repo / "fixture.toml"
+            config.write_text('title = "History coverage fixture"\n[[rules]]\nid = "history-fixture"\nregex = "reliability-marker-[a-z]+"\n', encoding="utf-8")
+            report = repo / "coverage.json"
+            process = gate.subprocess.run([str(binary), "git", str(repo),
+                "--log-opts=--full-history --all --no-renames", "--redact=100",
+                "--config=" + str(config), "--report-format=json", "--report-path=" + str(report)],
+                capture_output=True, timeout=30)
+            self.assertEqual(process.returncode, 1, "Synthetic findings must fail the scanner")
+            findings = json.loads(report.read_text(encoding="utf-8"))
+            self.assertEqual({finding["File"] for finding in findings}, {"removed.txt", "renamed.txt", "branch.txt"})
 
 
 if __name__ == "__main__":

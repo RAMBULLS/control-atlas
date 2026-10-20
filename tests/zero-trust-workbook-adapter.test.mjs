@@ -2,6 +2,30 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
+test('fresh workbook parsing rebuilds proven shorthand references without inventing predicates', async () => {
+  const { default: ExcelJS } = await import('exceljs');
+  const { parseNistZeroTrustMappingWorkbook } = await import('../tools/importers/zero-trust-workbook-adapter.mjs');
+  const workbook = new ExcelJS.Workbook();
+  const sheet = workbook.addWorksheet('Publisher');
+  sheet.addRows([
+    ['ZTA Architecture Component', 'Product', "Component’s Function", 'Relationship', 'Relationship Explanation'],
+    ['PEP', 'Product', 'Protect access', 'Supports PR.PS-01', 'First native direction'],
+    ['PEP', 'Product', 'Protect access', 'Is supported by PR.PS-01', 'Second native direction'],
+    ['PEP', 'Product', 'Protect access', 'PR.PS-01 (already listed)', 'Publisher cross-reference'],
+    ['PEP', 'Other product', 'Protect access', 'PR.PS-01 (already listed)', 'Different context'],
+  ]);
+  const { mappings } = await parseNistZeroTrustMappingWorkbook(Buffer.from(await workbook.xlsx.writeBuffer()), {
+    source_key: 'fixture-workbook', mapping_kind: 'csf_2', url: 'https://example.invalid/workbook.xlsx',
+  });
+  assert.equal(mappings.length, 4);
+  assert.deepEqual(mappings[2].source_disposition.mapping_ids, mappings.slice(0, 2).map((row) => row.id));
+  assert.equal(mappings[2].relationship, 'PR.PS-01 (already listed)');
+  assert.equal(mappings[2].relationship_parse_status, 'unresolved');
+  assert.deepEqual(mappings[2].relationship_clauses, []);
+  assert.equal(mappings[3].source_disposition, undefined);
+  assert.equal(mappings[3].relationship_parse_status, 'unresolved');
+});
+
 test('committed Zero Trust structured sources reconcile without synthetic records', () => {
   const manifest = JSON.parse(readFileSync('data/curated/nist-zt/structured-source-manifest.json', 'utf8'));
   assert.equal(manifest.reconciliation.workbooks_discovered, 5);

@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import readXlsxFile from 'read-excel-file/node';
+import { resolveRedundantPublisherReference } from './reference-dispositions.mjs';
 
 function text(value) {
   return value == null ? '' : String(value).replace(/\r/g, '').trim();
@@ -174,6 +175,13 @@ export async function parseNistZeroTrustMappingWorkbook(bytes, source) {
   if (!mappings.length) throw new Error(`${source.source_key} contained no mappings`);
   const ids = new Set(mappings.map((entry) => entry.id));
   if (ids.size !== mappings.length) throw new Error(`${source.source_key} produced duplicate mapping IDs`);
+  // A fresh workbook replaces the retained rows. Recompute the same validated
+  // publisher references here so refresh does not discard their dispositions.
+  // Unknown shorthand remains unresolved; it never becomes a new assertion.
+  for (const mapping of mappings) {
+    const disposition = resolveRedundantPublisherReference(mapping, mappings);
+    if (disposition) mapping.source_disposition = disposition;
+  }
   return { mappings, sheets };
 }
 

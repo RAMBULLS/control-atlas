@@ -20,6 +20,10 @@ export const SWEEPS = Object.freeze({
     label: 'sweep-red-refresh',
     jobs: [['refresh', 'Source data refresh']],
   },
+  history: {
+    label: 'sweep-red-history',
+    jobs: [['history', 'Snapshot and complete-history secret scans']],
+  },
 });
 
 const DESCRIPTIONS = { failure: 'failed', cancelled: 'was cancelled', skipped: 'did not run', undefined: 'reported no result' };
@@ -106,6 +110,7 @@ export function runSweepAlert(env = process.env, options = {}) {
   if (!/^[A-Za-z0-9][A-Za-z0-9_.-]*\/[A-Za-z0-9][A-Za-z0-9_.-]*$/.test(repository || '')) throw new Error('Invalid repository');
   const results = {
     build: env.RESULT_BUILD, browser: env.RESULT_BROWSER, accessibility: env.RESULT_ACCESSIBILITY, refresh: env.RESULT_REFRESH,
+    history: env.RESULT_HISTORY,
   };
   const assessment = assessSweep(kind, results);
   const runUrl = env.RUN_URL;

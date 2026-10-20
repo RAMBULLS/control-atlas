@@ -20,6 +20,43 @@ test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
 });
 
+async function assertSingleFontTransfers(page, files) {
+  const urls = [...new Set(files.map(file => file.url))];
+  const timings = await page.evaluate(() => performance.getEntriesByType("resource")
+    .filter(entry => /\/fonts\/[a-f0-9]{64}\.woff2/.test(entry.name))
+    .map(entry => ({ url: entry.name, transfer: entry.transferSize, decoded: entry.decodedBodySize })));
+  for (const url of urls) {
+    const entries = timings.filter(entry => entry.url === url);
+    expect(entries.some(entry => Number.isFinite(entry.decoded) && entry.decoded > 0), JSON.stringify({ url, timings })).toBe(true);
+    // FontFace consumers can emit multiple response events for a cached URL.
+    // Require no repeated wire transfer; valid cache hits may need none.
+    expect(entries.filter(entry => entry.transfer > 0).length, JSON.stringify({ url, timings })).toBeLessThanOrEqual(1);
+  }
+  return urls.length;
+}
+
+test("records and publication inventories work without native gzip decoding or raw payload duplicates", async ({ page }) => {
+  test.setTimeout(120_000);
+  await page.addInitScript(() => {
+    Object.defineProperty(globalThis, "DecompressionStream", { configurable: true, value: undefined });
+  });
+  const requests = [];
+  page.on("request", request => {
+    if (/\/(atlas-neighborhood|catalog-records)\//.test(request.url())) requests.push(request.url());
+  });
+  await page.goto("/#/record/nist-800-53/AC-2");
+  await waitForAppReady(page, { allowPartial: true });
+  await dismissOnboarding(page);
+  await expect(page.locator('[data-record-content="nist-800-53:AC-2"]')).toHaveAttribute("data-record-context-ready", "true");
+  await expect(page.locator("[data-record-source-error]")).toHaveCount(0);
+  await page.goto("/#/library/publication/nist-800-53");
+  await waitForAppReady(page, { allowPartial: true });
+  await expect(page.locator("#catalog-records-title")).toBeVisible();
+  expect(requests.some(url => /atlas-neighborhood\/.+\.json\.gz/.test(url))).toBe(true);
+  expect(requests.some(url => /catalog-records\/.+\.json\.gz/.test(url))).toBe(true);
+  expect(requests.some(url => /\.json(?:\?|$)/.test(url))).toBe(false);
+});
+
 test("first-paint fonts load the exact pinned faces without duplicate file requests", async ({ page }) => {
   const files = [];
   page.on("response", response => { if (/\/fonts\/[a-f0-9]{64}\.woff2/.test(response.url())) files.push({ url: response.url(), ok: response.ok() }); });
@@ -35,8 +72,7 @@ test("first-paint fonts load the exact pinned faces without duplicate file reque
     expect(faces).toContainEqual({ family, weight, status: "loaded" });
   }
   expect(files.every(file => file.ok)).toBe(true);
-  expect(files.length).toBe(new Set(files.map(file => file.url)).size);
-  expect(files).toHaveLength(3);
+  expect(await assertSingleFontTransfers(page, files)).toBe(3);
 });
 
 test("record text loads its used pinned faces through CSS without duplicate font requests", async ({ page }) => {
@@ -61,9 +97,9 @@ test("record text loads its used pinned faces through CSS without duplicate font
   expect(fonts.text.some(text => text.family.includes("IBM Plex Mono"))).toBe(true);
   expect(fonts.text.every(text => text.loaded)).toBe(true);
   expect(files.every(file => file.ok)).toBe(true);
-  expect(files.length).toBe(new Set(files.map(file => file.url)).size);
-  expect(files.length).toBeGreaterThan(0);
-  expect(files.length).toBeLessThanOrEqual(3);
+  const uniqueTransfers = await assertSingleFontTransfers(page, files);
+  expect(uniqueTransfers).toBeGreaterThan(0);
+  expect(uniqueTransfers).toBeLessThanOrEqual(3);
 });
 
 test("semantic button recipes retain sizing, keyboard focus, disabled state and caller overrides", async ({ page }) => {
@@ -160,6 +196,21 @@ test("record navigation waits for its own neighborhood and never announces stale
 });
 
 test("record arrival data starts before selected-page hints and overlaps the shell", async ({ page }) => {
+  await page.addInitScript(() => {
+    const order = globalThis.__arrivalInvocationOrder = [];
+    const nativeFetch = globalThis.fetch;
+    globalThis.fetch = (...args) => {
+      order.push({ kind: "fetch", url: String(args[0]) });
+      return Reflect.apply(nativeFetch, globalThis, args);
+    };
+    const nativeAppend = globalThis.Node.prototype.appendChild;
+    globalThis.Node.prototype.appendChild = function (node) {
+      if (node instanceof globalThis.HTMLLinkElement && node.rel === "modulepreload") {
+        order.push({ kind: "hint", url: node.href });
+      }
+      return Reflect.apply(nativeAppend, this, [node]);
+    };
+  });
   const requested = [];
   page.on("request", request => requested.push(request.url()));
   let loaderWaiting = false;
@@ -179,9 +230,15 @@ test("record arrival data starts before selected-page hints and overlaps the she
     releaseLoader();
     await expect(page.locator('[data-record-section="official-text"]')).toContainText("Define and document the types of accounts allowed");
     const shardIndex = requested.findIndex(url => /atlas-neighborhood\/[0-9a-f]+\.json\.gz/.test(url));
-    const firstUiIndex = requested.findIndex(routeScript);
     expect(shardIndex).toBeGreaterThanOrEqual(0);
-    expect(firstUiIndex).toBeGreaterThan(shardIndex);
+    expect(requested.some(routeScript)).toBe(true);
+    // Browsers may dispatch already queued network work in a different order.
+    // Verify the actual fetch/hint invocation order, plus both real requests.
+    const invoked = await page.evaluate(() => globalThis.__arrivalInvocationOrder);
+    const data = invoked.findIndex(entry => entry.kind === "fetch" && /atlas-neighborhood\/.+\.json\.gz/.test(entry.url));
+    const hint = invoked.findIndex(entry => entry.kind === "hint" && routeScript(entry.url));
+    expect(data).toBeGreaterThanOrEqual(0);
+    expect(hint).toBeGreaterThan(data);
   } finally {
     releaseLoader();
   }
@@ -260,7 +317,11 @@ test(`Resources keeps its identity and heading geometry at ${width}px until the 
     await expect(page.locator("#root")).toHaveAttribute("data-static-route-kind", "resources");
     await expect(page.locator("#root")).not.toHaveAttribute("data-react-active", "true");
     await expect(shell).toHaveCSS("position", "relative");
-    await page.evaluate(() => document.fonts.ready);
+    await page.evaluate(async () => {
+      const heading = globalThis.document.querySelector("[data-static-route] h1");
+      const style = globalThis.getComputedStyle(heading);
+      await globalThis.document.fonts.load(`${style.fontWeight} ${style.fontSize} ${style.fontFamily}`, heading.textContent);
+    });
     const beforeHeading = await shell.getByRole("heading", { level: 1 }).boundingBox();
     expect(directoryRequests, "the native masthead is usable before directory delivery starts").toEqual([]);
     releaseEntry();

@@ -1,19 +1,7 @@
 import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
 
-import { readServedArtifact } from "./support.mjs";
-
-async function gotoApp(page, path) {
-  await page.goto(path);
-  await page.locator("#app").waitFor({ state: "attached" });
-}
-
-async function waitForAppReady(page) {
-  await page.locator('#app[data-app-ready="true"]').waitFor({
-    state: "attached",
-    timeout: 30_000,
-  });
-}
+import { gotoApp, waitForAppReady, readServedArtifact } from "./support.mjs";
 
 test.describe("Sources Inspector State & Trust Workflow", () => {
   test("1440px desktop uses master-detail layout without occluding the register", async ({ page }) => {

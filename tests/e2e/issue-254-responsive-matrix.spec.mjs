@@ -82,9 +82,14 @@ for (const sample of REPRESENTATIVES) {
 
 test("STIG desktop composition aligns the action cluster and utility rail beside identity", async ({ page }) => {
   await open(page, STIG);
-  const identity = await page.locator(".ca-record-heading").boundingBox();
-  const actions = await page.locator(".record-title-actions").boundingBox();
-  const rail = await page.locator(".record-template-sidebar").boundingBox();
+  await page.evaluate(() => globalThis.document.fonts.ready);
+  const { identity, actions, rail } = await page.evaluate(() => {
+    const box = selector => {
+      const { x, y, width, height } = globalThis.document.querySelector(selector).getBoundingClientRect();
+      return { x, y, width, height };
+    };
+    return { identity: box(".ca-record-heading"), actions: box(".record-title-actions"), rail: box(".record-template-sidebar") };
+  });
   expect(actions.x).toBeGreaterThanOrEqual(identity.x + identity.width);
   expect(Math.abs(actions.y - identity.y)).toBeLessThanOrEqual(8);
   expect(rail.x).toBeGreaterThan(actions.x + actions.width);

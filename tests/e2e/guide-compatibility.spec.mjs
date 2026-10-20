@@ -72,7 +72,10 @@ test("retired RMF guide link keeps the Atlas journey through reload and back", a
   await dismissOnboarding(page);
   await page.goto("/#/learn?pattern=understanding-rmf");
   await expect(page).toHaveURL(/#\/atlas\?atlasJourney=rmf$/);
-  await page.reload();
+  await waitForAppReady(page);
+  await expect(page.getByRole("heading", { name: "Atlas", exact: true })).toBeVisible();
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await waitForAppReady(page);
   await expect(page).toHaveURL(/#\/atlas\?atlasJourney=rmf$/);
   await page.goBack();
   await expect(page).toHaveURL(/#\/$/);

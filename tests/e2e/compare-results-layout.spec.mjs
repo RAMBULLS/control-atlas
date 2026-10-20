@@ -67,6 +67,7 @@ test("published baseline selections reconcile, filter and export on desktop and 
   const totals = await page.locator("#compare-results > p").nth(1).innerText();
   const shared = Number(totals.match(/([\d,]+) shared/)[1].replaceAll(",", ""));
   expect(shared).toBeGreaterThan(25);
+  await page.getByLabel("Result group").scrollIntoViewIfNeeded();
   await page.getByLabel("Result group").selectOption("shared");
   expect(await page.locator("[data-baseline-result]").count()).toBeLessThanOrEqual(25);
   const downloadPromise = page.waitForEvent("download");

@@ -62,7 +62,8 @@ test('production acceptance: STIG benchmark reaches finding, CCI and current Vie
   await expect(page.getByRole('heading', { name: 'Check', exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Fix', exact: true })).toBeVisible();
   await page.getByRole('link', { name: 'View publication', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Microsoft Windows 11 Security Technical Implementation Guide', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Microsoft_Windows_11_STIG — Microsoft Windows 11 Security Technical Implementation Guide', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Benchmark Summary', exact: true })).toBeVisible();
   await page.getByRole('link', { name: /^V-253255 —/ }).click();
   await page.getByRole('link', { name: 'CCI-002421', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Requirement', exact: true })).toBeVisible();
@@ -103,7 +104,7 @@ test('production acceptance: current FedRAMP mappings export with source evidenc
   await page.getByRole('button', { name: 'CSV', exact: true }).click();
   const download = await event;
   expect(await download.failure()).toBeNull();
-  const text = await readFile(await download.path(), 'utf8');
+  const text = new TextDecoder('utf-8', { fatal: true }).decode(await readFile(await download.path()));
   const rows = csvRows(text);
   expect(rows[0]).toContain('Evidence / Locator');
   expect(rows[0]).toContain('Published Source ID');

@@ -101,6 +101,9 @@ export async function waitForAppReady(page, options = {}) {
     await expect(page.locator('#app')).toHaveAttribute('data-app-ready', readyPattern, { timeout: 60000 });
     // Data readiness can precede the route transition's interaction lock.
     await expect(page.locator('main#workspace')).not.toHaveAttribute('inert', '', { timeout: 60000 });
+    if (!allowPartial) {
+      await expect(page.locator('#workspace [data-route-suspense-pending="true"]')).toHaveCount(0, { timeout: 60000 });
+    }
   } catch (error) {
     const startupSnapshot = await page.evaluate(() => {
       const app = globalThis.document.querySelector('#app');

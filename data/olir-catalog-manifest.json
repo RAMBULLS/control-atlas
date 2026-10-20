@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-20T05:56:41.072Z",
+  "generated_at": "2026-10-20T06:24:56.204Z",
   "source": "https://csrc.nist.gov/projects/olir/informative-reference-catalog",
   "api_endpoint": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog",
   "total_entries": 105,
@@ -142,7 +142,7 @@
           "status": 200,
           "final_url": "https://drive.google.com/drive/folders/11qgNa4EavIN5YFh0gfTl9D-4VJISBe-p?usp=sharing",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 337239
+          "byte_length": 337539
         },
         {
           "kind": "artifact download",
@@ -483,7 +483,7 @@
           "status": 200,
           "final_url": "https://drive.google.com/drive/folders/1uqUpwlj7NeP-TDSPR2sHaVXHOQlabCCG?usp=sharing",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 324990
+          "byte_length": 325009
         },
         {
           "kind": "artifact download",
@@ -801,7 +801,7 @@
           "status": 200,
           "final_url": "https://cyberoon.com/research/ai-soc-v10-to-nist-csf-20-informative-reference-mapping",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 2093012
+          "byte_length": 2093051
         },
         {
           "kind": "artifact download",
@@ -809,7 +809,7 @@
           "status": 200,
           "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 291358
+          "byte_length": 291365
         },
         {
           "kind": "artifact download",
@@ -817,7 +817,7 @@
           "status": 200,
           "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/releases/tag/v1.0.0",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 195234
+          "byte_length": 195241
         },
         {
           "kind": "artifact download",
@@ -825,7 +825,7 @@
           "status": 200,
           "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/blob/main/docs/AI_SOC_Controls_Catalog_v1_0.pdf",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 231790
+          "byte_length": 231796
         },
         {
           "kind": "GitHub Contents API",
@@ -1031,7 +1031,7 @@
           "kind": "artifact download",
           "url": "https://docs.google.com/spreadsheets/d/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP/export?format=xlsx",
           "status": 200,
-          "final_url": "https://doc-0c-98-sheets.googleusercontent.com/export/f3kk9gtum31ktuqh54kn7i1e14/4uhho90iajc2jqlq7dj6i2rcpc/1792475800000/100790643046296837536/*/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP?format=xlsx",
+          "final_url": "https://doc-0c-98-sheets.googleusercontent.com/export/f3kk9gtum31ktuqh54kn7i1e14/7u1mgtgh3s9rqc9lj212ogspuo/1792477495000/100790643046296837536/*/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP?format=xlsx",
           "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "byte_length": 21218
         }
@@ -1350,7 +1350,7 @@
       "retention": {
         "cause": "publisher_unavailable",
         "first_retained_at": "2026-09-21T15:12:54.460Z",
-        "consecutive_refreshes": 4
+        "consecutive_refreshes": 5
       }
     },
     {
@@ -1804,7 +1804,7 @@
       "artifact": {
         "map_file": "maps/olir/176.json",
         "artifact_url": "https://www.gov.uk/government/publications/cyber-governance-mapping/mapping-cyber-governance-code-to-nist-cyber-security-framework",
-        "checksum": "sha256:9b8f1540bb27ba3c276bafd6f68106afce334809cf0fde4f9f78f0c04ba79f64",
+        "checksum": "sha256:a665481c41da7c0cfeacaf1d3e94505705936615c99f9d173e107fb7121caf27",
         "byte_length": 88370,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",

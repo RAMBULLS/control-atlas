@@ -4593,7 +4593,7 @@
       "retrieved_at": "2026-10-20",
       "artifact_url": "https://github.com/RAMBULLS/control-atlas/blob/main/data/800-53b-baselines.json",
       "byte_length": 3730,
-      "sha256": "sha256:32a71cbb7437606a9b139acf0b454911987d1885593eeb1a25e0f8867f1f82d9",
+      "sha256": "sha256:6bb039a686bca8ada0a6d2b65d29c3df0e17ce6c972831f6a04859784771a23a",
       "parser": "normalized-baseline-records",
       "parser_version": "1.0.0",
       "record_count": 4,
@@ -4615,7 +4615,7 @@
       "version": "5.2.0",
       "lifecycle_status": "active",
       "retrieval_method": "direct_file_import",
-      "retrieved_at": "2026-10-20",
+      "retrieved_at": "2026-10-18",
       "artifact_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/v1.5.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_HIGH-baseline_profile.json",
       "byte_length": 12492,
       "sha256": "sha256:60576970caef91b2cba56d46e5948b72e3b879434fc2a4840bc4179e5e75cfd7",
@@ -4643,7 +4643,7 @@
       "version": "5.2.0",
       "lifecycle_status": "active",
       "retrieval_method": "direct_file_import",
-      "retrieved_at": "2026-10-20",
+      "retrieved_at": "2026-10-18",
       "artifact_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/v1.5.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_LOW-baseline_profile.json",
       "byte_length": 7234,
       "sha256": "sha256:8fd206017c8d718b44bdef612c2ff321a9fd84d97a515c8ec33c4619accbef6e",
@@ -4671,7 +4671,7 @@
       "version": "5.2.0",
       "lifecycle_status": "active",
       "retrieval_method": "direct_file_import",
-      "retrieved_at": "2026-10-20",
+      "retrieved_at": "2026-10-18",
       "artifact_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/v1.5.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json",
       "byte_length": 10498,
       "sha256": "sha256:9030dbf1f13169947eb97eb101b4bd2f00d3c151b100455a923ac75803f00ea1",
@@ -4699,7 +4699,7 @@
       "version": "5.2.0",
       "lifecycle_status": "active",
       "retrieval_method": "direct_file_import",
-      "retrieved_at": "2026-10-20",
+      "retrieved_at": "2026-10-18",
       "artifact_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/v1.5.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_PRIVACY-baseline_profile.json",
       "byte_length": 6064,
       "sha256": "sha256:7e650c4397ad633eadeaf510baa523372849b1fa3e18207b6c6b70ed456224f9",
@@ -4849,8 +4849,8 @@
       "retrieval_method": "direct_file_import",
       "retrieved_at": "2026-10-20",
       "artifact_url": "https://csrc.nist.gov/extensions/nudp/services/json/csf/download?olirids=all",
-      "byte_length": 144726,
-      "sha256": "sha256:62702f6f5353a62c2f71be5b7380f5993d75fe419ea30efa0ef38459316696a7",
+      "byte_length": 144728,
+      "sha256": "sha256:64368005f7529349365195c676b4d961608cb818db7a739a4ef431b106ee16f5",
       "parser": "csf-reference-tool-xlsx",
       "parser_version": "1.0.0",
       "record_count": 106,
@@ -8788,15 +8788,15 @@
         "sync_model": "auto_synced",
         "last_checked": "2026-10-20",
         "last_imported": "2026-10-20",
-        "hash": "sha256:8e3430ec5c5865304a2d50fcc743c7217b8db0afc56be042e629ad05e02a3e19",
+        "hash": "sha256:813575fdbb4e5f0bbe2dce56bce9374a68bc7a3fd517662425a98c3197d0e950",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:56:24.659Z",
+          "checked_at": "2026-10-20T06:24:36.575Z",
           "requests": [
             {
               "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json",
-              "checked_at": "2026-10-20T05:56:24.659Z",
+              "checked_at": "2026-10-20T06:24:36.575Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:01f37cf90ea99d92242c936cbfbdebcc338eef1f71454e2acac36cc56e9bc062",
@@ -8805,7 +8805,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-171/rev3/json/NIST_SP800-171_rev3_catalog.json",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-171/rev3/json/NIST_SP800-171_rev3_catalog.json",
-              "checked_at": "2026-10-20T05:56:29.127Z",
+              "checked_at": "2026-10-20T06:24:40.853Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:21b6f3b118b6e5b305aaed3a0e4b70fa5d1d9aa388a0b92e7d6ddfed69e93ac3",
@@ -8814,7 +8814,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/CSF/v2.0/json/NIST_CSF_v2.0_catalog.json",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/CSF/v2.0/json/NIST_CSF_v2.0_catalog.json",
-              "checked_at": "2026-10-20T05:56:26.531Z",
+              "checked_at": "2026-10-20T06:24:38.480Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:4836943f21d393f2821df85ada4e6f3c0617243b4ddf44263fe68205400210b4",
@@ -8823,10 +8823,10 @@
             {
               "url": "https://csrc.nist.gov/extensions/nudp/services/json/csf/download?olirids=all",
               "resolved_url": "https://csrc.nist.gov/extensions/nudp/services/json/csf/download?olirids=all",
-              "checked_at": "2026-10-20T05:56:28.299Z",
+              "checked_at": "2026-10-20T06:24:40.250Z",
               "http": 200,
               "validation": "remote",
-              "sha256": "sha256:5a553f9f8005b832257b4b5f4fdb15760b95a83fa42fd7555767e2d6c3db77ab",
+              "sha256": "sha256:dc69b54628370d5fdfaf01a4695b05d0b8bb1d153eefb34c397145f7f4f069ee",
               "byte_length": 144727
             }
           ]
@@ -8840,12 +8840,12 @@
         "hash": "sha256:604a2211ee8a552336549b1c737f446933c409c4f0f770a540538b3cf070458c",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:56:24.659Z",
+          "checked_at": "2026-10-20T06:24:36.575Z",
           "requests": [
             {
               "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json",
-              "checked_at": "2026-10-20T05:56:24.659Z",
+              "checked_at": "2026-10-20T06:24:36.575Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:01f37cf90ea99d92242c936cbfbdebcc338eef1f71454e2acac36cc56e9bc062",
@@ -8862,12 +8862,12 @@
         "hash": "sha256:ab869046d7d6e0dc24c4fa4ed81b42eeba696c904344bb18ce649735330999e5",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:56:29.127Z",
+          "checked_at": "2026-10-20T06:24:40.853Z",
           "requests": [
             {
               "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-171/rev3/json/NIST_SP800-171_rev3_catalog.json",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-171/rev3/json/NIST_SP800-171_rev3_catalog.json",
-              "checked_at": "2026-10-20T05:56:29.127Z",
+              "checked_at": "2026-10-20T06:24:40.853Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:21b6f3b118b6e5b305aaed3a0e4b70fa5d1d9aa388a0b92e7d6ddfed69e93ac3",
@@ -8884,12 +8884,12 @@
         "hash": "sha256:5c7485b42bdc8c5c89f841bb31c956552f67c0ad0516b495b9945257183917eb",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:56:26.531Z",
+          "checked_at": "2026-10-20T06:24:38.480Z",
           "requests": [
             {
               "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/CSF/v2.0/json/NIST_CSF_v2.0_catalog.json",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/CSF/v2.0/json/NIST_CSF_v2.0_catalog.json",
-              "checked_at": "2026-10-20T05:56:26.531Z",
+              "checked_at": "2026-10-20T06:24:38.480Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:4836943f21d393f2821df85ada4e6f3c0617243b4ddf44263fe68205400210b4",
@@ -8898,10 +8898,10 @@
             {
               "url": "https://csrc.nist.gov/extensions/nudp/services/json/csf/download?olirids=all",
               "resolved_url": "https://csrc.nist.gov/extensions/nudp/services/json/csf/download?olirids=all",
-              "checked_at": "2026-10-20T05:56:28.299Z",
+              "checked_at": "2026-10-20T06:24:40.250Z",
               "http": 200,
               "validation": "remote",
-              "sha256": "sha256:5a553f9f8005b832257b4b5f4fdb15760b95a83fa42fd7555767e2d6c3db77ab",
+              "sha256": "sha256:dc69b54628370d5fdfaf01a4695b05d0b8bb1d153eefb34c397145f7f4f069ee",
               "byte_length": 144727
             }
           ]
@@ -8915,12 +8915,12 @@
         "hash": "sha256:3dfc33408f60a9674edd05f41c75086b0d61f073b8b9908482f08a05ae9827e5",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:56:31.183Z",
+          "checked_at": "2026-10-20T06:24:42.910Z",
           "requests": [
             {
               "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-218/ver1/json/NIST_SP800-218_ver1_catalog.json",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-218/ver1/json/NIST_SP800-218_ver1_catalog.json",
-              "checked_at": "2026-10-20T05:56:31.183Z",
+              "checked_at": "2026-10-20T06:24:42.910Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:b01634a5fdb382e7a12660c379a4d0bc3a2b8e29abccf2861834880005137117",
@@ -8937,12 +8937,12 @@
         "hash": "sha256:6ebffa3ece70c3054b04cc32343fc10d06c19167b7c2fdfe10839d5d46eefe1a",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:57:54.769Z",
+          "checked_at": "2026-10-20T06:25:38.196Z",
           "requests": [
             {
               "url": "https://csrc.nist.gov/files/pubs/sp/800/171/r2/upd1/final/docs/sp800-171r2-security-reqs.csv",
               "resolved_url": "https://csrc.nist.gov/files/pubs/sp/800/171/r2/upd1/final/docs/sp800-171r2-security-reqs.csv",
-              "checked_at": "2026-10-20T05:57:54.769Z",
+              "checked_at": "2026-10-20T06:25:38.196Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:0f4d59413bbcc9998da80495ce46ebfe0475e392803c4d2ed38d9941d83f138d",
@@ -8959,12 +8959,12 @@
         "hash": "sha256:ac32c526087ee451b7c21f6c9d92daac483bb751f2485b22f4c3fefcac0e38ff",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:56:30.088Z",
+          "checked_at": "2026-10-20T06:24:41.741Z",
           "requests": [
             {
               "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-172/rev3/json/NIST_SP800-172_rev3_catalog.json",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-172/rev3/json/NIST_SP800-172_rev3_catalog.json",
-              "checked_at": "2026-10-20T05:56:30.088Z",
+              "checked_at": "2026-10-20T06:24:41.741Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:21c6df17c7ff1c8330f16334fdddd488ffc10f71051078dd73c18595a33da5ab",
@@ -8982,12 +8982,12 @@
         "last_retrieval_checked": "2026-10-20",
         "retrieval_evidence": {
           "scope": "pinned_edition_retrieval",
-          "checked_at": "2026-10-20T05:58:08.284Z",
+          "checked_at": "2026-10-20T06:25:50.193Z",
           "requests": [
             {
               "url": "https://www.ecfr.gov/api/versioner/v1/full/2026-08-01/title-32.xml?part=2002",
               "resolved_url": "https://www.ecfr.gov/api/versioner/v1/full/2026-08-01/title-32.xml?part=2002",
-              "checked_at": "2026-10-20T05:58:08.284Z",
+              "checked_at": "2026-10-20T06:25:50.193Z",
               "http": 200,
               "validation": "remote",
               "sha256": "sha256:3c595476a48f2b16cec4aacc6d5e78588dafa7ddf4d4c56a5c6bbb2641a1e930",
@@ -9011,12 +9011,12 @@
         "hash": "sha256:499ad67f9f52d493f4481edfa6bc39070ba799f57c83df82306113b40bf361b7",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:57:56.095Z",
+          "checked_at": "2026-10-20T06:25:39.271Z",
           "requests": [
             {
               "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_CCI_List.zip",
               "resolved_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_CCI_List.zip",
-              "checked_at": "2026-10-20T05:57:56.095Z",
+              "checked_at": "2026-10-20T06:25:39.271Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:077cbb6d2ae5f8fdbaaf416d87a34a8621767cdba490f3283feb0c5c35892700",
@@ -12258,12 +12258,12 @@
         "hash": null,
         "check_evidence": {
           "scope": "publisher_page_observation",
-          "checked_at": "2026-10-20T05:56:23.201Z",
+          "checked_at": "2026-10-20T06:24:34.879Z",
           "requests": [
             {
               "url": "https://www.cyber.mil/stigs/compilations/",
               "resolved_url": "https://www.cyber.mil/stigs/compilations/",
-              "checked_at": "2026-10-20T05:56:23.201Z",
+              "checked_at": "2026-10-20T06:24:34.879Z",
               "http": 200,
               "validation": "remote",
               "sha256": "sha256:3a3e616f3d8cbd3dc5c14da53a48601f6c2953e7e364dfe8bdd3a301d762d879",
@@ -12280,12 +12280,12 @@
         "hash": null,
         "check_evidence": {
           "scope": "publisher_page_observation",
-          "checked_at": "2026-10-20T05:56:23.380Z",
+          "checked_at": "2026-10-20T06:24:35.018Z",
           "requests": [
             {
               "url": "https://www.cyber.mil/stigs/downloads",
               "resolved_url": "https://www.cyber.mil/stigs/downloads",
-              "checked_at": "2026-10-20T05:56:23.380Z",
+              "checked_at": "2026-10-20T06:24:35.018Z",
               "http": 200,
               "validation": "remote",
               "sha256": "sha256:b084f2cc45d9ea2508e5a1e20fdbe249cdb637d3ce3d1a45b58da3302d917e63",
@@ -12302,12 +12302,12 @@
         "hash": null,
         "check_evidence": {
           "scope": "publisher_page_observation",
-          "checked_at": "2026-10-20T05:56:23.525Z",
+          "checked_at": "2026-10-20T06:24:35.149Z",
           "requests": [
             {
               "url": "https://www.cyber.mil/stigs/gpo/",
               "resolved_url": "https://www.cyber.mil/stigs/gpo/",
-              "checked_at": "2026-10-20T05:56:23.525Z",
+              "checked_at": "2026-10-20T06:24:35.149Z",
               "http": 200,
               "validation": "remote",
               "sha256": "sha256:805bf825e6080e3989750a63161eea048599e23b09feef0a81014a996ae2377c",
@@ -12345,16 +12345,16 @@
         "hash": null,
         "check_evidence": {
           "scope": "publisher_page_observation",
-          "checked_at": "2026-10-20T05:56:24.206Z",
+          "checked_at": "2026-10-20T06:24:35.687Z",
           "requests": [
             {
               "url": "https://github.com/nuwcdivnpt/stig-manager",
               "resolved_url": "https://github.com/nuwcdivnpt/stig-manager",
-              "checked_at": "2026-10-20T05:56:24.206Z",
+              "checked_at": "2026-10-20T06:24:35.687Z",
               "http": 200,
               "validation": "remote",
-              "sha256": "sha256:f72b2a00ab2a47c535582a6911a6321dcece13453cf3bf481d02d9467a440fe5",
-              "byte_length": 340938
+              "sha256": "sha256:d943793d827b60c89aaa0b3cea84cd917a8ca7a162a002ae11f59d8c9f16bd5e",
+              "byte_length": 340949
             }
           ]
         }
@@ -12367,12 +12367,12 @@
         "hash": "sha256:e480b11878be6251b1caccbab2100424fccc9599ba36d0330ea4e4fff76a99e2",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:57:55.167Z",
+          "checked_at": "2026-10-20T06:25:38.649Z",
           "requests": [
             {
               "url": "https://airc.nist.gov/docs/playbook.json",
               "resolved_url": "https://airc.nist.gov/docs/playbook.json",
-              "checked_at": "2026-10-20T05:57:55.167Z",
+              "checked_at": "2026-10-20T06:25:38.649Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:aecbee3d3c8820816d295b11d10fb61324b17c25c2ff39ee95e2aa5654555bba",
@@ -12389,12 +12389,12 @@
         "hash": "sha256:f8377ec11d7a1b80ad0a7cbe11b4da7a83c18ac5b9fbc0f08cda8d927ddcb0c9",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:56:31.183Z",
+          "checked_at": "2026-10-20T06:24:42.910Z",
           "requests": [
             {
               "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-218/ver1/json/NIST_SP800-218_ver1_catalog.json",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-218/ver1/json/NIST_SP800-218_ver1_catalog.json",
-              "checked_at": "2026-10-20T05:56:31.183Z",
+              "checked_at": "2026-10-20T06:24:42.910Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:b01634a5fdb382e7a12660c379a4d0bc3a2b8e29abccf2861834880005137117",
@@ -12412,12 +12412,12 @@
         "last_retrieval_checked": "2026-10-20",
         "retrieval_evidence": {
           "scope": "pinned_edition_retrieval",
-          "checked_at": "2026-10-20T05:58:08.799Z",
+          "checked_at": "2026-10-20T06:25:55.299Z",
           "requests": [
             {
               "url": "https://www.ecfr.gov/api/versioner/v1/full/2026-08-01/title-32.xml?part=170",
               "resolved_url": "https://www.ecfr.gov/api/versioner/v1/full/2026-08-01/title-32.xml?part=170",
-              "checked_at": "2026-10-20T05:58:08.799Z",
+              "checked_at": "2026-10-20T06:25:55.299Z",
               "http": 200,
               "validation": "remote",
               "sha256": "sha256:3dc8b9bebbe56753206429657cbac24ff32bfd64c75356ba276af38a1032b628",
@@ -12434,12 +12434,12 @@
         "hash": "sha256:93c861c4ba5f1215fbb1679762f7efbe09d13aab7566172d5701234768d13a4f",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:57:58.254Z",
+          "checked_at": "2026-10-20T06:25:41.177Z",
           "requests": [
             {
               "url": "https://www.fedramp.gov/legacy/assets/LEGACY%20FedRAMP_Security_Controls_Baseline.xlsx",
               "resolved_url": "https://www.fedramp.gov/legacy/assets/LEGACY%20FedRAMP_Security_Controls_Baseline.xlsx",
-              "checked_at": "2026-10-20T05:57:58.254Z",
+              "checked_at": "2026-10-20T06:25:41.177Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:aff2fa5eebd556ebed2a6d9eb562554967870780e9b3f85234ae1aabffe8156b",
@@ -12456,21 +12456,21 @@
         "hash": "sha256:901692ee1ef0740fd068aa6d9d35e23749b9d007c74f039de072edff02a0e3a8",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:56:32.651Z",
+          "checked_at": "2026-10-20T06:24:44.334Z",
           "requests": [
             {
               "url": "https://raw.githubusercontent.com/FedRAMP/rules/main/fedramp-consolidated-rules.json",
               "resolved_url": "https://raw.githubusercontent.com/FedRAMP/rules/main/fedramp-consolidated-rules.json",
-              "checked_at": "2026-10-20T05:56:32.657Z",
+              "checked_at": "2026-10-20T06:24:44.334Z",
               "http": 200,
-              "validation": "remote",
+              "validation": "revalidated",
               "sha256": "sha256:fb48d677a85d77fb72735a325de2c1945a1e0ceab1d2e655292fe9ebe3e4e0b4",
               "byte_length": 586076
             },
             {
               "url": "https://raw.githubusercontent.com/FedRAMP/rules/main/schemas/fedramp-consolidated-rules.schema.json",
               "resolved_url": "https://raw.githubusercontent.com/FedRAMP/rules/main/schemas/fedramp-consolidated-rules.schema.json",
-              "checked_at": "2026-10-20T05:56:32.651Z",
+              "checked_at": "2026-10-20T06:24:44.394Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:eb4710bee0b06d0f8f803302ac2e88b934ef2bc942d0b548738c7304f0cb418f",
@@ -12479,7 +12479,7 @@
             {
               "url": "https://www.fedramp.gov/legacy/",
               "resolved_url": "https://www.fedramp.gov/legacy/",
-              "checked_at": "2026-10-20T05:56:32.774Z",
+              "checked_at": "2026-10-20T06:24:44.452Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:8b85ed2b48d53f2e570ca06f915cfb7e1c625ac6229a12b9f15a0a883230b09f",
@@ -12496,12 +12496,12 @@
         "hash": "sha256:26bed4c4a32b11224c7e42da17655710088685e69933d656a10d476506c1dbeb",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:58:06.090Z",
+          "checked_at": "2026-10-20T06:25:49.248Z",
           "requests": [
             {
               "url": "https://www.ai.mil/Initiatives/About/Resources/Pathway-to-AI-Readiness/Responsible-AI/",
               "resolved_url": "https://www.ai.mil/Initiatives/About/Resources/Pathway-to-AI-Readiness/Responsible-AI/",
-              "checked_at": "2026-10-20T05:58:07.565Z",
+              "checked_at": "2026-10-20T06:25:49.661Z",
               "http": 200,
               "validation": "remote",
               "sha256": "sha256:3a8f0545f8b750f8134ac9cd500f29413eb3f0ee3651d5a551db4effa7af140e",
@@ -12510,7 +12510,7 @@
             {
               "url": "https://rai.acqbot.com/executive-summary",
               "resolved_url": "https://rai.acqbot.com/executive-summary",
-              "checked_at": "2026-10-20T05:58:06.090Z",
+              "checked_at": "2026-10-20T06:25:49.248Z",
               "http": 200,
               "validation": "remote",
               "sha256": "sha256:720a7b775d90380a28f0b73f428bae7acb7cf3774be44a4f4b6447abe1fa7f91",
@@ -12527,12 +12527,12 @@
         "hash": "sha256:1483da4eda55e348b7506c924aca89c7d067ec9efe322da00cc33b129d8d37b0",
         "check_evidence": {
           "scope": "publisher_revision_retrieval",
-          "checked_at": "2026-10-20T05:56:25.125Z",
+          "checked_at": "2026-10-20T06:24:37.064Z",
           "requests": [
             {
               "url": "https://api.github.com/repos/usnistgov/oscal-content/commits/main",
               "resolved_url": "https://api.github.com/repos/usnistgov/oscal-content/commits/main",
-              "checked_at": "2026-10-20T05:56:25.125Z",
+              "checked_at": "2026-10-20T06:24:37.064Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:f607904045a1d1afe0f8e92568222b5232d014aff12288d888526ba17d0c62ef",
@@ -12541,7 +12541,7 @@
             {
               "url": "https://api.github.com/repos/usnistgov/oscal-content/contents/nist.gov/SP800-53/rev5/json?ref=78650f02ad9321bb7b817846f8fbd4f2bcd620de",
               "resolved_url": "https://api.github.com/repos/usnistgov/oscal-content/contents/nist.gov/SP800-53/rev5/json?ref=78650f02ad9321bb7b817846f8fbd4f2bcd620de",
-              "checked_at": "2026-10-20T05:56:25.240Z",
+              "checked_at": "2026-10-20T06:24:37.180Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:de8815994cf0e67349ae204fa8f85ca8ddf3b1e4e66af424fe11f8eedca5873d",
@@ -12550,7 +12550,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_LOW-baseline_profile.json",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_LOW-baseline_profile.json",
-              "checked_at": "2026-10-20T05:56:25.258Z",
+              "checked_at": "2026-10-20T06:24:37.201Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:8fd206017c8d718b44bdef612c2ff321a9fd84d97a515c8ec33c4619accbef6e",
@@ -12559,7 +12559,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json",
-              "checked_at": "2026-10-20T05:56:25.271Z",
+              "checked_at": "2026-10-20T06:24:37.216Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:9030dbf1f13169947eb97eb101b4bd2f00d3c151b100455a923ac75803f00ea1",
@@ -12568,7 +12568,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_HIGH-baseline_profile.json",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_HIGH-baseline_profile.json",
-              "checked_at": "2026-10-20T05:56:25.284Z",
+              "checked_at": "2026-10-20T06:24:37.231Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:60576970caef91b2cba56d46e5948b72e3b879434fc2a4840bc4179e5e75cfd7",
@@ -12577,7 +12577,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_PRIVACY-baseline_profile.json",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_PRIVACY-baseline_profile.json",
-              "checked_at": "2026-10-20T05:56:25.296Z",
+              "checked_at": "2026-10-20T06:24:37.245Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:7e650c4397ad633eadeaf510baa523372849b1fa3e18207b6c6b70ed456224f9",
@@ -12594,12 +12594,12 @@
         "hash": "sha256:a2ec9e3d7070b229773a49d37cc2ee787dc58a19516fd3898969ea71367adcda",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:58:11.772Z",
+          "checked_at": "2026-10-20T06:25:57.694Z",
           "requests": [
             {
               "url": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.199.pdf",
               "resolved_url": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.199.pdf",
-              "checked_at": "2026-10-20T05:58:11.772Z",
+              "checked_at": "2026-10-20T06:25:57.694Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:73d19f05f71e30f378050f178aa3943c38790bbae56c07f2b5708c5a1a90242f",
@@ -12616,12 +12616,12 @@
         "hash": "sha256:7f6a4ad7fe6c140717bd7bd472b7730aad24665d06174a364d3d2dc397eb7085",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:58:12.295Z",
+          "checked_at": "2026-10-20T06:25:58.371Z",
           "requests": [
             {
               "url": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.200.pdf",
               "resolved_url": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.200.pdf",
-              "checked_at": "2026-10-20T05:58:12.295Z",
+              "checked_at": "2026-10-20T06:25:58.371Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:107a9b9cdc8eccf37386aec28bbaf2dfaef5cfece17151ceabc3960423243a57",
@@ -12638,12 +12638,12 @@
         "hash": "sha256:f8f6c47630441a094ea0e7529d6de1202b3438ab60acb5fddf4c024e6ea87815",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:58:12.571Z",
+          "checked_at": "2026-10-20T06:25:58.857Z",
           "requests": [
             {
               "url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-37r2.pdf",
               "resolved_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-37r2.pdf",
-              "checked_at": "2026-10-20T05:58:12.571Z",
+              "checked_at": "2026-10-20T06:25:58.857Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:4f75e1136bb905a654f1bcd9eefefb4108f47597276ee5eec0688f6d96f6a01d",
@@ -12675,12 +12675,12 @@
         "hash": null,
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:57:59.138Z",
+          "checked_at": "2026-10-20T06:25:41.965Z",
           "requests": [
             {
               "url": "https://csrc.nist.gov/files/pubs/sp/800/53/r5/upd1/final/docs/csf-pf-to-sp800-53r5-mappings.xlsx",
               "resolved_url": "https://csrc.nist.gov/files/pubs/sp/800/53/r5/upd1/final/docs/csf-pf-to-sp800-53r5-mappings.xlsx",
-              "checked_at": "2026-10-20T05:57:59.138Z",
+              "checked_at": "2026-10-20T06:25:41.965Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:8b09e8c5bd11dcfa494d2f5beec2d32d98df934285c0214712d020abefc162f1",
@@ -12697,12 +12697,12 @@
         "hash": null,
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:57:59.786Z",
+          "checked_at": "2026-10-20T06:25:42.342Z",
           "requests": [
             {
               "url": "https://csrc.nist.gov/csrc/media/Projects/olir/documents/submissions/CSFv1.1_to_CSFv2.0_CROSSWALK_20240220.xlsx",
               "resolved_url": "https://csrc.nist.gov/csrc/media/Projects/olir/documents/submissions/CSFv1.1_to_CSFv2.0_CROSSWALK_20240220.xlsx",
-              "checked_at": "2026-10-20T05:57:59.786Z",
+              "checked_at": "2026-10-20T06:25:42.342Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:3c0f2edc9206a828f6795241af2cf6e2bf390522ca97ff01dfc5156f5d9e52a4",
@@ -12719,12 +12719,12 @@
         "hash": "sha256:6edfe9c55fb66ff884220cc5863c6ee1431af993a8004c5a9b9149ae1d0d2c55",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:56:54.146Z",
+          "checked_at": "2026-10-20T06:25:10.811Z",
           "requests": [
             {
               "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-171/rev3/json/NIST_SP800-171_rev3_catalog.json",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-171/rev3/json/NIST_SP800-171_rev3_catalog.json",
-              "checked_at": "2026-10-20T05:56:54.146Z",
+              "checked_at": "2026-10-20T06:25:10.811Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:21b6f3b118b6e5b305aaed3a0e4b70fa5d1d9aa388a0b92e7d6ddfed69e93ac3",
@@ -12741,12 +12741,12 @@
         "hash": "sha256:cbe530bfa300eb783cdae2083e791f719439ef7c15ace8740328f79f10ef985e",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:56:54.729Z",
+          "checked_at": "2026-10-20T06:25:11.262Z",
           "requests": [
             {
               "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_CCI_List.zip",
               "resolved_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_CCI_List.zip",
-              "checked_at": "2026-10-20T05:56:54.729Z",
+              "checked_at": "2026-10-20T06:25:11.262Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:077cbb6d2ae5f8fdbaaf416d87a34a8621767cdba490f3283feb0c5c35892700",
@@ -12763,12 +12763,12 @@
         "hash": "sha256:33294be316ff481b5950adf626be5ae152922942aa6a1b42921b6bcaa265a625",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:57:58.746Z",
+          "checked_at": "2026-10-20T06:25:41.639Z",
           "requests": [
             {
               "url": "https://csrc.nist.gov/files/pubs/sp/800/53/r5/upd1/final/docs/sp800-53r4-to-r5-comparison-workbook.xlsx",
               "resolved_url": "https://csrc.nist.gov/files/pubs/sp/800/53/r5/upd1/final/docs/sp800-53r4-to-r5-comparison-workbook.xlsx",
-              "checked_at": "2026-10-20T05:57:58.746Z",
+              "checked_at": "2026-10-20T06:25:41.639Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:94465ffc5584e0c968342cfe0492f1c31b2854bed8b61914bf517651a5664570",
@@ -12785,24 +12785,24 @@
         "hash": "sha256:9effb639ef6c254a80dc20db5329023b9a89864d0c511abfe37aab594c933fe2",
         "check_evidence": {
           "scope": "publisher_revision_retrieval",
-          "checked_at": "2026-10-20T05:57:30.076Z",
+          "checked_at": "2026-10-20T06:25:16.034Z",
           "requests": [
             {
               "url": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/20664a889568dce884a1dac0ec7b12ae3a199f51/enterprise-attack/enterprise-attack-20.0.json",
               "resolved_url": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/20664a889568dce884a1dac0ec7b12ae3a199f51/enterprise-attack/enterprise-attack-20.0.json",
-              "checked_at": "2026-10-20T05:57:37.403Z",
+              "checked_at": "2026-10-20T06:25:22.757Z",
               "http": 200,
-              "validation": "remote",
+              "validation": "revalidated",
               "sha256": "sha256:81113ba98afa2928f3dcff62022539f7ce30c315c32e14422f11ff95ce534352",
               "byte_length": 55271014
             },
             {
               "url": "https://api.github.com/repos/mitre-attack/attack-stix-data/releases/latest",
               "resolved_url": "https://api.github.com/repos/mitre-attack/attack-stix-data/releases/latest",
-              "checked_at": "2026-10-20T05:57:30.076Z",
+              "checked_at": "2026-10-20T06:25:16.034Z",
               "http": 200,
               "validation": "remote",
-              "sha256": "sha256:ad99ad2955f55b01153317cd434aab7da4b501ea1e543f56b3d3c8e00f10da37",
+              "sha256": "sha256:16d5e38d4c8c3e074b48fb9fa661b87cdbf4146d90f20d8f11da209e32186459",
               "byte_length": 7050
             }
           ]
@@ -12816,24 +12816,24 @@
         "hash": "sha256:ff7d68ce8f411f5ba958cfe01f26f37b3bedac53098e3d5fe4dea291b31d3f02",
         "check_evidence": {
           "scope": "publisher_revision_retrieval",
-          "checked_at": "2026-10-20T05:57:30.076Z",
+          "checked_at": "2026-10-20T06:25:16.034Z",
           "requests": [
             {
               "url": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/20664a889568dce884a1dac0ec7b12ae3a199f51/ics-attack/ics-attack-20.0.json",
               "resolved_url": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/20664a889568dce884a1dac0ec7b12ae3a199f51/ics-attack/ics-attack-20.0.json",
-              "checked_at": "2026-10-20T05:57:35.430Z",
+              "checked_at": "2026-10-20T06:25:20.610Z",
               "http": 200,
-              "validation": "remote",
+              "validation": "revalidated",
               "sha256": "sha256:c9ca0ce523a1b5e512060a390415e8aefe8f6d32c5f82d7de81264960c1e1183",
               "byte_length": 5266683
             },
             {
               "url": "https://api.github.com/repos/mitre-attack/attack-stix-data/releases/latest",
               "resolved_url": "https://api.github.com/repos/mitre-attack/attack-stix-data/releases/latest",
-              "checked_at": "2026-10-20T05:57:30.076Z",
+              "checked_at": "2026-10-20T06:25:16.034Z",
               "http": 200,
               "validation": "remote",
-              "sha256": "sha256:ad99ad2955f55b01153317cd434aab7da4b501ea1e543f56b3d3c8e00f10da37",
+              "sha256": "sha256:16d5e38d4c8c3e074b48fb9fa661b87cdbf4146d90f20d8f11da209e32186459",
               "byte_length": 7050
             }
           ]
@@ -12847,12 +12847,12 @@
         "hash": "sha256:92282ba264aa9eab13b351e26a88cc0a55a5f45c9e49ced6f7be4fc7faa40fb9",
         "check_evidence": {
           "scope": "publisher_revision_retrieval",
-          "checked_at": "2026-10-20T05:57:34.575Z",
+          "checked_at": "2026-10-20T06:25:20.095Z",
           "requests": [
             {
               "url": "https://d3fend.mitre.org/ontologies/d3fend.json",
               "resolved_url": "https://d3fend.mitre.org/ontologies/d3fend.json",
-              "checked_at": "2026-10-20T05:57:34.676Z",
+              "checked_at": "2026-10-20T06:25:20.121Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:e1546d432c6aa64d45b62dd9e9484b0774ae84de7ff3605ff9dd4e20278957bf",
@@ -12861,7 +12861,7 @@
             {
               "url": "https://d3fend.mitre.org/api/version.json",
               "resolved_url": "https://d3fend.mitre.org/api/version.json",
-              "checked_at": "2026-10-20T05:57:34.575Z",
+              "checked_at": "2026-10-20T06:25:20.095Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:10618ef73b18600015f98ebbcb5796e8cea148a8fc49d38fb44b1fc94c33f3a5",
@@ -12899,12 +12899,12 @@
         "hash": "sha256:31eeb5114751a86f0e216e88a73e10f858165f7aa08fee3cfc8b7730263ca0a1",
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:58:00.051Z",
+          "checked_at": "2026-10-20T06:25:42.594Z",
           "requests": [
             {
               "url": "https://csrc.nist.gov/csrc/media/projects/olir/documents/submissions/Cybersecurity_Framework_v2-0_Concept_Crosswalk_800-53_5_2_0_draft.xlsx",
               "resolved_url": "https://csrc.nist.gov/csrc/media/projects/olir/documents/submissions/Cybersecurity_Framework_v2-0_Concept_Crosswalk_800-53_5_2_0_draft.xlsx",
-              "checked_at": "2026-10-20T05:58:00.051Z",
+              "checked_at": "2026-10-20T06:25:42.594Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:5521fa73ace64d8a3014a7b1e971f0f20d32df5ff5e174632723bda09e7e908f",
@@ -12921,12 +12921,12 @@
         "hash": null,
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:58:00.298Z",
+          "checked_at": "2026-10-20T06:25:42.865Z",
           "requests": [
             {
               "url": "https://csrc.nist.gov/csrc/media/Projects/olir/documents/submissions/CSFv2.0_Concept_Crosswalk_SP171r3_OLIR.xlsx",
               "resolved_url": "https://csrc.nist.gov/csrc/media/Projects/olir/documents/submissions/CSFv2.0_Concept_Crosswalk_SP171r3_OLIR.xlsx",
-              "checked_at": "2026-10-20T05:58:00.298Z",
+              "checked_at": "2026-10-20T06:25:42.865Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:08e50ecfe201417d1b7e257d5b68ee8a69686c8a31d1521c722892732809f0a0",
@@ -13244,12 +13244,12 @@
         "hash": null,
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:58:03.267Z",
+          "checked_at": "2026-10-20T06:25:46.318Z",
           "requests": [
             {
               "url": "https://download.microsoft.com/download/c/d/3/cd3e0d84-6fdd-4949-b529-73c9c0127b0d/Zero%20Trust%20Maturity%20Questionnaire%20v1.1.xlsx",
               "resolved_url": "https://download.microsoft.com/download/c/d/3/cd3e0d84-6fdd-4949-b529-73c9c0127b0d/Zero%20Trust%20Maturity%20Questionnaire%20v1.1.xlsx",
-              "checked_at": "2026-10-20T05:58:03.267Z",
+              "checked_at": "2026-10-20T06:25:46.318Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:697bb6f809cfa7f3572510520199d5a29ecf78b568112aa1dd0ddf37caaf7f68",
@@ -13287,12 +13287,12 @@
         "hash": null,
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:58:03.624Z",
+          "checked_at": "2026-10-20T06:25:46.569Z",
           "requests": [
             {
               "url": "https://pages.nist.gov/IoT-Device-Cybersecurity-Requirement-Catalogs/InformativeReferences/files/DRAFT_NIST_IoT_Device_Cybersecurity_Requirements_Catalog_to_800-53.xlsx",
               "resolved_url": "https://pages.nist.gov/IoT-Device-Cybersecurity-Requirement-Catalogs/InformativeReferences/files/DRAFT_NIST_IoT_Device_Cybersecurity_Requirements_Catalog_to_800-53.xlsx",
-              "checked_at": "2026-10-20T05:58:03.624Z",
+              "checked_at": "2026-10-20T06:25:46.569Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:6fd2261f49917b9657ac1fe26a2f3008f24cdca65cdebb77cf8a72e8b725b9ce",
@@ -13309,12 +13309,12 @@
         "hash": null,
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:58:03.842Z",
+          "checked_at": "2026-10-20T06:25:46.809Z",
           "requests": [
             {
               "url": "https://pages.nist.gov/IoT-Device-Cybersecurity-Requirement-Catalogs/InformativeReferences/files/DRAFT_NIST_IoT_Device_Cybersecurity_Requirements_Catalog_to_Cybersecurity_Framework.xlsx",
               "resolved_url": "https://pages.nist.gov/IoT-Device-Cybersecurity-Requirement-Catalogs/InformativeReferences/files/DRAFT_NIST_IoT_Device_Cybersecurity_Requirements_Catalog_to_Cybersecurity_Framework.xlsx",
-              "checked_at": "2026-10-20T05:58:03.842Z",
+              "checked_at": "2026-10-20T06:25:46.809Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:e485be296ed9a12948a11d6d59aaa3d23eed193e2fc50eae83b22a995efc952e",
@@ -13331,12 +13331,12 @@
         "hash": null,
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:58:04.222Z",
+          "checked_at": "2026-10-20T06:25:47.190Z",
           "requests": [
             {
               "url": "https://pages.nist.gov/mobile-threat-catalogue/mtc-data.json",
               "resolved_url": "https://pages.nist.gov/mobile-threat-catalogue/mtc-data.json",
-              "checked_at": "2026-10-20T05:58:04.222Z",
+              "checked_at": "2026-10-20T06:25:47.190Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:a3128ca6f905e18caae71149771eadc4c46a5db48ed4363aa69f7d23e2e36272",
@@ -13353,12 +13353,12 @@
         "hash": null,
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:58:04.435Z",
+          "checked_at": "2026-10-20T06:25:47.440Z",
           "requests": [
             {
               "url": "https://pages.nist.gov/mobile-threat-catalogue/mtc-cve-list.csv",
               "resolved_url": "https://pages.nist.gov/mobile-threat-catalogue/mtc-cve-list.csv",
-              "checked_at": "2026-10-20T05:58:04.435Z",
+              "checked_at": "2026-10-20T06:25:47.440Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:fab13eba27d35f8cb8b520a6a50709422e2737d06ee763463075612c23f843eb",
@@ -13375,12 +13375,12 @@
         "hash": null,
         "check_evidence": {
           "scope": "publisher_revision_retrieval",
-          "checked_at": "2026-10-20T05:57:42.144Z",
+          "checked_at": "2026-10-20T06:25:27.028Z",
           "requests": [
             {
               "url": "https://api.github.com/repos/usnistgov/zero-trust-architecture/branches/nist-pages",
               "resolved_url": "https://api.github.com/repos/usnistgov/zero-trust-architecture/branches/nist-pages",
-              "checked_at": "2026-10-20T05:57:42.144Z",
+              "checked_at": "2026-10-20T06:25:27.028Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:65f66eeb66f1296f450c512d5ce50a7fe23480ff8aa5b7529d346e0d6613d99e",
@@ -13389,7 +13389,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/index.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/index.html",
-              "checked_at": "2026-10-20T05:57:42.432Z",
+              "checked_at": "2026-10-20T06:25:27.272Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:4be04dd5f21e434f08edf9f62c06161acc955a5f9131e9f98787db7424cb4b60",
@@ -13398,7 +13398,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E1B1.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E1B1.html",
-              "checked_at": "2026-10-20T05:57:42.608Z",
+              "checked_at": "2026-10-20T06:25:27.365Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:de7dcee23a62ac98cd287df117fb22c532ed003ab186ef658f50032f4ac619f5",
@@ -13407,7 +13407,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E1B1.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E1B1.html",
-              "checked_at": "2026-10-20T05:57:42.676Z",
+              "checked_at": "2026-10-20T06:25:27.398Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:dd02bff757abb3e558f31e5caaeb1a5e7f8f7a1985e86b73222ef6941956b8e0",
@@ -13416,7 +13416,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E1B2.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E1B2.html",
-              "checked_at": "2026-10-20T05:57:43.302Z",
+              "checked_at": "2026-10-20T06:25:27.733Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:459f9a3f5274af59283e15662528abc961abb211f3b0c8f13ce95a4286d664b5",
@@ -13425,7 +13425,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E1B2.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E1B2.html",
-              "checked_at": "2026-10-20T05:57:43.423Z",
+              "checked_at": "2026-10-20T06:25:27.732Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:754c2532dfce47f9f492c2649f4ada666bbea3e28e23decc55b1605372429376",
@@ -13434,7 +13434,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E1B3.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E1B3.html",
-              "checked_at": "2026-10-20T05:57:43.754Z",
+              "checked_at": "2026-10-20T06:25:27.938Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:4ab0fa0652c0ee59d9f42802663050ff35221783425ca2aa47e5847a0c715339",
@@ -13443,7 +13443,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E1B3.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E1B3.html",
-              "checked_at": "2026-10-20T05:57:43.763Z",
+              "checked_at": "2026-10-20T06:25:27.930Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:84b2e76449dfbc04b587c8a5815b34eae5677545c191c8a14bb997c5e1c904ff",
@@ -13452,7 +13452,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E1B4.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E1B4.html",
-              "checked_at": "2026-10-20T05:57:44.366Z",
+              "checked_at": "2026-10-20T06:25:28.306Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:c5c5977b53922f8bae63c66c4a5501a83105233be2447707af41d93ae4d0bc1f",
@@ -13461,7 +13461,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E1B4.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E1B4.html",
-              "checked_at": "2026-10-20T05:57:44.388Z",
+              "checked_at": "2026-10-20T06:25:28.443Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:ba0354240d4e4f60d9220725a85e69295b581c624ce2e989611e80fe3f87fc5a",
@@ -13470,7 +13470,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E1B5.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E1B5.html",
-              "checked_at": "2026-10-20T05:57:44.986Z",
+              "checked_at": "2026-10-20T06:25:28.825Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:b3a6bdb3f35ffa80cebc9024148d1e3d2d44739fa966c03c927938b3ed1e96ed",
@@ -13479,7 +13479,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E1B5.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E1B5.html",
-              "checked_at": "2026-10-20T05:57:44.975Z",
+              "checked_at": "2026-10-20T06:25:28.820Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:54d5aca6d81b03940ea2bb3d8a02548fd2a3b196fbb6b083ca350d9906b12c17",
@@ -13488,7 +13488,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E1B6.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E1B6.html",
-              "checked_at": "2026-10-20T05:57:45.635Z",
+              "checked_at": "2026-10-20T06:25:29.191Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:30c4e90647a17b3fbb99438567b86c1a8847783183529456f299003b222a9369",
@@ -13497,7 +13497,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E1B6.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E1B6.html",
-              "checked_at": "2026-10-20T05:57:45.641Z",
+              "checked_at": "2026-10-20T06:25:29.191Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:19ebbda612929efd1c5e889a4588fadfbda76a35a51d54684f6c729636058ab3",
@@ -13506,7 +13506,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E2B1.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E2B1.html",
-              "checked_at": "2026-10-20T05:57:42.937Z",
+              "checked_at": "2026-10-20T06:25:27.517Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:945109aacd0bde0c3a3f20f85fb19688bf26319532d3d088382028748ec0d835",
@@ -13515,7 +13515,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E2B1.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E2B1.html",
-              "checked_at": "2026-10-20T05:57:42.888Z",
+              "checked_at": "2026-10-20T06:25:27.524Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:351ed01f15036c44e4f74ce5b9aad8f2e7c7098ab435cb02bf29e8a06d4ef594",
@@ -13524,7 +13524,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E2B3.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E2B3.html",
-              "checked_at": "2026-10-20T05:57:43.876Z",
+              "checked_at": "2026-10-20T06:25:28.024Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:1d5a3b8aeaa0a7450229e2246ffe26207e1e0861e51fe79630f75b820ba02fc2",
@@ -13533,7 +13533,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E2B3.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E2B3.html",
-              "checked_at": "2026-10-20T05:57:43.909Z",
+              "checked_at": "2026-10-20T06:25:28.028Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:415f61adc22f983183cfcdc75c89c3b6f0a25addf1a109b6733c5b4d71bc4f34",
@@ -13542,7 +13542,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E2B4.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E2B4.html",
-              "checked_at": "2026-10-20T05:57:44.518Z",
+              "checked_at": "2026-10-20T06:25:28.539Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:5e5d6553ee4bc7db45de2a87e16862acd9771e7719c9da10a5aeb3f9df431d5e",
@@ -13551,7 +13551,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E2B4.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E2B4.html",
-              "checked_at": "2026-10-20T05:57:44.545Z",
+              "checked_at": "2026-10-20T06:25:28.532Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:295cbd9f5e6b854e783c2a57ec5b356533c9a98bda6e4014921ff5ce0b75f69a",
@@ -13560,7 +13560,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E2B5.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E2B5.html",
-              "checked_at": "2026-10-20T05:57:45.178Z",
+              "checked_at": "2026-10-20T06:25:28.916Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:a3feda89e41bbb662b759d203a8b927889369ae0b0ec8dddb3800e755a330000",
@@ -13569,7 +13569,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E2B5.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E2B5.html",
-              "checked_at": "2026-10-20T05:57:45.148Z",
+              "checked_at": "2026-10-20T06:25:28.920Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:cad896d9928f25eb62c69ac1edb235878a42a22d2ad31180c8b30d6d95ef0c3c",
@@ -13578,7 +13578,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E2B6.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E2B6.html",
-              "checked_at": "2026-10-20T05:57:45.748Z",
+              "checked_at": "2026-10-20T06:25:29.275Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:3e84589d5425206b3dc8b35cf7d9b83e50c3376f28e6a49b47414efa053d6c04",
@@ -13587,7 +13587,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E2B6.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E2B6.html",
-              "checked_at": "2026-10-20T05:57:45.800Z",
+              "checked_at": "2026-10-20T06:25:29.278Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:5ee47f229d398cfcf840b5230954a5a1772aa37412193b686d42bdb370bc3fe8",
@@ -13596,7 +13596,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E3B1.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E3B1.html",
-              "checked_at": "2026-10-20T05:57:43.174Z",
+              "checked_at": "2026-10-20T06:25:27.632Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:7327de7b8e2038d8d54fce1e71bd519687aa874bdeb3bd47105b870f8db82a2a",
@@ -13605,7 +13605,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E3B1.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E3B1.html",
-              "checked_at": "2026-10-20T05:57:43.068Z",
+              "checked_at": "2026-10-20T06:25:27.628Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:5d0777e0273958592e298f4588d3fb566579b54c15a2bee999c557ce1bab3e2d",
@@ -13614,7 +13614,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E3B2.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E3B2.html",
-              "checked_at": "2026-10-20T05:57:43.543Z",
+              "checked_at": "2026-10-20T06:25:27.822Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:385c7c45afa07bef568c09e83e9061a017da193b1bcbf6078b76e5eaefc576d2",
@@ -13623,7 +13623,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E3B2.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E3B2.html",
-              "checked_at": "2026-10-20T05:57:43.580Z",
+              "checked_at": "2026-10-20T06:25:27.834Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:90ab9351e09b53478999e24908bec9cd5ac7a622ec0472644494f37752294293",
@@ -13632,7 +13632,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E3B3.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E3B3.html",
-              "checked_at": "2026-10-20T05:57:44.103Z",
+              "checked_at": "2026-10-20T06:25:28.128Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:61241b994f98e3c5e5ab250fd8c4be46b9b14c43f3e5caa3e040a93fbfc0974a",
@@ -13641,7 +13641,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E3B3.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E3B3.html",
-              "checked_at": "2026-10-20T05:57:44.052Z",
+              "checked_at": "2026-10-20T06:25:28.126Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:40cd7269f063f2d1fcb308dac0436fdca6c2a6880b7ab07dd77a67a4193dac92",
@@ -13650,7 +13650,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E3B4.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E3B4.html",
-              "checked_at": "2026-10-20T05:57:44.656Z",
+              "checked_at": "2026-10-20T06:25:28.634Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:74d430eb464e7872cd7890cf4043d79e6e5cf9dd960adde977353e9fc9c140c5",
@@ -13659,7 +13659,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E3B4.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E3B4.html",
-              "checked_at": "2026-10-20T05:57:44.678Z",
+              "checked_at": "2026-10-20T06:25:28.637Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:42d3d35385cb046979392a4139a6a50fe2755dacc84d01df74c2af93d0d89de3",
@@ -13668,7 +13668,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E3B5.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E3B5.html",
-              "checked_at": "2026-10-20T05:57:45.330Z",
+              "checked_at": "2026-10-20T06:25:29.016Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:36439f9868f0ee1624033be76fc0bc106f273aac9a722bf9a6eec6c0c0e4a86c",
@@ -13677,7 +13677,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E3B5.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E3B5.html",
-              "checked_at": "2026-10-20T05:57:45.335Z",
+              "checked_at": "2026-10-20T06:25:29.012Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:c62863037f48202d013ff0fbc3e2071ca4997420aa0c00b8612e963c3fe525db",
@@ -13686,7 +13686,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E4B3.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E4B3.html",
-              "checked_at": "2026-10-20T05:57:44.213Z",
+              "checked_at": "2026-10-20T06:25:28.215Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:4fb41383fa42c51762971fb497a421439075a8427de0b0c0b7bc8131e7d56c69",
@@ -13695,7 +13695,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E4B3.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E4B3.html",
-              "checked_at": "2026-10-20T05:57:44.246Z",
+              "checked_at": "2026-10-20T06:25:28.218Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:b62b2852034fa83001b145b38ae0707414e0dd1d4c063a8b3cb90a534e7c8be8",
@@ -13704,7 +13704,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E4B4.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E4B4.html",
-              "checked_at": "2026-10-20T05:57:44.865Z",
+              "checked_at": "2026-10-20T06:25:28.731Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:56970b3e3b87448ff6a4a8d8198061c9ea9d11828eeeb01a86c35eaaac040452",
@@ -13713,7 +13713,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E4B4.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E4B4.html",
-              "checked_at": "2026-10-20T05:57:44.802Z",
+              "checked_at": "2026-10-20T06:25:28.730Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:7cc883c62c7b4556fcb7c5455341c9b18a032a813f8a6f0064ccbc5a5401191e",
@@ -13722,7 +13722,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E4B5.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeB/appendices/Appendix-E4B5.html",
-              "checked_at": "2026-10-20T05:57:45.527Z",
+              "checked_at": "2026-10-20T06:25:29.111Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:44c9b896d15139c4871a218bf61a074a92fcc7f4ebee22b529fba858d075ef02",
@@ -13731,7 +13731,7 @@
             {
               "url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E4B5.html",
               "resolved_url": "https://raw.githubusercontent.com/usnistgov/zero-trust-architecture/f8f1e6f8c7f0d88171eee0fc6ab2be60e9f681ff/VolumeC/HowTo-E4B5.html",
-              "checked_at": "2026-10-20T05:57:45.446Z",
+              "checked_at": "2026-10-20T06:25:29.094Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:65d257f7658aaa41041be21c4038306094bec697aebc9408c8e71507ebcdf2cc",
@@ -13748,12 +13748,12 @@
         "hash": null,
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:58:02.347Z",
+          "checked_at": "2026-10-20T06:25:45.616Z",
           "requests": [
             {
               "url": "https://pages.nist.gov/zero-trust-architecture/_downloads/641f02c11e6f71752bb8bc96d96c5f38/NISTCSSMMapping.xlsx",
               "resolved_url": "https://pages.nist.gov/zero-trust-architecture/_downloads/641f02c11e6f71752bb8bc96d96c5f38/NISTCSSMMapping.xlsx",
-              "checked_at": "2026-10-20T05:58:02.347Z",
+              "checked_at": "2026-10-20T06:25:45.616Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:7b3df8d47bbd335ae3e2e58db9dc93c5017848f4eee7c532754e42dd4d7389ef",
@@ -13770,12 +13770,12 @@
         "hash": null,
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:58:02.567Z",
+          "checked_at": "2026-10-20T06:25:45.868Z",
           "requests": [
             {
               "url": "https://pages.nist.gov/zero-trust-architecture/_downloads/993f56b28d4d113836cb1f1a34146cb3/CSF1.1Mapping.xlsx",
               "resolved_url": "https://pages.nist.gov/zero-trust-architecture/_downloads/993f56b28d4d113836cb1f1a34146cb3/CSF1.1Mapping.xlsx",
-              "checked_at": "2026-10-20T05:58:02.567Z",
+              "checked_at": "2026-10-20T06:25:45.868Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:3e1465a81c0cc2cf1aaf655a5d448a87a74b9c4438c70a3640cb83235abc0f28",
@@ -13792,12 +13792,12 @@
         "hash": null,
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:58:02.139Z",
+          "checked_at": "2026-10-20T06:25:45.388Z",
           "requests": [
             {
               "url": "https://pages.nist.gov/zero-trust-architecture/_downloads/01dfaff2b25f0a61f127f06906bc37cc/CSF2.0Mapping.xlsx",
               "resolved_url": "https://pages.nist.gov/zero-trust-architecture/_downloads/01dfaff2b25f0a61f127f06906bc37cc/CSF2.0Mapping.xlsx",
-              "checked_at": "2026-10-20T05:58:02.139Z",
+              "checked_at": "2026-10-20T06:25:45.388Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:699359d4f16116e6f13e42d1c0ac61a569ed02ac27788012308fa88740fc9702",
@@ -13814,12 +13814,12 @@
         "hash": null,
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:58:02.888Z",
+          "checked_at": "2026-10-20T06:25:46.097Z",
           "requests": [
             {
               "url": "https://pages.nist.gov/zero-trust-architecture/_downloads/eba81c1a0ca458474b0e9bbdfc888eb5/SP800-53Mapping.xlsx",
               "resolved_url": "https://pages.nist.gov/zero-trust-architecture/_downloads/eba81c1a0ca458474b0e9bbdfc888eb5/SP800-53Mapping.xlsx",
-              "checked_at": "2026-10-20T05:58:02.888Z",
+              "checked_at": "2026-10-20T06:25:46.097Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:940153bf3a198658cae055f79e0cc842861984b73859a2db5db859696921dfb7",
@@ -13836,12 +13836,12 @@
         "hash": null,
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:58:01.050Z",
+          "checked_at": "2026-10-20T06:25:44.282Z",
           "requests": [
             {
               "url": "https://nvlpubs.nist.gov/nistpubs/specialpublications/NIST.SP.800-207.pdf",
               "resolved_url": "https://nvlpubs.nist.gov/nistpubs/specialpublications/NIST.SP.800-207.pdf",
-              "checked_at": "2026-10-20T05:58:01.050Z",
+              "checked_at": "2026-10-20T06:25:44.282Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:0290d6ece24874287316f4bf430fef770aa4ec08a2227c8f2c1e5b2ff975e03d",
@@ -13858,12 +13858,12 @@
         "hash": null,
         "check_evidence": {
           "scope": "publisher_artifact_retrieval",
-          "checked_at": "2026-10-20T05:58:01.733Z",
+          "checked_at": "2026-10-20T06:25:44.958Z",
           "requests": [
             {
               "url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-207A.pdf",
               "resolved_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-207A.pdf",
-              "checked_at": "2026-10-20T05:58:01.733Z",
+              "checked_at": "2026-10-20T06:25:44.958Z",
               "http": 200,
               "validation": "revalidated",
               "sha256": "sha256:bb1af3bab70d8589e71e9fce4a99d3e714a82dd7b2bc7a931c7458a6ab60bb52",

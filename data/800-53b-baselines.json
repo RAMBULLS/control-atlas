@@ -11,7 +11,7 @@
       "description": "NIST SP 800-53B low impact baseline for federal information systems.",
       "source": {
         "key": "nist-800-53b-baselines",
-        "snapshot_date": "2026-10-20T05:56:32.338Z",
+        "snapshot_date": "2026-10-20T06:24:44.089Z",
         "locator": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_LOW-baseline_profile.json",
         "version": "5.2.0"
       },
@@ -29,7 +29,7 @@
       "description": "NIST SP 800-53B moderate impact baseline for federal information systems.",
       "source": {
         "key": "nist-800-53b-baselines",
-        "snapshot_date": "2026-10-20T05:56:32.338Z",
+        "snapshot_date": "2026-10-20T06:24:44.089Z",
         "locator": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json",
         "version": "5.2.0"
       },
@@ -47,7 +47,7 @@
       "description": "NIST SP 800-53B high impact baseline for federal information systems.",
       "source": {
         "key": "nist-800-53b-baselines",
-        "snapshot_date": "2026-10-20T05:56:32.338Z",
+        "snapshot_date": "2026-10-20T06:24:44.089Z",
         "locator": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_HIGH-baseline_profile.json",
         "version": "5.2.0"
       },
@@ -68,7 +68,7 @@
       "description": "NIST SP 800-53B privacy baseline for federal information systems.",
       "source": {
         "key": "nist-800-53b-baselines",
-        "snapshot_date": "2026-10-20T05:56:32.338Z",
+        "snapshot_date": "2026-10-20T06:24:44.089Z",
         "locator": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_PRIVACY-baseline_profile.json",
         "version": "5.2.0"
       },

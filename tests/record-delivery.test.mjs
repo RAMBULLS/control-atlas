@@ -75,7 +75,9 @@ test('resolved static graph batches interactive code while preserving Home, warm
     [id('src/ui/App.tsx'), [id('src/shared/navigation-events.ts'), id('src/ui/lib/hashRoutes.ts'), id('src/ui/components/TopNav.tsx'), id('src/ui/lib/recordRouteModule.ts')]],
     [id('src/ui/lib/runtimeLoader.ts'), [id('src/app/runtime.mjs')]],
     [id('src/ui/lib/hashRoutes.ts'), [id('src/shared/navigation-events.ts')]],
-    [id('src/ui/pages/ObjectDetailPage.tsx'), [id('node_modules/@tabler/icons-react/dist/esm/icons/IconBook2.mjs')]],
+    [id('src/ui/pages/ObjectDetailPage.tsx'), [id('node_modules/@tabler/icons-react/dist/esm/icons/IconBook2.mjs'), id('src/ui/components/RecordPublishedText.tsx')]],
+    [id('src/ui/components/RecordPublishedText.tsx'), [id('src/ui/lib/publisherName.ts')]],
+    [id('src/ui/pages/CommonsPage.tsx'), [id('src/ui/lib/commonsPresentation.ts'), id('src/ui/lib/publisherName.ts')]],
     [id('node_modules/react-dom/client.js'), [id('node_modules/react/index.js')]],
     [id('node_modules/@tabler/icons-react/dist/esm/icons/IconBook2.mjs'), [id('node_modules/react/index.js')]],
   ]);
@@ -84,6 +86,18 @@ test('resolved static graph batches interactive code while preserving Home, warm
   const groups = recordChunkGroups(root, plan);
   const shell = groups.find(group => group.name === 'interactive-shell');
   const warmup = groups.find(group => group.name === 'data-warmup');
+  const recordUi = groups.find(group => group.name === 'record-ui');
+  const resourcesUi = groups.find(group => group.name === 'resources-ui');
+  for (const path of ['src/ui/components/RecordPublishedText.tsx', 'src/ui/lib/publisherName.ts']) {
+    assert.equal(recordUi.test(id(path)), true, path);
+    assert.equal(resourcesUi.test(id(path)), false, 'shared support has one owner');
+  }
+  assert.equal(resourcesUi.test(id('src/ui/lib/commonsPresentation.ts')), true);
+  for (const group of [recordUi, resourcesUi]) {
+    for (const path of ['src/main.tsx', 'src/ui/App.tsx', 'src/ui/lib/runtimeLoader.ts', 'src/ui/lib/recordRouteModule.ts', 'src/ui/pages/ObjectDetailPage.tsx', 'src/ui/pages/CommonsPage.tsx', 'node_modules/react/index.js']) {
+      assert.equal(group.test(id(path)), false, path);
+    }
+  }
   for (const path of ['src/ui/App.tsx', 'src/ui/components/TopNav.tsx', 'node_modules/@tabler/icons-react/dist/esm/icons/IconBook2.mjs']) assert.equal(shell.test(id(path)), true, path);
   assert.equal(groups.some(group => group.name === 'renderer'), false);
   for (const path of ['node_modules/react-dom/client.js', 'node_modules/react/index.js']) {
@@ -161,7 +175,9 @@ test('early responses retain the consuming loader deadline after their headers r
 });
 
 test('finite groups coalesce shared record UI and exact icons without capturing dependencies', () => {
-  const [ui, icons] = recordChunkGroups(root);
+  const groups = recordChunkGroups(root);
+  const ui = groups.find(group => group.name === 'record-ui');
+  const icons = groups.find(group => group.name === 'record-icons');
   assert.ok(RECORD_UI_MODULES.every(path => ui.test(`${root}/${path}`)));
   assert.equal(ui.test(`${root}/src/ui/lib/taxonomyContext.ts`), true);
   assert.equal(icons.test(`${root}/node_modules/@tabler/icons-react/dist/esm/icons/IconBook2.mjs`), true);
@@ -181,7 +197,9 @@ test('finite groups coalesce shared record UI and exact icons without capturing 
     assert.equal(group.entriesAware, false);
     assert.equal(group.minShareCount, 1);
   }
-  const [windowsUi, windowsIcons] = recordChunkGroups('C:\\work\\control-atlas');
+  const windowsGroups = recordChunkGroups('C:\\work\\control-atlas');
+  const windowsUi = windowsGroups.find(group => group.name === 'record-ui');
+  const windowsIcons = windowsGroups.find(group => group.name === 'record-icons');
   assert.equal(windowsUi.test('C:\\work\\control-atlas\\src\\ui\\components\\AppLink.tsx'), true);
   assert.equal(windowsUi.test('C:\\work\\control-atlas\\src\\shared\\record-control-context.mjs'), false);
   assert.equal(windowsIcons.test('C:\\work\\control-atlas\\node_modules\\@tabler\\icons-react\\dist\\esm\\icons\\IconBook2.mjs'), true);

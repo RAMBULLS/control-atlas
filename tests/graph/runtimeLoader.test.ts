@@ -55,7 +55,7 @@ test("a failed record module warm-up does not poison its recovery request", asyn
 });
 
 test("record rendering acknowledgment binds visible runtime identity and bounds cleanup", async () => {
-  const names = ["document", "MutationObserver", "requestAnimationFrame", "cancelAnimationFrame", "getComputedStyle"];
+  const names = ["document", "MutationObserver", "requestAnimationFrame", "cancelAnimationFrame", "getComputedStyle", "requestIdleCallback", "cancelIdleCallback"];
   const originals = names.map(name => Object.getOwnPropertyDescriptor(globalThis, name));
   const runtime = {};
   const token = recordCommitToken(runtime);
@@ -73,6 +73,8 @@ test("record rendering acknowledgment binds visible runtime identity and bounds 
     (callback: (time: number) => void) => { const id = ++nextFrame; frames.set(id, callback); return id; },
     (id: number) => frames.delete(id),
     () => ({ visibility: visible ? "visible" : "hidden" }),
+    undefined,
+    undefined,
   ];
   names.forEach((name, index) => Object.defineProperty(globalThis, name, { configurable: true, value: replacements[index] }));
   const advanceFrame = () => {
@@ -109,6 +111,35 @@ test("record rendering acknowledgment binds visible runtime identity and bounds 
     await committed;
     assert.equal(disconnected, true);
     assert.equal(frames.size, 0);
+
+    const idleCallbacks = new Map<number, () => void>();
+    Object.defineProperty(globalThis, "requestIdleCallback", { configurable: true, value: (callback: () => void, options: { timeout: number }) => {
+      assert.equal(options.timeout, 1_000);
+      const id = ++nextFrame;
+      idleCallbacks.set(id, callback);
+      return id;
+    } });
+    Object.defineProperty(globalThis, "cancelIdleCallback", { configurable: true, value: (id: number) => idleCallbacks.delete(id) });
+    disconnected = false;
+    const background = waitForRecordPaint("fixture:record", runtime, new AbortController().signal);
+    advanceFrame();
+    advanceFrame();
+    assert.equal(disconnected, false, "supporting work does not start inside a pre-render callback");
+    assert.equal(idleCallbacks.size, 1);
+    const acknowledgeIdle = [...idleCallbacks.values()][0];
+    idleCallbacks.clear();
+    acknowledgeIdle();
+    await background;
+    assert.equal(disconnected, true);
+
+    const cancelled = new AbortController();
+    const cancelledIdle = waitForRecordPaint("fixture:record", runtime, cancelled.signal);
+    advanceFrame();
+    advanceFrame();
+    assert.equal(idleCallbacks.size, 1);
+    cancelled.abort();
+    await cancelledIdle;
+    assert.equal(idleCallbacks.size, 0, "navigation cancels the pending background acknowledgment");
 
     disconnected = false;
     failed = true;

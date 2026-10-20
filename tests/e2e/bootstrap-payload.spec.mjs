@@ -152,6 +152,7 @@ test(`Resources keeps its identity and heading geometry at ${width}px until the 
     await expect(shell.getByRole("navigation", { name: "Resource companions" })).toBeVisible();
     await expect(page.locator("#root")).toHaveAttribute("data-static-route-kind", "resources");
     await expect(page.locator("#root")).not.toHaveAttribute("data-react-active", "true");
+    await expect(shell).toHaveCSS("min-height", "0px");
     await page.evaluate(() => document.fonts.ready);
     const beforeHeading = await shell.getByRole("heading", { level: 1 }).boundingBox();
     releaseEntry();

@@ -67,14 +67,28 @@ export function planInteractiveDelivery(moduleIds, info, rootDir) {
   for (const id of warmup) interactive.delete(id);
   // This tiny route import must remain available before the renderer arrives.
   interactive.delete(source('src/ui/lib/recordRouteModule.ts'));
-  return { interactive, warmup };
+  const support = entries => new Set([...closure(entries)].filter(id =>
+    !home.has(id) && !warmup.has(id) && !interactive.has(id) &&
+    id !== source('src/ui/lib/recordRouteModule.ts') &&
+    !/\/src\/ui\/pages\/[^/]+Page\.tsx$/.test(normalized(id))));
+  const recordSupport = support([source('src/ui/pages/ObjectDetailPage.tsx')]);
+  const resourceSupport = support([source('src/ui/pages/CommonsPage.tsx')]);
+  for (const id of recordSupport) resourceSupport.delete(id);
+  return { interactive, warmup, recordSupport, resourceSupport };
 }
 
+/** @param {string} rootDir
+ * @param {{interactive: Set<string>, warmup: Set<string>, recordSupport?: Set<string>, resourceSupport?: Set<string>}} delivery */
 export function recordChunkGroups(rootDir, delivery = { interactive: new Set(), warmup: new Set() }) {
   const ui = new Set(RECORD_UI_MODULES.map(path => `${normalized(rootDir)}/${path}`));
   const home = new Set(HOME_SHELL_MODULES.map(path => `${normalized(rootDir)}/${path}`));
   return [
-    { name: 'record-ui', test: id => ui.has(normalized(id)), priority: 10,
+    // Bundle the already-required static support closure, rather than making
+    // each small shared formatter or renderer a separate arrival request.
+    // Other page entries and every dynamic import remain independent.
+    { name: 'record-ui', test: id => ui.has(normalized(id)) || (delivery.recordSupport?.has(id) ?? false), priority: 30,
+      minShareCount: 1, entriesAware: false, includeDependenciesRecursively: false },
+    { name: 'resources-ui', test: id => delivery.resourceSupport?.has(id) ?? false, priority: 25,
       minShareCount: 1, entriesAware: false, includeDependenciesRecursively: false },
     { name: 'record-icons', test: id => RECORD_ICON_MODULES.some(path => normalized(id).endsWith(path)), priority: 20,
       minShareCount: 1, entriesAware: false, includeDependenciesRecursively: false },
@@ -202,7 +216,11 @@ export function verifyRecordDelivery(bundle, rootDir) {
   return { home: home.fileName, runtimeLoader: loader.fileName, pages,
     homeEntryClosures: homeEntries.map(entry => ({ entry: entry.fileName, chunks: describeClosure(entry) })),
     runtimeLoaderClosure: describeClosure(loader),
-    groups: chunks.filter(chunk => ['record-ui', 'record-icons', 'interactive-shell', 'data-warmup'].includes(chunk.name)).map(chunk => ({ name: chunk.name, file: chunk.fileName, bytes: Buffer.byteLength(chunk.code),
+    initialRouteClosures: pages.filter(page => /\/(?:ObjectDetail|Commons)Page\.tsx$/.test(page.id)).map(page => ({
+      page: normalized(page.id).replace(`${normalized(rootDir)}/`, ''),
+      chunks: closure(byName.get(page.file)).map(chunk => ({ file: chunk.fileName, bytes: Buffer.byteLength(chunk.code) })),
+    })),
+    groups: chunks.filter(chunk => ['record-ui', 'resources-ui', 'record-icons', 'interactive-shell', 'data-warmup'].includes(chunk.name)).map(chunk => ({ name: chunk.name, file: chunk.fileName, bytes: Buffer.byteLength(chunk.code),
       modules: Object.keys(chunk.modules).map(normalized), moduleLengths: Object.entries(chunk.modules).map(([id, module]) => ({ id: normalized(id), renderedLength: Number.isFinite(module.renderedLength) ? module.renderedLength : null })), imports: chunk.imports })),
     fontHashes: [...new Set(ORBITAL_FONT_HASHES)],
   };

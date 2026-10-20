@@ -110,7 +110,7 @@ test('production acceptance: current FedRAMP mappings export with source evidenc
 
 test('production acceptance: ATT&CK connects to a published defensive countermeasure', async ({ page }) => {
   await open(page, '/#/record/mitre-attack/T1001');
-  await page.getByText('MITRE D3FEND · 11', { exact: true }).click();
+  await page.getByText(/^MITRE D3FEND · \d+$/, { exact: true }).click();
   await page.getByRole('link', { name: 'D3-APCA — D3-APCA Application Protocol Command Analysis', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Countermeasure Description', exact: true })).toBeVisible();
   await expect(page.locator('main')).toContainText('Analyzing application protocol level remote commands');

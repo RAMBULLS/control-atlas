@@ -1,9 +1,9 @@
 import { expect, test } from "@playwright/test";
 
-import { dismissOnboarding, waitForAppReady } from "./support.mjs";
+import { dismissOnboarding, gotoApp, waitForAppReady } from "./support.mjs";
 
 async function open(page, route) {
-  await page.goto(route);
+  await gotoApp(page, route);
   await waitForAppReady(page);
   await dismissOnboarding(page);
 }

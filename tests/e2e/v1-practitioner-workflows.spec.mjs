@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 import { dismissOnboarding, gotoApp, readServedArtifact, waitForAppReady } from "./support.mjs";
 
 async function open(page, route) {
-  await page.goto(route);
+  await gotoApp(page, route);
   await waitForAppReady(page);
   await dismissOnboarding(page);
 }

@@ -392,7 +392,7 @@
     "node-html-parser": "^9.0.4",
     "orbital-archive-no-01": "https://github.com/rambulls/orbital-archive-no-01/archive/refs/tags/v1.8.0.tar.gz",
     "react": "^19.3.0",
-    "react-dom": "^19.2.7",
+    "react-dom": "^19.3.0",
     "tailwind-merge": "^3.6.0",
     "yaml": "^2.9.0",
     "yauzl": "3.4.0"

@@ -867,6 +867,7 @@ jobs:
     # silently, and a browser suite that did not run must never look like a pass.
     if: ${{ !cancelled() && needs.nightly-build.result == 'success' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 35
     strategy:
       fail-fast: false
       matrix:
@@ -902,7 +903,7 @@ jobs:
             focused=(tests/e2e/compare-results-layout.spec.mjs tests/e2e/epic12-qa-backlog-verify.spec.mjs tests/e2e/release-readiness-visual.spec.mjs
               --grep 'published baseline selections|content revisions compare|route semantic polish|full connection list')
           fi
-          npm run test:e2e:run -- "${focused[@]}" --shard=${{ matrix.shard }}/2 --retries=1 --reporter=blob,github
+          npm run test:e2e:run -- "${focused[@]}" --shard=${{ matrix.shard }}/2 --retries=1 --global-timeout=1500000 --reporter=blob,github,line
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         if: ${{ !cancelled() }}
         with:

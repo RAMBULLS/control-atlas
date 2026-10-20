@@ -80,6 +80,35 @@ test('fourth profile failure, unknown selections, discovery changes and catalog 
   }
 });
 
+test('fresh baseline summaries retain every admitted profile artifact and exact publisher locator', async () => {
+  const fixture = scenario();
+  await fetchFrameworkCatalogs(fixture.options);
+  const manifest = fixture.writes.find(([path]) => path.endsWith('nist-800-53b-profile-manifest.json'))[1];
+  const readJson = (path) => {
+    const entry = fixture.writes.find(([written]) => written === path);
+    assert.ok(entry, `Unexpected retained input: ${path}`);
+    return entry[1];
+  };
+  await fetchFrameworkCatalogs({ onlyPublic: ['800-53b-baselines'], readJson,
+    writeJson: (...args) => fixture.writes.push(args) });
+  const summaries = fixture.writes.find(([path]) => path.endsWith('800-53b-baselines.json'))[1];
+  assert.deepEqual(summaries.records.map((record) => record.id).sort(), [...BASELINE_NAMES].sort());
+  for (const record of summaries.records) {
+    const profile = manifest.profiles.find((entry) => entry.url.endsWith(`_${record.id}-baseline_profile.json`));
+    assert.equal(record.metadata.primary_artifact_id, `artifact-nist-800-53b-${record.id.toLowerCase()}-profile`);
+    assert.equal(record.source.locator, profile.url);
+    assert.equal(record.source.version, profile.publisher_version);
+    assert.equal(record.metadata.publisher_baseline_title, profile.label);
+  }
+  const writesBefore = fixture.writes.length;
+  const invalid = structuredClone(manifest);
+  invalid.profiles[0].sha256 = 'sha256:short';
+  await assert.rejects(fetchFrameworkCatalogs({ onlyPublic: ['800-53b-baselines'],
+    readJson: (path) => path.endsWith('nist-800-53b-profile-manifest.json') ? invalid : readJson(path),
+    writeJson: (...args) => fixture.writes.push(args) }), /Invalid NIST baseline byte evidence/);
+  assert.equal(fixture.writes.length, writesBefore, 'invalid profile evidence cannot overwrite accepted summaries');
+});
+
 test('unsupported selectors and ambiguous fragment locators fail before interpretation', () => {
   for (const patch of [ { 'include-all': {} }, { 'exclude-controls': [] }, { 'include-controls': [{ 'with-ids': ['ac-1'], 'with-child-controls': 'yes' }] }, { href: '#missing' } ]) {
     const profile = makeProfile('LOW');

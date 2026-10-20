@@ -182,13 +182,30 @@ export function buildFips200Catalog(snapshotDate) {
   ]);
 }
 
-export function buildNist80053BBaselineCatalog(snapshotDate) {
-  return publicCatalog(NIST_800_53B_SOURCE, snapshotDate, [
+export function buildNist80053BBaselineCatalog(snapshotDate, profiles) {
+  const catalog = publicCatalog(NIST_800_53B_SOURCE, snapshotDate, [
     { id: 'LOW', type: 'nist-800-53b-baseline', framework: 'nist-800-53b', title: 'Low Impact Baseline', family: 'NIST SP 800-53B Baselines', description: 'NIST SP 800-53B low impact baseline for federal information systems.', locator: 'sp800-53b#low' },
     { id: 'MODERATE', type: 'nist-800-53b-baseline', framework: 'nist-800-53b', title: 'Moderate Impact Baseline', family: 'NIST SP 800-53B Baselines', description: 'NIST SP 800-53B moderate impact baseline for federal information systems.', locator: 'sp800-53b#moderate' },
     { id: 'HIGH', type: 'nist-800-53b-baseline', framework: 'nist-800-53b', title: 'High Impact Baseline', family: 'NIST SP 800-53B Baselines', description: 'NIST SP 800-53B high impact baseline for federal information systems.', locator: 'sp800-53b#high' },
     { id: 'PRIVACY', type: 'nist-800-53b-baseline', framework: 'nist-800-53b', title: 'Privacy Baseline', family: 'NIST SP 800-53B Baselines', description: 'NIST SP 800-53B privacy baseline for federal information systems.', locator: 'sp800-53b#privacy' },
   ]);
+  if (!Array.isArray(profiles) || profiles.length !== catalog.records.length) throw new Error('All four admitted NIST baseline profiles are required');
+  for (const record of catalog.records) {
+    const matches = profiles.filter((profile) => profile.url?.endsWith(`/NIST_SP-800-53_rev5_${record.id}-baseline_profile.json`));
+    if (matches.length !== 1) throw new Error(`Missing or duplicate NIST baseline profile: ${record.id}`);
+    const profile = matches[0];
+    record.source.locator = profile.url;
+    record.source.version = profile.publisher_version;
+    record.metadata = {
+      primary_artifact_id: `artifact-nist-800-53b-${record.id.toLowerCase()}-profile`,
+      publisher_baseline_title: profile.label,
+    };
+    const titleVersion = profile.label?.match(/Revision\s*([\d.]+)/i)?.[1];
+    if (titleVersion && titleVersion !== profile.publisher_version) record.metadata.source_warnings = [
+      `Publisher profile title declares Revision ${titleVersion} while metadata.version declares ${profile.publisher_version}. Both publisher values are preserved.`,
+    ];
+  }
+  return catalog;
 }
 
 export function buildRmfCatalog(snapshotDate) {

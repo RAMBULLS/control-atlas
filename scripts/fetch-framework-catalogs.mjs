@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { writeJsonAtomically } from './lib/write-json-atomically.mjs';
 import { strictConditionalFetch } from './lib/strict-conditional-fetch.mjs';
 import { assertPublisherInventory } from './lib/publisher-inventory.mjs';
-import { baselineUrls, byteEvidence, discoverBaselineProfiles, fetchBaselineProfiles, gitBlobSha, verifyBaselineReconciliation } from './lib/nist-baseline-profiles.mjs';
+import { baselineUrls, byteEvidence, discoverBaselineProfiles, fetchBaselineProfiles, gitBlobSha, verifyBaselineManifest, verifyBaselineReconciliation } from './lib/nist-baseline-profiles.mjs';
 import {
   buildCmmcPublicCatalog,
   buildCuiPolicyCatalog,
@@ -298,7 +299,13 @@ export async function fetchFrameworkCatalogs(options = {}) {
     results.push(writeCatalog(target.outfile, document, writeJson));
   }
   for (const [filename, build] of publicTargets) {
-    const doc = build === buildFedrampPublicCatalog
+    let doc;
+    if (build === buildNist80053BBaselineCatalog) {
+      const readJson = options.readJson || ((path) => JSON.parse(readFileSync(path, 'utf8')));
+      const manifest = readJson(join(ROOT, 'data/nist-800-53b-profile-manifest.json'));
+      verifyBaselineManifest(manifest, readJson(join(ROOT, 'data/controls-800-53.json')));
+      doc = build(SNAPSHOT, manifest.profiles);
+    } else doc = build === buildFedrampPublicCatalog
       ? build(SNAPSHOT, fedrampMembership)
       : build === buildCuiPolicyCatalog
         ? build(SNAPSHOT, join(ROOT, 'data', 'nara-cui-registry-manifest.json'))

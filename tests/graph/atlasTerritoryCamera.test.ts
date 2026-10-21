@@ -1,7 +1,33 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { parse } from "node-html-parser";
+import { TerritoryMap } from "../../src/ui/components/atlas-territory/TerritoryMap";
 import { TERRITORY_GEOMETRY, territoryPolygon } from "../../src/ui/lib/atlasTerritoryGeography";
-import { boundsOf, fitTerritoryCamera, territoryCameraProgress } from "../../src/ui/lib/atlasTerritoryModel";
+import { boundsOf, buildTerritoryModel, fitTerritoryCamera, territoryCameraProgress } from "../../src/ui/lib/atlasTerritoryModel";
+
+test("rendered publication names include the visible kind or matching-record count in reading order", () => {
+  const area = "atlas:LIMB-IMPLEMENTATION";
+  const model = buildTerritoryModel({
+    publications: [{ id: "disa-stig", name: "Fixture publication", publisher: "Fixture publisher", kind: "Implementation standard", area, records: 1290 }],
+    routes: [],
+  } as Parameters<typeof buildTerritoryModel>[0]);
+  const noop = () => {};
+  for (const count of [null, 1, 1290]) {
+    const html = renderToStaticMarkup(createElement(TerritoryMap, {
+      model, size: { w: 1440, h: 900 }, focusAreaId: area, focusPublication: "disa-stig",
+      selectedRouteKey: null, revealed: [], pins: [], active: new Set<string>(), sharedLines: [],
+      publisher: "", records: [], hops: [], inspectorInset: 0,
+      context: count === null ? null : new Map([["disa-stig", { records: count, byTag: {} }]]),
+      actions: { selectDistrict: noop, selectPublication: noop, selectRoute: noop, selectRecord: noop, selectHop: noop, closeInspector: noop },
+    }));
+    const landmark = parse(html).querySelector('[data-landmark="disa-stig"]')!;
+    const visible = landmark.textContent.trim().replace(/\s+/g, " ");
+    assert.equal(visible, `DISA STIG ${count === null ? "Implementation standard" : `${count.toLocaleString()} matching ${count === 1 ? "record" : "records"}`}`);
+    assert.ok(landmark.getAttribute("aria-label")!.startsWith(visible + ","));
+  }
+});
 
 test("a frame timestamp before the effect starts cannot extrapolate the camera", () => {
   assert.equal(territoryCameraProgress(16, 32), 0);

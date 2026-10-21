@@ -128,18 +128,15 @@ export function TopNav(props: TopNavProps) {
 
   return (
     <header className="site-header" ref={headerRef}>
-      <AppLink
-        aria-label="Control Atlas — home"
-        className="brand"
-        onNavigate={onNavigate}
-        view="home"
-      >
+      <div className="brand">
         <BrandMark />
         <span className="brand-lockup">
-          <span className="brand-name">Control Atlas</span>
+          <AppLink aria-label="Control Atlas — home" className="brand-home" onNavigate={onNavigate} view="home">
+            <span className="brand-name">Control Atlas</span>
+          </AppLink>
           <BrandFlourish />
         </span>
-      </AppLink>
+      </div>
 
       {!compactNavigation ? (
         <nav aria-label="Primary navigation" className="primary-nav ml-[16px] self-end mb-[-1px]">

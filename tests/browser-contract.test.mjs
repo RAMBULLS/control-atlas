@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import test from 'node:test';
+import { parse } from 'node-html-parser';
 import { HOME_CONTENT, HOME_TOOLS } from '../src/shared/home-content.mjs';
 import { SITE_COPY } from '../src/shared/site-copy.mjs';
 
@@ -116,6 +117,12 @@ test('frontend foundation uses React, Vite, TypeScript, and Radix primitives', (
 });
 
 test('brand identity is immediate, generated, decorative, and motion-safe', () => {
+  const brandMarkup = parse(html).querySelector('[data-static-header] .brand');
+  const homeLink = brandMarkup.querySelector('a.brand-home');
+  assert.equal(homeLink.textContent, 'Control Atlas');
+  assert.equal(homeLink.getAttribute('href'), '#/');
+  assert.equal(homeLink.querySelector('.brand-kbd'), null);
+  assert.ok(brandMarkup.querySelector('.brand-kbd[aria-hidden="true"]'));
   const app = readFileSync('src/ui/App.tsx', 'utf8');
   const brand = readFileSync('src/ui/components/BrandLockup.tsx', 'utf8');
   const rotation = readFileSync('src/shared/brand-rotation.ts', 'utf8');

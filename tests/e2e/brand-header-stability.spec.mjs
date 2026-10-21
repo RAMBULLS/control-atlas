@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 import {
   attachPageDiagnostics,
   dismissOnboarding,
@@ -9,6 +10,28 @@ import {
 test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
 });
+
+for (const width of [390, 1440]) {
+  test(`brand home link keeps decoration separate from its accessible name at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await gotoApp(page, '/library');
+    await waitForAppReady(page);
+    await dismissOnboarding(page);
+    const home = page.getByRole('link', { name: 'Control Atlas — home', exact: true });
+    await expect(home).toHaveText('Control Atlas');
+    await expect(home.locator('.brand-kbd')).toHaveCount(0);
+    expect((await new AxeBuilder({ page }).include('.brand').withRules(['label-content-name-mismatch']).analyze()).violations).toEqual([]);
+    await home.focus();
+    await expect(home).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(page).toHaveURL(/#\/$/);
+    await gotoApp(page, '/library');
+    await waitForAppReady(page);
+    // The stretched link retains the existing full masthead click target.
+    await page.locator('.brand').click({ position: { x: 5, y: 5 } });
+    await expect(page).toHaveURL(/#\/$/);
+  });
+}
 
 test('every rotating brand word renders without clipping', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });

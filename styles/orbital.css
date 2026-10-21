@@ -460,6 +460,7 @@ body {
 }
 
 .brand {
+  position: relative;
   min-height: 68px;
   padding: var(--ca-space-2) 0;
   border-radius: 0;
@@ -467,10 +468,17 @@ body {
 }
 
 .brand:hover,
-.brand:focus-visible {
+.brand:has(.brand-home:focus-visible) {
   background: transparent;
   color: var(--ca-primary);
 }
+
+/* Keep decorative rotating text outside the link's spoken label while retaining
+   the complete brand area as a pointer and keyboard focus target. */
+.brand-home { display: flex; color: inherit; text-decoration: none; }
+.brand-home::after { content: ""; position: absolute; inset: 0; }
+.brand-home:focus-visible { outline: none; }
+.brand-home:focus-visible::after { outline: 2px solid var(--ca-primary); outline-offset: 3px; }
 
 .brand-icon-mark {
   width: 30px;

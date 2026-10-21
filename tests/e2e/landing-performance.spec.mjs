@@ -102,7 +102,7 @@ test("landing search and brand-home flow work without legacy onboarding surfaces
   });
 
   await page
-    .locator('[data-react-root] header.site-header a.brand')
+    .locator('[data-react-root] header.site-header .brand-home')
     .click();
   await expect(
     page.getByRole("heading", {

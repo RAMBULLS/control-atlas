@@ -378,10 +378,17 @@ an ephemeral one-day localhost certificate and admits only that certificate's
 SPKI hash in Chrome. No system trust or general certificate exception changes.
 Measured documents and transferred same-origin assets must report `h2`.
 The static server's ordinary browser-test mode remains HTTP/1.1.
+Content-addressed WOFF2 files use Pages' ten-minute cache lifetime so declared
+weights can share one font response. Other local assets retain `no-store`.
+Each measured Lighthouse sample still starts with a fresh browser profile.
 CI collects three fixed cold-browser samples per requested route after two host
 warmups. LHCI calculates each metric's median within that route; SPA routes must
 never be pooled by their shared final URL. Other audit and byte limits use the
 worst sample. Every sample must have valid metrics and transport evidence.
+For the font, Sources, Compare, keyboard and footer regressions, the existing
+manual nightly task accepts `sweep_mode=reliability` and
+`reliability_focus=acceptance`: three fixed repeats in all three engines, zero
+retries. This focused diagnostic does not qualify as the complete nightly sweep.
 The optional `--compare-http1` runner flag retains a fixed HTTP/1 reference
 before the HTTP/2 measurement, with the same build identities, routes, cold
 samples, host warmups, throttling and assertions. Reference failures remain in

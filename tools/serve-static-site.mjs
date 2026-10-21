@@ -17,6 +17,7 @@ const contentTypes = new Map([
   ['.json', 'application/json; charset=utf-8'],
   ['.mjs', 'text/javascript; charset=utf-8'],
   ['.gz', 'application/gzip'],
+  ['.woff2', 'font/woff2'],
 ]);
 const compressibleTypes = new Set(['.css', '.html', '.js', '.json', '.mjs']);
 const gzipCache = new Map();
@@ -66,12 +67,15 @@ const handler = (request, response) => {
   }
 
   const extension = extname(filePath);
+  // Pages uses a ten-minute cache lifetime. Content-addressed fonts can share
+  // that response across declared weights; HTML and rebuildable assets stay fresh.
+  const pinnedFont = extension === '.woff2' && /^\/fonts\/[a-f0-9]{64}\.woff2$/.test(requestPath);
   const useGzip =
     compressibleTypes.has(extension) &&
     /(?:^|,)\s*gzip(?:\s*;|\s*,|\s*$)/i.test(request.headers['accept-encoding'] || '');
   response.writeHead(200, {
     'content-type': contentTypes.get(extname(filePath)) || 'application/octet-stream',
-    'cache-control': 'no-store',
+    'cache-control': pinnedFont ? 'max-age=600' : 'no-store',
     ...(useGzip
       ? { 'content-encoding': 'gzip', vary: 'Accept-Encoding' }
       : {}),

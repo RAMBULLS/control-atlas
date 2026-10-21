@@ -301,6 +301,7 @@ test("Phase 3 record actions and global footer expose the required hierarchy", a
     await gotoApp(page, route);
     await waitForAppReady(page, { allowPartial: true });
     const footer = page.locator("footer.site-footer");
+    await footer.scrollIntoViewIfNeeded();
     await expect(footer).toBeVisible();
     await expect(footer).toContainText("Free and open source. Not a government system.");
     await expect(footer).toContainText("Product release");

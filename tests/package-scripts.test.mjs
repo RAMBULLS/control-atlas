@@ -100,6 +100,8 @@ test('nightly validation retains full cross-browser and data automation', () => 
   assert.deepEqual(Array.from(evaluate(matrix, 'reliability')), ['webkit']);
   assert.deepEqual(Array.from(evaluate(matrix, 'reliability', 'compare')), ['webkit']);
   assert.deepEqual(Array.from(evaluate(matrix, 'reliability', 'atlas')), ['firefox']);
+  assert.deepEqual(Array.from(evaluate(matrix, 'reliability', 'acceptance')), ['chromium', 'firefox', 'webkit']);
+  assert.deepEqual(workflow.on.workflow_dispatch.inputs.reliability_focus.options, ['compare', 'atlas', 'acceptance']);
   assert.notEqual(evaluate(workflow.jobs['nightly-build'].name, 'reliability'), 'Nightly build and contracts',
     'focused diagnostics cannot qualify the scheduled full-sweep coverage check');
   assert.match(workflow.jobs['sweep-alert'].if, /inputs\.sweep_mode != 'reliability'/);
@@ -107,11 +109,13 @@ test('nightly validation retains full cross-browser and data automation', () => 
   assert.match(ci, /npm run test:a11y:run/);
   assert.match(ci, /PLAYWRIGHT_BLOB_OUTPUT_NAME: report-\$\{\{ matrix\.browser \}\}-\$\{\{ matrix\.shard \}\}\.zip/);
   assert.match(ci, /PLAYWRIGHT_BLOB_OUTPUT_NAME: report-accessibility\.zip/);
-  assert.equal((ci.match(/--reporter=blob,github/g) ?? []).length, 3);
+  assert.equal((ci.match(/--reporter=blob,github/g) ?? []).length, 4);
   const suite = workflow.jobs['nightly-browser'].steps.find((step) => step.name === 'Run complete browser suite');
   assert.match(suite.run, /SWEEP_MODE.*reliability.*RELIABILITY_FOCUS.*atlas/);
   assert.match(suite.run, /record pins share ground\|context.*selected publication/);
   assert.match(suite.run, /--repeat-each=5 --trace=retain-on-failure/);
+  assert.match(suite.run, /RELIABILITY_FOCUS.*acceptance/);
+  assert.match(suite.run, /--repeat-each=3 --trace=retain-on-failure/);
   assert.match(suite.run, /--retries=0 --global-timeout=600000/);
   // Alert lifecycle now lives in tools/report-sweep-alert.mjs and is covered by tests/sweep-alert.test.mjs.
   assert.match(ci, /run: node tools\/report-sweep-alert\.mjs/);

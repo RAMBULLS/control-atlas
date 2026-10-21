@@ -29,7 +29,7 @@ on:
         required: false
         default: compare
         type: choice
-        options: [compare, atlas]
+        options: [compare, atlas, acceptance]
       refresh_run_id:
         description: Completed refresh run whose data and repository gates passed
         required: false
@@ -877,7 +877,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: ${{ inputs.sweep_mode == 'reliability' && (inputs.reliability_focus == 'atlas' && fromJSON('["firefox"]') || fromJSON('["webkit"]')) || fromJSON('["chromium","firefox","webkit"]') }}
+        browser: ${{ inputs.sweep_mode == 'reliability' && inputs.reliability_focus != 'acceptance' && (inputs.reliability_focus == 'atlas' && fromJSON('["firefox"]') || fromJSON('["webkit"]')) || fromJSON('["chromium","firefox","webkit"]') }}
         shard: [1, 2]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -906,7 +906,14 @@ jobs:
         shell: bash
         run: |
           focused=()
-          if [[ "$SWEEP_MODE" == 'reliability' && "$RELIABILITY_FOCUS" == 'atlas' ]]; then
+          if [[ "$SWEEP_MODE" == 'reliability' && "$RELIABILITY_FOCUS" == 'acceptance' ]]; then
+            focused=(tests/e2e/bootstrap-payload.spec.mjs tests/e2e/compare-pagination.spec.mjs
+              tests/e2e/sources-inspector-state.spec.mjs tests/e2e/critical-path-matrix.spec.mjs
+              tests/e2e/epic12-phase3-information-architecture.spec.mjs
+              --grep 'first-paint fonts load|record text loads|large Compare results use|filters by publisher or issuer|keyboard focus reaches|record actions and global footer'
+              --repeat-each=3 --trace=retain-on-failure)
+            npm run test:e2e:run -- "${focused[@]}" --shard=${{ matrix.shard }}/2 --retries=0 --global-timeout=600000 --reporter=blob,github,line
+          elif [[ "$SWEEP_MODE" == 'reliability' && "$RELIABILITY_FOCUS" == 'atlas' ]]; then
             focused=(tests/e2e/atlas-territory.spec.mjs tests/e2e/atlas-territory-context.spec.mjs
               --grep 'record pins share ground|context \+ a selected publication' --repeat-each=5 --trace=retain-on-failure)
             npm run test:e2e:run -- "${focused[@]}" --shard=${{ matrix.shard }}/2 --retries=0 --global-timeout=600000 --reporter=blob,github,line

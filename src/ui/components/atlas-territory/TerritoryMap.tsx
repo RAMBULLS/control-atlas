@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import React, { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { areaCssVariables, AREA_PRESENTATIONS } from "../../lib/areaVisualLanguage";
 import type { Pt } from "../../lib/atlasTerritoryGeography";
 import { boundsOf, fitView, fitTerritoryCamera, territoryCameraProgress, type TerritoryModel, type View } from "../../lib/atlasTerritoryModel";
@@ -234,9 +234,13 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
           const isPinned = pinned.has(l.id); const selected = focusPublication === l.id; const hov = hoverPublication === l.id;
           const label = showName(l.id) && (!dim || hov); const side = labelSide(l.id); const lift = selected || hov;
           const areaId = l.area;
+          const showCount = matched && !recordCatalogs.has(l.id);
+          const detail = showCount
+            ? `${context!.get(l.id)!.records.toLocaleString()} matching ${context!.get(l.id)!.records === 1 ? "record" : "records"}`
+            : (!recordCatalogs.has(l.id) && !tight && (lift || (focusAreaId === areaId && !isActive))) ? l.kind : "";
           return (
             <g
-              aria-label={`${model.alias(l.id)}, ${l.name}, ${l.publisher}, ${model.areaOf(l.id).label} territory${isPinned ? ", pinned" : ""}`}
+              aria-label={`${model.alias(l.id)}${detail ? ` ${detail}` : ""}, ${l.name}, ${l.publisher}, ${model.areaOf(l.id).label} territory${isPinned ? ", pinned" : ""}`}
               aria-pressed={selected}
               className={`lm${dim ? " is-dim" : ""}${isActive ? " is-active" : ""}${selected ? " is-selected" : ""}${hov ? " is-hover" : ""}${major ? " is-major" : ""}${matched ? " is-match" : ""}${publisherOn && !dim ? " is-layer" : ""}`}
               data-landmark={l.id}
@@ -255,8 +259,8 @@ export function TerritoryMap(props: MapProps & { actions: MapActions }) {
               {label ? (
                 <>
                   <text className="lm__name" fontSize={(major || lift ? 14.5 : 13.5) * ut} strokeWidth={4 * ut} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 4.5 * u}>{model.alias(l.id)}</text>
-                  {matched && !recordCatalogs.has(l.id) ? <text className="lm__type lm__count" fontSize={11.5 * ut} strokeWidth={4 * ut} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 19 * u}>{context!.get(l.id)!.records.toLocaleString()} matching {context!.get(l.id)!.records === 1 ? "record" : "records"}</text>
-                    : (!recordCatalogs.has(l.id) && !tight && (lift || (focusAreaId === areaId && !isActive))) ? <text className="lm__type" fontSize={11.5 * ut} strokeWidth={4 * ut} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 19 * u}>{l.kind}</text> : null}
+                  {" "}
+                  {detail ? <text className={`lm__type${showCount ? " lm__count" : ""}`} fontSize={11.5 * ut} strokeWidth={4 * ut} textAnchor={side === 1 ? "start" : "end"} x={p[0] + side * 12 * u} y={p[1] + 19 * u}>{detail}</text> : null}
                 </>
               ) : null}
               {isPinned ? <g className="pin-anim"><path className="pin" d={PIN} transform={`translate(${p[0]} ${p[1] - 9 * u}) scale(${u * 0.95})`} /></g> : null}

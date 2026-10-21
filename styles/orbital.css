@@ -460,6 +460,7 @@ body {
 }
 
 .brand {
+  position: relative;
   min-height: 68px;
   padding: var(--ca-space-2) 0;
   border-radius: 0;
@@ -467,10 +468,14 @@ body {
 }
 
 .brand:hover,
-.brand:focus-visible {
+.brand:has(.brand-home:focus-visible) {
   background: transparent;
   color: var(--ca-primary);
 }
+
+/* Keep decorative rotating text outside the link's spoken label while retaining
+   the complete brand area as a pointer and keyboard focus target. */
+.brand-home { position: absolute; inset: 0; z-index: 1; color: inherit; text-decoration: none; }
 
 .brand-icon-mark {
   width: 30px;
@@ -2074,6 +2079,10 @@ details > summary {
 }
 
 @media (max-width: 640px) {
+  /* The former brand anchor inherited the 44px touch minimum above. Keep that
+     same layout minimum now that the full-size link is inside the container. */
+  .brand { min-height: 44px; }
+
   .ca-page,
   .app-shell,
   #workspace {

@@ -119,7 +119,9 @@ test('frontend foundation uses React, Vite, TypeScript, and Radix primitives', (
 test('brand identity is immediate, generated, decorative, and motion-safe', () => {
   const brandMarkup = parse(html).querySelector('[data-static-header] .brand');
   const homeLink = brandMarkup.querySelector('a.brand-home');
-  assert.equal(homeLink.textContent, 'Control Atlas');
+  const name = homeLink.getAttribute('aria-labelledby').split(' ')
+    .map(id => brandMarkup.querySelector(`#${id}`).textContent).join(' ');
+  assert.equal(name, 'Control Atlas — home');
   assert.equal(homeLink.getAttribute('href'), '#/');
   assert.equal(homeLink.querySelector('.brand-kbd'), null);
   assert.ok(brandMarkup.querySelector('.brand-kbd[aria-hidden="true"]'));

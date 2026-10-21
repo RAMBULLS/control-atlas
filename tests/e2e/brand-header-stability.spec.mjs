@@ -18,7 +18,11 @@ for (const width of [390, 1440]) {
     await waitForAppReady(page);
     await dismissOnboarding(page);
     const home = page.getByRole('link', { name: 'Control Atlas — home', exact: true });
-    await expect(home).toHaveText('Control Atlas');
+    await expect(home).toHaveAccessibleName('Control Atlas — home');
+    await expect(page.locator('.brand-name')).toHaveText('Control Atlas');
+    const target = await home.boundingBox();
+    expect(target.width).toBeGreaterThanOrEqual(44);
+    expect(target.height).toBeGreaterThanOrEqual(44);
     await expect(home.locator('.brand-kbd')).toHaveCount(0);
     expect((await new AxeBuilder({ page }).include('.brand').withRules(['label-content-name-mismatch']).analyze()).violations).toEqual([]);
     await home.focus();

@@ -1,14 +1,23 @@
 import templateRegistry from "../../../data/template-registry.json";
 import workflowRegistry from "../../../data/compliance-workflows.json";
+import { buildRouteChoices } from "../../shared/build-route-choices.mjs";
+
+declare const __CONTROL_ATLAS_BUILD_ROUTE_CHOICES__: ReturnType<typeof buildRouteChoices>;
+declare const __CONTROL_ATLAS_BUILD_ROUTE_CHOICES_COMPILED__: boolean;
+// Node contracts use the real registries. Production replaces this branch
+// with the exact names/formats/ids computed from those same build inputs.
+const routeChoices = typeof __CONTROL_ATLAS_BUILD_ROUTE_CHOICES_COMPILED__ !== "undefined" && __CONTROL_ATLAS_BUILD_ROUTE_CHOICES_COMPILED__
+  ? __CONTROL_ATLAS_BUILD_ROUTE_CHOICES__
+  : buildRouteChoices(templateRegistry, workflowRegistry);
 
 const TEMPLATE_NAMES = new Set(
-  templateRegistry.templates.map((template) => template.name),
+  routeChoices.templates.map((template) => template.name),
 );
 const WORKFLOW_IDS = new Set(
-  workflowRegistry.workflows.map((workflow) => workflow.workflow_id),
+  routeChoices.workflowIds,
 );
 const FORMAT_BY_TEMPLATE = new Map(
-  templateRegistry.templates.map((template) => [
+  routeChoices.templates.map((template) => [
     template.name,
     new Set(template.supported_formats),
   ]),

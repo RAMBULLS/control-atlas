@@ -1,4 +1,7 @@
+/* global document, Element, MutationObserver */
 import { expect, test } from "@playwright/test";
+import { atlasNeighborhoodShardId } from "../../src/app/atlas-neighborhood.mjs";
+import { gzipSync, gunzipSync } from "node:zlib";
 
 import {
   attachPageDiagnostics,
@@ -15,6 +18,635 @@ function graphArtifactUrls(urls) {
 
 test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
+});
+
+async function assertSingleFontTransfers(page, files) {
+  const urls = [...new Set(files.map(file => file.url))];
+  const timings = await page.evaluate(() => performance.getEntriesByType("resource")
+    .filter(entry => entry instanceof PerformanceResourceTiming)
+    .filter(entry => /\/fonts\/[a-f0-9]{64}\.woff2/.test(entry.name))
+    .map(entry => ({ url: entry.name, transfer: entry.transferSize, decoded: entry.decodedBodySize })));
+  for (const url of urls) {
+    const entries = timings.filter(entry => entry.url === url);
+    expect(entries.some(entry => Number.isFinite(entry.decoded) && entry.decoded > 0), JSON.stringify({ url, timings })).toBe(true);
+    // FontFace consumers can emit multiple response events for a cached URL.
+    // Require no repeated wire transfer; valid cache hits may need none.
+    expect(entries.filter(entry => entry.transfer > 0).length, JSON.stringify({ url, timings })).toBeLessThanOrEqual(1);
+  }
+  return urls.length;
+}
+
+test("records and publication inventories work without native gzip decoding or raw payload duplicates", async ({ page }) => {
+  test.setTimeout(120_000);
+  await page.addInitScript(() => {
+    Object.defineProperty(globalThis, "DecompressionStream", { configurable: true, value: undefined });
+  });
+  const requests = [];
+  page.on("request", request => {
+    if (/\/(atlas-neighborhood|catalog-records)\//.test(request.url())) requests.push(request.url());
+  });
+  await page.goto("/#/record/nist-800-53/AC-2");
+  await waitForAppReady(page, { allowPartial: true });
+  await dismissOnboarding(page);
+  await expect(page.locator('[data-record-content="nist-800-53:AC-2"]')).toHaveAttribute("data-record-context-ready", "true");
+  await expect(page.locator("[data-record-source-error]")).toHaveCount(0);
+  await page.goto("/#/library/publication/nist-800-53");
+  await waitForAppReady(page, { allowPartial: true });
+  await expect(page.locator("#catalog-records-title")).toBeVisible();
+  expect(requests.some(url => /atlas-neighborhood\/.+\.json\.gz/.test(url))).toBe(true);
+  expect(requests.some(url => /catalog-records\/.+\.json\.gz/.test(url))).toBe(true);
+  expect(requests.some(url => /\.json(?:\?|$)/.test(url))).toBe(false);
+});
+
+test("first-paint fonts load the exact pinned faces without duplicate file requests", async ({ page }) => {
+  const files = [];
+  page.on("response", response => { if (/\/fonts\/[a-f0-9]{64}\.woff2/.test(response.url())) files.push({ url: response.url(), ok: response.ok() }); });
+  await page.goto("/");
+  const faces = await page.evaluate(async () => {
+    await document.fonts.ready;
+    const result = [];
+    document.fonts.forEach(face => result.push({ family: face.family.replace(/["']/g, ""), weight: face.weight, status: face.status }));
+    return result;
+  });
+  expect(faces).toHaveLength(5);
+  for (const [family, weight] of [["IBM Plex Mono", "400"], ["IBM Plex Mono", "600"], ["Oswald", "600"], ["Oswald", "700"]]) {
+    expect(faces).toContainEqual({ family, weight, status: "loaded" });
+  }
+  expect(files.every(file => file.ok)).toBe(true);
+  expect(await assertSingleFontTransfers(page, files)).toBe(3);
+});
+
+test("record text loads its used pinned faces through CSS without duplicate font requests", async ({ page }) => {
+  const files = [];
+  page.on("response", response => { if (/\/fonts\/[a-f0-9]{64}\.woff2/.test(response.url())) files.push({ url: response.url(), ok: response.ok() }); });
+  await page.goto("/#/record/nist-800-53/AC-2");
+  const record = page.locator('[data-record-content="nist-800-53:AC-2"]');
+  await expect(record).toBeVisible();
+  const fonts = await record.evaluate(async element => {
+    await document.fonts.ready;
+    const faces = [];
+    document.fonts.forEach(face => faces.push({ family: face.family, status: face.status }));
+    const text = [...element.querySelectorAll("h1,h2,p")].filter(node => node.getClientRects().length).map(node => {
+      const style = globalThis.getComputedStyle(node);
+      return { family: style.fontFamily, loaded: document.fonts.check(`${style.fontWeight} ${style.fontSize} ${style.fontFamily}`, node.textContent) };
+    });
+    return { faces, text };
+  });
+  expect(fonts.faces).toHaveLength(5);
+  expect(fonts.faces.every(face => face.status !== "error")).toBe(true);
+  expect(fonts.text.some(text => text.family.includes("Oswald"))).toBe(true);
+  expect(fonts.text.some(text => text.family.includes("IBM Plex Mono"))).toBe(true);
+  expect(fonts.text.every(text => text.loaded)).toBe(true);
+  expect(files.every(file => file.ok)).toBe(true);
+  const uniqueTransfers = await assertSingleFontTransfers(page, files);
+  expect(uniqueTransfers).toBeGreaterThan(0);
+  expect(uniqueTransfers).toBeLessThanOrEqual(3);
+});
+
+test("semantic button recipes retain sizing, keyboard focus, disabled state and caller overrides", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate(() => {
+    const host = document.createElement("section");
+    host.id = "button-contract";
+    host.style.cssText = "position:fixed;inset:100px auto auto 10px;z-index:99999;display:grid;gap:8px";
+    for (const variant of ["primary", "secondary", "secondary-quiet", "destructive", "editorial"]) {
+      const button = document.createElement("button");
+      button.className = `ca-button ca-button-${variant}`;
+      button.textContent = variant;
+      const row = document.createElement("div");
+      row.append(button);
+      host.append(row);
+    }
+    document.body.append(host);
+  });
+  const buttons = page.locator("#button-contract button");
+  for (const button of await buttons.all()) {
+    const values = await button.evaluate(element => {
+      const style = globalThis.getComputedStyle(element);
+      return { display: style.display, minHeight: style.minHeight, padding: style.paddingInlineStart,
+        border: style.borderTopWidth, radius: style.borderTopLeftRadius, weight: style.fontWeight, transform: style.textTransform };
+    });
+    expect(values).toEqual({ display: "inline-flex", minHeight: "44px", padding: "16px", border: "1px", radius: "3px", weight: "700", transform: "uppercase" });
+  }
+  await page.keyboard.press("Tab");
+  await buttons.first().focus();
+  await expect(buttons.first()).toHaveCSS("outline-width", "2px");
+  await expect(buttons.first()).toHaveCSS("outline-offset", "2px");
+  await buttons.first().evaluate(element => element.setAttribute("disabled", ""));
+  await expect(buttons.first()).toHaveCSS("opacity", "0.5");
+  await expect(buttons.first()).toHaveCSS("cursor", "not-allowed");
+  await page.addStyleTag({ content: "@layer utilities { .button-contract-override { padding-inline: 0 !important; font-weight: 400 !important; } }" });
+  await buttons.nth(1).evaluate(element => element.classList.add("button-contract-override"));
+  await expect(buttons.nth(1)).toHaveCSS("padding-inline-start", "0px");
+  await expect(buttons.nth(1)).toHaveCSS("font-weight", "400");
+});
+
+async function useLegacyRecordBootstrap(page) {
+  // Omit only the new register field to exercise the admitted older staging
+  // format. Publisher/source contents and the source-record index stay exact.
+  await page.route(/\/catalog-bootstrap-record\.json(?:\.gz)?(?:\?|$)/, async route => {
+    const response = await route.fetch({ url: route.request().url().replace('catalog-bootstrap-record.json', 'catalog-bootstrap.json') });
+    const compressed = new URL(route.request().url()).pathname.endsWith(".gz");
+    const bytes = await response.body();
+    const artifact = JSON.parse((compressed ? gunzipSync(bytes) : bytes).toString("utf8"));
+    delete artifact.catalog_bootstrap.sources;
+    delete artifact.catalog_bootstrap.record_bootstrap;
+    const json = Buffer.from(JSON.stringify(artifact));
+    const body = compressed ? gzipSync(json) : json;
+    const headers = { ...response.headers(), "content-length": String(body.length) };
+    delete headers["content-encoding"];
+    await route.fulfill({ response, headers, body });
+  });
+}
+
+test("record navigation waits for its own neighborhood and never announces stale absence", async ({ page }) => {
+  const firstId = "nist-800-53:AC-2";
+  const nextId = "fedramp-2026:IEC-CSO-EFI";
+  const nextShard = atlasNeighborhoodShardId(nextId);
+  expect(nextShard).not.toBe(atlasNeighborhoodShardId(firstId));
+  await page.goto("/#/record/nist-800-53/AC-2");
+  await expect(page.locator(`[data-record-content="${firstId}"]`)).toBeVisible();
+  let held = false;
+  let release = () => {};
+  const released = new Promise(resolve => { release = () => resolve(undefined); });
+  await page.route(`**/data/generated/atlas-neighborhood/${nextShard}.json*`, async route => {
+    held = true;
+    await released;
+    await route.continue();
+  });
+  try {
+    await page.goto("/#/record/fedramp-2026/IEC-CSO-EFI", { waitUntil: "domcontentloaded" });
+    await expect.poll(() => held).toBe(true);
+    await expect(page.locator('[data-record-content]')).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: "Record not found", exact: true })).toHaveCount(0);
+    await expect(page).toHaveTitle("Loading record — Control Atlas");
+    await expect(page.locator("#app")).toHaveAttribute("data-app-ready", "false");
+    await page.goto("/#/");
+    await waitForAppReady(page);
+    release();
+    await expect(page.locator('[data-record-content]')).toHaveCount(0);
+    await page.goto("/#/record/fedramp-2026/IEC-CSO-EFI");
+    await expect(page.locator(`[data-record-content="${nextId}"]`)).toBeVisible();
+    await expect(page.locator('[data-source-field="discussion"]')).toContainText("All incidents must be assigned a default PAIN-5");
+    // Accepted absence still produces the real recovery page.
+    await page.goto("/#/record/fedramp-2026/NOT-A-PUBLISHED-RECORD");
+    await expect(page.getByRole("heading", { name: "Record not found", exact: true })).toBeVisible();
+  } finally {
+    release();
+  }
+});
+
+test("record arrival data starts before selected-page hints and overlaps the shell", async ({ page }) => {
+  await page.addInitScript(() => {
+    const order = globalThis.__arrivalInvocationOrder = [];
+    const nativeFetch = globalThis.fetch;
+    globalThis.fetch = (...args) => {
+      order.push({ kind: "fetch", url: String(args[0]) });
+      return Reflect.apply(nativeFetch, globalThis, args);
+    };
+    const nativeAppend = globalThis.Node.prototype.appendChild;
+    globalThis.Node.prototype.appendChild = function (node) {
+      if (node instanceof globalThis.HTMLLinkElement && node.rel === "modulepreload") {
+        order.push({ kind: "hint", url: node.href });
+      }
+      return Reflect.apply(nativeAppend, this, [node]);
+    };
+  });
+  const requested = [];
+  page.on("request", request => requested.push(request.url()));
+  let loaderWaiting = false;
+  let releaseLoader = () => {};
+  const loaderReleased = new Promise(resolve => { releaseLoader = () => resolve(undefined); });
+  await page.route(/\/assets\/(?:runtimeLoader|data-warmup)-[^/]+\.js$/, async route => {
+    loaderWaiting = true;
+    await loaderReleased;
+    await route.continue();
+  });
+  const routeScript = url => /\/assets\/ObjectDetailPage-[^/]+\.js$/.test(url);
+  try {
+    await page.goto("/#/record/nist-800-53/AC-2", { waitUntil: "domcontentloaded" });
+    await expect.poll(() => loaderWaiting).toBe(true);
+    await expect.poll(() => requested.some(url => /\/assets\/interactive-shell-[^/]+\.js$/.test(url)), { message: "The shell download overlaps the data module" }).toBe(true);
+    await expect(page.locator('[data-record-content]')).toHaveCount(0);
+    releaseLoader();
+    await expect(page.locator('[data-record-section="official-text"]')).toContainText("Define and document the types of accounts allowed");
+    const shardIndex = requested.findIndex(url => /atlas-neighborhood\/[0-9a-f]+\.json\.gz/.test(url));
+    expect(shardIndex).toBeGreaterThanOrEqual(0);
+    expect(requested.some(routeScript)).toBe(true);
+    // Browsers may dispatch already queued network work in a different order.
+    // Verify the actual fetch/hint invocation order, plus both real requests.
+    const invoked = await page.evaluate(() => globalThis.__arrivalInvocationOrder);
+    const data = invoked.findIndex(entry => entry.kind === "fetch" && /atlas-neighborhood\/.+\.json\.gz/.test(entry.url));
+    const hint = invoked.findIndex(entry => entry.kind === "hint" && routeScript(entry.url));
+    expect(data).toBeGreaterThanOrEqual(0);
+    expect(hint).toBeGreaterThan(data);
+  } finally {
+    releaseLoader();
+  }
+});
+
+test("returning Home during the initial loader wait never commits the stale record", async ({ page }) => {
+  const requested = [];
+  page.on("request", request => requested.push(request.url()));
+  let loaderWaiting = false;
+  let releaseLoader = () => {};
+  const loaderReleased = new Promise(resolve => { releaseLoader = () => resolve(undefined); });
+  await page.route(/\/assets\/(?:runtimeLoader|data-warmup)-[^/]+\.js$/, async route => {
+    loaderWaiting = true;
+    await loaderReleased;
+    await route.continue();
+  });
+  const loaderResponse = page.waitForResponse(response => /\/assets\/(?:runtimeLoader|data-warmup)-[^/]+\.js$/.test(response.url()));
+  await page.route(/\/assets\/ObjectDetailPage-[^/]+\.js$/, async route => {
+    const response = await route.fetch();
+    await route.fulfill({ response, body: `globalThis.__recordModuleExecuted = true;\n${await response.text()}` });
+  });
+  try {
+    await page.goto("/#/record/nist-800-53/AC-2", { waitUntil: "domcontentloaded" });
+    await expect.poll(() => loaderWaiting).toBe(true);
+    await page.evaluate(() => { globalThis.location.hash = "/"; });
+    releaseLoader();
+    const response = await loaderResponse;
+    expect(response.ok()).toBe(true);
+    await page.evaluate(async url => {
+      await import(url);
+      await new Promise(resolve => setTimeout(resolve, 0));
+    }, response.url());
+    await waitForAppReady(page);
+    await expect(page.locator('[data-static-home]')).toBeVisible();
+    await expect(page.locator('[data-record-content]')).toHaveCount(0);
+    await expect(page.locator('[data-route-suspense-pending="true"]')).toHaveCount(0);
+    expect(await page.evaluate(() => globalThis.__recordModuleExecuted === true)).toBe(false);
+    // The classic arrival script may already have requested its one compact
+    // cohort before React's loader was held. Returning Home must add no more.
+    expect(requested.filter(url => /atlas-neighborhood/.test(url)).length).toBeLessThanOrEqual(1);
+    await page.getByRole("link", { name: "All records", exact: true }).click();
+    await waitForAppReady(page);
+    await expect(page).toHaveURL(/#\/library/);
+    await expect(page.locator('[data-record-content]')).toHaveCount(0);
+  } finally {
+    releaseLoader();
+  }
+});
+
+for (const width of [412, 1440]) {
+test(`Resources keeps its identity and heading geometry at ${width}px until the lazy directory is usable`, async ({ page }) => {
+  await page.setViewportSize({ width, height: 823 });
+  await page.clock.install();
+  const directoryRequests = [];
+  page.on("request", request => {
+    if (/commons-search-index|\/assets\/(?:data-warmup|interactive-shell|CommonsPage)-/.test(request.url())) directoryRequests.push(request.url());
+  });
+  let releaseEntry = () => {};
+  const entryReleased = new Promise(resolve => { releaseEntry = () => resolve(undefined); });
+  await page.route(/\/assets\/index-[^/]+\.js$/, async route => {
+    await entryReleased;
+    await route.continue();
+  });
+  let releaseDirectory = () => {};
+  const directoryReleased = new Promise(resolve => { releaseDirectory = () => resolve(undefined); });
+  await page.route(/\/assets\/CommonsPage-[^/]+\.js$/, async route => {
+    await directoryReleased;
+    await route.continue();
+  });
+  try {
+    await page.goto("/#/resources", { waitUntil: "commit" });
+    const shell = page.locator("[data-static-route]");
+    await expect(shell).toBeVisible();
+    await expect(shell.getByRole("heading", { level: 1 })).toHaveText("Resources");
+    await expect(shell.getByRole("navigation", { name: "Resource companions" })).toBeVisible();
+    await expect(page.locator("#root")).toHaveAttribute("data-static-route-kind", "resources");
+    await expect(page.locator("#root")).not.toHaveAttribute("data-react-active", "true");
+    await expect(shell).toHaveCSS("position", "relative");
+    await page.evaluate(async () => {
+      const heading = globalThis.document.querySelector("[data-static-route] h1");
+      const style = globalThis.getComputedStyle(heading);
+      await globalThis.document.fonts.load(`${style.fontWeight} ${style.fontSize} ${style.fontFamily}`, heading.textContent);
+    });
+    const beforeHeading = await shell.getByRole("heading", { level: 1 }).boundingBox();
+    expect(directoryRequests, "the native masthead is usable before directory delivery starts").toEqual([]);
+    releaseEntry();
+    await expect(page.locator('[data-route-suspense-pending="true"]')).toHaveCount(1);
+    // Startup hides the unready workspace with opacity rather than inherited
+    // visibility; it must also stay outside keyboard interaction until ready.
+    const workspace = page.locator('#workspace');
+    await expect(workspace).toHaveCSS('opacity', '0');
+    await expect(workspace).toHaveAttribute('inert', '');
+    await workspace.focus();
+    await expect(workspace).not.toBeFocused();
+    await page.clock.fastForward(16_000);
+    await expect(page.locator("#root")).not.toHaveAttribute("data-route-hydrated", "true");
+    releaseDirectory();
+    await expect(page.locator("#root")).toHaveAttribute("data-route-hydrated", "true");
+    await expect(workspace).toHaveCSS('opacity', '1');
+    await expect(workspace).not.toHaveAttribute('inert', '');
+    await expect(page.getByRole("heading", { name: "Resources", exact: true, level: 1 })).toHaveCount(1);
+    await expect(shell).not.toHaveAttribute("role", "status");
+    await expect(page.getByRole("searchbox", { name: "Find resources" })).toBeVisible();
+    await expect(page.getByRole("main", { name: "Resources" })).toBeVisible();
+    const afterHeading = await shell.getByRole("heading", { level: 1 }).boundingBox();
+    expect(Math.abs(afterHeading.x - beforeHeading.x), "masthead horizontal handoff").toBeLessThanOrEqual(1);
+    expect(Math.abs(afterHeading.y - beforeHeading.y), "masthead vertical handoff").toBeLessThanOrEqual(1);
+    expect(Math.abs(afterHeading.height - beforeHeading.height), "masthead height handoff").toBeLessThanOrEqual(1);
+    expect(Math.abs(afterHeading.width - beforeHeading.width), "masthead width handoff").toBeLessThanOrEqual(1);
+    const companions = page.getByRole("navigation", { name: "Resource companions" });
+    await expect(companions).toHaveCount(1);
+    const headerBox = await shell.locator("header").boundingBox();
+    const searchBox = await page.locator(".workspace-search").boundingBox();
+    expect(headerBox).not.toBeNull();
+    expect(searchBox).not.toBeNull();
+    const searchGap = searchBox.y - (headerBox.y + headerBox.height);
+    expect(searchGap, "search does not overlap its masthead").toBeGreaterThanOrEqual(0);
+    expect(searchGap, "search follows the single masthead").toBeLessThanOrEqual(28);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.getByRole("searchbox", { name: "Find resources" }).fill("zero trust");
+    await page.getByRole("searchbox", { name: "Find resources" }).press("Enter");
+    await expect(page).toHaveURL(/q=zero\+trust/);
+    await expect(page.getByRole("heading", { name: "Resources", exact: true, level: 1 })).toHaveCount(1);
+    await expect(page.getByRole("searchbox", { name: "Find resources" })).toBeFocused();
+    await companions.getByRole("link", { name: /Browse Templates/ }).click();
+    await expect(shell).not.toBeVisible();
+    await expect(page.getByRole("heading", { name: "Templates", exact: true, level: 1 })).toBeVisible();
+    await expect(page.locator("#workspace")).not.toHaveAttribute("aria-labelledby", "static-route-title");
+    await page.locator('.site-header a[href="#/resources"]').click();
+    await expect(shell.getByRole("heading", { level: 1 })).toBeFocused();
+    await page.goBack();
+    await expect(shell).not.toBeVisible();
+    await page.goBack();
+    await expect(shell).toBeVisible();
+    await expect(page.getByRole("searchbox", { name: "Find resources" })).toHaveValue("zero trust");
+    await expect(page.getByRole("heading", { name: "Resources", exact: true, level: 1 })).toHaveCount(1);
+  } finally {
+    releaseEntry();
+    releaseDirectory();
+  }
+});
+}
+
+test("client navigation to Resources retains its complete React masthead", async ({ page }) => {
+  await page.goto("/#/guides");
+  await waitForAppReady(page);
+  await page.locator('.site-header a[href="#/resources"]').click();
+  await expect(page.getByRole("searchbox", { name: "Find resources" })).toBeVisible();
+  await expect(page.locator("[data-static-route]")).toHaveCount(0);
+  await expect(page.locator(".workspace-template > .page-header")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Resources", exact: true, level: 1 })).toHaveCount(1);
+  await expect(page.getByRole("navigation", { name: "Resource companions" })).toHaveCount(1);
+});
+
+test("Resources exposes recovery when a delayed page module fails", async ({ page }) => {
+  await page.clock.install();
+  let releaseDirectory = () => {};
+  const directoryReleased = new Promise(resolve => { releaseDirectory = () => resolve(undefined); });
+  await page.route(/\/assets\/CommonsPage-[^/]+\.js$/, async route => {
+    await directoryReleased;
+    await route.abort();
+  });
+  try {
+    await page.goto("/#/resources");
+    await expect(page.locator('[data-route-suspense-pending="true"]')).toHaveCount(1);
+    await page.clock.fastForward(16_000);
+    releaseDirectory();
+    await expect(page.getByText("This workspace stopped unexpectedly. The rest of Control Atlas is still available.")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Try loading again" })).toBeVisible();
+    await expect(page.locator("#root")).toHaveAttribute("data-route-hydrated", "true");
+  } finally {
+    releaseDirectory();
+  }
+});
+
+test("legacy record staging commits official content without a whole-tree or Resources download, then supports search", async ({ page }) => {
+  await useLegacyRecordBootstrap(page);
+  await page.setViewportSize({ width: 412, height: 823 });
+  const resourceRequests = [];
+  const sourceRequests = [];
+  const sourceRecordRequests = [];
+  const manifestRequests = [];
+  let spineRequests = 0;
+  page.on("request", request => {
+    if (/commons-search-index|commons-resource-dataset/.test(request.url())) resourceRequests.push(request.url());
+    if (/atlas-spine/.test(request.url())) spineRequests += 1;
+    if (/\/sources\.json(?:\.gz)?(?:\?|$)/.test(request.url())) sourceRequests.push(request.url());
+    if (/\/source-records\//.test(request.url())) sourceRecordRequests.push(request.url());
+    if (/atlas-neighborhood-manifest/.test(request.url())) manifestRequests.push(request.url());
+  });
+  let releaseRecord = () => {};
+  const recordReleased = new Promise(resolve => { releaseRecord = () => resolve(undefined); });
+  let releaseSupporting = () => {};
+  const supportingReleased = new Promise(resolve => { releaseSupporting = () => resolve(undefined); });
+  await page.route(/\/data\/generated\/sources\.json(?:\.gz)?(?:\?|$)/, async route => {
+    await supportingReleased;
+    await route.continue();
+  });
+  await page.route(/\/assets\/ObjectDetailPage-[^/]+\.js$/, async route => {
+    await recordReleased;
+    await route.continue();
+  });
+  const neighborhood = page.waitForResponse(response => /atlas-neighborhood\/[0-9a-f]+\.json\.gz/.test(response.url()));
+  try {
+    await page.goto("/#/record/nist-800-53/AC-2", { waitUntil: "domcontentloaded" });
+    await neighborhood;
+    await expect(page.locator('[data-route-suspense-pending="true"]')).toHaveCount(0);
+    await expect(page.locator('[data-record-content]')).toHaveCount(0);
+    await expect.poll(() => sourceRecordRequests.length).toBeGreaterThan(0);
+    expect(sourceRequests, "the source register waits for published record paint").toEqual([]);
+    expect(manifestRequests, "the admitted partition metadata is already in the catalog bootstrap").toEqual([]);
+    expect(spineRequests).toBe(0);
+    releaseRecord();
+    const published = page.locator('[data-record-section="official-text"]');
+    await expect(published).toBeVisible();
+    await expect.poll(() => sourceRequests.length).toBeGreaterThan(0);
+    await page.evaluate(() => document.fonts.ready);
+    const before = await published.boundingBox();
+    const acceptedParagraph = await published.locator("p").first().elementHandle();
+    releaseSupporting();
+    await expect(page.locator('[data-record-content="nist-800-53:AC-2"]')).toHaveAttribute("data-record-context-ready", "true");
+    const after = await published.boundingBox();
+    expect(await acceptedParagraph.evaluate(node => node.isConnected)).toBe(true);
+    expect(await published.locator("p").first().evaluate((node, accepted) => node === accepted, acceptedParagraph)).toBe(true);
+    for (const axis of ["x", "y", "width", "height"]) expect(Math.abs(after[axis] - before[axis]), `Published text ${axis} stays stable through supporting metadata`).toBeLessThanOrEqual(1);
+    await expect(page.locator('[data-record-content="nist-800-53:AC-2"]')).toHaveAttribute("data-record-commit", /^\d+$/);
+    await expect(page.locator('[data-record-section="official-text"]')).toContainText("Define and document the types of accounts allowed");
+    expect(spineRequests, "the complete record authority chain needs no whole-tree download").toBe(0);
+    expect(resourceRequests, "a closed-search record needs no Resources payload").toEqual([]);
+    const coldTransfer = await page.evaluate(() => {
+      const entries = /** @type {PerformanceResourceTiming[]} */ (performance.getEntriesByType("resource"));
+      return {
+        totalEncodedBytes: entries.reduce((total, entry) => total + entry.encodedBodySize, 0),
+        recordArtifacts: entries.filter(entry => /atlas-neighborhood/.test(entry.name))
+          .map(entry => ({ path: new URL(entry.name).pathname, encodedBytes: entry.encodedBodySize })),
+      };
+    });
+    console.log(`[record-cold-transfer] ${JSON.stringify(coldTransfer)}`);
+    expect(coldTransfer.recordArtifacts).toHaveLength(1);
+    expect(coldTransfer.recordArtifacts.every(entry => entry.encodedBytes > 0)).toBe(true);
+    await page.getByRole("button", { name: "Open search" }).click();
+    await page.getByRole("searchbox", { name: "Search Control Atlas" }).fill("NISTControls");
+    await expect(page.getByRole("link", {
+      name: "Reddit /r/NISTControls Practitioner Community", exact: true,
+    })).toBeVisible();
+    expect(resourceRequests.some(url => url.includes("commons-search-index"))).toBe(true);
+    expect(resourceRequests.some(url => url.includes("commons-resource-dataset"))).toBe(true);
+  } finally {
+    releaseRecord();
+    releaseSupporting();
+  }
+});
+
+test("atomic record arrival includes complete source context without another source fetch", async ({ page }) => {
+  await page.setViewportSize({ width: 412, height: 823 });
+  const sourceRequests = [];
+  page.on("request", request => {
+    if (/\/sources\.json(?:\.gz)?(?:\?|$)|\/source-records\//.test(request.url())) sourceRequests.push(request.url());
+  });
+  await page.goto("/#/record/nist-800-53/AC-2");
+  const record = page.locator('[data-record-content="nist-800-53:AC-2"]');
+  await expect(record).toHaveAttribute("data-record-context-ready", "true");
+  await expect(record.locator('[data-record-section="official-text"]')).toContainText("Define and document the types of accounts allowed");
+  await expect(record.locator('[data-record-section="related-records"] details.record-relationship-disclosure').first()).toBeAttached();
+  await expect(record).not.toContainText("Loading source information for related records.");
+  expect(sourceRequests).toEqual([]);
+});
+
+test("a fulfilled record warm-up renders accepted text without another route fallback", async ({ page }) => {
+  let releaseData = () => {};
+  const dataReleased = new Promise(resolve => { releaseData = () => resolve(undefined); });
+  await page.route(/\/data\/generated\/atlas-neighborhood\/[^/]+\.json/, async route => {
+    await dataReleased;
+    await route.continue();
+  });
+  const moduleResponse = page.waitForResponse(response =>
+    /\/assets\/ObjectDetailPage-[^/]+\.js$/.test(new URL(response.url()).pathname),
+  );
+  try {
+    await page.goto("/#/record/nist-800-53/AC-2", { waitUntil: "domcontentloaded" });
+    const response = await moduleResponse;
+    expect(response.ok()).toBe(true);
+    // Await evaluation of the exact module warmed by the entry, including its
+    // dependencies. A completed network response alone does not prove readiness.
+    await page.evaluate(async url => {
+      await import(url);
+      await new Promise(resolve => setTimeout(resolve, 0));
+    }, response.url());
+    await page.evaluate(() => {
+      const marker = '[data-route-suspense-pending="true"]';
+      const observe = () => {
+        if (document.querySelector(marker)) document.documentElement.dataset.recordFallbackObserved = "true";
+      };
+      observe();
+      const observer = new MutationObserver(records => {
+        // Inspect removed nodes too: a fallback inserted and removed in one
+        // browser task must still fail this contract.
+        for (const record of records) {
+          for (const node of [...record.addedNodes, ...record.removedNodes]) {
+            if (node instanceof Element && (node.matches(marker) || node.querySelector(marker))) {
+              document.documentElement.dataset.recordFallbackObserved = "true";
+            }
+          }
+        }
+        observe();
+      });
+      const root = document.getElementById("root");
+      if (!root) throw new Error("Record root is missing");
+      observer.observe(root, { childList: true, subtree: true });
+      document.addEventListener("test:stop-record-fallback-observation", () => observer.disconnect(), { once: true });
+    });
+    releaseData();
+    const record = page.locator('[data-record-content="nist-800-53:AC-2"]');
+    const published = page.locator('[data-record-section="official-text"]');
+    await expect(published).toBeVisible();
+    await expect(published).toContainText("Define and document the types of accounts allowed");
+    const acceptedText = await published.textContent();
+    const acceptedCommit = await record.getAttribute("data-record-commit");
+    expect(acceptedCommit).toMatch(/^\d+$/);
+    const acceptedNode = await published.elementHandle();
+    await expect(record).toHaveAttribute("data-record-context-ready", "true");
+    // Supporting source metadata creates a complete runtime after the official
+    // commit. It must preserve the accepted text node without a route fallback.
+    await expect(record).toHaveAttribute("data-record-commit", /^\d+$/);
+    expect(await published.textContent()).toBe(acceptedText);
+    expect(await acceptedNode.evaluate(node => node === document.querySelector('[data-record-section="official-text"]'))).toBe(true);
+    await acceptedNode.dispose();
+    await expect(page.locator("html")).not.toHaveAttribute("data-record-fallback-observed", "true");
+    await expect(page.locator('[data-route-suspense-pending="true"]')).toHaveCount(0);
+  } finally {
+    releaseData();
+    await page.evaluate(() => document.dispatchEvent(new Event("test:stop-record-fallback-observation")));
+  }
+});
+
+test("a failed required record source can retry without inventing official text", async ({ page }) => {
+  let failContext = true;
+  let releaseRetry = () => {};
+  const retryReleased = new Promise(resolve => { releaseRetry = () => resolve(undefined); });
+  let observeRetry = () => {};
+  const retryRequested = new Promise(resolve => { observeRetry = () => resolve(undefined); });
+  await page.route(/\/data\/generated\/atlas-neighborhood\/[^/]+\.json/, async route => {
+    if (failContext) await route.abort();
+    else {
+      observeRetry();
+      await retryReleased;
+      await route.continue();
+    }
+  });
+  await page.goto("/#/record/nist-800-53/AC-2");
+  const published = page.locator('[data-record-section="official-text"]');
+  await expect(page.getByText("Unable to load data", { exact: true })).toBeVisible();
+  await expect(published).toHaveCount(0);
+  failContext = false;
+  const recoveredRecord = page.waitForResponse(response => /atlas-neighborhood\/[0-9a-f]+\.json\.gz/.test(response.url()) && response.status() === 200);
+  await page.getByRole("button", { name: "Try loading again" }).click();
+  await retryRequested;
+  await expect(published).toHaveCount(0);
+  releaseRetry();
+  await recoveredRecord;
+  await expect(page.getByText("Unable to load data", { exact: true })).toHaveCount(0);
+  await expect(published).toBeVisible();
+  await expect(published).toContainText("Define and document the types of accounts allowed");
+});
+
+test("a bounded render handoff failure retains accepted record text during retry", async ({ page }) => {
+  await page.clock.install();
+  await page.addInitScript(() => {
+    document.addEventListener("DOMContentLoaded", () => {
+      const style = document.createElement("style");
+      style.id = "test-delayed-record-visibility";
+      style.textContent = "[data-record-content] { visibility: hidden !important; }";
+      document.head.append(style);
+    }, { once: true });
+  });
+  await page.goto("/#/record/nist-800-53/AC-2");
+  const record = page.locator('[data-record-content="nist-800-53:AC-2"]');
+  const published = page.locator('[data-record-section="official-text"]');
+  await expect(published).toBeAttached();
+  const acceptedText = await published.textContent();
+  await page.clock.fastForward(12_100);
+  await expect(page.locator("[data-record-context-error]")).toBeAttached();
+  await page.evaluate(() => document.getElementById("test-delayed-record-visibility").remove());
+  await expect(published).toBeVisible();
+  const acceptedCommit = await record.getAttribute("data-record-commit");
+  let releaseRetry = () => {};
+  const retryReleased = new Promise(resolve => { releaseRetry = () => resolve(undefined); });
+  let observeRetry = () => {};
+  const retryRequested = new Promise(resolve => { observeRetry = () => resolve(undefined); });
+  await page.route(/\/data\/generated\/atlas-neighborhood\/[^/]+\.json/, async route => {
+    observeRetry();
+    await retryReleased;
+    await route.continue();
+  });
+  try {
+    await page.locator("[data-record-context-error]").getByRole("button", { name: "Try loading again" }).click();
+    await retryRequested;
+    await expect(published).toBeVisible();
+    expect(await published.textContent()).toBe(acceptedText);
+    await expect(record).toHaveAttribute("data-record-commit", acceptedCommit);
+    releaseRetry();
+    await expect(record).toHaveAttribute("data-record-context-ready", "true");
+    await expect(page.locator("[data-record-context-error]")).toHaveCount(0);
+    expect(await published.textContent()).toBe(acceptedText);
+  } finally {
+    releaseRetry();
+  }
 });
 
 test("home bootstrap avoids graph JSON artifacts", async ({ page }) => {
@@ -173,7 +805,7 @@ test("focused Atlas loads one neighborhood without monolithic graph JSON", async
 
   expect(graphArtifactUrls(requested)).toEqual([]);
   expect(
-    requested.some((url) => url.includes("atlas-neighborhood/32.json")),
+    requested.some((url) => url.includes(`atlas-neighborhood/${atlasNeighborhoodShardId("nist-800-53:AC-2")}.json`)),
   ).toBeTruthy();
 });
 
@@ -186,13 +818,10 @@ test("focused Atlas loading state avoids a content-agnostic mobile minimum heigh
     releaseNeighborhood = () => resolve();
   });
 
-  await page.route(
-    "**/data/generated/atlas-neighborhood/32.json*",
-    async (route) => {
-      await neighborhoodGate;
-      await route.continue();
-    },
-  );
+  await page.route(`**/data/generated/atlas-neighborhood/${atlasNeighborhoodShardId("nist-800-53:AC-2")}.json*`, async (route) => {
+    await neighborhoodGate;
+    await route.continue();
+  });
 
   await page.goto("/#/explore?node=nist-800-53%3AAC-2&relationshipView=map");
   await expect(page.locator("#app")).toHaveAttribute(

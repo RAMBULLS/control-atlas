@@ -158,8 +158,17 @@ test('retention keeps an existing incident open until actual recovery without mu
 
 test('production measurement has fixed warmups, three measured runs and unchanged budgets', () => {
   const plan = productionLighthousePlan('https://rambulls.github.io/control-atlas/');
-  assert.equal(plan.filter(r => r.warmup).length, 2);
-  assert.equal(plan.filter(r => !r.warmup).length, 3);
+  assert.equal(plan.filter(r => r.warmup).length, 6);
+  assert.equal(plan.filter(r => !r.warmup).length, 9);
+  assert.deepEqual([...new Set(plan.map(r => r.route))], [
+    'https://rambulls.github.io/control-atlas/',
+    'https://rambulls.github.io/control-atlas/#/resources',
+    'https://rambulls.github.io/control-atlas/#/record/nist-800-53/AC-2',
+  ]);
+  for (const route of new Set(plan.map(r => r.route))) {
+    assert.equal(plan.filter(r => r.route === route && r.warmup).length, 2);
+    assert.equal(plan.filter(r => r.route === route && !r.warmup).length, 3);
+  }
   assert.ok(plan.every(r => r.args.includes('--save-assets')));
   assert.ok(plan.filter(r => r.warmup).every(r => r.args.at(-1).includes('/warmups/')));
   assert.equal(routeThresholdFailures([{ url: 'x', runs: 3, lcpMs: 1000, cls: 0, tbtMs: 201 }]).length, 1);

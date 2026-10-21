@@ -8,6 +8,7 @@
 import { cpSync, rmSync, mkdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { verifyPublishedSite } from './lib/site-payload.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = join(ROOT, 'dist-public');
@@ -80,6 +81,8 @@ function main() {
     }
   }
 
+  const published = verifyPublishedSite(DIST);
+  console.log(`Public mirror storage verified: ${published.bytes}/${published.maxBytes} bytes.`);
   console.log(`\nStaged ${count} allowed paths to ${DIST}/`);
   console.log('Ready for public sync.');
 }

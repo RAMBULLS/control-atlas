@@ -352,6 +352,70 @@ and small logs instead of downloading a full site or corpus to the laptop.
 
 ### Production performance measurement
 
+Published storage is measured separately from Lighthouse arrival bytes and the
+compressed Actions ZIP. The built site must stay within 1,000,000,000 bytes,
+following the [GitHub Pages published-site limit](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits).
+The builder verifies byte-identical gzip pairs before omitting duplicate raw JSON
+from `atlas-neighborhood`, `graph-data`, `compare-data` and `catalog-records` in
+the staged package. Full generated source/evidence artifacts remain available to
+validation and reproducible builds. Registries, native-encoded search data and
+the research worker's verified payload retain their existing delivery.
+Manifest `.json` paths identify decoded artifacts; runtime loading resolves their
+existing `.json.gz` representations. Deployment checks the storage limit again,
+including when selecting an older artifact for recovery.
+
+Modern browsers use native gzip decoding. Browsers without that API lazily use
+the already installed `fflate` decoder; they must not require the omitted raw
+duplicates. Existing raw-file fallback remains available for retained and legacy
+layouts. Published collection smoke checks explicitly opt into compressed shards;
+source-generation checks still require their raw inputs and exact record counts.
+The independent site-artifact check counts actual published files and rejects
+symbolic links, leftover duplicate large JSON and storage over the hosting limit.
+
+CI's `npm run test:performance:ci` serves the unchanged built site over
+localhost HTTPS with HTTP/2, matching the public deployment transport. It uses
+an ephemeral one-day localhost certificate and admits only that certificate's
+SPKI hash in Chrome. No system trust or general certificate exception changes.
+Measured documents and transferred same-origin assets must report `h2`.
+The static server's ordinary browser-test mode remains HTTP/1.1.
+Content-addressed WOFF2 files use Pages' ten-minute cache lifetime so declared
+weights can share one font response. Other local assets retain `no-store`.
+Each measured Lighthouse sample still starts with a fresh browser profile.
+CI collects three fixed cold-browser samples per requested route after two host
+warmups. LHCI calculates each metric's median within that route; SPA routes must
+never be pooled by their shared final URL. Other audit and byte limits use the
+worst sample. Every sample must have valid metrics and transport evidence.
+For the font, Sources, Compare, keyboard and footer regressions, the existing
+manual nightly task accepts `sweep_mode=reliability` and
+`reliability_focus=acceptance`: three fixed repeats in all three engines, zero
+retries. This focused diagnostic does not qualify as the complete nightly sweep.
+The optional `--compare-http1` runner flag retains a fixed HTTP/1 reference
+before the HTTP/2 measurement, with the same build identities, routes, cold
+samples, host warmups, throttling and assertions. Reference failures remain in
+the comparison artifact; they are not production-transport passes.
+
+Control Atlas is a reference and analysis tool with large connected source data.
+Its first useful guidance and publisher text should load promptly; complete
+search, comparison and graph context may load progressively with truthful loading
+states. Optimize measured bottlenecks without removing source evidence or moving
+unbounded work into the first view. A perfect Lighthouse score is not required:
+the performance score remains advisory, while task completion, accessibility,
+loading stability and the explicit metric/byte budgets are required.
+
+CI and deployed checks target LCP <= 2500 ms, TBT <= 200 ms and CLS <= 0.1 using
+the fixed route medians. These are synthetic mobile regression gates, not proof
+that every device, connection or visit meets those times. The 400,000-byte script
+and 1,800,000-byte total arrival caps are project budgets, not industry standards.
+Changing them requires measured task benefit and an explicit tradeoff; a failed
+run alone does not justify raising a limit.
+
+[Core Web Vitals](https://web.dev/articles/vitals) defines good real-user LCP
+<= 2500 ms, INP <= 200 ms and CLS <= 0.1 at the 75th percentile, with mobile and
+desktop assessed separately. Field compliance remains unverified without that
+visit data. TBT is a lab diagnostic, not INP. Functional keyboard/search/journey
+checks remain necessary alongside loading measurements. Interpret differences
+using the documented [lab and field distinction](https://web.dev/articles/lab-and-field-data-differences).
+
 `npm run lighthouse:production` uses two fixed host warmups followed by three
 measured cold-browser runs. All three measured runs enter the median; scores do
 not trigger retries or selective sampling. LCP, TBT and CLS budgets remain

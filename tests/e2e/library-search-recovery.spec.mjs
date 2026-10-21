@@ -1,14 +1,39 @@
 import { expect, test } from "@playwright/test";
 
-import { dismissOnboarding, waitForAppReady } from "./support.mjs";
+import { dismissOnboarding, gotoApp, waitForAppReady } from "./support.mjs";
 
 async function open(page, route) {
-  await page.goto(route);
+  await gotoApp(page, route);
   await waitForAppReady(page);
   await dismissOnboarding(page);
 }
 
 const resultCount = (page) => page.locator("#library-results .workspace-result-row").first();
+
+test("Library waits for its own index instead of announcing a previous route's results", async ({ page }) => {
+  await open(page, "/#/record/nist-800-53/AC-2");
+  let held = false;
+  let release = () => {};
+  const gate = new Promise(resolve => { release = () => resolve(undefined); });
+  await page.route(/\/data\/generated\/library-search(?:-index)?\.json(?:\.gz)?(?:\?|$)/, async route => {
+    held = true;
+    await gate;
+    await route.continue();
+  });
+  try {
+    await page.getByRole("link", { name: "Filter the Library by RMF", exact: true }).click();
+    await expect.poll(() => held).toBe(true);
+    await expect(page.locator("#app")).toHaveAttribute("data-app-ready", "false");
+    await expect(page.locator(".workspace-result-count")).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: "No records found.", exact: true })).toHaveCount(0);
+    release();
+    await waitForAppReady(page);
+    await expect(resultCount(page)).toBeVisible();
+    await expect(page.locator(".workspace-result-count")).toHaveText(/^[1-9][\d,]* (?:matches|results)/);
+  } finally {
+    release();
+  }
+});
 
 test("global Search from Atlas includes Resources and source publications", async ({ page }) => {
   const resourceRequests = [];

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { loadSourceRegistry } from '../tools/validators/source-registry.mjs';
 import { validateGraphArtifacts } from '../tools/validators/federal-graph.mjs';
@@ -11,6 +12,7 @@ const required = [
   'dist/site/assets/',
   'dist/site/data/source-registry.json',
   'dist/site/data/generated/sources.json',
+  'dist/site/data/generated/catalog-bootstrap-record.json',
   'dist/site/data/generated/nodes.json',
   'dist/site/data/generated/edges.json',
   'dist/site/data/generated/evidence.json',
@@ -22,14 +24,26 @@ const required = [
 for (const path of required) assert.ok(existsSync(path), `${path} is required`);
 
 const registry = loadSourceRegistry(JSON.parse(readFileSync('dist/site/data/source-registry.json', 'utf8')));
-const nodes = readGeneratedCollection('dist/site', 'nodes').nodes;
-const edges = readGeneratedCollection('dist/site', 'edges').edges;
-const evidence = readGeneratedCollection('dist/site', 'evidence').evidence;
+const nodes = readGeneratedCollection('dist/site', 'nodes', { compressed: true }).nodes;
+const edges = readGeneratedCollection('dist/site', 'edges', { compressed: true }).edges;
+const evidence = readGeneratedCollection('dist/site', 'evidence', { compressed: true }).evidence;
 const findings = JSON.parse(readFileSync('dist/site/data/generated/graph-health.json', 'utf8')).findings;
 const buildManifest = JSON.parse(readFileSync('dist/site/data/generated/build-manifest.json', 'utf8')).build_manifest;
 const sourceManifests = JSON.parse(readFileSync('dist/site/data/generated/source-manifests.json', 'utf8')).source_manifests;
 const indexHtml = readFileSync('dist/site/index.html', 'utf8');
 const assets = readdirSync('dist/site/assets');
+const policyPosition = indexHtml.indexOf('http-equiv="Content-Security-Policy"');
+const firstScriptPosition = indexHtml.search(/<script\b/i);
+assert.ok(policyPosition >= 0 && firstScriptPosition > policyPosition, 'the security policy must precede every executable script');
+const arrivalScripts = [...indexHtml.matchAll(/<script data-arrival-delivery>([\s\S]*?)<\/script>/g)];
+assert.equal(arrivalScripts.length, 1, 'arrival delivery uses one exact inline first-paint script');
+const arrivalHash = createHash('sha256').update(arrivalScripts[0][1]).digest('base64');
+assert.ok(indexHtml.includes(`'sha256-${arrivalHash}'`), 'CSP must admit the exact arrival bytes');
+assert.doesNotMatch(indexHtml.match(/script-src [^;]+;/)[0], /unsafe-inline/, 'executable inline scripts still require exact hashes');
+const fontStyles = indexHtml.match(/<style data-orbital-fonts>([\s\S]*?)<\/style>/)?.[1];
+assert.ok(fontStyles, 'pinned font declarations must precede the stylesheet and arrival script');
+assert.equal((fontStyles.match(/@font-face/g) || []).length, 5);
+assert.ok(indexHtml.indexOf('<style data-orbital-fonts>') < indexHtml.indexOf('<script data-arrival-delivery>'));
 
 assert.equal(registry.registry.schema_version, '5.0');
 assert.ok(nodes.length > 6000, 'normalized federal graph nodes required');

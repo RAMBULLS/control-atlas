@@ -17,6 +17,12 @@ const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 const request = { url: 'https://cache.example/resource', method: 'GET', headers: { host: 'cache.example' } };
 const staleRequest = { ...request, headers: { ...request.headers, 'cache-control': 'max-stale=86400' } };
 
+test('React and its DOM renderer keep exactly matching locked runtime versions', () => {
+  const { packages } = JSON.parse(readFileSync('package-lock.json', 'utf8'));
+  assert.equal(packages['node_modules/react'].version, packages['node_modules/react-dom'].version,
+    'A renderer mismatch prevents every interactive workspace from loading');
+});
+
 const bracePackages = Object.entries(JSON.parse(readFileSync('package-lock.json', 'utf8')).packages)
   .filter(([path]) => path.endsWith('node_modules/brace-expansion'));
 assert.ok(bracePackages.length, 'Brace expansion regression requires the installed dependency families');

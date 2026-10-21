@@ -247,12 +247,27 @@ test("critical path: keyboard focus reaches primary nav and search", async ({
   await expect(
     page.getByRole("heading", { name: "Atlas", exact: true }),
   ).toBeVisible();
+  await waitForAppReady(page);
 
   const search = page.getByRole("button", { name: "Open search" });
   await search.focus();
   await expect(search).toBeFocused();
   await page.keyboard.press("Enter");
-  await expect(
-    page.getByRole("searchbox", { name: "Search Control Atlas" }),
-  ).toBeFocused();
+  try {
+    await expect(page.getByRole("searchbox", { name: "Search Control Atlas" })).toBeFocused();
+  } catch (error) {
+    await test.info().attach("keyboard-search-state", {
+      body: JSON.stringify(await page.evaluate(() => ({
+        href: globalThis.location.href,
+        active: globalThis.document.activeElement?.outerHTML,
+        root: { ...(/** @type {HTMLElement | null} */ (globalThis.document.querySelector("#root")))?.dataset },
+        app: { ...(/** @type {HTMLElement | null} */ (globalThis.document.querySelector("#app")))?.dataset },
+        dialogs: [...globalThis.document.querySelectorAll('[role="dialog"]')].map(node => ({
+          label: node.getAttribute("aria-label"), visibility: globalThis.getComputedStyle(node).visibility,
+        })),
+      }))),
+      contentType: "application/json",
+    });
+    throw error;
+  }
 });

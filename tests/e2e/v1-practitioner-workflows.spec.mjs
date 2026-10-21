@@ -1,10 +1,9 @@
 import { expect, test } from "@playwright/test";
-import { readFileSync } from "node:fs";
 
-import { dismissOnboarding, gotoApp, waitForAppReady } from "./support.mjs";
+import { dismissOnboarding, gotoApp, readServedArtifact, waitForAppReady } from "./support.mjs";
 
 async function open(page, route) {
-  await page.goto(route);
+  await gotoApp(page, route);
   await waitForAppReady(page);
   await dismissOnboarding(page);
 }
@@ -171,11 +170,25 @@ test("V1 workflow 08 — inspect a source and how it is used", async ({ page }) 
   await open(page, "/#/sources?source=nist-800-53");
   const checkedDetail = page.getByRole("region", { name: "Source status summary" });
   await expect(checkedDetail).toContainText("Source freshness");
-  const registry = JSON.parse(readFileSync(new URL('../../data/source-registry.json', import.meta.url), 'utf8'));
-  const checked = registry.freshness.sources.find((source) => source.source_id === 'nist-800-53')?.last_checked;
-  expect(checked, 'Canonical source must record its actual verification date').toMatch(/^\d{4}-\d{2}-\d{2}$/);
-  const date = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${checked}T00:00:00Z`));
-  await expect(checkedDetail).toContainText(`Checked ${date}`);
+  // Browser jobs consume the accepted site artifact, so its source evidence is
+  // the oracle even when the refresh candidate differs from the Git checkout.
+  const { sources } = await readServedArtifact(page, "sources.json");
+  const checkedSources = sources.filter((source) => source.id === "nist-800-53");
+  expect(checkedSources).toHaveLength(1);
+  const lastChecked = checkedSources[0].last_checked;
+  expect(lastChecked).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  const checkedDate = new Date(`${lastChecked}T00:00:00.000Z`);
+  expect(Number.isNaN(checkedDate.getTime())).toBe(false);
+  expect(checkedDate.toISOString().slice(0, 10)).toBe(lastChecked);
+  const formattedCheckedDate = new Intl.DateTimeFormat("en-US", {
+    day: "numeric",
+    month: "short",
+    timeZone: "UTC",
+    year: "numeric",
+  }).format(checkedDate);
+  await expect(checkedDetail.locator('[data-freshness="checked"]')).toHaveText(
+    `Checked ${formattedCheckedDate}`,
+  );
 
   await open(page, "/#/sources?source=nist-800-53a-assessment-procedures");
   const assessmentDetail = page.getByRole("region", { name: "Source status summary" });

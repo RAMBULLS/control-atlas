@@ -1,5 +1,4 @@
-import * as Accordion from "@radix-ui/react-accordion";
-import { IconArrowRight, IconCheck, IconX } from "@tabler/icons-react";
+import { IconCheck, IconX } from "@tabler/icons-react";
 import React, { useId, type CSSProperties, type ElementType, type ReactNode } from "react";
 
 import { displayNameFor } from "../../app/display-names.mjs";
@@ -587,28 +586,6 @@ export function SourceSummaryCard(props: { source: any; onOpen?: () => void; det
         </ButtonLink>
       </div>
     </article>
-  );
-}
-
-export function DisclosurePanel(props: {
-  value: string;
-  title: string;
-  children: ReactNode;
-}) {
-  return (
-    <Accordion.Item className="accordion-item" value={props.value}>
-      <Accordion.Header asChild>
-        <h2>
-        <Accordion.Trigger className="accordion-trigger">
-          <span>{props.title}</span>
-          <IconArrowRight size={18} stroke={1.8} />
-        </Accordion.Trigger>
-        </h2>
-      </Accordion.Header>
-      <Accordion.Content className="accordion-content">
-        {props.children}
-      </Accordion.Content>
-    </Accordion.Item>
   );
 }
 

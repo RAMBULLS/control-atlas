@@ -65,6 +65,14 @@ export type AuthoritySpineEvidence = {
   }>;
 };
 
+export type AuthorityTraceEvidence = {
+  instruments: Array<{
+    id: string; label: string; node_type: string; parent?: string | null;
+    blurb?: string; source_refs?: AtlasSourceRef[];
+  }>;
+  publications: Array<{ catalog_id: string; primary_authority: string | null }>;
+};
+
 const AUTHORITY_TYPES = new Set(["statute", "regulation", "policy_directive"]);
 function itemId(id: string) {
   const separator = id.indexOf(":");
@@ -208,6 +216,36 @@ export function extendDisplayedAuthorityTrace(
   if (!publicationId) return links;
   const publication = model.nodesById.get(publicationId)!;
   const authority = authorityChain(model, publication.primaryAuthority).map((node) => hop(node, "authority"));
+  return [...authority, ...canonical];
+}
+
+/** Record traces need the declared authority chain, not the complete Atlas tree. */
+export function extendCuratedAuthorityTrace(
+  evidence: AuthorityTraceEvidence,
+  links: AtlasTraceHop[],
+): AtlasTraceHop[] {
+  const firstCanonical = links.findIndex(link => link.origin !== "authority");
+  const canonical = firstCanonical >= 0 ? links.slice(firstCanonical) : [];
+  const publications = new Map(evidence.publications.map(entry => [`${entry.catalog_id}:CATALOG`, entry]));
+  if (publications.size !== evidence.publications.length) throw new Error("Duplicate authority publication.");
+  const publicationId = canonical.find(link => publications.has(link.id))?.id;
+  const publication = publicationId ? publications.get(publicationId) : undefined;
+  if (!publication) return links;
+  const instruments = new Map(evidence.instruments.map(entry => [entry.id, entry]));
+  if (instruments.size !== evidence.instruments.length) throw new Error("Duplicate authority instrument.");
+  const authority: AtlasTraceHop[] = [];
+  const seen = new Set<string>();
+  let id = publication.primary_authority;
+  while (id) {
+    if (seen.has(id)) throw new Error(`Authority chain cycle at ${id}.`);
+    seen.add(id);
+    const instrument = instruments.get(id);
+    if (!instrument) throw new Error(`Authority chain has unresolved instrument ${id}.`);
+    authority.unshift({ id: instrument.id, label: instrument.label, node_type: instrument.node_type,
+      origin: "authority", rationale: instrument.blurb || undefined,
+      source_refs: instrument.source_refs?.length ? [...instrument.source_refs] : undefined });
+    id = instrument.parent || null;
+  }
   return [...authority, ...canonical];
 }
 

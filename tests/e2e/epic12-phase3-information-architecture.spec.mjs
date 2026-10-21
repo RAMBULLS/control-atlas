@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { attachPageDiagnostics, clickAtlasPublication, gotoApp, waitForAppReady } from "./support.mjs";
+import { attachPageDiagnostics, clickAtlasPublication, gotoApp, waitForAppReady, expectVisibleWithDiagnostics } from "./support.mjs";
 
 const NAV = [
   { label: "Atlas", path: "/atlas", placement: "primary" },
@@ -301,11 +301,12 @@ test("Phase 3 record actions and global footer expose the required hierarchy", a
     await gotoApp(page, route);
     await waitForAppReady(page, { allowPartial: true });
     const footer = page.locator("footer.site-footer");
+    await footer.scrollIntoViewIfNeeded();
     await expect(footer).toBeVisible();
     await expect(footer).toContainText("Free and open source. Not a government system.");
     await expect(footer).toContainText("Product release");
     await expect(footer).toContainText("Source data built");
-    await expect(footer.getByRole("link", { name: "Submit resource" })).toBeVisible();
+    await expectVisibleWithDiagnostics(page, footer.getByRole("link", { name: "Submit resource" }), 'footer.site-footer a[href*="template=submit-resource"]');
     await expect(footer.getByRole("link", { name: "Report a problem" })).toBeVisible();
   }
 });

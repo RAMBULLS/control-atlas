@@ -2,7 +2,7 @@
 
 - **Owner:** Forge
 - **Status:** Canonical
-- **Last reviewed:** 2026-08-12
+- **Last reviewed:** 2026-10-20
 - **Supersession:** Approved architecture changes replace the affected section here and update executable contracts in the same change.
 
 ## Product Identity
@@ -72,9 +72,17 @@ Generated runtime graph artifacts remain:
 The focused Atlas adds normalized read models generated from those canonical artifacts:
 
 - `data/generated/atlas-neighborhood-manifest.json`
-- `data/generated/atlas-neighborhood/*.json` (128 deterministic self-contained incident-edge shards)
+- `data/generated/atlas-neighborhood/*.json` (8192 deterministic self-contained incident-edge shards)
 
 These are delivery optimizations, not a second relationship truth. Each stored edge remains canonical and incident to the selected record.
+
+Published neighborhood, graph, comparison and catalog-record shards use their existing `.json.gz` representation. The builder proves each decoded file is byte-identical before removing its duplicate raw JSON from the staged site. The full generated corpus remains intact for source validation and reproducibility. Runtime loading uses native gzip decoding, with the existing `fflate` dependency loaded lazily when that browser API is unavailable. Other delivery paths and legacy raw-file fallback remain supported. The published-file total is independently limited to GitHub Pages' 1 GB allowance; an Actions ZIP's compressed size does not establish compliance.
+
+Record first paint uses `data/generated/catalog-bootstrap-record.json` for the admitted catalog/partition layout and global source-ID index. The existing neighborhood cohort carries complete canonical source objects for every center, displayed node and relationship reference in that cohort. Validation requires exact reference coverage and global admission before publishing record context. No source fields are abbreviated. Global search and the Sources register load the full source ledger; cohort readiness does not claim global readiness. The combined representative arrival must fit within the complete catalog/source/cohort inputs it replaces. Older bootstrap shapes retain their complete atomic register or exact `data/generated/source-records/` projection and bounded supporting-register path.
+
+Home's React page stays lazy. The renderer, interactive shell and pure data module download separately without adding React to Home's static entry. The bounded arrival script is inline and admitted by its exact generated CSP hash, so selected-route requests need no preparatory script round trip. Route validation uses names, supported formats and task IDs computed from the canonical registries at build time; full descriptions remain with their publication/task consumers. The emitted graph rejects full task descriptions in the data preloader.
+
+Production delivers Orbital's five original font-face declarations before the arrival script, backed by four exact pinned WOFF2 files. Static landing routes warm their required text faces through the browser's FontFaceSet; record routes use their native CSS font requirements. Development retains the ordinary font stylesheet. Build and browser guards verify declarations, bytes, loaded faces and duplicate-free requests.
 
 Every displayable relationship separates:
 
@@ -89,6 +97,8 @@ Blocked relationships remain graph-health findings and never become displayable 
 
 - `src/` is the source-of-truth application tree and `tools/build-static-site.mjs` stages the deployable site into `dist/site`.
 - React + Vite render the translation-first UI while existing runtime/data contracts remain reusable.
+- The existing classic first-paint shell starts bounded module hints and compact arrival data before stylesheet completion. The runtime consumes those exact response promises and retains validation, timeout, fallback and retry behavior; Home requests no interactive code.
+- The Resources directory consumes the generated search projection, including exact summary provenance, access flags and review dates. Resource detail pages load the complete dataset and source evidence.
 - The Atlas route uses React Flow and ELK only for the bounded area/publication overview, then switches to semantic DOM for publisher-native levels.
 - Focused Atlas routes load the compact node index plus one incident-edge shard; they do not fetch monolithic `nodes`, `edges`, or `evidence` artifacts.
 - React Flow + ELK remain lazy dependencies for bounded overview and local-connection diagrams; they never render an unbounded catalog as a generic graph.

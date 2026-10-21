@@ -69,6 +69,7 @@ for (const viewport of [
     await expect(hierarchy).toContainText("PROTECT");
     await expect(hierarchy).toContainText("Identity Management, Authentication, and Access Control");
     const collapsed = page.locator("details.record-relationship-disclosure");
+    await expect(collapsed.first()).toBeAttached();
     expect(await collapsed.count()).toBeGreaterThan(0);
     for (const group of await collapsed.all()) {
       await expect(group).not.toHaveAttribute("open", "");
@@ -159,6 +160,7 @@ test("collapsed relationship groups are keyboard-operable and bounded by default
 
   await openRecord(page, "/#/record/csf-2/PR.AA-01");
   await expect(page.locator('[data-relationship-treatment="ATLAS_ONLY"]')).toHaveCount(0);
+  await expect(page.locator("details.record-relationship-disclosure").first()).toBeAttached();
   expect(await page.locator("details.record-relationship-disclosure").count()).toBeGreaterThan(0);
   await expect(page.locator("details.record-relationship-disclosure").first()).not.toHaveAttribute("open", "");
 });

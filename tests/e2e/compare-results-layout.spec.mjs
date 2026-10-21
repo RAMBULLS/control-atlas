@@ -1,5 +1,6 @@
 /* global document, getComputedStyle, Node */
 import { readFile } from "node:fs/promises";
+import { gunzipSync } from "node:zlib";
 
 import { AxeBuilder } from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
@@ -67,6 +68,7 @@ test("published baseline selections reconcile, filter and export on desktop and 
   const totals = await page.locator("#compare-results > p").nth(1).innerText();
   const shared = Number(totals.match(/([\d,]+) shared/)[1].replaceAll(",", ""));
   expect(shared).toBeGreaterThan(25);
+  await page.getByLabel("Result group").scrollIntoViewIfNeeded();
   await page.getByLabel("Result group").selectOption("shared");
   expect(await page.locator("[data-baseline-result]").count()).toBeLessThanOrEqual(25);
   const downloadPromise = page.waitForEvent("download");
@@ -224,7 +226,7 @@ test("an extreme one-to-many record shows its true total in a bounded window, no
   test.setTimeout(180_000);
   const bootstrap = JSON.parse(await readFile("dist/site/data/generated/catalog-bootstrap.json", "utf8")).catalog_bootstrap;
   const pair = bootstrap.comparison_pairs["disa-cci|disa-stig"];
-  const index = JSON.parse(await readFile(`dist/site/data/generated/${pair.path}`, "utf8"));
+  const index = JSON.parse(gunzipSync(await readFile(`dist/site/data/generated/${pair.path}.gz`)).toString("utf8"));
   const pairRequests = [];
   page.on("request", (request) => {
     if (request.url().includes("/compare-data/disa-cci--disa-stig-")) pairRequests.push(request.url());

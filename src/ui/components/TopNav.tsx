@@ -165,7 +165,7 @@ export function TopNav(props: TopNavProps) {
           <Button
             aria-label="Open search"
             variant="secondary"
-            className="!min-h-[36px] !border-transparent hover:!border-[var(--ca-border-strong)] header-search-trigger"
+            className="!border-transparent hover:!border-[var(--ca-border-strong)] header-search-trigger"
             onClick={onOpenSearch}
           >
             <IconSearch aria-hidden="true" size={16} stroke={2} />

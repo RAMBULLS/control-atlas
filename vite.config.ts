@@ -6,6 +6,9 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { resolve } from 'node:path';
 import { RUNTIME_CACHE_VERSION } from './src/shared/runtime-cache-version.mjs';
+import { ATLAS_NEIGHBORHOOD_SHARD_COUNT } from './src/app/atlas-neighborhood.mjs';
+import { buildRouteChoices } from './src/shared/build-route-choices.mjs';
+import { inlineArrivalDelivery, inlineOrbitalFontStyles, materializeOrbitalFonts, planInteractiveDelivery, recordChunkGroups, verifyRecordDelivery } from './tools/record-delivery.mjs';
 import { HOME_CONTENT, HOME_TOOLS } from './src/shared/home-content.mjs';
 import { FIRST_PAINT_ROUTE_COPY, SITE_COPY } from './src/shared/site-copy.mjs';
 import {
@@ -23,6 +26,7 @@ import { buildHomeSurface } from './src/shared/home-surface-build.ts';
 import type { HomeSurface } from './src/shared/home-surface.ts';
 
 const rootDir = fileURLToPath(new URL('.', import.meta.url));
+const orbitalFonts = materializeOrbitalFonts(rootDir);
 
 function readGeneratedJson(relativePath: string) {
   return JSON.parse(readFileSync(resolve(rootDir, 'data/generated', relativePath), 'utf8'));
@@ -206,10 +210,22 @@ function getBuildSha(): string {
   }
 }
 
-export default defineConfig({
+const interactiveDelivery = {
+  interactive: new Set<string>(), warmup: new Set<string>(),
+  renderer: new Set<string>(),
+  recordSupport: new Set<string>(), resourceSupport: new Set<string>(),
+};
+
+export default defineConfig(({ command }) => ({
+  resolve: { alias: [{ find: /^orbital-archive-no-01\/fonts\.css$/, replacement: command === 'build' ? '\0control-atlas-inline-fonts.css' : orbitalFonts.stylesheet }] },
   base: './',
   root: resolve(rootDir, 'src'),
   define: {
+    __CONTROL_ATLAS_BUILD_ROUTE_CHOICES_COMPILED__: 'true',
+    __CONTROL_ATLAS_BUILD_ROUTE_CHOICES__: JSON.stringify(buildRouteChoices(
+      JSON.parse(readFileSync(resolve(rootDir, 'data/template-registry.json'), 'utf8')),
+      JSON.parse(readFileSync(resolve(rootDir, 'data/compliance-workflows.json'), 'utf8')),
+    )),
     'globalThis.__ATLAS_BRAND_SIGNALS__': JSON.stringify(atlasBrandSignals),
     'globalThis.__ATLAS_SCOPE_METRICS__': JSON.stringify(atlasScopeMetrics),
     'globalThis.__HOME_SURFACE__': JSON.stringify(homeSurface),
@@ -254,6 +270,42 @@ export default defineConfig({
         };
       },
     },
+    {
+      name: 'record-delivery-boundaries',
+      resolveId(id) { if (id === '\0control-atlas-inline-fonts.css') return id; },
+      load(id) { if (id === '\0control-atlas-inline-fonts.css') return ''; },
+      buildStart() {
+        if (command !== 'build') return;
+        for (const [digest, bytes] of orbitalFonts.fonts) {
+          this.emitFile({ type: 'asset', fileName: `fonts/${digest}.woff2`, source: bytes });
+        }
+      },
+      buildEnd(error) {
+        if (error) return;
+        const plan = planInteractiveDelivery(this.getModuleIds(), id => this.getModuleInfo(id), rootDir);
+        interactiveDelivery.interactive = plan.interactive;
+        interactiveDelivery.warmup = plan.warmup;
+        interactiveDelivery.renderer = plan.renderer;
+        interactiveDelivery.recordSupport = plan.recordSupport;
+        interactiveDelivery.resourceSupport = plan.resourceSupport;
+      },
+      transformIndexHtml: {
+        order: 'post',
+        handler(_html, context) {
+          if (!context.bundle) return [];
+          return {
+            html: inlineArrivalDelivery(inlineOrbitalFontStyles(_html, orbitalFonts.css), context.bundle, rootDir,
+              { version: RUNTIME_CACHE_VERSION, shardCount: ATLAS_NEIGHBORHOOD_SHARD_COUNT },
+              readFileSync(resolve(rootDir, 'src/public/progressive-shell.js'), 'utf8')),
+            tags: [],
+          };
+        },
+      },
+      generateBundle(_options, bundle) {
+        const report = verifyRecordDelivery(bundle, rootDir);
+        this.emitFile({ type: 'asset', fileName: 'record-delivery-chunks.json', source: JSON.stringify(report, null, 2) });
+      },
+    },
     tailwindcss(),
     react(),
   ],
@@ -262,5 +314,12 @@ export default defineConfig({
     emptyOutDir: globalThis.process.env.CONTROL_ATLAS_REUSE_STAGED_DATA !== '1',
     sourcemap: false,
     assetsDir: 'assets',
+    rolldownOptions: {
+      preserveEntrySignatures: false,
+      output: {
+        strictExecutionOrder: true,
+        codeSplitting: { groups: recordChunkGroups(rootDir, interactiveDelivery) },
+      },
+    },
   },
-});
+}));

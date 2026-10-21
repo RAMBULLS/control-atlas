@@ -148,6 +148,7 @@ test("WS2 keeps governed related-record samples human-readable and bounded at ev
     const related = page.locator('[data-record-section="related-records"]');
     await related.scrollIntoViewIfNeeded();
     const groups = related.locator("details.record-relationship-disclosure");
+    await expect(groups.first()).toBeAttached();
     expect(await groups.count()).toBeGreaterThan(0);
     let appgateGroup;
     for (const group of await groups.all()) {

@@ -90,7 +90,8 @@ test("resource ecosystem visual evidence", async ({ page }) => {
 
 });
 
-test("resource dataset error is honest", async ({ page }) => {
+test("resource directory data error is honest", async ({ page }) => {
+  await page.route("**/data/generated/commons-search-index.json*", (route) => route.abort());
   await page.route("**/data/commons-resource-dataset.json*", (route) => route.abort());
   await page.route("**/data/commons-resource-dataset.json.gz*", (route) => route.abort());
   await open(page, "#/resources");

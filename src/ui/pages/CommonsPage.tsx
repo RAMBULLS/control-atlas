@@ -68,9 +68,9 @@ export function CommonsPage(props: {
   const [queryDraft, setQueryDraft] = useState(state.query);
   const [compareMode, setCompareMode] = useState(false);
   const [selectedResourceIds, setSelectedResourceIds] = useState<string[]>([]);
-  const directoryAvailable = Boolean(bundle?.commonsDataset);
-  const resources = (bundle?.commonsDataset?.resources || []) as CommonsResource[];
-  const collections = (bundle?.commonsDataset?.collections || []) as CommonsCollection[];
+  const directoryAvailable = Boolean(bundle?.commonsSearchIndex || bundle?.commonsDataset);
+  const resources = (bundle?.commonsSearchIndex?.documents || bundle?.commonsDataset?.resources || []) as CommonsResource[];
+  const collections = (bundle?.commonsSearchIndex?.collections || bundle?.commonsDataset?.collections || []) as CommonsCollection[];
   const update = (patch: Partial<CommonsState>) => onNavigate("commons", { ...state, ...patch });
 
   useLayoutEffect(() => setQueryDraft(state.query), [state.query]);

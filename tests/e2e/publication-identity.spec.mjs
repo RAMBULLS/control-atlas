@@ -89,7 +89,8 @@ test("a missing publication identity fails closed without guessed attribution", 
   page,
 }) => {
   attachPageDiagnostics(page);
-  await page.route("**/data/generated/sources.json*", async (route) => {
+  let corruptedPublication = false;
+  await page.route(/\/data\/generated\/(?:sources|catalog-bootstrap-record)\.json/, async (route) => {
     if (route.request().url().includes(".json.gz")) {
       await route.fulfill({
         status: 200,
@@ -100,20 +101,31 @@ test("a missing publication identity fails closed without guessed attribution", 
     }
     const response = await route.fetch();
     const artifact = await response.json();
-    artifact.sources = artifact.sources.filter(
-      (source) => source.id !== "nist-csf-2",
-    );
+    const register = artifact.catalog_bootstrap || artifact;
+    if (register.record_source_delivery === "neighborhood-v1") {
+      expect(register.source_ids).toContain("nist-csf-2");
+      register.source_ids = register.source_ids.filter(id => id !== "nist-csf-2");
+    } else {
+      expect(register.sources.some(source => source.id === "nist-csf-2")).toBe(true);
+      register.sources = register.sources.filter(source => source.id !== "nist-csf-2");
+    }
+    corruptedPublication = true;
     await route.fulfill({ response, json: artifact });
   });
 
   await gotoApp(page, "/#/record/csf-2/CATEGORY-DE.AE");
-  await waitForAppReady(page);
+  // This fixture deliberately rejects the atomic register before data readiness.
+  // Wait for the explicit fail-closed surface below, never a successful load.
   await dismissOnboarding(page);
 
-  await expect(
-    page.getByText("Source identity unavailable", { exact: true }),
-  ).toBeVisible();
-  await expect(
+  const identityUnavailable = page.getByText("Source identity unavailable", { exact: true });
+  const rejectedRegister = page.getByText("Unable to load data", { exact: true });
+  await expect(identityUnavailable.or(rejectedRegister)).toBeVisible();
+  expect(corruptedPublication).toBe(true);
+  if (await rejectedRegister.isVisible()) {
+    await expect(page.locator("#app")).toHaveAttribute("data-app-ready", "error");
+    await expect(page.locator("main")).toContainText("Something went wrong while loading Control Atlas. Try again in a moment.");
+  } else await expect(
     page.getByText(
       "Can't confirm which publisher this came from, so it isn't shown as official yet.",
       { exact: true },

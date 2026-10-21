@@ -21996,7 +21996,7 @@
       "name": "Official DISA STIG Viewer 3.x",
       "shortName": "DISA STIG Viewer",
       "slug": "tool-disa-stig-viewer",
-      "summary": "Java GUI application for opening, editing, and managing DISA STIG XCCDF benchmarks and `.ckl` checklist files.",
+      "summary": "Desktop application for viewing DISA STIG benchmarks and managing Viewer 3 `.cklb` JSON checklists. Use the official guide when working with older `.ckl` files.",
       "whyIncluded": "A tool used by DoD assessors and ISSOs to compile system STIG checklists for eMASS ATO submission.",
       "canonicalUrl": "https://www.cyber.mil/stigs/srg-stig-tools/",
       "publisher": "DISA",
@@ -22029,7 +22029,6 @@
         "U.S. Federal Civilian"
       ],
       "formats": [
-        "JAR",
         "Desktop Application"
       ],
       "openSource": true,

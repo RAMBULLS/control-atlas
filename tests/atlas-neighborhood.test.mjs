@@ -4,7 +4,9 @@ import { join } from "node:path";
 import test from "node:test";
 
 import {
+  ATLAS_NEIGHBORHOOD_SHARD_COUNT,
   atlasNeighborhoodShardId,
+  atlasNeighborhoodSourceIds,
   buildAtlasNeighborhoodShards,
 } from "../src/app/atlas-neighborhood.mjs";
 import {
@@ -12,6 +14,14 @@ import {
   buildAncestorGraph,
 } from "../src/app/ancestor-path.mjs";
 import { readGeneratedCollection } from "../scripts/lib/generated-graph-artifacts.mjs";
+
+test("cohort source admission includes centers, structural nodes, siblings and every edge publisher", () => {
+  const records = {
+    one: { center_node: { source_id: "center" }, nodes: [["a", "control", "A", "Alpha", "catalog", "ancestor"]], edges: [["edge", "a", "b", "maps_to", "correlation", "published", "published", "direct", [["mapping", "primary", "row"]]]] },
+    two: { center_node: { source_id: "sibling" }, nodes: [["b", "control", "B", "Beta", "catalog", "center"]], edges: [] },
+  };
+  assert.deepEqual(atlasNeighborhoodSourceIds(records), ["ancestor", "center", "mapping", "sibling"]);
+});
 
 test("Atlas neighborhood sharding is deterministic and preserves canonical edges", () => {
   const graph = {
@@ -47,6 +57,15 @@ test("Atlas neighborhood sharding is deterministic and preserves canonical edges
   const first = buildAtlasNeighborhoodShards(graph, 8);
   const second = buildAtlasNeighborhoodShards(graph, 8);
   assert.deepEqual(first, second);
+  const finer = buildAtlasNeighborhoodShards(graph, ATLAS_NEIGHBORHOOD_SHARD_COUNT);
+  const records = (shards) => Object.fromEntries(shards.flatMap(shard => Object.entries(shard.records)));
+  assert.deepEqual(records(finer), records(first), "finer shards preserve every complete record and edge");
+  assert.equal(finer.reduce((count, shard) => count + shard.record_count, 0), graph.nodes.length);
+  for (const shard of finer) {
+    for (const id of Object.keys(shard.records)) {
+      assert.equal(shard.shard_id, atlasNeighborhoodShardId(id));
+    }
+  }
   const record = first
     .find((shard) => shard.shard_id === atlasNeighborhoodShardId("a", 8))
     .records.a;
@@ -238,19 +257,36 @@ test("generated Atlas shards contain only incident canonical edges", () => {
   const canonicalEdges = new Map(
     readGeneratedCollection(".", "edges").edges.map((edge) => [edge.id, edge]),
   );
+  const incidentEdges = new Map();
+  for (const edge of canonicalEdges.values()) {
+    for (const id of new Set([edge.source_node_id, edge.target_node_id])) {
+      const ids = incidentEdges.get(id) || [];
+      ids.push(edge.id);
+      incidentEdges.set(id, ids);
+    }
+  }
   const canonicalNodes = readGeneratedCollection(".", "nodes").nodes;
   const canonicalNodeById = new Map(
     canonicalNodes.map((node) => [node.id, node]),
   );
   const canonicalNodeIds = new Set(canonicalNodeById.keys());
+  const canonicalSources = new Map(readGeneratedCollection(".", "sources").sources.map(source => [source.id, source]));
   const shardDir = "data/generated/atlas-neighborhood";
   const shardedNodeIds = new Set();
   let recordCount = 0;
   for (const filename of readdirSync(shardDir)) {
     const artifact = JSON.parse(readFileSync(join(shardDir, filename), "utf8"));
+    const cohort = artifact.atlas_neighborhood_shard;
+    assert.deepEqual(cohort.source_ids, atlasNeighborhoodSourceIds(cohort.records));
+    assert.deepEqual(cohort.sources, cohort.source_ids.map(id => {
+      assert.ok(canonicalSources.has(id), `${filename} has an admitted publisher for every reference`);
+      return canonicalSources.get(id);
+    }), `${filename} retains every full canonical source object`);
     for (const [nodeId, record] of Object.entries(artifact.atlas_neighborhood_shard.records)) {
       recordCount += 1;
       shardedNodeIds.add(nodeId);
+      assert.equal(artifact.atlas_neighborhood_shard.shard_id, atlasNeighborhoodShardId(nodeId));
+      assert.deepEqual(record.edges.map(edge => edge[0]).sort(), (incidentEdges.get(nodeId) || []).sort(), `${nodeId} keeps every incident relationship`);
       // ancestor_path is attached to the shard copy on purpose: it is how the
       // record page draws the chain to the trunk without loading the graph. It
       // is stripped from nodes.json to stay inside the 20 MiB artifact budget,

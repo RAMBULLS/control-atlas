@@ -1338,7 +1338,8 @@ li {
 }
 
 /* Links get the same box as buttons: uppercase tracked link text was 6px wider than its cell in Firefox at 375px. */
-.record-actions-popover :is(a, button) {
+.record-actions-popover :is(a, button),
+.ca-record-layout .record-title-actions .record-actions-popover :is(a, button) {
   width: 100%;
   min-width: 0;
   justify-content: flex-start;

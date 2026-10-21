@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { gunzipSync } from "node:zlib";
 
 import { dismissOnboarding, gotoApp, waitForAppReady } from "./support.mjs";
 
@@ -17,7 +18,9 @@ function expectedMappings() {
   const sources = new Set();
   let mappings = 0;
   for (const shard of manifest.sharded_collection.shards) {
-    for (const edge of JSON.parse(readFileSync(join(root, shard.path), "utf8")).edges) {
+    const path = join(root, shard.path);
+    const bytes = existsSync(path) ? readFileSync(path) : gunzipSync(readFileSync(`${path}.gz`));
+    for (const edge of JSON.parse(bytes.toString("utf8")).edges) {
       if (edge.publication_status !== "published") continue;
       const endpoints = [edge.source_node_id, edge.target_node_id];
       const source = endpoints.find((id) => id.startsWith("nist-800-53:"));

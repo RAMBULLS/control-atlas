@@ -80,15 +80,25 @@ for (const route of UI_REVIEW_ROUTES) {
     await open(page, route.path);
 
     // The route names itself, in the first screen.
-    const heading = page.locator("main h1").first();
-    expect(await heading.count(), `${route.id} renders no h1 inside main`).toBeGreaterThan(0);
+    const heading = route.id === "resources"
+      ? page.getByRole("heading", { name: "Resources", level: 1 })
+      : page.locator("main h1").first();
+    await expect(heading, `${route.id} renders no visible route heading`).toBeVisible();
+    if (route.id === "resources") {
+      await expect(heading).toHaveCount(1);
+      await expect(page.getByRole("main", { name: "Resources" })).toBeVisible();
+    }
     const headingBox = await heading.boundingBox();
     expect(headingBox, `${route.id} h1 is not rendered`).not.toBeNull();
     expect(headingBox.y, `${route.id} h1 starts below the first screen`).toBeLessThanOrEqual(DESKTOP.height);
 
     // Heading levels never skip on the way down.
-    const levels = await page.locator("main").locator("h1, h2, h3, h4, h5, h6")
-      .evaluateAll((nodes) => nodes.map((node) => Number(node.tagName[1])));
+    const levels = route.id === "resources"
+      ? await page.locator('[data-static-route]:not([hidden]) h1, main h1, main h2, main h3, main h4, main h5, main h6')
+        .evaluateAll((nodes) => nodes.filter(node => node.getClientRects().length > 0)
+          .map(node => Number(node.tagName[1])))
+      : await page.locator("main").locator("h1, h2, h3, h4, h5, h6")
+        .evaluateAll((nodes) => nodes.map((node) => Number(node.tagName[1])));
     if (levels.length) {
       expect(levels[0], `${route.id} starts at h${levels[0]}`).toBe(1);
       for (let index = 1; index < levels.length; index += 1) {
@@ -148,11 +158,15 @@ for (const route of UI_REVIEW_ROUTES) {
       expect(navBox.y, `${route.id}: primary navigation starts at ${Math.round(navBox.y)}px on a phone`)
         .toBeLessThanOrEqual(PHONE.height);
     }
-    for (const action of (await page.locator("main a[class*='button'], main button:visible").all()).slice(0, 10)) {
-      const box = await action.boundingBox();
-      if (!box || box.height === 0) continue;
-      const name = (await action.textContent() || "").trim().slice(0, 40);
-      expect(roundCssPixels(box.height), `${route.id}: "${name}" is ${box.height}px tall`).toBeGreaterThanOrEqual(44);
+    // Supporting record context can finish between async locator reads. Measure
+    // the first ten current actions atomically, preserving the same touch limit.
+    const actions = await page.locator("main a[class*='button'], main button:visible").evaluateAll(nodes => nodes.slice(0, 10).map(action => ({
+      height: action.getBoundingClientRect().height,
+      name: (action.textContent || "").trim().slice(0, 40),
+    })));
+    for (const { height, name } of actions) {
+      if (height === 0) continue;
+      expect(roundCssPixels(height), `${route.id}: "${name}" is ${height}px tall`).toBeGreaterThanOrEqual(44);
     }
   });
 }

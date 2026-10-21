@@ -42,6 +42,26 @@ after(() => {
   }
 });
 
+test("record source files are complete exact projections and share the admitted neighborhood layout", () => {
+  const bootstrap = JSON.parse(readFileSync(join(generatedDirectory, "catalog-bootstrap.json"), "utf8")).catalog_bootstrap;
+  const manifest = JSON.parse(readFileSync(join(generatedDirectory, "atlas-neighborhood-manifest.json"), "utf8")).atlas_neighborhood_manifest;
+  const { sources } = generated("sources");
+  const recordBootstrap = generated("catalog-bootstrap-record").catalog_bootstrap;
+  const expected = { ...bootstrap, source_ids: Object.keys(bootstrap.source_records), record_source_delivery: "neighborhood-v1" };
+  delete expected.source_records;
+  for (const key of ["comparison_pairs", "comparison_items", "comparison_baselines", "comparison_content", "mapping_sources"]) delete expected[key];
+  assert.deepEqual(recordBootstrap, expected);
+  assert.equal(bootstrap.atlas_neighborhood.shard_count, manifest.shard_count);
+  assert.equal(bootstrap.atlas_neighborhood.hash_algorithm, manifest.hash_algorithm);
+  assert.deepEqual(Object.keys(bootstrap.source_records).sort(), sources.map(source => source.id).sort());
+  for (const source of sources) {
+    const path = bootstrap.source_records[source.id];
+    assert.equal(path, `source-records/${Buffer.from(source.id, "utf8").toString("base64url")}.json`);
+    const projection = JSON.parse(readFileSync(join(generatedDirectory, path), "utf8"));
+    assert.deepEqual(projection.sources, [source]);
+  }
+});
+
 test("CCI adapter preserves official bridge requirements and references", () => {
   const result = parseCciXml(
     readFileSync("tests/fixtures/cci/sample.xml", "utf8"),

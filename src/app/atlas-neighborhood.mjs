@@ -1,4 +1,6 @@
-export const ATLAS_NEIGHBORHOOD_SHARD_COUNT = 128;
+// Smaller cohorts preserve each complete neighborhood while keeping unrelated
+// records off a cold record's download path.
+export const ATLAS_NEIGHBORHOOD_SHARD_COUNT = 8192;
 
 export function atlasNeighborhoodShardId(
   nodeId,
@@ -44,6 +46,19 @@ function compactEdge(edge) {
       reference.locator || "",
     ]),
   ];
+}
+
+// Admission for a self-contained cohort includes centers, related/structural
+// nodes and every incident edge's publisher references, including siblings.
+export function atlasNeighborhoodSourceIds(records) {
+  const ids = new Set();
+  const add = id => { if (typeof id === "string" && id) ids.add(id); };
+  for (const record of Object.values(records)) {
+    add(record.center_node?.source_id);
+    for (const node of record.nodes || []) add(node[5]);
+    for (const edge of record.edges || []) for (const reference of edge[8] || []) add(reference[0]);
+  }
+  return [...ids].sort();
 }
 
 export function buildAtlasNeighborhoodShards(

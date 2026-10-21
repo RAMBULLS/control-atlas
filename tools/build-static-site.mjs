@@ -16,6 +16,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { generatedDataIsIdentical } from "./lib/generated-data-digest.mjs";
 import { gzipSync } from "node:zlib";
+import { compactPublishedJson, verifyPublishedSite } from "./lib/site-payload.mjs";
 import { runNodeSync } from "./lib/process-runner.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -60,6 +61,11 @@ function assertGeneratedDataComplete() {
   const catalogBootstrap = readGeneratedArtifact(
     "data/generated/catalog-bootstrap.json",
   ).catalog_bootstrap;
+  for (const sourcePath of Object.values(catalogBootstrap?.source_records ?? {})) {
+    if (!/^source-records\/[A-Za-z0-9_-]+\.json$/.test(sourcePath) || !existsSync(join(ROOT, "data/generated", sourcePath))) {
+      throw new Error(`Generated source cache is incomplete: ${sourcePath}`);
+    }
+  }
   for (const catalog of catalogBootstrap?.catalogs ?? []) {
     const path = `data/generated/catalog-records/${catalog.id}.json`;
     if (!existsSync(join(ROOT, path))) {
@@ -220,4 +226,8 @@ for (const file of getFiles(DIST)) {
   }
 }
 
+const compacted = compactPublishedJson(DIST);
+const published = verifyPublishedSite(DIST);
+console.log(`Published JSON compaction: ${compacted.removedFiles} exact gzip pairs; removed ${compacted.removedBytes} duplicate bytes.`);
+console.log(`Published site: ${published.files} files, ${published.bytes}/${published.maxBytes} bytes.`);
 console.log(`Built staged static site at ${DIST}`);

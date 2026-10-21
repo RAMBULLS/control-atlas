@@ -2,6 +2,7 @@
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { verifyPublishedSite } from "./lib/site-payload.mjs";
 
 function argumentValue(name) {
   const index = process.argv.indexOf(name);
@@ -26,4 +27,5 @@ if (
   );
 }
 
-console.log(`Verified site artifact for ${expectedSha}`);
+const published = verifyPublishedSite(join(process.cwd(), "dist", "site"));
+console.log(`Verified site artifact for ${expectedSha}: ${published.files} files, ${published.bytes}/${published.maxBytes} bytes`);

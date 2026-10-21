@@ -24,6 +24,7 @@ import { loadSourceRegistry } from "../tools/validators/source-registry.mjs";
 import {
   ATLAS_NEIGHBORHOOD_SHARD_COUNT,
   buildAtlasNeighborhoodShards,
+  atlasNeighborhoodSourceIds,
 } from "../src/app/atlas-neighborhood.mjs";
 import {
   catalogIdOf,
@@ -2883,7 +2884,9 @@ function createBuildManifest(graph) {
       "atlas-neighborhood-manifest.json",
       "atlas-neighborhood/",
       "catalog-bootstrap.json",
+      "catalog-bootstrap-record.json",
       "catalog-records/",
+      "source-records/",
       "compare-data/",
     ],
     governance_artifacts: GOVERNANCE_FILES,
@@ -3997,8 +4000,12 @@ export function buildFrameworkData({ generatedDirectory = DEFAULT_GENERATED } = 
     }
   }
   const comparisons = buildComparisonArtifacts(graph, undefined, true);
+  const recordSources = [...graph.sources].sort((left, right) => left.id.localeCompare(right.id));
   const catalogBootstrap = {
+    record_bootstrap: "catalog-bootstrap-record.json",
     catalogs,
+    atlas_neighborhood: { shard_count: ATLAS_NEIGHBORHOOD_SHARD_COUNT, hash_algorithm: "fnv1a-32" },
+    source_records: Object.fromEntries(recordSources.map(source => [source.id, `source-records/${Buffer.from(source.id, "utf8").toString("base64url")}.json`])),
     comparison_pairs: comparisons.manifest,
     comparison_items: comparisons.itemManifest,
     comparison_baselines: comparisons.baselineManifest,
@@ -4043,6 +4050,8 @@ const catalogRecords = new Map();
       entry === "library-search-index" ||
       entry === "atlas-neighborhood" ||
       entry === "catalog-records" ||
+      entry === "source-records" ||
+      entry === "record-content" ||
       entry === "compare-data" ||
       entry === "graph-data"
     ) {
@@ -4220,6 +4229,12 @@ const catalogRecords = new Map();
   mkdirSync(join(GENERATED, "compare-data"), { recursive: true });
   for (const [path, text] of comparisons.files) writeFileSync(join(GENERATED, path), text, "utf8");
 
+  mkdirSync(join(GENERATED, "source-records"), { recursive: true });
+  for (const source of recordSources) {
+    writeFileSync(join(GENERATED, catalogBootstrap.source_records[source.id]),
+      `${JSON.stringify(artifact("sources", [source], generatedAt))}\n`, "utf8");
+  }
+
   writeFileSync(
     join(GENERATED, "catalog-bootstrap.json"),
     `${JSON.stringify(
@@ -4227,6 +4242,13 @@ const catalogRecords = new Map();
     )}\n`,
     "utf8",
   );
+  // Keep global source admission here; each complete neighborhood carries all
+  // of its exact referenced source objects. Other pages retain the full index.
+  const recordBootstrap = { ...catalogBootstrap };
+  delete recordBootstrap.source_records;
+  for (const key of ['comparison_pairs', 'comparison_items', 'comparison_baselines', 'comparison_content', 'mapping_sources']) delete recordBootstrap[key];
+  writeFileSync(join(GENERATED, "catalog-bootstrap-record.json"),
+    `${JSON.stringify(artifact("catalog_bootstrap", { ...recordBootstrap, source_ids: recordSources.map(source => source.id), record_source_delivery: "neighborhood-v1" }, generatedAt))}\n`, "utf8");
 
   const catalogRecordsDir = join(GENERATED, "catalog-records");
   mkdirSync(catalogRecordsDir, { recursive: true });
@@ -4322,6 +4344,7 @@ const catalogRecords = new Map();
   const atlasShardManifest = [];
   for (const shard of atlasNeighborhoodShards) {
     const shardPath = `atlas-neighborhood/${shard.shard_id}.json`;
+    const sourceIds = atlasNeighborhoodSourceIds(shard.records);
     writeFileSync(
       join(GENERATED, shardPath),
       `${JSON.stringify(
@@ -4331,6 +4354,12 @@ const catalogRecords = new Map();
             shard_id: shard.shard_id,
             record_count: shard.record_count,
             records: shard.records,
+            source_ids: sourceIds,
+            sources: sourceIds.map(id => {
+              const source = sourceById.get(id);
+              if (!source) throw new Error(`Neighborhood references an unregistered source: ${id}`);
+              return source;
+            }),
           },
           generatedAt,
         ),

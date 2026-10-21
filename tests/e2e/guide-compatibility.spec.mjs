@@ -44,11 +44,33 @@ for (const [guide, template, title] of [
     const action = page.getByRole("link", { name: `Open the ${title}`, exact: true });
     const destination = `#/build/documents/${template}`;
     await expect(action).toHaveAttribute("href", destination);
-    const opened = context.waitForEvent("page");
-    await action.click({ modifiers: ["Control"] });
-    const newTab = await opened;
-    await expect(newTab.locator("#app")).toHaveAttribute("data-view", "templates");
+    await action.evaluate(element => {
+      globalThis.__guideClick = null;
+      element.addEventListener('click', event => {
+        const click = /** @type {MouseEvent} */ (event);
+        const state = { ctrl: click.ctrlKey, meta: click.metaKey, button: click.button, prevented: false };
+        globalThis.__guideClick = state;
+        globalThis.queueMicrotask(() => { state.prevented = event.defaultPrevented; });
+      });
+    });
+    let newTab;
+    try {
+      [newTab] = await Promise.all([
+        context.waitForEvent("page"),
+        action.click({ modifiers: ["Control"] }),
+      ]);
+    } catch (error) {
+      console.log('[guide-click]', JSON.stringify(await page.evaluate(() => ({
+        href: globalThis.location.href, click: globalThis.__guideClick,
+        active: globalThis.document.activeElement?.outerHTML,
+      }))));
+      throw error;
+    }
+    // Control-click opens a background tab. Switch to it before exercising the
+    // document: browsers can defer animation-frame work while it is hidden.
+    await newTab.bringToFront();
     await waitForAppReady(newTab);
+    await expect(newTab.locator("#app")).toHaveAttribute("data-view", "templates");
     await expect.poll(() => new URL(newTab.url()).hash).toBe(destination);
     await expect(newTab.getByRole("complementary", { name: "Current document" })).toContainText(title);
     await newTab.close();
@@ -72,7 +94,10 @@ test("retired RMF guide link keeps the Atlas journey through reload and back", a
   await dismissOnboarding(page);
   await page.goto("/#/learn?pattern=understanding-rmf");
   await expect(page).toHaveURL(/#\/atlas\?atlasJourney=rmf$/);
-  await page.reload();
+  await waitForAppReady(page);
+  await expect(page.getByRole("heading", { name: "Atlas", exact: true })).toBeVisible();
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await waitForAppReady(page);
   await expect(page).toHaveURL(/#\/atlas\?atlasJourney=rmf$/);
   await page.goBack();
   await expect(page).toHaveURL(/#\/$/);

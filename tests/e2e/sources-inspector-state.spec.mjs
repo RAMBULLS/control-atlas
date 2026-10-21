@@ -1,23 +1,7 @@
 import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
 
-async function gotoApp(page, path) {
-  await page.goto(path);
-  await page.locator("#app").waitFor({ state: "attached" });
-}
-
-async function waitForAppReady(page) {
-  await page.locator('#app[data-app-ready="true"]').waitFor({
-    state: "attached",
-    timeout: 30_000,
-  });
-}
-
-async function readServedArtifact(page, filename) {
-  const response = await page.request.get(`/data/generated/${filename}`);
-  expect(response.ok()).toBe(true);
-  return response.json();
-}
+import { gotoApp, waitForAppReady, readServedArtifact, expectVisibleWithDiagnostics } from "./support.mjs";
 
 test.describe("Sources Inspector State & Trust Workflow", () => {
   test("1440px desktop uses master-detail layout without occluding the register", async ({ page }) => {
@@ -157,7 +141,7 @@ test.describe("Sources Inspector State & Trust Workflow", () => {
 
         // Exactly one publisher/issuer control is shown, and it says what it filters.
         const select = page.getByLabel(view.label, { exact: true });
-        await expect(select).toBeVisible();
+        await expectVisibleWithDiagnostics(page, select, '#source-publisher-filter');
         await expect(select.locator("option").first()).toHaveText(view.all);
         await expect(page.getByRole("navigation", { name: view.nav })).toBeHidden();
         expect(await overflow()).toBeLessThanOrEqual(0);

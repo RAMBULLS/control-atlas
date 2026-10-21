@@ -24,6 +24,40 @@ function emitDiagnostic(event, detail) {
   console.log(`[pw-diag] ${event}: ${detail}`);
 }
 
+// Preserve the failed assertion while capturing the real DOM state, rather than
+// guessing at CSS changes from an image that disagrees with browser visibility.
+export async function expectVisibleWithDiagnostics(page, locator, selector) {
+  try {
+    await expect(locator).toBeVisible();
+  } catch (error) {
+    const snapshot = await page.evaluate((targetSelector) => {
+      const element = globalThis.document.querySelector(targetSelector);
+      const ancestors = [];
+      for (let node = element; node && ancestors.length < 10; node = node.parentElement) {
+        const style = globalThis.getComputedStyle(node);
+        ancestors.push({
+          tag: node.tagName, id: node.id, class: node.getAttribute('class'),
+          display: style.display, visibility: style.visibility,
+          contentVisibility: style.contentVisibility, opacity: style.opacity,
+          bounds: node.getBoundingClientRect().toJSON(),
+          rectCount: node.getClientRects().length,
+          nativeVisible: typeof node.checkVisibility === 'function' ? node.checkVisibility() : null,
+          inert: node.hasAttribute('inert'), ariaHidden: node.getAttribute('aria-hidden'),
+          open: node.hasAttribute('open'),
+        });
+      }
+      return {
+        href: globalThis.location.href, selector: targetSelector, ancestors,
+        viewport: { width: globalThis.innerWidth, height: globalThis.innerHeight, scrollY: globalThis.scrollY },
+        root: { ...(/** @type {HTMLElement | null} */ (globalThis.document.querySelector('#root')))?.dataset },
+        phoneFilterMedia: globalThis.matchMedia('(width < 48rem)').matches,
+      };
+    }, selector).catch((diagnosticError) => ({ diagnosticError: String(diagnosticError) }));
+    emitDiagnostic('visibility.snapshot', JSON.stringify(snapshot));
+    throw error;
+  }
+}
+
 export function attachPageDiagnostics(page) {
   page.on('console', (message) => {
     if (message.type() === 'error' || message.type() === 'warning') {
@@ -49,6 +83,12 @@ export function appUrl(path = '/') {
   const normalizedBase = baseURL.endsWith('/') ? baseURL : `${baseURL}/`;
   const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
   return new URL(normalizedPath, normalizedBase).toString();
+}
+
+export async function readServedArtifact(page, filename) {
+  const response = await page.request.get(appUrl(`/data/generated/${filename}`));
+  expect(response.ok()).toBe(true);
+  return response.json();
 }
 
 export async function gotoApp(page, path = '/', options = undefined) {
@@ -95,11 +135,27 @@ export async function waitForAppReady(page, options = {}) {
     await expect(page.locator('#app')).toHaveAttribute('data-app-ready', readyPattern, { timeout: 60000 });
     // Data readiness can precede the route transition's interaction lock.
     await expect(page.locator('main#workspace')).not.toHaveAttribute('inert', '', { timeout: 60000 });
+    await expect(page.locator('main#workspace')).toBeVisible();
+    if (!allowPartial) {
+      await expect(page.locator('#workspace [data-route-suspense-pending="true"]')).toHaveCount(0, { timeout: 60000 });
+    }
   } catch (error) {
     const startupSnapshot = await page.evaluate(() => {
       const app = globalThis.document.querySelector('#app');
+      const workspace = globalThis.document.querySelector('main#workspace');
+      const publisher = globalThis.document.querySelector('#source-publisher-filter');
+      const style = element => element ? {
+        display: globalThis.getComputedStyle(element).display,
+        visibility: globalThis.getComputedStyle(element).visibility,
+        bounds: element.getBoundingClientRect().toJSON(),
+      } : null;
       return {
         href: globalThis.location.href,
+        root: { ...(/** @type {HTMLElement | null} */ (globalThis.document.querySelector('#root')))?.dataset },
+        workspace: style(workspace),
+        publisher: style(publisher),
+        publisherParent: style(publisher?.parentElement),
+        phoneFilterMedia: globalThis.matchMedia('(width < 48rem)').matches,
         ready: app?.getAttribute('data-app-ready') || '<missing>',
         busy: app?.getAttribute('aria-busy') || '<missing>',
         text: app?.textContent?.trim().slice(0, 400) || '',

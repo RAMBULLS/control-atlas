@@ -14,7 +14,7 @@ test.beforeEach(async ({ page }) => {
 for (const width of [390, 1440]) {
   test(`brand home link keeps decoration separate from its accessible name at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
-    await gotoApp(page, '/library');
+    await gotoApp(page, '/#/library');
     await waitForAppReady(page);
     await dismissOnboarding(page);
     const home = page.getByRole('link', { name: 'Control Atlas — home', exact: true });
@@ -25,7 +25,7 @@ for (const width of [390, 1440]) {
     await expect(home).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(page).toHaveURL(/#\/$/);
-    await gotoApp(page, '/library');
+    await gotoApp(page, '/#/library');
     await waitForAppReady(page);
     // The stretched link retains the existing full masthead click target.
     await page.locator('.brand').click({ position: { x: 5, y: 5 } });

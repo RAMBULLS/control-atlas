@@ -194,14 +194,14 @@ test('actual Vite build hook emits exactly four pinned font assets and keeps dev
   const method = name => plugin.properties.find(property => ts.isMethodDeclaration(property) && property.name.getText(config) === name);
   for (const command of ['build', 'serve']) {
     const emitted = [];
-    const context = { command, orbitalFonts: externalizeOrbitalFonts(css), graph: { emitFile: file => emitted.push(file) }, result: null };
+    const context = { command, orbitalFonts: externalizeOrbitalFonts(css), graph: { emitFile: file => emitted.push(file) }, id: '\0control-atlas-inline-fonts.css', result: null };
     const hook = method('buildStart');
     runInNewContext(ts.transpileModule(`(function() ${hook.body.getText(config)}).call(graph);`, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText, context);
     assert.equal(emitted.length, command === 'build' ? 4 : 0);
     for (const asset of emitted) assert.equal(asset.fileName, `fonts/${createHash('sha256').update(asset.source).digest('hex')}.woff2`);
     for (const name of ['resolveId', 'load']) {
       const hook = method(name);
-      runInNewContext(`result = (function(id) ${hook.body.getText(config)})(${JSON.stringify('\0control-atlas-inline-fonts.css')});`, context);
+      runInNewContext(`result = (function(id) ${hook.body.getText(config)})(id);`, context);
       assert.equal(context.result, name === 'resolveId' ? '\0control-atlas-inline-fonts.css' : '');
     }
   }

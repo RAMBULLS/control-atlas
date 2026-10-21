@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "olir_id": 222,
   "source_artifact": "https://bxaios.com/nist-alignment/",
-  "sha256": "sha256:a5ad3c769e72b1e48afdebf684e57127e79f1dbf454554c875c9fd7dd788bb27",
+  "sha256": "sha256:c23b9f1787dd396f1965c8ddcb3c2b5a83b6ab3717e943e28f1d85028c349119",
   "byte_length": 143570,
   "parser": "olir-html",
   "extraction_scope": "published_html_relationships",

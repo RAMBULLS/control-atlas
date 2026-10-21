@@ -1,6 +1,6 @@
 {
   "schemaVersion": "4.0",
-  "lastUpdated": "2026-10-20",
+  "lastUpdated": "2026-10-21",
   "collections": [
     {
       "id": "dod-cybersecurity-portals",
@@ -674,7 +674,7 @@
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "v0.121.0",
-      "publisherUpdatedAt": "2026-10-19",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -712,7 +712,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/anchore/grype",
         "commitSha": "afe2742527d98d822da06c9f32eed86fe3d193e0",
@@ -769,7 +769,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-10-19T20:26:33Z",
-          "latestRepositoryUpdateAt": "2026-10-19T21:57:04Z",
+          "latestRepositoryUpdateAt": "2026-10-21T06:34:41Z",
           "license": "Apache-2.0",
           "description": "A vulnerability scanner for container images and filesystems"
         }
@@ -922,7 +922,7 @@
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "v1.55.0",
-      "publisherUpdatedAt": "2026-10-20",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -960,7 +960,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/anchore/syft",
         "commitSha": "f15c3343e29dfb20cf6d82c820e7090b49808c96",
@@ -1013,7 +1013,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-10-19T18:54:44Z",
-          "latestRepositoryUpdateAt": "2026-10-20T05:15:11Z",
+          "latestRepositoryUpdateAt": "2026-10-21T12:30:16Z",
           "license": "Apache-2.0",
           "description": "CLI tool and library for generating a Software Bill of Materials from container images and filesystems"
         }
@@ -1193,7 +1193,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "organization_profile",
         "repositoryApiUrl": "https://api.github.com/repos/ansible-lockdown/.github",
         "commitSha": "2dcdbc5c89114127a0afe2f38160dd72a1ef20dc",
@@ -1464,25 +1464,25 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-19T11:16:12Z.",
+          "text": "Latest repository push: 2026-10-21T00:15:54Z.",
           "sourceUrl": "https://api.github.com/repos/redcanaryco/atomic-red-team"
         }
       },
       "overview": {
         "text": "Atomic Red Team™ is a library of tests mapped to the MITRE ATT&CK® framework. Security teams can use Atomic Red Team to quickly, portably, and reproducibly test their environments.",
-        "sourceUrl": "https://github.com/redcanaryco/atomic-red-team/blob/388942adbd9641f4dfdcf079d7efe9a75ec0ac43/README.md",
+        "sourceUrl": "https://github.com/redcanaryco/atomic-red-team/blob/1edbe50b8f49560110e6cf85161c1ef75a5732b7/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/redcanaryco/atomic-red-team",
-        "commitSha": "388942adbd9641f4dfdcf079d7efe9a75ec0ac43",
-        "commitUrl": "https://github.com/redcanaryco/atomic-red-team/commit/388942adbd9641f4dfdcf079d7efe9a75ec0ac43",
+        "commitSha": "1edbe50b8f49560110e6cf85161c1ef75a5732b7",
+        "commitUrl": "https://github.com/redcanaryco/atomic-red-team/commit/1edbe50b8f49560110e6cf85161c1ef75a5732b7",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/redcanaryco/atomic-red-team/blob/388942adbd9641f4dfdcf079d7efe9a75ec0ac43/README.md",
-        "readmeSha256": "sha256:c900e6296af4fc686a427a411dff8c63c4e1e99e525c3186cdb640a7b8952c8e",
+        "readmeUrl": "https://github.com/redcanaryco/atomic-red-team/blob/1edbe50b8f49560110e6cf85161c1ef75a5732b7/README.md",
+        "readmeSha256": "sha256:92329594b87ced70a36fb6c4472bcec017a84ab83cc84dcbb0b1e635122c3ac4",
         "readmeByteLength": 2472,
         "overviewExcerpt": "Atomic Red Team™ is a library of tests mapped to the MITRE ATT&CK® framework. Security teams can use Atomic Red Team to quickly, portably, and reproducibly test their environments.",
         "sections": {
@@ -1512,14 +1512,14 @@
             "mitre-attack"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-19T11:16:12Z",
-          "latestRepositoryUpdateAt": "2026-10-20T03:04:32Z",
+          "lastPushedAt": "2026-10-21T00:15:54Z",
+          "latestRepositoryUpdateAt": "2026-10-21T10:51:17Z",
           "license": "MIT",
           "description": "Small and highly portable detection tests based on MITRE's ATT&CK."
         }
       },
-      "publisherUpdatedAt": "2026-10-20",
-      "lastCommitAt": "2026-10-19T11:16:12Z",
+      "publisherUpdatedAt": "2026-10-21",
+      "lastCommitAt": "2026-10-21T00:15:54Z",
       "license": "MIT"
     },
     {
@@ -1706,7 +1706,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/oscal-club/awesome-oscal",
         "commitSha": "fe430cb66a6662f790a02462d4b00b956cf3fbae",
@@ -2198,7 +2198,7 @@
         "usage": {
           "status": "documented",
           "text": "Please refer to the Quickstart Guide for BloodHound Community Edition, which is part of the BloodHound documentation.",
-          "sourceUrl": "https://github.com/SpecterOps/BloodHound/blob/41421cc5e28370e1feab7e454a032ba808c7cce1/README.md"
+          "sourceUrl": "https://github.com/SpecterOps/BloodHound/blob/93c4de19b5d4c4710f561113d6b7ab1e767234e3/README.md"
         },
         "license": {
           "status": "documented",
@@ -2207,7 +2207,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-19T23:31:24Z.",
+          "text": "Latest repository push: 2026-10-21T01:10:04Z.",
           "sourceUrl": "https://api.github.com/repos/SpecterOps/BloodHound"
         },
         "release": {
@@ -2221,18 +2221,18 @@
       },
       "overview": {
         "text": "BloodHound is a monolithic web application composed of an embedded React frontend with Sigma.js and a Go based REST API backend. It is deployed with a Postgresql application database and a Neo4j graph database, and is fed by the SharpHound and AzureHound data collectors.",
-        "sourceUrl": "https://github.com/SpecterOps/BloodHound/blob/41421cc5e28370e1feab7e454a032ba808c7cce1/README.md",
+        "sourceUrl": "https://github.com/SpecterOps/BloodHound/blob/93c4de19b5d4c4710f561113d6b7ab1e767234e3/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/SpecterOps/BloodHound",
-        "commitSha": "41421cc5e28370e1feab7e454a032ba808c7cce1",
-        "commitUrl": "https://github.com/SpecterOps/BloodHound/commit/41421cc5e28370e1feab7e454a032ba808c7cce1",
+        "commitSha": "93c4de19b5d4c4710f561113d6b7ab1e767234e3",
+        "commitUrl": "https://github.com/SpecterOps/BloodHound/commit/93c4de19b5d4c4710f561113d6b7ab1e767234e3",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/SpecterOps/BloodHound/blob/41421cc5e28370e1feab7e454a032ba808c7cce1/README.md",
+        "readmeUrl": "https://github.com/SpecterOps/BloodHound/blob/93c4de19b5d4c4710f561113d6b7ab1e767234e3/README.md",
         "readmeSha256": "sha256:3ba7971d833fb40f79e839343f4d0a03f3891cd510696a4929927b76a2ea6e89",
         "readmeByteLength": 4091,
         "overviewExcerpt": "BloodHound is a monolithic web application composed of an embedded React frontend with Sigma.js and a Go based REST API backend. It is deployed with a Postgresql application database and a Neo4j graph database, and is fed by the SharpHound and AzureHound data collectors.",
@@ -2263,16 +2263,16 @@
           "primaryLanguage": "Go",
           "topics": [],
           "archived": false,
-          "lastPushedAt": "2026-10-19T23:31:24Z",
-          "latestRepositoryUpdateAt": "2026-10-19T21:24:51Z",
+          "lastPushedAt": "2026-10-21T01:10:04Z",
+          "latestRepositoryUpdateAt": "2026-10-21T11:20:33Z",
           "license": "Apache-2.0",
           "description": "Six Degrees of Domain Admin"
         }
       },
       "currentVersion": "v9.8.0",
       "lastReleaseAt": "2026-10-07T17:30:52Z",
-      "publisherUpdatedAt": "2026-10-19",
-      "lastCommitAt": "2026-10-19T23:31:24Z",
+      "publisherUpdatedAt": "2026-10-21",
+      "lastCommitAt": "2026-10-21T01:10:04Z",
       "license": "Apache-2.0"
     },
     {
@@ -2688,8 +2688,8 @@
       "repositoryUrl": "https://github.com/bridgecrewio/checkov",
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
-      "currentVersion": "3.3.29",
-      "publisherUpdatedAt": "2026-10-20",
+      "currentVersion": "3.3.30",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -2714,7 +2714,7 @@
       "nextCheckAt": "2026-11-03",
       "overview": {
         "text": "Checkov is a static code analysis tool for infrastructure as code (IaC) and also a software composition analysis (SCA) tool for images and open source packages.",
-        "sourceUrl": "https://github.com/bridgecrewio/checkov/blob/7a6782e3d81e19f1bdd9213129f3138767691f5f/README.md",
+        "sourceUrl": "https://github.com/bridgecrewio/checkov/blob/811d0687902c66d5964c68da5739c947979e85b1/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
@@ -2725,7 +2725,7 @@
             "kind": "publisher_screenshot",
             "url": "https://raw.githubusercontent.com/bridgecrewio/checkov/main/docs/checkov-jenkins.png",
             "alt": "jenikins-screenshot",
-            "sourceUrl": "https://github.com/bridgecrewio/checkov/blob/7a6782e3d81e19f1bdd9213129f3138767691f5f/README.md",
+            "sourceUrl": "https://github.com/bridgecrewio/checkov/blob/811d0687902c66d5964c68da5739c947979e85b1/README.md",
             "sha256": "sha256:8599a8bd1f5d937a55001b6a48b6a8e78149b1e0e834e505d13341188e227c7f",
             "byteLength": 227140,
             "contentType": "image/png",
@@ -2733,20 +2733,20 @@
             "height": 969,
             "license": "Apache-2.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-10-20",
-            "commitSha": "7a6782e3d81e19f1bdd9213129f3138767691f5f"
+            "retrievedAt": "2026-10-21",
+            "commitSha": "811d0687902c66d5964c68da5739c947979e85b1"
           }
         ],
-        "sourceUrl": "https://github.com/bridgecrewio/checkov/blob/7a6782e3d81e19f1bdd9213129f3138767691f5f/README.md"
+        "sourceUrl": "https://github.com/bridgecrewio/checkov/blob/811d0687902c66d5964c68da5739c947979e85b1/README.md"
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/bridgecrewio/checkov",
-        "commitSha": "7a6782e3d81e19f1bdd9213129f3138767691f5f",
-        "commitUrl": "https://github.com/bridgecrewio/checkov/commit/7a6782e3d81e19f1bdd9213129f3138767691f5f",
+        "commitSha": "811d0687902c66d5964c68da5739c947979e85b1",
+        "commitUrl": "https://github.com/bridgecrewio/checkov/commit/811d0687902c66d5964c68da5739c947979e85b1",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/bridgecrewio/checkov/blob/7a6782e3d81e19f1bdd9213129f3138767691f5f/README.md",
+        "readmeUrl": "https://github.com/bridgecrewio/checkov/blob/811d0687902c66d5964c68da5739c947979e85b1/README.md",
         "readmeSha256": "sha256:3c6aeee9721851b6e94b41331d49f9b11bf7aae0987bd337ce3fdb0b495e67d6",
         "readmeByteLength": 23252,
         "overviewExcerpt": "Checkov is a static code analysis tool for infrastructure as code (IaC) and also a software composition analysis (SCA) tool for images and open source packages.",
@@ -2783,7 +2783,7 @@
             "kind": "publisher_screenshot",
             "url": "https://raw.githubusercontent.com/bridgecrewio/checkov/main/docs/checkov-jenkins.png",
             "alt": "jenikins-screenshot",
-            "sourceUrl": "https://github.com/bridgecrewio/checkov/blob/7a6782e3d81e19f1bdd9213129f3138767691f5f/README.md",
+            "sourceUrl": "https://github.com/bridgecrewio/checkov/blob/811d0687902c66d5964c68da5739c947979e85b1/README.md",
             "sha256": "sha256:8599a8bd1f5d937a55001b6a48b6a8e78149b1e0e834e505d13341188e227c7f",
             "byteLength": 227140,
             "contentType": "image/png",
@@ -2791,16 +2791,16 @@
             "height": 969,
             "license": "Apache-2.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-10-20",
-            "commitSha": "7a6782e3d81e19f1bdd9213129f3138767691f5f"
+            "retrievedAt": "2026-10-21",
+            "commitSha": "811d0687902c66d5964c68da5739c947979e85b1"
           }
         ],
         "release": {
           "status": "published",
-          "version": "3.3.29",
-          "name": "3.3.29",
-          "url": "https://github.com/bridgecrewio/checkov/releases/tag/3.3.29",
-          "publishedAt": "2026-10-13T23:03:17Z",
+          "version": "3.3.30",
+          "name": "3.3.30",
+          "url": "https://github.com/bridgecrewio/checkov/releases/tag/3.3.30",
+          "publishedAt": "2026-10-20T23:03:11Z",
           "prerelease": false
         },
         "facts": {
@@ -2822,8 +2822,8 @@
             "terraform"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-19T04:44:39Z",
-          "latestRepositoryUpdateAt": "2026-10-20T05:00:01Z",
+          "lastPushedAt": "2026-10-20T23:03:17Z",
+          "latestRepositoryUpdateAt": "2026-10-21T09:46:02Z",
           "license": "Apache-2.0",
           "description": "Prevent cloud misconfigurations and find vulnerabilities during build-time in infrastructure as code, container images and open source packages with Checkov by Bridgecrew."
         }
@@ -2846,27 +2846,27 @@
         "inputs": {
           "status": "documented",
           "text": "sh checkov --directory /user/path/to/iac/code Or a specific file or files sh checkov --file /user/tf/example.tf Or sh checkov -f /user/cloudformation/example1.yml -f /user/cloudformation/example2.yml Or a terraform plan file in json format sh terraform init terraform plan -out tf.plan terraform show -json tf.plan tf.json checkov -f tf.json Note: terraform show output file tf.json will be a single line. For that reason all findings will be reported line number 0 by Checkov sh check: CKV AWS 21: \"Ensure all data stored in the S3 bucket have versioning enabled\" FAILED for resource: aws s3 bucket.customer File: /tf/tf.json:0-0 Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-16-enable-versioning If you have installed jq you can convert json file into multiple lines with the following command: sh terraform show -json tf.plan jq '.' tf.json Scan result would be much user friendly. sh checkov -f tf.json Check: CKV AWS 21: \"Ensure all data stored in the S3 bucket have versioning enabled\" FAILED for resource: aws s3 bucket.customer File: /tf/tf1.json:224-268 Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-16-enable-versioning 225 \"values\": { 226 \"acceleration status\": \"\", 227 \"acl\": \"private\", 228 \"arn\": \"arn:aws:s3:::mybucket\", Alternatively, specify the repo root of the hcl files used to generate the plan file, using the --repo-root-for-plan-enrichment flag, to enrich the output with the appropriate file path, line numbers, and codeblock of the resource(s). An added benefit is that check suppressions will be handled accordingly. sh checkov -f tf.json --repo-root-for-plan-enrichment /user/path/to/iac/code",
-          "sourceUrl": "https://github.com/bridgecrewio/checkov/blob/7a6782e3d81e19f1bdd9213129f3138767691f5f/README.md"
+          "sourceUrl": "https://github.com/bridgecrewio/checkov/blob/811d0687902c66d5964c68da5739c947979e85b1/README.md"
         },
         "outputs": {
           "status": "documented",
           "text": "The console output is in colour by default, to switch to a monochrome output, set the environment variable: ANSI COLORS DISABLED",
-          "sourceUrl": "https://github.com/bridgecrewio/checkov/blob/7a6782e3d81e19f1bdd9213129f3138767691f5f/README.md"
+          "sourceUrl": "https://github.com/bridgecrewio/checkov/blob/811d0687902c66d5964c68da5739c947979e85b1/README.md"
         },
         "formats": {
           "status": "documented",
           "text": "To skip a check on a given Terraform definition block or CloudFormation resource, apply the following comment pattern inside it's scope: checkov:skip= : is one of the available check scanners is an optional suppression reason to be included in the output",
-          "sourceUrl": "https://github.com/bridgecrewio/checkov/blob/7a6782e3d81e19f1bdd9213129f3138767691f5f/README.md"
+          "sourceUrl": "https://github.com/bridgecrewio/checkov/blob/811d0687902c66d5964c68da5739c947979e85b1/README.md"
         },
         "installation": {
           "status": "documented",
           "text": "To install pip follow the official docs sh pip3 install checkov Certain environments (e.g., Debian 12) may require you to install Checkov in a virtual environment sh",
-          "sourceUrl": "https://github.com/bridgecrewio/checkov/blob/7a6782e3d81e19f1bdd9213129f3138767691f5f/README.md"
+          "sourceUrl": "https://github.com/bridgecrewio/checkov/blob/811d0687902c66d5964c68da5739c947979e85b1/README.md"
         },
         "usage": {
           "status": "documented",
           "text": "By using command line flags, you can specify to run only named checks (allow list) or run all checks except those listed (deny list). If you are using the platform integration via API key, you can also specify a severity threshold to skip and / or include. Moreover, as json files can't contain comments, one can pass regex pattern to skip json file secret scan. See the docs for more detailed information about how these flags work together.",
-          "sourceUrl": "https://github.com/bridgecrewio/checkov/blob/7a6782e3d81e19f1bdd9213129f3138767691f5f/README.md"
+          "sourceUrl": "https://github.com/bridgecrewio/checkov/blob/811d0687902c66d5964c68da5739c947979e85b1/README.md"
         },
         "license": {
           "status": "documented",
@@ -2875,20 +2875,20 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-19T04:44:39Z.",
+          "text": "Latest repository push: 2026-10-20T23:03:17Z.",
           "sourceUrl": "https://api.github.com/repos/bridgecrewio/checkov"
         },
         "release": {
           "status": "published",
-          "version": "3.3.29",
-          "name": "3.3.29",
-          "url": "https://github.com/bridgecrewio/checkov/releases/tag/3.3.29",
-          "publishedAt": "2026-10-13T23:03:17Z",
+          "version": "3.3.30",
+          "name": "3.3.30",
+          "url": "https://github.com/bridgecrewio/checkov/releases/tag/3.3.30",
+          "publishedAt": "2026-10-20T23:03:11Z",
           "prerelease": false
         }
       },
-      "lastReleaseAt": "2026-10-13T23:03:17Z",
-      "lastCommitAt": "2026-10-19T04:44:39Z",
+      "lastReleaseAt": "2026-10-20T23:03:11Z",
+      "lastCommitAt": "2026-10-20T23:03:17Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -3284,7 +3284,7 @@
       "maturity": "established",
       "maintenanceStatus": "active",
       "currentVersion": "v13.0.0.0",
-      "publisherUpdatedAt": "2026-10-19",
+      "publisherUpdatedAt": "2026-10-20",
       "lastReleaseAt": "2026-10-06T17:41:52Z",
       "lastCommitAt": "2026-10-09T16:09:35Z",
       "lastCheckedAt": "2026-08-03",
@@ -3339,7 +3339,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/cisagov/cset",
         "commitSha": "48b3afe17c4e897f7eac768ec0c56ca63be14526",
@@ -3386,7 +3386,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-10-09T16:09:35Z",
-          "latestRepositoryUpdateAt": "2026-10-19T20:08:35Z",
+          "latestRepositoryUpdateAt": "2026-10-20T08:34:22Z",
           "license": "MIT",
           "description": "Cybersecurity Evaluation Tool"
         }
@@ -3760,7 +3760,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/cisagov/Decider",
         "commitSha": "6290a80504561d21b641ba5bf69d1fe5c1ee0a21",
@@ -3804,14 +3804,14 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-02-20T22:24:57Z",
-          "latestRepositoryUpdateAt": "2026-10-19T19:53:29Z",
+          "latestRepositoryUpdateAt": "2026-10-20T08:54:40Z",
           "license": "NOASSERTION",
           "description": "A web application that assists network defenders, analysts, and researchers in the process of mapping adversary behaviors to the MITRE ATT&CK® framework."
         }
       },
       "currentVersion": "v3.0.0",
       "lastReleaseAt": "2023-09-26T18:24:32Z",
-      "publisherUpdatedAt": "2026-10-19",
+      "publisherUpdatedAt": "2026-10-20",
       "lastCommitAt": "2026-02-20T22:24:57Z"
     },
     {
@@ -4329,7 +4329,7 @@
       "toolProfile": {
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-19T17:06:17Z.",
+          "text": "Latest repository push: 2026-10-21T00:57:55Z.",
           "sourceUrl": "https://api.github.com/repos/cisagov/Malcolm"
         },
         "release": {
@@ -4348,7 +4348,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/cisagov/Malcolm",
         "commitSha": "aa29d73ad5124ab0c6c23257885533faed923601",
@@ -4396,16 +4396,16 @@
             "zeek"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-19T17:06:17Z",
-          "latestRepositoryUpdateAt": "2026-10-20T01:02:33Z",
+          "lastPushedAt": "2026-10-21T00:57:55Z",
+          "latestRepositoryUpdateAt": "2026-10-21T00:12:09Z",
           "license": "NOASSERTION",
           "description": "Malcolm is a powerful, easily deployable network traffic analysis tool suite for full packet capture artifacts (PCAP files), Zeek logs and Suricata alerts."
         }
       },
       "currentVersion": "v26.09.0",
       "lastReleaseAt": "2026-09-30T17:26:02Z",
-      "publisherUpdatedAt": "2026-10-20",
-      "lastCommitAt": "2026-10-19T17:06:17Z"
+      "publisherUpdatedAt": "2026-10-21",
+      "lastCommitAt": "2026-10-21T00:57:55Z"
     },
     {
       "id": "official-niccs-training-catalog",
@@ -4589,9 +4589,9 @@
       "maturity": "established",
       "maintenanceStatus": "active",
       "currentVersion": "v1.8.0",
-      "publisherUpdatedAt": "2026-10-19",
+      "publisherUpdatedAt": "2026-10-21",
       "lastReleaseAt": "2026-05-07T21:44:29Z",
-      "lastCommitAt": "2026-10-20T02:30:38Z",
+      "lastCommitAt": "2026-10-21T12:55:56Z",
       "lastCheckedAt": "2026-08-03",
       "nextCheckAt": "2026-11-03",
       "updateMethod": "manual_primary_source_review",
@@ -4630,7 +4630,7 @@
       ],
       "overview": {
         "text": "ScubaGear is an assessment tool that verifies that a Microsoft 365 (M365) tenant’s configuration conforms to the policies described in the Secure Cloud Business Applications (SCuBA) Secure Configuration Baseline documents.",
-        "sourceUrl": "https://github.com/cisagov/ScubaGear/blob/f77ca8d07512f0910c55523866be91de81faa7f7/README.md",
+        "sourceUrl": "https://github.com/cisagov/ScubaGear/blob/cf05f99931eb1d88e0335610ac8f0713f2e76fad/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
@@ -4640,17 +4640,17 @@
           "Windows"
         ],
         "environments": [],
-        "sourceUrl": "https://github.com/cisagov/ScubaGear/blob/f77ca8d07512f0910c55523866be91de81faa7f7/README.md",
+        "sourceUrl": "https://github.com/cisagov/ScubaGear/blob/cf05f99931eb1d88e0335610ac8f0713f2e76fad/README.md",
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/cisagov/ScubaGear",
-        "commitSha": "f77ca8d07512f0910c55523866be91de81faa7f7",
-        "commitUrl": "https://github.com/cisagov/ScubaGear/commit/f77ca8d07512f0910c55523866be91de81faa7f7",
+        "commitSha": "cf05f99931eb1d88e0335610ac8f0713f2e76fad",
+        "commitUrl": "https://github.com/cisagov/ScubaGear/commit/cf05f99931eb1d88e0335610ac8f0713f2e76fad",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/cisagov/ScubaGear/blob/f77ca8d07512f0910c55523866be91de81faa7f7/README.md",
+        "readmeUrl": "https://github.com/cisagov/ScubaGear/blob/cf05f99931eb1d88e0335610ac8f0713f2e76fad/README.md",
         "readmeSha256": "sha256:f7be2e4b2ce32abeab3804590b21cba8c46d055d209d8e46c6546bf682c12a0a",
         "readmeByteLength": 12856,
         "overviewExcerpt": "ScubaGear is an assessment tool that verifies that a Microsoft 365 (M365) tenant’s configuration conforms to the policies described in the Secure Cloud Business Applications (SCuBA) Secure Configuration Baseline documents.",
@@ -4704,8 +4704,8 @@
             "security-automation"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-20T02:30:38Z",
-          "latestRepositoryUpdateAt": "2026-10-19T21:37:01Z",
+          "lastPushedAt": "2026-10-21T12:55:56Z",
+          "latestRepositoryUpdateAt": "2026-10-21T12:50:46Z",
           "license": "CC0-1.0",
           "description": "Automation to assess the state of your M365 tenant against CISA's baselines"
         }
@@ -4726,17 +4726,17 @@
         "outputs": {
           "status": "documented",
           "text": "- HTML Reports : Interactive, user-friendly compliance reports. Sample BaselineReports.html - JSON Output : Structured results for reporting and parsing. Sample ScubaResults.json - CSV Export : Spreadsheet-compatible data for analysis. Sample ScubaResults.csv",
-          "sourceUrl": "https://github.com/cisagov/ScubaGear/blob/f77ca8d07512f0910c55523866be91de81faa7f7/README.md"
+          "sourceUrl": "https://github.com/cisagov/ScubaGear/blob/cf05f99931eb1d88e0335610ac8f0713f2e76fad/README.md"
         },
         "installation": {
           "status": "documented",
           "text": "To install ScubaGear from PSGallery, open a PowerShell 5 terminal on a Windows computer and install the module: powershell",
-          "sourceUrl": "https://github.com/cisagov/ScubaGear/blob/f77ca8d07512f0910c55523866be91de81faa7f7/README.md"
+          "sourceUrl": "https://github.com/cisagov/ScubaGear/blob/cf05f99931eb1d88e0335610ac8f0713f2e76fad/README.md"
         },
         "usage": {
           "status": "documented",
           "text": "Before launching ScubaGear , it's important to ensure your environment is properly configured. This includes having the necessary dependencies and permissions in place. Please review the prerequisites section to verify that your system meets all requirements. This will help avoid errors during execution and ensure a smooth experience when using ScubaGear. [!NOTE] After installing ScubaGear in your environment, we recommend using the built-in update functions and features when you need to update to the latest version. See the Update Guide for more information.",
-          "sourceUrl": "https://github.com/cisagov/ScubaGear/blob/f77ca8d07512f0910c55523866be91de81faa7f7/README.md"
+          "sourceUrl": "https://github.com/cisagov/ScubaGear/blob/cf05f99931eb1d88e0335610ac8f0713f2e76fad/README.md"
         },
         "license": {
           "status": "documented",
@@ -4745,7 +4745,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-20T02:30:38Z.",
+          "text": "Latest repository push: 2026-10-21T12:55:56Z.",
           "sourceUrl": "https://api.github.com/repos/cisagov/ScubaGear"
         },
         "release": {
@@ -4931,18 +4931,18 @@
       ],
       "overview": {
         "text": "The CISA Vulnrichment project is the public repository of CISA's enrichment of public CVE records through CISA's ADP (Authorized Data Publisher) container. In this phase of the project, CISA is assessing new and recent CVEs and adding key SSVC decision points. Once scored, some higher-risk CVEs will also receive enrichment of CWE and/or CVSS data points, where possible.",
-        "sourceUrl": "https://github.com/cisagov/vulnrichment/blob/c7d15706ff78585e334de191060e1ba33879e31a/README.md",
+        "sourceUrl": "https://github.com/cisagov/vulnrichment/blob/c3a5ae9e092ae8ba1caee2f7bdd389e5c7cd693b/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/cisagov/vulnrichment",
-        "commitSha": "c7d15706ff78585e334de191060e1ba33879e31a",
-        "commitUrl": "https://github.com/cisagov/vulnrichment/commit/c7d15706ff78585e334de191060e1ba33879e31a",
+        "commitSha": "c3a5ae9e092ae8ba1caee2f7bdd389e5c7cd693b",
+        "commitUrl": "https://github.com/cisagov/vulnrichment/commit/c3a5ae9e092ae8ba1caee2f7bdd389e5c7cd693b",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/cisagov/vulnrichment/blob/c7d15706ff78585e334de191060e1ba33879e31a/README.md",
+        "readmeUrl": "https://github.com/cisagov/vulnrichment/blob/c3a5ae9e092ae8ba1caee2f7bdd389e5c7cd693b/README.md",
         "readmeSha256": "sha256:ffec1da10bdea8a98458362f7136d31b4143ef21875b6aa4b5d7bd9041164ba9",
         "readmeByteLength": 8501,
         "overviewExcerpt": "The CISA Vulnrichment project is the public repository of CISA's enrichment of public CVE records through CISA's ADP (Authorized Data Publisher) container. In this phase of the project, CISA is assessing new and recent CVEs and adding key SSVC decision points. Once scored, some higher-risk CVEs will also receive enrichment of CWE and/or CVSS data points, where possible.",
@@ -4970,14 +4970,14 @@
           "primaryLanguage": null,
           "topics": [],
           "archived": false,
-          "lastPushedAt": "2026-10-20T05:17:05Z",
-          "latestRepositoryUpdateAt": "2026-10-20T05:17:09Z",
+          "lastPushedAt": "2026-10-21T12:17:19Z",
+          "latestRepositoryUpdateAt": "2026-10-21T12:17:25Z",
           "license": "CC0-1.0",
           "description": "A repo to conduct vulnerability enrichment."
         }
       },
-      "publisherUpdatedAt": "2026-10-20",
-      "lastCommitAt": "2026-10-20T05:17:05Z",
+      "publisherUpdatedAt": "2026-10-21",
+      "lastCommitAt": "2026-10-21T12:17:19Z",
       "license": "CC0-1.0"
     },
     {
@@ -5172,18 +5172,18 @@
       "nextCheckAt": "2026-11-03",
       "overview": {
         "text": "Cloud Custodian, also known as c7n, is a rules engine for managing public cloud accounts and resources. It allows users to define policies to enable a well managed cloud infrastructure, that\\'s both secure and cost optimized. It consolidates many of the adhoc scripts organizations have into a lightweight and flexible tool, with unified metrics and reporting.",
-        "sourceUrl": "https://github.com/cloud-custodian/cloud-custodian/blob/95a39afec2c1e8d07a01c0317e2b61c9f6c655b6/README.md",
+        "sourceUrl": "https://github.com/cloud-custodian/cloud-custodian/blob/addc02c12f3bd03560ec20a2583ffce84fd808b7/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/cloud-custodian/cloud-custodian",
-        "commitSha": "95a39afec2c1e8d07a01c0317e2b61c9f6c655b6",
-        "commitUrl": "https://github.com/cloud-custodian/cloud-custodian/commit/95a39afec2c1e8d07a01c0317e2b61c9f6c655b6",
+        "commitSha": "addc02c12f3bd03560ec20a2583ffce84fd808b7",
+        "commitUrl": "https://github.com/cloud-custodian/cloud-custodian/commit/addc02c12f3bd03560ec20a2583ffce84fd808b7",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/cloud-custodian/cloud-custodian/blob/95a39afec2c1e8d07a01c0317e2b61c9f6c655b6/README.md",
+        "readmeUrl": "https://github.com/cloud-custodian/cloud-custodian/blob/addc02c12f3bd03560ec20a2583ffce84fd808b7/README.md",
         "readmeSha256": "sha256:9c3d91a73ef2eb7af0a1de295f7bf1c659d02de3d812bf7cd173626a6dd2ad69",
         "readmeByteLength": 12799,
         "overviewExcerpt": "Cloud Custodian, also known as c7n, is a rules engine for managing public cloud accounts and resources. It allows users to define policies to enable a well managed cloud infrastructure, that\\'s both secure and cost optimized. It consolidates many of the adhoc scripts organizations have into a lightweight and flexible tool, with unified metrics and reporting.",
@@ -5226,8 +5226,8 @@
             "terraform"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-20T02:46:39Z",
-          "latestRepositoryUpdateAt": "2026-10-20T02:46:44Z",
+          "lastPushedAt": "2026-10-20T22:14:44Z",
+          "latestRepositoryUpdateAt": "2026-10-20T22:14:53Z",
           "license": "Apache-2.0",
           "description": "Rules engine for cloud security, cost optimization, and governance, DSL in yaml for policies to query, filter, and take actions on resources"
         }
@@ -5254,7 +5254,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-20T02:46:39Z.",
+          "text": "Latest repository push: 2026-10-20T22:14:44Z.",
           "sourceUrl": "https://api.github.com/repos/cloud-custodian/cloud-custodian"
         },
         "release": {
@@ -5267,7 +5267,7 @@
         }
       },
       "lastReleaseAt": "2026-10-01T22:58:55Z",
-      "lastCommitAt": "2026-10-20T02:46:39Z",
+      "lastCommitAt": "2026-10-20T22:14:44Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -6225,7 +6225,7 @@
       "license": "BSD-3-Clause",
       "maintenanceStatus": "active",
       "currentVersion": "v0.1.82",
-      "publisherUpdatedAt": "2026-10-19",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -6253,18 +6253,18 @@
       "nextCheckAt": "2026-11-03",
       "overview": {
         "text": "The purpose of this project is to create security policy content for various platforms &mdash; Red Hat Enterprise Linux , Fedora , Ubuntu , Debian , SUSE Linux Enterprise Server (SLES) ,... &mdash; as well as products &mdash; Firefox ,... We aim to make it as easy as possible to write new and maintain existing security content in all the commonly used formats.",
-        "sourceUrl": "https://github.com/ComplianceAsCode/content/blob/36fb9257b83a67460c1d37ccfc5b9bf3561427b1/README.md",
+        "sourceUrl": "https://github.com/ComplianceAsCode/content/blob/7b08b10b164b561f0547701bbb3741c47546dc4e/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/ComplianceAsCode/content",
-        "commitSha": "36fb9257b83a67460c1d37ccfc5b9bf3561427b1",
-        "commitUrl": "https://github.com/ComplianceAsCode/content/commit/36fb9257b83a67460c1d37ccfc5b9bf3561427b1",
+        "commitSha": "7b08b10b164b561f0547701bbb3741c47546dc4e",
+        "commitUrl": "https://github.com/ComplianceAsCode/content/commit/7b08b10b164b561f0547701bbb3741c47546dc4e",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/ComplianceAsCode/content/blob/36fb9257b83a67460c1d37ccfc5b9bf3561427b1/README.md",
+        "readmeUrl": "https://github.com/ComplianceAsCode/content/blob/7b08b10b164b561f0547701bbb3741c47546dc4e/README.md",
         "readmeSha256": "sha256:00a9f7cb793b1e915fb47bdea3ab77ba8d6e3d2149caad382ce0bbbed76dae4a",
         "readmeByteLength": 12442,
         "overviewExcerpt": "The purpose of this project is to create security policy content for various platforms &mdash; Red Hat Enterprise Linux , Fedora , Ubuntu , Debian , SUSE Linux Enterprise Server (SLES) ,... &mdash; as well as products &mdash; Firefox ,... We aim to make it as easy as possible to write new and maintain existing security content in all the commonly used formats.",
@@ -6322,8 +6322,8 @@
             "xccdf"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-20T00:13:28Z",
-          "latestRepositoryUpdateAt": "2026-10-19T21:18:39Z",
+          "lastPushedAt": "2026-10-21T10:38:34Z",
+          "latestRepositoryUpdateAt": "2026-10-21T10:38:40Z",
           "license": "NOASSERTION",
           "description": "Security automation content in SCAP, Bash, Ansible, and other formats"
         }
@@ -6346,17 +6346,17 @@
         "inputs": {
           "status": "documented",
           "text": "Our security content can be used to scan bare-metal machines, virtual machines, virtual machine images (qcow2 and others), containers (including Docker), and container images. We use platform checks to detect whether we should or should not evaluate some of the rules. For example: separate partition checks make perfect sense on bare-metal machines but go against recommended practices on containers.",
-          "sourceUrl": "https://github.com/ComplianceAsCode/content/blob/36fb9257b83a67460c1d37ccfc5b9bf3561427b1/README.md"
+          "sourceUrl": "https://github.com/ComplianceAsCode/content/blob/7b08b10b164b561f0547701bbb3741c47546dc4e/README.md"
         },
         "formats": {
           "status": "documented",
           "text": "&nbsp; &nbsp; &nbsp; &nbsp; \"SCAP content\" refers to documents in the XCCDF , OVAL and SCAP source data stream formats. These documents can be presented in different forms and by different organizations to meet their security automation and technical implementation needs. For general use, we recommend SCAP source data streams because they contain all the data you need to evaluate and put machines into compliance. The data streams are part of our release ZIP archives. \"Ansible content\" refers to Ansible playbooks generated from security profiles. These can be used both in check-mode to evaluate compliance, as well as run-mode to put machines into compliance. We publish these on Ansible Galaxy as well as in release ZIP archives. \"Bash fix files\" refers to Bash scripts generated from security profiles. These are meant to be run on machines to put them into compliance. We recommend using other formats but understand that for some deployment scenarios bash is the only option. \"CEL content\" refers to compliance content using the Common Expression Language (CEL) for Kubernetes and OpenShift platforms. CEL content is generated as YAML files and is designed for native Kubernetes resource evaluation through the compliance-operator, without requiring shell access to nodes. This format is used for platform-level compliance checks on container orchestration systems.",
-          "sourceUrl": "https://github.com/ComplianceAsCode/content/blob/36fb9257b83a67460c1d37ccfc5b9bf3561427b1/README.md"
+          "sourceUrl": "https://github.com/ComplianceAsCode/content/blob/7b08b10b164b561f0547701bbb3741c47546dc4e/README.md"
         },
         "usage": {
           "status": "documented",
           "text": "We assume you have installed ComplianceAsCode system-wide into a standard location from current upstream sources as instructed in the previous section. There are several ways to consume ComplianceAsCode content, we will only go through a few of them here.",
-          "sourceUrl": "https://github.com/ComplianceAsCode/content/blob/36fb9257b83a67460c1d37ccfc5b9bf3561427b1/README.md"
+          "sourceUrl": "https://github.com/ComplianceAsCode/content/blob/7b08b10b164b561f0547701bbb3741c47546dc4e/README.md"
         },
         "license": {
           "status": "documented",
@@ -6365,7 +6365,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-20T00:13:28Z.",
+          "text": "Latest repository push: 2026-10-21T10:38:34Z.",
           "sourceUrl": "https://api.github.com/repos/ComplianceAsCode/content"
         },
         "release": {
@@ -6378,7 +6378,7 @@
         }
       },
       "lastReleaseAt": "2026-09-01T13:52:27Z",
-      "lastCommitAt": "2026-10-20T00:13:28Z",
+      "lastCommitAt": "2026-10-21T10:38:34Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -6575,7 +6575,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/NSWC-Crane/C-PAT",
         "commitSha": "7064ffbeaa603402e8b3a738578d20850d1bb8f6",
@@ -6883,7 +6883,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/cyberark/community",
         "commitSha": "e83794e4e7e925321f01df07fcf126cd539b87ba",
@@ -7077,7 +7077,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/gchq/CyberChef",
         "commitSha": "cc70a4530b86aff4bc40ccc74b1ad4857eccdca2",
@@ -7123,14 +7123,14 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-10-19T04:15:56Z",
-          "latestRepositoryUpdateAt": "2026-10-20T03:29:40Z",
+          "latestRepositoryUpdateAt": "2026-10-21T12:25:11Z",
           "license": "Apache-2.0",
           "description": "The Cyber Swiss Army Knife - a web app for encryption, encoding, compression and data analysis"
         }
       },
       "currentVersion": "v11.5.0",
       "lastReleaseAt": "2026-09-18T11:54:19Z",
-      "publisherUpdatedAt": "2026-10-20",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCommitAt": "2026-10-19T04:15:56Z",
       "license": "Apache-2.0"
     },
@@ -7222,7 +7222,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/CycloneDX/cyclonedx-cli",
         "commitSha": "b3cfa4b0edc356dad07e0b6e7ab6da0a94af0246",
@@ -11043,11 +11043,11 @@
         "installation": {
           "status": "documented",
           "text": "pip3 install git+https://github.com/elastic/detection-rules.git subdirectory=lib/kibana pip3 install git+https://github.com/elastic/detection-rules.git subdirectory=lib/kql",
-          "sourceUrl": "https://github.com/elastic/detection-rules/blob/3cff483ace4a05f65b0b69a22103fefc325c7241/README.md"
+          "sourceUrl": "https://github.com/elastic/detection-rules/blob/9431b803cd7bf18e79bc5f703534ba4a1e4eb729/README.md"
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-20T00:19:48Z.",
+          "text": "Latest repository push: 2026-10-21T13:00:53Z.",
           "sourceUrl": "https://api.github.com/repos/elastic/detection-rules"
         },
         "release": {
@@ -11061,18 +11061,18 @@
       },
       "overview": {
         "text": "Detection Rules is the home for rules used by Elastic Security. This repository is used for the development, maintenance, testing, validation, and release of rules for Elastic Security’s Detection Engine.",
-        "sourceUrl": "https://github.com/elastic/detection-rules/blob/3cff483ace4a05f65b0b69a22103fefc325c7241/README.md",
+        "sourceUrl": "https://github.com/elastic/detection-rules/blob/9431b803cd7bf18e79bc5f703534ba4a1e4eb729/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/elastic/detection-rules",
-        "commitSha": "3cff483ace4a05f65b0b69a22103fefc325c7241",
-        "commitUrl": "https://github.com/elastic/detection-rules/commit/3cff483ace4a05f65b0b69a22103fefc325c7241",
+        "commitSha": "9431b803cd7bf18e79bc5f703534ba4a1e4eb729",
+        "commitUrl": "https://github.com/elastic/detection-rules/commit/9431b803cd7bf18e79bc5f703534ba4a1e4eb729",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/elastic/detection-rules/blob/3cff483ace4a05f65b0b69a22103fefc325c7241/README.md",
+        "readmeUrl": "https://github.com/elastic/detection-rules/blob/9431b803cd7bf18e79bc5f703534ba4a1e4eb729/README.md",
         "readmeSha256": "sha256:d7a3468cfa4fb40e378242bc5723455c0253898eb3c8d486c02f71a67a45e054",
         "readmeByteLength": 11709,
         "overviewExcerpt": "Detection Rules is the home for rules used by Elastic Security. This repository is used for the development, maintenance, testing, validation, and release of rules for Elastic Security’s Detection Engine.",
@@ -11112,16 +11112,16 @@
             "threat-hunting"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-20T00:19:48Z",
-          "latestRepositoryUpdateAt": "2026-10-20T03:04:07Z",
+          "lastPushedAt": "2026-10-21T13:00:53Z",
+          "latestRepositoryUpdateAt": "2026-10-21T13:00:57Z",
           "license": "NOASSERTION",
           "description": null
         }
       },
       "currentVersion": "dev-v3.0.0",
       "lastReleaseAt": "2026-09-25T21:06:52Z",
-      "publisherUpdatedAt": "2026-10-20",
-      "lastCommitAt": "2026-10-20T00:19:48Z"
+      "publisherUpdatedAt": "2026-10-21",
+      "lastCommitAt": "2026-10-21T13:00:53Z"
     },
     {
       "id": "community-elastic-security",
@@ -11553,7 +11553,7 @@
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "0.45.1",
-      "publisherUpdatedAt": "2026-10-19",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -11578,18 +11578,18 @@
       "nextCheckAt": "2026-11-03",
       "overview": {
         "text": "Falco is a cloud native runtime security tool for Linux operating systems. It is designed to detect and alert on abnormal behavior and potential security threats in real-time.",
-        "sourceUrl": "https://github.com/falcosecurity/falco/blob/ecf7af96095706637898add168095c17b1e94782/README.md",
+        "sourceUrl": "https://github.com/falcosecurity/falco/blob/4cea537828c2b33c11e2c2a9427251682dfa1136/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/falcosecurity/falco",
-        "commitSha": "ecf7af96095706637898add168095c17b1e94782",
-        "commitUrl": "https://github.com/falcosecurity/falco/commit/ecf7af96095706637898add168095c17b1e94782",
+        "commitSha": "4cea537828c2b33c11e2c2a9427251682dfa1136",
+        "commitUrl": "https://github.com/falcosecurity/falco/commit/4cea537828c2b33c11e2c2a9427251682dfa1136",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/falcosecurity/falco/blob/ecf7af96095706637898add168095c17b1e94782/README.md",
+        "readmeUrl": "https://github.com/falcosecurity/falco/blob/4cea537828c2b33c11e2c2a9427251682dfa1136/README.md",
         "readmeSha256": "sha256:51d6bc97d21a0503e7d25d5129a3219ca17d69f54709b7cfde452b3edc5dc869",
         "readmeByteLength": 12611,
         "overviewExcerpt": "Falco is a cloud native runtime security tool for Linux operating systems. It is designed to detect and alert on abnormal behavior and potential security threats in real-time.",
@@ -11631,8 +11631,8 @@
             "security"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-19T16:02:56Z",
-          "latestRepositoryUpdateAt": "2026-10-19T20:36:40Z",
+          "lastPushedAt": "2026-10-20T16:46:50Z",
+          "latestRepositoryUpdateAt": "2026-10-21T12:07:50Z",
           "license": "Apache-2.0",
           "description": "Cloud Native Runtime Security"
         }
@@ -11654,7 +11654,7 @@
         "usage": {
           "status": "documented",
           "text": "If you're new to Falco, begin your journey with our Getting Started guide. For production deployments, please refer to our comprehensive Setup documentation. As final recommendations before deploying Falco, verify environment compatibility, define your detection goals, optimize performance, choose the appropriate build, and plan for SIEM or data lake integration to ensure effective incident response.",
-          "sourceUrl": "https://github.com/falcosecurity/falco/blob/ecf7af96095706637898add168095c17b1e94782/README.md"
+          "sourceUrl": "https://github.com/falcosecurity/falco/blob/4cea537828c2b33c11e2c2a9427251682dfa1136/README.md"
         },
         "license": {
           "status": "documented",
@@ -11663,7 +11663,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-19T16:02:56Z.",
+          "text": "Latest repository push: 2026-10-20T16:46:50Z.",
           "sourceUrl": "https://api.github.com/repos/falcosecurity/falco"
         },
         "release": {
@@ -11676,7 +11676,7 @@
         }
       },
       "lastReleaseAt": "2026-10-19T10:49:56Z",
-      "lastCommitAt": "2026-10-19T16:02:56Z",
+      "lastCommitAt": "2026-10-20T16:46:50Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -13174,7 +13174,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/gitleaks/gitleaks",
         "commitSha": "b58d3f102cf3a2c84cb7f923d05c25c9b1aed84b",
@@ -13236,14 +13236,14 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-09-30T04:14:02Z",
-          "latestRepositoryUpdateAt": "2026-10-20T06:00:56Z",
+          "latestRepositoryUpdateAt": "2026-10-21T11:41:29Z",
           "license": "MIT",
           "description": "Find secrets with Gitleaks 🔑"
         }
       },
       "currentVersion": "v8.30.1",
       "lastReleaseAt": "2026-03-21T02:17:58Z",
-      "publisherUpdatedAt": "2026-10-20",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCommitAt": "2026-09-30T04:14:02Z",
       "license": "MIT"
     },
@@ -13438,7 +13438,7 @@
       "verificationMethod": "official_repository",
       "nextCheckAt": "2026-11-03",
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/GSA/oscal-ssp-to-word",
         "commitSha": "925e4ce5491ce6a84c8c3b3b67e7f57cc496b5c0",
@@ -13733,7 +13733,7 @@
       "license": "MIT",
       "maintenanceStatus": "active",
       "currentVersion": "v.0.9.4",
-      "publisherUpdatedAt": "2026-10-19",
+      "publisherUpdatedAt": "2026-10-20",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -13766,7 +13766,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/scipag/HardeningKitty",
         "commitSha": "da0976073caad006c48b2478588c2f7fa572ab46",
@@ -13822,7 +13822,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-07-21T05:09:20Z",
-          "latestRepositoryUpdateAt": "2026-10-19T21:55:21Z",
+          "latestRepositoryUpdateAt": "2026-10-20T20:58:34Z",
           "license": "MIT",
           "description": "HardeningKitty - Checks and hardens your Windows configuration"
         }
@@ -14112,7 +14112,7 @@
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "v5.2.0",
-      "publisherUpdatedAt": "2026-10-19",
+      "publisherUpdatedAt": "2026-10-20",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -14151,7 +14151,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/oscal-compass/compliance-trestle",
         "commitSha": "0841bbd19abe3d94888a8e41c2536379aac7c8c7",
@@ -14205,8 +14205,8 @@
             "pypi"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-19T18:24:32Z",
-          "latestRepositoryUpdateAt": "2026-10-19T12:19:07Z",
+          "lastPushedAt": "2026-10-20T12:56:19Z",
+          "latestRepositoryUpdateAt": "2026-10-20T09:46:49Z",
           "license": "Apache-2.0",
           "description": "An opinionated tooling platform for managing compliance as code, using continuous integration and NIST's OSCAL standard."
         }
@@ -14248,7 +14248,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-19T18:24:32Z.",
+          "text": "Latest repository push: 2026-10-20T12:56:19Z.",
           "sourceUrl": "https://api.github.com/repos/oscal-compass/compliance-trestle"
         },
         "release": {
@@ -14261,7 +14261,7 @@
         }
       },
       "lastReleaseAt": "2026-10-05T11:19:36Z",
-      "lastCommitAt": "2026-10-19T18:24:32Z",
+      "lastCommitAt": "2026-10-20T12:56:19Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -14599,7 +14599,7 @@
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "v2.2.0",
-      "publisherUpdatedAt": "2026-10-19",
+      "publisherUpdatedAt": "2026-10-20",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -14624,18 +14624,18 @@
       "nextCheckAt": "2026-11-03",
       "overview": {
         "text": "Find security vulnerabilities, compliance issues, and infrastructure misconfigurations early in the development cycle of your infrastructure-as-code with KICS by Checkmarx.",
-        "sourceUrl": "https://github.com/Checkmarx/kics/blob/a1c1b94719551be0c49ada95b1e328ce7f12adb2/README.md",
+        "sourceUrl": "https://github.com/Checkmarx/kics/blob/1f05308bc1f1068c41cdc3cb5a3c2d99732c56fd/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/Checkmarx/kics",
-        "commitSha": "a1c1b94719551be0c49ada95b1e328ce7f12adb2",
-        "commitUrl": "https://github.com/Checkmarx/kics/commit/a1c1b94719551be0c49ada95b1e328ce7f12adb2",
+        "commitSha": "1f05308bc1f1068c41cdc3cb5a3c2d99732c56fd",
+        "commitUrl": "https://github.com/Checkmarx/kics/commit/1f05308bc1f1068c41cdc3cb5a3c2d99732c56fd",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/Checkmarx/kics/blob/a1c1b94719551be0c49ada95b1e328ce7f12adb2/README.md",
+        "readmeUrl": "https://github.com/Checkmarx/kics/blob/1f05308bc1f1068c41cdc3cb5a3c2d99732c56fd/README.md",
         "readmeSha256": "sha256:ec37e0afebccc793aa6a90bb949fc7b3ed991ed36065a465ee034b7a2ca65097",
         "readmeByteLength": 14061,
         "overviewExcerpt": "Find security vulnerabilities, compliance issues, and infrastructure misconfigurations early in the development cycle of your infrastructure-as-code with KICS by Checkmarx.",
@@ -14679,8 +14679,8 @@
             "vulnerability-scanners"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-19T12:53:55Z",
-          "latestRepositoryUpdateAt": "2026-10-19T14:27:25Z",
+          "lastPushedAt": "2026-10-20T16:08:58Z",
+          "latestRepositoryUpdateAt": "2026-10-20T15:23:48Z",
           "license": "Apache-2.0",
           "description": "Find security vulnerabilities, compliance issues, and infrastructure misconfigurations early in the development cycle of your infrastructure-as-code with KICS by Checkmarx."
         }
@@ -14702,7 +14702,7 @@
         "usage": {
           "status": "documented",
           "text": "Setting up and using KICS is super-easy. - First, see how to install and get KICS running. - Then explore KICS output results format and quickly fix the issues detected. Interested in more advanced stuff? - Deep dive into KICS queries. - Understand how to integrate KICS in your favourite CI/CD pipelines. See KICS documentation for more details and topics.",
-          "sourceUrl": "https://github.com/Checkmarx/kics/blob/a1c1b94719551be0c49ada95b1e328ce7f12adb2/README.md"
+          "sourceUrl": "https://github.com/Checkmarx/kics/blob/1f05308bc1f1068c41cdc3cb5a3c2d99732c56fd/README.md"
         },
         "license": {
           "status": "documented",
@@ -14711,7 +14711,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-19T12:53:55Z.",
+          "text": "Latest repository push: 2026-10-20T16:08:58Z.",
           "sourceUrl": "https://api.github.com/repos/Checkmarx/kics"
         },
         "release": {
@@ -14724,7 +14724,7 @@
         }
       },
       "lastReleaseAt": "2026-09-17T10:33:31Z",
-      "lastCommitAt": "2026-10-19T12:53:55Z",
+      "lastCommitAt": "2026-10-20T16:08:58Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -14861,7 +14861,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/aquasecurity/kube-bench",
         "commitSha": "e278a5915a982f2756026de6e2f9ca77077ef9f9",
@@ -14908,7 +14908,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-10-19T19:32:45Z",
-          "latestRepositoryUpdateAt": "2026-10-20T05:22:12Z",
+          "latestRepositoryUpdateAt": "2026-10-20T16:32:44Z",
           "license": "Apache-2.0",
           "description": "Checks whether Kubernetes is deployed according to security best practices as defined in the CIS Kubernetes Benchmark"
         }
@@ -15058,7 +15058,7 @@
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "v4.0.16",
-      "publisherUpdatedAt": "2026-10-20",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -15083,7 +15083,7 @@
       "nextCheckAt": "2026-11-03",
       "overview": {
         "text": "Comprehensive Kubernetes Security from Development to Runtime",
-        "sourceUrl": "https://github.com/kubescape/kubescape/blob/4f0d4f9f2ce99f77a3abf57bd3fb2154b43615ae/README.md",
+        "sourceUrl": "https://github.com/kubescape/kubescape/blob/1f12120be7efac5954bf6aa29351c053f4617484/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
@@ -15093,7 +15093,7 @@
           "Windows"
         ],
         "environments": [],
-        "sourceUrl": "https://github.com/kubescape/kubescape/blob/4f0d4f9f2ce99f77a3abf57bd3fb2154b43615ae/README.md",
+        "sourceUrl": "https://github.com/kubescape/kubescape/blob/1f12120be7efac5954bf6aa29351c053f4617484/README.md",
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "media": {
@@ -15101,9 +15101,9 @@
         "items": [
           {
             "kind": "publisher_screenshot",
-            "url": "https://raw.githubusercontent.com/kubescape/kubescape/4f0d4f9f2ce99f77a3abf57bd3fb2154b43615ae/docs/img/demo-v3.gif",
+            "url": "https://raw.githubusercontent.com/kubescape/kubescape/1f12120be7efac5954bf6aa29351c053f4617484/docs/img/demo-v3.gif",
             "alt": "Kubescape CLI demo",
-            "sourceUrl": "https://github.com/kubescape/kubescape/blob/4f0d4f9f2ce99f77a3abf57bd3fb2154b43615ae/README.md",
+            "sourceUrl": "https://github.com/kubescape/kubescape/blob/1f12120be7efac5954bf6aa29351c053f4617484/README.md",
             "sha256": "sha256:e82318b76c707547dbe35f2a0c4a5fdc7187ecc13581dfba78c6a96a15f43937",
             "byteLength": 1544622,
             "contentType": "image/gif",
@@ -15111,20 +15111,20 @@
             "height": 1080,
             "license": "Apache-2.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-10-20",
-            "commitSha": "4f0d4f9f2ce99f77a3abf57bd3fb2154b43615ae"
+            "retrievedAt": "2026-10-21",
+            "commitSha": "1f12120be7efac5954bf6aa29351c053f4617484"
           }
         ],
-        "sourceUrl": "https://github.com/kubescape/kubescape/blob/4f0d4f9f2ce99f77a3abf57bd3fb2154b43615ae/README.md"
+        "sourceUrl": "https://github.com/kubescape/kubescape/blob/1f12120be7efac5954bf6aa29351c053f4617484/README.md"
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/kubescape/kubescape",
-        "commitSha": "4f0d4f9f2ce99f77a3abf57bd3fb2154b43615ae",
-        "commitUrl": "https://github.com/kubescape/kubescape/commit/4f0d4f9f2ce99f77a3abf57bd3fb2154b43615ae",
+        "commitSha": "1f12120be7efac5954bf6aa29351c053f4617484",
+        "commitUrl": "https://github.com/kubescape/kubescape/commit/1f12120be7efac5954bf6aa29351c053f4617484",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/kubescape/kubescape/blob/4f0d4f9f2ce99f77a3abf57bd3fb2154b43615ae/README.md",
+        "readmeUrl": "https://github.com/kubescape/kubescape/blob/1f12120be7efac5954bf6aa29351c053f4617484/README.md",
         "readmeSha256": "sha256:e658b219f68970d01b7e12e15983fa5cac2293e48e86d7ab2374f9ed405e61ed",
         "readmeByteLength": 19153,
         "overviewExcerpt": "Comprehensive Kubernetes Security from Development to Runtime",
@@ -15156,9 +15156,9 @@
         "media": [
           {
             "kind": "publisher_screenshot",
-            "url": "https://raw.githubusercontent.com/kubescape/kubescape/4f0d4f9f2ce99f77a3abf57bd3fb2154b43615ae/docs/img/demo-v3.gif",
+            "url": "https://raw.githubusercontent.com/kubescape/kubescape/1f12120be7efac5954bf6aa29351c053f4617484/docs/img/demo-v3.gif",
             "alt": "Kubescape CLI demo",
-            "sourceUrl": "https://github.com/kubescape/kubescape/blob/4f0d4f9f2ce99f77a3abf57bd3fb2154b43615ae/README.md",
+            "sourceUrl": "https://github.com/kubescape/kubescape/blob/1f12120be7efac5954bf6aa29351c053f4617484/README.md",
             "sha256": "sha256:e82318b76c707547dbe35f2a0c4a5fdc7187ecc13581dfba78c6a96a15f43937",
             "byteLength": 1544622,
             "contentType": "image/gif",
@@ -15166,8 +15166,8 @@
             "height": 1080,
             "license": "Apache-2.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-10-20",
-            "commitSha": "4f0d4f9f2ce99f77a3abf57bd3fb2154b43615ae"
+            "retrievedAt": "2026-10-21",
+            "commitSha": "1f12120be7efac5954bf6aa29351c053f4617484"
           }
         ],
         "release": {
@@ -15191,8 +15191,8 @@
             "vulnerability-detection"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-20T05:47:16Z",
-          "latestRepositoryUpdateAt": "2026-10-20T05:47:27Z",
+          "lastPushedAt": "2026-10-21T10:23:30Z",
+          "latestRepositoryUpdateAt": "2026-10-21T10:23:36Z",
           "license": "Apache-2.0",
           "description": "Kubescape is an open-source Kubernetes security platform for your IDE, CI/CD pipelines, and clusters. It includes risk analysis, security, compliance, and misconfiguration scanning, saving Kubernetes users and administrators precious time, effort, and resources."
         }
@@ -15214,22 +15214,22 @@
         "outputs": {
           "status": "documented",
           "text": "bash",
-          "sourceUrl": "https://github.com/kubescape/kubescape/blob/4f0d4f9f2ce99f77a3abf57bd3fb2154b43615ae/README.md"
+          "sourceUrl": "https://github.com/kubescape/kubescape/blob/1f12120be7efac5954bf6aa29351c053f4617484/README.md"
         },
         "formats": {
           "status": "documented",
           "text": "bash",
-          "sourceUrl": "https://github.com/kubescape/kubescape/blob/4f0d4f9f2ce99f77a3abf57bd3fb2154b43615ae/README.md"
+          "sourceUrl": "https://github.com/kubescape/kubescape/blob/1f12120be7efac5954bf6aa29351c053f4617484/README.md"
         },
         "installation": {
           "status": "documented",
           "text": "sh curl -s https://raw.githubusercontent.com/kubescape/kubescape/master/install.sh /bin/bash 💡 See Installation for more options (Homebrew, Krew, Windows, etc.)",
-          "sourceUrl": "https://github.com/kubescape/kubescape/blob/4f0d4f9f2ce99f77a3abf57bd3fb2154b43615ae/README.md"
+          "sourceUrl": "https://github.com/kubescape/kubescape/blob/1f12120be7efac5954bf6aa29351c053f4617484/README.md"
         },
         "usage": {
           "status": "documented",
           "text": "bash",
-          "sourceUrl": "https://github.com/kubescape/kubescape/blob/4f0d4f9f2ce99f77a3abf57bd3fb2154b43615ae/README.md"
+          "sourceUrl": "https://github.com/kubescape/kubescape/blob/1f12120be7efac5954bf6aa29351c053f4617484/README.md"
         },
         "license": {
           "status": "documented",
@@ -15238,7 +15238,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-20T05:47:16Z.",
+          "text": "Latest repository push: 2026-10-21T10:23:30Z.",
           "sourceUrl": "https://api.github.com/repos/kubescape/kubescape"
         },
         "release": {
@@ -15251,7 +15251,7 @@
         }
       },
       "lastReleaseAt": "2026-10-14T13:00:31Z",
-      "lastCommitAt": "2026-10-20T05:47:16Z",
+      "lastCommitAt": "2026-10-21T10:23:30Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -15697,7 +15697,7 @@
       "license": "GPL-3.0",
       "maintenanceStatus": "active",
       "currentVersion": "3.1.7",
-      "publisherUpdatedAt": "2026-10-19",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -15726,7 +15726,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/CISOfy/lynis",
         "commitSha": "9319416fa0726369ab0a48f686155a90363f3f9c",
@@ -15788,7 +15788,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-09-16T21:41:02Z",
-          "latestRepositoryUpdateAt": "2026-10-19T23:58:20Z",
+          "latestRepositoryUpdateAt": "2026-10-21T11:48:02Z",
           "license": "GPL-3.0",
           "description": "Lynis - Security auditing tool for Linux, macOS, and UNIX-based systems. Assists with compliance testing (HIPAA/ISO27001/PCI DSS) and system hardening. Agentless, and installation optional."
         }
@@ -16009,12 +16009,12 @@
         "installation": {
           "status": "documented",
           "text": "Maester needs PowerShell 7.4 or later on Windows, Linux or macOS. powershell Install-Module -Name Maester -Scope CurrentUser The tests ship inside the module, so there is nothing else to install or download.",
-          "sourceUrl": "https://github.com/maester365/maester/blob/bd9ab9d7c910be6b6d86aedf22f2be2f80b2153f/README.md"
+          "sourceUrl": "https://github.com/maester365/maester/blob/2155d3b3e6f3a9d8a631d43f4255411a10eff6d9/README.md"
         },
         "usage": {
           "status": "documented",
           "text": "powershell Connect-Maester Invoke-Maester To also run your own tests, or to change settings with a maester-config.json , keep them in a folder and pass it with -Path (or run from that folder): powershell Invoke-Maester -Path ~/maester To learn more see maester.dev.",
-          "sourceUrl": "https://github.com/maester365/maester/blob/bd9ab9d7c910be6b6d86aedf22f2be2f80b2153f/README.md"
+          "sourceUrl": "https://github.com/maester365/maester/blob/2155d3b3e6f3a9d8a631d43f4255411a10eff6d9/README.md"
         },
         "license": {
           "status": "documented",
@@ -16023,7 +16023,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-20T01:45:42Z.",
+          "text": "Latest repository push: 2026-10-21T11:54:41Z.",
           "sourceUrl": "https://api.github.com/repos/maester365/maester"
         },
         "release": {
@@ -16037,18 +16037,18 @@
       },
       "overview": {
         "text": "Monitor your Microsoft 365 tenant's security configuration using Maester!",
-        "sourceUrl": "https://github.com/maester365/maester/blob/bd9ab9d7c910be6b6d86aedf22f2be2f80b2153f/README.md",
+        "sourceUrl": "https://github.com/maester365/maester/blob/2155d3b3e6f3a9d8a631d43f4255411a10eff6d9/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/maester365/maester",
-        "commitSha": "bd9ab9d7c910be6b6d86aedf22f2be2f80b2153f",
-        "commitUrl": "https://github.com/maester365/maester/commit/bd9ab9d7c910be6b6d86aedf22f2be2f80b2153f",
+        "commitSha": "2155d3b3e6f3a9d8a631d43f4255411a10eff6d9",
+        "commitUrl": "https://github.com/maester365/maester/commit/2155d3b3e6f3a9d8a631d43f4255411a10eff6d9",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/maester365/maester/blob/bd9ab9d7c910be6b6d86aedf22f2be2f80b2153f/README.md",
+        "readmeUrl": "https://github.com/maester365/maester/blob/2155d3b3e6f3a9d8a631d43f4255411a10eff6d9/README.md",
         "readmeSha256": "sha256:04a48e5a75e360e936cd76837fbba2549a3f13eac2596a3a3711a02e5295f53b",
         "readmeByteLength": 8394,
         "overviewExcerpt": "Monitor your Microsoft 365 tenant's security configuration using Maester!",
@@ -16093,16 +16093,16 @@
             "microsoft-graph"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-20T01:45:42Z",
-          "latestRepositoryUpdateAt": "2026-10-19T13:47:55Z",
+          "lastPushedAt": "2026-10-21T11:54:41Z",
+          "latestRepositoryUpdateAt": "2026-10-21T11:21:07Z",
           "license": "MIT",
           "description": "Maester is a test automation framework to help you stay in control of your Microsoft security configuration."
         }
       },
       "currentVersion": "2.3.0",
       "lastReleaseAt": "2026-10-06T12:04:55Z",
-      "publisherUpdatedAt": "2026-10-19",
-      "lastCommitAt": "2026-10-20T01:45:42Z",
+      "publisherUpdatedAt": "2026-10-21",
+      "lastCommitAt": "2026-10-21T11:54:41Z",
       "license": "MIT",
       "compatibility": {
         "status": "documented",
@@ -16112,7 +16112,7 @@
           "Linux"
         ],
         "environments": [],
-        "sourceUrl": "https://github.com/maester365/maester/blob/bd9ab9d7c910be6b6d86aedf22f2be2f80b2153f/README.md",
+        "sourceUrl": "https://github.com/maester365/maester/blob/2155d3b3e6f3a9d8a631d43f4255411a10eff6d9/README.md",
         "note": "Supported environments stated in the commit-pinned repository README."
       }
     },
@@ -16997,7 +16997,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/microsoft/StigRepo",
         "commitSha": "1d4e5baf3c1641c7fa631c122c80253461d0440a",
@@ -17268,7 +17268,7 @@
         "installation": {
           "status": "documented",
           "text": "To acquire the latest bits of the module from a machine that has internet connectivity, run the following PowerShell lines: powershell Install-Module -Name Microsoft365DSC -Force Update-M365DSCModule",
-          "sourceUrl": "https://github.com/Microsoft365DSC/Microsoft365DSC/blob/7c2e9790e17bf7f5b9b20de71b2145669a78ff2c/README.md"
+          "sourceUrl": "https://github.com/Microsoft365DSC/Microsoft365DSC/blob/fd18a38977df5b5f76a9c5a97f064968d148875b/README.md"
         },
         "license": {
           "status": "documented",
@@ -17277,7 +17277,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-20T05:20:34Z.",
+          "text": "Latest repository push: 2026-10-21T12:32:21Z.",
           "sourceUrl": "https://api.github.com/repos/Microsoft365DSC/Microsoft365DSC"
         },
         "release": {
@@ -17291,18 +17291,18 @@
       },
       "overview": {
         "text": "This module allows organizations to automate the deployment, configuration, reporting and monitoring of Microsoft 365 Tenants via PowerShell Desired State Configuration. The compiled configuration needs to be executed from an agent's Local Configuration Manager (LCM) (machine or container) which can communicate back remotely to Microsoft 365 via remote API calls (therefore requires internet connectivity)",
-        "sourceUrl": "https://github.com/Microsoft365DSC/Microsoft365DSC/blob/7c2e9790e17bf7f5b9b20de71b2145669a78ff2c/README.md",
+        "sourceUrl": "https://github.com/Microsoft365DSC/Microsoft365DSC/blob/fd18a38977df5b5f76a9c5a97f064968d148875b/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/Microsoft365DSC/Microsoft365DSC",
-        "commitSha": "7c2e9790e17bf7f5b9b20de71b2145669a78ff2c",
-        "commitUrl": "https://github.com/Microsoft365DSC/Microsoft365DSC/commit/7c2e9790e17bf7f5b9b20de71b2145669a78ff2c",
+        "commitSha": "fd18a38977df5b5f76a9c5a97f064968d148875b",
+        "commitUrl": "https://github.com/Microsoft365DSC/Microsoft365DSC/commit/fd18a38977df5b5f76a9c5a97f064968d148875b",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/Microsoft365DSC/Microsoft365DSC/blob/7c2e9790e17bf7f5b9b20de71b2145669a78ff2c/README.md",
+        "readmeUrl": "https://github.com/Microsoft365DSC/Microsoft365DSC/blob/fd18a38977df5b5f76a9c5a97f064968d148875b/README.md",
         "readmeSha256": "sha256:b78df49fbe80d36d3978beece1fed5116108ed987ece0fc3bfcd27f1ad683390",
         "readmeByteLength": 5208,
         "overviewExcerpt": "This module allows organizations to automate the deployment, configuration, reporting and monitoring of Microsoft 365 Tenants via PowerShell Desired State Configuration. The compiled configuration needs to be executed from an agent's Local Configuration Manager (LCM) (machine or container) which can communicate back remotely to Microsoft 365 via remote API calls (therefore requires internet connectivity)",
@@ -17358,16 +17358,16 @@
             "teams"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-20T05:20:34Z",
-          "latestRepositoryUpdateAt": "2026-10-20T05:20:40Z",
+          "lastPushedAt": "2026-10-21T12:32:21Z",
+          "latestRepositoryUpdateAt": "2026-10-21T12:32:29Z",
           "license": "MIT",
           "description": "Manages, configures, extracts and monitors Microsoft 365 tenant configurations"
         }
       },
       "currentVersion": "2.26.1015.1",
       "lastReleaseAt": "2026-10-14T22:44:21Z",
-      "publisherUpdatedAt": "2026-10-20",
-      "lastCommitAt": "2026-10-20T05:20:34Z",
+      "publisherUpdatedAt": "2026-10-21",
+      "lastCommitAt": "2026-10-21T12:32:21Z",
       "license": "MIT"
     },
     {
@@ -17486,7 +17486,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-19T19:55:17Z.",
+          "text": "Latest repository push: 2026-10-21T09:21:55Z.",
           "sourceUrl": "https://api.github.com/repos/MISP/MISP"
         },
         "release": {
@@ -17519,7 +17519,7 @@
             "height": 1140,
             "license": "AGPL-3.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-10-20",
+            "retrievedAt": "2026-10-21",
             "commitSha": "fc99c9e3fc85beddc6ef18835359f3c8b7f44608"
           },
           {
@@ -17534,14 +17534,14 @@
             "height": 876,
             "license": "AGPL-3.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-10-20",
+            "retrievedAt": "2026-10-21",
             "commitSha": "fc99c9e3fc85beddc6ef18835359f3c8b7f44608"
           }
         ],
         "sourceUrl": "https://github.com/MISP/MISP/blob/fc99c9e3fc85beddc6ef18835359f3c8b7f44608/README.md"
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/MISP/MISP",
         "commitSha": "fc99c9e3fc85beddc6ef18835359f3c8b7f44608",
@@ -17574,7 +17574,7 @@
             "height": 1140,
             "license": "AGPL-3.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-10-20",
+            "retrievedAt": "2026-10-21",
             "commitSha": "fc99c9e3fc85beddc6ef18835359f3c8b7f44608"
           },
           {
@@ -17589,7 +17589,7 @@
             "height": 876,
             "license": "AGPL-3.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-10-20",
+            "retrievedAt": "2026-10-21",
             "commitSha": "fc99c9e3fc85beddc6ef18835359f3c8b7f44608"
           }
         ],
@@ -17627,16 +17627,16 @@
             "threatintel"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-19T19:55:17Z",
-          "latestRepositoryUpdateAt": "2026-10-19T21:35:44Z",
+          "lastPushedAt": "2026-10-21T09:21:55Z",
+          "latestRepositoryUpdateAt": "2026-10-21T06:17:19Z",
           "license": "AGPL-3.0",
           "description": "MISP (core software) - Open Source Threat Intelligence and Sharing Platform"
         }
       },
       "currentVersion": "v2.5.50",
       "lastReleaseAt": "2026-10-10T09:48:00Z",
-      "publisherUpdatedAt": "2026-10-19",
-      "lastCommitAt": "2026-10-19T19:55:17Z",
+      "publisherUpdatedAt": "2026-10-21",
+      "lastCommitAt": "2026-10-21T09:21:55Z",
       "license": "AGPL-3.0"
     },
     {
@@ -17898,7 +17898,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-19T20:11:41Z.",
+          "text": "Latest repository push: 2026-10-20T18:53:56Z.",
           "sourceUrl": "https://api.github.com/repos/mitre-attack/attack-navigator"
         },
         "release": {
@@ -17917,7 +17917,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/mitre-attack/attack-navigator",
         "commitSha": "734a1caba29fcd51f20b9ca239ce652b3354a47e",
@@ -17966,7 +17966,7 @@
             "mitre-corporation"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-19T20:11:41Z",
+          "lastPushedAt": "2026-10-20T18:53:56Z",
           "latestRepositoryUpdateAt": "2026-10-19T03:46:45Z",
           "license": "Apache-2.0",
           "description": "Web app that provides basic navigation and annotation of ATT&CK matrices"
@@ -17975,7 +17975,7 @@
       "currentVersion": "v5.3.2",
       "lastReleaseAt": "2026-04-21T15:45:39Z",
       "publisherUpdatedAt": "2026-10-19",
-      "lastCommitAt": "2026-10-19T20:11:41Z",
+      "lastCommitAt": "2026-10-20T18:53:56Z",
       "license": "Apache-2.0"
     },
     {
@@ -18142,7 +18142,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/apache/caldera",
         "commitSha": "cb8d6a8160e0f4990af323a7c071d5e8482b42c7",
@@ -18197,14 +18197,14 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-10-12T19:16:34Z",
-          "latestRepositoryUpdateAt": "2026-10-20T05:36:35Z",
+          "latestRepositoryUpdateAt": "2026-10-21T08:22:05Z",
           "license": "Apache-2.0",
           "description": "Automated Adversary Emulation Platform"
         }
       },
       "currentVersion": "5.3.0",
       "lastReleaseAt": "2025-04-24T17:51:59Z",
-      "publisherUpdatedAt": "2026-10-20",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCommitAt": "2026-10-12T19:16:34Z",
       "license": "Apache-2.0"
     },
@@ -18413,7 +18413,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/mitre/emass_client",
         "commitSha": "c9013aafc5319fd7e2c74bba6e56cdf535959e70",
@@ -18612,7 +18612,7 @@
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "v2.14.0",
-      "publisherUpdatedAt": "2026-10-20",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -18640,7 +18640,7 @@
       "nextCheckAt": "2026-11-03",
       "overview": {
         "text": "This repository contains the source code for Heimdall's Backend, Frontend (AKA Heimdall Lite), OHDF Converters, and InSpecJS.",
-        "sourceUrl": "https://github.com/mitre/heimdall2/blob/a8692b04ccc55f67b097507b0909466c09b22347/README.md",
+        "sourceUrl": "https://github.com/mitre/heimdall2/blob/e0d6e4a1d2f26f6ab8d7705b4a6510caf571ba69/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
@@ -18653,17 +18653,17 @@
         "environments": [
           "Containers"
         ],
-        "sourceUrl": "https://github.com/mitre/heimdall2/blob/a8692b04ccc55f67b097507b0909466c09b22347/README.md",
+        "sourceUrl": "https://github.com/mitre/heimdall2/blob/e0d6e4a1d2f26f6ab8d7705b4a6510caf571ba69/README.md",
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/mitre/heimdall2",
-        "commitSha": "a8692b04ccc55f67b097507b0909466c09b22347",
-        "commitUrl": "https://github.com/mitre/heimdall2/commit/a8692b04ccc55f67b097507b0909466c09b22347",
+        "commitSha": "e0d6e4a1d2f26f6ab8d7705b4a6510caf571ba69",
+        "commitUrl": "https://github.com/mitre/heimdall2/commit/e0d6e4a1d2f26f6ab8d7705b4a6510caf571ba69",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/mitre/heimdall2/blob/a8692b04ccc55f67b097507b0909466c09b22347/README.md",
+        "readmeUrl": "https://github.com/mitre/heimdall2/blob/e0d6e4a1d2f26f6ab8d7705b4a6510caf571ba69/README.md",
         "readmeSha256": "sha256:e161ac641277e23872628af6e57fe712ddfe71b97b45306751edd91a653799b5",
         "readmeByteLength": 28131,
         "overviewExcerpt": "This repository contains the source code for Heimdall's Backend, Frontend (AKA Heimdall Lite), OHDF Converters, and InSpecJS.",
@@ -18702,8 +18702,8 @@
             "mitre-saf"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-20T04:03:34Z",
-          "latestRepositoryUpdateAt": "2026-10-20T03:56:09Z",
+          "lastPushedAt": "2026-10-21T07:51:34Z",
+          "latestRepositoryUpdateAt": "2026-10-21T07:47:57Z",
           "license": "NOASSERTION",
           "description": "Heimdall Enterprise Server 2 lets you view, store, and compare automated security control scan results."
         }
@@ -18726,12 +18726,12 @@
         "installation": {
           "status": "documented",
           "text": "1. Install Docker 2. Download and extract the most recent Heimdall release from our releases page. Alternatively, you can clone this repository and navigate to the heimdall2 folder. 3. Navigate to the base folder where docker-compose.yml is located 4. By default Heimdall will generate self-signed certificates that will last for 7 days. For production use, place your certificate files in ./nginx/certs/ with the names ssl certificate.crt and ssl certificate key.key respectively. For development use, you can use the default generated certificates which means you do not need to put any certificate files in the ./nginx/certs/ folder. NGINX Configuration Note: You can configure NGINX settings by changing values in the nginx/conf/default.conf file. 5. Run the following commands in a terminal window from the Heimdall source directory. For more information on the .env file, visit Environment Variables Configuration. bash For Linux or Mac ./setup-docker-env.sh For Windows ./setup-docker-env.bat [!TIP] If you would like to further configure your Docker-based Heimdall deployment, edit the .env file located in the root directory generated after running the setup-docker-env.sh or setup-docker-env.bat scripts 6. Heimdall might need certificates to access the open internet or internal resources (ex. an LDAP server). Please convert any certificates into PEM files and place them in ./certs/ where they will be automatically ingested. Alternatively, you can place a shell script that will retrieve those certs in that directory, and modify the command attribute underneath the certs service in the docker-compose.yml to run that script. bash Below is an example of what may be in the ./certs directory, including any scripts or certificates. ./certs/ ├── dodcerts.sh └── my certificates.pem For…",
-          "sourceUrl": "https://github.com/mitre/heimdall2/blob/a8692b04ccc55f67b097507b0909466c09b22347/README.md"
+          "sourceUrl": "https://github.com/mitre/heimdall2/blob/e0d6e4a1d2f26f6ab8d7705b4a6510caf571ba69/README.md"
         },
         "usage": {
           "status": "documented",
           "text": "To run Heimdall Lite locally, just use the npm built-in utility npx : bash npx @mitre/heimdall-lite If you use this tool often and want to have it installed locally, use the following command: bash npm install -g @mitre/heimdall-lite Then, any subsequent npx @mitre/heimdall-lite will use the local version and load much more quickly.",
-          "sourceUrl": "https://github.com/mitre/heimdall2/blob/a8692b04ccc55f67b097507b0909466c09b22347/README.md"
+          "sourceUrl": "https://github.com/mitre/heimdall2/blob/e0d6e4a1d2f26f6ab8d7705b4a6510caf571ba69/README.md"
         },
         "license": {
           "status": "documented",
@@ -18740,7 +18740,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-20T04:03:34Z.",
+          "text": "Latest repository push: 2026-10-21T07:51:34Z.",
           "sourceUrl": "https://api.github.com/repos/mitre/heimdall2"
         },
         "release": {
@@ -18753,7 +18753,7 @@
         }
       },
       "lastReleaseAt": "2026-08-24T23:04:44Z",
-      "lastCommitAt": "2026-10-20T04:03:34Z",
+      "lastCommitAt": "2026-10-21T07:51:34Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -18903,7 +18903,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/mitre/saf",
         "commitSha": "a43d40437d87c290c388dbfd4917ac75db5d86a9",
@@ -19172,7 +19172,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/mitre/vulcan",
         "commitSha": "fb1f0154e21e84d95d4d0d3ed183789d40976318",
@@ -20595,7 +20595,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/usnistgov/macos_security",
         "commitSha": "ab0ad0ef17fcbdffda1e0e00a11e5c40d51cc401",
@@ -21807,18 +21807,18 @@
       ],
       "overview": {
         "text": "English • 中文 • Korean • Indonesia • Spanish • 日本語 • Portuguese • Türkçe",
-        "sourceUrl": "https://github.com/projectdiscovery/nuclei/blob/f3b817b818a61e87296a27441351e85d739140b8/README.md",
+        "sourceUrl": "https://github.com/projectdiscovery/nuclei/blob/b0eeadc5541e3378fc2cc7a6f109e2eeb003c53b/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/projectdiscovery/nuclei",
-        "commitSha": "f3b817b818a61e87296a27441351e85d739140b8",
-        "commitUrl": "https://github.com/projectdiscovery/nuclei/commit/f3b817b818a61e87296a27441351e85d739140b8",
+        "commitSha": "b0eeadc5541e3378fc2cc7a6f109e2eeb003c53b",
+        "commitUrl": "https://github.com/projectdiscovery/nuclei/commit/b0eeadc5541e3378fc2cc7a6f109e2eeb003c53b",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/projectdiscovery/nuclei/blob/f3b817b818a61e87296a27441351e85d739140b8/README.md",
+        "readmeUrl": "https://github.com/projectdiscovery/nuclei/blob/b0eeadc5541e3378fc2cc7a6f109e2eeb003c53b/README.md",
         "readmeSha256": "sha256:8caad941a99640616da89e15b77dcc42f51a09b7233d3c0a64c19d69b65b7e96",
         "readmeByteLength": 61938,
         "overviewExcerpt": "English • 中文 • Korean • Indonesia • Spanish • 日本語 • Portuguese • Türkçe",
@@ -21864,16 +21864,16 @@
             "vulnerability-scanner"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-20T05:49:11Z",
-          "latestRepositoryUpdateAt": "2026-10-20T05:32:51Z",
+          "lastPushedAt": "2026-10-21T08:56:27Z",
+          "latestRepositoryUpdateAt": "2026-10-21T12:42:01Z",
           "license": "MIT",
           "description": "Nuclei is a fast, customizable vulnerability scanner powered by the global security community and built on a simple YAML-based DSL, enabling collaboration to tackle trending vulnerabilities on the internet. It helps you find vulnerabilities in your applications, APIs, networks, DNS, and cloud configurations."
         }
       },
       "currentVersion": "v3.11.1",
       "lastReleaseAt": "2026-08-08T12:21:32Z",
-      "publisherUpdatedAt": "2026-10-20",
-      "lastCommitAt": "2026-10-20T05:49:11Z",
+      "publisherUpdatedAt": "2026-10-21",
+      "lastCommitAt": "2026-10-21T08:56:27Z",
       "license": "MIT"
     },
     {
@@ -22184,7 +22184,7 @@
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "v1.21.3",
-      "publisherUpdatedAt": "2026-10-20",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -22208,18 +22208,18 @@
       "nextCheckAt": "2026-11-03",
       "overview": {
         "text": "Open Policy Agent (OPA) is an open source, general-purpose policy engine that enables unified, context-aware policy enforcement across the entire stack.",
-        "sourceUrl": "https://github.com/open-policy-agent/opa/blob/1c3090029733195c3f7b3e2a67dbb739cc2f087d/README.md",
+        "sourceUrl": "https://github.com/open-policy-agent/opa/blob/cbc1b4352eee436940a06653888e9314257b433b/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/open-policy-agent/opa",
-        "commitSha": "1c3090029733195c3f7b3e2a67dbb739cc2f087d",
-        "commitUrl": "https://github.com/open-policy-agent/opa/commit/1c3090029733195c3f7b3e2a67dbb739cc2f087d",
+        "commitSha": "cbc1b4352eee436940a06653888e9314257b433b",
+        "commitUrl": "https://github.com/open-policy-agent/opa/commit/cbc1b4352eee436940a06653888e9314257b433b",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/open-policy-agent/opa/blob/1c3090029733195c3f7b3e2a67dbb739cc2f087d/README.md",
+        "readmeUrl": "https://github.com/open-policy-agent/opa/blob/cbc1b4352eee436940a06653888e9314257b433b/README.md",
         "readmeSha256": "sha256:e69b5027d2200383478d14c61a51f07bfd48a66bce826869448c2329e8ad2103",
         "readmeByteLength": 9132,
         "overviewExcerpt": "Open Policy Agent (OPA) is an open source, general-purpose policy engine that enables unified, context-aware policy enforcement across the entire stack.",
@@ -22256,8 +22256,8 @@
             "policy"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-20T03:51:33Z",
-          "latestRepositoryUpdateAt": "2026-10-20T02:41:46Z",
+          "lastPushedAt": "2026-10-21T03:54:04Z",
+          "latestRepositoryUpdateAt": "2026-10-21T11:54:01Z",
           "license": "Apache-2.0",
           "description": "Open Policy Agent (OPA) is an open source, general-purpose policy engine."
         }
@@ -22284,7 +22284,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-20T03:51:33Z.",
+          "text": "Latest repository push: 2026-10-21T03:54:04Z.",
           "sourceUrl": "https://api.github.com/repos/open-policy-agent/opa"
         },
         "release": {
@@ -22297,7 +22297,7 @@
         }
       },
       "lastReleaseAt": "2026-10-19T22:08:40Z",
-      "lastCommitAt": "2026-10-20T03:51:33Z",
+      "lastCommitAt": "2026-10-21T03:54:04Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -22532,7 +22532,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/opencontrol/compliance-masonry",
         "commitSha": "cb0e8dd950884cd4411bd3007aea587cd20eb6c3",
@@ -22695,16 +22695,16 @@
         "installation": {
           "status": "documented",
           "text": "All you need to install the OpenCTI platform can be found in the official documentation. For installation, you can: Use Docker Install manually Use Terraform (community) Use Helm charts (community)",
-          "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/blob/cf8ad7c6b6d96ccbac6fd410167d4b7a5a699aee/README.md"
+          "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/blob/f50124d28268491ba79d82411190c3270a30b507/README.md"
         },
         "usage": {
           "status": "documented",
           "text": "To improve the features and the performances of OpenCTI, the platform collects anonymous statistical data related to its usage and health. You can find all the details on collected data and associated usage in the usage telemetry documentation.",
-          "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/blob/cf8ad7c6b6d96ccbac6fd410167d4b7a5a699aee/README.md"
+          "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/blob/f50124d28268491ba79d82411190c3270a30b507/README.md"
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-19T21:24:15Z.",
+          "text": "Latest repository push: 2026-10-21T13:00:46Z.",
           "sourceUrl": "https://api.github.com/repos/OpenCTI-Platform/opencti"
         },
         "release": {
@@ -22718,7 +22718,7 @@
       },
       "overview": {
         "text": "Note: THREAD 2026 — 15 October, Paris. Our community conference for threat intelligence and cyber defense practitioners. Talks, labs, workshops, and an evening social. Join us →",
-        "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/blob/cf8ad7c6b6d96ccbac6fd410167d4b7a5a699aee/README.md",
+        "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/blob/f50124d28268491ba79d82411190c3270a30b507/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
@@ -22728,17 +22728,17 @@
         "environments": [
           "Containers"
         ],
-        "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/blob/cf8ad7c6b6d96ccbac6fd410167d4b7a5a699aee/README.md",
+        "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/blob/f50124d28268491ba79d82411190c3270a30b507/README.md",
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/OpenCTI-Platform/opencti",
-        "commitSha": "cf8ad7c6b6d96ccbac6fd410167d4b7a5a699aee",
-        "commitUrl": "https://github.com/OpenCTI-Platform/opencti/commit/cf8ad7c6b6d96ccbac6fd410167d4b7a5a699aee",
+        "commitSha": "f50124d28268491ba79d82411190c3270a30b507",
+        "commitUrl": "https://github.com/OpenCTI-Platform/opencti/commit/f50124d28268491ba79d82411190c3270a30b507",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/OpenCTI-Platform/opencti/blob/cf8ad7c6b6d96ccbac6fd410167d4b7a5a699aee/README.md",
+        "readmeUrl": "https://github.com/OpenCTI-Platform/opencti/blob/f50124d28268491ba79d82411190c3270a30b507/README.md",
         "readmeSha256": "sha256:45ddc85b09eab925b311cc8497be31c8914fafa48dca1d6e706ccb60478e12e8",
         "readmeByteLength": 7831,
         "overviewExcerpt": "Note: THREAD 2026 — 15 October, Paris. Our community conference for threat intelligence and cyber defense practitioners. Talks, labs, workshops, and an evening social. Join us →",
@@ -22783,16 +22783,16 @@
             "threat-intelligence"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-19T21:24:15Z",
-          "latestRepositoryUpdateAt": "2026-10-19T22:33:07Z",
+          "lastPushedAt": "2026-10-21T13:00:46Z",
+          "latestRepositoryUpdateAt": "2026-10-21T12:58:33Z",
           "license": "NOASSERTION",
           "description": "Open Cyber Threat Intelligence Platform"
         }
       },
       "currentVersion": "7.261019.0",
       "lastReleaseAt": "2026-10-19T15:07:28Z",
-      "publisherUpdatedAt": "2026-10-19",
-      "lastCommitAt": "2026-10-19T21:24:15Z"
+      "publisherUpdatedAt": "2026-10-21",
+      "lastCommitAt": "2026-10-21T13:00:46Z"
     },
     {
       "id": "tool-openscap",
@@ -22839,9 +22839,9 @@
       "maturity": "established",
       "maintenanceStatus": "active",
       "currentVersion": "1.4.5",
-      "publisherUpdatedAt": "2026-10-19",
+      "publisherUpdatedAt": "2026-10-21",
       "lastReleaseAt": "2026-10-13T07:53:03Z",
-      "lastCommitAt": "2026-10-13T11:38:14Z",
+      "lastCommitAt": "2026-10-21T11:57:49Z",
       "lastCheckedAt": "2026-08-03",
       "nextCheckAt": "2026-11-03",
       "updateMethod": "manual_primary_source_review",
@@ -22878,18 +22878,18 @@
       ],
       "overview": {
         "text": "The oscap program is a command line tool that allows users to load, scan, validate, edit, and export SCAP documents.",
-        "sourceUrl": "https://github.com/OpenSCAP/openscap/blob/c84c8aa5e961b7ba0340a43faf4555dc383af625/README.md",
+        "sourceUrl": "https://github.com/OpenSCAP/openscap/blob/d4e6d314451ad403c675a84395e522f207de1b6a/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/OpenSCAP/openscap",
-        "commitSha": "c84c8aa5e961b7ba0340a43faf4555dc383af625",
-        "commitUrl": "https://github.com/OpenSCAP/openscap/commit/c84c8aa5e961b7ba0340a43faf4555dc383af625",
+        "commitSha": "d4e6d314451ad403c675a84395e522f207de1b6a",
+        "commitUrl": "https://github.com/OpenSCAP/openscap/commit/d4e6d314451ad403c675a84395e522f207de1b6a",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/OpenSCAP/openscap/blob/c84c8aa5e961b7ba0340a43faf4555dc383af625/README.md",
+        "readmeUrl": "https://github.com/OpenSCAP/openscap/blob/d4e6d314451ad403c675a84395e522f207de1b6a/README.md",
         "readmeSha256": "sha256:630d8566159f882d83dc6c64c15ff58c4c01f92a2f2a77ac3700afbde5ef97b2",
         "readmeByteLength": 3754,
         "overviewExcerpt": "The oscap program is a command line tool that allows users to load, scan, validate, edit, and export SCAP documents.",
@@ -22926,8 +22926,8 @@
             "xccdf"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-13T11:38:14Z",
-          "latestRepositoryUpdateAt": "2026-10-19T08:11:53Z",
+          "lastPushedAt": "2026-10-21T11:57:49Z",
+          "latestRepositoryUpdateAt": "2026-10-21T11:57:55Z",
           "license": "LGPL-2.1",
           "description": "NIST Certified SCAP 1.2 toolkit"
         }
@@ -22952,7 +22952,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-13T11:38:14Z.",
+          "text": "Latest repository push: 2026-10-21T11:57:49Z.",
           "sourceUrl": "https://api.github.com/repos/OpenSCAP/openscap"
         },
         "release": {
@@ -23074,7 +23074,7 @@
       "license": "LGPL-2.1",
       "maintenanceStatus": "active",
       "currentVersion": "1.4.5",
-      "publisherUpdatedAt": "2026-10-19",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -23099,18 +23099,18 @@
       "nextCheckAt": "2026-11-03",
       "overview": {
         "text": "The oscap program is a command line tool that allows users to load, scan, validate, edit, and export SCAP documents.",
-        "sourceUrl": "https://github.com/OpenSCAP/openscap/blob/c84c8aa5e961b7ba0340a43faf4555dc383af625/README.md",
+        "sourceUrl": "https://github.com/OpenSCAP/openscap/blob/d4e6d314451ad403c675a84395e522f207de1b6a/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/OpenSCAP/openscap",
-        "commitSha": "c84c8aa5e961b7ba0340a43faf4555dc383af625",
-        "commitUrl": "https://github.com/OpenSCAP/openscap/commit/c84c8aa5e961b7ba0340a43faf4555dc383af625",
+        "commitSha": "d4e6d314451ad403c675a84395e522f207de1b6a",
+        "commitUrl": "https://github.com/OpenSCAP/openscap/commit/d4e6d314451ad403c675a84395e522f207de1b6a",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/OpenSCAP/openscap/blob/c84c8aa5e961b7ba0340a43faf4555dc383af625/README.md",
+        "readmeUrl": "https://github.com/OpenSCAP/openscap/blob/d4e6d314451ad403c675a84395e522f207de1b6a/README.md",
         "readmeSha256": "sha256:630d8566159f882d83dc6c64c15ff58c4c01f92a2f2a77ac3700afbde5ef97b2",
         "readmeByteLength": 3754,
         "overviewExcerpt": "The oscap program is a command line tool that allows users to load, scan, validate, edit, and export SCAP documents.",
@@ -23147,8 +23147,8 @@
             "xccdf"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-13T11:38:14Z",
-          "latestRepositoryUpdateAt": "2026-10-19T08:11:53Z",
+          "lastPushedAt": "2026-10-21T11:57:49Z",
+          "latestRepositoryUpdateAt": "2026-10-21T11:57:55Z",
           "license": "LGPL-2.1",
           "description": "NIST Certified SCAP 1.2 toolkit"
         }
@@ -23175,7 +23175,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-13T11:38:14Z.",
+          "text": "Latest repository push: 2026-10-21T11:57:49Z.",
           "sourceUrl": "https://api.github.com/repos/OpenSCAP/openscap"
         },
         "release": {
@@ -23188,7 +23188,7 @@
         }
       },
       "lastReleaseAt": "2026-10-13T07:53:03Z",
-      "lastCommitAt": "2026-10-13T11:38:14Z",
+      "lastCommitAt": "2026-10-21T11:57:49Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -23297,7 +23297,7 @@
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "v5.6.0",
-      "publisherUpdatedAt": "2026-10-20",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -23336,7 +23336,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/ossf/scorecard",
         "commitSha": "6d4113e03c0014d63613b65b26a0c5a14c98ce3f",
@@ -23383,7 +23383,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-10-19T15:03:53Z",
-          "latestRepositoryUpdateAt": "2026-10-20T04:22:28Z",
+          "latestRepositoryUpdateAt": "2026-10-21T10:50:43Z",
           "license": "Apache-2.0",
           "description": "OpenSSF Scorecard - Security health metrics for Open Source"
         }
@@ -23541,7 +23541,7 @@
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "5.23.1",
-      "publisherUpdatedAt": "2026-10-19",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -23565,18 +23565,18 @@
       "nextCheckAt": "2026-11-03",
       "overview": {
         "text": "osquery is a SQL powered operating system instrumentation, monitoring, and analytics framework. Available for Linux, macOS, and Windows.",
-        "sourceUrl": "https://github.com/osquery/osquery/blob/bf8c07615b80c89596724ce246f0c356ed874878/README.md",
+        "sourceUrl": "https://github.com/osquery/osquery/blob/f2457e5ed73e1237cb1de021a7ddd6cf16f476c3/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/osquery/osquery",
-        "commitSha": "bf8c07615b80c89596724ce246f0c356ed874878",
-        "commitUrl": "https://github.com/osquery/osquery/commit/bf8c07615b80c89596724ce246f0c356ed874878",
+        "commitSha": "f2457e5ed73e1237cb1de021a7ddd6cf16f476c3",
+        "commitUrl": "https://github.com/osquery/osquery/commit/f2457e5ed73e1237cb1de021a7ddd6cf16f476c3",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/osquery/osquery/blob/bf8c07615b80c89596724ce246f0c356ed874878/README.md",
+        "readmeUrl": "https://github.com/osquery/osquery/blob/f2457e5ed73e1237cb1de021a7ddd6cf16f476c3/README.md",
         "readmeSha256": "sha256:3ec209a28fbed220070320ab760371dcefee4f3e5ab02087e76ef083d0707ea3",
         "readmeByteLength": 7111,
         "overviewExcerpt": "osquery is a SQL powered operating system instrumentation, monitoring, and analytics framework. Available for Linux, macOS, and Windows.",
@@ -23616,8 +23616,8 @@
             "sql"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-15T16:57:10Z",
-          "latestRepositoryUpdateAt": "2026-10-19T18:00:16Z",
+          "lastPushedAt": "2026-10-20T19:19:47Z",
+          "latestRepositoryUpdateAt": "2026-10-21T12:36:32Z",
           "license": "NOASSERTION",
           "description": "SQL powered operating system instrumentation, monitoring, and analytics."
         }
@@ -23640,7 +23640,7 @@
         "installation": {
           "status": "documented",
           "text": "To download the latest stable builds and for repository information and installation instructions visit https://osquery.io/downloads. We use a simple numbered versioning scheme X.Y.Z , where X is a major version, Y is a minor, and Z is a patch. We plan minor releases roughly every two months. These releases are tracked on our Milestones page. A patch release is used when there are unforeseen bugs with our minor release and we need to quickly patch. A rare 'revision' release might be used if we need to change build configurations. Major, minor, and patch releases are tagged on GitHub and can be viewed on the Releases page. We open a new Release Checklist issue when we prepare a minor release. If you are interested in the status of a release, please find the corresponding checklist issue, and note that the issue will be marked closed when we are finished the checklist. We consider a release 'in testing' during the period of hosting new downloads on our website and adding them to our hosted repositories. We will mark the release as 'stable' on GitHub when enough testing has occurred, this usually takes two weeks.",
-          "sourceUrl": "https://github.com/osquery/osquery/blob/bf8c07615b80c89596724ce246f0c356ed874878/README.md"
+          "sourceUrl": "https://github.com/osquery/osquery/blob/f2457e5ed73e1237cb1de021a7ddd6cf16f476c3/README.md"
         },
         "license": {
           "status": "documented",
@@ -23649,7 +23649,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-15T16:57:10Z.",
+          "text": "Latest repository push: 2026-10-20T19:19:47Z.",
           "sourceUrl": "https://api.github.com/repos/osquery/osquery"
         },
         "release": {
@@ -23662,7 +23662,7 @@
         }
       },
       "lastReleaseAt": "2026-06-24T14:57:05Z",
-      "lastCommitAt": "2026-10-15T16:57:10Z",
+      "lastCommitAt": "2026-10-20T19:19:47Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -23839,18 +23839,18 @@
       ],
       "overview": {
         "text": "Use OSV-Scanner to find existing vulnerabilities affecting your project's dependencies. OSV-Scanner provides an officially supported frontend to the OSV database and CLI interface to OSV-Scalibr that connects a project’s list of dependencies with the vulnerabilities that affect them.",
-        "sourceUrl": "https://github.com/google/osv-scanner/blob/f455353546889009663c1f8b640d5880a01c889a/README.md",
+        "sourceUrl": "https://github.com/google/osv-scanner/blob/ffeae830de4c0dd2dfa692c276e5db221b778a1a/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/google/osv-scanner",
-        "commitSha": "f455353546889009663c1f8b640d5880a01c889a",
-        "commitUrl": "https://github.com/google/osv-scanner/commit/f455353546889009663c1f8b640d5880a01c889a",
+        "commitSha": "ffeae830de4c0dd2dfa692c276e5db221b778a1a",
+        "commitUrl": "https://github.com/google/osv-scanner/commit/ffeae830de4c0dd2dfa692c276e5db221b778a1a",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/google/osv-scanner/blob/f455353546889009663c1f8b640d5880a01c889a/README.md",
+        "readmeUrl": "https://github.com/google/osv-scanner/blob/ffeae830de4c0dd2dfa692c276e5db221b778a1a/README.md",
         "readmeSha256": "sha256:ae9d6a52e41fea4dad413bf20ef6097cba581891e139e918484c38cad8fcb751",
         "readmeByteLength": 11071,
         "overviewExcerpt": "Use OSV-Scanner to find existing vulnerabilities affecting your project's dependencies. OSV-Scanner provides an officially supported frontend to the OSV database and CLI interface to OSV-Scalibr that connects a project’s list of dependencies with the vulnerabilities that affect them.",
@@ -23889,16 +23889,16 @@
             "vulnerability-scanner"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-19T20:58:59Z",
-          "latestRepositoryUpdateAt": "2026-10-19T20:29:06Z",
+          "lastPushedAt": "2026-10-21T04:38:52Z",
+          "latestRepositoryUpdateAt": "2026-10-21T12:00:07Z",
           "license": "Apache-2.0",
           "description": "Vulnerability scanner written in Go which uses the data provided by https://osv.dev"
         }
       },
       "currentVersion": "v2.7.0",
       "lastReleaseAt": "2026-10-12T01:32:07Z",
-      "publisherUpdatedAt": "2026-10-19",
-      "lastCommitAt": "2026-10-19T20:58:59Z",
+      "publisherUpdatedAt": "2026-10-21",
+      "lastCommitAt": "2026-10-21T04:38:52Z",
       "license": "Apache-2.0"
     },
     {
@@ -23950,7 +23950,7 @@
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "5.2.0",
-      "publisherUpdatedAt": "2026-10-19",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -23974,18 +23974,18 @@
       "nextCheckAt": "2026-11-03",
       "overview": {
         "text": "Dependency-Track is an intelligent Component Analysis platform that allows organizations to identify and reduce risk in the software supply chain. Dependency-Track takes a unique and highly beneficial approach by leveraging the capabilities of Software Bill of Materials (SBOM).",
-        "sourceUrl": "https://github.com/DependencyTrack/dependency-track/blob/e541c49800c67c640091f6ef1d260198ae6ed522/README.md",
+        "sourceUrl": "https://github.com/DependencyTrack/dependency-track/blob/fd55deccf61ca81457dbe773f1879bcc859fc738/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/DependencyTrack/dependency-track",
-        "commitSha": "e541c49800c67c640091f6ef1d260198ae6ed522",
-        "commitUrl": "https://github.com/DependencyTrack/dependency-track/commit/e541c49800c67c640091f6ef1d260198ae6ed522",
+        "commitSha": "fd55deccf61ca81457dbe773f1879bcc859fc738",
+        "commitUrl": "https://github.com/DependencyTrack/dependency-track/commit/fd55deccf61ca81457dbe773f1879bcc859fc738",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/DependencyTrack/dependency-track/blob/e541c49800c67c640091f6ef1d260198ae6ed522/README.md",
+        "readmeUrl": "https://github.com/DependencyTrack/dependency-track/blob/fd55deccf61ca81457dbe773f1879bcc859fc738/README.md",
         "readmeSha256": "sha256:70b38a18097a812ccd495d827377a2e005bef787b5faa9eb0acd59b65bb79c63",
         "readmeByteLength": 4006,
         "overviewExcerpt": "Dependency-Track is an intelligent Component Analysis platform that allows organizations to identify and reduce risk in the software supply chain. Dependency-Track takes a unique and highly beneficial approach by leveraging the capabilities of Software Bill of Materials (SBOM).",
@@ -24037,8 +24037,8 @@
             "vulnerability-detection"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-19T18:32:22Z",
-          "latestRepositoryUpdateAt": "2026-10-19T18:39:18Z",
+          "lastPushedAt": "2026-10-21T08:09:12Z",
+          "latestRepositoryUpdateAt": "2026-10-21T11:18:29Z",
           "license": "Apache-2.0",
           "description": "Dependency-Track is an intelligent Component Analysis platform that allows organizations to identify and reduce risk in the software supply chain."
         }
@@ -24061,7 +24061,7 @@
         "usage": {
           "status": "documented",
           "text": "Want to kick the tires? Follow the Quickstart tutorial to get a local instance running with Docker Compose in a few minutes.",
-          "sourceUrl": "https://github.com/DependencyTrack/dependency-track/blob/e541c49800c67c640091f6ef1d260198ae6ed522/README.md"
+          "sourceUrl": "https://github.com/DependencyTrack/dependency-track/blob/fd55deccf61ca81457dbe773f1879bcc859fc738/README.md"
         },
         "license": {
           "status": "documented",
@@ -24070,7 +24070,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-19T18:32:22Z.",
+          "text": "Latest repository push: 2026-10-21T08:09:12Z.",
           "sourceUrl": "https://api.github.com/repos/DependencyTrack/dependency-track"
         },
         "release": {
@@ -24083,7 +24083,7 @@
         }
       },
       "lastReleaseAt": "2026-10-08T09:09:37Z",
-      "lastCommitAt": "2026-10-19T18:32:22Z",
+      "lastCommitAt": "2026-10-21T08:09:12Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -24919,7 +24919,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/microsoft/PowerSTIG",
         "commitSha": "efa8aec879259ade7db396715850c58df9f44e81",
@@ -25371,7 +25371,7 @@
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "5.45.0",
-      "publisherUpdatedAt": "2026-10-20",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -25400,7 +25400,7 @@
       "nextCheckAt": "2026-11-03",
       "overview": {
         "text": "Prowler is the Open Cloud Security Platform trusted by thousands to automate security and compliance in any cloud environment. With thousands of ready-to-use checks and compliance frameworks, Prowler delivers real-time, customizable monitoring and seamless integrations, making cloud security simple, scalable, and cost-effective for organizations of any size. The Agentic Cloud Defender Try Prowler Cloud",
-        "sourceUrl": "https://github.com/prowler-cloud/prowler/blob/4d922da2a6a29fdf49287176bae11401aaf02b75/README.md",
+        "sourceUrl": "https://github.com/prowler-cloud/prowler/blob/6ee0dd9730570edeeefa5cd2595f58931e772f57/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
@@ -25410,7 +25410,7 @@
         "environments": [
           "Containers"
         ],
-        "sourceUrl": "https://github.com/prowler-cloud/prowler/blob/4d922da2a6a29fdf49287176bae11401aaf02b75/README.md",
+        "sourceUrl": "https://github.com/prowler-cloud/prowler/blob/6ee0dd9730570edeeefa5cd2595f58931e772f57/README.md",
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "media": {
@@ -25418,9 +25418,9 @@
         "items": [
           {
             "kind": "publisher_screenshot",
-            "url": "https://raw.githubusercontent.com/prowler-cloud/prowler/4d922da2a6a29fdf49287176bae11401aaf02b75/docs/images/products/dashboard.png",
+            "url": "https://raw.githubusercontent.com/prowler-cloud/prowler/6ee0dd9730570edeeefa5cd2595f58931e772f57/docs/images/products/dashboard.png",
             "alt": "Prowler Local Dashboard",
-            "sourceUrl": "https://github.com/prowler-cloud/prowler/blob/4d922da2a6a29fdf49287176bae11401aaf02b75/README.md",
+            "sourceUrl": "https://github.com/prowler-cloud/prowler/blob/6ee0dd9730570edeeefa5cd2595f58931e772f57/README.md",
             "sha256": "sha256:5c7c5e9c113d8a9df967f8bac44cb5176de2727e1ee484e58e633debe14fcd8c",
             "byteLength": 320174,
             "contentType": "image/png",
@@ -25428,20 +25428,20 @@
             "height": 1141,
             "license": "Apache-2.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-10-20",
-            "commitSha": "4d922da2a6a29fdf49287176bae11401aaf02b75"
+            "retrievedAt": "2026-10-21",
+            "commitSha": "6ee0dd9730570edeeefa5cd2595f58931e772f57"
           }
         ],
-        "sourceUrl": "https://github.com/prowler-cloud/prowler/blob/4d922da2a6a29fdf49287176bae11401aaf02b75/README.md"
+        "sourceUrl": "https://github.com/prowler-cloud/prowler/blob/6ee0dd9730570edeeefa5cd2595f58931e772f57/README.md"
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/prowler-cloud/prowler",
-        "commitSha": "4d922da2a6a29fdf49287176bae11401aaf02b75",
-        "commitUrl": "https://github.com/prowler-cloud/prowler/commit/4d922da2a6a29fdf49287176bae11401aaf02b75",
+        "commitSha": "6ee0dd9730570edeeefa5cd2595f58931e772f57",
+        "commitUrl": "https://github.com/prowler-cloud/prowler/commit/6ee0dd9730570edeeefa5cd2595f58931e772f57",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/prowler-cloud/prowler/blob/4d922da2a6a29fdf49287176bae11401aaf02b75/README.md",
+        "readmeUrl": "https://github.com/prowler-cloud/prowler/blob/6ee0dd9730570edeeefa5cd2595f58931e772f57/README.md",
         "readmeSha256": "sha256:7f0fbdb7e980596994bbc6da14202f6f5726f2016fb53f635d872a0aa117c735",
         "readmeByteLength": 22093,
         "overviewExcerpt": "Prowler is the Open Cloud Security Platform trusted by thousands to automate security and compliance in any cloud environment. With thousands of ready-to-use checks and compliance frameworks, Prowler delivers real-time, customizable monitoring and seamless integrations, making cloud security simple, scalable, and cost-effective for organizations of any size. The Agentic Cloud Defender Try Prowler Cloud",
@@ -25467,9 +25467,9 @@
         "media": [
           {
             "kind": "publisher_screenshot",
-            "url": "https://raw.githubusercontent.com/prowler-cloud/prowler/4d922da2a6a29fdf49287176bae11401aaf02b75/docs/images/products/dashboard.png",
+            "url": "https://raw.githubusercontent.com/prowler-cloud/prowler/6ee0dd9730570edeeefa5cd2595f58931e772f57/docs/images/products/dashboard.png",
             "alt": "Prowler Local Dashboard",
-            "sourceUrl": "https://github.com/prowler-cloud/prowler/blob/4d922da2a6a29fdf49287176bae11401aaf02b75/README.md",
+            "sourceUrl": "https://github.com/prowler-cloud/prowler/blob/6ee0dd9730570edeeefa5cd2595f58931e772f57/README.md",
             "sha256": "sha256:5c7c5e9c113d8a9df967f8bac44cb5176de2727e1ee484e58e633debe14fcd8c",
             "byteLength": 320174,
             "contentType": "image/png",
@@ -25477,8 +25477,8 @@
             "height": 1141,
             "license": "Apache-2.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-10-20",
-            "commitSha": "4d922da2a6a29fdf49287176bae11401aaf02b75"
+            "retrievedAt": "2026-10-21",
+            "commitSha": "6ee0dd9730570edeeefa5cd2595f58931e772f57"
           }
         ],
         "release": {
@@ -25515,10 +25515,10 @@
             "security-tools"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-20T06:05:38Z",
-          "latestRepositoryUpdateAt": "2026-10-20T05:43:11Z",
+          "lastPushedAt": "2026-10-21T12:14:38Z",
+          "latestRepositoryUpdateAt": "2026-10-21T12:28:15Z",
           "license": "Apache-2.0",
-          "description": "Prowler is the world’s most widely used open-source cloud security platform that automates security and compliance across any cloud environment."
+          "description": "This repo hosts Prowler OSS (CLI and Local Server). Prowler is the world’s most widely used open-source cloud security platform that automates security and compliance across any cloud environment for Humans and AI Agents."
         }
       },
       "presentationProfile": {
@@ -25539,12 +25539,12 @@
         "installation": {
           "status": "documented",
           "text": "[!Note] If you want to use AWS role assumption (e.g., with the \"Connect assuming IAM Role\" option), you may need to mount your local .aws directory into the container as a volume (e.g., - \"${HOME}/.aws:/home/prowler/.aws:ro\" ). There are several ways to configure credentials for Docker containers. See the Troubleshooting section for more details and examples. You can find more information in the Troubleshooting section.",
-          "sourceUrl": "https://github.com/prowler-cloud/prowler/blob/4d922da2a6a29fdf49287176bae11401aaf02b75/README.md"
+          "sourceUrl": "https://github.com/prowler-cloud/prowler/blob/6ee0dd9730570edeeefa5cd2595f58931e772f57/README.md"
         },
         "usage": {
           "status": "documented",
           "text": "Prowler can be executed across various environments, offering flexibility to meet your needs. It can be run from: - Your own workstation - A Kubernetes Job - Google Compute Engine - Azure Virtual Machines (VMs) - Amazon EC2 instances - AWS Fargate or other container platforms - CloudShell And many more environments.",
-          "sourceUrl": "https://github.com/prowler-cloud/prowler/blob/4d922da2a6a29fdf49287176bae11401aaf02b75/README.md"
+          "sourceUrl": "https://github.com/prowler-cloud/prowler/blob/6ee0dd9730570edeeefa5cd2595f58931e772f57/README.md"
         },
         "license": {
           "status": "documented",
@@ -25553,7 +25553,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-20T06:05:38Z.",
+          "text": "Latest repository push: 2026-10-21T12:14:38Z.",
           "sourceUrl": "https://api.github.com/repos/prowler-cloud/prowler"
         },
         "release": {
@@ -25566,7 +25566,7 @@
         }
       },
       "lastReleaseAt": "2026-10-15T10:43:19Z",
-      "lastCommitAt": "2026-10-20T06:05:38Z",
+      "lastCommitAt": "2026-10-21T12:14:38Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -27482,7 +27482,7 @@
       "license": "GPL-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "5.14.0",
-      "publisherUpdatedAt": "2026-10-19",
+      "publisherUpdatedAt": "2026-10-20",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -27512,7 +27512,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/nccgroup/ScoutSuite",
         "commitSha": "7909f2fc6186063e5c9e7ddef8c4d7d1072c8f3d",
@@ -27563,7 +27563,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2025-09-23T18:33:52Z",
-          "latestRepositoryUpdateAt": "2026-10-19T23:32:11Z",
+          "latestRepositoryUpdateAt": "2026-10-20T17:18:15Z",
           "license": "GPL-2.0",
           "description": "Multi-Cloud Security Auditing Tool"
         }
@@ -27898,7 +27898,7 @@
         "usage": {
           "status": "documented",
           "text": "1. From the Semgrep AppSec Platform 2. From the CLI For new users, we recommend starting with the Semgrep AppSec Platform because it provides a visual interface, a demo project, result triaging and exploration workflows, and makes setup in CI/CD fast. Scans are still local and code isn't uploaded. Alternatively, you can also start with the CLI and navigate the terminal output to run one-off searches.",
-          "sourceUrl": "https://github.com/semgrep/semgrep/blob/51602ad27f09ef9342a5620601de5ef8f572fbc6/README.md"
+          "sourceUrl": "https://github.com/semgrep/semgrep/blob/fe209763a4a2ccfcdf6434e6c332edc24a2f586e/README.md"
         },
         "license": {
           "status": "documented",
@@ -27907,21 +27907,21 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-20T00:03:56Z.",
+          "text": "Latest repository push: 2026-10-21T00:02:16Z.",
           "sourceUrl": "https://api.github.com/repos/semgrep/semgrep"
         },
         "release": {
           "status": "published",
-          "version": "v1.181.0",
-          "name": "Release v1.181.0",
-          "url": "https://github.com/semgrep/semgrep/releases/tag/v1.181.0",
-          "publishedAt": "2026-10-14T21:26:24Z",
+          "version": "v1.182.0",
+          "name": "Release v1.182.0",
+          "url": "https://github.com/semgrep/semgrep/releases/tag/v1.182.0",
+          "publishedAt": "2026-10-20T20:27:41Z",
           "prerelease": false
         }
       },
       "overview": {
         "text": "Semgrep is a fast, open-source, static analysis tool that searches code, finds bugs, and enforces secure guardrails and coding standards. Semgrep supports 30+ languages and can run in an IDE, as a pre-commit check, and as part of CI/CD workflows.",
-        "sourceUrl": "https://github.com/semgrep/semgrep/blob/51602ad27f09ef9342a5620601de5ef8f572fbc6/README.md",
+        "sourceUrl": "https://github.com/semgrep/semgrep/blob/fe209763a4a2ccfcdf6434e6c332edc24a2f586e/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
@@ -27932,7 +27932,7 @@
             "kind": "publisher_screenshot",
             "url": "https://raw.githubusercontent.com/semgrep/semgrep/develop/images/semgrep-example-rules-editor.jpg",
             "alt": "Semgrep rule example for finding Python print() statements",
-            "sourceUrl": "https://github.com/semgrep/semgrep/blob/51602ad27f09ef9342a5620601de5ef8f572fbc6/README.md",
+            "sourceUrl": "https://github.com/semgrep/semgrep/blob/fe209763a4a2ccfcdf6434e6c332edc24a2f586e/README.md",
             "sha256": "sha256:d4cf55feb982e51835c762780989c23f0f0a744faefde496009309b2fe4b2056",
             "byteLength": 270550,
             "contentType": "image/jpeg",
@@ -27940,20 +27940,20 @@
             "height": 1408,
             "license": "LGPL-2.1",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-10-20",
-            "commitSha": "51602ad27f09ef9342a5620601de5ef8f572fbc6"
+            "retrievedAt": "2026-10-21",
+            "commitSha": "fe209763a4a2ccfcdf6434e6c332edc24a2f586e"
           }
         ],
-        "sourceUrl": "https://github.com/semgrep/semgrep/blob/51602ad27f09ef9342a5620601de5ef8f572fbc6/README.md"
+        "sourceUrl": "https://github.com/semgrep/semgrep/blob/fe209763a4a2ccfcdf6434e6c332edc24a2f586e/README.md"
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/semgrep/semgrep",
-        "commitSha": "51602ad27f09ef9342a5620601de5ef8f572fbc6",
-        "commitUrl": "https://github.com/semgrep/semgrep/commit/51602ad27f09ef9342a5620601de5ef8f572fbc6",
+        "commitSha": "fe209763a4a2ccfcdf6434e6c332edc24a2f586e",
+        "commitUrl": "https://github.com/semgrep/semgrep/commit/fe209763a4a2ccfcdf6434e6c332edc24a2f586e",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/semgrep/semgrep/blob/51602ad27f09ef9342a5620601de5ef8f572fbc6/README.md",
+        "readmeUrl": "https://github.com/semgrep/semgrep/blob/fe209763a4a2ccfcdf6434e6c332edc24a2f586e/README.md",
         "readmeSha256": "sha256:cb039cfdcd7f53d69a1e3ac960113a02b9803885f069e6bb299f91b88d78b064",
         "readmeByteLength": 20250,
         "overviewExcerpt": "Semgrep is a fast, open-source, static analysis tool that searches code, finds bugs, and enforces secure guardrails and coding standards. Semgrep supports 30+ languages and can run in an IDE, as a pre-commit check, and as part of CI/CD workflows.",
@@ -27975,7 +27975,7 @@
             "kind": "publisher_screenshot",
             "url": "https://raw.githubusercontent.com/semgrep/semgrep/develop/images/semgrep-example-rules-editor.jpg",
             "alt": "Semgrep rule example for finding Python print() statements",
-            "sourceUrl": "https://github.com/semgrep/semgrep/blob/51602ad27f09ef9342a5620601de5ef8f572fbc6/README.md",
+            "sourceUrl": "https://github.com/semgrep/semgrep/blob/fe209763a4a2ccfcdf6434e6c332edc24a2f586e/README.md",
             "sha256": "sha256:d4cf55feb982e51835c762780989c23f0f0a744faefde496009309b2fe4b2056",
             "byteLength": 270550,
             "contentType": "image/jpeg",
@@ -27983,16 +27983,16 @@
             "height": 1408,
             "license": "LGPL-2.1",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-10-20",
-            "commitSha": "51602ad27f09ef9342a5620601de5ef8f572fbc6"
+            "retrievedAt": "2026-10-21",
+            "commitSha": "fe209763a4a2ccfcdf6434e6c332edc24a2f586e"
           }
         ],
         "release": {
           "status": "published",
-          "version": "v1.181.0",
-          "name": "Release v1.181.0",
-          "url": "https://github.com/semgrep/semgrep/releases/tag/v1.181.0",
-          "publishedAt": "2026-10-14T21:26:24Z",
+          "version": "v1.182.0",
+          "name": "Release v1.182.0",
+          "url": "https://github.com/semgrep/semgrep/releases/tag/v1.182.0",
+          "publishedAt": "2026-10-20T20:27:41Z",
           "prerelease": false
         },
         "facts": {
@@ -28013,16 +28013,16 @@
             "typescript"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-20T00:03:56Z",
-          "latestRepositoryUpdateAt": "2026-10-20T02:56:37Z",
+          "lastPushedAt": "2026-10-21T00:02:16Z",
+          "latestRepositoryUpdateAt": "2026-10-21T12:38:31Z",
           "license": "LGPL-2.1",
           "description": "Lightweight static analysis for many languages. Find bug variants with patterns that look like source code."
         }
       },
-      "currentVersion": "v1.181.0",
-      "lastReleaseAt": "2026-10-14T21:26:24Z",
-      "publisherUpdatedAt": "2026-10-20",
-      "lastCommitAt": "2026-10-20T00:03:56Z",
+      "currentVersion": "v1.182.0",
+      "lastReleaseAt": "2026-10-20T20:27:41Z",
+      "publisherUpdatedAt": "2026-10-21",
+      "lastCommitAt": "2026-10-21T00:02:16Z",
       "license": "LGPL-2.1"
     },
     {
@@ -28485,18 +28485,18 @@
       ],
       "overview": {
         "text": "Welcome to the Sigma main rule repository. The place where detection engineers, threat hunters and all defensive security practitioners collaborate on detection rules. The repository offers more than 3000 detection rules of different type and aims to make reliable detections accessible to all at no cost.",
-        "sourceUrl": "https://github.com/SigmaHQ/sigma/blob/f083329893e4f44869bf7d283c7aa001ad86a0cd/README.md",
+        "sourceUrl": "https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/SigmaHQ/sigma",
-        "commitSha": "f083329893e4f44869bf7d283c7aa001ad86a0cd",
-        "commitUrl": "https://github.com/SigmaHQ/sigma/commit/f083329893e4f44869bf7d283c7aa001ad86a0cd",
+        "commitSha": "05d1031f537e830b76da53bae2400c5814c89165",
+        "commitUrl": "https://github.com/SigmaHQ/sigma/commit/05d1031f537e830b76da53bae2400c5814c89165",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/SigmaHQ/sigma/blob/f083329893e4f44869bf7d283c7aa001ad86a0cd/README.md",
+        "readmeUrl": "https://github.com/SigmaHQ/sigma/blob/05d1031f537e830b76da53bae2400c5814c89165/README.md",
         "readmeSha256": "sha256:3e321fa527d6f8608ba0682c2f6639ff615437fa57437eb92577a43d5f19e84a",
         "readmeByteLength": 12943,
         "overviewExcerpt": "Welcome to the Sigma main rule repository. The place where detection engineers, threat hunters and all defensive security practitioners collaborate on detection rules. The repository offers more than 3000 detection rules of different type and aims to make reliable detections accessible to all at no cost.",
@@ -28543,16 +28543,16 @@
             "sysmon"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-19T11:01:37Z",
-          "latestRepositoryUpdateAt": "2026-10-20T04:47:17Z",
+          "lastPushedAt": "2026-10-21T03:04:45Z",
+          "latestRepositoryUpdateAt": "2026-10-21T09:49:04Z",
           "license": "NOASSERTION",
           "description": "Main Sigma Rule Repository"
         }
       },
       "currentVersion": "r2026-07-01",
       "lastReleaseAt": "2026-07-09T14:51:34Z",
-      "publisherUpdatedAt": "2026-10-20",
-      "lastCommitAt": "2026-10-19T11:01:37Z"
+      "publisherUpdatedAt": "2026-10-21",
+      "lastCommitAt": "2026-10-21T03:04:45Z"
     },
     {
       "id": "ecosystem-sigstore-cosign",
@@ -28668,7 +28668,7 @@
       ],
       "overview": {
         "text": "Signing OCI containers (and other artifacts) using Sigstore!",
-        "sourceUrl": "https://github.com/sigstore/cosign/blob/821c9bf35ba3ff72fa2cfb1c833b316d74aa92e4/README.md",
+        "sourceUrl": "https://github.com/sigstore/cosign/blob/0e48502cf5ef34e2e60bbd3617aa19945712f705/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
@@ -28682,17 +28682,17 @@
         "environments": [
           "Kubernetes"
         ],
-        "sourceUrl": "https://github.com/sigstore/cosign/blob/821c9bf35ba3ff72fa2cfb1c833b316d74aa92e4/README.md",
+        "sourceUrl": "https://github.com/sigstore/cosign/blob/0e48502cf5ef34e2e60bbd3617aa19945712f705/README.md",
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/sigstore/cosign",
-        "commitSha": "821c9bf35ba3ff72fa2cfb1c833b316d74aa92e4",
-        "commitUrl": "https://github.com/sigstore/cosign/commit/821c9bf35ba3ff72fa2cfb1c833b316d74aa92e4",
+        "commitSha": "0e48502cf5ef34e2e60bbd3617aa19945712f705",
+        "commitUrl": "https://github.com/sigstore/cosign/commit/0e48502cf5ef34e2e60bbd3617aa19945712f705",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/sigstore/cosign/blob/821c9bf35ba3ff72fa2cfb1c833b316d74aa92e4/README.md",
+        "readmeUrl": "https://github.com/sigstore/cosign/blob/0e48502cf5ef34e2e60bbd3617aa19945712f705/README.md",
         "readmeSha256": "sha256:ff167bbc67a9ad2a043bc0581c5f5cfd9701cf826bc8ea15c18d01b496920983",
         "readmeByteLength": 34472,
         "overviewExcerpt": "Signing OCI containers (and other artifacts) using Sigstore!",
@@ -28721,10 +28721,10 @@
         "media": [],
         "release": {
           "status": "published",
-          "version": "v3.1.3",
-          "name": "v3.1.3",
-          "url": "https://github.com/sigstore/cosign/releases/tag/v3.1.3",
-          "publishedAt": "2026-08-06T01:09:23Z",
+          "version": "v3.1.4",
+          "name": "v3.1.4",
+          "url": "https://github.com/sigstore/cosign/releases/tag/v3.1.4",
+          "publishedAt": "2026-10-20T18:27:42Z",
           "prerelease": false
         },
         "facts": {
@@ -28732,16 +28732,16 @@
           "primaryLanguage": "Go",
           "topics": [],
           "archived": false,
-          "lastPushedAt": "2026-10-19T21:12:08Z",
-          "latestRepositoryUpdateAt": "2026-10-19T21:12:12Z",
+          "lastPushedAt": "2026-10-20T17:40:31Z",
+          "latestRepositoryUpdateAt": "2026-10-21T04:35:57Z",
           "license": "Apache-2.0",
           "description": "Code signing and transparency for containers and binaries"
         }
       },
-      "currentVersion": "v3.1.3",
-      "lastReleaseAt": "2026-08-06T01:09:23Z",
-      "publisherUpdatedAt": "2026-10-19",
-      "lastCommitAt": "2026-10-19T21:12:08Z",
+      "currentVersion": "v3.1.4",
+      "lastReleaseAt": "2026-10-20T18:27:42Z",
+      "publisherUpdatedAt": "2026-10-21",
+      "lastCommitAt": "2026-10-20T17:40:31Z",
       "license": "Apache-2.0"
     },
     {
@@ -29203,7 +29203,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/turbot/steampipe",
         "commitSha": "103201b1aad459788fb7d798637295600ed82179",
@@ -29267,7 +29267,7 @@
             "zero-etl"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-07T10:49:15Z",
+          "lastPushedAt": "2026-10-21T01:09:55Z",
           "latestRepositoryUpdateAt": "2026-10-19T14:34:24Z",
           "license": "AGPL-3.0",
           "description": "Zero-ETL, infinite possibilities. Live query APIs, code & more with SQL. No DB required."
@@ -29305,7 +29305,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-07T10:49:15Z.",
+          "text": "Latest repository push: 2026-10-21T01:09:55Z.",
           "sourceUrl": "https://api.github.com/repos/turbot/steampipe"
         },
         "release": {
@@ -29318,7 +29318,7 @@
         }
       },
       "lastReleaseAt": "2026-09-16T10:41:32Z",
-      "lastCommitAt": "2026-10-07T10:49:15Z",
+      "lastCommitAt": "2026-10-21T01:09:55Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -29463,7 +29463,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/NUWCDIVNPT/stig-manager",
         "commitSha": "deaed8ddd051a8bdee7fe68cccbb11f61a80e2c7",
@@ -29511,7 +29511,7 @@
             "stig-manager"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-19T19:03:42Z",
+          "lastPushedAt": "2026-10-21T02:23:54Z",
           "latestRepositoryUpdateAt": "2026-10-14T19:43:31Z",
           "license": "NOASSERTION",
           "description": "An API and client for managing STIG assessments"
@@ -29545,7 +29545,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-19T19:03:42Z.",
+          "text": "Latest repository push: 2026-10-21T02:23:54Z.",
           "sourceUrl": "https://api.github.com/repos/NUWCDIVNPT/stig-manager"
         },
         "release": {
@@ -29558,7 +29558,7 @@
         }
       },
       "lastReleaseAt": "2026-09-18T15:32:02Z",
-      "lastCommitAt": "2026-10-19T19:03:42Z",
+      "lastCommitAt": "2026-10-21T02:23:54Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -30420,7 +30420,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/tenable/terrascan",
         "commitSha": "dafb3e0ad72812fbecfc36d33e8bd4347f12b114",
@@ -31167,8 +31167,8 @@
       "repositoryUrl": "https://github.com/aquasecurity/trivy",
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
-      "currentVersion": "v0.76.0",
-      "publisherUpdatedAt": "2026-10-20",
+      "currentVersion": "v0.76.1",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -31193,18 +31193,18 @@
       "nextCheckAt": "2026-11-03",
       "overview": {
         "text": "Trivy ([pronunciation][pronunciation]) is a comprehensive and versatile security scanner. Trivy has scanners that look for security issues, and targets where it can find those issues.",
-        "sourceUrl": "https://github.com/aquasecurity/trivy/blob/b65f323088c50dee7ecead5418fda4fa74c6693a/README.md",
+        "sourceUrl": "https://github.com/aquasecurity/trivy/blob/f61f400f60a108751e5886b896b2fc63c31bd865/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/aquasecurity/trivy",
-        "commitSha": "b65f323088c50dee7ecead5418fda4fa74c6693a",
-        "commitUrl": "https://github.com/aquasecurity/trivy/commit/b65f323088c50dee7ecead5418fda4fa74c6693a",
+        "commitSha": "f61f400f60a108751e5886b896b2fc63c31bd865",
+        "commitUrl": "https://github.com/aquasecurity/trivy/commit/f61f400f60a108751e5886b896b2fc63c31bd865",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/aquasecurity/trivy/blob/b65f323088c50dee7ecead5418fda4fa74c6693a/README.md",
+        "readmeUrl": "https://github.com/aquasecurity/trivy/blob/f61f400f60a108751e5886b896b2fc63c31bd865/README.md",
         "readmeSha256": "sha256:217d4d9db626c98b80f0fa214b510705d922f16b9c9452a6ce10d86788be67ba",
         "readmeByteLength": 5590,
         "overviewExcerpt": "Trivy ([pronunciation][pronunciation]) is a comprehensive and versatile security scanner. Trivy has scanners that look for security issues, and targets where it can find those issues.",
@@ -31224,10 +31224,10 @@
         "media": [],
         "release": {
           "status": "published",
-          "version": "v0.76.0",
-          "name": "v0.76.0",
-          "url": "https://github.com/aquasecurity/trivy/releases/tag/v0.76.0",
-          "publishedAt": "2026-10-14T11:45:44Z",
+          "version": "v0.76.1",
+          "name": "v0.76.1",
+          "url": "https://github.com/aquasecurity/trivy/releases/tag/v0.76.1",
+          "publishedAt": "2026-10-21T11:18:34Z",
           "prerelease": false
         },
         "facts": {
@@ -31251,8 +31251,8 @@
             "vulnerability-scanners"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-19T09:31:55Z",
-          "latestRepositoryUpdateAt": "2026-10-20T05:58:34Z",
+          "lastPushedAt": "2026-10-21T12:32:48Z",
+          "latestRepositoryUpdateAt": "2026-10-21T12:32:55Z",
           "license": "Apache-2.0",
           "description": "Find vulnerabilities, misconfigurations, secrets, SBOM in containers, Kubernetes, code repositories, clouds and more"
         }
@@ -31275,7 +31275,7 @@
         "usage": {
           "status": "documented",
           "text": "bash trivy [--scanners ] Examples: bash trivy image python:3.4-alpine Result https://github.com/user-attachments/assets/af1c11e7-d9c5-48af-8e05-cb34dfd6352a bash trivy fs --scanners vuln,secret,misconfig myproject/ Result https://github.com/user-attachments/assets/6b3894b7-77c5-4ffc-ac94-ffe6648a30dc bash trivy k8s --report summary cluster Result",
-          "sourceUrl": "https://github.com/aquasecurity/trivy/blob/b65f323088c50dee7ecead5418fda4fa74c6693a/README.md"
+          "sourceUrl": "https://github.com/aquasecurity/trivy/blob/f61f400f60a108751e5886b896b2fc63c31bd865/README.md"
         },
         "license": {
           "status": "documented",
@@ -31284,20 +31284,20 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-19T09:31:55Z.",
+          "text": "Latest repository push: 2026-10-21T12:32:48Z.",
           "sourceUrl": "https://api.github.com/repos/aquasecurity/trivy"
         },
         "release": {
           "status": "published",
-          "version": "v0.76.0",
-          "name": "v0.76.0",
-          "url": "https://github.com/aquasecurity/trivy/releases/tag/v0.76.0",
-          "publishedAt": "2026-10-14T11:45:44Z",
+          "version": "v0.76.1",
+          "name": "v0.76.1",
+          "url": "https://github.com/aquasecurity/trivy/releases/tag/v0.76.1",
+          "publishedAt": "2026-10-21T11:18:34Z",
           "prerelease": false
         }
       },
-      "lastReleaseAt": "2026-10-14T11:45:44Z",
-      "lastCommitAt": "2026-10-19T09:31:55Z",
+      "lastReleaseAt": "2026-10-21T11:18:34Z",
+      "lastCommitAt": "2026-10-21T12:32:48Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -31706,7 +31706,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-17T13:17:26Z.",
+          "text": "Latest repository push: 2026-10-21T12:06:26Z.",
           "sourceUrl": "https://api.github.com/repos/Velocidex/velociraptor"
         },
         "release": {
@@ -31736,7 +31736,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/Velocidex/velociraptor",
         "commitSha": "46fb167bb0cd135e07c8705474f8cc071bee4f16",
@@ -31784,16 +31784,16 @@
             "inventory-management"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-17T13:17:26Z",
-          "latestRepositoryUpdateAt": "2026-10-19T21:42:27Z",
+          "lastPushedAt": "2026-10-21T12:06:26Z",
+          "latestRepositoryUpdateAt": "2026-10-21T09:57:10Z",
           "license": "NOASSERTION",
           "description": "Digging Deeper...."
         }
       },
       "currentVersion": "v0.77.3",
       "lastReleaseAt": "2026-10-05T01:00:38Z",
-      "publisherUpdatedAt": "2026-10-19",
-      "lastCommitAt": "2026-10-17T13:17:26Z"
+      "publisherUpdatedAt": "2026-10-21",
+      "lastCommitAt": "2026-10-21T12:06:26Z"
     },
     {
       "id": "service-virustotal",
@@ -32049,7 +32049,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/volatilityfoundation/volatility3",
         "commitSha": "77ff0b1932d77527f850c8ced01d85805ea7bf97",
@@ -32097,14 +32097,14 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-10-12T09:18:06Z",
-          "latestRepositoryUpdateAt": "2026-10-20T04:59:13Z",
+          "latestRepositoryUpdateAt": "2026-10-21T12:57:03Z",
           "license": "NOASSERTION",
           "description": "Volatility 3.0 development"
         }
       },
       "currentVersion": "v2.28.2",
       "lastReleaseAt": "2026-09-17T19:47:09Z",
-      "publisherUpdatedAt": "2026-10-20",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCommitAt": "2026-10-12T09:18:06Z"
     },
     {
@@ -32305,7 +32305,7 @@
       "license": "GPL-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "v4.14.9",
-      "publisherUpdatedAt": "2026-10-20",
+      "publisherUpdatedAt": "2026-10-21",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -32334,7 +32334,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/wazuh/wazuh",
         "commitSha": "8de6b401cd2ac4e52be2e8e361a77302eb70ba16",
@@ -32389,8 +32389,8 @@
             "xdr"
           ],
           "archived": false,
-          "lastPushedAt": "2026-10-20T05:46:03Z",
-          "latestRepositoryUpdateAt": "2026-10-20T03:09:25Z",
+          "lastPushedAt": "2026-10-21T12:54:51Z",
+          "latestRepositoryUpdateAt": "2026-10-21T09:06:57Z",
           "license": "NOASSERTION",
           "description": "Wazuh - The Open Source Security Platform. Unified XDR and SIEM protection for endpoints and cloud workloads."
         }
@@ -32417,7 +32417,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-20T05:46:03Z.",
+          "text": "Latest repository push: 2026-10-21T12:54:51Z.",
           "sourceUrl": "https://api.github.com/repos/wazuh/wazuh"
         },
         "release": {
@@ -32430,7 +32430,7 @@
         }
       },
       "lastReleaseAt": "2026-10-15T17:40:40Z",
-      "lastCommitAt": "2026-10-20T05:46:03Z",
+      "lastCommitAt": "2026-10-21T12:54:51Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -32734,32 +32734,32 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-10-19T15:21:40Z.",
+          "text": "Latest repository push: 2026-10-21T12:20:29Z.",
           "sourceUrl": "https://api.github.com/repos/VirusTotal/yara-x"
         },
         "release": {
           "status": "published",
-          "version": "v1.21.0",
-          "name": "v1.21.0",
-          "url": "https://github.com/VirusTotal/yara-x/releases/tag/v1.21.0",
-          "publishedAt": "2026-09-29T09:11:32Z",
+          "version": "v1.22.0",
+          "name": "v1.22.0",
+          "url": "https://github.com/VirusTotal/yara-x/releases/tag/v1.22.0",
+          "publishedAt": "2026-10-20T13:39:16Z",
           "prerelease": false
         }
       },
       "overview": {
         "text": "YARA-X is a re-incarnation of YARA, a pattern matching tool designed with malware researchers in mind. This new incarnation intends to be faster, safer and more user-friendly than its predecessor. The ultimate goal of YARA-X is replacing YARA as the default pattern matching tool for malware researchers.",
-        "sourceUrl": "https://github.com/VirusTotal/yara-x/blob/f2a0b20d8ed580f03dac93b575cac481282a8772/README.md",
+        "sourceUrl": "https://github.com/VirusTotal/yara-x/blob/37153d0efc988cc92bcce39bbc1acc258dc3cf45/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-10-20",
+        "capturedAt": "2026-10-21",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/VirusTotal/yara-x",
-        "commitSha": "f2a0b20d8ed580f03dac93b575cac481282a8772",
-        "commitUrl": "https://github.com/VirusTotal/yara-x/commit/f2a0b20d8ed580f03dac93b575cac481282a8772",
+        "commitSha": "37153d0efc988cc92bcce39bbc1acc258dc3cf45",
+        "commitUrl": "https://github.com/VirusTotal/yara-x/commit/37153d0efc988cc92bcce39bbc1acc258dc3cf45",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/VirusTotal/yara-x/blob/f2a0b20d8ed580f03dac93b575cac481282a8772/README.md",
+        "readmeUrl": "https://github.com/VirusTotal/yara-x/blob/37153d0efc988cc92bcce39bbc1acc258dc3cf45/README.md",
         "readmeSha256": "sha256:fe5c6f9fde50171d930617d0d21daec6ce089dd9b02853662f5a41dd614ee109",
         "readmeByteLength": 3142,
         "overviewExcerpt": "YARA-X is a re-incarnation of YARA, a pattern matching tool designed with malware researchers in mind. This new incarnation intends to be faster, safer and more user-friendly than its predecessor. The ultimate goal of YARA-X is replacing YARA as the default pattern matching tool for malware researchers.",
@@ -32776,10 +32776,10 @@
         "media": [],
         "release": {
           "status": "published",
-          "version": "v1.21.0",
-          "name": "v1.21.0",
-          "url": "https://github.com/VirusTotal/yara-x/releases/tag/v1.21.0",
-          "publishedAt": "2026-09-29T09:11:32Z",
+          "version": "v1.22.0",
+          "name": "v1.22.0",
+          "url": "https://github.com/VirusTotal/yara-x/releases/tag/v1.22.0",
+          "publishedAt": "2026-10-20T13:39:16Z",
           "prerelease": false
         },
         "facts": {
@@ -32787,16 +32787,16 @@
           "primaryLanguage": "Rust",
           "topics": [],
           "archived": false,
-          "lastPushedAt": "2026-10-19T15:21:40Z",
-          "latestRepositoryUpdateAt": "2026-10-19T15:21:55Z",
+          "lastPushedAt": "2026-10-21T12:20:29Z",
+          "latestRepositoryUpdateAt": "2026-10-21T12:10:01Z",
           "license": "BSD-3-Clause",
           "description": "A rewrite of YARA in Rust."
         }
       },
-      "currentVersion": "v1.21.0",
-      "lastReleaseAt": "2026-09-29T09:11:32Z",
-      "publisherUpdatedAt": "2026-10-19",
-      "lastCommitAt": "2026-10-19T15:21:40Z",
+      "currentVersion": "v1.22.0",
+      "lastReleaseAt": "2026-10-20T13:39:16Z",
+      "publisherUpdatedAt": "2026-10-21",
+      "lastCommitAt": "2026-10-21T12:20:29Z",
       "license": "BSD-3-Clause"
     },
     {
@@ -32940,10 +32940,10 @@
     },
     {
       "id": "resource:catalog-elastic-detection-rules:publisher-destination",
-      "sourceUrl": "https://github.com/elastic/detection-rules/commit/3cff483ace4a05f65b0b69a22103fefc325c7241",
+      "sourceUrl": "https://github.com/elastic/detection-rules/commit/9431b803cd7bf18e79bc5f703534ba4a1e4eb729",
       "locatorType": "repository_commit",
-      "locator": "3cff483ace4a05f65b0b69a22103fefc325c7241",
-      "retrievedAt": "2026-10-20",
+      "locator": "9431b803cd7bf18e79bc5f703534ba4a1e4eb729",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -33055,7 +33055,7 @@
       "sourceUrl": "https://github.com/cyberark/community/commit/e83794e4e7e925321f01df07fcf126cd539b87ba",
       "locatorType": "repository_commit",
       "locator": "e83794e4e7e925321f01df07fcf126cd539b87ba",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -33276,10 +33276,10 @@
     },
     {
       "id": "resource:dataset-cisa-vulnrichment:publisher-destination",
-      "sourceUrl": "https://github.com/cisagov/vulnrichment/commit/c7d15706ff78585e334de191060e1ba33879e31a",
+      "sourceUrl": "https://github.com/cisagov/vulnrichment/commit/c3a5ae9e092ae8ba1caee2f7bdd389e5c7cd693b",
       "locatorType": "repository_commit",
-      "locator": "c7d15706ff78585e334de191060e1ba33879e31a",
-      "retrievedAt": "2026-10-20",
+      "locator": "c3a5ae9e092ae8ba1caee2f7bdd389e5c7cd693b",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -33484,10 +33484,10 @@
     },
     {
       "id": "resource:ecosystem-nuclei:publisher-destination",
-      "sourceUrl": "https://github.com/projectdiscovery/nuclei/commit/f3b817b818a61e87296a27441351e85d739140b8",
+      "sourceUrl": "https://github.com/projectdiscovery/nuclei/commit/b0eeadc5541e3378fc2cc7a6f109e2eeb003c53b",
       "locatorType": "repository_commit",
-      "locator": "f3b817b818a61e87296a27441351e85d739140b8",
-      "retrievedAt": "2026-10-20",
+      "locator": "b0eeadc5541e3378fc2cc7a6f109e2eeb003c53b",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -33500,10 +33500,10 @@
     },
     {
       "id": "resource:ecosystem-osv:publisher-destination",
-      "sourceUrl": "https://github.com/google/osv-scanner/commit/f455353546889009663c1f8b640d5880a01c889a",
+      "sourceUrl": "https://github.com/google/osv-scanner/commit/ffeae830de4c0dd2dfa692c276e5db221b778a1a",
       "locatorType": "repository_commit",
-      "locator": "f455353546889009663c1f8b640d5880a01c889a",
-      "retrievedAt": "2026-10-20",
+      "locator": "ffeae830de4c0dd2dfa692c276e5db221b778a1a",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -33516,18 +33516,18 @@
     },
     {
       "id": "resource:ecosystem-sigmahq:publisher-destination",
-      "sourceUrl": "https://github.com/SigmaHQ/sigma/commit/f083329893e4f44869bf7d283c7aa001ad86a0cd",
+      "sourceUrl": "https://github.com/SigmaHQ/sigma/commit/05d1031f537e830b76da53bae2400c5814c89165",
       "locatorType": "repository_commit",
-      "locator": "f083329893e4f44869bf7d283c7aa001ad86a0cd",
-      "retrievedAt": "2026-10-20",
+      "locator": "05d1031f537e830b76da53bae2400c5814c89165",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:ecosystem-sigstore-cosign:publisher-destination",
-      "sourceUrl": "https://github.com/sigstore/cosign/commit/821c9bf35ba3ff72fa2cfb1c833b316d74aa92e4",
+      "sourceUrl": "https://github.com/sigstore/cosign/commit/0e48502cf5ef34e2e60bbd3617aa19945712f705",
       "locatorType": "repository_commit",
-      "locator": "821c9bf35ba3ff72fa2cfb1c833b316d74aa92e4",
-      "retrievedAt": "2026-10-20",
+      "locator": "0e48502cf5ef34e2e60bbd3617aa19945712f705",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -33567,7 +33567,7 @@
       "sourceUrl": "https://github.com/opencontrol/compliance-masonry/commit/cb0e8dd950884cd4411bd3007aea587cd20eb6c3",
       "locatorType": "repository_commit",
       "locator": "cb0e8dd950884cd4411bd3007aea587cd20eb6c3",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -33879,7 +33879,7 @@
       "sourceUrl": "https://github.com/microsoft/StigRepo/commit/1d4e5baf3c1641c7fa631c122c80253461d0440a",
       "locatorType": "repository_commit",
       "locator": "1d4e5baf3c1641c7fa631c122c80253461d0440a",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34183,15 +34183,15 @@
       "sourceUrl": "https://github.com/ansible-lockdown/.github/commit/2dcdbc5c89114127a0afe2f38160dd72a1ef20dc",
       "locatorType": "repository_commit",
       "locator": "2dcdbc5c89114127a0afe2f38160dd72a1ef20dc",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:tool-atomic-red-team:publisher-destination",
-      "sourceUrl": "https://github.com/redcanaryco/atomic-red-team/commit/388942adbd9641f4dfdcf079d7efe9a75ec0ac43",
+      "sourceUrl": "https://github.com/redcanaryco/atomic-red-team/commit/1edbe50b8f49560110e6cf85161c1ef75a5732b7",
       "locatorType": "repository_commit",
-      "locator": "388942adbd9641f4dfdcf079d7efe9a75ec0ac43",
-      "retrievedAt": "2026-10-20",
+      "locator": "1edbe50b8f49560110e6cf85161c1ef75a5732b7",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34199,23 +34199,23 @@
       "sourceUrl": "https://github.com/oscal-club/awesome-oscal/commit/fe430cb66a6662f790a02462d4b00b956cf3fbae",
       "locatorType": "repository_commit",
       "locator": "fe430cb66a6662f790a02462d4b00b956cf3fbae",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:tool-bloodhound-ce:publisher-destination",
-      "sourceUrl": "https://github.com/SpecterOps/BloodHound/commit/41421cc5e28370e1feab7e454a032ba808c7cce1",
+      "sourceUrl": "https://github.com/SpecterOps/BloodHound/commit/93c4de19b5d4c4710f561113d6b7ab1e767234e3",
       "locatorType": "repository_commit",
-      "locator": "41421cc5e28370e1feab7e454a032ba808c7cce1",
-      "retrievedAt": "2026-10-20",
+      "locator": "93c4de19b5d4c4710f561113d6b7ab1e767234e3",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:tool-checkov:publisher-destination",
-      "sourceUrl": "https://github.com/bridgecrewio/checkov/commit/7a6782e3d81e19f1bdd9213129f3138767691f5f",
+      "sourceUrl": "https://github.com/bridgecrewio/checkov/commit/811d0687902c66d5964c68da5739c947979e85b1",
       "locatorType": "repository_commit",
-      "locator": "7a6782e3d81e19f1bdd9213129f3138767691f5f",
-      "retrievedAt": "2026-10-20",
+      "locator": "811d0687902c66d5964c68da5739c947979e85b1",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34223,7 +34223,7 @@
       "sourceUrl": "https://github.com/cisagov/cset/commit/48b3afe17c4e897f7eac768ec0c56ca63be14526",
       "locatorType": "repository_commit",
       "locator": "48b3afe17c4e897f7eac768ec0c56ca63be14526",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34231,7 +34231,7 @@
       "sourceUrl": "https://github.com/cisagov/Decider/commit/6290a80504561d21b641ba5bf69d1fe5c1ee0a21",
       "locatorType": "repository_commit",
       "locator": "6290a80504561d21b641ba5bf69d1fe5c1ee0a21",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34239,31 +34239,31 @@
       "sourceUrl": "https://github.com/cisagov/Malcolm/commit/aa29d73ad5124ab0c6c23257885533faed923601",
       "locatorType": "repository_commit",
       "locator": "aa29d73ad5124ab0c6c23257885533faed923601",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:tool-cisa-scubagear:publisher-destination",
-      "sourceUrl": "https://github.com/cisagov/ScubaGear/commit/f77ca8d07512f0910c55523866be91de81faa7f7",
+      "sourceUrl": "https://github.com/cisagov/ScubaGear/commit/cf05f99931eb1d88e0335610ac8f0713f2e76fad",
       "locatorType": "repository_commit",
-      "locator": "f77ca8d07512f0910c55523866be91de81faa7f7",
-      "retrievedAt": "2026-10-20",
+      "locator": "cf05f99931eb1d88e0335610ac8f0713f2e76fad",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:tool-cloud-custodian:publisher-destination",
-      "sourceUrl": "https://github.com/cloud-custodian/cloud-custodian/commit/95a39afec2c1e8d07a01c0317e2b61c9f6c655b6",
+      "sourceUrl": "https://github.com/cloud-custodian/cloud-custodian/commit/addc02c12f3bd03560ec20a2583ffce84fd808b7",
       "locatorType": "repository_commit",
-      "locator": "95a39afec2c1e8d07a01c0317e2b61c9f6c655b6",
-      "retrievedAt": "2026-10-20",
+      "locator": "addc02c12f3bd03560ec20a2583ffce84fd808b7",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:tool-compliance-as-code:publisher-destination",
-      "sourceUrl": "https://github.com/ComplianceAsCode/content/commit/36fb9257b83a67460c1d37ccfc5b9bf3561427b1",
+      "sourceUrl": "https://github.com/ComplianceAsCode/content/commit/7b08b10b164b561f0547701bbb3741c47546dc4e",
       "locatorType": "repository_commit",
-      "locator": "36fb9257b83a67460c1d37ccfc5b9bf3561427b1",
-      "retrievedAt": "2026-10-20",
+      "locator": "7b08b10b164b561f0547701bbb3741c47546dc4e",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34271,7 +34271,7 @@
       "sourceUrl": "https://github.com/oscal-compass/compliance-trestle/commit/0841bbd19abe3d94888a8e41c2536379aac7c8c7",
       "locatorType": "repository_commit",
       "locator": "0841bbd19abe3d94888a8e41c2536379aac7c8c7",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34279,7 +34279,7 @@
       "sourceUrl": "https://github.com/NSWC-Crane/C-PAT/commit/7064ffbeaa603402e8b3a738578d20850d1bb8f6",
       "locatorType": "repository_commit",
       "locator": "7064ffbeaa603402e8b3a738578d20850d1bb8f6",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34287,7 +34287,7 @@
       "sourceUrl": "https://github.com/gchq/CyberChef/commit/cc70a4530b86aff4bc40ccc74b1ad4857eccdca2",
       "locatorType": "repository_commit",
       "locator": "cc70a4530b86aff4bc40ccc74b1ad4857eccdca2",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34295,15 +34295,15 @@
       "sourceUrl": "https://github.com/CycloneDX/cyclonedx-cli/commit/b3cfa4b0edc356dad07e0b6e7ab6da0a94af0246",
       "locatorType": "repository_commit",
       "locator": "b3cfa4b0edc356dad07e0b6e7ab6da0a94af0246",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:tool-dependency-track:publisher-destination",
-      "sourceUrl": "https://github.com/DependencyTrack/dependency-track/commit/e541c49800c67c640091f6ef1d260198ae6ed522",
+      "sourceUrl": "https://github.com/DependencyTrack/dependency-track/commit/fd55deccf61ca81457dbe773f1879bcc859fc738",
       "locatorType": "repository_commit",
-      "locator": "e541c49800c67c640091f6ef1d260198ae6ed522",
-      "retrievedAt": "2026-10-20",
+      "locator": "fd55deccf61ca81457dbe773f1879bcc859fc738",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34324,10 +34324,10 @@
     },
     {
       "id": "resource:tool-falco-runtime-security:publisher-destination",
-      "sourceUrl": "https://github.com/falcosecurity/falco/commit/ecf7af96095706637898add168095c17b1e94782",
+      "sourceUrl": "https://github.com/falcosecurity/falco/commit/4cea537828c2b33c11e2c2a9427251682dfa1136",
       "locatorType": "repository_commit",
-      "locator": "ecf7af96095706637898add168095c17b1e94782",
-      "retrievedAt": "2026-10-20",
+      "locator": "4cea537828c2b33c11e2c2a9427251682dfa1136",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34335,7 +34335,7 @@
       "sourceUrl": "https://github.com/gitleaks/gitleaks/commit/b58d3f102cf3a2c84cb7f923d05c25c9b1aed84b",
       "locatorType": "repository_commit",
       "locator": "b58d3f102cf3a2c84cb7f923d05c25c9b1aed84b",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34343,7 +34343,7 @@
       "sourceUrl": "https://github.com/anchore/grype/commit/afe2742527d98d822da06c9f32eed86fe3d193e0",
       "locatorType": "repository_commit",
       "locator": "afe2742527d98d822da06c9f32eed86fe3d193e0",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34351,7 +34351,7 @@
       "sourceUrl": "https://github.com/GSA/oscal-ssp-to-word/commit/925e4ce5491ce6a84c8c3b3b67e7f57cc496b5c0",
       "locatorType": "repository_commit",
       "locator": "925e4ce5491ce6a84c8c3b3b67e7f57cc496b5c0",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34359,7 +34359,7 @@
       "sourceUrl": "https://github.com/scipag/HardeningKitty/commit/da0976073caad006c48b2478588c2f7fa572ab46",
       "locatorType": "repository_commit",
       "locator": "da0976073caad006c48b2478588c2f7fa572ab46",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34372,10 +34372,10 @@
     },
     {
       "id": "resource:tool-kics:publisher-destination",
-      "sourceUrl": "https://github.com/Checkmarx/kics/commit/a1c1b94719551be0c49ada95b1e328ce7f12adb2",
+      "sourceUrl": "https://github.com/Checkmarx/kics/commit/1f05308bc1f1068c41cdc3cb5a3c2d99732c56fd",
       "locatorType": "repository_commit",
-      "locator": "a1c1b94719551be0c49ada95b1e328ce7f12adb2",
-      "retrievedAt": "2026-10-20",
+      "locator": "1f05308bc1f1068c41cdc3cb5a3c2d99732c56fd",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34383,15 +34383,15 @@
       "sourceUrl": "https://github.com/aquasecurity/kube-bench/commit/e278a5915a982f2756026de6e2f9ca77077ef9f9",
       "locatorType": "repository_commit",
       "locator": "e278a5915a982f2756026de6e2f9ca77077ef9f9",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:tool-kubescape:publisher-destination",
-      "sourceUrl": "https://github.com/kubescape/kubescape/commit/4f0d4f9f2ce99f77a3abf57bd3fb2154b43615ae",
+      "sourceUrl": "https://github.com/kubescape/kubescape/commit/1f12120be7efac5954bf6aa29351c053f4617484",
       "locatorType": "repository_commit",
-      "locator": "4f0d4f9f2ce99f77a3abf57bd3fb2154b43615ae",
-      "retrievedAt": "2026-10-20",
+      "locator": "1f12120be7efac5954bf6aa29351c053f4617484",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34407,15 +34407,15 @@
       "sourceUrl": "https://github.com/CISOfy/lynis/commit/9319416fa0726369ab0a48f686155a90363f3f9c",
       "locatorType": "repository_commit",
       "locator": "9319416fa0726369ab0a48f686155a90363f3f9c",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:tool-maester:publisher-destination",
-      "sourceUrl": "https://github.com/maester365/maester/commit/bd9ab9d7c910be6b6d86aedf22f2be2f80b2153f",
+      "sourceUrl": "https://github.com/maester365/maester/commit/2155d3b3e6f3a9d8a631d43f4255411a10eff6d9",
       "locatorType": "repository_commit",
-      "locator": "bd9ab9d7c910be6b6d86aedf22f2be2f80b2153f",
-      "retrievedAt": "2026-10-20",
+      "locator": "2155d3b3e6f3a9d8a631d43f4255411a10eff6d9",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34436,10 +34436,10 @@
     },
     {
       "id": "resource:tool-microsoft365dsc:publisher-destination",
-      "sourceUrl": "https://github.com/Microsoft365DSC/Microsoft365DSC/commit/7c2e9790e17bf7f5b9b20de71b2145669a78ff2c",
+      "sourceUrl": "https://github.com/Microsoft365DSC/Microsoft365DSC/commit/fd18a38977df5b5f76a9c5a97f064968d148875b",
       "locatorType": "repository_commit",
-      "locator": "7c2e9790e17bf7f5b9b20de71b2145669a78ff2c",
-      "retrievedAt": "2026-10-20",
+      "locator": "fd18a38977df5b5f76a9c5a97f064968d148875b",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34447,7 +34447,7 @@
       "sourceUrl": "https://github.com/MISP/MISP/commit/fc99c9e3fc85beddc6ef18835359f3c8b7f44608",
       "locatorType": "repository_commit",
       "locator": "fc99c9e3fc85beddc6ef18835359f3c8b7f44608",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34455,7 +34455,7 @@
       "sourceUrl": "https://github.com/mitre-attack/attack-navigator/commit/734a1caba29fcd51f20b9ca239ce652b3354a47e",
       "locatorType": "repository_commit",
       "locator": "734a1caba29fcd51f20b9ca239ce652b3354a47e",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34463,7 +34463,7 @@
       "sourceUrl": "https://github.com/apache/caldera/commit/cb8d6a8160e0f4990af323a7c071d5e8482b42c7",
       "locatorType": "repository_commit",
       "locator": "cb8d6a8160e0f4990af323a7c071d5e8482b42c7",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34471,15 +34471,15 @@
       "sourceUrl": "https://github.com/mitre/emass_client/commit/c9013aafc5319fd7e2c74bba6e56cdf535959e70",
       "locatorType": "repository_commit",
       "locator": "c9013aafc5319fd7e2c74bba6e56cdf535959e70",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:tool-mitre-heimdall:publisher-destination",
-      "sourceUrl": "https://github.com/mitre/heimdall2/commit/a8692b04ccc55f67b097507b0909466c09b22347",
+      "sourceUrl": "https://github.com/mitre/heimdall2/commit/e0d6e4a1d2f26f6ab8d7705b4a6510caf571ba69",
       "locatorType": "repository_commit",
-      "locator": "a8692b04ccc55f67b097507b0909466c09b22347",
-      "retrievedAt": "2026-10-20",
+      "locator": "e0d6e4a1d2f26f6ab8d7705b4a6510caf571ba69",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34487,7 +34487,7 @@
       "sourceUrl": "https://github.com/mitre/saf/commit/a43d40437d87c290c388dbfd4917ac75db5d86a9",
       "locatorType": "repository_commit",
       "locator": "a43d40437d87c290c388dbfd4917ac75db5d86a9",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34495,7 +34495,7 @@
       "sourceUrl": "https://github.com/mitre/vulcan/commit/fb1f0154e21e84d95d4d0d3ed183789d40976318",
       "locatorType": "repository_commit",
       "locator": "fb1f0154e21e84d95d4d0d3ed183789d40976318",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34503,7 +34503,7 @@
       "sourceUrl": "https://github.com/usnistgov/macos_security/commit/ab0ad0ef17fcbdffda1e0e00a11e5c40d51cc401",
       "locatorType": "repository_commit",
       "locator": "ab0ad0ef17fcbdffda1e0e00a11e5c40d51cc401",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34516,34 +34516,34 @@
     },
     {
       "id": "resource:tool-open-policy-agent:publisher-destination",
-      "sourceUrl": "https://github.com/open-policy-agent/opa/commit/1c3090029733195c3f7b3e2a67dbb739cc2f087d",
+      "sourceUrl": "https://github.com/open-policy-agent/opa/commit/cbc1b4352eee436940a06653888e9314257b433b",
       "locatorType": "repository_commit",
-      "locator": "1c3090029733195c3f7b3e2a67dbb739cc2f087d",
-      "retrievedAt": "2026-10-20",
+      "locator": "cbc1b4352eee436940a06653888e9314257b433b",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:tool-opencti:publisher-destination",
-      "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/commit/cf8ad7c6b6d96ccbac6fd410167d4b7a5a699aee",
+      "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/commit/f50124d28268491ba79d82411190c3270a30b507",
       "locatorType": "repository_commit",
-      "locator": "cf8ad7c6b6d96ccbac6fd410167d4b7a5a699aee",
-      "retrievedAt": "2026-10-20",
+      "locator": "f50124d28268491ba79d82411190c3270a30b507",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:tool-openscap-workbench:publisher-destination",
-      "sourceUrl": "https://github.com/OpenSCAP/openscap/commit/c84c8aa5e961b7ba0340a43faf4555dc383af625",
+      "sourceUrl": "https://github.com/OpenSCAP/openscap/commit/d4e6d314451ad403c675a84395e522f207de1b6a",
       "locatorType": "repository_commit",
-      "locator": "c84c8aa5e961b7ba0340a43faf4555dc383af625",
-      "retrievedAt": "2026-10-20",
+      "locator": "d4e6d314451ad403c675a84395e522f207de1b6a",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:tool-openscap:publisher-destination",
-      "sourceUrl": "https://github.com/OpenSCAP/openscap/commit/c84c8aa5e961b7ba0340a43faf4555dc383af625",
+      "sourceUrl": "https://github.com/OpenSCAP/openscap/commit/d4e6d314451ad403c675a84395e522f207de1b6a",
       "locatorType": "repository_commit",
-      "locator": "c84c8aa5e961b7ba0340a43faf4555dc383af625",
-      "retrievedAt": "2026-10-20",
+      "locator": "d4e6d314451ad403c675a84395e522f207de1b6a",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34551,15 +34551,15 @@
       "sourceUrl": "https://github.com/ossf/scorecard/commit/6d4113e03c0014d63613b65b26a0c5a14c98ce3f",
       "locatorType": "repository_commit",
       "locator": "6d4113e03c0014d63613b65b26a0c5a14c98ce3f",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:tool-osquery:publisher-destination",
-      "sourceUrl": "https://github.com/osquery/osquery/commit/bf8c07615b80c89596724ce246f0c356ed874878",
+      "sourceUrl": "https://github.com/osquery/osquery/commit/f2457e5ed73e1237cb1de021a7ddd6cf16f476c3",
       "locatorType": "repository_commit",
-      "locator": "bf8c07615b80c89596724ce246f0c356ed874878",
-      "retrievedAt": "2026-10-20",
+      "locator": "f2457e5ed73e1237cb1de021a7ddd6cf16f476c3",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34575,15 +34575,15 @@
       "sourceUrl": "https://github.com/microsoft/PowerSTIG/commit/efa8aec879259ade7db396715850c58df9f44e81",
       "locatorType": "repository_commit",
       "locator": "efa8aec879259ade7db396715850c58df9f44e81",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:tool-prowler-cloud-security:publisher-destination",
-      "sourceUrl": "https://github.com/prowler-cloud/prowler/commit/4d922da2a6a29fdf49287176bae11401aaf02b75",
+      "sourceUrl": "https://github.com/prowler-cloud/prowler/commit/6ee0dd9730570edeeefa5cd2595f58931e772f57",
       "locatorType": "repository_commit",
-      "locator": "4d922da2a6a29fdf49287176bae11401aaf02b75",
-      "retrievedAt": "2026-10-20",
+      "locator": "6ee0dd9730570edeeefa5cd2595f58931e772f57",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34591,7 +34591,7 @@
       "sourceUrl": "https://github.com/nccgroup/ScoutSuite/commit/7909f2fc6186063e5c9e7ddef8c4d7d1072c8f3d",
       "locatorType": "repository_commit",
       "locator": "7909f2fc6186063e5c9e7ddef8c4d7d1072c8f3d",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34604,10 +34604,10 @@
     },
     {
       "id": "resource:tool-semgrep:publisher-destination",
-      "sourceUrl": "https://github.com/semgrep/semgrep/commit/51602ad27f09ef9342a5620601de5ef8f572fbc6",
+      "sourceUrl": "https://github.com/semgrep/semgrep/commit/fe209763a4a2ccfcdf6434e6c332edc24a2f586e",
       "locatorType": "repository_commit",
-      "locator": "51602ad27f09ef9342a5620601de5ef8f572fbc6",
-      "retrievedAt": "2026-10-20",
+      "locator": "fe209763a4a2ccfcdf6434e6c332edc24a2f586e",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34615,7 +34615,7 @@
       "sourceUrl": "https://github.com/turbot/steampipe/commit/103201b1aad459788fb7d798637295600ed82179",
       "locatorType": "repository_commit",
       "locator": "103201b1aad459788fb7d798637295600ed82179",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34623,7 +34623,7 @@
       "sourceUrl": "https://github.com/NUWCDIVNPT/stig-manager/commit/deaed8ddd051a8bdee7fe68cccbb11f61a80e2c7",
       "locatorType": "repository_commit",
       "locator": "deaed8ddd051a8bdee7fe68cccbb11f61a80e2c7",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34639,7 +34639,7 @@
       "sourceUrl": "https://github.com/anchore/syft/commit/f15c3343e29dfb20cf6d82c820e7090b49808c96",
       "locatorType": "repository_commit",
       "locator": "f15c3343e29dfb20cf6d82c820e7090b49808c96",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34655,15 +34655,15 @@
       "sourceUrl": "https://github.com/tenable/terrascan/commit/dafb3e0ad72812fbecfc36d33e8bd4347f12b114",
       "locatorType": "repository_commit",
       "locator": "dafb3e0ad72812fbecfc36d33e8bd4347f12b114",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:tool-trivy:publisher-destination",
-      "sourceUrl": "https://github.com/aquasecurity/trivy/commit/b65f323088c50dee7ecead5418fda4fa74c6693a",
+      "sourceUrl": "https://github.com/aquasecurity/trivy/commit/f61f400f60a108751e5886b896b2fc63c31bd865",
       "locatorType": "repository_commit",
-      "locator": "b65f323088c50dee7ecead5418fda4fa74c6693a",
-      "retrievedAt": "2026-10-20",
+      "locator": "f61f400f60a108751e5886b896b2fc63c31bd865",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34671,7 +34671,7 @@
       "sourceUrl": "https://github.com/Velocidex/velociraptor/commit/46fb167bb0cd135e07c8705474f8cc071bee4f16",
       "locatorType": "repository_commit",
       "locator": "46fb167bb0cd135e07c8705474f8cc071bee4f16",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34679,7 +34679,7 @@
       "sourceUrl": "https://github.com/volatilityfoundation/volatility3/commit/77ff0b1932d77527f850c8ced01d85805ea7bf97",
       "locatorType": "repository_commit",
       "locator": "77ff0b1932d77527f850c8ced01d85805ea7bf97",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34687,7 +34687,7 @@
       "sourceUrl": "https://github.com/wazuh/wazuh/commit/8de6b401cd2ac4e52be2e8e361a77302eb70ba16",
       "locatorType": "repository_commit",
       "locator": "8de6b401cd2ac4e52be2e8e361a77302eb70ba16",
-      "retrievedAt": "2026-10-20",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {
@@ -34700,10 +34700,10 @@
     },
     {
       "id": "resource:tool-yara-x:publisher-destination",
-      "sourceUrl": "https://github.com/VirusTotal/yara-x/commit/f2a0b20d8ed580f03dac93b575cac481282a8772",
+      "sourceUrl": "https://github.com/VirusTotal/yara-x/commit/37153d0efc988cc92bcce39bbc1acc258dc3cf45",
       "locatorType": "repository_commit",
-      "locator": "f2a0b20d8ed580f03dac93b575cac481282a8772",
-      "retrievedAt": "2026-10-20",
+      "locator": "37153d0efc988cc92bcce39bbc1acc258dc3cf45",
+      "retrievedAt": "2026-10-21",
       "reviewStatus": "reviewed"
     },
     {

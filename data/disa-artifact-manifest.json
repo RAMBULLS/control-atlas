@@ -4,9 +4,9 @@
   "compilation_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
   "artifact_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
   "byte_length": 375803537,
-  "retrieval_timestamp": "2026-10-20T05:57:16.464Z",
+  "retrieval_timestamp": "2026-10-21T12:58:59.559Z",
   "checksum": "sha256:399f3caa237d111073a792e397c1944291ffb1767eb9ec8d2e59f0f0e317f88d",
-  "discovery_content_checksum": "sha256:62a1332dc289a5ae5b55e21315c0a5651b426696ecdef3bbe643649b21c07d13",
+  "discovery_content_checksum": "sha256:7afd1f9d125147eb6efb6bf894098c1df8fa251bd922d6538f33b55f6d831483",
   "discovery_checksum_kind": "decoded_utf8_publisher_directory_snapshot",
   "publications": {
     "total_discovered_archives": 1022,
@@ -15838,13 +15838,5 @@
         "reason": "not an XML/XCCDF file"
       }
     ]
-  },
-  "inventory_check": {
-    "checked_at": "2026-10-20T06:25:13.670Z",
-    "status": "no_declared_inventory_change",
-    "content_checksum": "sha256:62a1332dc289a5ae5b55e21315c0a5651b426696ecdef3bbe643649b21c07d13",
-    "check_tier": "publisher_directory_inventory",
-    "publisher_bytes_retrieved": false,
-    "retained_content_retrieved_at": "2026-10-20T05:57:16.464Z"
   }
 }

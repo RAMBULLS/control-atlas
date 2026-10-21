@@ -338,7 +338,10 @@
     "tmp": "0.2.7",
     "@lhci/cli": {
       "uuid": "11.1.1",
-      "lighthouse": "13.4.1"
+      "lighthouse": "13.4.1",
+      "@lhci/utils": {
+        "js-yaml": "4.3.2"
+      }
     },
     "exceljs": {
       "uuid": "11.1.1",
@@ -347,9 +350,6 @@
     "nanoid": "^3.3.17",
     "express": {
       "qs": "6.16.0"
-    },
-    "@lhci/utils": {
-      "js-yaml": "4.3.2"
     }
   },
   "devDependencies": {

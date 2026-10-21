@@ -92,5 +92,10 @@ test('installed LHCI uses the upgraded parser with the verified compatibility pa
   assert.ok(verifyLhciYamlPatch() > 0);
   const lhciRequire = createRequire(installedFile);
   assert.equal(lhciRequire('js-yaml/package.json').version, PATCH.yamlVersion);
+  // A sibling override can detach utils from the CLI's existing Lighthouse
+  // override, silently restoring its old vulnerable transitive dependency tree.
+  const cliRequire = createRequire(require.resolve('@lhci/cli/package.json'));
+  assert.equal(lhciRequire('lighthouse/package.json').version, '13.4.1');
+  assert.equal(lhciRequire.resolve('lighthouse/package.json'), cliRequire.resolve('lighthouse/package.json'));
   checkConfigurations(lhciRequire(installedFile), root);
 }));

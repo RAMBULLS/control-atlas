@@ -44,9 +44,28 @@ for (const [guide, template, title] of [
     const action = page.getByRole("link", { name: `Open the ${title}`, exact: true });
     const destination = `#/build/documents/${template}`;
     await expect(action).toHaveAttribute("href", destination);
-    const opened = context.waitForEvent("page");
-    await action.click({ modifiers: ["Control"] });
-    const newTab = await opened;
+    await action.evaluate(element => {
+      globalThis.__guideClick = null;
+      element.addEventListener('click', event => {
+        const click = /** @type {MouseEvent} */ (event);
+        const state = { ctrl: click.ctrlKey, meta: click.metaKey, button: click.button, prevented: false };
+        globalThis.__guideClick = state;
+        globalThis.queueMicrotask(() => { state.prevented = event.defaultPrevented; });
+      });
+    });
+    let newTab;
+    try {
+      [newTab] = await Promise.all([
+        context.waitForEvent("page"),
+        action.click({ modifiers: ["Control"] }),
+      ]);
+    } catch (error) {
+      console.log('[guide-click]', JSON.stringify(await page.evaluate(() => ({
+        href: globalThis.location.href, click: globalThis.__guideClick,
+        active: globalThis.document.activeElement?.outerHTML,
+      }))));
+      throw error;
+    }
     await waitForAppReady(newTab);
     await expect(newTab.locator("#app")).toHaveAttribute("data-view", "templates");
     await expect.poll(() => new URL(newTab.url()).hash).toBe(destination);

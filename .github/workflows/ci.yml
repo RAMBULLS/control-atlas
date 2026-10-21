@@ -909,8 +909,8 @@ jobs:
           if [[ "$SWEEP_MODE" == 'reliability' && "$RELIABILITY_FOCUS" == 'acceptance' ]]; then
             focused=(tests/e2e/bootstrap-payload.spec.mjs tests/e2e/compare-pagination.spec.mjs
               tests/e2e/sources-inspector-state.spec.mjs tests/e2e/critical-path-matrix.spec.mjs
-              tests/e2e/epic12-phase3-information-architecture.spec.mjs
-              --grep 'first-paint fonts load|record text loads|large Compare results use|filters by publisher or issuer|keyboard focus reaches|record actions and global footer'
+              tests/e2e/epic12-phase3-information-architecture.spec.mjs tests/e2e/guide-compatibility.spec.mjs
+              --grep 'first-paint fonts load|record text loads|large Compare results use|filters by publisher or issuer|keyboard focus reaches|record actions and global footer|Resources keeps its identity|opens the chosen working file in a new tab'
               --repeat-each=3 --trace=retain-on-failure)
             npm run test:e2e:run -- "${focused[@]}" --shard=${{ matrix.shard }}/2 --retries=0 --global-timeout=600000 --reporter=blob,github,line
           elif [[ "$SWEEP_MODE" == 'reliability' && "$RELIABILITY_FOCUS" == 'atlas' ]]; then

@@ -327,11 +327,19 @@ test(`Resources keeps its identity and heading geometry at ${width}px until the 
     expect(directoryRequests, "the native masthead is usable before directory delivery starts").toEqual([]);
     releaseEntry();
     await expect(page.locator('[data-route-suspense-pending="true"]')).toHaveCount(1);
-    await expect(page.locator('[data-route-suspense-pending="true"]')).not.toBeVisible();
+    // Startup hides the unready workspace with opacity rather than inherited
+    // visibility; it must also stay outside keyboard interaction until ready.
+    const workspace = page.locator('#workspace');
+    await expect(workspace).toHaveCSS('opacity', '0');
+    await expect(workspace).toHaveAttribute('inert', '');
+    await workspace.focus();
+    await expect(workspace).not.toBeFocused();
     await page.clock.fastForward(16_000);
     await expect(page.locator("#root")).not.toHaveAttribute("data-route-hydrated", "true");
     releaseDirectory();
     await expect(page.locator("#root")).toHaveAttribute("data-route-hydrated", "true");
+    await expect(workspace).toHaveCSS('opacity', '1');
+    await expect(workspace).not.toHaveAttribute('inert', '');
     await expect(page.getByRole("heading", { name: "Resources", exact: true, level: 1 })).toHaveCount(1);
     await expect(shell).not.toHaveAttribute("role", "status");
     await expect(page.getByRole("searchbox", { name: "Find resources" })).toBeVisible();

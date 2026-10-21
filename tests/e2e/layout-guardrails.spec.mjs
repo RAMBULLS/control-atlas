@@ -80,9 +80,14 @@ for (const route of UI_REVIEW_ROUTES) {
     await open(page, route.path);
 
     // The route names itself, in the first screen.
-    const heading = route.id === "resources"
-      ? page.getByRole("heading", { name: "Resources", level: 1 })
-      : page.locator("main h1").first();
+    // Atlas can replace its loading h1 after the shell becomes interactive.
+    // Measure the destination heading, not a placeholder being unmounted.
+    const atlasRoute = route.id === "start-here-bookmark" || route.id === "atlas-overview";
+    const heading = atlasRoute
+      ? page.getByRole("heading", { name: "Atlas", level: 1, exact: true })
+      : route.id === "resources"
+        ? page.getByRole("heading", { name: "Resources", level: 1 })
+        : page.locator("main h1").first();
     await expect(heading, `${route.id} renders no visible route heading`).toBeVisible();
     if (route.id === "resources") {
       await expect(heading).toHaveCount(1);

@@ -2079,6 +2079,10 @@ details > summary {
 }
 
 @media (max-width: 640px) {
+  /* The former brand anchor inherited the 44px touch minimum above. Keep that
+     same layout minimum now that the full-size link is inside the container. */
+  .brand { min-height: 44px; }
+
   .ca-page,
   .app-shell,
   #workspace {

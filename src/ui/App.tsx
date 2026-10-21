@@ -752,6 +752,7 @@ export function App() {
       <main
         aria-labelledby={viewState.view === "commons" && document.getElementById("root")?.dataset.staticRouteKind === "resources" ? "static-route-title" : undefined}
         id="workspace"
+        inert={document.getElementById("root")?.dataset.staticRouteActive === "true" && document.getElementById("root")?.dataset.routeHydrated !== "true"}
         tabIndex={-1}
       >
         {routeRecovery ? (

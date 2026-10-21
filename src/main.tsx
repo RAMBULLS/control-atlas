@@ -163,6 +163,8 @@ function observeRouteHydration() {
     }
     rootElement.dataset.routeHydrated = 'true';
     delete rootElement.dataset.staticRouteActive;
+    const workspace = reactRootElement.querySelector<HTMLElement>('#workspace');
+    if (workspace && workspace.dataset.routeTransitionInert !== 'true') workspace.inert = false;
     const shell = rootElement.querySelector<HTMLElement>('[data-static-route]');
     if (rootElement.dataset.staticRouteKind === 'resources') {
       rootElement.dataset.staticRoutePersistent = 'resources';

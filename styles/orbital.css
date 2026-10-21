@@ -222,7 +222,10 @@ body {
 #root[data-static-route-active="true"] [data-react-root] #workspace {
   min-height: calc(100svh - var(--ca-header-height, 68px));
   position: relative;
-  visibility: hidden;
+  /* Do not inherit hidden visibility into lazy route descendants: WebKit can
+     retain that computed value after the parent is revealed. The workspace is
+     inert until the first-paint shell hands ownership to React. */
+  opacity: 0;
   z-index: 1;
 }
 
@@ -230,13 +233,13 @@ body {
   [data-react-root]
   #workspace {
   background: var(--ca-bg);
-  visibility: visible;
+  opacity: 1;
 }
 
 /* On hydration, React fully owns the route masthead and workspace geometry. */
 #root[data-route-hydrated="true"] > [data-react-root] #workspace {
   min-height: 0;
-  visibility: visible;
+  opacity: 1;
 }
 
 /* Resources keeps its real first-paint masthead, as Library does. The directory
@@ -328,10 +331,8 @@ body {
   margin-bottom: 0;
 }
 
-.site-footer {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 560px;
-}
+/* Keep footer links laid out. WebKit can leave their boxes at zero size after
+   scrolling a content-visibility:auto footer into view. */
 
 [data-static-search-status] {
   min-block-size: calc(3.4em + 24px);

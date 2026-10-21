@@ -48,11 +48,17 @@ for (const [guide, template, title] of [
       globalThis.__guideClick = null;
       element.addEventListener('click', event => {
         const click = /** @type {MouseEvent} */ (event);
-        const state = { ctrl: click.ctrlKey, meta: click.metaKey, button: click.button, prevented: false };
+        const state = { ctrl: click.ctrlKey, meta: click.metaKey, button: click.button,
+          focused: globalThis.document.hasFocus(), visibility: globalThis.document.visibilityState,
+          trusted: click.isTrusted, prevented: false };
         globalThis.__guideClick = state;
-        globalThis.queueMicrotask(() => { state.prevented = event.defaultPrevented; });
+        // Read after bubbling through React's delegated handler, not between listeners.
+        globalThis.setTimeout(() => { state.prevented = event.defaultPrevented; }, 0);
       });
     });
+    // Modified native navigation operates on the tab the user is interacting with.
+    await page.bringToFront();
+    await expect.poll(() => page.evaluate(() => globalThis.document.hasFocus())).toBe(true);
     let newTab;
     try {
       [newTab] = await Promise.all([

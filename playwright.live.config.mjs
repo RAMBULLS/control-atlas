@@ -13,6 +13,10 @@ export default defineConfig({
   workers: 1,
   use: {
     baseURL,
+    // Keep live acceptance on the same full Chromium mode as the local suite.
+    ...((process.env.PLAYWRIGHT_BROWSER || 'chromium') === 'chromium'
+      ? { channel: 'chromium' }
+      : {}),
     // Persist first-failure evidence for each bounded route group. This is
     // intentionally configured, not proof that a live run has occurred.
     screenshot: "only-on-failure",

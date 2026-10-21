@@ -172,9 +172,13 @@ for (const width of [375, 1440]) {
     const hardware = page.locator('.intent-grid a[href*="/hardware_baseline"]');
     const original = page.url();
     const destination = await hardware.getAttribute("href");
-    const opened = context.waitForEvent("page");
-    await hardware.click({ modifiers: ["Control"] });
-    const newTab = await opened;
+    await page.bringToFront();
+    await expect.poll(() => page.evaluate(() => globalThis.document.hasFocus())).toBe(true);
+    const [newTab] = await Promise.all([
+      context.waitForEvent("page"),
+      hardware.click({ modifiers: ["Control"] }),
+    ]);
+    await newTab.bringToFront();
     await expect(newTab.locator("#app")).toHaveAttribute("data-view", "templates");
     await waitForAppReady(newTab);
     await expect.poll(() => new URL(newTab.url()).hash).toBe(destination);

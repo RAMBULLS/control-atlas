@@ -41,6 +41,9 @@ export default defineConfig({
   },
   use: {
     baseURL,
+    // Full Chromium uses the real browser's headless mode. Headless shell has
+    // a native modified-click regression: microsoft/playwright#42142.
+    ...(browserName === 'chromium' ? { channel: 'chromium' } : {}),
     actionTimeout: process.env.CI ? 15000 : 0,
     navigationTimeout: process.env.CI ? 30000 : 0,
     trace: 'on-first-retry',

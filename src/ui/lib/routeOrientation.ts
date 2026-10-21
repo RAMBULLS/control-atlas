@@ -40,17 +40,18 @@ export function scrollToTop(): void {
   window.scrollTo({ top: 0, behavior: "auto" });
 }
 
-export function focusRouteHeading(): number {
-  return window.requestAnimationFrame(() => {
-    const heading = [...document.querySelectorAll<HTMLElement>(
-      "#workspace h1, [data-static-route]:not([hidden]) h1, [data-static-search] h1",
-    )].find(element => element.getClientRects().length > 0 &&
-      window.getComputedStyle(element).visibility !== "hidden");
-    if (heading) {
-      if (!heading.hasAttribute("tabindex")) heading.tabIndex = -1;
-      heading.focus({ preventScroll: true });
-    } else {
-      document.getElementById("workspace")?.focus({ preventScroll: true });
-    }
-  });
+export function focusRouteHeading(): void {
+  // App calls this after its two-frame route commit, immediately after removing
+  // inert. Finish focus in that same turn: another frame can steal focus from a
+  // user who has already moved to the search button on the interactive page.
+  const heading = [...document.querySelectorAll<HTMLElement>(
+    "#workspace h1, [data-static-route]:not([hidden]) h1, [data-static-search] h1",
+  )].find(element => element.getClientRects().length > 0 &&
+    window.getComputedStyle(element).visibility !== "hidden");
+  if (heading) {
+    if (!heading.hasAttribute("tabindex")) heading.tabIndex = -1;
+    heading.focus({ preventScroll: true });
+  } else {
+    document.getElementById("workspace")?.focus({ preventScroll: true });
+  }
 }

@@ -5,6 +5,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { verifyDependencyPatches } from './dependency-patches.mjs';
+import { verifyLhciYamlPatch } from './lhci-yaml-patch.mjs';
 
 const severityRank = new Map([
   ['info', 0],
@@ -77,6 +78,7 @@ function reportFailures(result) {
 
 function main() {
   verifyDependencyPatches();
+  verifyLhciYamlPatch();
   const config = JSON.parse(readFileSync(new URL('../../security/npm-audit-exceptions.json', import.meta.url), 'utf8'));
   const threshold = config.threshold || 'high';
   const npmExecPath = process.env.npm_execpath;

@@ -459,6 +459,16 @@ manifest, lockfile and security tooling together and leave release blocked on
 the restored advisories. Never remove only the integrity check. Retain the
 security regression tests when adopting an upstream fix.
 
+`@lhci/utils` 0.15.1 uses an explicit `js-yaml` 4.3.2 override to remove
+`argparse` 1 and its vulnerable `sprintf-js` dependency (GHSA-hp3w-g68c-fv3c).
+Its configuration loader receives one compatibility change, `safeLoad` to
+`load`, whose default schema remains safe. The exact upstream and patched bytes
+are enforced by `scripts/security/lhci-yaml-patch.mjs` during the same postinstall
+and audit gates. Configuration regressions cover YAML, JSON, JavaScript, unsafe
+tags and malformed YAML. Remove this patch when an upstream LHCI release supports
+the upgraded parser and passes those regressions. Roll back the override and
+patch together; reintroducing `sprintf-js` leaves the security issue unresolved.
+
 ### Recover a validated refresh PR
 
 If a refresh passes ingestion, repository verification and SBOM generation but

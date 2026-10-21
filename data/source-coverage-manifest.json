@@ -1,6 +1,6 @@
 {
   "schema_version": "4.0",
-  "generated_at": "2026-10-20T06:00:23.596Z",
+  "generated_at": "2026-10-21T13:03:09.932Z",
   "completeness": {
     "total_publications": 103,
     "total_artifacts": 98,
@@ -60,7 +60,7 @@
         "direct_file_import",
         "extracted_from_official_publication"
       ],
-      "last_refresh": "2026-10-20",
+      "last_refresh": "2026-10-21",
       "has_shard": true
     },
     {
@@ -83,7 +83,7 @@
       "methods": [
         "extracted_from_official_publication"
       ],
-      "last_refresh": "2026-10-20",
+      "last_refresh": "2026-10-21",
       "has_shard": true
     },
     {
@@ -106,7 +106,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-20",
+      "last_refresh": "2026-10-21",
       "has_shard": true
     },
     {
@@ -129,7 +129,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-20",
+      "last_refresh": "2026-10-21",
       "has_shard": true
     },
     {
@@ -152,7 +152,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-20",
+      "last_refresh": "2026-10-21",
       "has_shard": true
     },
     {
@@ -175,7 +175,7 @@
       "methods": [
         "extracted_from_official_publication"
       ],
-      "last_refresh": "2026-10-20",
+      "last_refresh": "2026-10-21",
       "has_shard": true
     },
     {
@@ -221,7 +221,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-20",
+      "last_refresh": "2026-10-21",
       "has_shard": true
     },
     {
@@ -336,7 +336,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-20",
+      "last_refresh": "2026-10-21",
       "has_shard": true
     },
     {
@@ -359,7 +359,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-20",
+      "last_refresh": "2026-10-21",
       "has_shard": true
     },
     {
@@ -382,7 +382,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-20",
+      "last_refresh": "2026-10-21",
       "has_shard": true
     },
     {
@@ -498,7 +498,7 @@
         "extracted_from_official_publication",
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-20",
+      "last_refresh": "2026-10-21",
       "has_shard": true
     },
     {
@@ -544,7 +544,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-20",
+      "last_refresh": "2026-10-21",
       "has_shard": true
     },
     {

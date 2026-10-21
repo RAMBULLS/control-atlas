@@ -66,6 +66,9 @@ for (const [guide, template, title] of [
       }))));
       throw error;
     }
+    // Control-click opens a background tab. Switch to it before exercising the
+    // document: browsers can defer animation-frame work while it is hidden.
+    await newTab.bringToFront();
     await waitForAppReady(newTab);
     await expect(newTab.locator("#app")).toHaveAttribute("data-view", "templates");
     await expect.poll(() => new URL(newTab.url()).hash).toBe(destination);

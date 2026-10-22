@@ -257,6 +257,46 @@ red, so a sweep that did not run cannot look green. Jobs are never marked
 
 Do the least work that keeps the trust: stop as soon as the answer is known.
 
+### Release incidents and bounded repair
+
+The existing refresh supervisor also observes completed main CI, Security, and
+Deploy runs. `tools/report-release-health.mjs` keeps separate persistent issues
+under `release-red-ci`, `release-red-security`, and `release-red-deploy`. It reads
+the source run back from GitHub and accepts only the latest run attempt for the
+current main commit. Pull-request runs, superseded results, and a deployment
+skipped because its upstream CI failed cannot clear a live incident. An actual
+successful recovery closes that control's issue. Reporting errors fail the job.
+
+Hosted-runner verification allows at most three inventory reads, separated by
+one and two seconds, when GitHub has not yet listed the executing runner. The
+same runner, group, commit, active job, image and runtime checks still apply.
+Conflicting identities, completed jobs, and ambiguous matches fail immediately;
+there is no automatic test relaxation or whole-workflow retry loop.
+
+The existing RAM.BULLS Weekly Operating Review owns the weekly exception check
+and practical repairs for Control Atlas. Its Sunday 09:00 America/New_York run
+checks current main CI, the deployed SHA, source/sweep/release incidents, and
+actionable dependency/security changes before starting any work. Reuse passing
+evidence and check other active writers first. A clear, reversible correction
+may proceed through a feature branch, focused proof, required hosted gates,
+protected PR merge and exact-SHA live verification under Bryant's maintenance
+authorization. Record the original failure, correction and result in the same
+incident or PR. Routine implementation choices do not need founder approval.
+
+Keep one repair candidate at a time, within current shared resource limits.
+Use the existing CI dispatch with `task=precommit` for the required final
+integration gate. It runs `npm run precommit` and artifact verification without
+starting the separate exhaustive nightly matrix. Scheduled deep sweeps and all
+normal PR, main, security and deployment gates keep their existing coverage.
+After two unsupported hypotheses, investigate a different cause rather than
+repeating broad runs. Changes to product purpose, data meaning, security policy,
+credentials, paid capacity, destructive recovery, or required quality budgets
+need an actual owner decision. Other projects' pauses remain binding. If a fix
+needs more engineering but no founder decision, retain the actionable incident
+and next check; do not manufacture an approval blocker. Weekly agent execution
+requires its configured local host and app to be available. GitHub's scheduled
+source and security jobs remain independent of that local agent.
+
 | Trigger | Check or fetch | Validation | Rebuild scope | Test scope | Deploy |
 |---|---|---|---|---|---|
 | Wednesday refresh, nothing changed | Conditional GET per source (304 when unchanged) | Baseline band, identity and inventory rules | None. `tools/classify-refresh-outcome.mjs` restores the tree | None | No PR, no deploy |

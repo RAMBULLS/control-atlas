@@ -78,7 +78,7 @@ test('hosted acceptance requires current GitHub job and runner readback', async 
   for (const jobs of [[], [{ ...job, runner_name: 'other' }], [{ ...job, status: 'completed' }],
     [{ ...job, runner_group_name: 'self-hosted' }], [{ ...job, head_sha: 'b'.repeat(40) }], [job, job]]) {
     await assert.rejects(verifyRemoteHostedRunner(hosted, {
-      request: async () => ({ ok: true, json: async () => ({ jobs }) }),
+      request: async () => ({ ok: true, json: async () => ({ jobs }) }), sleep: async () => {},
     }), /absent or ambiguous/);
   }
   await assert.rejects(verifyRemoteHostedRunner(hosted, {
@@ -93,6 +93,40 @@ test('fresh checkout is bound to the exact workflow SHA', () => {
   assert.throws(() => verifyHostedCheckout({ ...options, env: {} }), /GitHub-hosted/);
 });
 
+test('hosted runner readback recovers a delayed inventory without admitting unverified work', async () => {
+  const job = { id: 123, runner_name: hosted.RUNNER_NAME, runner_group_name: 'GitHub Actions',
+    status: 'in_progress', labels: ['windows-latest'], head_sha: sha };
+  let calls = 0;
+  const waits = [];
+  const result = await verifyRemoteHostedRunner(hosted, {
+    request: async () => ({ ok: true, json: async () => ({ jobs: ++calls === 3 ? [job] : [] }) }),
+    sleep: async (ms) => { waits.push(ms); },
+  });
+  assert.equal(result.id, job.id);
+  assert.equal(calls, 3);
+  assert.deepEqual(waits, [1000, 2000]);
+});
+
+test('hosted runner readback stops after three missing inventories and rejects ambiguous identity immediately', async () => {
+  let calls = 0;
+  await assert.rejects(verifyRemoteHostedRunner(hosted, {
+    request: async () => { calls += 1; return { ok: true, json: async () => ({ jobs: [] }) }; },
+    sleep: async () => {},
+  }), /absent or ambiguous/);
+  assert.equal(calls, 3);
+  const job = { id: 123, runner_name: hosted.RUNNER_NAME, runner_group_name: 'GitHub Actions',
+    status: 'in_progress', labels: ['ubuntu-latest'], head_sha: sha };
+  for (const jobs of [[job, job], [{ ...job, status: 'completed' }],
+    [{ ...job, head_sha: 'b'.repeat(40) }], [{ ...job, runner_group_name: 'self-hosted' }]]) {
+    let attempts = 0;
+    await assert.rejects(verifyRemoteHostedRunner(hosted, {
+      request: async () => { attempts += 1; return { ok: true, json: async () => ({ jobs }) }; },
+      sleep: async () => { assert.fail('An invalid identity must not be retried'); },
+    }), /absent or ambiguous/);
+    assert.equal(attempts, 1);
+  }
+});
+
 test('source hygiene keeps local main denied and admits ordinary task branches', async () => {
   await verifySourceBranch('chore/hosted-main-hygiene', { env: {} });
   await assert.rejects(verifySourceBranch('main', { ...options, env: {} }), /GitHub-hosted/);
@@ -105,7 +139,7 @@ test('source hygiene admits main only with exact hosted checkout and current job
   const job = { id: 123, runner_name: hosted.RUNNER_NAME, runner_group_name: 'GitHub Actions',
     status: 'in_progress', labels: ['ubuntu-latest'], head_sha: sha };
   const context = { ...options, env: hosted, git: () => sha,
-    request: async () => ({ ok: true, json: async () => ({ jobs: [job] }) }) };
+    request: async () => ({ ok: true, json: async () => ({ jobs: [job] }) }), sleep: async () => {} };
   await verifySourceBranch('main', context);
   await assert.rejects(verifySourceBranch('main', { ...context, git: () => 'b'.repeat(40) }), /does not match/);
   await assert.rejects(verifySourceBranch('main', { ...context,

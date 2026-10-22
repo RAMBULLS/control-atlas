@@ -17,7 +17,7 @@ on:
         required: true
         default: standard
         type: choice
-        options: [standard, nightly, refresh, recover-refresh-pr, oscal, lighthouse-ab]
+        options: [standard, precommit, nightly, refresh, recover-refresh-pr, oscal, lighthouse-ab]
       sweep_mode:
         description: Full acceptance or a focused reliability diagnostic
         required: false
@@ -825,12 +825,12 @@ jobs:
         run: node tools/sweep-due.mjs
 
   nightly-build:
-    name: ${{ inputs.sweep_mode == 'reliability' && 'Focused browser diagnostic build' || 'Nightly build and contracts' }}
+    name: ${{ inputs.task == 'precommit' && 'Final integration' || inputs.sweep_mode == 'reliability' && 'Focused browser diagnostic build' || 'Nightly build and contracts' }}
     needs: sweep-gate
     if: >-
       ${{ !cancelled() &&
           ((github.event.schedule == '37 6 * * 0' && needs.sweep-gate.outputs.nightly_due == 'true') ||
-           (github.event_name == 'workflow_dispatch' && inputs.task == 'nightly')) }}
+           (github.event_name == 'workflow_dispatch' && contains(fromJSON('["nightly","precommit"]'), inputs.task))) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -871,7 +871,7 @@ jobs:
     needs: nightly-build
     # Explicit: a skipped sweep-gate upstream of nightly-build would otherwise skip this job
     # silently, and a browser suite that did not run must never look like a pass.
-    if: ${{ !cancelled() && needs.nightly-build.result == 'success' }}
+    if: ${{ !cancelled() && inputs.task != 'precommit' && needs.nightly-build.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 35
     strategy:
@@ -937,7 +937,7 @@ jobs:
     needs: nightly-build
     # Explicit: a skipped sweep-gate upstream of nightly-build would otherwise skip this job
     # silently, and a browser suite that did not run must never look like a pass.
-    if: ${{ !cancelled() && inputs.sweep_mode != 'reliability' && needs.nightly-build.result == 'success' }}
+    if: ${{ !cancelled() && inputs.task != 'precommit' && inputs.sweep_mode != 'reliability' && needs.nightly-build.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

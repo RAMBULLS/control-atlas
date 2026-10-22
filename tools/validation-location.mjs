@@ -2,6 +2,7 @@ import { existsSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { dirname, posix, resolve, win32 } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { backoffDelayMs, realSleep } from '../scripts/lib/retry-policy.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -72,24 +73,35 @@ export async function verifyRemoteHostedRunner(env = process.env, options = {}) 
     if (JSON.stringify(saved.identity) === JSON.stringify(identity) && saved.verifiedAt > Date.now() - 60 * 60_000) return saved.job;
   }
   const endpoint = `https://api.github.com/repos/RAMBULLS/control-atlas/actions/runs/${identity.run}/attempts/${attempt}/jobs?per_page=100`;
-  const headers = { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+  const headers = { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'Cache-Control': 'no-cache' };
   if (env.ATLAS_RUNNER_TOKEN) headers.Authorization = `Bearer ${env.ATLAS_RUNNER_TOKEN}`;
-  let response = await request(endpoint, { headers, signal: AbortSignal.timeout(10_000) });
-  // Public repository readback remains available to jobs with narrower tokens.
-  if (response.status === 403 && headers.Authorization) {
-    delete headers.Authorization;
-    response = await request(endpoint, { headers, signal: AbortSignal.timeout(10_000) });
+  for (let readback = 1; readback <= 3; readback += 1) {
+    let response = await request(endpoint, { headers, signal: AbortSignal.timeout(10_000) });
+    // Public repository readback remains available to jobs with narrower tokens.
+    if (response.status === 403 && headers.Authorization) {
+      delete headers.Authorization;
+      response = await request(endpoint, { headers, signal: AbortSignal.timeout(10_000) });
+    }
+    if (!response.ok) throw new Error(`Hosted runner readback failed (${response.status}).`);
+    const inventory = await response.json();
+    if (!Array.isArray(inventory.jobs)) throw new Error('Hosted runner inventory is malformed.');
+    const matching = inventory.jobs.filter(job => job.runner_name === identity.runner);
+    const jobs = matching.filter(job =>
+      job.runner_group_name === 'GitHub Actions' && job.status === 'in_progress' &&
+      job.head_sha === identity.sha &&
+      job.labels?.some(label => /^(ubuntu|windows|macos)-/.test(label)));
+    if (matching.length === 1 && jobs.length === 1) {
+      const job = { id: jobs[0].id, sha: jobs[0].head_sha, runner: jobs[0].runner_name,
+        group: jobs[0].runner_group_name, labels: jobs[0].labels, readbacks: readback };
+      if (!options.request && cachePath) writeFileSync(cachePath, JSON.stringify({ identity, job, verifiedAt: Date.now() }));
+      return job;
+    }
+    // GitHub can publish the running job after execution starts. Only absence
+    // permits another read; contradictory or ambiguous identities never do.
+    if (matching.length !== 0 || readback === 3) break;
+    await (options.sleep ?? realSleep)(backoffDelayMs(readback));
   }
-  if (!response.ok) throw new Error(`Hosted runner readback failed (${response.status}).`);
-  const inventory = await response.json();
-  const jobs = inventory.jobs?.filter(job => job.runner_name === identity.runner &&
-    job.runner_group_name === 'GitHub Actions' && job.status === 'in_progress' &&
-    job.head_sha === identity.sha &&
-    job.labels?.some(label => /^(ubuntu|windows|macos)-/.test(label))) ?? [];
-  if (jobs.length !== 1) throw new Error('Current hosted runner is absent or ambiguous in GitHub job readback.');
-  const job = { id: jobs[0].id, sha: jobs[0].head_sha, runner: jobs[0].runner_name, group: jobs[0].runner_group_name, labels: jobs[0].labels };
-  if (!options.request && cachePath) writeFileSync(cachePath, JSON.stringify({ identity, job, verifiedAt: Date.now() }));
-  return job;
+  throw new Error('Current hosted runner is absent or ambiguous in GitHub job readback after bounded verification.');
 }
 
 export function verifyHostedCheckout(options = {}) {

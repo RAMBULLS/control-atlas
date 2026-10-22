@@ -24,6 +24,18 @@ export const SWEEPS = Object.freeze({
     label: 'sweep-red-history',
     jobs: [['history', 'Snapshot and complete-history secret scans']],
   },
+  'release-ci': {
+    label: 'release-red-ci', title: 'Control Atlas main CI is blocking deployment',
+    jobs: [['release', 'Main CI']],
+  },
+  'release-security': {
+    label: 'release-red-security', title: 'Control Atlas release security check is failing',
+    jobs: [['release', 'Release security checks']],
+  },
+  'release-deploy': {
+    label: 'release-red-deploy', title: 'Control Atlas production verification is failing',
+    jobs: [['release', 'Production deployment and verification']],
+  },
 });
 
 const DESCRIPTIONS = { failure: 'failed', cancelled: 'was cancelled', skipped: 'did not run', undefined: 'reported no result' };
@@ -41,7 +53,7 @@ const RUN_LINE = /\n?Run: \S+\n?/;
 
 export function sweepIssueBody(assessment, runUrl) {
   return [
-    'A scheduled Control Atlas sweep is red.',
+    assessment.label.startsWith('release-') ? 'A Control Atlas release check is red.' : 'A scheduled Control Atlas sweep is red.',
     '',
     ...assessment.failing.map((job) => `- ${job.name} ${job.text}.`),
     '',
@@ -59,7 +71,7 @@ export function planSweepAlert({ kind, results, issues = [], runUrl }) {
   const assessment = assessSweep(kind, results);
   const open = issues.filter((issue) => !issue.pull_request && issue.state === 'open')
     .sort((left, right) => left.number - right.number);
-  const title = `Scheduled Control Atlas job is failing: ${assessment.label}`;
+  const title = SWEEPS[kind].title ?? `Scheduled Control Atlas job is failing: ${assessment.label}`;
   if (!assessment.red) {
     return open.map((issue) => ({
       type: 'comment-close', number: issue.number,

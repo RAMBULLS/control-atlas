@@ -119,11 +119,12 @@ export function JourneyCard(props: {
           <ul className="atl-list">
             {publications.map((p) => {
               const pub = model.publicationById.get(p.id)!;
+              const alias = model.alias(p.id);
               return (
                 <li key={p.id}>
-                  <button aria-label={`${p.role}: ${pub.name}. Show it on the map.`} onClick={() => props.onPublication(p.id)} type="button">
+                  <button aria-label={`${p.role}: ${pub.name}${alias !== pub.name ? ` (${alias})` : ""} · ${pub.publisher}. Show it on the map.`} onClick={() => props.onPublication(p.id)} type="button">
                     <b>{p.role}</b>
-                    <small><span className="atl-journey__official">{pub.name}</span>{model.alias(p.id) !== pub.name ? ` (${model.alias(p.id)})` : ""} · {pub.publisher}</small>
+                    <small><span className="atl-journey__official">{pub.name}</span>{alias !== pub.name ? ` (${alias})` : ""} · {pub.publisher}</small>
                   </button>
                 </li>
               );

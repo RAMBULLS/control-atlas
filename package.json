@@ -368,7 +368,7 @@
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
     "eslint": "^10.5.0",
-    "fast-xml-parser": "^5.11.1",
+    "fast-xml-parser": "^5.11.2",
     "globals": "^17.7.0",
     "make-fetch-happen": "^16.0.1",
     "pdf-parse": "^2.4.5",

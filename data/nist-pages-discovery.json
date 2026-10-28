@@ -2,9 +2,9 @@
   "schema_version": "1.0",
   "source": {
     "url": "https://pages.nist.gov/pages-root/",
-    "retrieved_at": "2026-10-21T12:57:17.446Z",
+    "retrieved_at": "2026-10-28T15:40:43.319Z",
     "byte_length": 32648,
-    "sha256": "sha256:167353f8f0181062dc4063ccd7ab7c877b5dbe931c0294bec068dcb2c0b8b102"
+    "sha256": "sha256:ac4fd949369e227f50c1fbd8022df9935e0b3e93a7c10f1a4b28b244c37b940b"
   },
   "reconciliation": {
     "discovered_projects": 257,
@@ -726,7 +726,7 @@
     {
       "repo_name": "dioptra",
       "url": "https://pages.nist.gov/dioptra/",
-      "description": "Dioptra Overview — Dioptra 1.2.1 documentation",
+      "description": "Dioptra Overview — Dioptra 1.2.2 documentation",
       "disposition": "excluded",
       "topics": [],
       "reason": "no-cybersecurity-or-governance-title-signal"
@@ -1334,7 +1334,7 @@
     {
       "repo_name": "nccoe-ai-identity",
       "url": "https://pages.nist.gov/nccoe-ai-identity/",
-      "description": "Introduction — NCCoE Agentic AI Identity and Authorization Project Resource Hub  documentation",
+      "description": "Introduction — NCCoE Agentic SI Identity and Authorization Project Resource Hub  documentation",
       "disposition": "candidate",
       "topics": [
         "identity"

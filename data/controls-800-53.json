@@ -81917,7 +81917,7 @@
       "framework": "800-53",
       "title": "Logging Syntax",
       "family": "System and Services Acquisition",
-      "description": "Require the developer of the system or system component to minimize the use of personally identifiable information in development and test environments.",
+      "description": "Require the developer of the system, system component, or system service to use [Assignment: secure logging format(s)] to log [Assignment: events types to log] at [Assignment: level of detail to log].",
       "source": {
         "key": "nist-oscal"
       },
@@ -81937,7 +81937,7 @@
           "methods": [
             {
               "id": "sa-15.13_asm-examine",
-              "label": "SA-15(12)-Examine",
+              "label": "SA-15(13)-Examine",
               "method": "EXAMINE",
               "objects": [
                 "System and services acquisition policy;",
@@ -83943,7 +83943,9 @@
               "id": "sa-24_obj",
               "label": "SA-24",
               "prose": "Determine if:",
-              "statement_refs": []
+              "statement_refs": [
+                "sa-24_smt"
+              ]
             },
             {
               "id": "sa-24_obj.a.1",
@@ -83982,7 +83984,7 @@
               "label": "SA-24a.05",
               "prose": "organizational systems, system components, or system services achieve cyber resiliency through [Assignment: cyber resiliency design principles];",
               "statement_refs": [
-                "ac-2_smt.a.5"
+                "sa-24_smt.a.5"
               ]
             },
             {
@@ -83990,7 +83992,7 @@
               "label": "SA-24b.[01]",
               "prose": "selected cyber resiliency goals are implemented as part of an organizational risk management process of systems security engineering process;",
               "statement_refs": [
-                "ac-2_smt.b"
+                "sa-24_smt.b"
               ]
             },
             {
@@ -83998,7 +84000,7 @@
               "label": "SA-24b.[02]",
               "prose": "selected cyber resiliency objectives are implemented as part of an organizational risk management process of systems security engineering process;",
               "statement_refs": [
-                "ac-2_smt.b"
+                "sa-24_smt.b"
               ]
             },
             {
@@ -84006,7 +84008,7 @@
               "label": "SA-24b.[03]",
               "prose": "selected cyber resiliency techniques are implemented as part of an organizational risk management process of systems security engineering process;",
               "statement_refs": [
-                "ac-2_smt.b"
+                "sa-24_smt.b"
               ]
             },
             {
@@ -84014,7 +84016,7 @@
               "label": "SA-24b.[04]",
               "prose": "selected cyber resiliency implementation approaches are implemented as part of an organizational risk management process of systems security engineering process;",
               "statement_refs": [
-                "ac-2_smt.b"
+                "sa-24_smt.b"
               ]
             },
             {
@@ -84022,7 +84024,47 @@
               "label": "SA-24b.[05]",
               "prose": "selected cyber resiliency design principles are implemented as part of an organizational risk management process of systems security engineering process.",
               "statement_refs": [
-                "ac-2_smt.b"
+                "sa-24_smt.b"
+              ]
+            },
+            {
+              "id": "sa-24_obj.b-6",
+              "label": "SA-24b.[06]",
+              "prose": "selected cyber resiliency goals are reviewed as part of an organizational risk management process of systems security engineering process;",
+              "statement_refs": [
+                "sa-24_smt.b"
+              ]
+            },
+            {
+              "id": "sa-24_obj.b-7",
+              "label": "SA-24b.[07]",
+              "prose": "selected cyber resiliency objectives are reviewed as part of an organizational risk management process of systems security engineering process;",
+              "statement_refs": [
+                "sa-24_smt.b"
+              ]
+            },
+            {
+              "id": "sa-24_obj.b-8",
+              "label": "SA-24b.[08]",
+              "prose": "selected cyber resiliency techniques are reviewed as part of an organizational risk management process of systems security engineering process;",
+              "statement_refs": [
+                "sa-24_smt.b"
+              ]
+            },
+            {
+              "id": "sa-24_obj.b-9",
+              "label": "SA-24b.[09]",
+              "prose": "selected cyber resiliency implementation approaches are reviewed as part of an organizational risk management process of systems security engineering process;",
+              "statement_refs": [
+                "sa-24_smt.b"
+              ]
+            },
+            {
+              "id": "sa-24_obj.b-10",
+              "label": "SA-24b.[10]",
+              "prose": "selected cyber resiliency design principles are reviewed as part of an organizational risk management process of systems security engineering process.",
+              "statement_refs": [
+                "sa-24_smt.b"
               ]
             }
           ],
@@ -84089,7 +84131,7 @@
               "mechanisms supporting the application of cyber resiliency principles in system specification, design, development, implementation, and modification."
             ]
           ],
-          "procedure_text": "Determine if: organizational systems, system components, or system services achieve cyber resiliency through [Assignment: cyber resiliency goals]; organizational systems, system components, or system services achieve cyber resiliency through [Assignment: cyber resiliency objectives]; organizational systems, system components, or system services achieve cyber resiliency through [Assignment: cyber resiliency techniques]; organizational systems, system components, or system services achieve cyber resiliency through [Assignment: cyber resiliency implementation approaches]; organizational systems, system components, or system services achieve cyber resiliency through [Assignment: cyber resiliency design principles]; selected cyber resiliency goals are implemented as part of an organizational risk management process of systems security engineering process; selected cyber resiliency objectives are implemented as part of an organizational risk management process of systems security engineering process; selected cyber resiliency techniques are implemented as part of an organizational risk management process of systems security engineering process; selected cyber resiliency implementation approaches are implemented as part of an organizational risk management process of systems security engineering process; selected cyber resiliency design principles are implemented as part of an organizational risk management process of systems security engineering process."
+          "procedure_text": "Determine if: organizational systems, system components, or system services achieve cyber resiliency through [Assignment: cyber resiliency goals]; organizational systems, system components, or system services achieve cyber resiliency through [Assignment: cyber resiliency objectives]; organizational systems, system components, or system services achieve cyber resiliency through [Assignment: cyber resiliency techniques]; organizational systems, system components, or system services achieve cyber resiliency through [Assignment: cyber resiliency implementation approaches]; organizational systems, system components, or system services achieve cyber resiliency through [Assignment: cyber resiliency design principles]; selected cyber resiliency goals are implemented as part of an organizational risk management process of systems security engineering process; selected cyber resiliency objectives are implemented as part of an organizational risk management process of systems security engineering process; selected cyber resiliency techniques are implemented as part of an organizational risk management process of systems security engineering process; selected cyber resiliency implementation approaches are implemented as part of an organizational risk management process of systems security engineering process; selected cyber resiliency design principles are implemented as part of an organizational risk management process of systems security engineering process. selected cyber resiliency goals are reviewed as part of an organizational risk management process of systems security engineering process; selected cyber resiliency objectives are reviewed as part of an organizational risk management process of systems security engineering process; selected cyber resiliency techniques are reviewed as part of an organizational risk management process of systems security engineering process; selected cyber resiliency implementation approaches are reviewed as part of an organizational risk management process of systems security engineering process; selected cyber resiliency design principles are reviewed as part of an organizational risk management process of systems security engineering process."
         },
         "discussion": "Cyber resiliency is critical to ensuring the survivability of mission critical systems and high value assets. Cyber resiliency focuses on limiting the damage from adversity or the conditions that can cause a loss of assets. Damage can affect: (1) organizations (e.g., loss of reputation, increased existential risk); (2) missions or business functions (e.g., decreased capability to complete current missions and to accomplish future missions); (3) security (e.g., decreased capability to achieve security objectives or to prevent, detect, and respond to cyber incidents); (4) systems (e.g., unauthorized use of system resources or decreased capability to meet system requirements); or (5) specific system elements (e.g., physical destruction; corruption, modification, or fabrication of information). Cyber resiliency goals are intended to help organizations maintain a state of informed preparedness for adversity, continue essential mission or business functions despite adversity, restore mission or business functions during and after adversity, and modify mission or business functions and their supporting capabilities in response to predicted changes in technical, operational, or threat environments. NIST SP 800-160, Volume 2 provides additional information on the Cyber Resiliency Engineering Framework to include detailed descriptions of cyber resiliency goals, objectives, techniques, implementation approaches, and design principles. NIST SP 800-160, Vol 1 provides additional information on achieving cyber resiliency as an emergent property of an engineered system.",
         "related_controls": [
@@ -98916,7 +98958,7 @@
             },
             {
               "id": "si-2.7_obj.c-1",
-              "label": "si-2.7_obj.c-1",
+              "label": "SI-02(07)c.[01]",
               "prose": "The actions (defined in [SI-02(07)b.](#si-2.7_smt.b)) are implemented",
               "statement_refs": [
                 "si-2.7_smt.c"
@@ -98924,7 +98966,7 @@
             },
             {
               "id": "si-2.7_obj.c-2",
-              "label": "si-2.7_obj.c-2",
+              "label": "SI-02(07)c.[02]",
               "prose": "The implementation of actions is monitored for effectiveness.",
               "statement_refs": [
                 "si-2.7_smt.c"
@@ -112791,8 +112833,8 @@
     "raw_identity_sha256": "sha256:a973d699659cb32d5c0a1fedb064bbf090c51cc1f7246504b6ceced722d48cda",
     "imported_identity_sha256": "sha256:5e9d025c17130380a1d39bcd20340e536b6eb4e98da71331575ad62e2cd84e5e",
     "source_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json",
-    "source_sha256": "sha256:01f37cf90ea99d92242c936cbfbdebcc338eef1f71454e2acac36cc56e9bc062",
-    "source_byte_length": 10442037,
+    "source_sha256": "sha256:64ca6b4161de51ab6af098a7d101d326f14c95e1abf721396cd8a049e8115eeb",
+    "source_byte_length": 10448237,
     "publisher_version": "5.2.0"
   }
 }

@@ -1,57 +1,57 @@
 {
   "schema_version": "1.0",
-  "retrieved_at": "2026-10-21T12:57:27.807Z",
+  "retrieved_at": "2026-10-28T15:40:52.798Z",
   "discovery": {
-    "url": "https://api.github.com/repos/usnistgov/oscal-content/contents/nist.gov/SP800-53/rev5/json?ref=78650f02ad9321bb7b817846f8fbd4f2bcd620de",
-    "sha256": "sha256:de8815994cf0e67349ae204fa8f85ca8ddf3b1e4e66af424fe11f8eedca5873d",
+    "url": "https://api.github.com/repos/usnistgov/oscal-content/contents/nist.gov/SP800-53/rev5/json?ref=f0de6d8d8c059d374f15e0ae07508d82e370fc1d",
+    "sha256": "sha256:179062a0479005134aa8802f486c03f047c4986fe3b2f6ad289a7e51ef6671a3",
     "byte_length": 26013,
-    "publisher_commit": "78650f02ad9321bb7b817846f8fbd4f2bcd620de",
+    "publisher_commit": "f0de6d8d8c059d374f15e0ae07508d82e370fc1d",
     "revision_discovery": {
       "url": "https://api.github.com/repos/usnistgov/oscal-content/commits/main",
-      "sha256": "sha256:f607904045a1d1afe0f8e92568222b5232d014aff12288d888526ba17d0c62ef",
-      "byte_length": 881856
+      "sha256": "sha256:c1f85c19e219709679a7840ba281cbd4f44b23009c48590cea72c08ecfc62c0e",
+      "byte_length": 255153
     },
     "catalog": {
-      "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json",
-      "git_blob_sha": "8ebe3c91181cc078d40e39bcf34ea233e652d025"
+      "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/f0de6d8d8c059d374f15e0ae07508d82e370fc1d/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json",
+      "git_blob_sha": "55eb9f2506cab43e051eeac6b48496246afcfd2c"
     },
     "profiles": [
       {
         "name": "NIST_SP-800-53_rev5_HIGH-baseline_profile.json",
-        "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_HIGH-baseline_profile.json",
-        "git_blob_sha": "05cbae1c0276f4fdff1f18cb3e521b13ac3ff9ea"
+        "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/f0de6d8d8c059d374f15e0ae07508d82e370fc1d/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_HIGH-baseline_profile.json",
+        "git_blob_sha": "9e275cbcc1e97e0ad52cb3dbd3cf668d653b409f"
       },
       {
         "name": "NIST_SP-800-53_rev5_LOW-baseline_profile.json",
-        "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_LOW-baseline_profile.json",
-        "git_blob_sha": "fe2ee0d4a982945479d1c2c61737302c35cfbec8"
+        "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/f0de6d8d8c059d374f15e0ae07508d82e370fc1d/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_LOW-baseline_profile.json",
+        "git_blob_sha": "84edda2906a0edcb5e180034119e0501fc57691e"
       },
       {
         "name": "NIST_SP-800-53_rev5_MODERATE-baseline_profile.json",
-        "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json",
-        "git_blob_sha": "a5da8cff72abe52b819b69dbe225ad7c4d780c8e"
+        "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/f0de6d8d8c059d374f15e0ae07508d82e370fc1d/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json",
+        "git_blob_sha": "f0d1a6ecffa9b033480563a1f46bbac3f4ec7c41"
       },
       {
         "name": "NIST_SP-800-53_rev5_PRIVACY-baseline_profile.json",
-        "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_PRIVACY-baseline_profile.json",
-        "git_blob_sha": "85025c21e392ab4d67ad4b4490bbff6871811945"
+        "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/f0de6d8d8c059d374f15e0ae07508d82e370fc1d/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_PRIVACY-baseline_profile.json",
+        "git_blob_sha": "63c6ee354dbb2ddf17da03a3d186de26b9fabc2a"
       }
     ]
   },
   "catalog": {
-    "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json",
-    "sha256": "sha256:01f37cf90ea99d92242c936cbfbdebcc338eef1f71454e2acac36cc56e9bc062",
-    "byte_length": 10442037,
-    "git_blob_sha": "8ebe3c91181cc078d40e39bcf34ea233e652d025",
+    "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/f0de6d8d8c059d374f15e0ae07508d82e370fc1d/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json",
+    "sha256": "sha256:64ca6b4161de51ab6af098a7d101d326f14c95e1abf721396cd8a049e8115eeb",
+    "byte_length": 10448237,
+    "git_blob_sha": "55eb9f2506cab43e051eeac6b48496246afcfd2c",
     "publisher_version": "5.2.0",
     "retrieved_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json"
   },
   "profiles": [
     {
-      "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_LOW-baseline_profile.json",
-      "sha256": "sha256:8fd206017c8d718b44bdef612c2ff321a9fd84d97a515c8ec33c4619accbef6e",
+      "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/f0de6d8d8c059d374f15e0ae07508d82e370fc1d/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_LOW-baseline_profile.json",
+      "sha256": "sha256:cfd4f5d9a192eb42dc04b745d82f95a85926a2a85a45418034a380a42bda9424",
       "byte_length": 7234,
-      "git_blob_sha": "fe2ee0d4a982945479d1c2c61737302c35cfbec8",
+      "git_blob_sha": "84edda2906a0edcb5e180034119e0501fc57691e",
       "label": "Electronic (OSCAL) Version of NIST Special Publication 800-53 Revision 5.2.0 LOW IMPACT BASELINE",
       "control_ids": [
         "AC-1",
@@ -205,10 +205,10 @@
         "SR-8"
       ],
       "import_urls": [
-        "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json"
+        "https://raw.githubusercontent.com/usnistgov/oscal-content/f0de6d8d8c059d374f15e0ae07508d82e370fc1d/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json"
       ],
       "publisher_version": "5.2.0",
-      "publisher_last_modified": "2026-05-11T16:10:16.00000-00:00",
+      "publisher_last_modified": "2026-10-22T11:30:00.00000-00:00",
       "reconciliation": {
         "discovered": 149,
         "ingested": 149,
@@ -217,10 +217,10 @@
       }
     },
     {
-      "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json",
-      "sha256": "sha256:9030dbf1f13169947eb97eb101b4bd2f00d3c151b100455a923ac75803f00ea1",
+      "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/f0de6d8d8c059d374f15e0ae07508d82e370fc1d/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json",
+      "sha256": "sha256:e3a0f11237cfaac24dfcf1586e07683f17423757fd84208deb33196b12e8f590",
       "byte_length": 10498,
-      "git_blob_sha": "a5da8cff72abe52b819b69dbe225ad7c4d780c8e",
+      "git_blob_sha": "f0d1a6ecffa9b033480563a1f46bbac3f4ec7c41",
       "label": "Electronic (OSCAL) Version of NIST Special Publication 800-53 Revision 5.2.0 MODERATE IMPACT BASELINE",
       "control_ids": [
         "AC-1",
@@ -512,10 +512,10 @@
         "SR-8"
       ],
       "import_urls": [
-        "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json"
+        "https://raw.githubusercontent.com/usnistgov/oscal-content/f0de6d8d8c059d374f15e0ae07508d82e370fc1d/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json"
       ],
       "publisher_version": "5.2.0",
-      "publisher_last_modified": "2026-05-11T16:10:16.00000-00:00",
+      "publisher_last_modified": "2026-10-22T11:30:00.00000-00:00",
       "reconciliation": {
         "discovered": 287,
         "ingested": 287,
@@ -524,10 +524,10 @@
       }
     },
     {
-      "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_HIGH-baseline_profile.json",
-      "sha256": "sha256:60576970caef91b2cba56d46e5948b72e3b879434fc2a4840bc4179e5e75cfd7",
+      "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/f0de6d8d8c059d374f15e0ae07508d82e370fc1d/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_HIGH-baseline_profile.json",
+      "sha256": "sha256:d2ef340986b9f1ee820ad866a0f964d9a9d1088b24080c74b795ddb0148b9f83",
       "byte_length": 12492,
-      "git_blob_sha": "05cbae1c0276f4fdff1f18cb3e521b13ac3ff9ea",
+      "git_blob_sha": "9e275cbcc1e97e0ad52cb3dbd3cf668d653b409f",
       "label": "Electronic (OSCAL) Version of NIST Special Publication 800-53 Revision 5.1.1 HIGH IMPACT BASELINE",
       "control_ids": [
         "AC-1",
@@ -902,10 +902,10 @@
         "SR-9.1"
       ],
       "import_urls": [
-        "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json"
+        "https://raw.githubusercontent.com/usnistgov/oscal-content/f0de6d8d8c059d374f15e0ae07508d82e370fc1d/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json"
       ],
       "publisher_version": "5.2.0",
-      "publisher_last_modified": "2026-05-11T16:10:16.00000-00:00",
+      "publisher_last_modified": "2026-10-22T11:30:00.00000-00:00",
       "reconciliation": {
         "discovered": 370,
         "ingested": 370,
@@ -914,10 +914,10 @@
       }
     },
     {
-      "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_PRIVACY-baseline_profile.json",
-      "sha256": "sha256:7e650c4397ad633eadeaf510baa523372849b1fa3e18207b6c6b70ed456224f9",
+      "url": "https://raw.githubusercontent.com/usnistgov/oscal-content/f0de6d8d8c059d374f15e0ae07508d82e370fc1d/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_PRIVACY-baseline_profile.json",
+      "sha256": "sha256:c0e3d54d9f474bc6c33338a8e524bc52ad070f94f9274db7ec48242242fecacc",
       "byte_length": 6064,
-      "git_blob_sha": "85025c21e392ab4d67ad4b4490bbff6871811945",
+      "git_blob_sha": "63c6ee354dbb2ddf17da03a3d186de26b9fabc2a",
       "label": "Electronic (OSCAL) Version of NIST Special Publication 800-53 Revision 5.2.0 PRIVACY BASELINE",
       "control_ids": [
         "AC-1",
@@ -1018,10 +1018,10 @@
         "SI-19"
       ],
       "import_urls": [
-        "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json"
+        "https://raw.githubusercontent.com/usnistgov/oscal-content/f0de6d8d8c059d374f15e0ae07508d82e370fc1d/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json"
       ],
       "publisher_version": "5.2.0",
-      "publisher_last_modified": "2026-05-11T16:10:16.00000-00:00",
+      "publisher_last_modified": "2026-10-22T11:30:00.00000-00:00",
       "reconciliation": {
         "discovered": 96,
         "ingested": 96,

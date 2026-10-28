@@ -8,7 +8,7 @@
       "framework": "800-172",
       "title": "Dual Authorization",
       "family": "Access Control",
-      "description": "Enforce dual authorization for [Assignment: privileged commands and/or other actions]. (includes preempt) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes exert) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned.",
+      "description": "Enforce dual authorization for [Assignment: privileged commands and/or other actions] . (includes preempt) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes exert) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned.",
       "metadata": {
         "discussion": "Dual authorization is also known as two-person control. Dual authorization reduces risk related to insider threats, including adversaries who have obtained credentials. Dual authorization requires the approval of two authorized individuals to execute privileged commands and/or other organizational actions that may affect the protection of CUI. To reduce the risk of collusion, organizations consider rotating dual authorization duties to other individuals. Organizations also consider the risk associated with implementing dual authorization when immediate responses are necessary to ensure public and environmental safety. This requirement enhances SP 800-171 requirement 03.01.02."
       }
@@ -82,7 +82,7 @@
       "framework": "800-172",
       "title": "Account Monitoring for Atypical Usage",
       "family": "Access Control",
-      "description": "Monitor system accounts for [Assignment: atypical usage]. Report atypical usage of system accounts to [Assignment: personnel or roles]. (includes detect) Reduce risk due to ignorance of threat events and possible replicated or similar threat events in the same or similar environments. Reduce likelihood of impact. The adversary loses the advantage of stealth as defenders are better prepared by developing and sharing threat intelligence.",
+      "description": "Monitor system accounts for [Assignment: atypical usage] . Report atypical usage of system accounts to [Assignment: personnel or roles]. (includes detect) Reduce risk due to ignorance of threat events and possible replicated or similar threat events in the same or similar environments. Reduce likelihood of impact. The adversary loses the advantage of stealth as defenders are better prepared by developing and sharing threat intelligence.",
       "metadata": {
         "discussion": "Atypical usage includes accessing systems at certain times of the day or from locations that are not consistent with the normal usage patterns of individuals. Monitoring for atypical usage may reveal rogue behavior by individuals or an attack in progress. This requirement enhances SP 800-171 requirement 03.01.01."
       }
@@ -93,7 +93,7 @@
       "framework": "800-172",
       "title": "Attribute-Based Access Control",
       "family": "Access Control",
-      "description": "Enforce attribute-based access control policy over defined subjects and objects. Control access based upon [Assignment: attributes]. (includes preempt) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes exert) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned.",
+      "description": "Enforce attribute-based access control policy over defined subjects and objects. Control access based upon [Assignment: attributes] . (includes preempt) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes exert) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned.",
       "metadata": {
         "discussion": "Attribute-based access control is an access control policy that restricts system access to authorized users based on specified organizational attributes (e.g., job function, role, identity), action attributes (e.g., read, write, delete), environmental attributes (e.g., time of day, location), and resource attributes (e.g., document classification). Organizations can create rules based on specified attributes and the authorizations (i.e., privileges) to perform needed operations on the systems associated with organization-defined attributes and rules. When users are assigned to attributes defined in attribute-based access control policies or rules, they can be provisioned to a system with the appropriate privileges or dynamically granted access to a protected resource. Attribute-based access control can be implemented as either a mandatory or discretionary form of access control. This requirement enhances SP 800-171 requirement 03.01.02."
       }
@@ -115,7 +115,7 @@
       "framework": "800-172",
       "title": "Role-Based Access Control",
       "family": "Access Control",
-      "description": "Enforce a role-based access control policy over defined subjects and objects. Control access based upon [Assignment: organization-defined value]. (includes preempt) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes exert) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned.",
+      "description": "Enforce a role-based access control policy over defined subjects and objects. Control access based upon [Assignment: organization-defined value] . (includes preempt) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes exert) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned.",
       "metadata": {
         "discussion": "Role-based access control (RBAC) is an access control policy that enforces access to objects and system functions based on the defined role (i.e., job function) of the subject. Organizations can create specific roles based on job functions and the authorizations (i.e., privileges) to perform needed operations on the systems associated with the organization-defined roles. When users are assigned to specific roles, they inherit the authorizations or privileges defined for those roles. RBAC simplifies privilege administration for organizations because privileges are not assigned directly to every user (which can be a large number of individuals) but are instead acquired through role assignments. RBAC can also increase security risks if individuals assigned to a role are given access to information beyond what they need to support organizational mission or business functions. RBAC can be implemented as a mandatory or discretionary form of access control. This requirement enhances SP 800-171 requirement 03.01.02."
       }
@@ -288,9 +288,9 @@
       "framework": "800-172",
       "title": "Automated Unauthorized Component Detection",
       "family": "Configuration Management",
-      "description": "Detect the presence of unauthorized or misconfigured system components using [Assignment: automated mechanisms]. Take the following actions when unauthorized or misconfigured components are detected: [Selection (one or more): disable network access by such components; isolate the components; notify [Assignment: personnel or roles] ] . (includes expunge and preempt) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes contain) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned. (includes detect) Reduce risk due to ignorance of threat events and possible replicated or similar threat events in the same or similar environments. Reduce likelihood of impact. The adversary loses the advantage of stealth as defenders are better prepared by developing and sharing threat intelligence.",
+      "description": "Detect the presence of unauthorized or misconfigured system components using [Assignment: automated mechanisms]. Take the following actions when unauthorized or misconfigured components are detected: [Selection (one or more): disable network access by such components; isolate the components; notify [Assignment: personnel or roles]]. (includes expunge and preempt) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes contain) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned. (includes detect) Reduce risk due to ignorance of threat events and possible replicated or similar threat events in the same or similar environments. Reduce likelihood of impact. The adversary loses the advantage of stealth as defenders are better prepared by developing and sharing threat intelligence.",
       "metadata": {
-        "discussion": "Monitoring for unauthorized or misconfigured components may be accomplished on an ongoing basis or by the periodic scanning of systems for that purpose. Automated mechanisms may also be used to prevent the connection of unauthorized or misconfigured system components. Automated mechanisms can be implemented in systems or in separate system components. When acquiring and implementing automated mechanisms, organizations consider whether such mechanisms depend on the ability of the system component to support an agent or supplicant in order to be detected since some types of components do not have or cannot support agents (e.g., IoT devices, sensors). Isolation can be achieved, for example, by placing unauthorized system components in separate domains or subnets or quarantining such components. This type of component isolation is commonly referred to as \"sandboxing.\" This requirement enhances SP 800-171 requirement 03.04.10."
+        "discussion": "Monitoring for unauthorized or misconfigured components may be accomplished on an ongoing basis or by the periodic scanning of systems for that purpose. Automated mechanisms may also be used to prevent the connection of unauthorized or misconfigured system components. Automated mechanisms can be implemented in systems or in separate system components. When acquiring and implementing automated mechanisms, organizations consider whether such mechanisms depend on the ability of the system component to support an agent or supplicant in order to be detected since some types of components do not have or cannot support agents (e.g., IoT devices, sensors). Isolation can be achieved, for example, by placing unauthorized system components in separate domains or subnets or quarantining such components. This type of component isolation is commonly referred to as “sandboxing.” This requirement enhances SP 800-171 requirement 03.04.10."
       }
     },
     {
@@ -376,7 +376,7 @@
       "framework": "800-172",
       "title": "Password Managers",
       "family": "Identification and Authentication",
-      "description": "Employ [Assignment: password managers] to generate and manage passwords. Protect the passwords using [Assignment: safeguards]. (includes preempt) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes delay and exert) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned.",
+      "description": "Employ [Assignment: password managers] to generate and manage passwords. Protect the passwords using [Assignment: safeguards] . (includes preempt) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes delay and exert) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned.",
       "metadata": {
         "discussion": "A potential risk of using password managers is that adversaries can target the collection of passwords generated by the password manager. Therefore, the passwords require strong protection, including encrypting the passwords. This requirement enhances SP 800-171 requirement 03.05.07."
       }
@@ -677,7 +677,7 @@
       "framework": "800-172",
       "title": "Indicators of Compromise",
       "family": "Risk Assessment",
-      "description": "Discover, collect, and distribute to [Assignment: sources], indicators of compromise provided by [Assignment: personnel or roles] . (includes detect and reveal) Reduce risk due to ignorance of threat events and possible replicated or similar threat events in the same or similar environments. Reduce likelihood of impact. The adversary loses the advantage of stealth as defenders are better prepared by developing and sharing threat intelligence.",
+      "description": "Discover, collect, and distribute to [Assignment: sources], indicators of compromise provided by [Assignment: personnel or roles]. (includes detect and reveal) Reduce risk due to ignorance of threat events and possible replicated or similar threat events in the same or similar environments. Reduce likelihood of impact. The adversary loses the advantage of stealth as defenders are better prepared by developing and sharing threat intelligence.",
       "metadata": {
         "discussion": "Indicators of compromise (IOCs) are forensic artifacts from intrusions that are identified on organizational systems at the host or network level. IOCs provide valuable information on systems that have been compromised. IOCs can include the creation of registry key values. IOCs for network traffic include universal resource locator (URL) or protocol elements that indicate malicious code command and control servers. The rapid distribution and adoption of IOCs can improve information security by reducing the time that systems and organizations are vulnerable to the same exploit or attack. Threat indicators, signatures, tactics, techniques, procedures, and other IOCs may be available via government and non-government cooperatives, including the Forum of Incident Response and Security Teams (FIRST), the Computer Emergency Response Team Coordination Center (CERT/CC), the United States Computer Emergency Readiness Team (US-CERT), and the Defense Industrial Base (DIB) Cybersecurity Information Sharing Program. This requirement enhances SP 800-171 requirement 03.14.06."
       }
@@ -787,7 +787,7 @@
       "framework": "800-172",
       "title": "Concealment and Misdirection",
       "family": "System and Communications Protection",
-      "description": "Employ the following concealment and misdirection techniques to mislead adversaries: [Assignment: concealment and misdirection techniques] . (includes preempt) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes exert) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned. (includes deceive) Direct threat events away from defender-chosen resources. Reduce likelihood of occurrence and (to a lesser extent) reduce likelihood of impact. The adversary’s efforts cease. The adversary actions are mistargeted or misinformed.",
+      "description": "Employ the following concealment and misdirection techniques to mislead adversaries: [Assignment: concealment and misdirection techniques]. (includes preempt) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes exert) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned. (includes deceive) Direct threat events away from defender-chosen resources. Reduce likelihood of occurrence and (to a lesser extent) reduce likelihood of impact. The adversary’s efforts cease. The adversary actions are mistargeted or misinformed.",
       "metadata": {
         "discussion": "Concealment and misdirection techniques can significantly reduce the targeting capabilities of adversaries (i.e., window of opportunity and available attack surface) to initiate and complete attacks. For example, virtualization techniques provide organizations with the ability to disguise systems, potentially reducing the likelihood of successful attacks without the cost of having multiple platforms. The increased use of specific concealment and misdirection techniques and methods, including randomness, uncertainty, and virtualization, may sufficiently confuse and mislead adversaries and subsequently increase the risk of discovery or exposing tradecraft. Concealment and misdirection techniques may provide additional time to perform core mission and business functions. The implementation of concealment and misdirection techniques may add to the complexity and management overhead required for the system. This requirement does not enhance a specific requirement in SP 800-171 but can be used to strengthen the protection of CUI associated with critical programs or high value assets."
       }
@@ -820,7 +820,7 @@
       "framework": "800-172",
       "title": "Platform-Independent Applications",
       "family": "System and Communications Protection",
-      "description": "Include within organizational systems the following platform independent applications: [Assignment: platform-independent applications] . (includes shorten and reduce) Restrict the consequences of realized threat events by limiting the damage or effects they cause in terms of time, system resources, and/or mission or business impacts. Reduce level of impact and reduce likelihood of impact of subsequent events in the same threat scenario. The adversary’s effectiveness is restricted.",
+      "description": "Include within organizational systems the following platform independent applications: [Assignment: platform-independent applications]. (includes shorten and reduce) Restrict the consequences of realized threat events by limiting the damage or effects they cause in terms of time, system resources, and/or mission or business impacts. Reduce level of impact and reduce likelihood of impact of subsequent events in the same threat scenario. The adversary’s effectiveness is restricted.",
       "metadata": {
         "discussion": "Platforms are the hardware, software, and firmware components used to execute the organization’s software applications. Platforms include operating systems, the underlying computer architectures, or both. Platform-independent applications are applications with the capability to execute on multiple platforms. Such applications promote portability and reconstitution on different platforms. The portability of applications and the ability to reconstitute applications on different platforms increase the availability of mission-essential functions within organizations when systems with specific operating systems are under attack. This requirement does not enhance a specific requirement in SP 800-171 but can be used to strengthen the protection of CUI associated with critical programs or high value assets."
       }
@@ -875,7 +875,7 @@
       "framework": "800-172",
       "title": "Thin Nodes",
       "family": "System and Communications Protection",
-      "description": "Employ minimal functionality and information storage on the following system components: [Assignment: system components] . (includes preempt) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes contain) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned.",
+      "description": "Employ minimal functionality and information storage on the following system components: [Assignment: system components]. (includes preempt) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes contain) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned.",
       "metadata": {
         "discussion": "The deployment of system components with minimal functionality reduces the need to secure every endpoint and may reduce the exposure of information, systems, and services to attacks. Reduced or minimal functionality includes diskless nodes and thin client technologies. This requirement does not enhance a specific requirement in SP 800-171 but can be used to strengthen the protection of CUI associated with critical programs or high value assets."
       }
@@ -886,7 +886,7 @@
       "framework": "800-172",
       "title": "Denial-of-Service Protection",
       "family": "System and Communications Protection",
-      "description": "[Assignment: types of denial-of-service events] the effects of the following types of denial-of-service events: [Selection: Protect against; Limit]. Employ the following safeguards to prevent the denial-of-service events [Assignment: safeguards]. (includes preempt and negate) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes exert) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned. (includes reduce) Restrict the consequences of realized threat events by limiting the damage or effects they cause in terms of time, system resources, and/or mission or business impacts. Reduce level of impact and reduce likelihood of impact of subsequent events in the same threat scenario. The adversary’s effectiveness is restricted.",
+      "description": "[Assignment: types of denial-of-service events] the effects of the following types of denial-of-service events: [Selection: Protect against; Limit]. Employ the following safeguards to prevent the denial-of-service events[Assignment: safeguards]. (includes preempt and negate) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes exert) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned. (includes reduce) Restrict the consequences of realized threat events by limiting the damage or effects they cause in terms of time, system resources, and/or mission or business impacts. Reduce level of impact and reduce likelihood of impact of subsequent events in the same threat scenario. The adversary’s effectiveness is restricted.",
       "metadata": {
         "discussion": "Denial-of-service events may occur due to a variety of internal and external causes, such as an attack by an adversary or a lack of planning to support organizational needs with respect to capacity and bandwidth. Such attacks can occur across a wide range of network protocols (e.g., IPv4, IPv6). A variety of technologies are available to limit or eliminate the origination and effects of denial-of-service events. For example, boundary protection devices can filter certain types of packets to protect system components on internal networks from being directly affected by or the source of denial-of-service attacks. Employing increased network capacity and bandwidth combined with service redundancy also reduces the susceptibility to denial-of-service events. This requirement is sourced to a control tailored out of the SP 800-53B .13 moderate baseline in SP 800-171."
       }
@@ -979,7 +979,7 @@
       "framework": "800-172",
       "title": "Non-Persistent Information",
       "family": "System and Information Integrity",
-      "description": "[Selection: Refresh [Assignment: information] [Assignment: frequency] ; Generate [Assignment: information] on demand ]. Delete information when no longer needed. (includes preempt) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes exert) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned.",
+      "description": "[Selection: Refresh [Assignment: information] [Assignment: frequency]; Generate [Assignment: information] on demand]. Delete information when no longer needed. (includes preempt) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes exert) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned.",
       "metadata": {
         "discussion": "Retaining information longer than is required makes that information a potential target for advanced adversaries searching for high value assets to compromise through unauthorized disclosure, unauthorized modification, or exfiltration. For system-related information, unnecessary retention provides adversaries with information that can assist in their reconnaissance and lateral movement through the system. This requirement does not enhance a specific requirement in SP 800-171 but can be used to strengthen the protection of CUI associated with critical programs or high value assets."
       }
@@ -1006,7 +1006,7 @@
       "framework": "800-172",
       "title": "Integrity Checks",
       "family": "System and Information Integrity",
-      "description": "Perform an integrity check of [Assignment: organization-defined software, firmware, and information] [Selection (one or more): at startup; at [Assignment: transitional states or security-relevant events] ; [Assignment: frequency] ]. (includes preempt) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes exert) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned.",
+      "description": "Perform an integrity check of [Assignment: organization-defined software, firmware, and information] [Selection (one or more): at startup; at [Assignment: transitional states or security-relevant events]; [Assignment: frequency] ]. (includes preempt) Ensure that the threat event does not have an impact. Reduce likelihood of occurrence and/or reduce likelihood of impact. The adversary’s efforts or resources cannot be applied or are wasted. (includes exert) Make it more difficult for threat events to cause adverse impacts or consequences. Reduce likelihood of impact and reduce level of impact. Adversary activities are restricted in scope, fail to achieve full effect, do not take place in accordance with adversary timeline, or require greater resources than adversary had planned.",
       "metadata": {
         "discussion": "Security-relevant events include the identification of new threats to which organizational systems are susceptible and the installation of hardware, software, or firmware. Transitional states include system startup, restart, shutdown, and abort. This requirement is sourced to a control tailored out of the SP 800-53B .13 moderate baseline in SP 800-171."
       }
@@ -1094,9 +1094,9 @@
       "framework": "800-172",
       "title": "Tainting",
       "family": "System and Information Integrity",
-      "description": "Embed data or capabilities in the following systems or system components to determine if CUI has been exfiltrated or improperly removed from the organization: [Assignment: systems or system components] . (includes detect) Reduce risk due to ignorance of threat events and possible replicated or similar threat events in the same or similar environments. Reduce likelihood of impact. The adversary loses the advantage of stealth as defenders are better prepared by developing and sharing threat intelligence.",
+      "description": "Embed data or capabilities in the following systems or system components to determine if CUI has been exfiltrated or improperly removed from the organization: [Assignment: systems or system components]. (includes detect) Reduce risk due to ignorance of threat events and possible replicated or similar threat events in the same or similar environments. Reduce likelihood of impact. The adversary loses the advantage of stealth as defenders are better prepared by developing and sharing threat intelligence.",
       "metadata": {
-        "discussion": "Many cyber-attacks target organizational information or information that the organization holds on behalf of other entities with the intent to exfiltrate that information. In addition, insider attacks and erroneous user procedures can remove information from the system in violation of organizational policies. Tainting approaches can range from passive to active. A passive tainting approach can be as simple as adding false email names and addresses to an internal database. If the organization receives email at one of the false email addresses, it knows that the database has been compromised. Moreover, the organization knows that the email was sent by an unauthorized entity, so any packets it includes potentially contain malicious code, and the unauthorized entity may have potentially obtained a copy of the database. Another tainting approach includes embedding false data or steganographic data in files to enable the data to be found via open-source analysis. An active tainting approach can include embedding software in the data that is able to \"call home,\" thereby alerting the organization to its capture and possibly its location and the path by which it was exfiltrated or removed. This requirement does not enhance a specific requirement in SP 800-171 but can be used to strengthen the protection of CUI associated with critical programs or high value assets."
+        "discussion": "Many cyber-attacks target organizational information or information that the organization holds on behalf of other entities with the intent to exfiltrate that information. In addition, insider attacks and erroneous user procedures can remove information from the system in violation of organizational policies. Tainting approaches can range from passive to active. A passive tainting approach can be as simple as adding false email names and addresses to an internal database. If the organization receives email at one of the false email addresses, it knows that the database has been compromised. Moreover, the organization knows that the email was sent by an unauthorized entity, so any packets it includes potentially contain malicious code, and the unauthorized entity may have potentially obtained a copy of the database. Another tainting approach includes embedding false data or steganographic data in files to enable the data to be found via open-source analysis. An active tainting approach can include embedding software in the data that is able to “call home,” thereby alerting the organization to its capture and possibly its location and the path by which it was exfiltrated or removed. This requirement does not enhance a specific requirement in SP 800-171 but can be used to strengthen the protection of CUI associated with critical programs or high value assets."
       }
     },
     {
@@ -1193,7 +1193,7 @@
       "framework": "800-172",
       "title": "Inspection of Systems or Components",
       "family": "Supply Chain Risk Management",
-      "description": "Inspect the following systems or system components [Assignment: systems or system components] to detect tampering: [Selection (one or more): at random; [Assignment: frequency] ; upon [Assignment: indications of the need for inspection] ]. (includes detect) Reduce risk due to ignorance of threat events and possible replicated or similar threat events in the same or similar environments. Reduce likelihood of impact. The adversary loses the advantage of stealth as defenders are better prepared by developing and sharing threat intelligence.",
+      "description": "Inspect the following systems or system components [Assignment: systems or system components] to detect tampering: [Selection (one or more): at random; [Assignment: frequency] ; upon [Assignment: indications of the need for inspection]]. (includes detect) Reduce risk due to ignorance of threat events and possible replicated or similar threat events in the same or similar environments. Reduce likelihood of impact. The adversary loses the advantage of stealth as defenders are better prepared by developing and sharing threat intelligence.",
       "metadata": {
         "discussion": "Inspecting systems or systems components for evidence of tampering addresses physical and logical tampering and is applied to systems and system components that are removed from organization-controlled areas. Indications of a need for inspection include changes in packaging, specifications, factory location, or entity in which the part is purchased, and when individuals return from travel to high-risk locations. This requirement is sourced to a control tailored out of the SP 800-53B .13 moderate baseline in SP 800-171."
       }
@@ -1215,7 +1215,7 @@
       "framework": "800-172",
       "title": "Provenance",
       "family": "Supply Chain Risk Management",
-      "description": "Document, monitor, and maintain valid provenance of the following systems, system components, and associated CUI: [Assignment: systems, system components, and associated CUI]. (includes detect) Reduce risk due to ignorance of threat events and possible replicated or similar threat events in the same or similar environments. Reduce likelihood of impact. The adversary loses the advantage of stealth as defenders are better prepared by developing and sharing threat intelligence.",
+      "description": "Document, monitor, and maintain valid provenance of the following systems, system components, and associated CUI: [Assignment: systems, system components, and associated CUI] . (includes detect) Reduce risk due to ignorance of threat events and possible replicated or similar threat events in the same or similar environments. Reduce likelihood of impact. The adversary loses the advantage of stealth as defenders are better prepared by developing and sharing threat intelligence.",
       "metadata": {
         "discussion": "Every system and system component has a point of origin and may be changed throughout its existence. Provenance is the chronology of the origin, development, ownership, location, and changes to a system or system component and associated data. It may also include personnel and processes used to interact with or make modifications to the system, component, or associated data. Organizations have methods to document, monitor, and maintain valid provenance baselines for systems, system components, and related data. These actions help track, assess, and document any changes to the provenance, including changes in supply chain elements or configuration, and help ensure non-repudiation of provenance information and the provenance change records. This requirement does not enhance a specific requirement in SP 800-171 but can be used to strengthen the protection of CUI associated with critical programs or high value assets."
       }
@@ -1238,79 +1238,79 @@
     "imported_count": 115,
     "excluded": [
       {
-        "id": "SP_800_172_3_0_0_3.1",
+        "id": "SP_800_172_3.1",
         "reason": "structural or non-target OSCAL unit"
       },
       {
-        "id": "SP_800_172_3_0_0_3.2",
+        "id": "SP_800_172_3.2",
         "reason": "structural or non-target OSCAL unit"
       },
       {
-        "id": "SP_800_172_3_0_0_3.3",
+        "id": "SP_800_172_3.3",
         "reason": "structural or non-target OSCAL unit"
       },
       {
-        "id": "SP_800_172_3_0_0_3.4",
+        "id": "SP_800_172_3.4",
         "reason": "structural or non-target OSCAL unit"
       },
       {
-        "id": "SP_800_172_3_0_0_3.5",
+        "id": "SP_800_172_3.5",
         "reason": "structural or non-target OSCAL unit"
       },
       {
-        "id": "SP_800_172_3_0_0_3.6",
+        "id": "SP_800_172_3.6",
         "reason": "structural or non-target OSCAL unit"
       },
       {
-        "id": "SP_800_172_3_0_0_3.7",
+        "id": "SP_800_172_3.7",
         "reason": "structural or non-target OSCAL unit"
       },
       {
-        "id": "SP_800_172_3_0_0_3.8",
+        "id": "SP_800_172_3.8",
         "reason": "structural or non-target OSCAL unit"
       },
       {
-        "id": "SP_800_172_3_0_0_3.9",
+        "id": "SP_800_172_3.9",
         "reason": "structural or non-target OSCAL unit"
       },
       {
-        "id": "SP_800_172_3_0_0_3.10",
+        "id": "SP_800_172_3.10",
         "reason": "structural or non-target OSCAL unit"
       },
       {
-        "id": "SP_800_172_3_0_0_3.11",
+        "id": "SP_800_172_3.11",
         "reason": "structural or non-target OSCAL unit"
       },
       {
-        "id": "SP_800_172_3_0_0_3.12",
+        "id": "SP_800_172_3.12",
         "reason": "structural or non-target OSCAL unit"
       },
       {
-        "id": "SP_800_172_3_0_0_3.13",
+        "id": "SP_800_172_3.13",
         "reason": "structural or non-target OSCAL unit"
       },
       {
-        "id": "SP_800_172_3_0_0_3.14",
+        "id": "SP_800_172_3.14",
         "reason": "structural or non-target OSCAL unit"
       },
       {
-        "id": "SP_800_172_3_0_0_3.15",
+        "id": "SP_800_172_3.15",
         "reason": "structural or non-target OSCAL unit"
       },
       {
-        "id": "SP_800_172_3_0_0_3.16",
+        "id": "SP_800_172_3.16",
         "reason": "structural or non-target OSCAL unit"
       },
       {
-        "id": "SP_800_172_3_0_0_3.17",
+        "id": "SP_800_172_3.17",
         "reason": "structural or non-target OSCAL unit"
       }
     ],
-    "raw_identity_sha256": "sha256:ef769421856c8cf53bca05bf0219f9306ebabe745bf74f3e520e9060aba35668",
+    "raw_identity_sha256": "sha256:637ba4166d1e5b5f0b20b755f8aa43fd206c96e7acde219ae35542e7c38fd2e1",
     "imported_identity_sha256": "sha256:1bf1456c1e83fb23613ff68c3873330fe3eb95dc4b9dbb14a7c465b73a2b6bde",
     "source_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-172/rev3/json/NIST_SP800-172_rev3_catalog.json",
-    "source_sha256": "sha256:21c6df17c7ff1c8330f16334fdddd488ffc10f71051078dd73c18595a33da5ab",
-    "source_byte_length": 980722,
-    "publisher_version": "1.0.0"
+    "source_sha256": "sha256:694a5a3ea7bf1f78af112f5634af33fca9c22f6044c2bc824565876e5126e893",
+    "source_byte_length": 993703,
+    "publisher_version": "1.0.1"
   }
 }

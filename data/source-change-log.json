@@ -78,6 +78,31 @@
         "lifecycle_transitions": [],
         "added_sample": [],
         "removed_sample": []
+      },
+      {
+        "catalog_id": "disa-srg",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 2551,
+          "normalized_sha256": "sha256:9ccf2dfa8d881ade87699872d6ea2b27f1dce9cae0886b49f4ca7fe82c0ef7d7",
+          "publisher_version": "V2R3",
+          "accepted_at": "2026-10-20T01:55:22-04:00"
+        },
+        "current": {
+          "record_count": 2551,
+          "normalized_sha256": "sha256:f7a921039334a179984f35b14b73d2e993767ba905da8a7639bb69af154b4f2f",
+          "publisher_version": "V2R3"
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 0,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
       }
     ],
     "disa-stig": [
@@ -277,6 +302,31 @@
         "lifecycle_transitions": [],
         "added_sample": [],
         "removed_sample": []
+      },
+      {
+        "catalog_id": "disa-stig",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 27430,
+          "normalized_sha256": "sha256:c1879513bcb86c4f8134c6f1fb203ce3a5023e0368d3d3d8eeca48f470a82c09",
+          "publisher_version": "V3R8",
+          "accepted_at": "2026-10-20T06:00:31.157Z"
+        },
+        "current": {
+          "record_count": 27430,
+          "normalized_sha256": "sha256:b52b72046b1011c026b1fe8e51a8404d301d3f1a4c41bec61e5bcc5724226cff",
+          "publisher_version": "V3R8"
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 0,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
       }
     ],
     "cmmc-2": [
@@ -425,6 +475,31 @@
         "lifecycle_transitions": [],
         "added_sample": [],
         "removed_sample": []
+      },
+      {
+        "catalog_id": "cmmc-2",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 3,
+          "normalized_sha256": "sha256:a202dc1af00bd920ef0f723e0167d055a84427094320c2cefc26de31cfbba60c",
+          "publisher_version": null,
+          "accepted_at": "2026-10-21T13:03:20.742Z"
+        },
+        "current": {
+          "record_count": 3,
+          "normalized_sha256": "sha256:ef4ac71763a4608b064d0e6e298b2107301b29b4914c47e2e3d47a776628138e",
+          "publisher_version": null
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 3,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
       }
     ],
     "csf-2": [
@@ -562,6 +637,31 @@
         "current": {
           "record_count": 106,
           "normalized_sha256": "sha256:c4b8a525955926a040a9052938c477b2d886e9bdb95d6b5308021a4c76791fd6",
+          "publisher_version": "2.0"
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 0,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
+      },
+      {
+        "catalog_id": "csf-2",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 106,
+          "normalized_sha256": "sha256:c4b8a525955926a040a9052938c477b2d886e9bdb95d6b5308021a4c76791fd6",
+          "publisher_version": "2.0",
+          "accepted_at": "2026-10-21T13:03:20.742Z"
+        },
+        "current": {
+          "record_count": 106,
+          "normalized_sha256": "sha256:9e564f3e0005a44684ff1dd67c71dc1db48840a86cf5372c116e6e37ae155bc4",
           "publisher_version": "2.0"
         },
         "version_changed": false,
@@ -744,6 +844,31 @@
         "lifecycle_transitions": [],
         "added_sample": [],
         "removed_sample": []
+      },
+      {
+        "catalog_id": "cui-policy",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 129,
+          "normalized_sha256": "sha256:c1c56c7ef0fd5a0b4ee47152ea56e067010c0a20576836d8572bae69fb3eca49",
+          "publisher_version": null,
+          "accepted_at": "2026-10-21T13:03:20.742Z"
+        },
+        "current": {
+          "record_count": 129,
+          "normalized_sha256": "sha256:b9c6434fff5d05afcbd1c2eecd3459091852883f583b1d29d9bf2040b00e0ea0",
+          "publisher_version": null
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 126,
+        "stamp_only_count": 3,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
       }
     ],
     "dod-rai": [
@@ -881,6 +1006,31 @@
         "current": {
           "record_count": 11,
           "normalized_sha256": "sha256:f457a070dba684ea3efd8d16bc893e6f1c80980b32b4604ac918a8a27e46bb62",
+          "publisher_version": null
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 11,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
+      },
+      {
+        "catalog_id": "dod-rai",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 11,
+          "normalized_sha256": "sha256:f457a070dba684ea3efd8d16bc893e6f1c80980b32b4604ac918a8a27e46bb62",
+          "publisher_version": null,
+          "accepted_at": "2026-10-21T13:03:20.742Z"
+        },
+        "current": {
+          "record_count": 11,
+          "normalized_sha256": "sha256:6edae9f97b3bc40738d537bfd5f4f98a72e41d9212fcab92ac33e457d2b9aa9f",
           "publisher_version": null
         },
         "version_changed": false,
@@ -1040,6 +1190,31 @@
         "lifecycle_transitions": [],
         "added_sample": [],
         "removed_sample": []
+      },
+      {
+        "catalog_id": "dod-zt",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 320,
+          "normalized_sha256": "sha256:c6d442d3557a14c3aed97b44966eedb40dd9d269684fa643eafe7df7171713cd",
+          "publisher_version": null,
+          "accepted_at": "2026-10-21T13:03:20.742Z"
+        },
+        "current": {
+          "record_count": 320,
+          "normalized_sha256": "sha256:a6f1c0df33a5642899e5f9ffceb9acf0be0daa513450b6bf69fd364c3557f25e",
+          "publisher_version": null
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 320,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
       }
     ],
     "fedramp-rev5": [
@@ -1177,6 +1352,31 @@
         "current": {
           "record_count": 4,
           "normalized_sha256": "sha256:adefa41aa26fe97f236b9e8bdd9ac0536754aafbdf00786b8ff665bf253c83a2",
+          "publisher_version": null
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 4,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
+      },
+      {
+        "catalog_id": "fedramp-rev5",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 4,
+          "normalized_sha256": "sha256:adefa41aa26fe97f236b9e8bdd9ac0536754aafbdf00786b8ff665bf253c83a2",
+          "publisher_version": null,
+          "accepted_at": "2026-10-21T13:03:20.742Z"
+        },
+        "current": {
+          "record_count": 4,
+          "normalized_sha256": "sha256:25d267bd780836122b709366153941f37cdb8cdcd99e39164997a84fa89a0b90",
           "publisher_version": null
         },
         "version_changed": false,
@@ -1442,6 +1642,31 @@
         "lifecycle_transitions": [],
         "added_sample": [],
         "removed_sample": []
+      },
+      {
+        "catalog_id": "fips-199",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 3,
+          "normalized_sha256": "sha256:d08f896528adfcb08481cb0561cfa80e5d99977d46409aa0ac492a977e8fee14",
+          "publisher_version": null,
+          "accepted_at": "2026-10-21T13:03:20.742Z"
+        },
+        "current": {
+          "record_count": 3,
+          "normalized_sha256": "sha256:e69593efc5bc2e42a251911a58d5f59e610c442fbc8da7d2510efba3b1ae0595",
+          "publisher_version": null
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 3,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
       }
     ],
     "fips-200": [
@@ -1579,6 +1804,31 @@
         "current": {
           "record_count": 17,
           "normalized_sha256": "sha256:6d4016f114ff0e471ecdd0ee91b59c879afe44dd870d95c0fe80a9ae5209c960",
+          "publisher_version": null
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 17,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
+      },
+      {
+        "catalog_id": "fips-200",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 17,
+          "normalized_sha256": "sha256:6d4016f114ff0e471ecdd0ee91b59c879afe44dd870d95c0fe80a9ae5209c960",
+          "publisher_version": null,
+          "accepted_at": "2026-10-21T13:03:20.742Z"
+        },
+        "current": {
+          "record_count": 17,
+          "normalized_sha256": "sha256:04eb1f8497956a75d2de1b63339cdc28f2b89de1ad311361d277696d85fde0b4",
           "publisher_version": null
         },
         "version_changed": false,
@@ -1738,6 +1988,31 @@
         "lifecycle_transitions": [],
         "added_sample": [],
         "removed_sample": []
+      },
+      {
+        "catalog_id": "microsoft-zt-maturity",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 62,
+          "normalized_sha256": "sha256:a912d69dff0ad467a7433d07936ed944be18e13f4a3009c4350c5ace5799fc08",
+          "publisher_version": null,
+          "accepted_at": "2026-10-21T13:03:20.742Z"
+        },
+        "current": {
+          "record_count": 62,
+          "normalized_sha256": "sha256:5d1a4030fcc0c93aa5ff4a2cd9f7191fdfaaaca7573768ea95fff4d20ca26dce",
+          "publisher_version": null
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 62,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
       }
     ],
     "mitre-attack": [
@@ -1860,6 +2135,31 @@
         "current": {
           "record_count": 867,
           "normalized_sha256": "sha256:212bdb0f28044a88d54b3577864fa0b130797d48a8a102c150cc302f82abc0e8",
+          "publisher_version": "20.0"
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 867,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
+      },
+      {
+        "catalog_id": "mitre-attack",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 867,
+          "normalized_sha256": "sha256:212bdb0f28044a88d54b3577864fa0b130797d48a8a102c150cc302f82abc0e8",
+          "publisher_version": "20.0",
+          "accepted_at": "2026-10-21T13:03:20.742Z"
+        },
+        "current": {
+          "record_count": 867,
+          "normalized_sha256": "sha256:166f4f4dc380a8e2d944c57aac6c94b208bcb54288f15165bc4caf3d22e17cca",
           "publisher_version": "20.0"
         },
         "version_changed": false,
@@ -2011,6 +2311,31 @@
         "lifecycle_transitions": [],
         "added_sample": [],
         "removed_sample": []
+      },
+      {
+        "catalog_id": "mitre-attack-ics",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 127,
+          "normalized_sha256": "sha256:c90b3833f1742e3a7a925a6045036a0adbb0c419c980b6d030626ad448fefb8b",
+          "publisher_version": "20.0",
+          "accepted_at": "2026-10-21T13:03:20.742Z"
+        },
+        "current": {
+          "record_count": 127,
+          "normalized_sha256": "sha256:b6c9f26357edd63fcd2b264de74f2009ce26ef24f17c4f1bd1de368e521a9e73",
+          "publisher_version": "20.0"
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 127,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
       }
     ],
     "mitre-d3fend": [
@@ -2123,6 +2448,31 @@
         "current": {
           "record_count": 271,
           "normalized_sha256": "sha256:09c4e8e8c6be4650c9d2c4e2ea5101691996469d10b254d60b1103d32e5718a8",
+          "publisher_version": "1.6.0"
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 271,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
+      },
+      {
+        "catalog_id": "mitre-d3fend",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 271,
+          "normalized_sha256": "sha256:09c4e8e8c6be4650c9d2c4e2ea5101691996469d10b254d60b1103d32e5718a8",
+          "publisher_version": "1.6.0",
+          "accepted_at": "2026-10-21T13:03:20.742Z"
+        },
+        "current": {
+          "record_count": 271,
+          "normalized_sha256": "sha256:e3f34b9320522c1967baa0fd33072826b3be9e09322d8eb24b4b16cbd15a8946",
           "publisher_version": "1.6.0"
         },
         "version_changed": false,
@@ -2271,6 +2621,31 @@
         "current": {
           "record_count": 7,
           "normalized_sha256": "sha256:d24d10810295965dd2b8031ffb1d11b087b99cec262f28966a1725006668b23a",
+          "publisher_version": null
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 7,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
+      },
+      {
+        "catalog_id": "nist-800-37",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 7,
+          "normalized_sha256": "sha256:d24d10810295965dd2b8031ffb1d11b087b99cec262f28966a1725006668b23a",
+          "publisher_version": null,
+          "accepted_at": "2026-10-21T13:03:20.742Z"
+        },
+        "current": {
+          "record_count": 7,
+          "normalized_sha256": "sha256:ddc5abb4fe30e496ed50be77172a58b9bf3ce2d44b9fabdbd43d88db0dc291ab",
           "publisher_version": null
         },
         "version_changed": false,
@@ -2453,6 +2828,31 @@
         "lifecycle_transitions": [],
         "added_sample": [],
         "removed_sample": []
+      },
+      {
+        "catalog_id": "nist-800-53b",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 4,
+          "normalized_sha256": "sha256:172672923c0d93903fbe7cc8f9a9b94ff286a8f5baaf2abdd61e4ab83975f137",
+          "publisher_version": null,
+          "accepted_at": "2026-10-21T13:03:20.742Z"
+        },
+        "current": {
+          "record_count": 4,
+          "normalized_sha256": "sha256:1f93b930a752d1a2cf120091e18df4d427e255826cbe79320f422ca12fa946ec",
+          "publisher_version": null
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 4,
+        "stamp_only_count": 0,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
       }
     ],
     "nist-ai-rmf": [
@@ -2590,6 +2990,31 @@
         "current": {
           "record_count": 72,
           "normalized_sha256": "sha256:4413254bd98404a2c328d384a6281b7fdbc4a7759a713729fb8333dfdc3c74a6",
+          "publisher_version": null
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 72,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
+      },
+      {
+        "catalog_id": "nist-ai-rmf",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 72,
+          "normalized_sha256": "sha256:4413254bd98404a2c328d384a6281b7fdbc4a7759a713729fb8333dfdc3c74a6",
+          "publisher_version": null,
+          "accepted_at": "2026-10-21T13:03:20.742Z"
+        },
+        "current": {
+          "record_count": 72,
+          "normalized_sha256": "sha256:765fef63f71a5772adfac25cae40650078593f86cc3b914cc71fdddaa6c063f6",
           "publisher_version": null
         },
         "version_changed": false,
@@ -2772,6 +3197,31 @@
         "lifecycle_transitions": [],
         "added_sample": [],
         "removed_sample": []
+      },
+      {
+        "catalog_id": "nist-iot-cybersecurity",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 489,
+          "normalized_sha256": "sha256:5b983f64fe7b7a8f3fd6df8570f0944750f3cfa932c50ee48f32a2edcc8bb671",
+          "publisher_version": null,
+          "accepted_at": "2026-10-21T13:03:20.742Z"
+        },
+        "current": {
+          "record_count": 489,
+          "normalized_sha256": "sha256:8a48465acf778b74bc3fdb1a02def3dc8d74b8cd46dd6945ffe6e4a8f26678ca",
+          "publisher_version": null
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 489,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
       }
     ],
     "nist-mobile-threats": [
@@ -2920,6 +3370,31 @@
         "lifecycle_transitions": [],
         "added_sample": [],
         "removed_sample": []
+      },
+      {
+        "catalog_id": "nist-mobile-threats",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 268,
+          "normalized_sha256": "sha256:cb1f3907af2b325dfa7beb9afeb7d15c405ea34451ad451dbff880db94ddd082",
+          "publisher_version": null,
+          "accepted_at": "2026-10-21T13:03:20.742Z"
+        },
+        "current": {
+          "record_count": 268,
+          "normalized_sha256": "sha256:90a423fcdb1bdf206bcc72daea949f37ab795cb2b33fb6cd85f7668ae91a826b",
+          "publisher_version": null
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 268,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
       }
     ],
     "nist-ssdf": [
@@ -3057,6 +3532,31 @@
         "current": {
           "record_count": 42,
           "normalized_sha256": "sha256:b8104eb53a50f51c47017a19a3a516f656a3301bfb944f62337d57d6937968ac",
+          "publisher_version": "1.0.0"
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 42,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
+      },
+      {
+        "catalog_id": "nist-ssdf",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 42,
+          "normalized_sha256": "sha256:b8104eb53a50f51c47017a19a3a516f656a3301bfb944f62337d57d6937968ac",
+          "publisher_version": "1.0.0",
+          "accepted_at": "2026-10-21T13:03:20.742Z"
+        },
+        "current": {
+          "record_count": 42,
+          "normalized_sha256": "sha256:b3c9c513d904383a9315a76ac0d11ffc7b6afad98801ebabdc6c3cb4f5721cc8",
           "publisher_version": "1.0.0"
         },
         "version_changed": false,
@@ -3258,6 +3758,112 @@
         "removed_count": 0,
         "changed_count": 0,
         "stamp_only_count": 344,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
+      },
+      {
+        "catalog_id": "nist-zt",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 344,
+          "normalized_sha256": "sha256:8d54bd3ae4f8f1043184f401e4563a22e9182bdf1d388a5fac3d5f690d5aca58",
+          "publisher_version": null,
+          "accepted_at": "2026-10-21T13:03:20.742Z"
+        },
+        "current": {
+          "record_count": 344,
+          "normalized_sha256": "sha256:b559db929cc4d46acd10047cf55d77ad5247076af14b64bbefb2a7668fa15204",
+          "publisher_version": null
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 344,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
+      }
+    ],
+    "nist-800-171": [
+      {
+        "catalog_id": "nist-800-171",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 130,
+          "normalized_sha256": "sha256:c5d42f679844aa6a01bac89df25bfa4d51e9ee920a03207d933e8fe56c26c81d",
+          "publisher_version": "1.1.0",
+          "accepted_at": "2026-09-10T02:44:39.193Z"
+        },
+        "current": {
+          "record_count": 130,
+          "normalized_sha256": "sha256:5b27407212b3d668b8d1164f85e7d9bcf0a3d351135506ac992bd1b43e41f8ea",
+          "publisher_version": "1.1.0"
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 0,
+        "stamp_only_count": 0,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
+      }
+    ],
+    "nist-800-172": [
+      {
+        "catalog_id": "nist-800-172",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 115,
+          "normalized_sha256": "sha256:7ac7a928e7edde6cd999f90d294c969489e4d530a4a561b775d9742005c24ac7",
+          "publisher_version": "1.0.0",
+          "accepted_at": "2026-09-10T02:44:39.193Z"
+        },
+        "current": {
+          "record_count": 115,
+          "normalized_sha256": "sha256:2506afcfc3f807fab55a625df5f2347a394dc24146b051d71715c7ad266d3b39",
+          "publisher_version": "1.0.1"
+        },
+        "version_changed": true,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 16,
+        "stamp_only_count": 0,
+        "diff_basis": "content_excluding_provenance_stamps",
+        "lifecycle_transitions": [],
+        "added_sample": [],
+        "removed_sample": []
+      }
+    ],
+    "nist-800-53": [
+      {
+        "catalog_id": "nist-800-53",
+        "accepted_at": "2026-10-28T15:45:12.126Z",
+        "decision": "within_band",
+        "previous": {
+          "record_count": 1196,
+          "normalized_sha256": "sha256:4a55324a1c16217c1715a4120ea681b81369cd00240efb601a27c49fafda1228",
+          "publisher_version": "5.2.0",
+          "accepted_at": "2026-09-10T02:44:39.193Z"
+        },
+        "current": {
+          "record_count": 1196,
+          "normalized_sha256": "sha256:853edf4c958e54aabb940b917553c4df57dfd8e8e944d494527dd21a74374046",
+          "publisher_version": "5.2.0"
+        },
+        "version_changed": false,
+        "added_count": 0,
+        "removed_count": 0,
+        "changed_count": 3,
+        "stamp_only_count": 0,
         "diff_basis": "content_excluding_provenance_stamps",
         "lifecycle_transitions": [],
         "added_sample": [],

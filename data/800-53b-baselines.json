@@ -11,8 +11,8 @@
       "description": "NIST SP 800-53B low impact baseline for federal information systems.",
       "source": {
         "key": "nist-800-53b-baselines",
-        "snapshot_date": "2026-10-21T12:57:39.347Z",
-        "locator": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_LOW-baseline_profile.json",
+        "snapshot_date": "2026-10-28T15:41:00.507Z",
+        "locator": "https://raw.githubusercontent.com/usnistgov/oscal-content/f0de6d8d8c059d374f15e0ae07508d82e370fc1d/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_LOW-baseline_profile.json",
         "version": "5.2.0"
       },
       "metadata": {
@@ -29,8 +29,8 @@
       "description": "NIST SP 800-53B moderate impact baseline for federal information systems.",
       "source": {
         "key": "nist-800-53b-baselines",
-        "snapshot_date": "2026-10-21T12:57:39.347Z",
-        "locator": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json",
+        "snapshot_date": "2026-10-28T15:41:00.507Z",
+        "locator": "https://raw.githubusercontent.com/usnistgov/oscal-content/f0de6d8d8c059d374f15e0ae07508d82e370fc1d/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_MODERATE-baseline_profile.json",
         "version": "5.2.0"
       },
       "metadata": {
@@ -47,8 +47,8 @@
       "description": "NIST SP 800-53B high impact baseline for federal information systems.",
       "source": {
         "key": "nist-800-53b-baselines",
-        "snapshot_date": "2026-10-21T12:57:39.347Z",
-        "locator": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_HIGH-baseline_profile.json",
+        "snapshot_date": "2026-10-28T15:41:00.507Z",
+        "locator": "https://raw.githubusercontent.com/usnistgov/oscal-content/f0de6d8d8c059d374f15e0ae07508d82e370fc1d/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_HIGH-baseline_profile.json",
         "version": "5.2.0"
       },
       "metadata": {
@@ -68,8 +68,8 @@
       "description": "NIST SP 800-53B privacy baseline for federal information systems.",
       "source": {
         "key": "nist-800-53b-baselines",
-        "snapshot_date": "2026-10-21T12:57:39.347Z",
-        "locator": "https://raw.githubusercontent.com/usnistgov/oscal-content/78650f02ad9321bb7b817846f8fbd4f2bcd620de/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_PRIVACY-baseline_profile.json",
+        "snapshot_date": "2026-10-28T15:41:00.507Z",
+        "locator": "https://raw.githubusercontent.com/usnistgov/oscal-content/f0de6d8d8c059d374f15e0ae07508d82e370fc1d/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_PRIVACY-baseline_profile.json",
         "version": "5.2.0"
       },
       "metadata": {

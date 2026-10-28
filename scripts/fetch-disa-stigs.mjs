@@ -562,7 +562,7 @@ async function main() {
     writeJsonAtomically(join(outputRoot, 'data', 'stig-rules.json'), result.stig);
     writeJsonAtomically(join(outputRoot, 'data', 'srg-requirements.json'), result.srg);
   }
-  writeJsonAtomically(join(outputRoot, 'maps', 'stig-srg-to-cci.json'), result.relationships);
+  writeJsonAtomically(join(outputRoot, 'maps', 'stig-srg-to-cci.json'), result.relationships, { space: 0 });
   if (!result.fallbackMode && requestedOutput) writeDisaArtifactManifest(result, outputRoot);
   if (!result.fallbackMode && !requestedOutput) attestDisaProjections(ROOT, JSON.parse(readFileSync(join(ROOT, 'data/disa-artifact-manifest.json'))));
   if (result.fallbackMode) {

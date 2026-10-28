@@ -20,3 +20,15 @@ test('atomic JSON writes preserve unchanged files and their mtimes', () => {
     rmSync(directory, { recursive: true, force: true });
   }
 });
+
+test('atomic JSON writes support compact serialization without changing content', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'control-atlas-json-compact-'));
+  const destination = join(directory, 'generated.json');
+  try {
+    assert.equal(writeJsonAtomically(destination, { value: 1, records: [{ id: 'A' }] }, { space: 0 }), true);
+    assert.equal(readFileSync(destination, 'utf8'), '{"value":1,"records":[{"id":"A"}]}\n');
+    assert.deepEqual(JSON.parse(readFileSync(destination, 'utf8')), { value: 1, records: [{ id: 'A' }] });
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});

@@ -5,9 +5,9 @@ function sleep(milliseconds) {
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
 }
 
-export function writeJsonAtomically(destination, document, { attempts = 5 } = {}) {
+export function writeJsonAtomically(destination, document, { attempts = 5, space = 2 } = {}) {
   mkdirSync(dirname(destination), { recursive: true });
-  const serialized = `${JSON.stringify(document, null, 2)}\n`;
+  const serialized = `${JSON.stringify(document, null, space)}\n`;
   if (existsSync(destination) && readFileSync(destination, 'utf8') === serialized) return false;
   const temporary = `${destination}.${process.pid}.${Date.now()}.tmp`;
   writeFileSync(temporary, serialized, 'utf8');

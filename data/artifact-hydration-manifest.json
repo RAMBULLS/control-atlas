@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T13:00:29.972Z",
+  "generated_at": "2026-10-28T15:42:45.302Z",
   "hydrated": 1,
   "removed_orphans": [],
   "results": [
@@ -11,7 +11,7 @@
       "sha256": "sha256:81113ba98afa2928f3dcff62022539f7ce30c315c32e14422f11ff95ce534352",
       "byte_length": 55271014,
       "record_count": 867,
-      "retrieved_at": "2026-10-21"
+      "retrieved_at": "2026-10-28"
     },
     {
       "id": "artifact-mitre-attack-ics",
@@ -21,7 +21,7 @@
       "sha256": "sha256:c9ca0ce523a1b5e512060a390415e8aefe8f6d32c5f82d7de81264960c1e1183",
       "byte_length": 5266683,
       "record_count": 127,
-      "retrieved_at": "2026-10-21"
+      "retrieved_at": "2026-10-28"
     },
     {
       "id": "artifact-mitre-d3fend-ontology",
@@ -31,7 +31,7 @@
       "sha256": "sha256:e1546d432c6aa64d45b62dd9e9484b0774ae84de7ff3605ff9dd4e20278957bf",
       "byte_length": 4833645,
       "record_count": 271,
-      "retrieved_at": "2026-10-21"
+      "retrieved_at": "2026-10-28"
     },
     {
       "id": "artifact-mitre-d3fend-mappings",
@@ -72,7 +72,7 @@
       "byte_length": 113309,
       "record_count": 117,
       "retrieved_at": "2026-08-07",
-      "checked_at": "2026-10-21T12:59:47.303Z",
+      "checked_at": "2026-10-28T15:42:16.295Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -84,7 +84,7 @@
       "byte_length": 413720,
       "record_count": 72,
       "retrieved_at": "2026-08-07",
-      "checked_at": "2026-10-21T12:59:47.736Z",
+      "checked_at": "2026-10-28T15:42:16.598Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -96,7 +96,7 @@
       "byte_length": 586076,
       "record_count": 5,
       "retrieved_at": "2026-10-20",
-      "checked_at": "2026-10-21T12:59:48.142Z",
+      "checked_at": "2026-10-28T15:42:16.814Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -108,7 +108,7 @@
       "byte_length": 417323,
       "record_count": 5137,
       "retrieved_at": "2026-09-10",
-      "checked_at": "2026-10-21T12:59:50.234Z",
+      "checked_at": "2026-10-28T15:42:17.438Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -120,7 +120,7 @@
       "byte_length": 10442037,
       "record_count": 1196,
       "retrieved_at": "2026-08-07",
-      "checked_at": "2026-10-21T12:59:51.175Z",
+      "checked_at": "2026-10-28T15:42:18.436Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -132,7 +132,7 @@
       "byte_length": 980722,
       "record_count": 115,
       "retrieved_at": "2026-08-07",
-      "checked_at": "2026-10-21T12:59:51.655Z",
+      "checked_at": "2026-10-28T15:42:18.813Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -144,7 +144,7 @@
       "byte_length": 253878,
       "record_count": 61,
       "retrieved_at": "2026-08-07",
-      "checked_at": "2026-10-21T12:59:52.076Z",
+      "checked_at": "2026-10-28T15:42:19.264Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -156,7 +156,7 @@
       "byte_length": 905711,
       "record_count": 130,
       "retrieved_at": "2026-08-07",
-      "checked_at": "2026-10-21T12:59:52.591Z",
+      "checked_at": "2026-10-28T15:42:19.679Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -168,7 +168,7 @@
       "byte_length": 709615,
       "record_count": 6,
       "retrieved_at": "2026-08-07",
-      "checked_at": "2026-10-21T12:59:53.381Z",
+      "checked_at": "2026-10-28T15:42:20.282Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -180,7 +180,7 @@
       "byte_length": 167183,
       "record_count": 2,
       "retrieved_at": "2026-08-07",
-      "checked_at": "2026-10-21T12:59:53.812Z",
+      "checked_at": "2026-10-28T15:42:20.646Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -192,7 +192,7 @@
       "byte_length": 201644,
       "record_count": 2,
       "retrieved_at": "2026-08-07",
-      "checked_at": "2026-10-21T12:59:54.352Z",
+      "checked_at": "2026-10-28T15:42:21.015Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -204,7 +204,7 @@
       "byte_length": 26451,
       "record_count": 0,
       "retrieved_at": "2026-08-07",
-      "checked_at": "2026-10-21T12:59:54.749Z",
+      "checked_at": "2026-10-28T15:42:21.310Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -216,7 +216,7 @@
       "byte_length": 38766,
       "record_count": 0,
       "retrieved_at": "2024-02-20",
-      "checked_at": "2026-10-21T12:59:55.177Z",
+      "checked_at": "2026-10-28T15:42:21.624Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -228,7 +228,7 @@
       "byte_length": 28991,
       "record_count": 0,
       "retrieved_at": "2026-08-07",
-      "checked_at": "2026-10-21T12:59:55.578Z",
+      "checked_at": "2026-10-28T15:42:21.914Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -240,7 +240,7 @@
       "byte_length": 966908,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T12:59:56.528Z",
+      "checked_at": "2026-10-28T15:42:22.338Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -252,7 +252,7 @@
       "byte_length": 1380107,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T12:59:57.490Z",
+      "checked_at": "2026-10-28T15:42:22.645Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -264,7 +264,7 @@
       "byte_length": 49243,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T12:59:57.908Z",
+      "checked_at": "2026-10-28T15:42:22.856Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -276,7 +276,7 @@
       "byte_length": 294001,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T12:59:58.247Z",
+      "checked_at": "2026-10-28T15:42:23.113Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -288,7 +288,7 @@
       "byte_length": 310256,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T12:59:58.662Z",
+      "checked_at": "2026-10-28T15:42:23.406Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -300,7 +300,7 @@
       "byte_length": 203874,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T12:59:59.018Z",
+      "checked_at": "2026-10-28T15:42:23.675Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -312,7 +312,7 @@
       "byte_length": 269794,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T12:59:59.350Z",
+      "checked_at": "2026-10-28T15:42:23.948Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -324,7 +324,7 @@
       "byte_length": 168581,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T12:59:59.742Z",
+      "checked_at": "2026-10-28T15:42:24.167Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -336,7 +336,7 @@
       "byte_length": 89472,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:00.452Z",
+      "checked_at": "2026-10-28T15:42:24.470Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -348,7 +348,7 @@
       "byte_length": 80838,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:00.843Z",
+      "checked_at": "2026-10-28T15:42:24.734Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -360,7 +360,7 @@
       "byte_length": 238330,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:01.407Z",
+      "checked_at": "2026-10-28T15:42:25.150Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -372,7 +372,7 @@
       "byte_length": 3513,
       "record_count": 249,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:01.757Z",
+      "checked_at": "2026-10-28T15:42:25.429Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -488,7 +488,7 @@
       "byte_length": 41933,
       "record_count": null,
       "retrieved_at": "2026-08-07",
-      "checked_at": "2026-10-21T13:00:04.141Z",
+      "checked_at": "2026-10-28T15:42:27.229Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -496,11 +496,11 @@
       "status": "OK",
       "http": 200,
       "url": "https://www.ai.mil/Initiatives/About/Resources/Pathway-to-AI-Readiness/Responsible-AI/",
-      "sha256": "sha256:2b72831221aa68e806eb7cd76efdd9478493e64c4d8f4d8a33b3a1323db55781",
-      "byte_length": 105016,
+      "sha256": "sha256:997cb69cc125b00c51164a795f08a579b5e077714ceb759080ba4fb80e879443",
+      "byte_length": 100748,
       "record_count": null,
-      "retrieved_at": "2026-10-21",
-      "checked_at": "2026-10-21T13:00:05.305Z",
+      "retrieved_at": "2026-10-28",
+      "checked_at": "2026-10-28T15:42:27.868Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -512,7 +512,7 @@
       "byte_length": 89692,
       "record_count": null,
       "retrieved_at": "2026-08-07",
-      "checked_at": "2026-10-21T13:00:06.848Z",
+      "checked_at": "2026-10-28T15:42:28.359Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -524,7 +524,7 @@
       "byte_length": 178061,
       "record_count": null,
       "retrieved_at": "2026-08-07",
-      "checked_at": "2026-10-21T13:00:07.536Z",
+      "checked_at": "2026-10-28T15:42:28.965Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -536,7 +536,7 @@
       "byte_length": 349827,
       "record_count": 219,
       "retrieved_at": "2026-08-07",
-      "checked_at": "2026-10-21T13:00:07.959Z",
+      "checked_at": "2026-10-28T15:42:29.354Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -544,11 +544,11 @@
       "status": "OK",
       "http": 200,
       "url": "https://csrc.nist.gov/extensions/nudp/services/json/csf/download?olirids=all",
-      "sha256": "sha256:5bf51f9512d005de820fbbc6bf1a1c0338da9999bfc1ff1ecf20dcaacc6c5ed3",
-      "byte_length": 144728,
+      "sha256": "sha256:fed33d100774d619e87bb6ec0f42a79add1d0d44754f33f722a8d06611778d00",
+      "byte_length": 144727,
       "record_count": null,
-      "retrieved_at": "2026-10-21",
-      "checked_at": "2026-10-21T13:00:12.089Z",
+      "retrieved_at": "2026-10-28",
+      "checked_at": "2026-10-28T15:42:30.957Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -560,7 +560,7 @@
       "byte_length": 80356,
       "record_count": null,
       "retrieved_at": "2026-08-07",
-      "checked_at": "2026-10-21T13:00:12.560Z",
+      "checked_at": "2026-10-28T15:42:31.245Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -572,7 +572,7 @@
       "byte_length": 218892,
       "record_count": null,
       "retrieved_at": "2026-08-07",
-      "checked_at": "2026-10-21T13:00:13.028Z",
+      "checked_at": "2026-10-28T15:42:31.636Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -584,7 +584,7 @@
       "byte_length": 2270327,
       "record_count": null,
       "retrieved_at": "2026-08-07",
-      "checked_at": "2026-10-21T13:00:13.397Z",
+      "checked_at": "2026-10-28T15:42:32.022Z",
       "check_scope": "publisher_artifact_retrieval"
     },
     {
@@ -592,10 +592,10 @@
       "status": "OK",
       "http": "range-verified",
       "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
-      "sha256": "sha256:399f3caa237d111073a792e397c1944291ffb1767eb9ec8d2e59f0f0e317f88d",
-      "byte_length": 375803537,
+      "sha256": "sha256:ea581eb2d5c4a210440852b67ea4dd9564fffdf57c8c94aec971047fe0c01d1d",
+      "byte_length": 375827141,
       "record_count": 0,
-      "retrieved_at": "2026-10-21",
+      "retrieved_at": "2026-10-28",
       "attestation": "DISA compilation range download and parse"
     },
     {
@@ -603,30 +603,30 @@
       "status": "OK",
       "http": "local",
       "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
-      "sha256": "sha256:c1879513bcb86c4f8134c6f1fb203ce3a5023e0368d3d3d8eeca48f470a82c09",
+      "sha256": "sha256:b52b72046b1011c026b1fe8e51a8404d301d3f1a4c41bec61e5bcc5724226cff",
       "byte_length": 84805620,
       "record_count": 27430,
-      "retrieved_at": "2026-10-21"
+      "retrieved_at": "2026-10-28"
     },
     {
       "id": "artifact-disa-srg-library",
       "status": "OK",
       "http": "local",
       "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
-      "sha256": "sha256:9ccf2dfa8d881ade87699872d6ea2b27f1dce9cae0886b49f4ca7fe82c0ef7d7",
+      "sha256": "sha256:f7a921039334a179984f35b14b73d2e993767ba905da8a7639bb69af154b4f2f",
       "byte_length": 6797592,
       "record_count": 2551,
-      "retrieved_at": "2026-10-21"
+      "retrieved_at": "2026-10-28"
     },
     {
       "id": "artifact-disa-stig-srg-cci-references",
       "status": "OK",
       "http": "local",
       "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
-      "sha256": "sha256:60f5d33ae89e5258b3090ac3421fe7da50bb69368c0d9054f5d5ccd9651d6fde",
-      "byte_length": 90385233,
+      "sha256": "sha256:d1428783fbf8989a17de4d1c3bd39422e1470ea3c14a67680405e09abe61d6f7",
+      "byte_length": 102608144,
       "record_count": null,
-      "retrieved_at": "2026-10-21"
+      "retrieved_at": "2026-10-28"
     },
     {
       "id": "artifact-nist-800-53b-low-profile",
@@ -637,7 +637,7 @@
       "byte_length": 7234,
       "record_count": 1,
       "retrieved_at": "2026-10-18",
-      "checked_at": "2026-10-21T13:00:15.543Z",
+      "checked_at": "2026-10-28T15:42:33.719Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -649,7 +649,7 @@
       "byte_length": 10498,
       "record_count": 1,
       "retrieved_at": "2026-10-18",
-      "checked_at": "2026-10-21T13:00:15.930Z",
+      "checked_at": "2026-10-28T15:42:34.099Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -661,7 +661,7 @@
       "byte_length": 12492,
       "record_count": 1,
       "retrieved_at": "2026-10-18",
-      "checked_at": "2026-10-21T13:00:16.368Z",
+      "checked_at": "2026-10-28T15:42:34.468Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -673,7 +673,7 @@
       "byte_length": 6064,
       "record_count": 1,
       "retrieved_at": "2026-10-18",
-      "checked_at": "2026-10-21T13:00:16.854Z",
+      "checked_at": "2026-10-28T15:42:34.837Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -681,10 +681,10 @@
       "status": "OK",
       "http": "local",
       "url": "https://github.com/RAMBULLS/control-atlas/blob/main/data/800-53b-baselines.json",
-      "sha256": "sha256:172672923c0d93903fbe7cc8f9a9b94ff286a8f5baaf2abdd61e4ab83975f137",
+      "sha256": "sha256:1f93b930a752d1a2cf120091e18df4d427e255826cbe79320f422ca12fa946ec",
       "byte_length": 3730,
       "record_count": 4,
-      "retrieved_at": "2026-10-21",
+      "retrieved_at": "2026-10-28",
       "evidence_scope": "local_normalized",
       "local_path": "data/800-53b-baselines.json",
       "format": "json",
@@ -710,7 +710,7 @@
       "byte_length": 78427,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:17.550Z",
+      "checked_at": "2026-10-28T15:42:35.575Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -722,7 +722,7 @@
       "byte_length": 131518,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:17.945Z",
+      "checked_at": "2026-10-28T15:42:35.798Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -734,7 +734,7 @@
       "byte_length": 74648,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:18.233Z",
+      "checked_at": "2026-10-28T15:42:36.020Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -746,7 +746,7 @@
       "byte_length": 54660,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:18.646Z",
+      "checked_at": "2026-10-28T15:42:36.406Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -758,7 +758,7 @@
       "byte_length": 58815,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:18.928Z",
+      "checked_at": "2026-10-28T15:42:36.693Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -770,7 +770,7 @@
       "byte_length": 79945,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:19.208Z",
+      "checked_at": "2026-10-28T15:42:36.982Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -782,7 +782,7 @@
       "byte_length": 71113,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:19.599Z",
+      "checked_at": "2026-10-28T15:42:37.198Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -794,7 +794,7 @@
       "byte_length": 50474,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:19.952Z",
+      "checked_at": "2026-10-28T15:42:37.430Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -806,7 +806,7 @@
       "byte_length": 72766,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:20.353Z",
+      "checked_at": "2026-10-28T15:42:37.651Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -818,7 +818,7 @@
       "byte_length": 53574,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:20.623Z",
+      "checked_at": "2026-10-28T15:42:37.879Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -830,7 +830,7 @@
       "byte_length": 31647,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:20.995Z",
+      "checked_at": "2026-10-28T15:42:38.225Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -842,7 +842,7 @@
       "byte_length": 30623,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:21.271Z",
+      "checked_at": "2026-10-28T15:42:38.523Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -854,7 +854,7 @@
       "byte_length": 80846,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:21.539Z",
+      "checked_at": "2026-10-28T15:42:38.748Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -866,7 +866,7 @@
       "byte_length": 80302,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:21.825Z",
+      "checked_at": "2026-10-28T15:42:38.976Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -878,7 +878,7 @@
       "byte_length": 70692,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:22.105Z",
+      "checked_at": "2026-10-28T15:42:39.201Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -890,7 +890,7 @@
       "byte_length": 50859,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:22.514Z",
+      "checked_at": "2026-10-28T15:42:39.526Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -902,7 +902,7 @@
       "byte_length": 57115,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:22.918Z",
+      "checked_at": "2026-10-28T15:42:39.799Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -914,7 +914,7 @@
       "byte_length": 65382,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:23.192Z",
+      "checked_at": "2026-10-28T15:42:40.025Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -926,7 +926,7 @@
       "byte_length": 65550,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:23.530Z",
+      "checked_at": "2026-10-28T15:42:40.248Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -938,7 +938,7 @@
       "byte_length": 52365,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:23.805Z",
+      "checked_at": "2026-10-28T15:42:40.478Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -950,7 +950,7 @@
       "byte_length": 66008,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:24.227Z",
+      "checked_at": "2026-10-28T15:42:40.701Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -962,7 +962,7 @@
       "byte_length": 60763,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:24.513Z",
+      "checked_at": "2026-10-28T15:42:40.957Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -974,7 +974,7 @@
       "byte_length": 61503,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:24.810Z",
+      "checked_at": "2026-10-28T15:42:41.259Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -986,7 +986,7 @@
       "byte_length": 47968,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:25.187Z",
+      "checked_at": "2026-10-28T15:42:41.562Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -998,7 +998,7 @@
       "byte_length": 58568,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:25.479Z",
+      "checked_at": "2026-10-28T15:42:41.855Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -1010,7 +1010,7 @@
       "byte_length": 70903,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:25.771Z",
+      "checked_at": "2026-10-28T15:42:42.073Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -1022,7 +1022,7 @@
       "byte_length": 83318,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:26.062Z",
+      "checked_at": "2026-10-28T15:42:42.349Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -1034,7 +1034,7 @@
       "byte_length": 59466,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:26.343Z",
+      "checked_at": "2026-10-28T15:42:42.564Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -1046,7 +1046,7 @@
       "byte_length": 68696,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:26.737Z",
+      "checked_at": "2026-10-28T15:42:42.789Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -1058,7 +1058,7 @@
       "byte_length": 53260,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:27.143Z",
+      "checked_at": "2026-10-28T15:42:43.006Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -1070,7 +1070,7 @@
       "byte_length": 62668,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:27.530Z",
+      "checked_at": "2026-10-28T15:42:43.347Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -1082,7 +1082,7 @@
       "byte_length": 46254,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:27.808Z",
+      "checked_at": "2026-10-28T15:42:43.653Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -1094,7 +1094,7 @@
       "byte_length": 49353,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:28.169Z",
+      "checked_at": "2026-10-28T15:42:43.856Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -1106,7 +1106,7 @@
       "byte_length": 40142,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:28.517Z",
+      "checked_at": "2026-10-28T15:42:44.132Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -1118,7 +1118,7 @@
       "byte_length": 56468,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:28.866Z",
+      "checked_at": "2026-10-28T15:42:44.601Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -1130,7 +1130,7 @@
       "byte_length": 46077,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:29.209Z",
+      "checked_at": "2026-10-28T15:42:44.818Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -1142,7 +1142,7 @@
       "byte_length": 57923,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:29.596Z",
+      "checked_at": "2026-10-28T15:42:45.036Z",
       "check_scope": "pinned_edition_retrieval"
     },
     {
@@ -1154,7 +1154,7 @@
       "byte_length": 47594,
       "record_count": null,
       "retrieved_at": "2026-08-12",
-      "checked_at": "2026-10-21T13:00:29.972Z",
+      "checked_at": "2026-10-28T15:42:45.302Z",
       "check_scope": "pinned_edition_retrieval"
     }
   ]

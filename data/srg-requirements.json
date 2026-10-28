@@ -4,7 +4,7 @@
   "source_artifact": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
   "source_version": "V2R3",
   "snapshot_date": "2026-09-01",
-  "checksum": "sha256:399f3caa237d111073a792e397c1944291ffb1767eb9ec8d2e59f0f0e317f88d",
+  "checksum": "sha256:ea581eb2d5c4a210440852b67ea4dd9564fffdf57c8c94aec971047fe0c01d1d",
   "records": [
     {
       "id": "V-202013",

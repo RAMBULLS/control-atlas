@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "source_inventory": "data/nist-structured-asset-discovery.json",
-  "source_inventory_sha256": "sha256:8447f7d7259a87d213df13d743d3527587e6344548a091dca01ed9e26c7b9e6f",
+  "source_inventory_sha256": "sha256:09f6a5322e3d3fc56a64a73e6bb4da6dda87dff3cb527fab91097f004f2f6de6",
   "reconciliation": {
     "assets_discovered": 28,
     "assets_classified": 28,

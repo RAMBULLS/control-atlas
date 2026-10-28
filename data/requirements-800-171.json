@@ -1411,8 +1411,8 @@
     "raw_identity_sha256": "sha256:668eff4124113934b1370dc28d7a9306d94a0c7cd41528249e9473d71488eef9",
     "imported_identity_sha256": "sha256:bf6c85bf816b6654b2c70991d4054acd08d116c4ece12ac43be08083a5079d17",
     "source_url": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-171/rev3/json/NIST_SP800-171_rev3_catalog.json",
-    "source_sha256": "sha256:21b6f3b118b6e5b305aaed3a0e4b70fa5d1d9aa388a0b92e7d6ddfed69e93ac3",
-    "source_byte_length": 905711,
+    "source_sha256": "sha256:fd68bad4c1fee98dd1b2511884b585fb1f14265d4c5693d0492a25dd66e73dde",
+    "source_byte_length": 905717,
     "publisher_version": "1.1.0"
   }
 }

@@ -1,12 +1,12 @@
 {
   "schema_version": "1.0",
   "source_inventory": "data/nist-pages-discovery.json",
-  "source_inventory_sha256": "sha256:167353f8f0181062dc4063ccd7ab7c877b5dbe931c0294bec068dcb2c0b8b102",
+  "source_inventory_sha256": "sha256:ac4fd949369e227f50c1fbd8022df9935e0b3e93a7c10f1a4b28b244c37b940b",
   "reconciliation": {
     "projects_discovered": 257,
     "project_landing_pages_attempted": 257,
-    "pages_attempted": 345,
-    "pages_fetched": 340,
+    "pages_attempted": 344,
+    "pages_fetched": 339,
     "pages_failed": 4,
     "structured_assets_discovered": 28,
     "spreadsheets_discovered": 8,
@@ -1763,24 +1763,16 @@
       "structured_assets": 0
     },
     {
-      "requested_url": "https://pages.nist.gov/nccoe-devsecops/appendix-d.html",
-      "url": "https://pages.nist.gov/nccoe-devsecops/appendix-d.html",
+      "requested_url": "https://pages.nist.gov/nccoe-devsecops/example-implementation-1-2/appendix-d.html",
+      "url": "https://pages.nist.gov/nccoe-devsecops/example-implementation-1-2/appendix-d.html",
       "project": "nccoe-devsecops",
       "depth": 1,
       "status": "fetched",
       "structured_assets": 0
     },
     {
-      "requested_url": "https://pages.nist.gov/nccoe-devsecops/functional-demonstration-scenarios.html",
-      "url": "https://pages.nist.gov/nccoe-devsecops/functional-demonstration-scenarios.html",
-      "project": "nccoe-devsecops",
-      "depth": 1,
-      "status": "fetched",
-      "structured_assets": 0
-    },
-    {
-      "requested_url": "https://pages.nist.gov/nccoe-devsecops/mapping-ssdf.html",
-      "url": "https://pages.nist.gov/nccoe-devsecops/mapping-ssdf.html",
+      "requested_url": "https://pages.nist.gov/nccoe-devsecops/example-implementation-1-2/mapping-ssdf.html",
+      "url": "https://pages.nist.gov/nccoe-devsecops/example-implementation-1-2/mapping-ssdf.html",
       "project": "nccoe-devsecops",
       "depth": 1,
       "status": "fetched",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T12:58:18.071Z",
+  "generated_at": "2026-10-28T15:41:10.262Z",
   "source": "https://csrc.nist.gov/projects/olir/informative-reference-catalog",
   "api_endpoint": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog",
   "total_entries": 105,
@@ -142,7 +142,7 @@
           "status": 200,
           "final_url": "https://drive.google.com/drive/folders/11qgNa4EavIN5YFh0gfTl9D-4VJISBe-p?usp=sharing",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 339825
+          "byte_length": 340918
         },
         {
           "kind": "artifact download",
@@ -483,7 +483,7 @@
           "status": 200,
           "final_url": "https://drive.google.com/drive/folders/1uqUpwlj7NeP-TDSPR2sHaVXHOQlabCCG?usp=sharing",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 327694
+          "byte_length": 328831
         },
         {
           "kind": "artifact download",
@@ -801,7 +801,7 @@
           "status": 200,
           "final_url": "https://cyberoon.com/research/ai-soc-v10-to-nist-csf-20-informative-reference-mapping",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 2093032
+          "byte_length": 2093298
         },
         {
           "kind": "artifact download",
@@ -809,7 +809,7 @@
           "status": 200,
           "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 291488
+          "byte_length": 291704
         },
         {
           "kind": "artifact download",
@@ -817,7 +817,7 @@
           "status": 200,
           "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/releases/tag/v1.0.0",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 195488
+          "byte_length": 195477
         },
         {
           "kind": "artifact download",
@@ -825,7 +825,7 @@
           "status": 200,
           "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/blob/main/docs/AI_SOC_Controls_Catalog_v1_0.pdf",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 231970
+          "byte_length": 232128
         },
         {
           "kind": "GitHub Contents API",
@@ -1031,7 +1031,7 @@
           "kind": "artifact download",
           "url": "https://docs.google.com/spreadsheets/d/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP/export?format=xlsx",
           "status": 200,
-          "final_url": "https://doc-0c-98-sheets.googleusercontent.com/export/f3kk9gtum31ktuqh54kn7i1e14/pcjoagggraq3dnvrruleu1pr0s/1792587500000/100790643046296837536/*/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP?format=xlsx",
+          "final_url": "https://doc-0c-98-sheets.googleusercontent.com/export/f3kk9gtum31ktuqh54kn7i1e14/unvfbrldt6vhmqfhpv9laaik08/1793202070000/100790643046296837536/*/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP?format=xlsx",
           "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "byte_length": 21218
         }
@@ -1062,7 +1062,7 @@
       "artifact": {
         "map_file": "maps/olir/222.json",
         "artifact_url": "https://bxaios.com/nist-alignment/",
-        "checksum": "sha256:c23b9f1787dd396f1965c8ddcb3c2b5a83b6ab3717e943e28f1d85028c349119",
+        "checksum": "sha256:19ab8ea4c8156e86ebb28f516a8239410a62ce71c4fd6d93a45bfa24dab53537",
         "byte_length": 143570,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
@@ -1121,7 +1121,7 @@
       "artifact": {
         "map_file": "maps/olir/203.json",
         "artifact_url": "https://bxaios.com/nist-alignment/",
-        "checksum": "sha256:c23b9f1787dd396f1965c8ddcb3c2b5a83b6ab3717e943e28f1d85028c349119",
+        "checksum": "sha256:19ab8ea4c8156e86ebb28f516a8239410a62ce71c4fd6d93a45bfa24dab53537",
         "byte_length": 143570,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
@@ -1198,7 +1198,7 @@
           "status": 200,
           "final_url": "https://www.infoblox.com/solutions/compliance/",
           "content_type": "text/html; charset=UTF-8",
-          "byte_length": 533594
+          "byte_length": 534481
         }
       ]
     },
@@ -1350,7 +1350,7 @@
       "retention": {
         "cause": "publisher_unavailable",
         "first_retained_at": "2026-09-21T15:12:54.460Z",
-        "consecutive_refreshes": 6
+        "consecutive_refreshes": 7
       }
     },
     {
@@ -1407,7 +1407,7 @@
           "status": 200,
           "final_url": "https://zenodo.org/records/18498447",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 93965
+          "byte_length": 94308
         },
         {
           "kind": "artifact download",
@@ -1575,7 +1575,7 @@
           "status": 200,
           "final_url": "https://www.cisecurity.org/insights/white-papers/cis-controls-v8-1-mapping-to-nist-csf-2-0",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 116738
+          "byte_length": 116445
         }
       ]
     },
@@ -1804,7 +1804,7 @@
       "artifact": {
         "map_file": "maps/olir/176.json",
         "artifact_url": "https://www.gov.uk/government/publications/cyber-governance-mapping/mapping-cyber-governance-code-to-nist-cyber-security-framework",
-        "checksum": "sha256:c0bd75eb0ff3581b049a28b9fe6f831bc25b74ff3ef84e26ddcc7c775c28c918",
+        "checksum": "sha256:03ff4dac9735f5e33abaf82d22d76647e9ca3beab1713e9d585fc2dde296b91c",
         "byte_length": 88370,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
@@ -2032,7 +2032,7 @@
           "status": 200,
           "final_url": "https://cyberriskinstitute.org/the-profile/",
           "content_type": "text/html; charset=UTF-8",
-          "byte_length": 83404
+          "byte_length": 89053
         }
       ]
     },
@@ -2847,7 +2847,7 @@
           "status": 200,
           "final_url": "https://cyberriskinstitute.org/The-Profile/",
           "content_type": "text/html; charset=UTF-8",
-          "byte_length": 83404
+          "byte_length": 89053
         }
       ]
     },
@@ -2894,7 +2894,7 @@
           "status": 200,
           "final_url": "https://www.cisecurity.org/controls",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 274759
+          "byte_length": 272576
         }
       ]
     },
@@ -3395,11 +3395,11 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
-      "availability": "artifact_replaced_by_html",
+      "availability": "unexpected_html_response",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
-      "quarantine_reason": "no public relationship mapping could be downloaded from the registered NIST submission locations; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200",
+      "quarantine_reason": "no public relationship mapping could be downloaded from the registered NIST submission locations; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 200",
       "retrieval_attempts": [
         {
           "kind": "NIST catalog detail endpoint",
@@ -3417,10 +3417,19 @@
           "kind": "artifact download",
           "url": "https://content.securecontrolsframework.com/olir/Secure-Controls-Framework-SCFv2023.2-to-NIST-800-171-R2.xlsx",
           "status": 200,
-          "final_url": "https://securecontrolsframework.com/free-content/scf-download",
+          "final_url": "https://content.securecontrolsframework.com/olir/Secure-Controls-Framework-SCFv2023.2-to-NIST-800-171-R2.xlsx",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 58881,
-          "availability": "artifact_replaced_by_html"
+          "byte_length": 7125,
+          "availability": "unexpected_html_response"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://content.securecontrolsframework.com/olir/Secure-Controls-Framework-SCFv2023.2-to-NIST-800-171-R2.xlsx",
+          "status": 200,
+          "final_url": "https://content.securecontrolsframework.com/olir/Secure-Controls-Framework-SCFv2023.2-to-NIST-800-171-R2.xlsx",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 7182,
+          "availability": "unexpected_html_response"
         }
       ]
     },

@@ -123,7 +123,7 @@ export function JourneyCard(props: {
               return (
                 <li key={p.id}>
                   <button aria-label={`${p.role}: ${pub.name}${alias !== pub.name ? ` (${alias})` : ""} · ${pub.publisher}. Show it on the map.`} onClick={() => props.onPublication(p.id)} type="button">
-                    <b>{p.role}</b>
+                    <b>{p.role}:</b>
                     <small><span className="atl-journey__official">{pub.name}</span>{alias !== pub.name ? ` (${alias})` : ""} · {pub.publisher}</small>
                   </button>
                 </li>

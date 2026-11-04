@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "retrieved_at": "2026-10-28T15:40:52.798Z",
+  "retrieved_at": "2026-11-04T15:28:08.097Z",
   "discovery": {
     "url": "https://api.github.com/repos/usnistgov/oscal-content/contents/nist.gov/SP800-53/rev5/json?ref=f0de6d8d8c059d374f15e0ae07508d82e370fc1d",
     "sha256": "sha256:179062a0479005134aa8802f486c03f047c4986fe3b2f6ad289a7e51ef6671a3",

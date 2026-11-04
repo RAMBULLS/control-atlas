@@ -1,6 +1,6 @@
 {
   "schema_version": "4.0",
-  "generated_at": "2026-10-28T15:45:04.303Z",
+  "generated_at": "2026-11-04T15:33:14.509Z",
   "completeness": {
     "total_publications": 103,
     "total_artifacts": 98,
@@ -60,7 +60,7 @@
         "direct_file_import",
         "extracted_from_official_publication"
       ],
-      "last_refresh": "2026-10-28",
+      "last_refresh": "2026-11-04",
       "has_shard": true
     },
     {
@@ -83,7 +83,7 @@
       "methods": [
         "extracted_from_official_publication"
       ],
-      "last_refresh": "2026-10-28",
+      "last_refresh": "2026-11-04",
       "has_shard": true
     },
     {
@@ -204,11 +204,11 @@
     {
       "catalog_id": "fedramp-2026",
       "completeness_status": "reconciled",
-      "expected_records": 448,
+      "expected_records": 449,
       "snapshot_expected_records": null,
       "inventory_evidence_class": "publisher_inventory",
       "independent_inventory": true,
-      "imported_records": 448,
+      "imported_records": 449,
       "excluded_records": 0,
       "missing_records": 0,
       "expected_basis": "Eligible publisher identities from an independently reconciled raw inventory when present. Accepted older snapshots explicitly use tracked reviewed counts; the inventory entry declares which evidence applies.",
@@ -221,7 +221,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-28",
+      "last_refresh": "2026-11-04",
       "has_shard": true
     },
     {
@@ -336,7 +336,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-28",
+      "last_refresh": "2026-11-04",
       "has_shard": true
     },
     {
@@ -359,7 +359,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-28",
+      "last_refresh": "2026-11-04",
       "has_shard": true
     },
     {
@@ -382,7 +382,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-28",
+      "last_refresh": "2026-11-04",
       "has_shard": true
     },
     {
@@ -405,7 +405,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-28",
+      "last_refresh": "2026-08-07",
       "has_shard": true
     },
     {
@@ -498,7 +498,7 @@
         "extracted_from_official_publication",
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-28",
+      "last_refresh": "2026-11-04",
       "has_shard": true
     },
     {
@@ -544,7 +544,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-10-28",
+      "last_refresh": "2026-11-04",
       "has_shard": true
     },
     {

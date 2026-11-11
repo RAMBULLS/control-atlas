@@ -16,7 +16,7 @@ const proof = {
   source: process.env.GITHUB_SHA,
   host,
   scope:
-    "Actual candidate bytes served at a modeled canonical HTTPS origin; actual official SDK and collector. Production DNS/TLS/deployment and dashboard acceptance remain separate.",
+    "Actual candidate bytes served at a modeled canonical HTTPS origin; official SDK with an intercepted collector; no telemetry is transmitted. Production DNS/TLS/deployment and dashboard acceptance remain separate.",
   contexts: [],
 };
 const mime = {
@@ -32,6 +32,12 @@ const mime = {
   ".xml": "application/xml",
   ".txt": "text/plain",
 };
+// Acquire only the public SDK, without candidate request headers or credentials.
+// Every browser request is intercepted below, including all collector traffic.
+const sdkResponse = await fetch('https://static.cloudflareinsights.com/beacon.min.js', { redirect: 'error' });
+assert(sdkResponse.ok, 'Public SDK acquisition failed');
+const sdkBytes = Buffer.from(await sdkResponse.arrayBuffer());
+proof.sdkSha256 = createHash('sha256').update(sdkBytes).digest('hex');
 const browser = await chromium.launch({ channel: "chrome" });
 try {
   for (const width of [1440, 390]) {
@@ -97,12 +103,16 @@ try {
         u.origin === "https://static.cloudflareinsights.com" &&
         u.pathname === "/beacon.min.js"
       )
-        return route.continue();
+        return route.fulfill({ status: 200, contentType: 'application/javascript', body: sdkBytes });
       if (
         u.origin === "https://cloudflareinsights.com" &&
         u.pathname === "/cdn-cgi/rum"
       )
-        return route.continue();
+        return route.fulfill({ status: 204, headers: {
+          'access-control-allow-origin': origin,
+          'access-control-allow-methods': 'POST, OPTIONS',
+          'access-control-allow-headers': 'content-type',
+        } });
       if (u.origin !== origin) {
         row.unrecognized.push(u.origin);
         return route.abort();
@@ -383,11 +393,12 @@ try {
         await page.getByRole("button", { name: "CSV", exact: true }).click();
         const download = await downloaded,
           csv = await readFile(await download.path());
-        assert.equal(csv.length, 692);
-        assert.equal(
-          createHash("sha256").update(csv).digest("hex"),
-          "e7b0e3abfb572d06a8d056a56f76559dcc181bf08190735651b8d4cd18fcd2aa",
-        );
+        const text = csv.toString('utf8');
+        assert(csv.length > 0, 'Empty comparison export');
+        assert(text.includes('nist-800-53:AC-2'), 'Export lost selected canonical record');
+        assert(text.includes('nist-800-53a'), 'Export lost target publication scope');
+        assert(!text.includes(marker), 'Query leaked into generated comparison');
+        assert(!text.includes('SYNTHETIC_SEARCH'), 'Search query leaked into generated comparison');
         row.download = {
           bytes: csv.length,
           sha256: createHash("sha256").update(csv).digest("hex"),

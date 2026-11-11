@@ -195,6 +195,7 @@ jobs:
       - run: npm ci
       - run: npm run lint:automation
       - run: npm run test:ci-contracts
+      - run: npm run lint:assurance && npm run test:assurance:contracts && npm run test:assurance:evidence && npm run verify:assurance
 
   content:
     name: Documentation contracts
@@ -249,6 +250,7 @@ jobs:
       - run: npm run lint:ci
       - run: npm run typecheck
       - run: npm run test:ci-contracts
+      - run: npm run lint:assurance && npm run test:assurance:contracts && npm run test:assurance:evidence && npm run verify:assurance
 
   generated:
     name: Prepare reproducible generated data
@@ -443,8 +445,12 @@ jobs:
 
   analytics-candidate:
     name: Analytics candidate qualification
+    # Candidate harness never receives the runner API token. All collector
+    # traffic is fulfilled locally; this is not production analytics evidence.
+    env:
+      ATLAS_RUNNER_TOKEN: ''
     needs: [changes, build]
-    if: ${{ github.event_name == 'pull_request' && github.head_ref == 'chore/rb-domain-t16-analytics' && needs.changes.outputs.build_required == 'true' }}
+    if: ${{ needs.changes.outputs.build_required == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 7
     steps:
@@ -460,7 +466,7 @@ jobs:
           path: dist/site
       - name: Prepare hosted browser library
         run: npm install --prefix "$RUNNER_TEMP/browser" --no-audit --no-fund --ignore-scripts playwright@1.64.0
-      - name: Qualify the immutable candidate with the official SDK and collector
+      - name: Qualify the immutable candidate with intercepted analytics collection
         env:
           PLAYWRIGHT_MODULE: ${{ runner.temp }}/browser/node_modules/playwright/index.mjs
           ANALYTICS_HOST: atlas.rambulls.dev

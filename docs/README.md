@@ -17,7 +17,7 @@ Only durable direction belongs in `docs/`:
 | Sources, publisher structure, relationships, and generated data | [Data policy](DATA_POLICY.md) |
 | Record-type source fidelity and semantic presentation roles | [Record type fidelity audit](RECORD_TYPE_FIDELITY_AUDIT.md) |
 | Governed discovery vocabulary and applicability coverage | [Taxonomy contract](TAXONOMY.md) |
-| Verification, release, and operations | [Operations](OPERATIONS.md) |
+| Verification, release, and operations | [Operations](OPERATIONS.md), including the executable nine-promise assurance contract |
 | CI/CD workflow architecture | [CI/CD](CI_CD.md) |
 | Open work only | [Backlog](BACKLOG.md) |
 | Third-party attribution | [Third-party notices](THIRD_PARTY_NOTICES.md) |

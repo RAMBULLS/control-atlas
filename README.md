@@ -42,12 +42,12 @@ Future work must preserve this order:
 Mappings and starter documents are based on public sources, with their owners
 and limitations attached.
 
-This application has no backend.
+This application has no backend. Core research and downloads require no account. Optional consent-controlled Cloudflare analytics measures page visits and loading speed; declining does not disable the site. Search queries and generated document content must remain local.
 
 ---
 
 ## Live Site
-Live site target: https://rambulls.github.io/control-atlas/
+Live site: https://atlas.rambulls.dev
 
 Built by [RAM.BULLS](https://rambulls.pages.dev/). If Control Atlas saves you time, you can [support the work](https://buymeacoffee.com/ram.bulls).
 

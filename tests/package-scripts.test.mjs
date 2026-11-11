@@ -355,3 +355,24 @@ test('Dependabot maintains npm packages and pinned GitHub Actions', () => {
   assert.match(dependabot, /package-ecosystem:\s*"npm"/);
   assert.match(dependabot, /package-ecosystem:\s*"github-actions"/);
 });
+
+test('assurance checks retain hosted guards and real registry-driven browser coverage', () => {
+  for (const name of ['test:assurance:contracts', 'verify:assurance', 'test:assurance:search', 'test:assurance:evidence', 'verify:assurance:execution', 'lint:assurance']) {
+    assert.equal(packageJson.scripts[`pre${name}`], 'node ./tools/validation-location.mjs');
+  }
+  assert.match(packageJson.scripts['test:runtime'], /assurance-search-recall/);
+  assert.match(packageJson.scripts['test:e2e:smoke'], /assurance-guides/);
+  assert.match(packageJson.scripts['test:e2e:smoke'], /assurance-template-downloads/);
+  assert.match(ci, /npm run test:assurance:contracts && npm run test:assurance:evidence && npm run verify:assurance/);
+  const qualification = parse(ci).jobs['analytics-candidate'];
+  assert.equal(qualification.if, "${{ needs.changes.outputs.build_required == 'true' }}");
+});
+
+test('routine candidate analytics cannot send collector traffic or inherit runner credentials', () => {
+  const qualification = parse(ci).jobs['analytics-candidate'];
+  assert.equal(qualification.env.ATLAS_RUNNER_TOKEN, '');
+  const harness = readFileSync('.github/analytics/candidate.mjs', 'utf8');
+  assert.doesNotMatch(harness, /route\.continue\(/);
+  assert.match(harness, /route\.fulfill\(\{ status: 204/);
+  assert.doesNotMatch(harness, /e7b0e3abfb572d06a8d056a56f76559dcc181bf08190735651b8d4cd18fcd2aa/);
+});

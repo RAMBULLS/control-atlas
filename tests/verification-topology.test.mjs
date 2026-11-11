@@ -28,3 +28,15 @@ test('large immutable generated fixtures are parsed once per test process', () =
     ['fixture-root', 'edges'],
   ]);
 });
+
+test('assurance registry edits retain mandatory checks in the existing affected planner', async () => {
+  const { classifyChangedPaths } = await import('../tools/classify-change-scope.mjs');
+  const { createVerificationPlan } = await import('../tools/verify-affected.mjs');
+  for (const path of ['config/assurance/promises.json', 'config/assurance/promises.schema.json', 'tools/lib/assurance-contract.mjs', 'tools/verify-assurance.mjs']) {
+    const plan = createVerificationPlan([path], classifyChangedPaths([path]));
+    assert.equal(plan.blocked, false, `${path}: ${plan.reasons}`);
+    assert.ok(plan.steps.some(step => step.id === 'assurance-contracts'), path);
+    assert.ok(plan.steps.some(step => step.id === 'assurance-registry'), path);
+    assert.ok(plan.steps.every(step => step.expectedTests <= 50 && step.budgetSeconds <= 120));
+  }
+});

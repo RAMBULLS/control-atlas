@@ -40,22 +40,13 @@ Record presentation is a validated semantic contract layer between runtime data 
 
 - GitHub Pages serves static HTML, CSS, JavaScript, and generated public-data bundles.
 - Search, browsing, relationship comparison, and exports run in the browser.
-- No backend, database, authentication, login, telemetry, or user, organization, or system data exists.
+- No backend, database, authentication, login, or operational user, organization, or system data exists. Optional consent-controlled Cloudflare analytics measures page visits and loading speed; search queries and generated document contents must not be transmitted. Declining or withdrawing consent preserves core same-origin functionality.
 - No user uploads, evidence ingestion, runtime scan parsing, operational-system connections, or server-side template generation are allowed.
 - Generated templates must remain local to the browser and must not be transmitted or stored.
 
-## Translation-First Product Standard
+## Source-First Product Standard
 
-Control Atlas is not a data explorer first. It is a public reference workbench that translates complex cybersecurity guidance into clear, traceable user action.
-
-Future work must preserve this order:
-
-1. User intent
-2. Plain-language meaning
-3. Visible relationships
-4. Source trust
-5. Recommended next action
-6. Raw technical detail only on demand
+Preserve exact publication identity and official text first, followed by publisher-declared hierarchy, labeled source-traceable relationships, concrete retrieval/comparison/navigation/document actions, product-authored notes and limitations, and raw technical detail on demand. Product explanations never replace source text or decide applicability, baseline selection, inheritance or authorization.
 
 ## Adopted Contracts
 
@@ -96,7 +87,7 @@ Blocked relationships remain graph-health findings and never become displayable 
 ## Technology Baseline
 
 - `src/` is the source-of-truth application tree and `tools/build-static-site.mjs` stages the deployable site into `dist/site`.
-- React + Vite render the translation-first UI while existing runtime/data contracts remain reusable.
+- React + Vite render the source-first UI while existing runtime/data contracts remain reusable.
 - The existing classic first-paint shell starts bounded module hints and compact arrival data before stylesheet completion. The runtime consumes those exact response promises and retains validation, timeout, fallback and retry behavior; Home requests no interactive code.
 - The Resources directory consumes the generated search projection, including exact summary provenance, access flags and review dates. Resource detail pages load the complete dataset and source evidence.
 - The Atlas route uses React Flow and ELK only for the bounded area/publication overview, then switches to semantic DOM for publisher-native levels.
@@ -105,13 +96,13 @@ Blocked relationships remain graph-health findings and never become displayable 
 - Tables, search, filters, and detail pages remain primary browsing models; visual relationships are supporting context, not a giant-canvas navigation system.
 - GitHub Pages remains the deployment target.
 - MiniSearch is the target search pattern.
-- Zod + JSON Schema is the target validation pattern.
+- JSON Schema and the existing AJV runtime validate public-data and assurance contracts.
 - AJV validates the application boundary and normalized output for OSCAL inputs; the official NIST OSCAL CLI remains an independent upstream-conformance gate.
 - JSON/JSONL runtime bundles and YAML curated registry files are the target data format pattern.
 
 ## Component Boundaries
 
-- `src/ui/`: translation-first page shell, reusable components, and query-state adapters.
+- `src/ui/`: source-first page shell, reusable components, and query-state adapters.
 - `src/app/`, `src/content/`, and `src/styles/`: reusable runtime/data helpers, shared content, and tokens.
 - `scripts/`: fetch and orchestrate public-data refresh/build flows.
 - `tools/importers/`, `tools/normalizers/`, `tools/validators/`, and `tools/relationship-builders/`: product pipeline modules for public data ingestion, normalization, validation, and relationship assembly.

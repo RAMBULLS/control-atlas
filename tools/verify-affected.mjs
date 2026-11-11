@@ -8,6 +8,11 @@ import { classifyNameStatus } from './classify-change-scope.mjs';
 import { reviewSelection } from './ui-review-routes.mjs';
 
 const AUTOMATION_TESTS = new Set([
+  'tests/assurance-contract.test.mjs',
+  'tests/assurance-results.test.mjs',
+  'tests/assurance-execution.test.mjs',
+  'tests/assurance-inventory.test.mjs',
+  'tests/assurance-guide-claims.test.mjs',
   'tests/recover-refresh-pr.test.mjs',
   'tests/build-layout-contract.test.mjs',
   'tests/change-scope.test.mjs',
@@ -84,6 +89,13 @@ function addStep(steps, step) {
 
 export function createVerificationPlan(paths, changeMap) {
   const steps = [];
+  const assuranceChanged = paths.some(path => path.startsWith('config/assurance/') || path.startsWith('tools/lib/assurance-') || path.startsWith('tools/verify-assurance') || path.startsWith('tests/assurance-'));
+  if (assuranceChanged) {
+    addStep(steps, { id: 'assurance-lint', command: ['npm', 'run', 'lint:assurance'], expectedTests: 0, workers: 1, budgetSeconds: 15 });
+    addStep(steps, { id: 'assurance-contracts', command: ['npm', 'run', 'test:assurance:contracts'], expectedTests: 35, workers: 1, budgetSeconds: 20 });
+    addStep(steps, { id: 'assurance-evidence', command: ['npm', 'run', 'test:assurance:evidence'], expectedTests: 29, workers: 1, budgetSeconds: 20 });
+    addStep(steps, { id: 'assurance-registry', command: ['npm', 'run', 'verify:assurance'], expectedTests: 0, workers: 1, budgetSeconds: 10 });
+  }
   const pipelinePaths = new Set([
     'tools/collect-production-lighthouse.mjs', 'tools/lighthouse-metrics.mjs',
     'tools/summarize-lighthouse.mjs', 'tools/report-refresh-alerts.mjs',

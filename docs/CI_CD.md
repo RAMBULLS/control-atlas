@@ -119,3 +119,12 @@ prevents publication; routine successful refreshes require no human approval.
 ## Deployment guarantees
 
 Production deployment never rebuilds routine releases. The deploy workflow downloads `site-build`, verifies that `release.json` matches the successful CI run SHA, and publishes through native GitHub Pages permissions. One bounded readiness job waits for that exact SHA at the public edge before production smoke and Lighthouse begin. It fails if the SHA does not appear within ten minutes, the publication window documented by [GitHub Pages](https://docs.github.com/en/pages/quickstart). Both production checks then test the verified release.
+
+
+## Assurance checks and evidence boundaries
+
+Assurance contract/schema checks reuse the existing automation and fast gates; search recall uses the generated-data unit gate, and registry-driven guide/template browser tests consume the immutable site in the existing browser gate. The affected-change planner retains these checks when their contract changes; it does not introduce a second dispatcher or waive full final acceptance.
+
+Candidate analytics qualification is selected for builds, not one historical branch. The collector is intercepted and the runner API token is withheld from that harness. This tests consent behavior and payload exclusions without transmitting candidate data to production telemetry. It does not prove production collection or dashboard delivery.
+
+Execution verification must independently read provider run and artifact identity before interpreting report assertions. Merely naming a run URL, completing deployment, or receiving a page URL is insufficient. Candidate and live evidence remain separate, and missing wiring or a missing report is `not_run`, never a passing coverage claim. Existing release/sweep/source incidents remain the sole operational incident machinery; no assurance schedule or parallel incident system is introduced.

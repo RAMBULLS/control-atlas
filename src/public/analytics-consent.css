@@ -8,7 +8,7 @@
   font: inherit;
   font-size: 14px;
   line-height: 1.5;
-  padding-bottom: 72px;
+  padding: 12px 24px 24px;
 }
 .rb-analytics-root *,
 .rb-analytics-root *::before,
@@ -86,11 +86,12 @@
   outline: 2px solid var(--rb-focus);
   outline-offset: 3px;
 }
+/* The persistent settings entry follows the page footer in normal flow.
+   Only the explicitly opened consent surfaces may overlay the workspace. */
 .rb-analytics-toggle-btn {
-  position: fixed;
-  bottom: 12px;
-  right: 12px;
-  z-index: 9998;
+  position: static;
+  display: block;
+  margin-left: auto;
 }
 .rb-analytics-toggle-btn[hidden] {
   display: none;

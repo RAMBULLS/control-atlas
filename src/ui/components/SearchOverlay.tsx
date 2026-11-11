@@ -23,14 +23,13 @@ import {
 } from "../lib/resourceBrands.mjs";
 import { searchResourceDocuments } from "../lib/resourceSearch.mjs";
 import type { RuntimeBundle } from "../lib/runtimeLoader";
-import type { ViewState } from "../lib/viewState";
-import { AppLink } from "./AppLink";
+import { AppLink, type AppNavigate } from "./AppLink";
 
 type SearchOverlayProps = {
   bundle: RuntimeBundle | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onNavigate: (view: ViewState["view"], patch?: Partial<ViewState>) => void;
+  onNavigate: AppNavigate;
   onOpenNode: (nodeId: string) => void;
 };
 
@@ -160,6 +159,14 @@ export function SearchOverlay(props: SearchOverlayProps) {
     const highlightedSuggestion = suggestions[highlightedIndex];
     if (highlightedSuggestion) {
       activateSuggestion(highlightedSuggestion);
+      return;
+    }
+    // Enter must not discard known resource matches in favor of an empty
+    // records-only page. Explicit Library and Resources links remain available.
+    if (bundle?.librarySearchReady && results.libraryResults.length === 0
+      && (results.resourceResults.length > 0 || results.communityResults.length > 0)) {
+      onOpenChange(false);
+      onNavigate("commons", { query: query.trim(), showAll: "true" }, true);
       return;
     }
     openExplore();
@@ -474,9 +481,12 @@ export function SearchOverlay(props: SearchOverlayProps) {
           )}
 
           {query.trim() ? (
-            <div className="card-actions flex gap-2">
+            <div className="card-actions flex flex-wrap gap-2">
               <AppLink onNavigate={onNavigate} patch={{ query: query.trim() }} variant="secondary" view="search">
-                Search the Library
+                Search Library records
+              </AppLink>
+              <AppLink onNavigate={onNavigate} patch={{ query: query.trim(), showAll: "true" }} variant="secondary" view="commons">
+                Search Resources
               </AppLink>
             </div>
           ) : null}

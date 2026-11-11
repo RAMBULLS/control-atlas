@@ -94,7 +94,8 @@ export function createVerificationPlan(paths, changeMap) {
   if (assuranceChanged) {
     addStep(steps, { id: 'assurance-lint', command: ['npm', 'run', 'lint:assurance'], expectedTests: 0, workers: 1, budgetSeconds: 15 });
     addStep(steps, { id: 'assurance-contracts', command: ['npm', 'run', 'test:assurance:contracts'], expectedTests: 35, workers: 1, budgetSeconds: 20 });
-    addStep(steps, { id: 'assurance-evidence', command: ['npm', 'run', 'test:assurance:evidence'], expectedTests: 44, workers: 1, budgetSeconds: 20 });
+    addStep(steps, { id: 'assurance-evidence', command: ['npm', 'run', 'test:assurance:evidence'], expectedTests: 29, workers: 1, budgetSeconds: 20 });
+    addStep(steps, { id: 'assurance-native', command: ['npm', 'run', 'test:assurance:native'], expectedTests: 22, workers: 1, budgetSeconds: 40 });
     addStep(steps, { id: 'assurance-registry', command: ['npm', 'run', 'verify:assurance'], expectedTests: 0, workers: 1, budgetSeconds: 10 });
   }
   const pipelinePaths = new Set([

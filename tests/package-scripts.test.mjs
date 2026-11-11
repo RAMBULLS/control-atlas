@@ -384,9 +384,10 @@ test('native assurance retention preserves TAP, exact identities and required CI
     assert.match(packageJson.scripts[name], /--test-reporter=\.\/tools\/assurance-node-reporter\.mjs/);
     assert.equal((packageJson.scripts[name].match(/--test-reporter-destination=stdout/g) ?? []).length, 2);
   }
-  assert.match(packageJson.scripts['test:assurance:evidence'], /tests\/assurance-node-results\.test\.mjs/);
+  assert.match(packageJson.scripts['test:assurance:native'], /tests\/assurance-node-results\.test\.mjs/);
+  assert.equal(packageJson.scripts['pretest:assurance:native'], 'node ./tools/validation-location.mjs');
   const workflow = parse(ci);
-  for (const name of ['unit', 'fast', 'automation']) {
+  for (const name of ['unit', 'fast', 'automation', 'windows-process']) {
     const steps = workflow.jobs[name].steps;
     const retained = steps.find(step => step.name === 'Preserve actual native test results');
     assert.equal(retained.if, 'always()');

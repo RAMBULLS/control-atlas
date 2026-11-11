@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { join, resolve, win32 } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { spawnSync } from 'node:child_process';
-import { createNodeResultCollector, assessNativeAssertions, validateNativeIdentity, nativeReportDigest } from '../tools/lib/assurance-node-results.mjs';
+import { createNodeResultCollector, assessNativeAssertions, validateNativeIdentity, nativeReportDigest, boundedNativeSource } from '../tools/lib/assurance-node-results.mjs';
 
 const root = process.cwd();
 const identity = {
@@ -36,6 +36,11 @@ test('native evidence preserves distinct requested head and actual checkout iden
   assert.notEqual(r.identity.code_sha, r.identity.checkout_sha);
 });
 for (const [name, change] of [
+  ['missing start', e => e.slice(1)],
+  ['duplicate start', e => [e[0], e[0], e[1], e[2]]],
+  ['unclosed start', e => [e[0], e[1], { type: 'test:start', data: metrics('ghost') }, e[2]]],
+  ['start after final summary', e => [...e, { type: 'test:start', data: metrics('ghost') }]],
+  ['terminal after final summary', e => [...e, e[1]]],
   ['missing summary', e => e.slice(0, 2)],
   ['duplicate summary', e => [...e, e[2]]],
   ['duplicate assertion', e => [e[0], e[1], e[0], e[1], e[2]]],
@@ -68,11 +73,75 @@ test('the actual Node reporter stream preserves suite ancestry and final counts'
     writeFileSync(source, "import { describe, it } from 'node:test'; describe('group', () => { it('one', () => {}); it('two', () => {}); });");
     // Synthetic tests run only in this isolated child and emit JSON to stdout.
     // They never create artifacts/assurance-node reports or count as product assertions.
-    const child = spawnSync(process.execPath, ['--test', '--test-reporter=' + reporter, source], { encoding: 'utf8', timeout: 20000 });
+    const child = spawnSync(process.execPath, ['--test', '--test-reporter=' + pathToFileURL(reporter).href, source], { encoding: 'utf8', timeout: 20000, env: process.platform === 'win32' ? { SystemRoot: process.env.SystemRoot } : {} });
     assert.equal(child.status, 0, child.stderr);
+    assert.ok(child.stdout.trim(), 'Missing native child report: ' + child.stderr);
     const r = JSON.parse(child.stdout);
     assert.equal(r.complete, true, JSON.stringify(r.errors));
     assert.deepEqual(r.results.filter(row => row.type === 'test').map(row => row.title), ['group > one', 'group > two']);
     assert.equal(r.summary.counts.tests, 2);
   } finally { rmSync(directory, { recursive: true, force: true }); }
+});
+
+
+test('Windows source bounds reject other volumes, UNC roots and same-volume traversal', () => {
+  assert.equal(boundedNativeSource('C:\\repo', 'D:\\outside.mjs', win32), null);
+  assert.equal(boundedNativeSource('C:\\repo', 'C:\\outside.mjs', win32), null);
+  assert.equal(boundedNativeSource('C:\\repo', '\\\\server\\share\\outside.mjs', win32), null);
+  assert.equal(boundedNativeSource('C:\\repo', 'C:\\repo\\tests\\one.mjs', win32), 'tests/one.mjs');
+});
+
+test('the production reporter retains native success, cancellation, empty reasons and hook failure facts', () => {
+  const reporter = resolve('tools/assurance-node-reporter.mjs');
+  const scenarios = [
+    { name: 'multiple-files', exit: 0, complete: true,
+      source: "import { describe, it } from 'node:test'; describe('group', () => { it('one', () => {}); it('two', () => {}); });",
+      second: "import test from 'node:test'; test('parent', async t => { await Promise.all([t.test('a', async () => {}), t.test('b', async () => {})]); });" },
+    { name: 'timeout', exit: 1, complete: true, cancelled: true,
+      source: "import test from 'node:test'; import { setTimeout as delay } from 'node:timers/promises'; test('times out', { timeout: 20 }, async () => { await delay(200); });" },
+    { name: 'abort', exit: 1, complete: true, cancelled: true,
+      source: "import test from 'node:test'; import { setTimeout as delay } from 'node:timers/promises'; const ac = new AbortController(); test('aborted', { signal: ac.signal }, async () => { await delay(200); }); setTimeout(() => ac.abort(), 10);" },
+    { name: 'parent-cancellation', exit: 1, complete: true, cancelled: true,
+      source: "import test from 'node:test'; import { setTimeout as delay } from 'node:timers/promises'; test('parent', t => { t.test('unawaited', async () => { await delay(200); }); });" },
+    { name: 'empty-reasons', exit: 0, complete: true,
+      source: "import test from 'node:test'; test('skip empty', t => t.skip('')); test('todo empty', t => t.todo(''));" },
+    { name: 'root-after-hook', exit: 1, complete: true,
+      source: "import test, { after } from 'node:test'; test('one', () => {}); after(() => { throw new Error('synthetic root hook failure'); });" },
+  ];
+  for (const scenario of scenarios) {
+    const directory = mkdtempSync(join(tmpdir(), 'atlas-native-production-'));
+    try {
+      const source = join(directory, 'fixture.test.mjs');
+      writeFileSync(source, scenario.source);
+      const inputs = [source];
+      if (scenario.second) {
+        const second = join(directory, 'second.test.mjs');
+        writeFileSync(second, scenario.second);
+        inputs.push(second);
+      }
+      // These are synthetic parser fixtures. No inherited API token or candidate
+      // result directory reaches the child; files remain under its private temp root.
+      const env = {
+        GITHUB_REPOSITORY: identity.repository, ATLAS_RUNNER_HEAD_SHA: identity.code_sha,
+        GITHUB_SHA: identity.checkout_sha, GITHUB_RUN_ID: identity.run_id,
+        GITHUB_RUN_ATTEMPT: String(identity.run_attempt), GITHUB_JOB: identity.job_key,
+        npm_lifecycle_event: identity.command,
+        ...(process.platform === 'win32' ? { SystemRoot: process.env.SystemRoot } : {}),
+      };
+      const child = spawnSync(process.execPath, ['--test', '--test-reporter=tap', '--test-reporter=' + pathToFileURL(reporter).href,
+        '--test-reporter-destination=stdout', '--test-reporter-destination=stdout', ...inputs],
+      { cwd: directory, env, encoding: 'utf8', timeout: 10000 });
+      assert.equal(child.status, scenario.exit, scenario.name + ': ' + child.stderr);
+      const output = join(directory, 'artifacts', 'assurance-node');
+      const names = readdirSync(output).filter(name => name.endsWith('.json'));
+      assert.equal(names.length, 1, scenario.name);
+      const result = JSON.parse(readFileSync(join(output, names[0]), 'utf8'));
+      assert.equal(result.complete, scenario.complete, scenario.name + ': ' + JSON.stringify(result.errors));
+      assert.equal(result.identity.command, 'synthetic-validator-fixture');
+      assert.match(child.stdout, /Native assurance diagnostic saved:/);
+      if (scenario.cancelled) assert.ok(result.results.some(row => row.status === 'cancelled'), scenario.name);
+      if (scenario.name === 'empty-reasons') assert.deepEqual(result.results.map(row => row.status), ['skipped', 'todo']);
+      if (scenario.name === 'root-after-hook') assert.ok(result.results.some(row => row.synthetic_hook_failure));
+    } finally { rmSync(directory, { recursive: true, force: true }); }
+  }
 });

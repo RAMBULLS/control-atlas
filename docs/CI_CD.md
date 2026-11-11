@@ -131,8 +131,10 @@ Execution verification must independently read provider run and artifact identit
 
 ## Native assurance result retention
 
-Selected native invariant suites keep TAP output and additionally emit Node 22 test-runner facts through tools/assurance-node-reporter.mjs. The unit, fast and automation jobs preserve these JSON diagnostics on success or failure in separate immutable artifacts. Missing expected result output fails artifact retention; this does not replace any existing required gate.
+Selected native invariant suites keep TAP output and additionally emit Node 22 test-runner facts through tools/assurance-node-reporter.mjs. The unit, fast, automation and Windows process jobs preserve these JSON diagnostics on success or failure in separate immutable artifacts. Each selected job requires at least one native report for retention. Retaining one report does not prove every expected invocation completed; required invocation and assertion coverage remains a separate verification obligation. No existing required gate is replaced.
 
 Each invocation records both the requested PR head and the actual checkout SHA, run and attempt, job key, command, Node version, native test identities, outcomes and final counts. Runner metadata is a claim requiring independent provider verification. A JSON file, green job name or registered test alone cannot establish nine-promise acceptance. A skipped or failed required assertion, incomplete stream, duplicate identity or mismatched report digest remains unusable evidence.
 
 This rebuilt native-reporting layer is separate from the missing unpublished implementation. Browser shard binding, the reviewed assertion inventory and actual-domain evidence remain required before aggregate assurance can pass. No source-refresh, Security, performance or production acceptance gate is removed or relaxed.
+
+Native diagnostics track starts and terminal events, including the documented Node 22 root after-hook failure event without a start. Empty skip/todo reasons and native timeout cancellation remain explicit. The native diagnostic tests run as their own guarded affected-check step and also run in the existing Windows process job; no step exceeds the existing fifty-test planning bound.

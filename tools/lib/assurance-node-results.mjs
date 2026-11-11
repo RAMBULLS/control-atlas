@@ -1,4 +1,4 @@
-import { relative, resolve, sep } from 'node:path';
+import path from 'node:path';
 import { createHash } from 'node:crypto';
 
 const identityKeys = ['repository', 'code_sha', 'checkout_sha', 'run_id', 'run_attempt', 'job_key', 'command', 'node_version'];
@@ -7,6 +7,14 @@ const sha = value => /^[a-f0-9]{40}$/.test(value ?? '');
 const integer = value => Number.isSafeInteger(value) && value >= 0;
 const present = value => typeof value === 'string' && value.length > 0;
 export const nativeReportDigest = report => createHash('sha256').update(JSON.stringify(report)).digest('hex');
+
+export function boundedNativeSource(root, file, pathApi = path) {
+  if (!present(root) || !present(file)) return null;
+  const relativePath = pathApi.relative(pathApi.resolve(root), pathApi.resolve(root, file));
+  if (!relativePath || pathApi.isAbsolute(relativePath) || relativePath === '..' ||
+      relativePath.startsWith('..' + pathApi.sep)) return null;
+  return relativePath.split(pathApi.sep).join('/');
+}
 
 export function validateNativeIdentity(identity) {
   return identity?.repository === 'RAMBULLS/control-atlas' &&
@@ -22,14 +30,9 @@ export function validateNativeIdentity(identity) {
  * verified. Environment metadata alone never establishes provider provenance.
  */
 export function createNodeResultCollector({ root, identity, startedAt = new Date().toISOString() }) {
-  const results = [], summaries = [], errors = [], parents = new Map();
+  const results = [], summaries = [], errors = [], parents = new Map(), pending = new Map();
   if (!validateNativeIdentity(identity)) errors.push('invalid execution metadata');
   if (!Number.isFinite(Date.parse(startedAt))) errors.push('invalid start time');
-  function source(file) {
-    if (!present(file)) return null;
-    const path = relative(resolve(root), resolve(root, file)).split(sep).join('/');
-    return path && !path.startsWith('../') && path !== '..' && !path.startsWith('/') ? path : null;
-  }
   return {
     accept({ type, data = {} }) {
       if (type === 'test:interrupted' || type === 'test:watch:restarted') errors.push('interrupted or repeated execution');
@@ -40,13 +43,17 @@ export function createNodeResultCollector({ root, identity, startedAt = new Date
         return;
       }
       if (!['test:start', 'test:pass', 'test:fail'].includes(type)) return;
-      const file = source(data.file);
+      if (summaries.length) { errors.push('native test event after final summary'); return; }
+      const file = boundedNativeSource(root, data.file);
       if (!file || !present(data.name) || !integer(data.nesting)) {
         errors.push('terminal event lacks bounded source identity');
         return;
       }
       const lineage = parents.get(file) ?? [];
+      const eventKey = JSON.stringify([file, data.name, data.nesting, data.line, data.column]);
       if (type === 'test:start') {
+        if (pending.has(eventKey) || [...pending.values()].some(row => row.file === file && row.nesting >= data.nesting)) errors.push('duplicate or unclosed native start');
+        pending.set(eventKey, { file, nesting: data.nesting });
         lineage.length = data.nesting;
         lineage[data.nesting] = data.name;
         parents.set(file, lineage);
@@ -55,14 +62,20 @@ export function createNodeResultCollector({ root, identity, startedAt = new Date
       const ancestorNames = lineage.slice(0, data.nesting);
       if (ancestorNames.length !== data.nesting || ancestorNames.some(name => !present(name))) errors.push('missing test ancestry');
       const failureType = data.details?.error?.failureType;
-      const status = data.skip ? 'skipped' : data.todo ? 'todo' :
-        failureType === 'cancelledByParent' || failureType === 'testAborted' ? 'cancelled' :
+      // Node 22 emits a root after-hook failure directly, without a start.
+      const rootHookFailure = type === 'test:fail' && failureType === 'hookFailed' && data.nesting === 0;
+      if (!pending.has(eventKey) && !rootHookFailure) errors.push('terminal without matching native start');
+      if ([...pending.values()].some(row => row.file === file && row.nesting > data.nesting)) errors.push('parent terminal before native children');
+      pending.delete(eventKey);
+      const status = data.skip !== undefined ? 'skipped' : data.todo !== undefined ? 'todo' :
+        ['cancelledByParent', 'testAborted', 'testTimeoutFailure'].includes(failureType) ? 'cancelled' :
           type === 'test:pass' ? 'passed' : 'failed';
       const row = {
         file, title: [...ancestorNames, data.name].join(' > '),
         line: data.line, column: data.column, nesting: data.nesting,
         ordinal: data.testNumber, type: data.details?.type === 'suite' ? 'suite' : 'test',
         status, duration_ms: data.details?.duration_ms,
+        ...(rootHookFailure ? { synthetic_hook_failure: true } : {}),
       };
       if (!integer(row.ordinal) || row.ordinal < 1 || !Number.isFinite(row.duration_ms) || row.duration_ms < 0) errors.push('invalid terminal metrics');
       results.push(row);
@@ -70,6 +83,7 @@ export function createNodeResultCollector({ root, identity, startedAt = new Date
       parents.set(file, lineage);
     },
     finish(finishedAt = new Date().toISOString()) {
+      if (pending.size) errors.push('unclosed native starts');
       const summary = summaries.length === 1 ? summaries[0] : null;
       if (!summary || countKeys.some(key => !integer(summary.counts?.[key])) ||
           !Number.isFinite(summary.duration_ms) || summary.duration_ms < 0 || typeof summary.success !== 'boolean') errors.push('missing or ambiguous final native summary');

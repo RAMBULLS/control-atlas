@@ -336,7 +336,9 @@
     "preverify:assurance": "node ./tools/validation-location.mjs",
     "pretest:assurance:search": "node ./tools/validation-location.mjs",
     "prelint:assurance": "node ./tools/validation-location.mjs",
-    "test:assurance:evidence": "node --test --test-reporter=tap --test-reporter=./tools/assurance-node-reporter.mjs --test-reporter-destination=stdout --test-reporter-destination=stdout tests/assurance-results.test.mjs tests/assurance-execution.test.mjs tests/assurance-inventory.test.mjs tests/assurance-node-results.test.mjs",
+    "test:assurance:evidence": "node --test --test-reporter=tap --test-reporter=./tools/assurance-node-reporter.mjs --test-reporter-destination=stdout --test-reporter-destination=stdout tests/assurance-results.test.mjs tests/assurance-execution.test.mjs tests/assurance-inventory.test.mjs",
+    "test:assurance:native": "node --test --test-reporter=tap --test-reporter=./tools/assurance-node-reporter.mjs --test-reporter-destination=stdout --test-reporter-destination=stdout tests/assurance-node-results.test.mjs",
+    "pretest:assurance:native": "node ./tools/validation-location.mjs",
     "verify:assurance:execution": "node tools/verify-assurance-execution.mjs",
     "pretest:assurance:evidence": "node ./tools/validation-location.mjs",
     "preverify:assurance:execution": "node ./tools/validation-location.mjs"

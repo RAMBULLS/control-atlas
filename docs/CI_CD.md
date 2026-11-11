@@ -128,3 +128,11 @@ Assurance contract/schema checks reuse the existing automation and fast gates; s
 Candidate analytics qualification is selected for builds, not one historical branch. The collector is intercepted and the runner API token is withheld from that harness. This tests consent behavior and payload exclusions without transmitting candidate data to production telemetry. It does not prove production collection or dashboard delivery.
 
 Execution verification must independently read provider run and artifact identity before interpreting report assertions. Merely naming a run URL, completing deployment, or receiving a page URL is insufficient. Candidate and live evidence remain separate, and missing wiring or a missing report is `not_run`, never a passing coverage claim. Existing release/sweep/source incidents remain the sole operational incident machinery; no assurance schedule or parallel incident system is introduced.
+
+## Native assurance result retention
+
+Selected native invariant suites keep TAP output and additionally emit Node 22 test-runner facts through tools/assurance-node-reporter.mjs. The unit, fast and automation jobs preserve these JSON diagnostics on success or failure in separate immutable artifacts. Missing expected result output fails artifact retention; this does not replace any existing required gate.
+
+Each invocation records both the requested PR head and the actual checkout SHA, run and attempt, job key, command, Node version, native test identities, outcomes and final counts. Runner metadata is a claim requiring independent provider verification. A JSON file, green job name or registered test alone cannot establish nine-promise acceptance. A skipped or failed required assertion, incomplete stream, duplicate identity or mismatched report digest remains unusable evidence.
+
+This rebuilt native-reporting layer is separate from the missing unpublished implementation. Browser shard binding, the reviewed assertion inventory and actual-domain evidence remain required before aggregate assurance can pass. No source-refresh, Security, performance or production acceptance gate is removed or relaxed.

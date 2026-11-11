@@ -196,6 +196,14 @@ jobs:
       - run: npm run lint:automation
       - run: npm run test:ci-contracts
       - run: npm run lint:assurance && npm run test:assurance:contracts && npm run test:assurance:evidence && npm run verify:assurance
+      - name: Preserve actual native test results
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: assurance-node-${{ github.job }}-${{ github.sha }}-${{ github.run_attempt }}
+          path: artifacts/assurance-node/*.json
+          if-no-files-found: error
+          retention-days: 3
 
   content:
     name: Documentation contracts
@@ -251,6 +259,14 @@ jobs:
       - run: npm run typecheck
       - run: npm run test:ci-contracts
       - run: npm run lint:assurance && npm run test:assurance:contracts && npm run test:assurance:evidence && npm run verify:assurance
+      - name: Preserve actual native test results
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: assurance-node-${{ github.job }}-${{ github.sha }}-${{ github.run_attempt }}
+          path: artifacts/assurance-node/*.json
+          if-no-files-found: error
+          retention-days: 3
 
   generated:
     name: Prepare reproducible generated data
@@ -406,6 +422,14 @@ jobs:
           name: generated-data
           path: data/generated
       - run: npm test
+      - name: Preserve actual native test results
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: assurance-node-${{ github.job }}-${{ github.sha }}-${{ github.run_attempt }}
+          path: artifacts/assurance-node/*.json
+          if-no-files-found: error
+          retention-days: 3
 
   build:
     name: Build immutable site artifact

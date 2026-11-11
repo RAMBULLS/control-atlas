@@ -376,3 +376,22 @@ test('routine candidate analytics cannot send collector traffic or inherit runne
   assert.match(harness, /route\.fulfill\(\{ status: 204/);
   assert.doesNotMatch(harness, /e7b0e3abfb572d06a8d056a56f76559dcc181bf08190735651b8d4cd18fcd2aa/);
 });
+
+
+test('native assurance retention preserves TAP, exact identities and required CI dependencies', () => {
+  for (const name of ['test:atlas', 'test:runtime', 'test:data', 'test:record-presentation', 'test:assurance:evidence']) {
+    assert.match(packageJson.scripts[name], /--test-reporter=tap/);
+    assert.match(packageJson.scripts[name], /--test-reporter=\.\/tools\/assurance-node-reporter\.mjs/);
+    assert.equal((packageJson.scripts[name].match(/--test-reporter-destination=stdout/g) ?? []).length, 2);
+  }
+  assert.match(packageJson.scripts['test:assurance:evidence'], /tests\/assurance-node-results\.test\.mjs/);
+  const workflow = parse(ci);
+  for (const name of ['unit', 'fast', 'automation']) {
+    const steps = workflow.jobs[name].steps;
+    const retained = steps.find(step => step.name === 'Preserve actual native test results');
+    assert.equal(retained.if, 'always()');
+    assert.equal(retained.with['if-no-files-found'], 'error');
+    assert.equal(retained.with.path, 'artifacts/assurance-node/*.json');
+  }
+  assert.ok(workflow.jobs.required.needs.includes('unit'));
+});

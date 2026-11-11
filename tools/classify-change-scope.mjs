@@ -24,6 +24,9 @@ const DEPENDENCY_FILES = new Set([
   'package-lock.json',
 ]);
 const AUTOMATION_FILES = new Set([
+  'tools/assurance-node-reporter.mjs',
+  'tools/lib/assurance-node-results.mjs',
+  'tests/assurance-node-results.test.mjs',
   'config/assurance/promises.json',
   'config/assurance/promises.schema.json',
   'tools/lib/assurance-contract.mjs',

@@ -49,8 +49,18 @@ for (const [index, template] of registry.templates.entries()) for (const format 
       const text = parts.flatMap(([, bytes]) => strings(parser.parse(strFromU8(bytes)))).join('\n');
       expect(text).toContain(GENERATED_FILE_NOTICE);
       expect(text).toContain(title);
-      expect(text).toContain('Source Metadata');
-      for (const heading of headings) expect(text).toContain(heading);
+      // XLSX maps the source and compatibility sections to Read Me rows.
+      // Require their actual exported contents as well as the format's labels.
+      expect(text).toContain(format === 'xlsx' ? 'Source' : 'Source Metadata');
+      expect(text).toContain('Environment archetype:');
+      expect(text).toContain('Basis:');
+      expect(text).toContain('Limit:');
+      for (const heading of headings) {
+        const exportedHeading = format === 'xlsx'
+          ? ({ 'Source Metadata': 'Source', 'Compatibility and Use': 'Interoperability' }[heading] || heading)
+          : heading;
+        expect(text).toContain(exportedHeading);
+      }
       if (format === 'xlsx') {
         const sheets = await readXlsxFile(path);
         expect(sheets.length).toBeGreaterThan(1);

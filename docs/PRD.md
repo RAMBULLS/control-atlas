@@ -830,7 +830,7 @@ The MVP is done when:
 | Users assume templates guarantee compliance | High | Prominent disclaimers; plain-language limitation notes in every template |
 | Large datasets slow the static site | Medium | Chunked JSON, MiniSearch static index, lazy loading |
 | Graph unusable at scale | Medium | Object-local graph views; table fallback required before graph ships |
-| Solo maintainer pace vs. scope | Medium | Shared Responsibility Matrix deferred; Guide and Glossary changes remain scoped to source-backed research |
+| Solo maintainer pace vs. scope | Medium | Shared Responsibility Matrix deferred; Guide and Glossary changes remain scoped to research using cited publisher documents |
 
 ---
 

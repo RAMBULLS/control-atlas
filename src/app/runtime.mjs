@@ -40,8 +40,12 @@ const SEARCH_STOP_WORDS = new Set([
 
 const SEARCH_INTENT_ALIASES = [
   {
-    terms: [/\b(review|inspect|check)\b/i, /\baudit\s+logs?\b/i],
+    terms: [/\b(review|inspect|check)\b/i, /\bphysical\s+access\s+logs?\b/i],
     query: "monitoring physical access",
+  },
+  {
+    terms: [/\b(review|inspect|check)\b/i, /\baudit\s+logs?\b/i],
+    query: "audit record review",
   },
   {
     terms: [

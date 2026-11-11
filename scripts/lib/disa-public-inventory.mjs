@@ -38,8 +38,13 @@ const ordered = (value) => Array.isArray(value) ? value.map(ordered) : value && 
 const validDate = (value) => /^\d{4}-\d{2}-\d{2}$/.test(value) &&
   Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value;
 
+const containsControl = (value) => [...value].some((character) => {
+  const code = character.codePointAt(0);
+  return code <= 31 || code === 127;
+});
+
 function publicUrl(literal) {
-  if (literal !== literal.trim() || /[\u0000-\u001f\u007f\\]/.test(literal) || /%(?:2e|2f|5c|25)/i.test(literal.split(/[?#]/)[0])) {
+  if (literal !== literal.trim() || (containsControl(literal) || literal.includes("\\")) || /%(?:2e|2f|5c|25)/i.test(literal.split(/[?#]/)[0])) {
     throw new Error('Ambiguous DISA publisher URL');
   }
   let url;
@@ -56,7 +61,7 @@ function filename(row) {
   let value;
   try { value = decodeURIComponent(path.slice(path.lastIndexOf('/') + 1)); }
   catch { throw new Error('Invalid DISA filename encoding'); }
-  if (!value || /[/\\\u0000-\u001f\u007f]/.test(value)) throw new Error('Invalid DISA filename');
+  if (!value || (/[\/\\]/.test(value) || containsControl(value))) throw new Error('Invalid DISA filename');
   return value;
 }
 

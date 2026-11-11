@@ -103,6 +103,16 @@ test('URL validation rejects credentials, ambiguous paths, fragments and non-HTT
   }
 });
 
+test('literal and encoded C0 and DEL characters remain forbidden in publisher paths', () => {
+  for (const code of [...Array(32).keys(), 127]) {
+    for (const character of [String.fromCodePoint(code), `%${code.toString(16).padStart(2, '0')}`]) {
+      const records = fixtures();
+      records[1].DownloadLink = `${base}U_Example${character}_V1R1_STIG.zip`;
+      assert.throws(() => parse(records), /publisher URL|filename/);
+    }
+  }
+});
+
 test('publisher field order and row order do not change inventory checksum, changed metadata does', () => {
   const first = parse(fixtures());
   const reversed = fixtures().reverse().map((record) => Object.fromEntries(Object.entries(record).reverse()));
@@ -186,7 +196,7 @@ test('retained old-directory metadata and retrieval dates remain unchanged; chan
 });
 
 test('unknown candidate package names are blockers rather than silently excluded manual content', () => {
-  assert.throws(() => reconcileDisaPublicInventory(parse([...fixtures(), row('004', 'U_Unrecognized_Current_STIG.zip')])), /Unrecognized public manual/);
+  assert.throws(() => reconcileDisaPublicInventory(parse([...fixtures(), row('004', 'U_Unrecognized_Current_STIG.zip')])), /Ambiguous lifecycle-marked DISA edition/);
 });
 
 test('changing records after parsing invalidates the inventory proof before reconciliation', () => {

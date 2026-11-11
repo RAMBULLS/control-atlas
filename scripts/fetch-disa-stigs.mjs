@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { copyFileSync, createWriteStream, existsSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { copyFileSync, createWriteStream, existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
 import { dirname, join, resolve, sep } from 'node:path';
@@ -11,20 +11,22 @@ import { promisify } from 'node:util';
 
 import { parseDisaCompilationStream, parseDisaStandalonePackage } from '../tools/importers/disa-stig-adapter.mjs';
 import {
-  groupAndSelectCurrentPublications,
   reconcilePublicationInventory,
   dedupeDisaRecords,
   dedupeDisaRelationships,
 } from './lib/disa-publication-reconciliation.mjs';
 import { writeJsonAtomically } from './lib/write-json-atomically.mjs';
-import { createStrictConditionalFetch } from './lib/strict-conditional-fetch.mjs';
+import { createStrictConditionalFetch, fetchDisaPublicInventoryBytes } from './lib/strict-conditional-fetch.mjs';
 import { assertOfficialSourceUrl } from './lib/source-url-policy.mjs';
 import { readDisaCatalog, writeDisaCatalog, attestDisaProjections } from './lib/disa-record-history.mjs';
-import { disaContentDue, disaInventoryChecksum, verifyDisaSnapshot, mergeDisaSnapshot } from './lib/disa-refresh.mjs';
+import { verifyDisaSnapshot, mergeDisaSnapshot } from './lib/disa-refresh.mjs';
 import { disaNativeInventories } from '../tools/importers/disa-native-inventory.mjs';
 
+import { DISA_PUBLIC_INVENTORY_URL, parseDisaPublicInventory, reconcileDisaPublicInventory, disaCanonicalHash } from './lib/disa-public-inventory.mjs';
+import { DISA_WITNESS_PATH, DISA_EVIDENCE_DIRECTORY, DISA_ACCEPTED_OUTPUT_PATHS, hashDisaFile, verifyRetainedDisaFile } from './lib/disa-source-acceptance.mjs';
+import { recordDisaInventoryReceipt, recordDisaNativeAcceptance } from './lib/source-check-receipts.mjs';
+
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const DISCOVERY_URL = 'https://public.cyber.mil/stigs/downloads/';
 const COMMITTED_ARTIFACTS = {
   stig: join(ROOT, 'data', 'stig-rules.json'),
   srg: join(ROOT, 'data', 'srg-requirements.json'),
@@ -33,12 +35,8 @@ const COMMITTED_ARTIFACTS = {
 
 const DL_BASE = 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/';
 
-// spec §6: the compilation URL is discovered from the real DL_BASE directory
-// index (an Apache-style listing — public.cyber.mil/stigs/downloads/ itself
-// is JS-rendered and exposes no static zip links from this environment),
-// filtered to "*Library*.zip" entries and sorted by the embedded month name
-// + year rather than plain alphabetical sort (which would pick a 2020 file
-// over a 2026 one — "2" < "A" in ASCII).
+// Legacy HTML parsing helpers remain for historical fixtures only. Discovery
+// below never requests the access-denied legacy directory.
 const MONTH_ORDER = {
   january: 1, february: 2, march: 3, april: 4, may: 5, june: 6,
   july: 7, august: 8, september: 9, october: 10, november: 11, december: 12,
@@ -86,27 +84,6 @@ function readJson(path) {
   return JSON.parse(readFileSync(path, 'utf8'));
 }
 
-function loadCommittedArtifacts() {
-  const stigData = readJson(COMMITTED_ARTIFACTS.stig);
-  const srgData = readJson(COMMITTED_ARTIFACTS.srg);
-  const relData = readJson(COMMITTED_ARTIFACTS.relationships);
-  return {
-    stig: stigData,
-    srg: srgData,
-    relationships: relData,
-    sourceArtifact: DISCOVERY_URL,
-    checksum: checksum(
-      `${readFileSync(COMMITTED_ARTIFACTS.stig, 'utf8')}\n${readFileSync(COMMITTED_ARTIFACTS.srg, 'utf8')}\n${readFileSync(COMMITTED_ARTIFACTS.relationships, 'utf8')}`,
-    ),
-    fallbackMode: 'committed-official-snapshot',
-  };
-}
-
-// spec §6: discover the latest official compilation from the real
-// directory index, download the exact archive, and parse it — no more
-// static allowlist of individual filenames (the old DISA_ARTIFACT_MANIFEST
-// this replaced was already undefined dead code, silently swallowed into a
-// fallback on every run).
 async function mapConcurrent(items, limit, fn) {
   const results = new Array(items.length);
   let index = 0;
@@ -120,46 +97,37 @@ async function mapConcurrent(items, limit, fn) {
   return results;
 }
 
-// Stream and parse compilation archive. Caches the downloaded archive in tmp/disa-cache
-// to avoid re-downloading ~368 MB when verified by file size.
-async function fetchAndParseCompilation(compilationUrl, fetchImpl) {
-  const cacheDir = join(ROOT, 'tmp', 'disa-cache');
-  mkdirSync(cacheDir, { recursive: true });
+// Reuse requires actual accepted hashes and dates. Size/HEAD equality is not
+// byte proof. The source transaction owns the whole cache, including history.
+async function fetchAndParseCompilation(compilationUrl, fetchImpl, options = {}) {
+  const cacheDir = join(ROOT, 'tmp', 'disa-cache'); mkdirSync(cacheDir, { recursive: true });
   const archivePath = join(cacheDir, 'compilation.zip');
-
-  let needsDownload = true;
-  let expectedTotalBytes = null;
-  try {
-    const probe = await fetchImpl(compilationUrl, { headers: { Range: 'bytes=0-0' } });
-    const contentRange = probe.headers?.get?.('content-range') || '';
-    const rangeMatch = contentRange.match(/^bytes\s+0-0\/(\d+)$/i);
-    if (rangeMatch) expectedTotalBytes = Number(rangeMatch[1]);
-  } catch {
-    // probe failed or mock fetcher
-  }
-
-  if (existsSync(archivePath) && expectedTotalBytes && statSync(archivePath).size === expectedTotalBytes) {
-    needsDownload = false;
-  }
-
-  if (needsDownload) {
+  let evidence;
+  if (!options.requireFresh && existsSync(archivePath)) {
+    const accepted = options.accepted;
+    evidence = verifyRetainedDisaFile(archivePath, { ...accepted, source_url: accepted?.artifact_url }, compilationUrl);
+  } else {
     const tmpPath = `${archivePath}.${Date.now()}.part`;
-    await downloadCompilation(compilationUrl, tmpPath, fetchImpl);
-    if (existsSync(archivePath)) rmSync(archivePath, { force: true });
-    renameSync(tmpPath, archivePath);
+    try {
+      await downloadCompilation(compilationUrl, tmpPath, fetchImpl);
+      const actual = hashDisaFile(tmpPath);
+      if (existsSync(archivePath)) {
+        const history = join(cacheDir, 'history'); mkdirSync(history, { recursive: true });
+        const prior = hashDisaFile(archivePath); const retained = join(history, `${prior.checksum.slice(7)}.zip`);
+        if (!existsSync(retained)) copyFileSync(archivePath, retained);
+      }
+      renameSync(tmpPath, archivePath);
+      evidence = { ...actual, source_url: compilationUrl, retrieval_timestamp: new Date().toISOString(),
+        verified_at: new Date().toISOString(), acquisition: 'downloaded_publisher_bytes' };
+    } finally { rmSync(tmpPath, { force: true }); }
   }
-
   const parsed = await parseDisaCompilationStream(archivePath, {
-    artifactUrl: compilationUrl,
-    sourceKeys: { stig: 'disa-stig-library', srg: 'disa-srg-library' },
+    artifactUrl: compilationUrl, sourceKeys: { stig: 'disa-stig-library', srg: 'disa-srg-library' },
+    selectedPublicationFilenames: options.selectedPublicationFilenames,
   });
-  return {
-    ...parsed,
-    sourceArtifact: compilationUrl,
-    checksum: parsed.checksum,
-    byteLength: statSync(archivePath).size,
-    fallbackMode: null,
-  };
+  if (parsed.checksum !== evidence.checksum) throw new Error('DISA compilation changed during parsing');
+  return { ...parsed, sourceArtifact: compilationUrl, checksum: evidence.checksum,
+    byteLength: evidence.byte_length, retrievalTimestamp: evidence.retrieval_timestamp, archiveEvidence: evidence, fallbackMode: null };
 }
 
 async function fetchAndParseStandalonePackages(standaloneNeeded, fetchImpl, options = {}) {
@@ -174,11 +142,14 @@ async function fetchAndParseStandalonePackages(standaloneNeeded, fetchImpl, opti
   const relationshipSeeds = [];
 
   const results = await mapConcurrent(standaloneNeeded, limit, async (pkg) => {
-    const url = `${DL_BASE}${pkg.filename}`;
+    const url = pkg.url;
+    if (!url || new URL(url).href !== url) throw new Error('Missing exact public inventory package URL');
     const cachedFile = join(cacheDir, pkg.filename);
     try {
-      let buffer;
-      if (existsSync(cachedFile) && statSync(cachedFile).size > 0 && !options.requireFresh) {
+      let buffer; let evidence;
+      if (existsSync(cachedFile) && !options.requireFresh) {
+        const prior = options.accepted?.reconciliation?.standalone_packages?.find((entry) => entry.filename === pkg.filename);
+        evidence = verifyRetainedDisaFile(cachedFile, prior, url);
         buffer = readFileSync(cachedFile);
       } else {
         const response = await fetchImpl(url);
@@ -193,6 +164,8 @@ async function fetchAndParseStandalonePackages(standaloneNeeded, fetchImpl, opti
           if (!existsSync(snapshot)) copyFileSync(cachedFile, snapshot);
         }
         writeFileSync(cachedFile, buffer);
+        evidence = { source_url: url, checksum: checksum(buffer), byte_length: buffer.length,
+          retrieval_timestamp: new Date().toISOString(), verified_at: new Date().toISOString(), acquisition: 'downloaded_publisher_bytes' };
       }
 
       const parsed = parseDisaStandalonePackage(buffer, {
@@ -201,11 +174,11 @@ async function fetchAndParseStandalonePackages(standaloneNeeded, fetchImpl, opti
         publicationFilename: pkg.filename,
       });
 
-      if (parsed.failed.length > 0 && parsed.stigRecords.length === 0 && parsed.srgRecords.length === 0) {
+      if (parsed.failed.length > 0 || parsed.stigRecords.length + parsed.srgRecords.length === 0) {
         throw new Error(`Failed to parse benchmark XML: ${parsed.failed.map((f) => f.reason).join('; ')}`);
       }
 
-      return { success: true, pkg, parsed };
+      return { success: true, pkg, parsed, evidence };
     } catch (err) {
       return { success: false, pkg, error: err.message };
     }
@@ -214,6 +187,7 @@ async function fetchAndParseStandalonePackages(standaloneNeeded, fetchImpl, opti
   for (const res of results) {
     if (res.success) {
       successes.push({
+        ...res.evidence,
         filename: res.pkg.filename,
         family: res.pkg.family,
         kind: res.pkg.kind,
@@ -262,7 +236,9 @@ async function fetchRange(url, start, end, fetchImpl) {
     try {
       const response = await fetchImpl(url, { headers: { Range: `bytes=${start}-${end}` } });
       if (response.status !== 206) {
-        throw new Error(`expected HTTP 206 for ${start}-${end}, received ${response.status}`);
+        const error = new Error(`expected HTTP 206 for ${start}-${end}, received ${response.status}`);
+        if (response.status >= 400 && response.status < 500 && response.status !== 429) error.code = 'DISA_ACCESS_REJECTED';
+        throw error;
       }
       const range = response.headers?.get?.('content-range') || '';
       const match = range.match(/^bytes\s+(\d+)-(\d+)\/(\d+)$/i);
@@ -275,6 +251,7 @@ async function fetchRange(url, start, end, fetchImpl) {
       }
       return { bytes, totalBytes: Number(match[3]) };
     } catch (error) {
+      if (error.code === 'DISA_ACCESS_REJECTED') throw error;
       lastError = error;
       if (attempt < RANGE_RETRIES) await wait(attempt * 2_000);
     }
@@ -357,31 +334,31 @@ async function downloadCompilation(url, destination, fetchImpl) {
 }
 
 async function discoverAndFetchAll(fetchImpl, options = {}) {
-  const indexResponse = await fetchImpl(DL_BASE);
-  if (!indexResponse.ok) {
-    throw new Error(`DISA directory index fetch failed: ${indexResponse.status} ${DL_BASE}`);
+  if (!process.env.CONTROL_ATLAS_SOURCE_CHECK_RECEIPT || !/^[a-f0-9]{40}$/.test(process.env.GITHUB_SHA || '')) {
+    throw new Error('DISA refresh requires a current hosted source transaction receipt and code commit');
   }
-  const indexHtml = await indexResponse.text();
-  const allZipUrls = extractDisaZipUrlsFromHtml(indexHtml);
-  const allZipFilenames = [...new Set(
-    [...String(indexHtml).matchAll(/href=["']([^"']+\.zip)["']/gi)]
-      .map((match) => match[1])
-      .filter((file) => !file.includes('/')),
-  )];
-
-  const publicationInventory = groupAndSelectCurrentPublications(allZipFilenames);
-  const compilationUrl = findLatestDisaLibraryUrl(indexHtml);
-  if (!compilationUrl) {
-    throw new Error(`No *Library*.zip compilation found in DISA directory index (${DL_BASE})`);
-  }
-
+  // The witness is independently captured and reviewed. Never derive its count
+  // or digest from this response, and never guess a fallback inventory endpoint.
+  const witnessBytes = readFileSync(join(ROOT, DISA_WITNESS_PATH));
+  if (JSON.parse(witnessBytes).fixture_only === true) throw new Error('Test fixtures are not an admitted production DISA witness');
+  const response = await fetchDisaPublicInventoryBytes(options.inventoryFetchImpl ? { fetchImpl: options.inventoryFetchImpl } : {});
+  const snapshot = parseDisaPublicInventory(response.bytes, { ...response, witnessBytes });
   const acceptedPath = join(ROOT, 'data/disa-artifact-manifest.json');
-  if (options.inventoryCheck && existsSync(acceptedPath)) {
-    const accepted = JSON.parse(readFileSync(acceptedPath));
-    if (!disaContentDue(accepted, indexHtml)) return { discoveryOnly: true, discoveryContentChecksum: disaInventoryChecksum(indexHtml) };
-  }
-
-  const compilationResult = await fetchAndParseCompilation(compilationUrl, fetchImpl);
+  const accepted = existsSync(acceptedPath) ? readJson(acceptedPath) : null;
+  const observation = reconcileDisaPublicInventory(snapshot, {
+    acceptedCompilationFiles: [...new Set((accepted?.reconciliation?.inventory_details || []).map((entry) => entry.entryPath.match(/^([^/]+\.zip)/i)?.[1]).filter(Boolean))],
+    acceptedStandaloneFiles: (accepted?.reconciliation?.standalone_packages || []).map((entry) => entry.filename),
+  });
+  const rawPath = `${DISA_EVIDENCE_DIRECTORY}/${snapshot.response_checksum.slice(7)}.json`;
+  mkdirSync(join(ROOT, DISA_EVIDENCE_DIRECTORY), { recursive: true }); writeFileSync(join(ROOT, rawPath), response.bytes);
+  const inventoryReceipt = recordDisaInventoryReceipt(process.env.CONTROL_ATLAS_SOURCE_CHECK_RECEIPT, {
+    ...response, raw: response.bytes, witnessBytes, reconciliation: observation, rawPath,
+  });
+  if (options.inventoryCheck) throw new Error('DISA complete inventory observed; metadata-only outcome retains source quarantine pending archive byte and native acceptance');
+  const currentPublications = observation.dispositions.filter((entry) => entry.disposition === 'active_manual_candidate');
+  const compilationUrl = observation.compilation_url;
+  const compilationResult = await fetchAndParseCompilation(compilationUrl, fetchImpl, { ...options, accepted,
+    selectedPublicationFilenames: currentPublications.map((entry) => entry.filename) });
   const compilationInnerZips = new Set(
     (compilationResult.inventory || [])
       .map((e) => e.entryPath.match(/^([^/]+\.zip)/i)?.[1])
@@ -389,16 +366,23 @@ async function discoverAndFetchAll(fetchImpl, options = {}) {
   );
 
   const reconciliation = reconcilePublicationInventory(
-    publicationInventory.currentPublications,
+    currentPublications,
     compilationInnerZips,
   );
+
+  for (const publication of reconciliation.representedInCompilation) {
+    if (!compilationResult.inventory.some((entry) => entry.status === 'ingested' && entry.recordCount > 0 &&
+        entry.entryPath.startsWith(`${publication.filename}/`))) {
+      throw new Error(`Selected DISA publication has no ingested native rules: ${publication.filename}`);
+    }
+  }
 
   let standaloneResult = { successes: [], failures: [], stigs: [], srgs: [], relationshipSeeds: [] };
   if (reconciliation.standaloneNeeded.length > 0 && !options.skipStandalone) {
     standaloneResult = await fetchAndParseStandalonePackages(
-      reconciliation.standaloneNeeded,
+      reconciliation.standaloneNeeded.map((entry) => ({ ...entry, url: currentPublications.find((candidate) => candidate.filename === entry.filename).url })),
       fetchImpl,
-      options,
+      { ...options, accepted },
     );
   }
 
@@ -422,12 +406,12 @@ async function discoverAndFetchAll(fetchImpl, options = {}) {
   const uniqueRelationships = dedupeDisaRelationships(combinedSeeds);
   uniqueRelationships.sort((a, b) => a.source_id.localeCompare(b.source_id) || a.target_id.localeCompare(b.target_id));
 
-  const totalExcludedArchives = publicationInventory.excludedByRule.length + publicationInventory.supersededPublications.length;
+  const totalExcludedArchives = observation.excluded_records;
   const missingCount = reconciliation.standaloneNeeded.length - standaloneResult.successes.length;
 
   return {
     ...compilationResult,
-    discoveryContentChecksum: disaInventoryChecksum(indexHtml),
+    publicInventory: { receipt: inventoryReceipt, reconciliation: observation },
     stig: {
       ...compilationResult.stig,
       records: allStigs,
@@ -445,10 +429,10 @@ async function discoverAndFetchAll(fetchImpl, options = {}) {
     standaloneStigCount: standaloneResult.stigs.length,
     standaloneSrgCount: standaloneResult.srgs.length,
     standaloneSuccesses: standaloneResult.successes,
-    discoveredUrls: allZipUrls.length,
+    discoveredUrls: snapshot.record_count,
     publications: {
-      total_discovered_archives: publicationInventory.totalDiscovered,
-      expected_canonical_publications: publicationInventory.currentPublications.length,
+      total_discovered_archives: snapshot.record_count,
+      expected_canonical_publications: currentPublications.length,
       represented_in_compilation: reconciliation.representedInCompilation.length,
       standalone_ingested: standaloneResult.successes.length,
       excluded_archives: totalExcludedArchives,
@@ -473,13 +457,13 @@ function writeDisaArtifactManifest(result, outputRoot = ROOT) {
   };
   const manifest = {
     schema_version: '2.0',
-    discovery_source: DL_BASE,
+    discovery_source: DISA_PUBLIC_INVENTORY_URL,
+    public_inventory: result.publicInventory,
     compilation_url: result.sourceArtifact,
     artifact_url: result.sourceArtifact,
     byte_length: result.byteLength,
-    retrieval_timestamp: new Date().toISOString(),
+    retrieval_timestamp: result.retrievalTimestamp,
     checksum: result.checksum,
-    ...(result.discoveryContentChecksum ? { discovery_content_checksum: result.discoveryContentChecksum, discovery_checksum_kind: 'decoded_utf8_publisher_directory_snapshot' } : {}),
     publications,
     reconciliation: {
       discovered_urls: result.discoveredUrls ?? null,
@@ -508,23 +492,11 @@ function writeDisaArtifactManifest(result, outputRoot = ROOT) {
 export async function fetchDisaStigs(options = {}) {
   const requireFresh = options.requireFresh || process.env.CONTROL_ATLAS_REQUIRE_FRESH_FETCH === '1';
   const fetchImpl = options.fetchImpl || strictConditionalFetch;
-  const explicitUrl = options.compilationUrl || process.env.DISA_STIG_COMPILATION_URL || '';
-
-  if (explicitUrl) {
-    try {
-      return await fetchAndParseCompilation(explicitUrl, fetchImpl);
-    } catch (error) {
-      if (requireFresh) throw error;
-      return loadCommittedArtifacts();
-    }
+  if (options.compilationUrl || process.env.DISA_STIG_COMPILATION_URL) {
+    throw new Error('DISA compilation overrides cannot replace complete public inventory discovery');
   }
-
-  try {
-    return await discoverAndFetchAll(fetchImpl, options);
-  } catch (error) {
-    if (requireFresh) throw error;
-    return loadCommittedArtifacts();
-  }
+  // No silent committed-snapshot fallback can mark this failed source accepted.
+  return discoverAndFetchAll(fetchImpl, { ...options, requireFresh });
 }
 
 async function main() {
@@ -533,14 +505,6 @@ async function main() {
   const outputRoot = requestedOutput ? resolve(ROOT, requestedOutput) : ROOT;
   if (requestedOutput && !outputRoot.startsWith(`${resolve(ROOT, '.local-agent/reference-export')}${sep}`)) throw new Error('Candidate output must remain in the existing local reference-export task area');
   let result = await fetchDisaStigs({ requireFresh, inventoryCheck: process.argv.includes('--inventory-check') && !process.argv.includes('--require-fresh') });
-  if (result.discoveryOnly) {
-    const path = join(ROOT, 'data/disa-artifact-manifest.json'); const accepted = JSON.parse(readFileSync(path));
-    accepted.inventory_check = { checked_at: new Date().toISOString(), status: 'no_declared_inventory_change', content_checksum: result.discoveryContentChecksum,
-      check_tier: 'publisher_directory_inventory', publisher_bytes_retrieved: false, retained_content_retrieved_at: accepted.retrieval_timestamp };
-    writeJsonAtomically(path, accepted);
-    console.log('DISA publisher inventory unchanged in the accepted quarter; retained content dates and checksums unchanged. No archive download or parse.');
-    return;
-  }
   if (requestedOutput) writeJsonAtomically(join(outputRoot, 'retrieval-diagnostics.json'), { fallback_mode: result.fallbackMode || null,
     publications: result.publications || null, failed_publications: result.failedPublications || [], failed_files: result.failed || [] });
   if (result.fallbackMode && requireFresh) {
@@ -556,6 +520,8 @@ async function main() {
     verifyDisaSnapshot(result, native, new Set(JSON.parse(readFileSync(join(ROOT, 'data/ccis.json'))).records.map((row) => row.id)));
     const merged = mergeDisaSnapshot(previous, result, JSON.parse(readFileSync(join(ROOT, 'data/curated/reference-catalogs/publisher-inventories.json'))), native, manifest);
     result = merged.result;
+    writeJsonAtomically(join(ROOT, DISA_EVIDENCE_DIRECTORY, 'native.json'), native);
+    result.nativeVerifiedAt = new Date().toISOString();
     writeJsonAtomically(join(ROOT, 'data/curated/reference-catalogs/publisher-inventories.json'), merged.proofs);
     writeDisaCatalog(ROOT, 'stig', result.stig); writeDisaCatalog(ROOT, 'srg', result.srg);
   } else {
@@ -564,7 +530,18 @@ async function main() {
   }
   writeJsonAtomically(join(outputRoot, 'maps', 'stig-srg-to-cci.json'), result.relationships, { space: 0 });
   if (!result.fallbackMode && requestedOutput) writeDisaArtifactManifest(result, outputRoot);
-  if (!result.fallbackMode && !requestedOutput) attestDisaProjections(ROOT, JSON.parse(readFileSync(join(ROOT, 'data/disa-artifact-manifest.json'))));
+  if (!result.fallbackMode && !requestedOutput) {
+    const path = join(ROOT, 'data/disa-artifact-manifest.json'); const manifest = readJson(path);
+    manifest.native_acceptance = { scope: 'publisher_bytes_and_native_content', code_commit: result.publicInventory.receipt.code_commit, verified_at: result.nativeVerifiedAt,
+      inventory_checksum: result.publicInventory.receipt.inventory_checksum, response_checksum: result.publicInventory.receipt.sha256,
+      native_checksum: hashDisaFile(join(ROOT, DISA_EVIDENCE_DIRECTORY, 'native.json')).checksum,
+      output_checksum: disaCanonicalHash(DISA_ACCEPTED_OUTPUT_PATHS.map((entry) => ({ path: entry, ...hashDisaFile(join(ROOT, entry)) }))),
+      archives: [result.archiveEvidence, ...(result.standaloneSuccesses || []).map(({ source_url, checksum, byte_length, retrieval_timestamp, verified_at, acquisition }) =>
+        ({ source_url, checksum, byte_length, retrieval_timestamp, verified_at, acquisition }))],
+    };
+    recordDisaNativeAcceptance(process.env.CONTROL_ATLAS_SOURCE_CHECK_RECEIPT, manifest);
+    writeJsonAtomically(path, manifest); attestDisaProjections(ROOT, manifest);
+  }
   if (result.fallbackMode) {
     console.log(`DISA fetch fallback: ${result.fallbackMode}`);
   }

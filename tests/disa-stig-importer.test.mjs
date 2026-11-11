@@ -390,3 +390,20 @@ test('parseDisaStandalonePackage extracts records and safely ignores supporting/
   assert.equal(parsed.relationshipSeeds.length, 2);
   assert.ok(parsed.checksum.startsWith('sha256:'));
 });
+
+test('complete public selection excludes lifecycle/history packages from current traversal without deleting prior source data', async () => {
+  const { mkdtempSync, rmSync, writeFileSync } = await import('node:fs');
+  const { tmpdir } = await import('node:os');
+  const { join } = await import('node:path');
+  const root = mkdtempSync(join(tmpdir(), 'disa-selected-'));
+  try {
+    const selected = 'U_Example_V2R1_STIG.zip'; const historical = 'U_Example_V1R1_STIG.zip';
+    const bytes = zipSync({ [selected]: zipSync({ 'current.xml': strToU8(sampleStigXml) }),
+      [historical]: zipSync({ 'prior.xml': strToU8(sampleStigXml.replaceAll('V-100001', 'V-100002')) }) });
+    const path = join(root, 'compilation.zip'); writeFileSync(path, bytes);
+    const result = await parseDisaCompilationStream(path, { artifactUrl: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip',
+      sourceKeys: { stig: 'disa-stig-library', srg: 'disa-srg-library' }, selectedPublicationFilenames: [selected] });
+    assert.deepEqual(result.stig.records.map((row) => row.id), ['V-100001']);
+    assert.ok(result.inventory.some((entry) => entry.entryPath === historical && entry.status === 'excluded' && /not retired/.test(entry.reason)));
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});

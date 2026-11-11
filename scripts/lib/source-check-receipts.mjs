@@ -1,3 +1,5 @@
+import { parseDisaPublicInventory } from './disa-public-inventory.mjs';
+import { disaInventoryReceipt, hasDisaNativeAcceptance, validateDisaAcceptanceEvidence } from './disa-source-acceptance.mjs';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -33,8 +35,8 @@ export async function observePublisherResponse(response, { path, url, resolvedUr
       validation: cacheStatus === 'revalidated' ? 'revalidated' : 'remote', ...fields });
     writeJsonAtomically(path, receipt);
   };
-  // DISA's existing range-validation exception can reuse a size-verified local
-  // archive after a successful publisher probe. Preserve that narrower scope.
+  // Preserve range probes as metadata only. DISA byte/native acceptance below
+  // separately requires actual archive hashes and complete source evidence.
   const range = /^bytes 0-0\/(\d+)$/.exec(response.headers?.get?.('content-range') || '');
   if (response.status === 206 && range && Number.isSafeInteger(Number(range[1]))) {
     try {
@@ -81,7 +83,7 @@ function readOptional(root, path) {
   return existsSync(join(root, path)) ? JSON.parse(readFileSync(join(root, path), 'utf8')) : null;
 }
 
-export function collectSourceChecks({ registry, report, activeStartedAt, readReceipt, hydration = null, baselines = null, disa = null, observations = [] }) {
+export function collectSourceChecks({ registry, report, activeStartedAt, readReceipt, hydration = null, baselines = null, disa = null, validateDisaEvidence = () => false, observations = [] }) {
   const checks = new Map();
   const start = Date.parse(report?.started_at);
   // Only the currently executing refresh may mint dates. Committed pipeline
@@ -89,6 +91,7 @@ export function collectSourceChecks({ registry, report, activeStartedAt, readRec
   if (report?.status !== 'running' || activeStartedAt !== report.started_at || !Number.isFinite(start)) return checks;
   const sources = new Set([...(registry.publications || []), ...(registry.sources || [])].map((entry) => entry.id));
   const units = new Map();
+  const receipts = new Map();
   for (const unit of report.results || []) {
     if (unit.status !== 'accepted' || ![unit.taskId, unit.sourceId].every((id) => typeof id === 'string' && /^[a-z0-9-]+$/i.test(id)) ||
         unit.checkReceiptPath !== sourceCheckReceiptPath(unit.taskId, unit.sourceId)) continue;
@@ -103,6 +106,7 @@ export function collectSourceChecks({ registry, report, activeStartedAt, readRec
         ((request.scope === 'publisher_range_probe' && request.http === 206) || (request.scope === 'publisher_artifact_retrieval' && request.http === 200 && /^sha256:[a-f0-9]{64}$/.test(request.sha256 || '') && request.byte_length > 0));
     });
     units.set(`${unit.taskId}:${unit.sourceId}`, requests);
+    receipts.set(`${unit.taskId}:${unit.sourceId}`, { receipt, completedAt: unit.completed_at });
   }
   const requestsFor = (task, source = task) => units.get(`${task}:${source}`) || [];
   const match = (requests, url, checksum = null) => requests.find((entry) => entry.url === url && entry.scope === 'publisher_artifact_retrieval' && (!checksum || entry.sha256 === checksum));
@@ -190,16 +194,18 @@ export function collectSourceChecks({ registry, report, activeStartedAt, readRec
   const ontology = hydrationById.get('artifact-mitre-d3fend-ontology');
   add('mitre-d3fend-mappings', [match(mitreRequests, D3FEND_MAP, mappings?.sha256 || 'missing'), match(mitreRequests, D3FEND, ontology?.sha256 || 'missing')]);
 
-  const disaRequests = requestsFor('fetch-disa-library');
-  const probe = disaRequests.find((entry) => entry.url === disa?.artifact_url && entry.scope === 'publisher_range_probe' && entry.total_byte_length === disa.byte_length);
-  const discovered = match(disaRequests, disa?.discovery_source);
-  if (Date.parse(disa?.retrieval_timestamp) >= start && disa?.publications?.failed_publications === 0 &&
-      disa.publications.missing_publications === 0 && disa.reconciliation?.failed_files === 0) {
-    const standalone = disa.reconciliation.standalone_packages;
-    if (Array.isArray(standalone) && standalone.length === disa.publications.standalone_ingested) {
-      const packages = standalone.map((entry) => match(disaRequests, new URL(entry.filename, disa.discovery_source).href, entry.checksum));
-      for (const id of ['disa-stig-library', 'disa-srg-library', 'disa-stig-srg-cci-references']) add(id, [discovered, probe, ...packages], 'publisher_range_probe');
-    }
+  const disaTransaction = receipts.get('fetch-disa-library:fetch-disa-library');
+  if (disaTransaction && hasDisaNativeAcceptance(disa, disaTransaction.receipt,
+    { startedAt: report.started_at, completedAt: disaTransaction.completedAt }) &&
+      validateDisaEvidence(disa, disaTransaction.receipt, { startedAt: report.started_at, completedAt: disaTransaction.completedAt })) {
+    // Inventory POST proves metadata only. Advance aliases only alongside the
+    // independently hash-verified archive/native/output transaction evidence.
+    const evidence = { scope: 'publisher_inventory_and_native_verification',
+      checked_at: disa.public_inventory.receipt.checked_at,
+      inventory: disa.public_inventory.receipt, native_acceptance: disa.native_acceptance,
+      publisher_bytes_retrieved: disa.native_acceptance.archives.every((entry) => entry.acquisition === 'downloaded_publisher_bytes'),
+    };
+    for (const id of ['disa-stig-library', 'disa-srg-library', 'disa-stig-srg-cci-references']) if (sources.has(id)) checks.set(id, evidence);
   }
   for (const observation of observations) {
     if (observation.available !== true || !(Date.parse(observation.observed_at) >= start)) continue;
@@ -216,6 +222,32 @@ export function loadSourceChecks(root, registry) {
     hydration: readOptional(root, 'data/artifact-hydration-manifest.json'),
     baselines: readOptional(root, 'data/nist-800-53b-profile-manifest.json'),
     disa: readOptional(root, 'data/disa-artifact-manifest.json'),
+    validateDisaEvidence: (manifest, receipt, times) => {
+      try { return validateDisaAcceptanceEvidence(root, manifest, receipt, times); } catch { return false; }
+    },
     observations: readOptional(root, 'data/stig-source-observations.json')?.observations || [],
   });
+}
+
+/** Dedicated DISA metadata receipt. Reparse consumed raw bytes and full witness;
+ * an arbitrary POST response never enters the generic receipt path. */
+export function recordDisaInventoryReceipt(path, { raw, witnessBytes, observedAt, resolvedUrl, requestFingerprint, reconciliation, rawPath }) {
+  const snapshot = parseDisaPublicInventory(raw, { witnessBytes, observedAt, resolvedUrl, requestFingerprint });
+  const request = disaInventoryReceipt(snapshot, reconciliation, rawPath, process.env.GITHUB_SHA);
+  if (!path) throw new Error('DISA source transaction receipt is required');
+  const receipt = JSON.parse(readFileSync(path, 'utf8'));
+  if (receipt.task_id !== 'fetch-disa-library' || receipt.source_id !== 'fetch-disa-library' ||
+      !Number.isFinite(Date.parse(receipt.started_at)) || Date.parse(request.checked_at) < Date.parse(receipt.started_at) || !Array.isArray(receipt.requests) || receipt.requests.length > 10000) {
+    throw new Error('Invalid DISA source transaction receipt');
+  }
+  receipt.requests.push(request); writeJsonAtomically(path, receipt); return request;
+}
+
+export function recordDisaNativeAcceptance(path, manifest) {
+  const receipt = JSON.parse(readFileSync(path, 'utf8'));
+  receipt.disa_native_acceptance = manifest.native_acceptance;
+  if (!hasDisaNativeAcceptance(manifest, receipt, { startedAt: receipt.started_at, completedAt: new Date().toISOString() })) {
+    throw new Error('DISA native acceptance does not match current transaction');
+  }
+  writeJsonAtomically(path, receipt);
 }

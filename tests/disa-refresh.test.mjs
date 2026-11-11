@@ -34,10 +34,10 @@ test('changed publisher text within the same named edition retains both captures
   assert.equal(merged[0].check_text, fresh.check_text);
   assert.deepEqual(preserveDisaRecordHistory(merged, [{ ...fresh, source: { ...fresh.source, snapshot_date: '2026-10-19' } }])[0].metadata.previous_editions, merged[0].metadata.previous_editions);
 });
-test('hydration accepts only a current matching inventory check and never upgrades old archive bytes to fresh retrieval', () => {
+test('legacy metadata-only hydration cannot grant byte or native acceptance', () => {
   const manifest = { retrieval_timestamp: '2026-10-07T00:00:00Z', discovery_content_checksum: disaInventoryChecksum(html) };
   manifest.inventory_check = { checked_at: '2026-10-18T00:00:00Z', content_checksum: manifest.discovery_content_checksum, retained_content_retrieved_at: manifest.retrieval_timestamp, status: 'no_declared_inventory_change', check_tier: 'publisher_directory_inventory', publisher_bytes_retrieved: false };
-  assert.equal(disaInventoryCheckedToday(manifest, '2026-10-18'), true);
+  assert.equal(disaInventoryCheckedToday(manifest, '2026-10-18'), false);
   assert.equal(disaInventoryCheckedToday(manifest, '2026-10-19'), false);
   for (const change of [{ publisher_bytes_retrieved: true }, { content_checksum: `sha256:${'b'.repeat(64)}` }, { retained_content_retrieved_at: '2026-10-08' }, { status: 'failed' }]) assert.equal(disaInventoryCheckedToday({ ...manifest, inventory_check: { ...manifest.inventory_check, ...change } }, '2026-10-18'), false);
   assert.equal(disaInventoryCheckedToday({ ...manifest, inventory_check: { ...manifest.inventory_check, checked_at: '2027-01-01T00:00:00Z' } }, '2027-01-01'), false);

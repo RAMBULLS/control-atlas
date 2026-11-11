@@ -336,3 +336,53 @@ test('strict refresh rejects a bare 304 without cached publisher bytes', async (
     rmSync(cachePath, { recursive: true, force: true });
   }
 });
+
+// Synthetic responses only: never call the denied directory or public service.
+const disaResponse = (body = '{}', { status = 200, url, headers = {} } = {}) => {
+  const response = new Response(body, { status, headers: { 'content-type': 'application/json', ...headers } });
+  Object.defineProperty(response, 'url', { value: url || 'https://www.cyber.mil/webruntime/api/apex/execute?language=en-US&asGuest=true&htmlEncode=false' });
+  return response;
+};
+test('fixed DISA guest POST consumes bounded bytes with no credentials, redirect, cache or request overrides', async () => {
+  const { fetchDisaPublicInventoryBytes } = await import('../scripts/lib/strict-conditional-fetch.mjs');
+  const { DISA_PUBLIC_INVENTORY_REQUEST: descriptor } = await import('../scripts/lib/disa-public-inventory.mjs');
+  let calls = 0;
+  const response = await fetchDisaPublicInventoryBytes({ fetchImpl: async (url, init) => {
+    calls += 1; assert.equal(url, descriptor.url); assert.equal(init.method, 'POST'); assert.equal(init.body, descriptor.body);
+    assert.equal(init.credentials, 'omit'); assert.equal(init.redirect, 'error'); assert.equal(init.cache, 'no-store');
+    assert.deepEqual(Object.keys(init.headers).sort(), ['Accept', 'Content-Type']);
+    return disaResponse('complete response', { headers: { 'content-length': '17' } });
+  } });
+  assert.equal(calls, 1); assert.equal(response.bytes.toString(), 'complete response');
+  for (const key of ['url', 'method', 'headers', 'body', 'credentials', 'redirect', 'cache', 'class', 'action', 'timeoutMs', 'urlPolicy']) {
+    await assert.rejects(fetchDisaPublicInventoryBytes({ [key]: 'override', fetchImpl: () => assert.fail('must not request') }), /overrides/);
+  }
+  await assert.rejects(createStrictConditionalFetch()('https://www.cyber.mil/stigs/downloads/', { method: 'POST' }), /GET and HEAD/);
+});
+test('DISA guest request rejects every redirect, denial, changed endpoint, cache substitute, oversize and truncation', async () => {
+  const { fetchDisaPublicInventoryBytes } = await import('../scripts/lib/strict-conditional-fetch.mjs');
+  for (const status of [301, 302, 303, 307, 308, 400, 403, 429, 500]) {
+    let count = 0;
+    await assert.rejects(fetchDisaPublicInventoryBytes({ fetchImpl: async () => { count += 1; return disaResponse('{}', { status }); } }), /rejected HTTP/);
+    assert.equal(count, 1, 'no retries or alternate endpoints');
+  }
+  for (const options of [{ url: 'https://www.cyber.mil/webruntime/api/apex/execute?asGuest=true&language=en-US&htmlEncode=false' },
+    { headers: { 'x-local-cache-status': 'revalidated' } }, { headers: { 'content-type': 'text/html' } },
+    { headers: { location: '/other' } }, { headers: { 'content-length': '1048577' } }, { headers: { 'content-length': '12' } }]) {
+    await assert.rejects(fetchDisaPublicInventoryBytes({ fetchImpl: async () => disaResponse('{}', options) }));
+  }
+  await assert.rejects(fetchDisaPublicInventoryBytes({ fetchImpl: async () => disaResponse('x'.repeat(1048577)) }), /byte bound/);
+  await assert.rejects(fetchDisaPublicInventoryBytes({ fetchImpl: async () => disaResponse('') }), /Truncated/);
+});
+test('DISA guest deadline covers a stalled body, not only response headers', async (t) => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const { fetchDisaPublicInventoryBytes } = await import('../scripts/lib/strict-conditional-fetch.mjs');
+  let signalStarted; const started = new Promise((resolve) => { signalStarted = resolve; });
+  const stalled = fetchDisaPublicInventoryBytes({ fetchImpl: async () => {
+    signalStarted(); const response = disaResponse('{}');
+    Object.defineProperty(response, 'body', { value: { async *[Symbol.asyncIterator]() { await new Promise(() => {}); } } });
+    return response;
+  } });
+  const rejected = assert.rejects(stalled, /deadline exceeded/);
+  await started; t.mock.timers.tick(20_001); await rejected;
+});

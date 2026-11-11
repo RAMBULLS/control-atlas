@@ -114,18 +114,22 @@ export function reconcileFreshness(registry, artifactDocuments, runDate, sourceC
     // This document is an SP 800-53 control-catalog proxy, not evidence for
     // the assessment publication's own edition or retrieval date.
     if (freshness.source_id === 'nist-800-53a-assessment-procedures') continue;
+    // DISA byte attestation owns acquisition dates. A normalized projection,
+    // new public metadata selection or retained-archive reparse is not another
+    // publisher retrieval. Keep import/check dates above independently scoped.
+    const disaOwnedDates = ['disa-stig-library', 'disa-srg-library', 'disa-stig-srg-cci-references'].includes(freshness.source_id);
     const nextVersion = artifactVersion(document);
     if (nextVersion) {
       for (const source of sourceRecordsById.get(freshness.source_id) || []) {
         source.version = freshness.source_id === 'nist-800-53b-baselines'
           ? `Revision 5, Release ${nextVersion}`
           : String(nextVersion);
-        if (contentChanged) source.retrieved_at = runDate;
+        if (contentChanged && !disaOwnedDates) source.retrieved_at = runDate;
       }
       for (const artifact of registry.artifacts || []) {
         if (artifact.publication_source_id === freshness.source_id) {
           artifact.version = String(nextVersion);
-          if (contentChanged) artifact.retrieved_at = runDate;
+          if (contentChanged && !disaOwnedDates) artifact.retrieved_at = runDate;
         }
       }
     }

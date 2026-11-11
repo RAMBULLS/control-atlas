@@ -105,3 +105,49 @@ export function createStrictConditionalFetch(options = {}) {
 }
 
 export const strictConditionalFetch = createStrictConditionalFetch();
+
+// The only POST exception is this observed, fixed, unauthenticated read action.
+// It is intentionally separate from the generic GET/HEAD client above. There
+// is no caller-supplied endpoint, body, header, redirect, cache or retry option.
+export async function fetchDisaPublicInventoryBytes(options = {}) {
+  if (Object.keys(options).some((key) => key !== 'fetchImpl')) throw new Error('DISA guest request overrides are forbidden');
+  const { DISA_PUBLIC_INVENTORY_REQUEST: request, DISA_PUBLIC_INVENTORY_MAX_BYTES: maximum,
+    DISA_PUBLIC_REQUEST_FINGERPRINT } = await import('./disa-public-inventory.mjs');
+  if (assertOfficialSourceUrl(request.url).href !== request.url) throw new Error('Ambiguous DISA inventory URL');
+  const controller = new AbortController();
+  const deadlineMs = 20_000;
+  let timeout;
+  const deadline = new Promise((_, reject) => {
+    timeout = setTimeout(() => { controller.abort(); reject(new Error('DISA guest inventory deadline exceeded')); }, deadlineMs);
+  });
+  const operation = async () => {
+    const response = await (options.fetchImpl || globalThis.fetch)(request.url, {
+      ...request, headers: { ...request.headers, Accept: 'application/json' },
+      cache: 'no-store', signal: controller.signal,
+    });
+    if (response.status !== 200 || response.redirected || response.url !== request.url ||
+        response.headers?.get('location') || response.headers?.get('x-local-cache-status') ||
+        !/^application\/json(?:\s*;|$)/i.test(response.headers?.get('content-type') || '')) {
+      throw new Error(`DISA guest inventory rejected HTTP ${response.status}, redirect or cached/non-JSON response`);
+    }
+    const length = response.headers.get('content-length');
+    if (length !== null && (!/^\d+$/.test(length) || Number(length) > maximum)) throw new Error('DISA inventory exceeds its byte bound');
+    if (!response.body || typeof response.body[Symbol.asyncIterator] !== 'function') throw new Error('DISA inventory response is not a bounded stream');
+    const chunks = []; let count = 0;
+    for await (const chunk of response.body) {
+      if (controller.signal.aborted) throw new Error('DISA guest inventory deadline exceeded');
+      count += chunk.byteLength;
+      if (count > maximum) throw new Error('DISA inventory exceeds its byte bound');
+      chunks.push(Buffer.from(chunk));
+    }
+    // Native fetch may decompress the body; Content-Length then describes the
+    // wire representation. Bound consumed bytes regardless; compare only identity.
+    if (!count || (!response.headers.get('content-encoding') && length !== null && count !== Number(length))) {
+      throw new Error('Truncated DISA inventory response');
+    }
+    return { bytes: Buffer.concat(chunks, count), resolvedUrl: response.url,
+      requestFingerprint: DISA_PUBLIC_REQUEST_FINGERPRINT, observedAt: new Date().toISOString() };
+  };
+  try { return await Promise.race([operation(), deadline]); }
+  finally { clearTimeout(timeout); controller.abort(); }
+}

@@ -48,6 +48,10 @@ export async function disaNativeInventories(root, manifest, progress = () => {})
     try {
       for await (const entry of archive.eachEntry()) {
         if (entry.fileName.endsWith('/')) continue;
+        if (depth === 0 && !parent && sourceUrl === manifest.compilation_url && manifest.public_inventory &&
+            !manifest.public_inventory.reconciliation.dispositions.some((row) => row.disposition === 'active_manual_candidate' && row.filename === entry.fileName)) {
+          exclusions.push({ locator: entry.fileName, reason: 'Outside the complete current public manual selection; no retirement inferred.' }); continue;
+        }
         const locator = parent ? `${parent}/${entry.fileName}` : entry.fileName;
         if (excluded(locator)) { exclusions.push({ locator, reason: 'Restricted CUI, sunset, draft, supplemental older edition, supporting file or template content outside the active public manual catalog.' }); continue; }
         if (!/\.(zip|xml|xccdf)$/i.test(entry.fileName)) continue;
@@ -70,17 +74,17 @@ export async function disaNativeInventories(root, manifest, progress = () => {})
   sourceEvidence.push({ source_id: 'artifact-disa-compilation-zip', url: manifest.compilation_url, sha256: sha, byte_length: statSync(compilation).size, evidence_kind: 'downloaded_publisher_bytes', retrieved_at: manifest.retrieval_timestamp });
   await visit(await yauzl.openPromise(compilation, { lazyEntries: true, validateEntrySizes: true }), ''); progress(`Native DISA compilation: ${files.length} XCCDF files`);
   for (const pkg of manifest.reconciliation.standalone_packages) {
-    sourceUrl = `${manifest.discovery_source}${pkg.filename}`;
+    sourceUrl = (pkg.source_url || new URL(pkg.filename, manifest.discovery_source).href);
     let path = join(root, 'tmp/disa-cache/standalone', pkg.filename);
     if (!existsSync(path)) {
-      const acquired = JSON.parse(readFileSync(join(root, '.local-agent/reference-export/inventory-acquisition.json'), 'utf8')).sources.find((entry) => entry.status === 'ACQUIRED' && entry.url === `${manifest.discovery_source}${pkg.filename}`);
+      const acquired = JSON.parse(readFileSync(join(root, '.local-agent/reference-export/inventory-acquisition.json'), 'utf8')).sources.find((entry) => entry.status === 'ACQUIRED' && entry.url === (pkg.source_url || new URL(pkg.filename, manifest.discovery_source).href));
       if (!acquired) throw new Error(`Missing official source package: ${pkg.filename}`);
       path = join(root, acquired.path);
     }
     const sha256 = await fileHash(path);
     sourceChecksum = sha256;
     if (sha256 !== pkg.checksum) throw new Error(`Standalone source bytes differ: ${pkg.filename}`);
-    sourceEvidence.push({ source_id: `disa-package:${pkg.filename}`, url: `${manifest.discovery_source}${pkg.filename}`, sha256, byte_length: statSync(path).size, evidence_kind: 'downloaded_publisher_bytes', retrieved_at: manifest.retrieval_timestamp });
+    sourceEvidence.push({ source_id: `disa-package:${pkg.filename}`, url: (pkg.source_url || new URL(pkg.filename, manifest.discovery_source).href), sha256, byte_length: statSync(path).size, evidence_kind: pkg.acquisition || 'downloaded_publisher_bytes', retrieved_at: pkg.retrieval_timestamp || manifest.retrieval_timestamp });
     await visit(await yauzl.openPromise(path, { lazyEntries: true, validateEntrySizes: true }), '', pkg.kind);
   }
   progress(`Native DISA total: ${files.length} XCCDF files across compilation and${manifest.reconciliation.standalone_packages.length} standalone packages`);

@@ -119,3 +119,12 @@ test('run-start source selections remain stable after later dataset mutation', (
   assert.deepEqual(units.map((unit) => unit.args), [['--only', 'artifact-a'], ['--only', 'artifact-a-child']]);
   assert.equal(new Set(hydrationResolutions().map((entry) => entry.id)).size, hydrationResolutions().length);
 });
+
+
+test('DISA source transaction explicitly owns cache, raw/native evidence, witness and accepted outputs', () => {
+  const task = { id: 'fetch-disa-library', script: 'fetch-disa-stigs.mjs', remote_fetch: true, isolation: 'quarantinable', retries: 1 };
+  const [unit] = sourceUnitsForTask(task, {});
+  for (const path of ['tmp/disa-cache', 'data/curated/disa/public-inventory-witness.json', 'data/disa-artifact-manifest.json',
+    'data/stig-rules.json', 'data/srg-requirements.json', 'maps/stig-srg-to-cci.json']) assert.ok(unit.paths.includes(path), path);
+  assert.ok(!unit.paths.includes('data/curated/dod-rai'));
+});

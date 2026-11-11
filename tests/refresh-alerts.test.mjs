@@ -97,3 +97,13 @@ test('reporter paginates issue reads and sends JSON on stdin without invoking a 
     rmSync(directory, { recursive: true, force: true });
   }
 });
+
+test('DISA accepted and accepted_partial cannot close incidents without independent byte/native acceptance', () => {
+  const issues = [255, 419].map((number) => ({ number, state: 'open', title: 'Source refresh quarantined: fetch-disa-library',
+    body: '<!-- control-atlas-refresh:fetch-disa-library -->\nExisting unresolved source gap.' }));
+  for (const status of ['accepted', 'accepted_partial']) {
+    const plans = planAlertChanges([{ sourceId: 'fetch-disa-library', status }], issues);
+    assert.ok(!plans.some((plan) => plan.payload.state === 'closed'));
+    assert.ok(plans.some((plan) => plan.payload.state === 'open'));
+  }
+});

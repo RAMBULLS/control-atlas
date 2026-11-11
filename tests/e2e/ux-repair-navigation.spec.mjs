@@ -148,7 +148,7 @@ for (const width of [390, 1165]) {
     expect(layout.position).toBe("static");
     expect(layout.top).toBeGreaterThanOrEqual(layout.footerBottom);
     await expect(page.locator("#rb-cf-beacon")).toHaveCount(0);
-    const otherPublications = page.getByRole("button", { name: /^Other publications/ });
+    const otherPublications = page.getByRole("button", { name: width === 390 ? /^Other ·/ : /^Other publications/ });
     await otherPublications.click();
     await expect(page.locator(".atl-pop--other")).toBeVisible();
     await settings.focus();

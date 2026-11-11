@@ -1,6 +1,6 @@
 // Serialized into the existing progressive shell so requests can start before the
 // stylesheet and React entry finish. No module executes and Home stays static.
-/** @param {{modules: string[], routeModules?: Record<string, string[]>, version: string, shardCount: number}} config */
+/** @param {{modules: string[], routeModules?: Record<string, string[]>, routeStyles?: Record<string, string[]>, version: string, shardCount: number}} config */
 export function startRoutePrefetch(config, environment = /** @type {typeof globalThis & {__ATLAS_ROUTE_PREFETCH__?: Map<string, Promise<Response>>}} */ (globalThis)) {
   const { document, location } = environment;
   const script = /** @type {HTMLScriptElement} */ (document.currentScript);
@@ -42,6 +42,23 @@ export function startRoutePrefetch(config, environment = /** @type {typeof globa
     link.href = new URL(path, base).href;
     link.crossOrigin = 'anonymous';
     document.head.appendChild(link);
+  }
+  // Module preloads do not discover Vite's extracted styles. Fetch only the
+  // selected record's emitted CSS now; its normal import still applies it in
+  // the original order. This does not execute modules or alter the stylesheet.
+  if (route === 'record') {
+    for (const path of new Set(config.routeStyles?.record || [])) {
+      const url = new URL(path, base);
+      if (url.origin !== new URL(base).origin) continue;
+      const existing = document.querySelectorAll?.('link[rel="preload"][as="style"]') || [];
+      if ([...existing].some(link => link.href === url.href)) continue;
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'style';
+      link.href = url.href;
+      link.crossOrigin = 'anonymous';
+      document.head.appendChild(link);
+    }
   }
 }
 

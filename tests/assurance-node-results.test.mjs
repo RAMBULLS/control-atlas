@@ -100,7 +100,7 @@ test('the production reporter retains native success, cancellation, empty reason
     { name: 'timeout', exit: 1, complete: true, cancelled: true,
       source: "import test from 'node:test'; import { setTimeout as delay } from 'node:timers/promises'; test('times out', { timeout: 20 }, async () => { await delay(200); });" },
     { name: 'abort', exit: 1, complete: true, cancelled: true,
-      source: "import test from 'node:test'; import { setTimeout as delay } from 'node:timers/promises'; const ac = new AbortController(); test('aborted', { signal: ac.signal }, async () => { await delay(200); }); setTimeout(() => ac.abort(), 10);" },
+      source: "import test from 'node:test'; import { setTimeout as delay } from 'node:timers/promises'; const ac = new AbortController(); test('aborted', { signal: ac.signal }, async () => { queueMicrotask(() => ac.abort(new Error('synthetic abort'))); await delay(200); });" },
     { name: 'parent-cancellation', exit: 1, complete: true, cancelled: true,
       source: "import test from 'node:test'; import { setTimeout as delay } from 'node:timers/promises'; test('parent', t => { t.test('unawaited', async () => { await delay(200); }); });" },
     { name: 'empty-reasons', exit: 0, complete: true,
@@ -131,15 +131,17 @@ test('the production reporter retains native success, cancellation, empty reason
       const child = spawnSync(process.execPath, ['--test', '--test-reporter=tap', '--test-reporter=' + pathToFileURL(reporter).href,
         '--test-reporter-destination=stdout', '--test-reporter-destination=stdout', ...inputs],
       { cwd: directory, env, encoding: 'utf8', timeout: 10000 });
-      assert.equal(child.status, scenario.exit, scenario.name + ': ' + child.stderr);
+      assert.equal(child.status, scenario.exit, scenario.name + ': ' + child.stderr.slice(0, 4000) + child.stdout.slice(0, 4000));
       const output = join(directory, 'artifacts', 'assurance-node');
       const names = readdirSync(output).filter(name => name.endsWith('.json'));
       assert.equal(names.length, 1, scenario.name);
       const result = JSON.parse(readFileSync(join(output, names[0]), 'utf8'));
-      assert.equal(result.complete, scenario.complete, scenario.name + ': ' + JSON.stringify(result.errors));
+      const diagnostic = scenario.name + ': ' + JSON.stringify({ summary: result.summary, results: result.results, errors: result.errors, stdout: child.stdout.slice(0, 4000), stderr: child.stderr.slice(0, 4000) });
+      assert.equal(result.complete, scenario.complete, diagnostic);
+      assert.equal(result.summary.success, scenario.exit === 0, diagnostic);
       assert.equal(result.identity.command, 'synthetic-validator-fixture');
       assert.match(child.stdout, /Native assurance diagnostic saved:/);
-      if (scenario.cancelled) assert.ok(result.results.some(row => row.status === 'cancelled'), scenario.name);
+      if (scenario.cancelled) assert.ok(result.results.some(row => row.status === 'cancelled'), diagnostic);
       if (scenario.name === 'empty-reasons') assert.deepEqual(result.results.map(row => row.status), ['skipped', 'todo']);
       if (scenario.name === 'root-after-hook') assert.ok(result.results.some(row => row.synthetic_hook_failure));
     } finally { rmSync(directory, { recursive: true, force: true }); }

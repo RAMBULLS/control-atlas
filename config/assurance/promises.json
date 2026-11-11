@@ -18,7 +18,8 @@
           "id": "search-library-invariant",
           "phase": "invariant",
           "references": [
-            "tests/search-quality.test.mjs"
+            "tests/search-quality.test.mjs",
+            "tests/assurance-search-recall.test.mjs"
           ],
           "scope_ids": [
             "exact-identity",
@@ -31,7 +32,8 @@
           "id": "search-library-candidate",
           "phase": "candidate",
           "references": [
-            "tests/e2e/complete-search-artifact.spec.mjs"
+            "tests/e2e/complete-search-artifact.spec.mjs",
+            "tests/e2e/assurance-search-recall.spec.mjs"
           ],
           "scope_ids": [
             "exact-identity",
@@ -44,7 +46,8 @@
           "id": "search-library-live",
           "phase": "live",
           "references": [
-            "tests/e2e/complete-search-artifact.spec.mjs"
+            "tests/e2e/complete-search-artifact.spec.mjs",
+            "tests/e2e/assurance-search-recall.spec.mjs"
           ],
           "scope_ids": [
             "exact-identity",

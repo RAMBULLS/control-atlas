@@ -75,6 +75,7 @@ export function createNodeResultCollector({ root, identity, startedAt = new Date
         line: data.line, column: data.column, nesting: data.nesting,
         ordinal: data.testNumber, type: data.details?.type === 'suite' ? 'suite' : 'test',
         status, duration_ms: data.details?.duration_ms,
+        ...(typeof failureType === 'string' ? { failure_type: failureType } : {}),
         ...(rootHookFailure ? { synthetic_hook_failure: true } : {}),
       };
       if (!integer(row.ordinal) || row.ordinal < 1 || !Number.isFinite(row.duration_ms) || row.duration_ms < 0) errors.push('invalid terminal metrics');

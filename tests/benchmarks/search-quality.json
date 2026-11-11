@@ -232,9 +232,11 @@
       "query": "MFA",
       "expected_ids": [
         "nist-800-53:IA-2.1",
+        "nist-800-53:IA-2.2",
         "nist-800-53:IA-5"
       ],
-      "top_k": 5
+      "top_k": 5,
+      "reason": "Broad novice discovery includes direct privileged-account and nonprivileged-account MFA controls plus supporting authenticator management. Ranking is editorial; these results do not determine applicability or compliance."
     },
     {
       "id": "novice-ssp",

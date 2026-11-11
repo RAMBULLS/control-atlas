@@ -102,21 +102,9 @@ Both groups share the same core problem: **compliance language doesn't connect t
 
 ## Information Architecture
 
-Six sections. Each one answers a practitioner question.
+Primary work surfaces are Atlas, Library, Compare, Guides, Templates and Resources. Sources holds provenance and currentness evidence. The implemented route and page contracts in `docs/PAGE_CONTRACTS.md` govern navigation.
 
-| Section | The question it answers |
-|---|---|
-| **Start Here** | Where do I begin? |
-| **Library** | What does this control / STIG / term mean and what connects to it? |
-| **Compare** | What do these frameworks share, and where do they differ? |
-| **Patterns** | How does this part of the process actually work? |
-| **Templates** | What do I need to produce, and what should it look like? |
-| **Sources** | Why should I trust this mapping? |
-
-Navigation order reflects practitioner workflow, not alphabetical or architectural logic.
-
-### Start Here
-A short client-side question flow — system type, data sensitivity, operational environment — that outputs a plain-language starting point: which framework applies, which baseline fits, what templates to generate first, and which pattern pages to read. No data stored. No profile created. Output is a recommendation, not a determination.
+Start Here and Patterns are retired surfaces. Retained bookmarks hand off to the current route; they must not restore a questionnaire, applicability recommendations or baseline suggestions.
 
 ### Library
 Searchable public reference objects: NIST controls, FedRAMP baselines, DISA STIGs/SRGs, CCIs, MITRE ATT&CK techniques, D3FEND countermeasures, and the compliance glossary. Every object page leads with official source content or an honest absence state, then shows related objects and source-traceable relationships.
@@ -124,7 +112,7 @@ Searchable public reference objects: NIST controls, FedRAMP baselines, DISA STIG
 ### Compare
 How frameworks map to each other: NIST ↔ FedRAMP, STIG → CCI → NIST, ATT&CK → D3FEND → control, baseline-to-baseline comparisons. Every mapping shows relationship type, provenance class, and confidence. Inferred mappings are clearly labeled. Export to CSV/Markdown/JSON.
 
-### Patterns
+### Guides
 Plain-language explanations of the authorization and audit concepts practitioners get wrong most often: inheritance, reciprocity, ATO vs. ATC, shared responsibility, boundary scoping, evidence expectations, POA&M residual risk. Each page follows a consistent structure: what it is, where it breaks down, what good looks like, related controls, related templates.
 
 ### Templates
@@ -137,27 +125,9 @@ The trust register for every source in Control Atlas: source class, owner, versi
 
 ## Feature Requirements
 
-### Start Here
+### Entry and compatibility
 
-A guided entry point for practitioners who don't know where to begin. Plain-language questions, no free-text input, no stored data.
-
-**Question flow:**
-- What kind of system are you working on? (Cloud SaaS / Platform service / Enclave / On-premises / Hybrid / Enterprise service)
-- What's the data sensitivity? (Unclassified / CUI / Classified / Not sure)
-- What's your operational environment? (Federal civilian / DoD / Contractor / CSP)
-
-**Output:**
-- Plain-language explanation of which frameworks apply and why
-- Suggested baseline(s) with a one-sentence rationale for each
-- Links to relevant Library objects, Pattern pages, and Templates
-- Explicit label: "This is a reference recommendation. It is not a compliance determination."
-
-**Acceptance criteria:**
-- Completes in under 60 seconds
-- No input stored or transmitted
-- Output is actionable — links directly to next steps, not just a list of framework names
-
----
+Home and Atlas offer public research paths. Legacy Start Here bookmarks use the compatibility resolver and never infer classification, applicability, baseline or an authorization path. Guide routes replace Patterns. Direct routes, reload and Back must preserve explicit selections and truthful unavailable states.
 
 ### Library Browser
 
@@ -664,7 +634,7 @@ control-atlas/
 
 ## Privacy
 
-Control Atlas avoids privacy risk by not collecting the data that would create the risk. No login, no accounts, no org or system profiles, no evidence upload, no template content telemetry, no remote storage of generated content. UI preferences may be stored locally; generated template content must not be persisted by default. No analytics for MVP.
+Control Atlas avoids privacy risk by not collecting the data that would create the risk. No login, no accounts, no org or system profiles, no evidence upload, no template content telemetry, no remote storage of generated content. UI preferences may be stored locally; generated template content must not be persisted by default. Optional consent-controlled Cloudflare analytics measures page visits and loading speed. Undecided or declined consent does not enable collection; withdrawal must preserve core local functionality. Queries and generated content are excluded from telemetry.
 
 ---
 
@@ -786,37 +756,14 @@ Each template story acceptance criteria: correct columns/sections per spec, plai
 
 ---
 
-### Epic 5: Patterns + Glossary + Start Here
+### Guide and glossary acceptance
 
-**Story 5.1 — Pattern page template**
-- Consistent structure: what it is, where it breaks down, what good looks like, do/don't, related controls/templates/sources
-- Plain language in first paragraph before formal terms
-- No authorization recommendations
-
-**Story 5.2 — Inheritance pattern pages** (common control provider, CSP, enterprise service)
-**Story 5.3 — Reciprocity pattern pages** (what it is, why it fails, generic checklist)
-**Story 5.4 — RMF/ATO/ATC pattern pages** (distinguish ATO, ATC, FedRAMP, local risk acceptance)
-**Story 5.5 — Evidence expectation patterns**
-**Story 5.6 — Boundary and scope patterns**
-
-**Story 5.7 — Glossary**
-- Plain-language definition before formal source text for every term
-- All minimum terms present
-- Searchable from main bar
-- Linked from object detail pages inline
-
-**Story 5.8 — Start Here flow**
-- Three questions, under 60 seconds
-- Output is actionable: plain-language rationale + direct links to Library, Patterns, Templates
-- No data stored or transmitted
-- Output labeled as reference recommendation
-
----
+The eleven registered practitioner guides must retain their content, citations, limitations and working next actions. They present Atlas planning aids alongside publisher authority; they do not make compliance, evidence-sufficiency or authorization decisions. Glossary definitions keep source attribution. Retired Start Here and Patterns functionality must not be recreated. Open work belongs only in `docs/BACKLOG.md`.
 
 ### Epic 6: QA + Accessibility + Release
 
 **Story 6.1 — E2E test suite (Playwright)**
-- Coverage: homepage, Start Here, search, provenance registry, object detail, crosswalk, baseline comparison, template generation (all types), graph and table fallback
+- Coverage: homepage, legacy bookmark handoff, search, provenance registry, object detail, crosswalk, baseline comparison, template generation (all types), graph and table fallback
 
 **Story 6.2 — Accessibility pass**
 - Keyboard navigation complete
@@ -844,7 +791,7 @@ Each template story acceptance criteria: correct columns/sections per spec, plai
 | 2 | Library, search, object pages | 2 |
 | 3 | Compare, baseline comparator, export | 2 |
 | 4 | Template Factory (all MVP templates) | 2–3 |
-| 5 | Patterns, Glossary, Start Here | 2 |
+| 5 | Guides, Glossary, compatibility routes | 2 |
 | 6 | QA, accessibility, hardening, launch | 1 |
 
 ---
@@ -856,7 +803,7 @@ The MVP is done when:
 1. Site deploys as a static site. No login, no backend.
 2. Every object page leads with official source content or an honest absence state.
 3. Every visible relationship explanation declares published rationale, Navigation note, or absence.
-4. Start Here helps browse public sources without inferring a classification, baseline, or authorization path.
+4. Legacy bookmark handoffs preserve public browsing without inferring a classification, baseline, or authorization path.
 5. Library is searchable by ID, title, and official description from any page.
 6. STIG → CCI → NIST trace is reachable in three clicks.
 7. Baseline comparator works for NIST and FedRAMP baselines.
@@ -883,7 +830,7 @@ The MVP is done when:
 | Users assume templates guarantee compliance | High | Prominent disclaimers; plain-language limitation notes in every template |
 | Large datasets slow the static site | Medium | Chunked JSON, MiniSearch static index, lazy loading |
 | Graph unusable at scale | Medium | Object-local graph views; table fallback required before graph ships |
-| Solo maintainer pace vs. scope | Medium | Shared Responsibility Matrix deferred; Start Here and Glossary are low-cost relative to value |
+| Solo maintainer pace vs. scope | Medium | Shared Responsibility Matrix deferred; Guide and Glossary changes remain scoped to research using cited publisher documents |
 
 ---
 

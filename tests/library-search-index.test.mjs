@@ -64,3 +64,58 @@ test("columnar Library index applies multi-publication area constraints before i
   assert.ok(results.length > 0);
   assert.ok(results.every((record) => implementationCatalogs.includes(record.catalog_id)));
 });
+
+
+test("columnar MFA discovery retains the complete reviewed top-five expected set", () => {
+  const runtime = indexedRuntime();
+  const required = ["nist-800-53:IA-2.1", "nist-800-53:IA-2.2", "nist-800-53:IA-5"];
+  const actual = runtime.searchLibrary("MFA").slice(0, 5).map(record => record.id);
+  for (const id of required) assert.ok(actual.includes(id), id);
+  assert.equal(new Set(actual).size, actual.length);
+});
+
+test("MFA discovery preserves qualifiers, publication filters and exact IDs in both transports", () => {
+  // Synthetic transport fixture; the canonical relevance set is independently
+  // reviewed and separately checked against the actual generated corpus above.
+  const records = [
+    ["nist-800-53:IA-2.1", "Multi-factor Authentication to Privileged Accounts", "control"],
+    ["nist-800-53:IA-2.2", "Multi-factor Authentication to Non-Privileged Accounts", "control"],
+    ["nist-800-53:IA-5", "Authenticator Management", "control"],
+    ["nist-800-53:IA-2.10", "Single Sign-On", "control"],
+    ["nist-800-53a:IA-2.1", "Multifactor Authentication Assessment", "assessment_procedure"],
+    ["fixture-external:one", "Multifactor Authentication External Users", "control"],
+  ].map(([id, title, object_type]) => ({
+    id, item_id: id.split(":")[1], title, object_type, catalog_id: id.split(":")[0],
+    source_name: "Synthetic transport fixture", official_text_preview: title, taxonomy_tags: [],
+  }));
+  for (const columnar of [false, true]) {
+    const make = documents => {
+      const fields = Object.keys(documents[0]);
+      const librarySearch = columnar
+        ? { documents: [], indexed_transport: { format: "columns-v1", fields, columns: fields.map(field => documents.map(record => record[field])) } }
+        : { documents };
+      return createFederalGraphRuntime({ sources: [], nodes: [], edges: [], evidence: [], findings: [], librarySearch });
+    };
+    const runtime = make(records);
+    for (const query of ["MFA", "2FA", "multi-factor authentication", "multifactor authentication", "two factor authentication"]) {
+      const actual = runtime.searchLibrary(query).map(record => record.id);
+      assert.deepEqual(actual.slice(0, 3), ["nist-800-53:IA-2.1", "nist-800-53:IA-2.2", "nist-800-53:IA-5"]);
+      assert.equal(new Set(actual).size, actual.length);
+      assert.equal(runtime.getLibraryTagContext(query).result_count, actual.length);
+    }
+    assert.deepEqual(runtime.searchLibrary("MFA external users").map(record => record.id), ["fixture-external:one"]);
+    assert.deepEqual(runtime.searchLibrary("MFA", { catalog_id: "fixture-external" }).map(record => record.id), ["fixture-external:one"]);
+    assert.deepEqual(runtime.searchLibrary("MFA", { catalog_ids: ["nist-800-53a"] }).map(record => record.id), ["nist-800-53a:IA-2.1"]);
+    const exact = runtime.searchLibrary("IA-2.1").map(record => record.id);
+    assert.ok(exact.includes("nist-800-53:IA-2.1"));
+    assert.ok(!exact.includes("nist-800-53:IA-2.10"));
+    // A preview hit in the first spelling must not discard a stronger title
+    // hit from the second spelling before the two expansions are combined.
+    const preview = "multifactor authentication contractor";
+    const ranked = make([
+      { ...records[5], id: "fixture-external:a-preview", item_id: "a-preview", title: "Other", official_text_preview: preview },
+      { ...records[5], id: "fixture-external:z-title", item_id: "z-title", title: "Multi-factor authentication contractor", official_text_preview: preview },
+    ]);
+    assert.equal(ranked.searchLibrary("MFA contractor")[0].id, "fixture-external:z-title");
+  }
+});

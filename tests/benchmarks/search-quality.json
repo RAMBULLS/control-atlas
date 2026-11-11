@@ -5,189 +5,246 @@
       "id": "expert-control-id",
       "audience": "expert",
       "query": "AC-2",
-      "expected_ids": ["nist-800-53:AC-2"],
+      "expected_ids": [
+        "nist-800-53:AC-2"
+      ],
       "top_k": 1
     },
     {
       "id": "expert-enhancement-notation",
       "audience": "expert",
       "query": "AC-2(1)",
-      "expected_ids": ["nist-800-53:AC-2.1"],
+      "expected_ids": [
+        "nist-800-53:AC-2.1"
+      ],
       "top_k": 1
     },
     {
       "id": "expert-cci-id",
       "audience": "expert",
       "query": "CCI-000225",
-      "expected_ids": ["disa-cci:CCI-000225"],
+      "expected_ids": [
+        "disa-cci:CCI-000225"
+      ],
       "top_k": 1
     },
     {
       "id": "expert-control-title",
       "audience": "expert",
       "query": "account management",
-      "expected_ids": ["nist-800-53:AC-2"],
+      "expected_ids": [
+        "nist-800-53:AC-2"
+      ],
       "top_k": 3
     },
     {
       "id": "novice-account-access",
       "audience": "novice",
       "query": "manage system accounts",
-      "expected_ids": ["nist-800-53:AC-2"],
+      "expected_ids": [
+        "nist-800-53:AC-2"
+      ],
       "top_k": 5
     },
     {
       "id": "novice-account-access-variant",
       "audience": "novice",
       "query": "how do I control user accounts",
-      "expected_ids": ["nist-800-53:AC-2"],
+      "expected_ids": [
+        "nist-800-53:AC-2"
+      ],
       "top_k": 5
     },
     {
       "id": "novice-data-at-rest",
       "audience": "novice",
       "query": "protect data stored on a device",
-      "expected_ids": ["nist-800-53:SC-28"],
+      "expected_ids": [
+        "nist-800-53:SC-28"
+      ],
       "top_k": 5
     },
     {
       "id": "novice-data-at-rest-variant",
       "audience": "novice",
       "query": "encrypt information at rest",
-      "expected_ids": ["nist-800-53:SC-28"],
+      "expected_ids": [
+        "nist-800-53:SC-28"
+      ],
       "top_k": 5
     },
     {
       "id": "novice-session-reuse",
       "audience": "novice",
       "query": "stop someone reusing an old login session",
-      "expected_ids": ["nist-800-53:SC-23.1"],
+      "expected_ids": [
+        "nist-800-53:SC-23.1"
+      ],
       "top_k": 5
     },
     {
       "id": "novice-session-reuse-variant",
       "audience": "novice",
       "query": "prevent session token reuse",
-      "expected_ids": ["nist-800-53:SC-23.1"],
+      "expected_ids": [
+        "nist-800-53:SC-23.1"
+      ],
       "top_k": 5
     },
     {
       "id": "novice-vulnerability-scanning",
       "audience": "novice",
       "query": "find software vulnerabilities and fix them",
-      "expected_ids": ["nist-800-53:RA-5"],
+      "expected_ids": [
+        "nist-800-53:RA-5"
+      ],
       "top_k": 5
     },
     {
       "id": "novice-vulnerability-scanning-variant",
       "audience": "novice",
       "query": "scan for security flaws",
-      "expected_ids": ["nist-800-53:RA-5"],
+      "expected_ids": [
+        "nist-800-53:RA-5"
+      ],
       "top_k": 5
     },
     {
       "id": "novice-incident-response",
       "audience": "novice",
       "query": "what should we do when a security incident happens",
-      "expected_ids": ["nist-800-53:IR-4"],
+      "expected_ids": [
+        "nist-800-53:IR-4"
+      ],
       "top_k": 5
     },
     {
       "id": "novice-incident-response-variant",
       "audience": "novice",
       "query": "respond to a cyber incident",
-      "expected_ids": ["nist-800-53:IR-4"],
+      "expected_ids": [
+        "nist-800-53:IR-4"
+      ],
       "top_k": 5
     },
     {
       "id": "expert-multifactor-enhancement",
       "audience": "expert",
       "query": "IA-2.1",
-      "expected_ids": ["nist-800-53:IA-2.1"],
+      "expected_ids": [
+        "nist-800-53:IA-2.1"
+      ],
       "top_k": 1
     },
     {
       "id": "expert-audit-review-id",
       "audience": "expert",
       "query": "AU-6",
-      "expected_ids": ["nist-800-53:AU-6"],
+      "expected_ids": [
+        "nist-800-53:AU-6"
+      ],
       "top_k": 1
     },
     {
       "id": "novice-least-privilege",
       "audience": "novice",
       "query": "least privilege",
-      "expected_ids": ["nist-800-53:AC-6"],
+      "expected_ids": [
+        "nist-800-53:AC-6"
+      ],
       "top_k": 5
     },
     {
       "id": "novice-audit-record-review",
       "audience": "novice",
       "query": "review audit logs",
-      "expected_ids": ["nist-800-53:PE-6"],
+      "expected_ids": [
+        "nist-800-53:AU-6"
+      ],
       "top_k": 5
     },
     {
       "id": "expert-control-id-leading-zero",
       "audience": "expert",
       "query": "AC-02",
-      "expected_ids": ["nist-800-53:AC-2"],
+      "expected_ids": [
+        "nist-800-53:AC-2"
+      ],
       "top_k": 1
     },
     {
       "id": "expert-control-id-no-hyphen",
       "audience": "expert",
       "query": "AC02",
-      "expected_ids": ["nist-800-53:AC-2"],
+      "expected_ids": [
+        "nist-800-53:AC-2"
+      ],
       "top_k": 1
     },
     {
       "id": "expert-control-id-space",
       "audience": "expert",
       "query": "AC 02",
-      "expected_ids": ["nist-800-53:AC-2"],
+      "expected_ids": [
+        "nist-800-53:AC-2"
+      ],
       "top_k": 1
     },
     {
       "id": "expert-enhancement-leading-zero",
       "audience": "expert",
       "query": "AC-02(01)",
-      "expected_ids": ["nist-800-53:AC-2.1"],
+      "expected_ids": [
+        "nist-800-53:AC-2.1"
+      ],
       "top_k": 1
     },
     {
       "id": "expert-enhancement-dot-leading-zero",
       "audience": "expert",
       "query": "AC-2.01",
-      "expected_ids": ["nist-800-53:AC-2.1"],
+      "expected_ids": [
+        "nist-800-53:AC-2.1"
+      ],
       "top_k": 1
     },
     {
       "id": "expert-cci-unpadded",
       "audience": "expert",
       "query": "CCI-225",
-      "expected_ids": ["disa-cci:CCI-000225"],
+      "expected_ids": [
+        "disa-cci:CCI-000225"
+      ],
       "top_k": 1
     },
     {
       "id": "expert-authority-prefix",
       "audience": "expert",
       "query": "NIST AC-02",
-      "expected_ids": ["nist-800-53:AC-2"],
+      "expected_ids": [
+        "nist-800-53:AC-2"
+      ],
       "top_k": 1
     },
     {
       "id": "novice-mfa",
       "audience": "novice",
       "query": "MFA",
-      "expected_ids": ["nist-800-53:IA-2.1", "nist-800-53:IA-5"],
-      "top_k": 5
+      "expected_ids": [
+        "nist-800-53:IA-2.1",
+        "nist-800-53:IA-2.2",
+        "nist-800-53:IA-5"
+      ],
+      "top_k": 5,
+      "reason": "Broad novice discovery includes direct privileged-account and nonprivileged-account MFA controls plus supporting authenticator management. Ranking is editorial; these results do not determine applicability or compliance."
     },
     {
       "id": "novice-ssp",
       "audience": "novice",
       "query": "SSP",
-      "expected_ids": ["nist-800-53:PL-2"],
+      "expected_ids": [
+        "nist-800-53:PL-2"
+      ],
       "top_k": 5
     },
     {
@@ -195,6 +252,17 @@
       "audience": "novice",
       "query": "banana bread recipe",
       "expected_ids": [],
+      "top_k": 5,
+      "expect_no_results": true,
+      "reason": "Intentional unrelated cooking query; no admitted cybersecurity record is expected."
+    },
+    {
+      "id": "novice-physical-access-log-review",
+      "audience": "novice",
+      "query": "review physical access logs",
+      "expected_ids": [
+        "nist-800-53:PE-6"
+      ],
       "top_k": 5
     }
   ]

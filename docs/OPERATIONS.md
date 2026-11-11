@@ -574,4 +574,17 @@ An obsolete public hostname for an earlier release still exists in the wild and 
 
 ## Runtime boundary
 
-The deployed site is static and public-data-only. It has no backend, authentication, telemetry, user uploads, organizational data, compliance scoring, operational integrations, or stored generated templates.
+The deployed site is static and public-data-only. It has no backend, authentication, user uploads, organizational data, compliance scoring, operational integrations, or stored generated templates. Optional consent-controlled Cloudflare analytics measures page visits and loading speed; queries and generated template contents must not be transmitted.
+
+
+## Nine-promise assurance evidence
+
+`config/assurance/promises.json` defines bounded claims and required scope for Search/Library, Atlas, record/source details, Compare, ten registered templates, eleven guides, Resources, provenance/freshness and account-free local operation. Its schema, live registry joins and negative tests reject missing or orphan scope and stale references. Registry counts do not substitute for testing each ID and format.
+
+`verify:assurance` without execution input validates the contract only. It is not release acceptance. Execution evidence must come from real runner results bound to the exact code SHA, immutable site artifact digest, provider run/attempt, report digest, browser, phase and exercised assertions. Missing, skipped, retried, failed, duplicate, unexpected or stale required evidence cannot pass. Candidate results do not establish actual-domain operation. The existing production three-engine acceptance, source gates, metric and byte budgets remain mandatory.
+
+The evidence evaluator caps execution observations at 24 hours, evaluated at consumption time. That is an execution-evidence validity policy, not a promise that every upstream source is checked daily. Source-specific cadence and successful retrieval receipts remain authoritative. Any static public health projection must become unknown when its evidence expires; it cannot claim awareness of a failure that happened after the build.
+
+Routine candidate analytics qualification intercepts all collection traffic and makes no production telemetry submissions. Its real public SDK is acquired anonymously and its digest recorded; collector acceptance and production dashboard delivery remain unverified. Qualification preserves local functionality after denial and withdrawal and must not inherit the runner API token.
+
+Structural and phrase tests are not semantic certification. Changes to public meaning require a separate source-backed review bound to claim text, edition, locator and source excerpt or digest, reviewer scope, disposition, limitations and invalidation triggers. AI specialist review must be labeled as such; it is not human practitioner certification, legal advice or external assurance. Changed words or source evidence invalidate the prior review. Keep run/review evidence in the PR and Actions artifacts, not dated documentation or a second backlog.

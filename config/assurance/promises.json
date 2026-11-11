@@ -1,0 +1,756 @@
+{
+  "schema_version": "1.0",
+  "version": "1.0.0",
+  "promises": [
+    {
+      "id": "search-library",
+      "claim": "Retrieve admitted records by canonical identity and bounded reviewed search fixtures.",
+      "registry": "src/app/runtime.mjs",
+      "owner_role": "repository-maintainer",
+      "scope_ids": [
+        "exact-identity",
+        "reviewed-top-k",
+        "inventory",
+        "load-recovery"
+      ],
+      "checks": [
+        {
+          "id": "search-library-invariant",
+          "phase": "invariant",
+          "references": [
+            "tests/search-quality.test.mjs",
+            "tests/assurance-search-recall.test.mjs"
+          ],
+          "scope_ids": [
+            "exact-identity",
+            "reviewed-top-k",
+            "inventory",
+            "load-recovery"
+          ]
+        },
+        {
+          "id": "search-library-candidate",
+          "phase": "candidate",
+          "references": [
+            "tests/e2e/complete-search-artifact.spec.mjs",
+            "tests/e2e/assurance-search-recall.spec.mjs"
+          ],
+          "scope_ids": [
+            "exact-identity",
+            "reviewed-top-k",
+            "inventory",
+            "load-recovery"
+          ]
+        },
+        {
+          "id": "search-library-live",
+          "phase": "live",
+          "references": [
+            "tests/e2e/complete-search-artifact.spec.mjs",
+            "tests/e2e/assurance-search-recall.spec.mjs"
+          ],
+          "scope_ids": [
+            "exact-identity",
+            "reviewed-top-k",
+            "inventory",
+            "load-recovery"
+          ]
+        }
+      ],
+      "required_evidence": [
+        "contract_hash",
+        "code_sha",
+        "artifact_digest",
+        "check_id",
+        "run_id",
+        "observed_at",
+        "valid_until",
+        "scope_ids",
+        "status",
+        "limitations",
+        "owner_role",
+        "next_check",
+        "result_locator",
+        "report_sha256",
+        "browser"
+      ],
+      "semantic_review_triggers": [
+        "changed public claim",
+        "changed source edition, locator, content or interpretation"
+      ],
+      "degraded_behavior": "Report failed or unknown scope explicitly; do not infer a passing result from retained content or a completed deployment."
+    },
+    {
+      "id": "atlas",
+      "claim": "Show publisher hierarchy and source-traceable relationships without layout-inferred claims.",
+      "registry": "src/app/atlas-neighborhood.mjs",
+      "owner_role": "repository-maintainer",
+      "scope_ids": [
+        "canonical-nodes",
+        "typed-edges",
+        "navigation",
+        "responsive-keyboard"
+      ],
+      "checks": [
+        {
+          "id": "atlas-invariant",
+          "phase": "invariant",
+          "references": [
+            "tests/atlas-neighborhood.test.mjs"
+          ],
+          "scope_ids": [
+            "canonical-nodes",
+            "typed-edges",
+            "navigation",
+            "responsive-keyboard"
+          ]
+        },
+        {
+          "id": "atlas-candidate",
+          "phase": "candidate",
+          "references": [
+            "tests/e2e/atlas-journeys.spec.mjs"
+          ],
+          "scope_ids": [
+            "canonical-nodes",
+            "typed-edges",
+            "navigation",
+            "responsive-keyboard"
+          ]
+        },
+        {
+          "id": "atlas-live",
+          "phase": "live",
+          "references": [
+            "tests/e2e/atlas-journeys.spec.mjs"
+          ],
+          "scope_ids": [
+            "canonical-nodes",
+            "typed-edges",
+            "navigation",
+            "responsive-keyboard"
+          ]
+        }
+      ],
+      "required_evidence": [
+        "contract_hash",
+        "code_sha",
+        "artifact_digest",
+        "check_id",
+        "run_id",
+        "observed_at",
+        "valid_until",
+        "scope_ids",
+        "status",
+        "limitations",
+        "owner_role",
+        "next_check",
+        "result_locator",
+        "report_sha256",
+        "browser"
+      ],
+      "semantic_review_triggers": [
+        "changed public claim",
+        "changed source edition, locator, content or interpretation"
+      ],
+      "degraded_behavior": "Report failed or unknown scope explicitly; do not infer a passing result from retained content or a completed deployment."
+    },
+    {
+      "id": "record-source",
+      "claim": "Present captured publisher content, edition and citations without inventing missing text.",
+      "registry": "src/shared/record-presentation.mjs",
+      "owner_role": "repository-maintainer",
+      "scope_ids": [
+        "catalog-type-coverage",
+        "exact-text",
+        "edition-citation",
+        "load-recovery"
+      ],
+      "checks": [
+        {
+          "id": "record-source-invariant",
+          "phase": "invariant",
+          "references": [
+            "tests/record-acceptance.test.mjs"
+          ],
+          "scope_ids": [
+            "catalog-type-coverage",
+            "exact-text",
+            "edition-citation",
+            "load-recovery"
+          ]
+        },
+        {
+          "id": "record-source-candidate",
+          "phase": "candidate",
+          "references": [
+            "tests/e2e/record-source-fidelity.spec.mjs"
+          ],
+          "scope_ids": [
+            "catalog-type-coverage",
+            "exact-text",
+            "edition-citation",
+            "load-recovery"
+          ]
+        },
+        {
+          "id": "record-source-live",
+          "phase": "live",
+          "references": [
+            "tests/e2e/record-source-fidelity.spec.mjs"
+          ],
+          "scope_ids": [
+            "catalog-type-coverage",
+            "exact-text",
+            "edition-citation",
+            "load-recovery"
+          ]
+        }
+      ],
+      "required_evidence": [
+        "contract_hash",
+        "code_sha",
+        "artifact_digest",
+        "check_id",
+        "run_id",
+        "observed_at",
+        "valid_until",
+        "scope_ids",
+        "status",
+        "limitations",
+        "owner_role",
+        "next_check",
+        "result_locator",
+        "report_sha256",
+        "browser"
+      ],
+      "semantic_review_triggers": [
+        "changed public claim",
+        "changed source edition, locator, content or interpretation"
+      ],
+      "degraded_behavior": "Report failed or unknown scope explicitly; do not infer a passing result from retained content or a completed deployment."
+    },
+    {
+      "id": "compare",
+      "claim": "Compare only declared capabilities and preserve identity, scope and native mapping direction.",
+      "registry": "src/shared/compare-capability.mjs",
+      "owner_role": "repository-maintainer",
+      "scope_ids": [
+        "supported-modes",
+        "unsupported-modes",
+        "direction",
+        "complete-filtered-export"
+      ],
+      "checks": [
+        {
+          "id": "compare-invariant",
+          "phase": "invariant",
+          "references": [
+            "tests/compare-capability.test.mjs"
+          ],
+          "scope_ids": [
+            "supported-modes",
+            "unsupported-modes",
+            "direction",
+            "complete-filtered-export"
+          ]
+        },
+        {
+          "id": "compare-candidate",
+          "phase": "candidate",
+          "references": [
+            "tests/e2e/compare-zero-trust.spec.mjs"
+          ],
+          "scope_ids": [
+            "supported-modes",
+            "unsupported-modes",
+            "direction",
+            "complete-filtered-export"
+          ]
+        },
+        {
+          "id": "compare-live",
+          "phase": "live",
+          "references": [
+            "tests/e2e/compare-zero-trust.spec.mjs"
+          ],
+          "scope_ids": [
+            "supported-modes",
+            "unsupported-modes",
+            "direction",
+            "complete-filtered-export"
+          ]
+        }
+      ],
+      "required_evidence": [
+        "contract_hash",
+        "code_sha",
+        "artifact_digest",
+        "check_id",
+        "run_id",
+        "observed_at",
+        "valid_until",
+        "scope_ids",
+        "status",
+        "limitations",
+        "owner_role",
+        "next_check",
+        "result_locator",
+        "report_sha256",
+        "browser"
+      ],
+      "semantic_review_triggers": [
+        "changed public claim",
+        "changed source edition, locator, content or interpretation"
+      ],
+      "degraded_behavior": "Report failed or unknown scope explicitly; do not infer a passing result from retained content or a completed deployment."
+    },
+    {
+      "id": "templates",
+      "claim": "Generate local working documents with source metadata, blank working fields and explicit review limitations.",
+      "registry": "data/template-registry.json",
+      "owner_role": "repository-maintainer",
+      "scope_ids": [
+        "tpl-ssp-starter:docx",
+        "tpl-impl-stmt:xlsx",
+        "tpl-evid-exp:xlsx",
+        "tpl-inherit-wksh:xlsx",
+        "tpl-reciprocity:xlsx",
+        "tpl-poam:xlsx",
+        "tpl-assess-plan:xlsx",
+        "tpl-conmon:xlsx",
+        "tpl-hw-baseline:xlsx",
+        "tpl-sw-baseline:xlsx"
+      ],
+      "checks": [
+        {
+          "id": "templates-invariant",
+          "phase": "invariant",
+          "references": [
+            "tests/template-export-contract.test.mjs"
+          ],
+          "scope_ids": [
+            "tpl-ssp-starter:docx",
+            "tpl-impl-stmt:xlsx",
+            "tpl-evid-exp:xlsx",
+            "tpl-inherit-wksh:xlsx",
+            "tpl-reciprocity:xlsx",
+            "tpl-poam:xlsx",
+            "tpl-assess-plan:xlsx",
+            "tpl-conmon:xlsx",
+            "tpl-hw-baseline:xlsx",
+            "tpl-sw-baseline:xlsx"
+          ]
+        },
+        {
+          "id": "templates-candidate",
+          "phase": "candidate",
+          "references": [
+            "tests/e2e/assurance-template-downloads.spec.mjs"
+          ],
+          "scope_ids": [
+            "tpl-ssp-starter:docx",
+            "tpl-impl-stmt:xlsx",
+            "tpl-evid-exp:xlsx",
+            "tpl-inherit-wksh:xlsx",
+            "tpl-reciprocity:xlsx",
+            "tpl-poam:xlsx",
+            "tpl-assess-plan:xlsx",
+            "tpl-conmon:xlsx",
+            "tpl-hw-baseline:xlsx",
+            "tpl-sw-baseline:xlsx"
+          ]
+        },
+        {
+          "id": "templates-live",
+          "phase": "live",
+          "references": [
+            "tests/e2e/assurance-template-downloads.spec.mjs"
+          ],
+          "scope_ids": [
+            "tpl-ssp-starter:docx",
+            "tpl-impl-stmt:xlsx",
+            "tpl-evid-exp:xlsx",
+            "tpl-inherit-wksh:xlsx",
+            "tpl-reciprocity:xlsx",
+            "tpl-poam:xlsx",
+            "tpl-assess-plan:xlsx",
+            "tpl-conmon:xlsx",
+            "tpl-hw-baseline:xlsx",
+            "tpl-sw-baseline:xlsx"
+          ]
+        }
+      ],
+      "required_evidence": [
+        "contract_hash",
+        "code_sha",
+        "artifact_digest",
+        "check_id",
+        "run_id",
+        "observed_at",
+        "valid_until",
+        "scope_ids",
+        "status",
+        "limitations",
+        "owner_role",
+        "next_check",
+        "result_locator",
+        "report_sha256",
+        "browser"
+      ],
+      "semantic_review_triggers": [
+        "changed public claim",
+        "changed source edition, locator, content or interpretation"
+      ],
+      "degraded_behavior": "Report failed or unknown scope explicitly; do not infer a passing result from retained content or a completed deployment."
+    },
+    {
+      "id": "guides",
+      "claim": "Provide source-linked procedural guidance with explicit limitations and working next actions.",
+      "registry": "src/app/learn-content.mjs",
+      "owner_role": "repository-maintainer",
+      "scope_ids": [
+        "starting-an-authorization",
+        "selecting-controls",
+        "implementing-controls",
+        "preparing-evidence",
+        "conducting-assessments",
+        "managing-findings",
+        "continuous-monitoring",
+        "inheritance-and-common-controls",
+        "reciprocity",
+        "cloud-and-shared-responsibility",
+        "stig-lifecycle"
+      ],
+      "checks": [
+        {
+          "id": "guides-invariant",
+          "phase": "invariant",
+          "references": [
+            "tests/browser-contract.test.mjs"
+          ],
+          "scope_ids": [
+            "starting-an-authorization",
+            "selecting-controls",
+            "implementing-controls",
+            "preparing-evidence",
+            "conducting-assessments",
+            "managing-findings",
+            "continuous-monitoring",
+            "inheritance-and-common-controls",
+            "reciprocity",
+            "cloud-and-shared-responsibility",
+            "stig-lifecycle"
+          ]
+        },
+        {
+          "id": "guides-candidate",
+          "phase": "candidate",
+          "references": [
+            "tests/e2e/assurance-guides.spec.mjs"
+          ],
+          "scope_ids": [
+            "starting-an-authorization",
+            "selecting-controls",
+            "implementing-controls",
+            "preparing-evidence",
+            "conducting-assessments",
+            "managing-findings",
+            "continuous-monitoring",
+            "inheritance-and-common-controls",
+            "reciprocity",
+            "cloud-and-shared-responsibility",
+            "stig-lifecycle"
+          ]
+        },
+        {
+          "id": "guides-live",
+          "phase": "live",
+          "references": [
+            "tests/e2e/assurance-guides.spec.mjs"
+          ],
+          "scope_ids": [
+            "starting-an-authorization",
+            "selecting-controls",
+            "implementing-controls",
+            "preparing-evidence",
+            "conducting-assessments",
+            "managing-findings",
+            "continuous-monitoring",
+            "inheritance-and-common-controls",
+            "reciprocity",
+            "cloud-and-shared-responsibility",
+            "stig-lifecycle"
+          ]
+        }
+      ],
+      "required_evidence": [
+        "contract_hash",
+        "code_sha",
+        "artifact_digest",
+        "check_id",
+        "run_id",
+        "observed_at",
+        "valid_until",
+        "scope_ids",
+        "status",
+        "limitations",
+        "owner_role",
+        "next_check",
+        "result_locator",
+        "report_sha256",
+        "browser"
+      ],
+      "semantic_review_triggers": [
+        "changed public claim",
+        "changed source edition, locator, content or interpretation"
+      ],
+      "degraded_behavior": "Report failed or unknown scope explicitly; do not infer a passing result from retained content or a completed deployment."
+    },
+    {
+      "id": "resources",
+      "claim": "Describe public resources with truthful ownership, access, lifecycle and compatibility.",
+      "registry": "data/commons-resource-dataset.json",
+      "owner_role": "repository-maintainer",
+      "scope_ids": [
+        "ownership-access",
+        "lifecycle",
+        "compatibility",
+        "internal-navigation"
+      ],
+      "checks": [
+        {
+          "id": "resources-invariant",
+          "phase": "invariant",
+          "references": [
+            "tests/resources-directory.test.mjs"
+          ],
+          "scope_ids": [
+            "ownership-access",
+            "lifecycle",
+            "compatibility",
+            "internal-navigation"
+          ]
+        },
+        {
+          "id": "resources-candidate",
+          "phase": "candidate",
+          "references": [
+            "tests/e2e/resource-discovery.spec.mjs"
+          ],
+          "scope_ids": [
+            "ownership-access",
+            "lifecycle",
+            "compatibility",
+            "internal-navigation"
+          ]
+        },
+        {
+          "id": "resources-live",
+          "phase": "live",
+          "references": [
+            "tests/e2e/resource-discovery.spec.mjs"
+          ],
+          "scope_ids": [
+            "ownership-access",
+            "lifecycle",
+            "compatibility",
+            "internal-navigation"
+          ]
+        }
+      ],
+      "required_evidence": [
+        "contract_hash",
+        "code_sha",
+        "artifact_digest",
+        "check_id",
+        "run_id",
+        "observed_at",
+        "valid_until",
+        "scope_ids",
+        "status",
+        "limitations",
+        "owner_role",
+        "next_check",
+        "result_locator",
+        "report_sha256",
+        "browser"
+      ],
+      "semantic_review_triggers": [
+        "changed public claim",
+        "changed source edition, locator, content or interpretation"
+      ],
+      "degraded_behavior": "Report failed or unknown scope explicitly; do not infer a passing result from retained content or a completed deployment."
+    },
+    {
+      "id": "provenance-freshness",
+      "claim": "Distinguish checked, imported, reviewed and edition evidence; retain last-good dates after failed refresh.",
+      "registry": "data/source-registry.json",
+      "owner_role": "repository-maintainer",
+      "scope_ids": [
+        "check-receipts",
+        "source-cadence",
+        "quarantine",
+        "recovery",
+        "view-time-expiry"
+      ],
+      "checks": [
+        {
+          "id": "provenance-freshness-invariant",
+          "phase": "invariant",
+          "references": [
+            "tests/source-freshness.test.mjs"
+          ],
+          "scope_ids": [
+            "check-receipts",
+            "source-cadence",
+            "quarantine",
+            "recovery",
+            "view-time-expiry"
+          ]
+        },
+        {
+          "id": "provenance-freshness-candidate",
+          "phase": "candidate",
+          "references": [
+            "tests/e2e/source-trust-surfaces.spec.mjs"
+          ],
+          "scope_ids": [
+            "check-receipts",
+            "source-cadence",
+            "quarantine",
+            "recovery",
+            "view-time-expiry"
+          ]
+        },
+        {
+          "id": "provenance-freshness-live",
+          "phase": "live",
+          "references": [
+            "tests/e2e/source-trust-surfaces.spec.mjs"
+          ],
+          "scope_ids": [
+            "check-receipts",
+            "source-cadence",
+            "quarantine",
+            "recovery",
+            "view-time-expiry"
+          ]
+        }
+      ],
+      "required_evidence": [
+        "contract_hash",
+        "code_sha",
+        "artifact_digest",
+        "check_id",
+        "run_id",
+        "observed_at",
+        "valid_until",
+        "scope_ids",
+        "status",
+        "limitations",
+        "owner_role",
+        "next_check",
+        "result_locator",
+        "report_sha256",
+        "browser"
+      ],
+      "semantic_review_triggers": [
+        "changed public claim",
+        "changed source edition, locator, content or interpretation"
+      ],
+      "degraded_behavior": "Report failed or unknown scope explicitly; do not infer a passing result from retained content or a completed deployment."
+    },
+    {
+      "id": "open-local",
+      "claim": "Keep core journeys anonymous and generated content local, with optional consent-controlled analytics.",
+      "registry": "src/main.tsx",
+      "owner_role": "repository-maintainer",
+      "scope_ids": [
+        "anonymous",
+        "undecided",
+        "deny",
+        "allow",
+        "withdraw",
+        "expired",
+        "gpc-dnt",
+        "storage-denied"
+      ],
+      "checks": [
+        {
+          "id": "open-local-invariant",
+          "phase": "invariant",
+          "references": [
+            "tests/browser-contract.test.mjs"
+          ],
+          "scope_ids": [
+            "anonymous",
+            "undecided",
+            "deny",
+            "allow",
+            "withdraw",
+            "expired",
+            "gpc-dnt",
+            "storage-denied"
+          ]
+        },
+        {
+          "id": "open-local-candidate",
+          "phase": "candidate",
+          "references": [
+            "tests/e2e/production-acceptance.spec.mjs"
+          ],
+          "scope_ids": [
+            "anonymous",
+            "undecided",
+            "deny",
+            "allow",
+            "withdraw",
+            "expired",
+            "gpc-dnt",
+            "storage-denied"
+          ]
+        },
+        {
+          "id": "open-local-live",
+          "phase": "live",
+          "references": [
+            "tests/e2e/production-acceptance.spec.mjs"
+          ],
+          "scope_ids": [
+            "anonymous",
+            "undecided",
+            "deny",
+            "allow",
+            "withdraw",
+            "expired",
+            "gpc-dnt",
+            "storage-denied"
+          ]
+        }
+      ],
+      "required_evidence": [
+        "contract_hash",
+        "code_sha",
+        "artifact_digest",
+        "check_id",
+        "run_id",
+        "observed_at",
+        "valid_until",
+        "scope_ids",
+        "status",
+        "limitations",
+        "owner_role",
+        "next_check",
+        "result_locator",
+        "report_sha256",
+        "browser"
+      ],
+      "semantic_review_triggers": [
+        "changed public claim",
+        "changed source edition, locator, content or interpretation"
+      ],
+      "degraded_behavior": "Report failed or unknown scope explicitly; do not infer a passing result from retained content or a completed deployment."
+    }
+  ]
+}

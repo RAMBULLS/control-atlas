@@ -6,7 +6,7 @@ test.beforeEach(async ({ page }) => {
   attachPageDiagnostics(page);
 });
 
-test("a cold deep link resolves from one complete search artifact", async ({
+test("a cold record deep link avoids the complete search artifact", async ({
   page,
 }) => {
   let searchArtifactRequests = 0;
@@ -34,7 +34,7 @@ test("a cold deep link resolves from one complete search artifact", async ({
   expect(retiredShardRequests).toBe(0);
 });
 
-test("a failed complete search artifact uses the app retry path", async ({
+test("a failed record artifact uses the app retry path", async ({
   page,
 }) => {
   // Re-baselined 2026-08-01: the record route no longer depends on the search

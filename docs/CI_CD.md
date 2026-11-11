@@ -119,3 +119,22 @@ prevents publication; routine successful refreshes require no human approval.
 ## Deployment guarantees
 
 Production deployment never rebuilds routine releases. The deploy workflow downloads `site-build`, verifies that `release.json` matches the successful CI run SHA, and publishes through native GitHub Pages permissions. One bounded readiness job waits for that exact SHA at the public edge before production smoke and Lighthouse begin. It fails if the SHA does not appear within ten minutes, the publication window documented by [GitHub Pages](https://docs.github.com/en/pages/quickstart). Both production checks then test the verified release.
+
+
+## Assurance checks and evidence boundaries
+
+Assurance contract/schema checks reuse the existing automation and fast gates; search recall uses the generated-data unit gate, and registry-driven guide/template browser tests consume the immutable site in the existing browser gate. The affected-change planner retains these checks when their contract changes; it does not introduce a second dispatcher or waive full final acceptance.
+
+Candidate analytics qualification is selected for builds, not one historical branch. The collector is intercepted and the runner API token is withheld from that harness. This tests consent behavior and payload exclusions without transmitting candidate data to production telemetry. It does not prove production collection or dashboard delivery.
+
+Execution verification must independently read provider run and artifact identity before interpreting report assertions. Merely naming a run URL, completing deployment, or receiving a page URL is insufficient. Candidate and live evidence remain separate, and missing wiring or a missing report is `not_run`, never a passing coverage claim. Existing release/sweep/source incidents remain the sole operational incident machinery; no assurance schedule or parallel incident system is introduced.
+
+## Native assurance result retention
+
+Selected native invariant suites keep TAP output and additionally emit Node 22 test-runner facts through tools/assurance-node-reporter.mjs. The unit, fast, automation and Windows process jobs preserve these JSON diagnostics on success or failure in separate immutable artifacts. Each selected job requires at least one native report for retention. Retaining one report does not prove every expected invocation completed; required invocation and assertion coverage remains a separate verification obligation. No existing required gate is replaced.
+
+Each invocation records both the requested PR head and the actual checkout SHA, run and attempt, job key, command, Node version, native test identities, outcomes and final counts. Runner metadata is a claim requiring independent provider verification. A JSON file, green job name or registered test alone cannot establish nine-promise acceptance. A skipped or failed required assertion, incomplete stream, duplicate identity or mismatched report digest remains unusable evidence.
+
+This rebuilt native-reporting layer is separate from the missing unpublished implementation. Browser shard binding, the reviewed assertion inventory and actual-domain evidence remain required before aggregate assurance can pass. No source-refresh, Security, performance or production acceptance gate is removed or relaxed.
+
+Native diagnostics track starts and terminal events, including the documented Node 22 root after-hook failure event without a start. Empty skip/todo reasons and native timeout cancellation remain explicit. The native diagnostic tests run as their own guarded affected-check step and also run in the existing Windows process job; no step exceeds the existing fifty-test planning bound.

@@ -355,3 +355,44 @@ test('Dependabot maintains npm packages and pinned GitHub Actions', () => {
   assert.match(dependabot, /package-ecosystem:\s*"npm"/);
   assert.match(dependabot, /package-ecosystem:\s*"github-actions"/);
 });
+
+test('assurance checks retain hosted guards and real registry-driven browser coverage', () => {
+  for (const name of ['test:assurance:contracts', 'verify:assurance', 'test:assurance:search', 'test:assurance:evidence', 'verify:assurance:execution', 'lint:assurance']) {
+    assert.equal(packageJson.scripts[`pre${name}`], 'node ./tools/validation-location.mjs');
+  }
+  assert.match(packageJson.scripts['test:runtime'], /assurance-search-recall/);
+  assert.match(packageJson.scripts['test:e2e:smoke'], /assurance-guides/);
+  assert.match(packageJson.scripts['test:e2e:smoke'], /assurance-template-downloads/);
+  assert.match(ci, /npm run test:assurance:contracts && npm run test:assurance:evidence && npm run verify:assurance/);
+  const qualification = parse(ci).jobs['analytics-candidate'];
+  assert.equal(qualification.if, "${{ needs.changes.outputs.build_required == 'true' }}");
+});
+
+test('routine candidate analytics cannot send collector traffic or inherit runner credentials', () => {
+  const qualification = parse(ci).jobs['analytics-candidate'];
+  assert.equal(qualification.env.ATLAS_RUNNER_TOKEN, '');
+  const harness = readFileSync('.github/analytics/candidate.mjs', 'utf8');
+  assert.doesNotMatch(harness, /route\.continue\(/);
+  assert.match(harness, /route\.fulfill\(\{ status: 204/);
+  assert.doesNotMatch(harness, /e7b0e3abfb572d06a8d056a56f76559dcc181bf08190735651b8d4cd18fcd2aa/);
+});
+
+
+test('native assurance retention preserves TAP, exact identities and required CI dependencies', () => {
+  for (const name of ['test:atlas', 'test:runtime', 'test:data', 'test:record-presentation', 'test:assurance:evidence']) {
+    assert.match(packageJson.scripts[name], /--test-reporter=tap/);
+    assert.match(packageJson.scripts[name], /--test-reporter=\.\/tools\/assurance-node-reporter\.mjs/);
+    assert.equal((packageJson.scripts[name].match(/--test-reporter-destination=stdout/g) ?? []).length, 2);
+  }
+  assert.match(packageJson.scripts['test:assurance:native'], /tests\/assurance-node-results\.test\.mjs/);
+  assert.equal(packageJson.scripts['pretest:assurance:native'], 'node ./tools/validation-location.mjs');
+  const workflow = parse(ci);
+  for (const name of ['unit', 'fast', 'automation', 'windows-process']) {
+    const steps = workflow.jobs[name].steps;
+    const retained = steps.find(step => step.name === 'Preserve actual native test results');
+    assert.equal(retained.if, 'always()');
+    assert.equal(retained.with['if-no-files-found'], 'error');
+    assert.equal(retained.with.path, 'artifacts/assurance-node/*.json');
+  }
+  assert.ok(workflow.jobs.required.needs.includes('unit'));
+});

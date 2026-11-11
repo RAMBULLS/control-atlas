@@ -595,3 +595,42 @@ test('existing data preloader is queued before the record route import and every
   assert.deepEqual(config.ci.assert.assertions['total-blocking-time'], ['error', { maxNumericValue: 200, aggregationMethod: 'median' }]);
   assert.deepEqual(config.ci.assert.assertions['cumulative-layout-shift'], ['error', { maxNumericValue: 0.1, aggregationMethod: 'median' }]);
 });
+
+
+test('record arrival hints emitted CSS without applying it or hinting unrelated routes', async () => {
+  const current = bundle();
+  current['renderer.js'] = chunk('renderer.js', ['node_modules/react/index.js']);
+  current['data-warmup.js'] = { ...current['loader.js'], fileName: 'data-warmup.js', name: 'data-warmup' };
+  delete current['loader.js'];
+  current['interactive-shell.js'] = chunk('interactive-shell.js', ['src/ui/App.tsx']);
+  current['resources-detail.js'] = chunk('resources-detail.js', ['src/ui/pages/CommonsDetailPage.tsx']);
+  current['record-ui.js'].viteMetadata = { importedCss: new Set(['assets/record.css']) };
+  current['record.js'].viteMetadata = { importedCss: new Set(['assets/record.css']) };
+  current['resources-detail.js'].viteMetadata = { importedCss: new Set(['assets/resources.css']) };
+  current['assets/record.css'] = { type: 'asset', fileName: 'assets/record.css', source: '.record{display:block}' };
+  const html = '<meta http-equiv="Content-Security-Policy" content="script-src \'self\';"><title>Control Atlas</title>';
+  const output = inlineArrivalDelivery(html, current, root, { version: 'fixture', shardCount: 8192 }, 'window.controlAtlasSyncFirstPaintShell = () => {};');
+  const source = output.match(/<script data-arrival-delivery>([\s\S]*?)<\/script>/)[1];
+  assert.ok(output.includes(`'sha256-${createHash('sha256').update(source).digest('base64')}'`));
+  for (const hash of ['#/', '#/resources', '#/resources/example', '#/record/nist-800-53/AC-2']) {
+    const links = [];
+    const document = { currentScript: { src: '' }, baseURI: 'https://example.test/mirror/',
+      fonts: { load: async () => [] }, createElement: () => ({}), addEventListener: () => {},
+      querySelectorAll: () => links.filter(link => link.rel === 'preload' && link.as === 'style'),
+      head: { appendChild: link => links.push(link) } };
+    const environment = { document, location: { hash }, fetch: async () => new Response('fixture') };
+    const context = { ...environment, globalThis: environment, window: {}, URL, AbortController, setTimeout, clearTimeout };
+    runInNewContext(source, context);
+    runInNewContext(source, context);
+    await Promise.resolve();
+    const styles = links.filter(link => link.as === 'style');
+    assert.deepEqual(styles, hash.startsWith('#/record/') ? [{ rel: 'preload', as: 'style',
+      href: 'https://example.test/mirror/assets/record.css', crossOrigin: 'anonymous' }] : []);
+    assert.ok(links.every(link => link.rel !== 'stylesheet'), 'normal Vite import retains application order');
+    assert.ok(!links.some(link => link.href.endsWith('resources.css')));
+  }
+  current['record-ui.js'].viteMetadata.importedCss = new Set(['https://other.test/record.css']);
+  assert.throws(() => inlineArrivalDelivery(html, current, root, { version: 'fixture', shardCount: 8192 }, ''), /emitted same-origin asset/);
+  current['record-ui.js'].viteMetadata.importedCss = new Set(['assets/missing.css']);
+  assert.throws(() => inlineArrivalDelivery(html, current, root, { version: 'fixture', shardCount: 8192 }, ''), /emitted same-origin asset/);
+});

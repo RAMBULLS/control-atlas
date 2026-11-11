@@ -21,23 +21,37 @@ export function inlineArrivalDelivery(html, bundle, rootDir, options, shell) {
     if (!chunk) throw new Error(`Early route delivery is missing ${name}.`);
     return chunk.fileName;
   });
+  const routeStyles = {};
   const routeModules = Object.fromEntries([['record', 'ObjectDetailPage.tsx'], ['resource-detail', 'CommonsDetailPage.tsx']].map(([route, page]) => {
     const entry = report.pages.find(entry => entry.id.endsWith(`/pages/${page}`));
     if (!entry) throw new Error(`Initial route entry is missing: ${page}`);
     const files = new Set();
+    const styles = new Set();
     const visit = file => {
       if (files.has(file)) return;
       files.add(file);
       const chunk = bundle[file];
-      if (chunk?.type === 'chunk') chunk.imports.forEach(visit);
+      if (chunk?.type === 'chunk') {
+        if (route === 'record') {
+          for (const style of chunk.viteMetadata?.importedCss || []) {
+            if (!/^[\w./-]+\.css$/.test(style) || style.startsWith('/') || style.split('/').includes('..') ||
+                bundle[style]?.type !== 'asset' || bundle[style].fileName !== style) {
+              throw new Error(`Record CSS is not an emitted same-origin asset: ${style}`);
+            }
+            styles.add(style);
+          }
+        }
+        chunk.imports.forEach(visit);
+      }
     };
     visit(entry.file);
+    if (styles.size) routeStyles[route] = [...styles];
     return [route, [...files]];
   }));
   // Static routes already contain text. Records should let CSS request the
   // faces their contents actually use instead of forcing every weight ahead
   // of the required record data and renderer on the shared connection.
-  const source = `(${startRoutePrefetch.toString()})(${JSON.stringify({ ...options, modules, routeModules })});\nif (!/^#\\/record\\//.test(location.hash)) (${warmOrbitalFonts.toString()})(document);\n${shell}\ndocument.addEventListener("DOMContentLoaded", window.controlAtlasSyncFirstPaintShell, {once:true});\n`;
+  const source = `(${startRoutePrefetch.toString()})(${JSON.stringify({ ...options, modules, routeModules, routeStyles })});\nif (!/^#\\/record\\//.test(location.hash)) (${warmOrbitalFonts.toString()})(document);\n${shell}\ndocument.addEventListener("DOMContentLoaded", window.controlAtlasSyncFirstPaintShell, {once:true});\n`;
   if (/<\/script/i.test(source)) throw new Error('Arrival source cannot contain a script end tag.');
   const digest = createHash('sha256').update(source).digest('base64');
   if (!html.includes("script-src 'self'") || !html.includes('<title>Control Atlas</title>')) throw new Error('Arrival delivery requires the existing CSP and title.');

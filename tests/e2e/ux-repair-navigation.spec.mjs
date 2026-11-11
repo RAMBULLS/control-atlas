@@ -121,9 +121,23 @@ test("global search exposes both destinations and preserves explicit resource se
 });
 
 for (const width of [390, 1165]) {
-  test(`analytics settings stays reachable without covering map controls at ${width}px`, async ({ page }) => {
+  test(`analytics settings stays reachable without covering map controls at ${width}px`, async ({ page, context, baseURL }) => {
+    // Model the allowed HTTPS origin using only the current local candidate.
+    // The production host restriction stays intact; no request reaches it.
+    const origin = "https://atlas.rambulls.dev";
+    const externalRequests = [];
+    await context.route("**/*", async (route) => {
+      const request = route.request();
+      const url = new URL(request.url());
+      if (url.origin !== origin || !["GET", "HEAD"].includes(request.method())) {
+        externalRequests.push(request.url());
+        return route.abort();
+      }
+      const response = await route.fetch({ url: `${baseURL}${url.pathname}${url.search}`, maxRedirects: 0 });
+      return route.fulfill({ response });
+    });
     await page.setViewportSize({ width, height: 749 });
-    await open(page, "/#/atlas");
+    await open(page, `${origin}/#/atlas`);
     const settings = page.getByRole("button", { name: "Analytics settings", exact: true });
     await expect(settings).toBeVisible();
     const layout = await settings.evaluate((button) => ({
@@ -146,5 +160,6 @@ for (const width of [390, 1165]) {
     await expect(panel).toBeHidden();
     await expect(settings).toBeFocused();
     await expect(page.locator("#rb-cf-beacon")).toHaveCount(0);
+    expect(externalRequests).toEqual([]);
   });
 }

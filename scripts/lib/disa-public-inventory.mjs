@@ -61,7 +61,7 @@ function filename(row) {
   let value;
   try { value = decodeURIComponent(path.slice(path.lastIndexOf('/') + 1)); }
   catch { throw new Error('Invalid DISA filename encoding'); }
-  if (!value || (/[\/\\]/.test(value) || containsControl(value))) throw new Error('Invalid DISA filename');
+  if (!value || (value.includes('/') || value.includes('\\') || containsControl(value))) throw new Error('Invalid DISA filename');
   return value;
 }
 

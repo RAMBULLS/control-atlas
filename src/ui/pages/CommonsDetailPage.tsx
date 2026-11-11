@@ -14,6 +14,7 @@ import { AppLink } from "../components/AppLink";
 import type { CommonsResource } from "../lib/commonsTypes";
 import { resourceDateLabel, resourceSummaryPresentation } from "../lib/commonsPresentation.mjs";
 import { serializeHashLocation } from "../lib/hashRoutes";
+import { PageJumpNav } from "../lib/pagePrimitives";
 import { resourceAccessLabel, resourceFieldLabel, resourceOriginLabel, resourceTypeLabel } from "../lib/resourceBrands.mjs";
 
 import { taxonomyTagsForResource, deriveTags } from "../../shared/record-taxonomy.mjs";
@@ -220,16 +221,18 @@ export function CommonsDetailPage({ bundle, viewState, onNavigate }: Props) {
               tags={resourceTaxonomyTags}
             />
 
-            <nav aria-label="On this page" className="resource-detail-toc">
+            <div className="resource-detail-toc">
               <strong>On this page</strong>
-              {hasOverview ? <a href="#what-it-is">What it is</a> : null}
-              {hasAudience ? <a href="#who-it-is-for">Who it's for</a> : null}
-              {hasAccess ? <a href="#access">How to use or access</a> : null}
-              {resource.media?.status === "available" ? <a href="#screenshots">Screenshots</a> : null}
-              {hasLimitations ? <a href="#limitations">Limitations</a> : null}
-              {hasRelatedResources ? <a href="#related-resources">Related resources</a> : null}
-              {collections.length ? <a href="#filed-under">Filed under</a> : null}
-            </nav>
+              <PageJumpNav sections={[
+                ...(hasOverview ? [{ id: "what-it-is", label: "What it is" }] : []),
+                ...(hasAudience ? [{ id: "who-it-is-for", label: "Who it's for" }] : []),
+                ...(hasAccess ? [{ id: "access", label: "How to use or access" }] : []),
+                ...(resource.media?.status === "available" ? [{ id: "screenshots", label: "Screenshots" }] : []),
+                ...(hasLimitations ? [{ id: "limitations", label: "Limitations" }] : []),
+                ...(hasRelatedResources ? [{ id: "related-resources", label: "Related resources" }] : []),
+                ...(collections.length ? [{ id: "filed-under", label: "Filed under" }] : []),
+              ]} />
+            </div>
             <dl className="resource-detail-brief"><div><dt>Type</dt><dd>{resourceTypeLabel(resource.resourceType)}</dd></div>{resource.maintainer && resource.maintainer !== resource.publisher ? <div><dt>Maintained by</dt><dd>{resource.maintainer}</dd></div> : null}{resource.whyIncluded ? <div><dt>Atlas context</dt><dd>{resource.whyIncluded}</dd></div> : null}</dl>
             {hasMaintenanceDetails ? <details className="resource-detail-maintenance">
               <summary>Source &amp; maintenance details</summary>

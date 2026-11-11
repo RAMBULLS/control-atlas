@@ -844,6 +844,14 @@ export function ExplorePage(props: {
                     ) : null}
                   </>
                 )}
+                {state.query.trim() ? (
+                  <p>
+                    Library search covers records. Tools, portals and other resources have their own search.
+                    {" "}<AppLink onNavigate={onNavigate} patch={{ query: state.query.trim(), showAll: "true" }} view="commons">
+                      Search Resources for “{state.query.trim()}”
+                    </AppLink>
+                  </p>
+                ) : null}
                 <Button onClick={() => onNavigate("search", { area: "", connectedOnly: "", filter: "", kind: "", publisher: "", query: "", sort: "relevance", tags: [], viewMode: "list" })} type="button" variant="primary">{hasFilters ? "Clear filters" : "Clear search"}</Button>
               </section>
             </li>

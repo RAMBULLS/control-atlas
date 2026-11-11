@@ -380,7 +380,7 @@ test('DISA guest deadline covers a stalled body, not only response headers', asy
   let signalStarted; const started = new Promise((resolve) => { signalStarted = resolve; });
   const stalled = fetchDisaPublicInventoryBytes({ fetchImpl: async () => {
     signalStarted(); const response = disaResponse('{}');
-    Object.defineProperty(response, 'body', { value: { async *[Symbol.asyncIterator]() { await new Promise(() => {}); } } });
+    Object.defineProperty(response, 'body', { value: { async *[Symbol.asyncIterator]() { yield await new Promise(() => {}); } } });
     return response;
   } });
   const rejected = assert.rejects(stalled, /deadline exceeded/);

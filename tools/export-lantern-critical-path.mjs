@@ -123,7 +123,7 @@ export async function exportLanternCriticalPath({ cwd = process.cwd(), route = '
     }
     const runtime = lighthouseRuntime(cwd);
     result.versions = { installedLighthouse: runtime.version, lhci: runtime.lhciVersion, reportLighthouse: report.lighthouseVersion };
-    if (runtime.version !== '13.4.1' || report.lighthouseVersion !== runtime.version) throw new Error('Same-version Lighthouse 13.4.1 is required.');
+    if (runtime.version !== '13.6.0' || report.lighthouseVersion !== runtime.version) throw new Error('Same-version Lighthouse 13.6.0 is required.');
     const directory = join(reportDirectory, 'metric-inputs', reference.id);
     const saved = {};
     for (const [key, filename, expected] of [

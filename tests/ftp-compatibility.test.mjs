@@ -13,7 +13,7 @@ const require = createRequire(import.meta.url);
 const lock = JSON.parse(readFileSync('package-lock.json', 'utf8'));
 const adapters = Object.entries(lock.packages).filter(([path]) =>
   path === 'node_modules/get-uri' || path.endsWith('/node_modules/get-uri'));
-assert.deepEqual(adapters.map(([, record]) => record.version).sort(), ['6.0.5', '8.0.1']);
+assert.deepEqual(adapters.map(([, record]) => record.version).sort(), ['6.0.5', '8.0.2']);
 const payload = 'function FindProxyForURL() { return "DIRECT"; }\n';
 const ordinaryListing = `-rw-r--r-- 1 owner group ${Buffer.byteLength(payload)} Jan 1 2026 source.pac\r\n`;
 
@@ -100,7 +100,7 @@ async function consume(stream) {
 
 for (const [path, record] of adapters) {
   const parentRequire = createRequire(join(resolve(path), 'package.json'));
-  assert.equal(parentRequire('basic-ftp/package.json').version, '6.2.1');
+  assert.equal(parentRequire('basic-ftp/package.json').version, '6.2.6');
   const manifest = JSON.parse(readFileSync(join(path, 'package.json'), 'utf8'));
   const entry = manifest.main || manifest.exports.default;
   const { getUri } = await import(pathToFileURL(resolve(path, entry)).href);

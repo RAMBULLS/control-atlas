@@ -347,7 +347,7 @@ test('malformed fresh reports fail and still invoke report export', t => {
 
 test('diagnostic extension preserves default audits, artifacts, settings and scoring', async () => {
   const runtime = lighthouseRuntime(root);
-  assert.equal(runtime.version, '13.4.1');
+  assert.equal(runtime.version, '13.6.0');
   const { initializeConfig } = await runtime.load('core/config/config.js');
   const { configPath, ...settings } = config.ci.collect.settings;
   const baseline = (await initializeConfig('navigation', undefined, settings)).resolvedConfig;

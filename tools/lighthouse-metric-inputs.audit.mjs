@@ -21,7 +21,7 @@ export default class MetricInputs extends Audit {
     if (![RECORD_HASH, '#/resources'].some(hash => artifacts.URL?.requestedUrl?.endsWith(hash))) return { score: null, notApplicable: true };
     try {
       if (process.env.INTERNAL_LANTERN_USE_TRACE !== undefined) throw new Error('Alternative trace graph is unsupported.');
-      if (runtime.version !== '13.4.1') throw new Error(`Expected Lighthouse 13.4.1, found ${runtime.version}.`);
+      if (runtime.version !== '13.6.0') throw new Error(`Expected Lighthouse 13.6.0, found ${runtime.version}.`);
       if (typeof artifacts.fetchTime !== 'string') throw new Error('Original fetchTime artifact is unavailable.');
       const { ProcessedTrace } = await runtime.load('core/computed/processed-trace.js');
       const { stringifyReplacer } = await runtime.load('core/lib/asset-saver.js');

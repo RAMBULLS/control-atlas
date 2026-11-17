@@ -6,6 +6,7 @@ import {
   clearRuntimeArtifactCache,
   compressedArtifactPath,
   fetchArtifact,
+  isTransientHostStatus,
   loadRuntimeDatasetStaged,
   loadAtlasNeighborhood,
   preloadRuntimeArtifacts,
@@ -898,6 +899,34 @@ test("artifact loading falls back from compressed to uncompressed data", async (
   }
 });
 
+test("a brief host error on compressed data is asked again before the fallback", async () => {
+  const originalFetch = globalThis.fetch;
+  const requests: string[] = [];
+  let compressedCalls = 0;
+  clearRuntimeArtifactCache();
+  globalThis.fetch = (async (input: Parameters<typeof fetch>[0]) => {
+    const url = String(input);
+    requests.push(url);
+    if (url.endsWith(".gz")) {
+      compressedCalls += 1;
+      if (compressedCalls === 1) return new Response("", { status: 503 });
+      return new Response(new Uint8Array(gzipSync('{"ready":true}')), { status: 200 });
+    }
+    return new Response("", { status: 404 });
+  }) as typeof fetch;
+  try {
+    assert.deepEqual(
+      await fetchArtifact("./shard.json", { compressedTimeoutMs: 5_000, fallbackTimeoutMs: 50 }),
+      { ready: true },
+    );
+    assert.deepEqual(requests, ["./shard.json.gz", "./shard.json.gz"]);
+    assert.equal(isTransientHostStatus(404), false, "a missing file still goes to the fallback at once");
+  } finally {
+    globalThis.fetch = originalFetch;
+    clearRuntimeArtifactCache();
+  }
+});
+
 test("artifact timeouts reject and evict the pending cache entry", async () => {
   const originalFetch = globalThis.fetch;
   let requests = 0;
@@ -932,13 +961,18 @@ test("a rejected artifact request can succeed on a fresh retry", async () => {
   const originalFetch = globalThis.fetch;
   let requests = 0;
   clearRuntimeArtifactCache();
-  globalThis.fetch = (async () => {
+  const urls: string[] = [];
+  globalThis.fetch = (async (input: Parameters<typeof fetch>[0]) => {
     requests += 1;
-    if (requests < 4) return new Response("unavailable", { status: 503 });
-    return new Response(JSON.stringify({ recovered: true }), { status: 200 });
+    urls.push(String(input));
+    // The first call fails on all three of its requests: compressed, its one
+    // retry after a host error, and the uncompressed fallback.
+    if (requests <= 3) return new Response("unavailable", { status: 503 });
+    return new Response(new Uint8Array(gzipSync(JSON.stringify({ recovered: true }))), { status: 200 });
   }) as typeof fetch;
   try {
     await assert.rejects(fetchArtifact("./retry.json"));
+    assert.deepEqual(urls, ["./retry.json.gz", "./retry.json.gz", "./retry.json"]);
     assert.deepEqual(await fetchArtifact("./retry.json"), { recovered: true });
     assert.equal(requests, 4);
   } finally {

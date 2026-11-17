@@ -105,3 +105,27 @@ test('normal refresh preserves prior records, complete old editions, connection 
   const repeated = mergeDisaSnapshot(merged.result, current, merged.proofs, inventories, manifest);
   assert.deepEqual(repeated.result, merged.result);
 });
+
+test('accepted DISA archive retrieval advances publication and source dates, and a retained-byte reparse keeps them', async () => {
+  const { attestDisaProjections } = await import('../scripts/lib/disa-record-history.mjs');
+  mkdirSync('.local', { recursive: true }); const root = mkdtempSync('.local/disa-attest-test-');
+  const put = (path, document) => writeFileSync(join(root, path), JSON.stringify(document));
+  const ids = ['disa-stig-library', 'disa-srg-library', 'disa-stig-srg-cci-references'];
+  try {
+    mkdirSync(join(root, 'data')); mkdirSync(join(root, 'maps'));
+    put('data/stig-rules.json', { records: [] }); put('data/srg-requirements.json', { records: [] }); put('maps/stig-srg-to-cci.json', { relationships: [] });
+    put('data/artifact-hydration-manifest.json', { results: [] });
+    put('data/source-registry.json', {
+      artifacts: ['artifact-disa-stig-library', 'artifact-disa-srg-library', 'artifact-disa-stig-srg-cci-references', 'artifact-disa-compilation-zip'].map((id) => ({ id })),
+      publications: [...ids, 'nist-800-53'].map((id) => ({ id, retrieved_at: '2026-07-01' })),
+      sources: [{ id: 'disa-stig-library', retrieved_at: '2026-07-01' }],
+    });
+    const manifest = { compilation_url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip', checksum: 'sha256:00', byte_length: 1, retrieval_timestamp: '2026-10-28T12:00:00Z' };
+    const dates = () => { const registry = JSON.parse(readFileSync(join(root, 'data/source-registry.json'))); return [...registry.publications, ...registry.sources].map((row) => [row.id, row.retrieved_at]); };
+    attestDisaProjections(root, manifest);
+    const accepted = dates();
+    assert.deepEqual(accepted, [...ids.map((id) => [id, '2026-10-28']), ['nist-800-53', '2026-07-01'], ['disa-stig-library', '2026-10-28']]);
+    attestDisaProjections(root, manifest);
+    assert.deepEqual(dates(), accepted);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});

@@ -61,6 +61,8 @@ export function writeDisaCatalog(root, kind, document) {
   return main;
 }
 
+export const DISA_OWNED_SOURCE_IDS = ['disa-stig-library', 'disa-srg-library', 'disa-stig-srg-cci-references'];
+
 /** Attest actual stored projections and supporting files without inventing publisher byte evidence. */
 export function attestDisaProjections(root, manifest) {
   const registry = JSON.parse(readFileSync(join(root, 'data/source-registry.json')));
@@ -81,6 +83,11 @@ export function attestDisaProjections(root, manifest) {
   Object.assign(artifact, { version: edition, artifact_url: manifest.compilation_url, sha256: manifest.checksum, byte_length: manifest.byte_length, retrieved_at: manifest.retrieval_timestamp.slice(0, 10) });
   const receipt = hydration.results.find((row) => row.id === artifact.id);
   if (receipt) Object.assign(receipt, { sha256: artifact.sha256, byte_length: artifact.byte_length, url: artifact.artifact_url, retrieved_at: artifact.retrieved_at });
+  // Publication and source dates follow the accepted archive retrieval, so a
+  // retained-byte reparse keeps its date and newly acquired bytes advance it.
+  for (const collection of [registry.publications || [], registry.sources || []]) {
+    for (const source of collection) if (DISA_OWNED_SOURCE_IDS.includes(source.id)) source.retrieved_at = manifest.retrieval_timestamp.slice(0, 10);
+  }
   writeJsonAtomically(join(root, 'data/source-registry.json'), registry);
   writeJsonAtomically(join(root, 'data/artifact-hydration-manifest.json'), hydration);
 }

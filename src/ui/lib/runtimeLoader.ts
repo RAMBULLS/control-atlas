@@ -35,6 +35,11 @@ function fetchRouteArtifact(path: string, signal: AbortSignal): Promise<Response
 const COMPRESSED_ARTIFACT_TIMEOUT_MS = 12_000;
 const FALLBACK_ARTIFACT_TIMEOUT_MS = 25_000;
 const JSON_WORKER_TIMEOUT_MS = 10_000;
+const TRANSIENT_RETRY_DELAY_MS = 750;
+
+export function isTransientHostStatus(status: number) {
+  return status === 408 || status === 429 || status >= 500;
+}
 
 export type RuntimeLoadErrorCode =
   | "artifact_timeout"
@@ -508,7 +513,15 @@ export async function fetchArtifact(path: string, options: ArtifactFetchOptions 
           options.compressedTimeoutMs ?? COMPRESSED_ARTIFACT_TIMEOUT_MS,
           "artifact_timeout",
           async (signal) => {
-            const response = await fetchRouteArtifact(compressedArtifactPath(path), signal);
+            const compressedPath = compressedArtifactPath(path);
+            let response = await fetchRouteArtifact(compressedPath, signal);
+            // A brief host error (seen as one 503 on a data shard just after a
+            // deploy) is not a missing file. Ask again once before the
+            // uncompressed fallback, which most sharded files do not publish.
+            if (isTransientHostStatus(response.status)) {
+              await new Promise((resolve) => globalThis.setTimeout(resolve, TRANSIENT_RETRY_DELAY_MS));
+              response = await fetch(compressedPath, { signal });
+            }
             if (!response.ok || !response.body) {
               throw new RuntimeLoadError("artifact_unavailable", "The compressed data is unavailable.");
             }

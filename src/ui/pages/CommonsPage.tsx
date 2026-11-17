@@ -10,6 +10,7 @@ import {
 import { SITE_COPY } from "../../shared/site-copy.mjs";
 import { useLayoutEffect, useMemo, useState } from "react";
 
+import "../../../styles/library-workspace.css";
 import "../../../styles/resources.css";
 import { AppLink } from "../components/AppLink";
 import { CollectionIcon } from "../components/CollectionIcon";

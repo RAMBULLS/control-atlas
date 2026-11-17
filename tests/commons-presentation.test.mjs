@@ -545,7 +545,8 @@ test("Resource and collection icon color communicates category instead of decora
   const resourceIcon = readFileSync(resolve("src/ui/components/ResourceTypeIcon.tsx"), "utf8");
   const collectionIcon = readFileSync(resolve("src/ui/components/CollectionIcon.tsx"), "utf8");
   const tokens = readFileSync(resolve("styles/tokens.css"), "utf8");
-  const styles = readFileSync(resolve("styles/surfaces.css"), "utf8");
+  // Library/Resources rules load with those pages, not the shared entry (issue 411).
+  const styles = readFileSync(resolve("styles/library-workspace.css"), "utf8");
 
   assert.match(directory, /data-resource-type=\{resource\.resourceType\}/);
   assert.match(resourceIcon, /data-resource-tone=\{tone\}/);

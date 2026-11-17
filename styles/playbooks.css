@@ -1,0 +1,71 @@
+/* Route-owned rules moved out of the shared entry sheets (styles/components.css, styles/surfaces.css) so the
+   record page does not download them before its first paint (issue 411).
+   Each rule keeps its original media context and relative order. */
+
+.ca-contextual-taxonomy > :is(h3, p) {
+  margin: 0;
+}
+
+.ca-contextual-tag-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ca-space-2);
+}
+
+.guide-card[data-guide-area="Governance"] { --guide-tone: var(--ca-area-governance); }
+
+.guide-card[data-guide-area="Compliance"] { --guide-tone: var(--ca-area-compliance); }
+
+.guide-card[data-guide-area="Implementation"] { --guide-tone: var(--ca-area-implementation); }
+
+.guide-card[data-guide-area="Assessment"] { --guide-tone: var(--ca-area-assessment); }
+
+.guide-card[data-guide-area="Operations"] { --guide-tone: var(--ca-area-operations); }
+
+.guide-card[data-guide-area="Architecture"] { --guide-tone: var(--ca-area-architecture); }
+
+.guide-card__body {
+  display: grid;
+  gap: var(--ca-space-2);
+}
+
+.guide-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ca-space-2);
+}
+
+.guide-card__number {
+  color: var(--ca-text-muted);
+  font: 600 var(--ca-text-xs) / 1.4 var(--ca-font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.guide-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ca-space-2);
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in srgb, var(--guide-tone) 42%, var(--ca-border));
+  background: color-mix(in srgb, var(--guide-tone) 12%, transparent);
+  color: var(--guide-tone);
+}
+
+.guide-card__arrow {
+  align-self: center;
+  color: var(--ca-text-muted);
+}
+
+.guide-procedure-steps > li {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: var(--ca-space-3);
+  align-items: start;
+  padding: var(--ca-space-4);
+  border: 1px solid var(--ca-border);
+  border-radius: var(--radius-md);
+  background: var(--ca-surface-raised);
+}

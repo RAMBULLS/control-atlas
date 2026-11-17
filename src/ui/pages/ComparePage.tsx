@@ -1,3 +1,4 @@
+import "../../../styles/compare.css";
 import { comparisonPairKey, comparisonScopeAllowed } from "../../shared/compare-scope.mjs";
 import { ContentComparison } from "./ContentComparison";
 import { BaselineComparison } from "./BaselineComparison";

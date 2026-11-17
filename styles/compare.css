@@ -1,0 +1,277 @@
+/* Route-owned rules moved out of the shared entry sheets (styles/components.css, styles/surfaces.css) so the
+   record page does not download them before its first paint (issue 411).
+   Each rule keeps its original media context and relative order. */
+
+.target-mapping-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--ca-space-1) 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ca-border) 40%, transparent);
+}
+
+.target-mapping-item:last-child {
+  border-bottom: none;
+}
+
+.target-item-title {
+  font-size: 0.8rem;
+  color: var(--ca-text-muted);
+}
+
+.compare-decision-boundary {
+  color: var(--ca-text-muted);
+}
+
+.compare-flow-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2.35fr) minmax(20rem, 0.8fr);
+  gap: var(--ca-space-6);
+  align-items: start;
+}
+
+.compare-preserved-context {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 var(--ca-space-5);
+  padding: 10px 12px;
+  border-left: 2px solid var(--ca-secondary);
+  background: var(--ca-surface-subtle);
+  color: var(--ca-text-muted);
+}
+
+.compare-step-actions {
+  justify-content: space-between;
+  margin-top: var(--ca-space-6);
+}
+
+.compare-results-panel {
+  min-width: 0;
+}
+
+.compare-results-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ca-space-4);
+}
+
+.compare-page-recovery {
+  color: var(--ca-warning-text);
+}
+
+.compare-record-title {
+  display: block;
+  margin-top: 4px;
+  color: var(--ca-text-muted);
+  font-size: var(--ca-text-sm);
+}
+
+.compare-results-empty {
+  margin-top: var(--ca-space-5);
+}
+
+.compare-decision-boundary {
+  margin: var(--ca-space-5) 0 0;
+  padding: 12px 14px;
+  border-left: 3px solid var(--ca-primary);
+  background: var(--ca-surface-subtle);
+  color: var(--ca-text-muted);
+  font-size: var(--ca-text-sm);
+}
+
+.compare-export-actions {
+  display: grid;
+  gap: 8px;
+}
+
+@media (max-width: 767px) {
+  .compare-results-toolbar .compare-export-actions .actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .compare-results-toolbar .compare-export-actions button {
+    width: 100%;
+  }
+}
+@media (max-width: 900px) {
+  .compare-flow-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 767px) {
+  .compare-results-head,
+  .compare-step-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+.compare-option-list__note {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  color: var(--ca-text-subtle);
+  font-family: var(--ca-font-mono, monospace);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.compare-answer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ca-space-4);
+  margin: var(--ca-space-4) 0 var(--ca-space-3);
+}
+
+.compare-answer-count {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.compare-answer .compare-mapping-total {
+  color: var(--ca-text);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.compare-answer .compare-crosswalk-source {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ca-space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.target-mapping-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--ca-space-2);
+  overflow-wrap: anywhere;
+}
+
+.target-mapping-relationship {
+  padding: 1px 8px;
+  border: 1px solid var(--ca-border);
+  border-radius: 999px;
+  color: var(--ca-text-muted);
+  font: 650 var(--ca-text-xs) / 1.3 var(--ca-font-mono);
+}
+
+.compare-table-scroll .target-mapping-item {
+  gap: 0;
+  padding-block: 2px;
+}
+
+.compare-table-scroll .target-item-title,
+.compare-table-scroll .compare-record-title {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+@media (max-width: 720px) {
+  .compare-answer {
+    flex-direction: column;
+  }
+
+  .compare-answer .compare-export-actions .actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    width: 100%;
+  }
+
+  .compare-answer .compare-export-actions .actions button {
+    width: 100%;
+    white-space: normal;
+  }
+
+  .compare-answer .compare-export-actions small {
+    max-width: none;
+  }
+}
+.compare-taxonomy-accordion .disclosure-trigger {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--ca-space-1) var(--ca-space-3);
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ca-text);
+  cursor: pointer;
+  text-align: left;
+}
+
+.target-window-caption {
+  margin: 0;
+  color: var(--ca-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* No overscroll containment: at either end of the window the wheel carries on
+   scrolling the page instead of trapping the reader inside the list. */
+.target-window-scroll {
+  max-height: min(26rem, 60vh);
+  overflow-y: auto;
+  border: 1px solid var(--ca-border-subtle);
+  padding-inline: var(--ca-space-3);
+}
+
+@media (min-width: 768px) {
+  .compare-results-table .target-mapping-list:not(.target-window-list) {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+    column-gap: var(--ca-space-5);
+  }
+}
+.target-window-scroll:focus-visible {
+  outline: 2px solid var(--ca-primary);
+  outline-offset: 2px;
+}
+
+.target-window-list {
+  position: relative;
+}
+
+.target-window-list > .target-mapping-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--target-window-row);
+  overflow: hidden;
+}
+
+.target-window-list .target-item-title {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+@media (max-width: 479px) {
+  .target-window {
+    --target-window-row: 7.5rem;
+  }
+}
+@media (max-width: 400px) {
+  .compare-answer .compare-export-actions .actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

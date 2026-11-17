@@ -1,3 +1,4 @@
+import "../../../styles/templates.css";
 import {
   IconCompass,
   IconExternalLink,

@@ -547,3 +547,304 @@
 .catalog-source-actions .catalog-source-details:focus-visible {
   color: var(--ca-text);
 }
+
+/* Route-owned rules moved out of the shared entry sheets (styles/components.css, styles/surfaces.css) so the
+   record page does not download them before its first paint (issue 411).
+   Each rule keeps its original media context and relative order. */
+
+.ca-copy-wrap:hover .ca-copy-btn,
+.ca-copy-btn:focus-visible { opacity: 1; }
+
+.ca-copy-btn.ca-copy-btn--copied { color: var(--ca-success); opacity: 1; }
+
+@media (hover: none) {
+  .ca-copy-btn {
+    opacity: 1;
+  }
+}
+.ca-source-id code {
+  overflow-wrap: anywhere;
+}
+
+.source-register-row--selected {
+  background: color-mix(in srgb, var(--ca-primary) 6%, var(--ca-surface)) !important;
+  border-left: 3px solid var(--ca-primary);
+}
+
+.sources-workspace.queue-layout {
+  display: block;
+  width: 100%;
+}
+
+@media (min-width: 1200px) {
+  .sources-workspace.queue-layout.sources-workspace--inspecting {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(23rem, 26rem);
+    gap: var(--ca-space-6);
+    align-items: start;
+  }
+}
+.source-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.source-table tbody tr:hover {
+  background: color-mix(in srgb, var(--ca-primary) 6%, var(--ca-surface));
+}
+
+.source-table tbody tr[aria-selected="true"],
+.source-table tbody tr.source-register-row--selected {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--ca-primary) 12%, transparent), transparent) !important;
+  box-shadow: inset 3px 0 var(--ca-primary);
+}
+
+@media (max-width: 799px) {
+  .source-table th:not(:first-child) {
+    display: none;
+  }
+
+  .source-table th:first-child {
+    display: block;
+    width: 100%;
+  }
+}
+.sources-page .sources-table-panel {
+  min-width: 0;
+  padding: 22px;
+}
+
+.sources-page .source-table tbody tr {
+  display: table-row;
+}
+
+.sources-page .source-table td {
+  display: table-cell;
+}
+
+.sources-page .source-admin-tools {
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.sources-page .source-admin-tools input[type="search"] {
+  flex-basis: 260px;
+  min-height: 44px;
+  padding-inline: 12px;
+}
+
+.sources-page .source-admin-tools select.source-filter-select {
+  min-height: 44px;
+  padding-inline: 12px;
+}
+
+.sources-page .calibration-rail {
+  margin-bottom: 0;
+  padding: 15px 0 8px;
+}
+
+.sources-page .source-table th,
+.sources-page .source-table td {
+  padding: 13px 12px;
+}
+
+.sources-page .source-attached-pill {
+  gap: var(--ca-space-1);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.source-attachment-count--mobile {
+  display: none;
+}
+
+.sources-page .source-table tbody tr[aria-selected="true"],
+.sources-page .source-table tbody tr.source-register-row--selected {
+  background: color-mix(in srgb, var(--ca-primary) 6%, var(--ca-surface)) !important;
+  box-shadow: inset 2px 0 var(--ca-primary);
+}
+
+.sources-page .source-register-row--selected {
+  border-left: 0;
+}
+
+.sources-page .source-inspector-card {
+  padding: 22px;
+}
+
+.sources-page .source-inspector-title,
+.source-inspector--modal .source-inspector-title {
+  margin: var(--ca-space-3) 0 0;
+  color: var(--ca-text);
+  font-family: var(--ca-font-display, sans-serif);
+  font-size: var(--ca-text-xl);
+  line-height: var(--line-height-heading);
+}
+
+.sources-page .source-inspector--inline {
+  position: sticky;
+  top: calc(var(--ca-header-height, 4rem) + var(--ca-space-4));
+  max-height: calc(100vh - var(--ca-header-height, 4rem) - var(--ca-space-8));
+  overflow: auto;
+  padding: 22px;
+}
+
+.sources-page .source-inspector-header,
+.source-inspector--modal .source-inspector-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ca-space-4);
+  padding-bottom: var(--ca-space-3);
+  border-bottom: 1px solid var(--ca-border);
+}
+
+.sources-page .source-status-overview,
+.source-inspector--modal .source-status-overview {
+  margin-top: var(--ca-space-4);
+}
+
+.sources-page .source-inspector-official-link,
+.source-inspector--modal .source-inspector-official-link {
+  width: 100%;
+  margin-top: var(--ca-space-1);
+}
+
+.source-inspector-close:hover,
+.source-inspector-close:focus-visible {
+  border-color: var(--ca-primary);
+  background: color-mix(in srgb, var(--ca-primary) 10%, var(--ca-surface));
+}
+
+@media (min-width: 800px) and (max-width: 1199px) {
+  .sources-page .source-table th,
+  .sources-page .source-table td {
+    padding: 10px 8px;
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 799px) {
+  .sources-page .source-table td:not(.source-col-publication) {
+    display: none;
+  }
+
+  .sources-page .source-admin-tools {
+    align-items: stretch;
+  }
+
+  .sources-page .source-admin-tools input[type="search"] {
+    flex-basis: 100%;
+  }
+
+  .sources-page .source-admin-tools select.source-filter-select {
+    flex: 1 1 100%;
+  }
+
+  .sources-page .source-table td.source-col-publication {
+    padding: var(--ca-space-3);
+  }
+
+  .sources-page .source-mobile-meta {
+    gap: 0;
+    margin-top: 0;
+  }
+
+  .sources-page .source-attachment-count--desktop {
+    display: none;
+  }
+
+  .sources-page .source-attachment-count--mobile {
+    display: inline;
+  }
+}
+@media (max-width: 767px) {
+  .sources-page .source-register-control-surface {
+    gap: var(--ca-space-2);
+    margin-block: var(--ca-space-2);
+    padding: var(--ca-space-2);
+  }
+}
+.catalog-index-group + .catalog-index-group {
+  margin-top: var(--ca-space-6);
+}
+
+.catalog-index-row:hover,
+.catalog-index-row:focus-visible {
+  color: var(--ca-secondary);
+}
+
+.catalog-index-row > span:first-child {
+  display: grid;
+  gap: var(--ca-space-1);
+  max-width: 52rem;
+}
+
+.catalog-index-row-meta {
+  font-size: var(--ca-text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.catalog-source-link {
+  justify-self: start;
+}
+
+.catalog-search > svg {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 720px) {
+  .catalog-index-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .catalog-record-title {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--ca-space-1);
+  }
+
+  .sources-page .source-register-control-surface {
+    gap: var(--ca-space-4);
+    margin-block: var(--ca-space-4);
+    padding: var(--ca-space-4);
+  }
+}
+.catalog-inventory-total {
+  margin: 0 0 12px;
+  color: var(--ca-text-muted);
+  font-size: 13px;
+}
+
+.catalog-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+}
+
+@media (max-width: 767px) {
+  .source-register-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    padding: 14px 12px;
+  }
+
+  .catalog-inventory-controls > :first-child {
+    grid-column: 1 / -1;
+  }
+
+  .catalog-pagination {
+    flex-wrap: wrap;
+  }
+
+  .catalog-pagination span {
+    order: -1;
+    width: 100%;
+    text-align: center;
+  }
+}

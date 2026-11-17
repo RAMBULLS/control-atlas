@@ -224,8 +224,9 @@ test("textual accent stays distinct from decorative teal and clears Resources ho
     contrastRatio(tokenValue("--ca-accent-text"), resourceHoverSurface) >= 4.5,
     "Textual accent must meet 4.5:1 on the Resources hover surface",
   );
+  // Library/Resources rules load with those pages, not the shared entry (issue 411).
   assert.match(
-    surfacesCss,
+    readFileSync("styles/library-workspace.css", "utf8"),
     /\.workspace-result-row:hover h3,[\s\S]*?\.workspace-result-row:focus-within h3\s*\{[^}]*color:\s*var\(--ca-accent-text\)/,
   );
 });

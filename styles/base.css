@@ -141,7 +141,6 @@ button {
   outline-offset: 3px;
 }
 
-.ca-skip-link,
 .skip-link {
   position: absolute;
   top: -40px;
@@ -153,7 +152,6 @@ button {
   border-radius: 0 0 var(--ca-radius-sm) 0;
 }
 
-.ca-skip-link:focus,
 .skip-link:focus {
   top: 0;
 }

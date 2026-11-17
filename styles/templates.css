@@ -1,0 +1,85 @@
+/* Route-owned rules moved out of the shared entry sheets (styles/surfaces.css) so the
+   record page does not download them before its first paint (issue 411).
+   Each rule keeps its original media context and relative order. */
+
+.intent-grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.intent-grid--solo {
+  grid-template-columns: minmax(240px, 480px);
+}
+
+.catalog-group-title {
+  margin: var(--ca-space-6) 0 var(--ca-space-3);
+  font-size: var(--font-size-lg);
+}
+
+.workflow-method[open] > summary {
+  margin-bottom: var(--ca-space-3);
+}
+
+.nexus-card-heading .badge {
+  flex: 0 0 auto;
+}
+
+.nexus-limitation svg {
+  flex: 0 0 auto;
+  margin-top: 0.1rem;
+}
+
+.nexus-facts {
+  display: grid;
+  gap: var(--ca-space-2);
+  margin: 0;
+}
+
+.nexus-details {
+  color: var(--ca-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.nexus-details[open] summary {
+  margin-bottom: var(--ca-space-2);
+}
+
+.fedramp-transition-block {
+  display: grid;
+  gap: var(--ca-space-2);
+  padding: var(--ca-space-3);
+  border: 1px solid color-mix(in srgb, var(--ca-border-strong) 18%, transparent);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--ca-surface-deep) 20%, transparent);
+}
+
+.compact-list {
+  margin-top: var(--ca-space-2);
+  font-size: var(--font-size-sm);
+}
+
+.fedramp-legacy-index .compact-list {
+  max-height: 24rem;
+  overflow: auto;
+  padding-right: var(--ca-space-2);
+}
+
+.workflow-detail:focus {
+  outline: 2px solid var(--ca-secondary);
+  outline-offset: var(--ca-space-2);
+}
+
+.template-sources-panel .nexus-grid {
+  grid-template-columns: 1fr;
+}
+
+.template-sources-panel .nexus-card-heading {
+  flex-wrap: wrap;
+}
+
+/* Disclosure labels inside the template sidebar. The teal secondary colour is
+   4.0:1 on this panel; the body text colour clears 4.5:1 at every width. */
+.template-sources-panel .nexus-details summary {
+  color: var(--ca-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

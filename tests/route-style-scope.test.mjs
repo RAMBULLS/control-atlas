@@ -26,6 +26,11 @@ const SHARED_STYLESHEETS = [
   "../styles/surfaces.css",
   "../styles/tailwind.css",
   "../styles/orbital.css",
+  // Record pages are the release LCP route (issue 411). As a route sheet this was
+  // requested only after the record script ran, the last step before the
+  // record text painted. It adds about 2.5 KB gzip to Home, and every rule is
+  // scoped to .ca-record-* or .ca-tag-explanations.
+  "../styles/record-detail.css",
 ];
 
 /** Route-scoped stylesheets and the page modules allowed to import them. */

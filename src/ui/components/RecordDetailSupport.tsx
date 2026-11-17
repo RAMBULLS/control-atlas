@@ -1,8 +1,6 @@
 import { IconChevronRight } from "@tabler/icons-react";
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 
-import "../../../styles/record-detail.css";
-
 /** Native details owns user toggles; breakpoint changes set the initial layout state. */
 export function RecordRailSection(props: {
   id: string;

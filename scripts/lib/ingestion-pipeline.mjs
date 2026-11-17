@@ -25,7 +25,7 @@ export const INGESTION_TASKS = Object.freeze([
   { id: 'fetch-olir-catalog', script: 'fetch-olir-catalog.mjs', stages: ['discover', 'acquire', 'parse'], scope: ['olir'], remote_fetch: true, retries: 2 },
   { id: 'fetch-olir-mappings', script: 'fetch-olir-mappings.mjs', stages: ['acquire', 'parse', 'relationships'], scope: ['olir'], remote_fetch: true, retries: 2 },
   { id: 'fetch-ccis', script: 'fetch-ccis.mjs', stages: ['acquire', 'parse', 'relationships'], scope: ['disa-cci'], remote_fetch: true, retries: 2 },
-  { id: 'fetch-disa-library', script: 'fetch-disa-stigs.mjs', args: ['--inventory-check'], stages: ['discover', 'acquire', 'parse'], scope: ['disa-stig', 'disa-srg'], remote_fetch: true, retries: 1 },
+  { id: 'fetch-disa-library', script: 'fetch-disa-stigs.mjs', stages: ['discover', 'acquire', 'parse'], scope: ['disa-stig', 'disa-srg'], remote_fetch: true, retries: 1 },
   { id: 'fetch-mitre', script: 'fetch-mitre-data.mjs', stages: ['acquire', 'parse', 'relationships'], scope: ['mitre-attack', 'mitre-d3fend'], remote_fetch: true, retries: 2 },
   { id: 'fetch-zero-trust-workbooks', script: 'fetch-zero-trust-workbooks.mjs', stages: ['acquire', 'parse', 'relationships'], scope: ['nist-zt', 'microsoft-zt-maturity'], remote_fetch: true, retries: 2 },
   { id: 'fetch-nist-zero-trust', script: 'fetch-nist-zero-trust-pages.mjs', stages: ['acquire', 'parse'], scope: ['nist-zt'], remote_fetch: true, retries: 2 },

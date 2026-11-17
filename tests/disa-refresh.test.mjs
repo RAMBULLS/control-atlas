@@ -34,10 +34,10 @@ test('changed publisher text within the same named edition retains both captures
   assert.equal(merged[0].check_text, fresh.check_text);
   assert.deepEqual(preserveDisaRecordHistory(merged, [{ ...fresh, source: { ...fresh.source, snapshot_date: '2026-10-19' } }])[0].metadata.previous_editions, merged[0].metadata.previous_editions);
 });
-test('hydration accepts only a current matching inventory check and never upgrades old archive bytes to fresh retrieval', () => {
+test('legacy metadata-only hydration cannot grant byte or native acceptance', () => {
   const manifest = { retrieval_timestamp: '2026-10-07T00:00:00Z', discovery_content_checksum: disaInventoryChecksum(html) };
   manifest.inventory_check = { checked_at: '2026-10-18T00:00:00Z', content_checksum: manifest.discovery_content_checksum, retained_content_retrieved_at: manifest.retrieval_timestamp, status: 'no_declared_inventory_change', check_tier: 'publisher_directory_inventory', publisher_bytes_retrieved: false };
-  assert.equal(disaInventoryCheckedToday(manifest, '2026-10-18'), true);
+  assert.equal(disaInventoryCheckedToday(manifest, '2026-10-18'), false);
   assert.equal(disaInventoryCheckedToday(manifest, '2026-10-19'), false);
   for (const change of [{ publisher_bytes_retrieved: true }, { content_checksum: `sha256:${'b'.repeat(64)}` }, { retained_content_retrieved_at: '2026-10-08' }, { status: 'failed' }]) assert.equal(disaInventoryCheckedToday({ ...manifest, inventory_check: { ...manifest.inventory_check, ...change } }, '2026-10-18'), false);
   assert.equal(disaInventoryCheckedToday({ ...manifest, inventory_check: { ...manifest.inventory_check, checked_at: '2027-01-01T00:00:00Z' } }, '2027-01-01'), false);
@@ -104,4 +104,28 @@ test('normal refresh preserves prior records, complete old editions, connection 
   for (const row of previous.relationships.relationships) assert.equal(merged.result.relationships.relationships.find((entry) => entry.source_id === row.source_id).atlas_connection_id, row.atlas_connection_id);
   const repeated = mergeDisaSnapshot(merged.result, current, merged.proofs, inventories, manifest);
   assert.deepEqual(repeated.result, merged.result);
+});
+
+test('accepted DISA archive retrieval advances publication and source dates, and a retained-byte reparse keeps them', async () => {
+  const { attestDisaProjections } = await import('../scripts/lib/disa-record-history.mjs');
+  mkdirSync('.local', { recursive: true }); const root = mkdtempSync('.local/disa-attest-test-');
+  const put = (path, document) => writeFileSync(join(root, path), JSON.stringify(document));
+  const ids = ['disa-stig-library', 'disa-srg-library', 'disa-stig-srg-cci-references'];
+  try {
+    mkdirSync(join(root, 'data')); mkdirSync(join(root, 'maps'));
+    put('data/stig-rules.json', { records: [] }); put('data/srg-requirements.json', { records: [] }); put('maps/stig-srg-to-cci.json', { relationships: [] });
+    put('data/artifact-hydration-manifest.json', { results: [] });
+    put('data/source-registry.json', {
+      artifacts: ['artifact-disa-stig-library', 'artifact-disa-srg-library', 'artifact-disa-stig-srg-cci-references', 'artifact-disa-compilation-zip'].map((id) => ({ id })),
+      publications: [...ids, 'nist-800-53'].map((id) => ({ id, retrieved_at: '2026-07-01' })),
+      sources: [{ id: 'disa-stig-library', retrieved_at: '2026-07-01' }],
+    });
+    const manifest = { compilation_url: 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip', checksum: 'sha256:00', byte_length: 1, retrieval_timestamp: '2026-10-28T12:00:00Z' };
+    const dates = () => { const registry = JSON.parse(readFileSync(join(root, 'data/source-registry.json'))); return [...registry.publications, ...registry.sources].map((row) => [row.id, row.retrieved_at]); };
+    attestDisaProjections(root, manifest);
+    const accepted = dates();
+    assert.deepEqual(accepted, [...ids.map((id) => [id, '2026-10-28']), ['nist-800-53', '2026-07-01'], ['disa-stig-library', '2026-10-28']]);
+    attestDisaProjections(root, manifest);
+    assert.deepEqual(dates(), accepted);
+  } finally { rmSync(root, { recursive: true, force: true }); }
 });

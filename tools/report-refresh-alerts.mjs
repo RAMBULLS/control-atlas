@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import { validateDisaAcceptanceEvidence } from '../scripts/lib/disa-source-acceptance.mjs';
 
 const SOURCE_ID = /^[a-z0-9][a-z0-9._-]{0,119}$/;
 const MARKER = /^<!-- control-atlas-refresh:([a-z0-9][a-z0-9._-]{0,119}) -->\r?\n/;
@@ -28,7 +30,7 @@ function checkedRunUrl(runUrl) {
   return url.href;
 }
 
-export function planAlertChanges(results, issues = [], runUrl = null) {
+export function planAlertChanges(results, issues = [], runUrl = null, { disaAccepted = false } = {}) {
   if (results == null) return [];
   if (!Array.isArray(results) || !Array.isArray(issues)) throw new Error('Expected source results and GitHub issues arrays');
   const run = checkedRunUrl(runUrl);
@@ -42,7 +44,9 @@ export function planAlertChanges(results, issues = [], runUrl = null) {
     sources.set(result.sourceId, result);
   }
   const plans = [];
-  for (const [sourceId, result] of sources) {
+  for (const [sourceId, original] of sources) {
+    const result = sourceId === 'fetch-disa-library' && ['accepted', 'accepted_partial'].includes(original.status) && !disaAccepted
+      ? { ...original, status: 'quarantined', error: 'DISA metadata observation or retained content alone lacks current byte/native acceptance.' } : original;
     if (!['accepted', 'accepted_partial', 'quarantined'].includes(result.status)) continue;
     const matching = issues.filter((issue) => !issue.pull_request &&
       MARKER.exec(issue.body || '')?.[1] === sourceId && Number.isSafeInteger(issue.number) && issue.number > 0)
@@ -74,7 +78,7 @@ export function planAlertChanges(results, issues = [], runUrl = null) {
       body.replace(/\n\n\[Refresh run\]\(https:\/\/github\.com\/[^\s)]+\/actions\/runs\/\d+\)$/, '')) {
       plans.push({ type: 'update', sourceId, number: existing.number, payload: { title, body, state: 'open' } });
     }
-    for (const duplicate of duplicates.filter((entry) => entry.state === 'open')) {
+    for (const duplicate of duplicates.filter((entry) => entry.state === 'open' && sourceId !== 'fetch-disa-library')) {
       plans.push({ type: 'update', sourceId, number: duplicate.number, payload: {
         state: 'closed', state_reason: 'not_planned',
         body: `${marker}\nDuplicate generated alert. Follow issue #${existing.number}.${link}`,
@@ -94,17 +98,27 @@ export function reportRefreshAlerts(options = {}) {
     const manifest = JSON.parse(readFileSync(options.olirManifestPath || resolve('data/olir-catalog-manifest.json'), 'utf8'));
     report.results = applyOlirRetentionHealth(report.results, manifest);
   }
+  let disaAccepted = false;
+  const disaResult = report.results.find((result) => result.sourceId === 'fetch-disa-library');
+  if (['accepted', 'accepted_partial'].includes(disaResult?.status)) {
+    try {
+      const root = options.root || process.cwd();
+      const manifest = JSON.parse(readFileSync(join(root, 'data/disa-artifact-manifest.json'), 'utf8'));
+      const receipt = JSON.parse(readFileSync(join(root, '.local/source-check-receipts/fetch-disa-library--fetch-disa-library.json'), 'utf8'));
+      disaAccepted = validateDisaAcceptanceEvidence(root, manifest, receipt, { startedAt: report.started_at, completedAt: disaResult.completed_at });
+    } catch { /* Failed/missing evidence retains the incident, never recovery. */ }
+  }
   const repository = options.repository || process.env.GITHUB_REPOSITORY || 'RAMBULLS/control-atlas';
   if (!/^[A-Za-z0-9][A-Za-z0-9_.-]*\/[A-Za-z0-9][A-Za-z0-9_.-]*$/.test(repository)) throw new Error('Invalid GitHub repository');
   const runUrl = options.runUrl || (process.env.GITHUB_RUN_ID ? `https://github.com/${repository}/actions/runs/${process.env.GITHUB_RUN_ID}` : null);
   // Validate before even issuing the read request.
-  planAlertChanges(report.results, [], runUrl);
+  planAlertChanges(report.results, [], runUrl, { disaAccepted });
   const gh = options.execFileImpl || execFileSync;
   const pages = JSON.parse(gh('gh', ['api', '--paginate', '--slurp', `repos/${repository}/issues?state=all&per_page=100`], {
     encoding: 'utf8', maxBuffer: 16 * 1024 * 1024,
   }));
   if (!Array.isArray(pages) || pages.some((page) => !Array.isArray(page))) throw new Error('Invalid paginated GitHub issues response');
-  const plans = planAlertChanges(report.results, pages.flat(), runUrl);
+  const plans = planAlertChanges(report.results, pages.flat(), runUrl, { disaAccepted });
   for (const plan of plans) {
     gh('gh', ['api', '--method', plan.type === 'create' ? 'POST' : 'PATCH',
       `repos/${repository}/issues${plan.type === 'create' ? '' : `/${plan.number}`}`, '--input', '-'], {

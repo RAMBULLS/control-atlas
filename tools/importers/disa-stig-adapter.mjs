@@ -357,7 +357,7 @@ async function checksumFile(filePath) {
 // benchmark ZIP is then unzipped in isolation. Peak memory is one benchmark
 // package plus the parser working set. Produces byte-identical records to the
 // buffer path and the same file-content sha256.
-export async function parseDisaCompilationStream(filePath, { artifactUrl, sourceKeys, hintKind }) {
+export async function parseDisaCompilationStream(filePath, { artifactUrl, sourceKeys, hintKind, selectedPublicationFilenames }) {
   const accumulator = createAccumulator();
   const failed = [];
   const inventory = [];
@@ -412,6 +412,10 @@ export async function parseDisaCompilationStream(filePath, { artifactUrl, source
   try {
     for await (const entry of outer.eachEntry()) {
       if (/\/$/.test(entry.fileName)) continue;
+      if (selectedPublicationFilenames && !selectedPublicationFilenames.includes(entry.fileName)) {
+        inventory.push({ entryPath: entry.fileName, status: 'excluded', reason: 'Outside the complete current public manual selection; retained history is not retired.' });
+        continue;
+      }
       const isZip = /\.zip$/i.test(entry.fileName);
       const isXml = /\.(xml|xccdf)$/i.test(entry.fileName);
       if (!isZip && !isXml) {

@@ -200,7 +200,7 @@ test('all four baseline profiles and the live publisher revision discovery are r
   assert.equal(collectSourceChecks(fixture).get('nist-800-53b-baselines').scope, 'publisher_revision_retrieval');
 });
 
-test('DISA needs a consumed compilation probe and every fresh standalone archive', () => {
+test('legacy DISA directory and range receipts never substitute for complete byte/native acceptance', () => {
   const ids = ['disa-stig-library', 'disa-srg-library', 'disa-stig-srg-cci-references'];
   const fixture = checkFixture(ids);
   const index = 'https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/';
@@ -212,7 +212,7 @@ test('DISA needs a consumed compilation probe and every fresh standalone archive
   const receipt = fixture.unit('fetch-disa-library', 'fetch-disa-library', [request(index), request(archive, { http: 206, scope: 'publisher_range_probe', total_byte_length: 100 })]);
   assert.equal(collectSourceChecks(fixture).size, 0, 'a disk-cached standalone does not count');
   receipt.requests.push(request(`${index}standalone.zip`));
-  assert.deepEqual([...collectSourceChecks(fixture).keys()], ids);
+  assert.equal(collectSourceChecks(fixture).size, 0, 'range plus standalone receipts still lack complete inventory and native acceptance');
   receipt.requests[1].total_byte_length = 99;
   assert.equal(collectSourceChecks(fixture).size, 0);
 });
@@ -339,4 +339,23 @@ test('a catalog falls back to its backup source only when the primary is unavail
       && error.message.includes('backup.example')
       && error.message.includes('all 2 candidate'),
   );
+});
+
+
+test('downstream DISA reconciliation cannot turn a changed projection or retained archive into new retrieval dates', () => {
+  const ids = ['disa-stig-library', 'disa-srg-library', 'disa-stig-srg-cci-references', 'non-disa-fixture'];
+  const registry = { publications: ids.map((id) => ({ id, retrieved_at: '2026-10-28' })),
+    artifacts: ids.map((id) => ({ id: `artifact-${id}`, publication_source_id: id, retrieved_at: '2026-10-28' })),
+    freshness: { sources: ids.map((id) => ({ source_id: id, sync_model: 'auto_synced', hash: checkSha,
+      last_checked: '2026-10-28', last_imported: '2026-10-28' })) } };
+  const documents = new Map(ids.map((id) => [id, [{ source_version: 'Verified native edition', records: [{ id: 'changed' }] }]]));
+  reconcileFreshness(registry, documents, '2026-11-11');
+  for (const id of ids.slice(0, 3)) {
+    assert.equal(registry.publications.find((row) => row.id === id).retrieved_at, '2026-10-28');
+    assert.equal(registry.artifacts.find((row) => row.publication_source_id === id).retrieved_at, '2026-10-28');
+    const state = registry.freshness.sources.find((row) => row.source_id === id);
+    assert.equal(state.last_imported, '2026-11-11'); assert.equal(state.last_checked, '2026-10-28');
+  }
+  assert.equal(registry.publications.at(-1).retrieved_at, '2026-11-11', 'other source behavior is unchanged');
+  assert.equal(registry.artifacts.at(-1).retrieved_at, '2026-11-11');
 });

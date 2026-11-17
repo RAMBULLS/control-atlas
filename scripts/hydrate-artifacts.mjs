@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { validateDisaAcceptanceEvidence } from './lib/disa-source-acceptance.mjs';
 // hydrate-artifacts — download every directly retrievable source artifact,
 // compute REAL sha256 + byte length + record count from the actual bytes, and
 // write those values back into data/source-registry.json. Emits
@@ -220,15 +221,16 @@ export function loadHydrationResolutions(root = ROOT) {
   return resolutions;
 }
 
-export function disaInventoryCheckedToday(manifest, today) {
-  const check = manifest?.inventory_check;
-  const prior = new Date(manifest?.retrieval_timestamp); const current = new Date(`${today}T00:00:00Z`);
-  return /^sha256:[a-f0-9]{64}$/i.test(manifest?.discovery_content_checksum || '')
-    && check?.content_checksum === manifest.discovery_content_checksum
-    && check.status === 'no_declared_inventory_change' && check.check_tier === 'publisher_directory_inventory'
-    && check.publisher_bytes_retrieved === false && String(check.checked_at).startsWith(today)
-    && check.retained_content_retrieved_at === manifest.retrieval_timestamp
-    && prior.getUTCFullYear() === current.getUTCFullYear() && Math.floor(prior.getUTCMonth() / 3) === Math.floor(current.getUTCMonth() / 3);
+// Kept as a compatibility predicate: metadata-only observation never grants
+// archive/native acceptance, even on the same day or in the same quarter.
+export function disaInventoryCheckedToday() { return false; }
+
+export function requireDisaHydrationAcceptance(root, manifest, startedAt) {
+  const path = join(root, '.local/source-check-receipts/fetch-disa-library--fetch-disa-library.json');
+  if (!startedAt || !existsSync(path)) throw new Error('DISA requires current byte/native acceptance, not metadata observation');
+  const receipt = JSON.parse(readFileSync(path, 'utf8'));
+  validateDisaAcceptanceEvidence(root, manifest, receipt, { startedAt, completedAt: new Date().toISOString() });
+  return manifest.native_acceptance;
 }
 
 const COUNTERS = {
@@ -374,10 +376,9 @@ export async function hydrateArtifacts({ root = ROOT, only = null, onlyPrefix = 
         if (!/^sha256:[a-f0-9]{64}$/i.test(checksum || '') || !Number.isInteger(byteLength) || byteLength <= 0 || !retrievedAt) {
           throw new Error('fresh DISA compilation attestation is missing or invalid');
         }
-        const inventoryOnly = !String(retrievedAt).startsWith(today) && disaInventoryCheckedToday(disaCompilation, today);
-        if (process.env.CONTROL_ATLAS_REQUIRE_FRESH_FETCH === '1' && !String(retrievedAt).startsWith(today) && !inventoryOnly) {
-          throw new Error(`DISA compilation was not retrieved today: ${retrievedAt}`);
-        }
+        const proof = process.env.CONTROL_ATLAS_REQUIRE_FRESH_FETCH === '1'
+          ? requireDisaHydrationAcceptance(root, disaCompilation, process.env.CONTROL_ATLAS_REFRESH_STARTED_AT) : null;
+        const retained = !proof || proof.archives[0].acquisition === 'retained_hash_verified';
         art.artifact_url = disaCompilation.artifact_url;
         art.sha256 = checksum;
         art.byte_length = byteLength;
@@ -386,16 +387,17 @@ export async function hydrateArtifacts({ root = ROOT, only = null, onlyPrefix = 
         log.push({
           id: r.id,
           status: 'OK',
-          http: inventoryOnly ? 'retained-range-verified' : 'range-verified',
+          http: proof ? (retained ? 'retained-hash-native-verified' : 'downloaded-native-verified') : 'historical-accepted-bytes',
           url: disaCompilation.artifact_url,
           sha256: checksum,
           byte_length: byteLength,
           record_count: art.record_count,
           retrieved_at: art.retrieved_at,
-          attestation: inventoryOnly ? 'Retained verified archive; current publisher directory inventory checked, archive bytes not retrieved this run.' : 'DISA compilation range download and parse',
-          ...(inventoryOnly ? { check_tier: 'publisher_directory_inventory', publisher_bytes_retrieved: false, inventory_checked_at: disaCompilation.inventory_check.checked_at } : {}),
+          attestation: proof ? 'Complete public inventory plus hash-verified archive and independent native reconciliation.' : 'Historical accepted archive attestation; no current source check.',
+          publisher_bytes_retrieved: proof ? !retained : false,
+          ...(proof ? { check_tier: 'publisher_bytes_and_native_content', verified_at: proof.verified_at } : {}),
         });
-        console.log(`OK  ${r.id}  ${byteLength}B  range-verified ${checksum.slice(0, 22)}â€¦`);
+        console.log(`OK  ${r.id}  ${byteLength}B  archive evidence ${checksum.slice(0, 22)}â€¦`);
         continue;
       }
       const { buf, status } = r.local

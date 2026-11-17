@@ -1,6 +1,6 @@
 import {
   chmodSync, copyFileSync, existsSync, lstatSync, mkdirSync, mkdtempSync,
-  readdirSync, realpathSync, rmSync,
+  readdirSync, realpathSync, rmSync, utimesSync, writeFileSync,
 } from 'node:fs';
 import { dirname, isAbsolute, join, relative, resolve, sep, win32 } from 'node:path';
 import { backoffDelayMs, classifyFailure, realSleep } from './retry-policy.mjs';
@@ -51,7 +51,23 @@ function copyTree(source, destination) {
     mkdirSync(resolve(destination, '..'), { recursive: true });
     copyFileSync(source, destination);
   }
-  chmodSync(destination, stat.mode & 0o777);
+  // Capture before reading/copying: reading may alter source atime and creating
+  // descendants alters directory mtime. Apply times before final read-only modes.
+  // A metadata failure is an incomplete copy, never a successful restoration.
+  try {
+    utimesSync(destination, stat.atime, stat.mtime);
+  } catch (error) {
+    error.transactionCopyPath = destination;
+    error.transactionCopyAction = 'restore timestamps';
+    throw error;
+  }
+  try {
+    chmodSync(destination, stat.mode & 0o777);
+  } catch (error) {
+    error.transactionCopyPath = destination;
+    error.transactionCopyAction = 'restore permissions';
+    throw error;
+  }
 }
 
 function declaredPaths(root, paths) {
@@ -109,6 +125,7 @@ export async function runSourceTransaction({
   inspectPath(root, storage);
   mkdirSync(storage, { recursive: true });
   const snapshot = mkdtempSync(join(storage, 'source-'));
+  let preserveSnapshot = false;
   try {
     const originals = targets.map((path, index) => {
       const present = existsSync(path);
@@ -116,13 +133,73 @@ export async function runSourceTransaction({
       if (present) copyTree(path, backup);
       return { path, backup, present };
     });
-    function restore() {
-      // Verify the complete boundary before removing anything.
-      for (const { path } of originals) inspectPath(root, path, true);
-      for (const { path, backup, present } of originals) {
-        rmSync(path, { recursive: true, force: true });
-        if (present) copyTree(backup, path);
+    // Persist the source-to-backup mapping before any source operation. If a
+    // restore or diagnostic write later fails, recovery does not depend on the
+    // process surviving or on guessing the numeric backup directory names.
+    const recoveryManifest = join(snapshot, 'manifest.json');
+    const recoveryMap = {
+      schema_version: '1.0', source_id: sourceId, root,
+      originals: originals.map(({ path, backup, present }) => ({ path, backup, present })),
+    };
+    writeFileSync(recoveryManifest, `${JSON.stringify(recoveryMap, null, 2)}\n`);
+    const describeFailure = (path, action, error) => ({
+      path: error.transactionCopyPath || path, action: error.transactionCopyAction || action,
+      code: String(error.code || 'UNKNOWN'), message: String(error.message || error),
+    });
+    function incompleteRestore(sourceError, failures, restoredPaths = []) {
+      // Set before attempting more filesystem work. Neither a diagnostic-write
+      // failure nor a cleanup/finally path may discard the only good copies.
+      preserveSnapshot = true;
+      const recovery = {
+        ...recoveryMap, status: 'rollback_incomplete', snapshot_path: snapshot,
+        manifest_path: recoveryManifest, failures, restored_paths: restoredPaths,
+        unrestored_paths: targets.filter((path) => !restoredPaths.includes(path)),
+      };
+      const diagnosticPath = join(snapshot, 'recovery.json');
+      let diagnosticError = null;
+      try {
+        inspectPath(root, snapshot, true);
+        inspectPath(root, diagnosticPath);
+        writeFileSync(diagnosticPath, `${JSON.stringify(recovery, null, 2)}\n`);
+        recovery.diagnostic_path = diagnosticPath;
+      } catch (error) {
+        diagnosticError = describeFailure(diagnosticPath, 'write recovery diagnostic', error);
+        recovery.diagnostic_error = diagnosticError;
       }
+      const details = failures.map((entry) => `${entry.action} at ${entry.path}: ${entry.code} ${entry.message}`).join('; ');
+      const error = new Error(`Source transaction rollback incomplete for ${sourceId}. ` +
+        `Retained snapshot: ${snapshot}. Recovery map: ${recoveryManifest}. ` +
+        `Failed actions: ${details}. Unrestored paths: ${recovery.unrestored_paths.join(', ')}. ` +
+        `Do not retry or report quarantine success; recover the retained originals first.` +
+        (diagnosticError ? ` Recovery diagnostic write failed: ${diagnosticError.code} ${diagnosticError.message}.` : ''),
+      { cause: sourceError });
+      error.code = 'SOURCE_TRANSACTION_ROLLBACK_INCOMPLETE';
+      error.recovery = recovery;
+      throw error;
+    }
+    function restore(sourceError) {
+      // Verify the COMPLETE boundary before removing anything. If a source
+      // leaves a symlink/unsafe target, retain every backup and stop untouched.
+      try { inspectPath(root, snapshot, true); }
+      catch (error) { incompleteRestore(sourceError, [describeFailure(snapshot, 'validate snapshot boundary', error)]); }
+      for (const { path } of originals) {
+        try { inspectPath(root, path, true); }
+        catch (error) { incompleteRestore(sourceError, [describeFailure(path, 'validate restore boundary', error)]); }
+      }
+      const failures = []; const restoredPaths = [];
+      for (const { path, backup, present } of originals) {
+        try {
+          rmSync(path, { recursive: true, force: true });
+          if (present) copyTree(backup, path);
+          restoredPaths.push(path);
+        } catch (error) {
+          failures.push(describeFailure(path, 'restore source output', error));
+        }
+      }
+      // Continue restoring other already-validated owned paths, then fail as
+      // infrastructure. No retry/classification/callback is allowed after even
+      // one incomplete restore, including a bytes-copied metadata failure.
+      if (failures.length) incompleteRestore(sourceError, failures, restoredPaths);
     }
     let lastError;
     for (let attempt = 1; attempt <= attempts; attempt += 1) {
@@ -135,7 +212,7 @@ export async function runSourceTransaction({
         }
       } catch (error) {
         lastError = error;
-        restore();
+        restore(error);
         // Ask again only when a new retrieval could plausibly differ. A
         // validation rejection is the publisher's current answer.
         const failureClass = classify(error);
@@ -151,12 +228,18 @@ export async function runSourceTransaction({
         if (onQuarantine) await onQuarantine(result);
         return result;
       }
-      // Boundary failures are infrastructure errors, never source quarantine.
-      for (const path of targets) inspectPath(root, path, true);
+      // An unsafe post-operation boundary also needs retained recovery copies;
+      // it cannot be an accepted result or an automatic unsafe restoration.
+      for (const path of targets) {
+        try { inspectPath(root, path, true); }
+        catch (error) { incompleteRestore(error, [describeFailure(path, 'validate acceptance boundary', error)]); }
+      }
       return { status: 'accepted', sourceId, attempts: attempt, value };
     }
   } finally {
-    inspectPath(root, snapshot, true);
-    rmSync(snapshot, { recursive: true, force: true });
+    if (!preserveSnapshot) {
+      inspectPath(root, snapshot, true);
+      rmSync(snapshot, { recursive: true, force: true });
+    }
   }
 }

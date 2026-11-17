@@ -102,7 +102,9 @@ const MFA_DISCOVERY_IDS = ["nist-800-53:IA-2.1", "nist-800-53:IA-2.2", "nist-800
 function resolveMfaDiscovery(value) {
   const raw = String(value || "").trim();
   const broad = /^(?:mfa|2fa|multi[- ]?factor|two[- ]?factor)(?:\s+authentication)?$/i.test(raw);
-  const expanded = raw.replace(/\b(?:mfa|2fa|multi[- ]?factor|two[- ]?factor)(?:\s+authentication)?\b/gi, "multifactor authentication");
+  // Only whole words expand. A term joined to an identifier by "-", ":", "." or
+  // "_" (D3-MFA, mitre-d3fend:D3-MFA) stays exact for identifier lookup.
+  const expanded = raw.replace(/(?<![\w.:-])(?:mfa|2fa|multi[- ]?factor|two[- ]?factor)(?:\s+authentication)?(?![\w.:-])/gi, "multifactor authentication");
   if (!broad && expanded === raw) return null;
   // Preserve qualified-query words; never rewrite the whole sentence to an ID.
   return {

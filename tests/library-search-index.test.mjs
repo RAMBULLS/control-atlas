@@ -84,6 +84,7 @@ test("MFA discovery preserves qualifiers, publication filters and exact IDs in b
     ["nist-800-53:IA-2.10", "Single Sign-On", "control"],
     ["nist-800-53a:IA-2.1", "Multifactor Authentication Assessment", "assessment_procedure"],
     ["fixture-external:one", "Multifactor Authentication External Users", "control"],
+    ["mitre-d3fend:D3-MFA", "Multi-factor Authentication", "countermeasure"],
   ].map(([id, title, object_type]) => ({
     id, item_id: id.split(":")[1], title, object_type, catalog_id: id.split(":")[0],
     source_name: "Synthetic transport fixture", official_text_preview: title, taxonomy_tags: [],
@@ -102,6 +103,10 @@ test("MFA discovery preserves qualifiers, publication filters and exact IDs in b
       assert.deepEqual(actual.slice(0, 3), ["nist-800-53:IA-2.1", "nist-800-53:IA-2.2", "nist-800-53:IA-5"]);
       assert.equal(new Set(actual).size, actual.length);
       assert.equal(runtime.getLibraryTagContext(query).result_count, actual.length);
+    }
+    // Identifiers that contain the term stay exact lookups.
+    for (const query of ["D3-MFA", "mitre-d3fend:D3-MFA"]) {
+      assert.equal(runtime.searchLibrary(query)[0]?.id, "mitre-d3fend:D3-MFA", query);
     }
     assert.deepEqual(runtime.searchLibrary("MFA external users").map(record => record.id), ["fixture-external:one"]);
     assert.deepEqual(runtime.searchLibrary("MFA", { catalog_id: "fixture-external" }).map(record => record.id), ["fixture-external:one"]);

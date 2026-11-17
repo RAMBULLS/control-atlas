@@ -1098,8 +1098,17 @@ jobs:
         run: node tools/classify-refresh-outcome.mjs
       - run: npm run resources:health
         if: ${{ steps.outcome.outputs.publish == 'true' }}
-      - run: npx playwright install --with-deps chromium
+      - name: Install Chromium, retrying a failed system package download
+        # One lost DNS lookup on the Ubuntu package mirror ended the 2026-11-11
+        # weekly refresh. Retry the install instead of losing a week of data.
         if: ${{ steps.outcome.outputs.publish == 'true' }}
+        run: |
+          for attempt in 1 2 3; do
+            npx playwright install --with-deps chromium && exit 0
+            echo "Browser install attempt $attempt failed."
+            sleep 30
+          done
+          exit 1
       - name: Verify refreshed repository
         if: ${{ steps.outcome.outputs.publish == 'true' }}
         env:

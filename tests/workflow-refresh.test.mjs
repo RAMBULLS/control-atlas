@@ -86,6 +86,7 @@ test('source refresh opens one App PR after the full gate and requires independe
   assert.match(workflow, /npm run resources:health/);
   assert.doesNotMatch(workflow, /npm run audit:deps/);
   assert.match(workflow, /npx playwright install --with-deps chromium/);
+  assert.match(workflow, /for attempt in 1 2 3; do\s+npx playwright install --with-deps chromium && exit 0/);
   assert.match(workflow, /npm run precommit:incremental/);
   assert.match(workflow, /npm run sbom:generate/);
   assert.match(workflow, /name: Restore tracked SBOM before source admission\s+run: git restore --worktree -- artifacts\/sbom\.cdx\.json/);

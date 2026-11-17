@@ -11,10 +11,9 @@ const require = createRequire(import.meta.url);
 const installedFile = require.resolve('@lhci/utils/src/lighthouserc.js');
 const upstream = readFileSync(installedFile, 'utf8').replace(PATCH.replacement, PATCH.original);
 const sha256 = value => createHash('sha256').update(value).digest('hex');
-// xmlbuilder2 already uses the same maintained parser. This lets the focused
-// fixture run without changing a shared installation; CI also tests LHCI's
-// actual installed dependency resolution below.
-const yamlRequire = createRequire(require.resolve('xmlbuilder2'));
+// Read the parser LHCI itself resolves. The fixture only reads it, so the
+// shared installation does not change; CI also checks its version below.
+const yamlRequire = createRequire(installedFile);
 const yaml = yamlRequire('js-yaml');
 
 function withFixture(callback) {

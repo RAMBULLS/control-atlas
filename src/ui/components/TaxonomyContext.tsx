@@ -1,6 +1,5 @@
 import { useId } from "react";
 
-import "../../../styles/record-detail.css";
 import {
   extractOrderedRecordDiscoveryTags,
   formatPlainLanguageProvenance,

@@ -24,6 +24,9 @@ import '../styles/components.css';
 import '../styles/surfaces.css';
 import '../styles/tailwind.css';
 import '../styles/orbital.css';
+// Record styles ship with the first stylesheet. As a route chunk they were
+// found only after the record script ran, which delayed the record text.
+import '../styles/record-detail.css';
 
 // Anti-framing guard (TRUST-002): GitHub Pages cannot send response headers,
 // so frame-ancestors/X-Frame-Options are unavailable. Break out of hostile

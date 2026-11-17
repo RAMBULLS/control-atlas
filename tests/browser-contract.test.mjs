@@ -473,7 +473,6 @@ test('concise DISA CCI records orient the user before the publisher requirement'
 
 test('Catalog controls stay anchored to the records section', () => {
   const catalogPage = readFileSync('src/ui/pages/CatalogDetailPage.tsx', 'utf8');
-  const surfaces = readFileSync('styles/surfaces.css', 'utf8');
   assert.match(catalogPage, /aria-label="Catalog record controls"/);
   assert.match(catalogPage, /className="catalog-record-toolbar"/);
   assert.doesNotMatch(catalogPage, />Published group</);
@@ -493,8 +492,10 @@ test('Catalog controls stay anchored to the records section', () => {
   assert.match(catalogPage, /Search \$\{tierLabelPlural/);
   assert.match(catalogPage, /data-published-tier/);
   assert.match(overview, /className="catalog-source-link"/);
-  assert.match(surfaces, /\.catalog-record-toolbar\s*\{/);
-  assert.match(surfaces, /\.catalog-source-link\s*\{[^}]*justify-self:\s*start;/s);
+  // Publication-page rules load with that page, not the shared entry (issue 411).
+  const publicationCss = readFileSync('styles/publication-trust.css', 'utf8');
+  assert.match(publicationCss, /\.catalog-record-toolbar\s*\{/);
+  assert.match(publicationCss, /\.catalog-source-link\s*\{[^}]*justify-self:\s*start;/s);
 });
 
 test('result-affecting controls have one visible workbench owner', () => {

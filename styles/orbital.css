@@ -278,16 +278,6 @@ body {
   grid-row: 5;
 }
 
-#root[data-static-route-kind="resources"]:has(> [data-static-route]:not([hidden]))
-  > [data-react-root] .workspace-template > .page-header {
-  display: none;
-}
-
-#root[data-static-route-kind="resources"]:has(> [data-static-route]:not([hidden]))
-  > [data-react-root] .workspace-template {
-  padding-top: 0;
-}
-
 /* A record identifier is already known from its URL. Use the reader's type
    scale without reserving blank space for publisher content not yet admitted. */
 #root[data-static-route-kind="record"] .static-route-summary {

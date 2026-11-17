@@ -43,7 +43,7 @@ export const UI_REVIEW_ROUTES = [
     id: "library",
     path: "/#/library",
     title: "Library",
-    owners: ["src/ui/pages/ExplorePage.tsx"],
+    owners: ["src/ui/pages/ExplorePage.tsx", "styles/library-workspace.css"],
   },
   {
     id: "record-control",
@@ -55,7 +55,7 @@ export const UI_REVIEW_ROUTES = [
     id: "compare",
     path: "/#/compare/relationships?intent=frameworks&source=nist-800-53&target=disa-cci&compareRun=true",
     title: "Compare results",
-    owners: ["src/ui/pages/ComparePage.tsx"],
+    owners: ["src/ui/pages/ComparePage.tsx", "styles/compare.css"],
   },
   {
     id: "compare-baselines",
@@ -73,19 +73,19 @@ export const UI_REVIEW_ROUTES = [
     id: "templates",
     path: "/#/build",
     title: "Templates",
-    owners: ["src/ui/pages/TemplatesPage.tsx"],
+    owners: ["src/ui/pages/TemplatesPage.tsx", "styles/templates.css"],
   },
   {
     id: "guides",
     path: "/#/guides?pattern=implementing-controls",
     title: "Guides",
-    owners: ["src/ui/pages/PlaybooksPage.tsx"],
+    owners: ["src/ui/pages/PlaybooksPage.tsx", "styles/playbooks.css"],
   },
   {
     id: "resources",
     path: "/#/resources?showAll=true",
     title: "Resources",
-    owners: ["src/ui/pages/CommonsPage.tsx", "styles/resources.css"],
+    owners: ["src/ui/pages/CommonsPage.tsx", "styles/resources.css", "styles/library-workspace.css"],
   },
   {
     id: "about",

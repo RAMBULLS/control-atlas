@@ -1,3 +1,4 @@
+import "../../../styles/playbooks.css";
 import {
   IconActivityHeartbeat,
   IconAlertTriangle,

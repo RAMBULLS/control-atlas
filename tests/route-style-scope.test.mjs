@@ -38,6 +38,12 @@ const ROUTE_STYLESHEETS = {
   "styles/publication-trust.css": ["src/ui/pages/CatalogDetailPage.tsx", "src/ui/pages/SourcesPage.tsx"],
   "styles/atlas-territory.css": ["src/ui/pages/AtlasTerritoryPage.tsx"],
   "styles/resources.css": ["src/ui/pages/CommonsPage.tsx", "src/ui/pages/CommonsDetailPage.tsx"],
+  // Moved out of the shared entry sheets so the record page (issue 411) does
+  // not download them before its first paint.
+  "styles/library-workspace.css": ["src/ui/pages/CommonsPage.tsx", "src/ui/pages/ExplorePage.tsx"],
+  "styles/templates.css": ["src/ui/pages/TemplatesPage.tsx"],
+  "styles/compare.css": ["src/ui/pages/ComparePage.tsx"],
+  "styles/playbooks.css": ["src/ui/pages/PlaybooksPage.tsx"],
 };
 
 /**

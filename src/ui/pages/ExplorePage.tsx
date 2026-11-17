@@ -1,3 +1,4 @@
+import "../../../styles/library-workspace.css";
 import {
   IconGitCompare,
   IconList,

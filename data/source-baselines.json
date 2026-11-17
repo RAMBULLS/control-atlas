@@ -17,7 +17,7 @@
       "accepted": {
         "record_count": 3,
         "normalized_byte_length": 1785,
-        "normalized_sha256": "sha256:6c5211d6edb6f5a7bd9e7279aceb648cda68bcd8c5ee8176a0f20e2862d4521a",
+        "normalized_sha256": "sha256:747c3b9dd7912307d3564552a61989e089f4ce4c1aa2b8a0b5c24c7518c8e998",
         "identity_sha256": "sha256:cc6223e7858a17ced74efc17f48ec36feaf3fd99fde1ba16ad867caa7152bafe",
         "publisher_version": null,
         "publisher_sha256": null,
@@ -25,20 +25,8 @@
         "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
         "independent_inventory": false
       },
-      "accepted_at": "2026-11-04T15:33:26.290Z",
+      "accepted_at": "2026-11-17T02:27:04.453Z",
       "history": [
-        {
-          "record_count": 3,
-          "normalized_byte_length": 1785,
-          "normalized_sha256": "sha256:01e16d82302aed46aeea57db02313038958b3b8e74a401b9295f83bbfdfddcb0",
-          "identity_sha256": "sha256:cc6223e7858a17ced74efc17f48ec36feaf3fd99fde1ba16ad867caa7152bafe",
-          "publisher_version": null,
-          "publisher_sha256": null,
-          "publisher_byte_length": null,
-          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
-          "independent_inventory": false,
-          "accepted_at": "2026-09-10T19:42:37.072Z"
-        },
         {
           "record_count": 3,
           "normalized_byte_length": 1785,
@@ -122,6 +110,18 @@
           "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
           "independent_inventory": false,
           "accepted_at": "2026-10-28T15:45:12.126Z"
+        },
+        {
+          "record_count": 3,
+          "normalized_byte_length": 1785,
+          "normalized_sha256": "sha256:6c5211d6edb6f5a7bd9e7279aceb648cda68bcd8c5ee8176a0f20e2862d4521a",
+          "identity_sha256": "sha256:cc6223e7858a17ced74efc17f48ec36feaf3fd99fde1ba16ad867caa7152bafe",
+          "publisher_version": null,
+          "publisher_sha256": null,
+          "publisher_byte_length": null,
+          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
+          "independent_inventory": false,
+          "accepted_at": "2026-11-04T15:33:26.290Z"
         }
       ]
     },
@@ -139,29 +139,17 @@
       },
       "accepted": {
         "record_count": 106,
-        "normalized_byte_length": 367910,
-        "normalized_sha256": "sha256:2ccf87eceb1bf20b1c51a4f37b8fe47caaf0e509117ca09c1152b416113d52aa",
+        "normalized_byte_length": 380008,
+        "normalized_sha256": "sha256:7e63a946d1cfb9e24b9f31b5fd6328d69435985ef57f614e8162a5e46c6053b4",
         "identity_sha256": "sha256:6ceda3e66f0d8543a1682dc9fb8fd876c7f129436fad7e2063946f81299d85e1",
         "publisher_version": "2.0",
-        "publisher_sha256": "sha256:cce7c44af4277686ac716e3c1c839c29d10bfb9272b24a1b4ad66bc162a76a22",
-        "publisher_byte_length": 144730,
+        "publisher_sha256": "sha256:7737bf639b7f03dc2d1f2ce725bac1905f281ce3c062d3ac3ca8471c863b915c",
+        "publisher_byte_length": 146545,
         "publisher_evidence_reason": null,
         "independent_inventory": true
       },
-      "accepted_at": "2026-11-04T15:33:26.290Z",
+      "accepted_at": "2026-11-17T02:27:04.453Z",
       "history": [
-        {
-          "record_count": 106,
-          "normalized_byte_length": 367586,
-          "normalized_sha256": "sha256:387c37b1df3e75bb42e319d2e12ea9284a56da94ff76ca75c7aa83bd63f67cc6",
-          "identity_sha256": "sha256:6ceda3e66f0d8543a1682dc9fb8fd876c7f129436fad7e2063946f81299d85e1",
-          "publisher_version": "2.0",
-          "publisher_sha256": "sha256:8e549da6a6a3b9dcab20d18f25e33ccba5ec643ca0aaf1ec4b6fc27d28eb3a24",
-          "publisher_byte_length": 144518,
-          "publisher_evidence_reason": null,
-          "independent_inventory": true,
-          "accepted_at": "2026-09-10T19:42:37.072Z"
-        },
         {
           "record_count": 106,
           "normalized_byte_length": 367586,
@@ -245,6 +233,18 @@
           "publisher_evidence_reason": null,
           "independent_inventory": true,
           "accepted_at": "2026-10-28T15:45:12.126Z"
+        },
+        {
+          "record_count": 106,
+          "normalized_byte_length": 367910,
+          "normalized_sha256": "sha256:2ccf87eceb1bf20b1c51a4f37b8fe47caaf0e509117ca09c1152b416113d52aa",
+          "identity_sha256": "sha256:6ceda3e66f0d8543a1682dc9fb8fd876c7f129436fad7e2063946f81299d85e1",
+          "publisher_version": "2.0",
+          "publisher_sha256": "sha256:cce7c44af4277686ac716e3c1c839c29d10bfb9272b24a1b4ad66bc162a76a22",
+          "publisher_byte_length": 144730,
+          "publisher_evidence_reason": null,
+          "independent_inventory": true,
+          "accepted_at": "2026-11-04T15:33:26.290Z"
         }
       ]
     },
@@ -263,7 +263,7 @@
       "accepted": {
         "record_count": 129,
         "normalized_byte_length": 269571,
-        "normalized_sha256": "sha256:a5834a70d2f27096492e09197957984058c1928e7cbcac888c0d7238a5aa37a5",
+        "normalized_sha256": "sha256:c464918da2d0658fc894b5dd07c855dbd58cb5020dade2040f0848ca697321c8",
         "identity_sha256": "sha256:d0efb56f31eb85b499d9747d5a19ed80945e3a67095133a52f6cc16fc65c3a74",
         "publisher_version": null,
         "publisher_sha256": null,
@@ -271,20 +271,8 @@
         "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
         "independent_inventory": false
       },
-      "accepted_at": "2026-11-04T15:33:26.290Z",
+      "accepted_at": "2026-11-17T02:27:04.453Z",
       "history": [
-        {
-          "record_count": 128,
-          "normalized_byte_length": 268295,
-          "normalized_sha256": "sha256:d567122809479a335abcf954dc8e7afb2cd49b7d1f6f2de0c386e62fa0bd470b",
-          "identity_sha256": "sha256:1fbdf729436789e098fb309b96016c86ae99532c3975a4a63b3fbab685927afb",
-          "publisher_version": null,
-          "publisher_sha256": null,
-          "publisher_byte_length": null,
-          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
-          "independent_inventory": false,
-          "accepted_at": "2026-09-21T15:16:41.811Z"
-        },
         {
           "record_count": 128,
           "normalized_byte_length": 268295,
@@ -368,6 +356,18 @@
           "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
           "independent_inventory": false,
           "accepted_at": "2026-10-28T15:45:12.126Z"
+        },
+        {
+          "record_count": 129,
+          "normalized_byte_length": 269571,
+          "normalized_sha256": "sha256:a5834a70d2f27096492e09197957984058c1928e7cbcac888c0d7238a5aa37a5",
+          "identity_sha256": "sha256:d0efb56f31eb85b499d9747d5a19ed80945e3a67095133a52f6cc16fc65c3a74",
+          "publisher_version": null,
+          "publisher_sha256": null,
+          "publisher_byte_length": null,
+          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
+          "independent_inventory": false,
+          "accepted_at": "2026-11-04T15:33:26.290Z"
         }
       ]
     },
@@ -611,7 +611,7 @@
       "accepted": {
         "record_count": 11,
         "normalized_byte_length": 4815,
-        "normalized_sha256": "sha256:ce0000ae49b858f49784f176641252f69b928fd4ec0f91fdd94977d66a4aeea7",
+        "normalized_sha256": "sha256:a667140ac08fc34f1c472398df785b6e829ae9de2ee7d96ef5b85c58eacd2c29",
         "identity_sha256": "sha256:fc62ec46b702920060f722b5c4551c1ee838b33188b3bd4f6a9e7fa590052489",
         "publisher_version": null,
         "publisher_sha256": null,
@@ -619,20 +619,8 @@
         "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
         "independent_inventory": false
       },
-      "accepted_at": "2026-11-04T15:33:26.290Z",
+      "accepted_at": "2026-11-17T02:27:04.453Z",
       "history": [
-        {
-          "record_count": 11,
-          "normalized_byte_length": 4815,
-          "normalized_sha256": "sha256:60333da78c575044bfcec3eeb576490eeea99c6e2b5f16125800eb101b6c57f7",
-          "identity_sha256": "sha256:fc62ec46b702920060f722b5c4551c1ee838b33188b3bd4f6a9e7fa590052489",
-          "publisher_version": null,
-          "publisher_sha256": null,
-          "publisher_byte_length": null,
-          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
-          "independent_inventory": false,
-          "accepted_at": "2026-09-10T19:42:37.072Z"
-        },
         {
           "record_count": 11,
           "normalized_byte_length": 4815,
@@ -716,6 +704,18 @@
           "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
           "independent_inventory": false,
           "accepted_at": "2026-10-28T15:45:12.126Z"
+        },
+        {
+          "record_count": 11,
+          "normalized_byte_length": 4815,
+          "normalized_sha256": "sha256:ce0000ae49b858f49784f176641252f69b928fd4ec0f91fdd94977d66a4aeea7",
+          "identity_sha256": "sha256:fc62ec46b702920060f722b5c4551c1ee838b33188b3bd4f6a9e7fa590052489",
+          "publisher_version": null,
+          "publisher_sha256": null,
+          "publisher_byte_length": null,
+          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
+          "independent_inventory": false,
+          "accepted_at": "2026-11-04T15:33:26.290Z"
         }
       ]
     },
@@ -734,7 +734,7 @@
       "accepted": {
         "record_count": 320,
         "normalized_byte_length": 2438032,
-        "normalized_sha256": "sha256:f55acc3132bedb1065f94580b2938f0314eae730e32519b953d6dae4d3710186",
+        "normalized_sha256": "sha256:45035f019e1331beb084740be27812eef2c4b92902e72af9c5b1cb3e7c097d4f",
         "identity_sha256": "sha256:cbaf01b9699a8988ee528804139f0c73fcef697282fccbf81ed4dc669f16ec9d",
         "publisher_version": null,
         "publisher_sha256": null,
@@ -742,20 +742,8 @@
         "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
         "independent_inventory": false
       },
-      "accepted_at": "2026-11-04T15:33:26.290Z",
+      "accepted_at": "2026-11-17T02:27:04.453Z",
       "history": [
-        {
-          "record_count": 320,
-          "normalized_byte_length": 2438032,
-          "normalized_sha256": "sha256:fb6d85e59a6520fbc07a8950c047cad8b024883b01eb65c77e15ae297c51ea11",
-          "identity_sha256": "sha256:cbaf01b9699a8988ee528804139f0c73fcef697282fccbf81ed4dc669f16ec9d",
-          "publisher_version": null,
-          "publisher_sha256": null,
-          "publisher_byte_length": null,
-          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
-          "independent_inventory": false,
-          "accepted_at": "2026-09-10T19:42:37.072Z"
-        },
         {
           "record_count": 320,
           "normalized_byte_length": 2438032,
@@ -839,6 +827,18 @@
           "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
           "independent_inventory": false,
           "accepted_at": "2026-10-28T15:45:12.126Z"
+        },
+        {
+          "record_count": 320,
+          "normalized_byte_length": 2438032,
+          "normalized_sha256": "sha256:f55acc3132bedb1065f94580b2938f0314eae730e32519b953d6dae4d3710186",
+          "identity_sha256": "sha256:cbaf01b9699a8988ee528804139f0c73fcef697282fccbf81ed4dc669f16ec9d",
+          "publisher_version": null,
+          "publisher_sha256": null,
+          "publisher_byte_length": null,
+          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
+          "independent_inventory": false,
+          "accepted_at": "2026-11-04T15:33:26.290Z"
         }
       ]
     },
@@ -857,7 +857,7 @@
       "accepted": {
         "record_count": 4,
         "normalized_byte_length": 21979,
-        "normalized_sha256": "sha256:303f0d4f349057f0b2d84fada9ef8eb8181a178899b3e534354382afbda14d0f",
+        "normalized_sha256": "sha256:79b19862bbbc66ac810b1bdd6e9d99da2d2467ab130a78e5acca4cbd2f37d2e2",
         "identity_sha256": "sha256:f4b9c41049d562ed0284b8fd66922afbd7a8d675c20c7b61783ddaea95fd8362",
         "publisher_version": null,
         "publisher_sha256": null,
@@ -865,20 +865,8 @@
         "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
         "independent_inventory": false
       },
-      "accepted_at": "2026-11-04T15:33:26.290Z",
+      "accepted_at": "2026-11-17T02:27:04.453Z",
       "history": [
-        {
-          "record_count": 4,
-          "normalized_byte_length": 21979,
-          "normalized_sha256": "sha256:051eb9d9381bb07d1ec0b4690cba9ca423451373ffa2f2b6b5726ec15b5675a0",
-          "identity_sha256": "sha256:f4b9c41049d562ed0284b8fd66922afbd7a8d675c20c7b61783ddaea95fd8362",
-          "publisher_version": null,
-          "publisher_sha256": null,
-          "publisher_byte_length": null,
-          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
-          "independent_inventory": false,
-          "accepted_at": "2026-09-10T19:42:37.072Z"
-        },
         {
           "record_count": 4,
           "normalized_byte_length": 21979,
@@ -962,6 +950,18 @@
           "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
           "independent_inventory": false,
           "accepted_at": "2026-10-28T15:45:12.126Z"
+        },
+        {
+          "record_count": 4,
+          "normalized_byte_length": 21979,
+          "normalized_sha256": "sha256:303f0d4f349057f0b2d84fada9ef8eb8181a178899b3e534354382afbda14d0f",
+          "identity_sha256": "sha256:f4b9c41049d562ed0284b8fd66922afbd7a8d675c20c7b61783ddaea95fd8362",
+          "publisher_version": null,
+          "publisher_sha256": null,
+          "publisher_byte_length": null,
+          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
+          "independent_inventory": false,
+          "accepted_at": "2026-11-04T15:33:26.290Z"
         }
       ]
     },
@@ -1079,7 +1079,7 @@
       "accepted": {
         "record_count": 3,
         "normalized_byte_length": 2455,
-        "normalized_sha256": "sha256:a13f2c58d3bf9df4bda845ff03b8a51b6f02dfce77d940352a5115bbe57dc197",
+        "normalized_sha256": "sha256:5a9989034f5246d18d3caf500d2e33bfbcb341dd881cfbcc402ba66049e76308",
         "identity_sha256": "sha256:4a1ec9743997c5edc856c341ac95fc3e4e2e31809db2b618ff43cd5d5cde2d7c",
         "publisher_version": null,
         "publisher_sha256": null,
@@ -1087,20 +1087,8 @@
         "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
         "independent_inventory": false
       },
-      "accepted_at": "2026-11-04T15:33:26.290Z",
+      "accepted_at": "2026-11-17T02:27:04.453Z",
       "history": [
-        {
-          "record_count": 3,
-          "normalized_byte_length": 2455,
-          "normalized_sha256": "sha256:2f5287793058556cb331aec27908b911d913b6c5811c45d121b4d7836114a790",
-          "identity_sha256": "sha256:4a1ec9743997c5edc856c341ac95fc3e4e2e31809db2b618ff43cd5d5cde2d7c",
-          "publisher_version": null,
-          "publisher_sha256": null,
-          "publisher_byte_length": null,
-          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
-          "independent_inventory": false,
-          "accepted_at": "2026-09-10T19:42:37.072Z"
-        },
         {
           "record_count": 3,
           "normalized_byte_length": 2455,
@@ -1184,6 +1172,18 @@
           "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
           "independent_inventory": false,
           "accepted_at": "2026-10-28T15:45:12.126Z"
+        },
+        {
+          "record_count": 3,
+          "normalized_byte_length": 2455,
+          "normalized_sha256": "sha256:a13f2c58d3bf9df4bda845ff03b8a51b6f02dfce77d940352a5115bbe57dc197",
+          "identity_sha256": "sha256:4a1ec9743997c5edc856c341ac95fc3e4e2e31809db2b618ff43cd5d5cde2d7c",
+          "publisher_version": null,
+          "publisher_sha256": null,
+          "publisher_byte_length": null,
+          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
+          "independent_inventory": false,
+          "accepted_at": "2026-11-04T15:33:26.290Z"
         }
       ]
     },
@@ -1202,7 +1202,7 @@
       "accepted": {
         "record_count": 17,
         "normalized_byte_length": 12062,
-        "normalized_sha256": "sha256:fcbffd20b7bf0e5588de5dbbc090e3807e6008d43d72a35dce409f9ef5e9ad98",
+        "normalized_sha256": "sha256:07ccc7a9fa25a9de062683c6fa9ce4cf057d75adb0fb597aed7dc2e23e8746bb",
         "identity_sha256": "sha256:e136192146b3c9c21fc461bd4c38920d25ee29d410d1e5aed873b3fc1ae758e4",
         "publisher_version": null,
         "publisher_sha256": null,
@@ -1210,20 +1210,8 @@
         "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
         "independent_inventory": false
       },
-      "accepted_at": "2026-11-04T15:33:26.290Z",
+      "accepted_at": "2026-11-17T02:27:04.453Z",
       "history": [
-        {
-          "record_count": 17,
-          "normalized_byte_length": 12062,
-          "normalized_sha256": "sha256:6c6c34d3b3f354e24123541b88bbdfd045067aceae49d245705b883e9c48738a",
-          "identity_sha256": "sha256:e136192146b3c9c21fc461bd4c38920d25ee29d410d1e5aed873b3fc1ae758e4",
-          "publisher_version": null,
-          "publisher_sha256": null,
-          "publisher_byte_length": null,
-          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
-          "independent_inventory": false,
-          "accepted_at": "2026-09-10T19:42:37.072Z"
-        },
         {
           "record_count": 17,
           "normalized_byte_length": 12062,
@@ -1307,6 +1295,18 @@
           "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
           "independent_inventory": false,
           "accepted_at": "2026-10-28T15:45:12.126Z"
+        },
+        {
+          "record_count": 17,
+          "normalized_byte_length": 12062,
+          "normalized_sha256": "sha256:fcbffd20b7bf0e5588de5dbbc090e3807e6008d43d72a35dce409f9ef5e9ad98",
+          "identity_sha256": "sha256:e136192146b3c9c21fc461bd4c38920d25ee29d410d1e5aed873b3fc1ae758e4",
+          "publisher_version": null,
+          "publisher_sha256": null,
+          "publisher_byte_length": null,
+          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
+          "independent_inventory": false,
+          "accepted_at": "2026-11-04T15:33:26.290Z"
         }
       ]
     },
@@ -1325,7 +1325,7 @@
       "accepted": {
         "record_count": 62,
         "normalized_byte_length": 264548,
-        "normalized_sha256": "sha256:586a2061066e1360615f5f0224fac82a94792a1bb19226c182898134cdab9cf1",
+        "normalized_sha256": "sha256:a4e4423f6c0d7cbe8826206e56ebe79f9b111500de6c639b9906e1433c669e69",
         "identity_sha256": "sha256:4c260f0182692d2dae30b4f1a5c9fb724a9d72fd89151070fdd0913e13d8a719",
         "publisher_version": null,
         "publisher_sha256": null,
@@ -1333,20 +1333,8 @@
         "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
         "independent_inventory": false
       },
-      "accepted_at": "2026-11-04T15:33:26.290Z",
+      "accepted_at": "2026-11-17T02:27:04.453Z",
       "history": [
-        {
-          "record_count": 62,
-          "normalized_byte_length": 264548,
-          "normalized_sha256": "sha256:50b9335c69e63e4841ed2fdbedf730b01500072a2ad0ab535c971280c7ba95ad",
-          "identity_sha256": "sha256:4c260f0182692d2dae30b4f1a5c9fb724a9d72fd89151070fdd0913e13d8a719",
-          "publisher_version": null,
-          "publisher_sha256": null,
-          "publisher_byte_length": null,
-          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
-          "independent_inventory": false,
-          "accepted_at": "2026-09-10T19:42:37.072Z"
-        },
         {
           "record_count": 62,
           "normalized_byte_length": 264548,
@@ -1430,6 +1418,18 @@
           "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
           "independent_inventory": false,
           "accepted_at": "2026-10-28T15:45:12.126Z"
+        },
+        {
+          "record_count": 62,
+          "normalized_byte_length": 264548,
+          "normalized_sha256": "sha256:586a2061066e1360615f5f0224fac82a94792a1bb19226c182898134cdab9cf1",
+          "identity_sha256": "sha256:4c260f0182692d2dae30b4f1a5c9fb724a9d72fd89151070fdd0913e13d8a719",
+          "publisher_version": null,
+          "publisher_sha256": null,
+          "publisher_byte_length": null,
+          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
+          "independent_inventory": false,
+          "accepted_at": "2026-11-04T15:33:26.290Z"
         }
       ]
     },
@@ -1447,29 +1447,17 @@
       },
       "accepted": {
         "record_count": 867,
-        "normalized_byte_length": 6386777,
-        "normalized_sha256": "sha256:e496a1c8c2f358d084a1f5b02ea028baa61918d26313b6d8ecf6c96a4b26edee",
+        "normalized_byte_length": 6388320,
+        "normalized_sha256": "sha256:ca8879e4ee2a631c5f3f9979688c9f5acc265133e5c75996efdad802d550fe89",
         "identity_sha256": "sha256:6e1abad0cd34680fc426df02d5ba955b2ec2bab47023d535fad561db059eee5f",
-        "publisher_version": "20.0",
-        "publisher_sha256": "sha256:81113ba98afa2928f3dcff62022539f7ce30c315c32e14422f11ff95ce534352",
-        "publisher_byte_length": 55271014,
+        "publisher_version": "20.1",
+        "publisher_sha256": "sha256:539a843a7b53ed9749740b2123dddae3726b1a4831841c32aca740b011b910b5",
+        "publisher_byte_length": 55277605,
         "publisher_evidence_reason": null,
         "independent_inventory": true
       },
-      "accepted_at": "2026-11-04T15:33:26.290Z",
+      "accepted_at": "2026-11-17T02:27:04.453Z",
       "history": [
-        {
-          "record_count": 858,
-          "normalized_byte_length": 2943643,
-          "normalized_sha256": "sha256:58f0448ac8f275b7937133f4cbeee63dc6857a7c7481eb92a27ae22857dbdf06",
-          "identity_sha256": "sha256:6204448789cf49343cca81e807338392f7525fb16d686ff0e7a11a3b0c34adef",
-          "publisher_version": "19.2",
-          "publisher_sha256": null,
-          "publisher_byte_length": null,
-          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
-          "independent_inventory": false,
-          "accepted_at": "2026-09-09T17:30:19-04:00"
-        },
         {
           "record_count": 858,
           "normalized_byte_length": 6264013,
@@ -1553,6 +1541,18 @@
           "publisher_evidence_reason": null,
           "independent_inventory": true,
           "accepted_at": "2026-10-28T15:45:12.126Z"
+        },
+        {
+          "record_count": 867,
+          "normalized_byte_length": 6386777,
+          "normalized_sha256": "sha256:e496a1c8c2f358d084a1f5b02ea028baa61918d26313b6d8ecf6c96a4b26edee",
+          "identity_sha256": "sha256:6e1abad0cd34680fc426df02d5ba955b2ec2bab47023d535fad561db059eee5f",
+          "publisher_version": "20.0",
+          "publisher_sha256": "sha256:81113ba98afa2928f3dcff62022539f7ce30c315c32e14422f11ff95ce534352",
+          "publisher_byte_length": 55271014,
+          "publisher_evidence_reason": null,
+          "independent_inventory": true,
+          "accepted_at": "2026-11-04T15:33:26.290Z"
         }
       ]
     },
@@ -1570,29 +1570,17 @@
       },
       "accepted": {
         "record_count": 127,
-        "normalized_byte_length": 639643,
-        "normalized_sha256": "sha256:65ee15cb8d0c397cfc98e2fa02cd32676cef90718a1b189bc0e39ace0f531073",
+        "normalized_byte_length": 640207,
+        "normalized_sha256": "sha256:67775209ae2b30eee37118ee08e8d38bd3b6e1b692f3fd6ccc067121e13ebec9",
         "identity_sha256": "sha256:b8cac0923d3a39e5df43f90eab775c7cdd0c8b6c9f570ea40f2676695bc42b24",
-        "publisher_version": "20.0",
-        "publisher_sha256": "sha256:c9ca0ce523a1b5e512060a390415e8aefe8f6d32c5f82d7de81264960c1e1183",
-        "publisher_byte_length": 5266683,
+        "publisher_version": "20.1",
+        "publisher_sha256": "sha256:3f6448369f9135ade84ff6437479441530d0b262f910dca991879a7146b524ff",
+        "publisher_byte_length": 5291092,
         "publisher_evidence_reason": null,
         "independent_inventory": true
       },
-      "accepted_at": "2026-11-04T15:33:26.290Z",
+      "accepted_at": "2026-11-17T02:27:04.453Z",
       "history": [
-        {
-          "record_count": 106,
-          "normalized_byte_length": 256736,
-          "normalized_sha256": "sha256:dbb61e20565cb2cb61ca9b6b056e0d325fe928fab337f177edff1b34da071389",
-          "identity_sha256": "sha256:ff94ef4424fa892b8f0d112bf8d50c94e68fcabf1eb1a962c9e3c8bc2c4881bd",
-          "publisher_version": "19.2",
-          "publisher_sha256": null,
-          "publisher_byte_length": null,
-          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
-          "independent_inventory": false,
-          "accepted_at": "2026-09-09T17:30:19-04:00"
-        },
         {
           "record_count": 118,
           "normalized_byte_length": 555843,
@@ -1676,6 +1664,18 @@
           "publisher_evidence_reason": null,
           "independent_inventory": true,
           "accepted_at": "2026-10-28T15:45:12.126Z"
+        },
+        {
+          "record_count": 127,
+          "normalized_byte_length": 639643,
+          "normalized_sha256": "sha256:65ee15cb8d0c397cfc98e2fa02cd32676cef90718a1b189bc0e39ace0f531073",
+          "identity_sha256": "sha256:b8cac0923d3a39e5df43f90eab775c7cdd0c8b6c9f570ea40f2676695bc42b24",
+          "publisher_version": "20.0",
+          "publisher_sha256": "sha256:c9ca0ce523a1b5e512060a390415e8aefe8f6d32c5f82d7de81264960c1e1183",
+          "publisher_byte_length": 5266683,
+          "publisher_evidence_reason": null,
+          "independent_inventory": true,
+          "accepted_at": "2026-11-04T15:33:26.290Z"
         }
       ]
     },
@@ -1694,7 +1694,7 @@
       "accepted": {
         "record_count": 271,
         "normalized_byte_length": 922185,
-        "normalized_sha256": "sha256:b9e3a49c9cf9244415631f517cb463abc04eb2303326e0663ec2bc541cd66770",
+        "normalized_sha256": "sha256:2fea3c2686949be2016381bad4d5eddde540e42d496a0fea4949e95db1dcc354",
         "identity_sha256": "sha256:29478142fb6361967ecd8e53717972fcf8a0ac0f9ce27732505c5e72ed19a2ec",
         "publisher_version": "1.6.0",
         "publisher_sha256": "sha256:e1546d432c6aa64d45b62dd9e9484b0774ae84de7ff3605ff9dd4e20278957bf",
@@ -1702,20 +1702,8 @@
         "publisher_evidence_reason": null,
         "independent_inventory": true
       },
-      "accepted_at": "2026-11-04T15:33:26.290Z",
+      "accepted_at": "2026-11-17T02:27:04.453Z",
       "history": [
-        {
-          "record_count": 271,
-          "normalized_byte_length": 182196,
-          "normalized_sha256": "sha256:8fa9309639bd7a508ffe5711547a708d84f7c71f20f838ca76ddf3d55f4dff9c",
-          "identity_sha256": "sha256:29478142fb6361967ecd8e53717972fcf8a0ac0f9ce27732505c5e72ed19a2ec",
-          "publisher_version": "1.6.0",
-          "publisher_sha256": null,
-          "publisher_byte_length": null,
-          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
-          "independent_inventory": false,
-          "accepted_at": "2026-09-09T17:30:19-04:00"
-        },
         {
           "record_count": 271,
           "normalized_byte_length": 922185,
@@ -1799,6 +1787,18 @@
           "publisher_evidence_reason": null,
           "independent_inventory": true,
           "accepted_at": "2026-10-28T15:45:12.126Z"
+        },
+        {
+          "record_count": 271,
+          "normalized_byte_length": 922185,
+          "normalized_sha256": "sha256:b9e3a49c9cf9244415631f517cb463abc04eb2303326e0663ec2bc541cd66770",
+          "identity_sha256": "sha256:29478142fb6361967ecd8e53717972fcf8a0ac0f9ce27732505c5e72ed19a2ec",
+          "publisher_version": "1.6.0",
+          "publisher_sha256": "sha256:e1546d432c6aa64d45b62dd9e9484b0774ae84de7ff3605ff9dd4e20278957bf",
+          "publisher_byte_length": 4833645,
+          "publisher_evidence_reason": null,
+          "independent_inventory": true,
+          "accepted_at": "2026-11-04T15:33:26.290Z"
         }
       ]
     },
@@ -1958,7 +1958,7 @@
       "accepted": {
         "record_count": 7,
         "normalized_byte_length": 5814,
-        "normalized_sha256": "sha256:3675950c5e044e5c40dffda35eb9391a4f6d33cfe13125021ce6d48e5ba897b8",
+        "normalized_sha256": "sha256:9fef8147f36218a7c0f92de70fbc96cf99e25a3c949e10891d4ceba79d5a9569",
         "identity_sha256": "sha256:55f9cc68f281cde10b01c98e7fd195fcec6cb96717f83b53785aca840b5bbe77",
         "publisher_version": null,
         "publisher_sha256": null,
@@ -1966,20 +1966,8 @@
         "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
         "independent_inventory": false
       },
-      "accepted_at": "2026-11-04T15:33:26.290Z",
+      "accepted_at": "2026-11-17T02:27:04.453Z",
       "history": [
-        {
-          "record_count": 7,
-          "normalized_byte_length": 5814,
-          "normalized_sha256": "sha256:e0dbbedd3c012179bae11e251cdf01f6eba9405be1b5d01128b114805efdc1b7",
-          "identity_sha256": "sha256:55f9cc68f281cde10b01c98e7fd195fcec6cb96717f83b53785aca840b5bbe77",
-          "publisher_version": null,
-          "publisher_sha256": null,
-          "publisher_byte_length": null,
-          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
-          "independent_inventory": false,
-          "accepted_at": "2026-09-10T19:42:37.072Z"
-        },
         {
           "record_count": 7,
           "normalized_byte_length": 5814,
@@ -2063,6 +2051,18 @@
           "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
           "independent_inventory": false,
           "accepted_at": "2026-10-28T15:45:12.126Z"
+        },
+        {
+          "record_count": 7,
+          "normalized_byte_length": 5814,
+          "normalized_sha256": "sha256:3675950c5e044e5c40dffda35eb9391a4f6d33cfe13125021ce6d48e5ba897b8",
+          "identity_sha256": "sha256:55f9cc68f281cde10b01c98e7fd195fcec6cb96717f83b53785aca840b5bbe77",
+          "publisher_version": null,
+          "publisher_sha256": null,
+          "publisher_byte_length": null,
+          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
+          "independent_inventory": false,
+          "accepted_at": "2026-11-04T15:33:26.290Z"
         }
       ]
     },
@@ -2132,7 +2132,7 @@
       "accepted": {
         "record_count": 4,
         "normalized_byte_length": 3730,
-        "normalized_sha256": "sha256:55c1b58834f2ef66496e7db8b58f824b40daedc55e014e5b7bc018cc60774550",
+        "normalized_sha256": "sha256:204948b98a8e1f8782c2f4e1f44eabf07e50084b27580bd5e9fcca63d150ce25",
         "identity_sha256": "sha256:96741b7a11d55cc7dc2863743d8fbd23ab9c3cf8beeb7eaceed8bca07ce937f6",
         "publisher_version": null,
         "publisher_sha256": null,
@@ -2140,20 +2140,8 @@
         "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
         "independent_inventory": false
       },
-      "accepted_at": "2026-11-04T15:33:26.290Z",
+      "accepted_at": "2026-11-17T02:27:04.453Z",
       "history": [
-        {
-          "record_count": 4,
-          "normalized_byte_length": 1865,
-          "normalized_sha256": "sha256:518da934775c8074b45e60891a38ab901c9b2b4ee9f681939fd541de6314378c",
-          "identity_sha256": "sha256:96741b7a11d55cc7dc2863743d8fbd23ab9c3cf8beeb7eaceed8bca07ce937f6",
-          "publisher_version": null,
-          "publisher_sha256": null,
-          "publisher_byte_length": null,
-          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
-          "independent_inventory": false,
-          "accepted_at": "2026-09-21T15:16:41.811Z"
-        },
         {
           "record_count": 4,
           "normalized_byte_length": 1865,
@@ -2237,6 +2225,18 @@
           "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
           "independent_inventory": false,
           "accepted_at": "2026-10-28T15:45:12.126Z"
+        },
+        {
+          "record_count": 4,
+          "normalized_byte_length": 3730,
+          "normalized_sha256": "sha256:55c1b58834f2ef66496e7db8b58f824b40daedc55e014e5b7bc018cc60774550",
+          "identity_sha256": "sha256:96741b7a11d55cc7dc2863743d8fbd23ab9c3cf8beeb7eaceed8bca07ce937f6",
+          "publisher_version": null,
+          "publisher_sha256": null,
+          "publisher_byte_length": null,
+          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
+          "independent_inventory": false,
+          "accepted_at": "2026-11-04T15:33:26.290Z"
         }
       ]
     },
@@ -2255,7 +2255,7 @@
       "accepted": {
         "record_count": 72,
         "normalized_byte_length": 192982,
-        "normalized_sha256": "sha256:b6d8cedae959b59f7f71d62e80c5d2952e01a6c31634bd5150bea0b6069ff51d",
+        "normalized_sha256": "sha256:c5d18bba5fdea7374b1789758d9b1ff11c124bf77d12db3a6bf69d546b5946ae",
         "identity_sha256": "sha256:03c44ee8ae3ad0f75f10db4a2285642bf6c53c8e038a9179d21ff01a63951080",
         "publisher_version": null,
         "publisher_sha256": "sha256:aecbee3d3c8820816d295b11d10fb61324b17c25c2ff39ee95e2aa5654555bba",
@@ -2263,20 +2263,8 @@
         "publisher_evidence_reason": null,
         "independent_inventory": true
       },
-      "accepted_at": "2026-11-04T15:33:26.290Z",
+      "accepted_at": "2026-11-17T02:27:04.453Z",
       "history": [
-        {
-          "record_count": 72,
-          "normalized_byte_length": 192982,
-          "normalized_sha256": "sha256:7f0264f67685631b606a3cba8602710695285997a55caed233498fc462655482",
-          "identity_sha256": "sha256:03c44ee8ae3ad0f75f10db4a2285642bf6c53c8e038a9179d21ff01a63951080",
-          "publisher_version": null,
-          "publisher_sha256": "sha256:aecbee3d3c8820816d295b11d10fb61324b17c25c2ff39ee95e2aa5654555bba",
-          "publisher_byte_length": 413720,
-          "publisher_evidence_reason": null,
-          "independent_inventory": true,
-          "accepted_at": "2026-09-10T19:42:37.072Z"
-        },
         {
           "record_count": 72,
           "normalized_byte_length": 192982,
@@ -2360,6 +2348,18 @@
           "publisher_evidence_reason": null,
           "independent_inventory": true,
           "accepted_at": "2026-10-28T15:45:12.126Z"
+        },
+        {
+          "record_count": 72,
+          "normalized_byte_length": 192982,
+          "normalized_sha256": "sha256:b6d8cedae959b59f7f71d62e80c5d2952e01a6c31634bd5150bea0b6069ff51d",
+          "identity_sha256": "sha256:03c44ee8ae3ad0f75f10db4a2285642bf6c53c8e038a9179d21ff01a63951080",
+          "publisher_version": null,
+          "publisher_sha256": "sha256:aecbee3d3c8820816d295b11d10fb61324b17c25c2ff39ee95e2aa5654555bba",
+          "publisher_byte_length": 413720,
+          "publisher_evidence_reason": null,
+          "independent_inventory": true,
+          "accepted_at": "2026-11-04T15:33:26.290Z"
         }
       ]
     },
@@ -2378,7 +2378,7 @@
       "accepted": {
         "record_count": 489,
         "normalized_byte_length": 3327350,
-        "normalized_sha256": "sha256:22aec4d9ee6fcc0a605fba0b1518e5d0eb70c92ffa8f5652d0caba78c19fb351",
+        "normalized_sha256": "sha256:c2c6b6943b74bd65177e3b8c8fe21e4fcb9202908a3102a715287159962270ae",
         "identity_sha256": "sha256:8eaf0b598efe96c3007e8659309a60e4a3fd5cbf3b651d3ce0ed624277f9f20e",
         "publisher_version": null,
         "publisher_sha256": null,
@@ -2386,20 +2386,8 @@
         "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
         "independent_inventory": false
       },
-      "accepted_at": "2026-11-04T15:33:26.290Z",
+      "accepted_at": "2026-11-17T02:27:04.453Z",
       "history": [
-        {
-          "record_count": 489,
-          "normalized_byte_length": 3043410,
-          "normalized_sha256": "sha256:1fc0fc3d23c941a9368bdf03940d41f23ea00326bb9df470cec1106427e96db5",
-          "identity_sha256": "sha256:8eaf0b598efe96c3007e8659309a60e4a3fd5cbf3b651d3ce0ed624277f9f20e",
-          "publisher_version": null,
-          "publisher_sha256": null,
-          "publisher_byte_length": null,
-          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
-          "independent_inventory": false,
-          "accepted_at": "2026-09-21T15:16:41.811Z"
-        },
         {
           "record_count": 489,
           "normalized_byte_length": 3043410,
@@ -2483,6 +2471,18 @@
           "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
           "independent_inventory": false,
           "accepted_at": "2026-10-28T15:45:12.126Z"
+        },
+        {
+          "record_count": 489,
+          "normalized_byte_length": 3327350,
+          "normalized_sha256": "sha256:22aec4d9ee6fcc0a605fba0b1518e5d0eb70c92ffa8f5652d0caba78c19fb351",
+          "identity_sha256": "sha256:8eaf0b598efe96c3007e8659309a60e4a3fd5cbf3b651d3ce0ed624277f9f20e",
+          "publisher_version": null,
+          "publisher_sha256": null,
+          "publisher_byte_length": null,
+          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
+          "independent_inventory": false,
+          "accepted_at": "2026-11-04T15:33:26.290Z"
         }
       ]
     },
@@ -2501,7 +2501,7 @@
       "accepted": {
         "record_count": 268,
         "normalized_byte_length": 1284878,
-        "normalized_sha256": "sha256:39f085ea2b3043643963c3cb6f239a3d5fc1a8ab0f527bdca729e45f20b6ac2f",
+        "normalized_sha256": "sha256:c12dd64361a6e8484d20f3037159b450ab1947d8bda21caba82c31bdfb7d3b8a",
         "identity_sha256": "sha256:e8a32c333abf135d74785e036733260dbaf1aade1d6564e93e6d21080807121d",
         "publisher_version": null,
         "publisher_sha256": null,
@@ -2509,20 +2509,8 @@
         "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
         "independent_inventory": false
       },
-      "accepted_at": "2026-11-04T15:33:26.290Z",
+      "accepted_at": "2026-11-17T02:27:04.453Z",
       "history": [
-        {
-          "record_count": 268,
-          "normalized_byte_length": 1284878,
-          "normalized_sha256": "sha256:d40207c2c4919684b3f884108cc19108aa47791f154e2fbab33ba0b7f332e6bb",
-          "identity_sha256": "sha256:e8a32c333abf135d74785e036733260dbaf1aade1d6564e93e6d21080807121d",
-          "publisher_version": null,
-          "publisher_sha256": null,
-          "publisher_byte_length": null,
-          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
-          "independent_inventory": false,
-          "accepted_at": "2026-09-10T19:42:37.072Z"
-        },
         {
           "record_count": 268,
           "normalized_byte_length": 1284878,
@@ -2606,6 +2594,18 @@
           "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
           "independent_inventory": false,
           "accepted_at": "2026-10-28T15:45:12.126Z"
+        },
+        {
+          "record_count": 268,
+          "normalized_byte_length": 1284878,
+          "normalized_sha256": "sha256:39f085ea2b3043643963c3cb6f239a3d5fc1a8ab0f527bdca729e45f20b6ac2f",
+          "identity_sha256": "sha256:e8a32c333abf135d74785e036733260dbaf1aade1d6564e93e6d21080807121d",
+          "publisher_version": null,
+          "publisher_sha256": null,
+          "publisher_byte_length": null,
+          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
+          "independent_inventory": false,
+          "accepted_at": "2026-11-04T15:33:26.290Z"
         }
       ]
     },
@@ -2624,7 +2624,7 @@
       "accepted": {
         "record_count": 42,
         "normalized_byte_length": 50934,
-        "normalized_sha256": "sha256:14780a6567ab6be6609aaaa8fd060431c4db9af9f997d56e0707fc61e567774f",
+        "normalized_sha256": "sha256:2be5fe1f44fa0804d42ef93e673d6ad791b6d24b08f2941c021e98f42981353d",
         "identity_sha256": "sha256:6a1990bbf67fc489305500b4cb6c98c1bdf762a2f3ef86573083f5a44fdf148c",
         "publisher_version": "1.0.0",
         "publisher_sha256": "sha256:fb864f27ccfe2c501737455180db91d8c05285a2ebb3fe1bdf1e193b06081634",
@@ -2632,20 +2632,8 @@
         "publisher_evidence_reason": null,
         "independent_inventory": true
       },
-      "accepted_at": "2026-11-04T15:33:26.290Z",
+      "accepted_at": "2026-11-17T02:27:04.453Z",
       "history": [
-        {
-          "record_count": 42,
-          "normalized_byte_length": 50934,
-          "normalized_sha256": "sha256:432d6db07f5d10df4ec8daf353211dae679b0826e8253aa47b939c665f361df7",
-          "identity_sha256": "sha256:6a1990bbf67fc489305500b4cb6c98c1bdf762a2f3ef86573083f5a44fdf148c",
-          "publisher_version": "1.0.0",
-          "publisher_sha256": "sha256:b01634a5fdb382e7a12660c379a4d0bc3a2b8e29abccf2861834880005137117",
-          "publisher_byte_length": 253878,
-          "publisher_evidence_reason": null,
-          "independent_inventory": true,
-          "accepted_at": "2026-09-10T19:42:37.072Z"
-        },
         {
           "record_count": 42,
           "normalized_byte_length": 50934,
@@ -2729,6 +2717,18 @@
           "publisher_evidence_reason": null,
           "independent_inventory": true,
           "accepted_at": "2026-10-28T15:45:12.126Z"
+        },
+        {
+          "record_count": 42,
+          "normalized_byte_length": 50934,
+          "normalized_sha256": "sha256:14780a6567ab6be6609aaaa8fd060431c4db9af9f997d56e0707fc61e567774f",
+          "identity_sha256": "sha256:6a1990bbf67fc489305500b4cb6c98c1bdf762a2f3ef86573083f5a44fdf148c",
+          "publisher_version": "1.0.0",
+          "publisher_sha256": "sha256:fb864f27ccfe2c501737455180db91d8c05285a2ebb3fe1bdf1e193b06081634",
+          "publisher_byte_length": 253884,
+          "publisher_evidence_reason": null,
+          "independent_inventory": true,
+          "accepted_at": "2026-11-04T15:33:26.290Z"
         }
       ]
     },
@@ -2747,7 +2747,7 @@
       "accepted": {
         "record_count": 344,
         "normalized_byte_length": 16367600,
-        "normalized_sha256": "sha256:0942ce98d5532b431e6cec338ade2c70c022a61ffc4093ffcca06ce6329cec39",
+        "normalized_sha256": "sha256:6c72cbb5c891ad419903510178a64c9ce63c82d3c2a7b04b3d79fc85d71ef4f7",
         "identity_sha256": "sha256:ca89fa0fdc955105aacafdc3673832d87f03abb83ab65f1ff3c4715aa1352ae6",
         "publisher_version": null,
         "publisher_sha256": null,
@@ -2755,20 +2755,8 @@
         "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
         "independent_inventory": false
       },
-      "accepted_at": "2026-11-04T15:33:26.290Z",
+      "accepted_at": "2026-11-17T02:27:04.453Z",
       "history": [
-        {
-          "record_count": 344,
-          "normalized_byte_length": 13735754,
-          "normalized_sha256": "sha256:717aad364653d00352efeec25ba822bc7176e4051516f2863231cc70056f75fd",
-          "identity_sha256": "sha256:ca89fa0fdc955105aacafdc3673832d87f03abb83ab65f1ff3c4715aa1352ae6",
-          "publisher_version": null,
-          "publisher_sha256": null,
-          "publisher_byte_length": null,
-          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
-          "independent_inventory": false,
-          "accepted_at": "2026-09-23T12:49:58.848Z"
-        },
         {
           "record_count": 344,
           "normalized_byte_length": 15166235,
@@ -2852,6 +2840,18 @@
           "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
           "independent_inventory": false,
           "accepted_at": "2026-10-28T15:45:12.126Z"
+        },
+        {
+          "record_count": 344,
+          "normalized_byte_length": 16367600,
+          "normalized_sha256": "sha256:0942ce98d5532b431e6cec338ade2c70c022a61ffc4093ffcca06ce6329cec39",
+          "identity_sha256": "sha256:ca89fa0fdc955105aacafdc3673832d87f03abb83ab65f1ff3c4715aa1352ae6",
+          "publisher_version": null,
+          "publisher_sha256": null,
+          "publisher_byte_length": null,
+          "publisher_evidence_reason": "Downloaded bytes were not retained in this accepted snapshot",
+          "independent_inventory": false,
+          "accepted_at": "2026-11-04T15:33:26.290Z"
         }
       ]
     }

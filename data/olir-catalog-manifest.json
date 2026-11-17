@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-11-04T15:28:31.515Z",
+  "generated_at": "2026-11-17T02:23:31.297Z",
   "source": "https://csrc.nist.gov/projects/olir/informative-reference-catalog",
   "api_endpoint": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog",
-  "total_entries": 105,
-  "final_count": 93,
-  "applicable_final_count": 52,
+  "total_entries": 106,
+  "final_count": 96,
+  "applicable_final_count": 55,
   "ingested_count": 42,
-  "quarantined_count": 63,
-  "unresolved_count": 10,
-  "retained_count": 2,
+  "quarantined_count": 64,
+  "unresolved_count": 13,
+  "retained_count": 1,
   "processed_items": [
     {
       "id": 238,
@@ -18,23 +18,225 @@
       "resolved_catalog_id": "csf-2",
       "reference_document_version": "Cybersecurity Framework v2.0",
       "version": "1.0.0",
-      "status": "Draft",
+      "status": "Final",
       "authority_description": "Owner",
       "submission_category": "Private Sector",
       "developer": "AAM Cyber",
-      "posted_date": "2026-10-06",
-      "reference_date": "2026-10-06",
+      "posted_date": "2026-11-05",
+      "reference_date": "2026-11-05",
       "submission_artifact_url": "https://doi.org/10.5281/zenodo.21271750",
-      "authority_tier": 5,
-      "authority_tier_label": "Draft",
+      "authority_tier": 4,
+      "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
-      "availability": "not_final",
+      "availability": "retrieval_failed",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
-      "quarantine_reason": "OLIR status is \"Draft\", not Final — held out of the published graph pending NIST finalization",
-      "retrieval_attempts": []
+      "quarantine_reason": "no public relationship mapping could be downloaded from the registered NIST submission locations; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 200; artifact download OLIR source URL policy rejected destination outside registered submission; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 400; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200",
+      "retrieval_attempts": [
+        {
+          "kind": "NIST catalog detail endpoint",
+          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/238",
+          "status": 200,
+          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/238",
+          "json_file_url": null,
+          "publisher_sha256": null,
+          "submission_url": "https://aamcyber.com/standard/five-laws/csf-2-0/",
+          "reference_url": "https://doi.org/10.5281/zenodo.21271750",
+          "mapping_summary": "<p>Supportive Relationship Mapping relating the Five Laws of AI Governance to the NIST Cybersecurity Framework 2.0. The Five Laws are five prohibitive statements about systems that can decide and act on their own: a system may not produce the measure of its own conduct; may not be governed only in retrospect; may not be the custodian of the record of its own conduct; no party may certify itself; and a system may not outlive its off-switch. This OLIR records six relationships between all five Laws and six CSF 2.0 Subcategories.</p>",
+          "mapping_comment": "<p>Relationship type for every recorded relationship is supports, with the relationship property example of. The Laws are stated prohibitively and describe properties of a governed system; CSF 2.0 Subcategories describe outcomes an organization seeks to achieve. Each recorded relationship identifies a Law as one way of achieving the Subcategory outcome in whole or in part; the outcomes can also be achieved by other means. Law III carries two relationships, at PR.PS-04 and RS.AN-07. Reference Document Element Descriptions are quoted verbatim from the Charter register of the published reference document.</p>"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://aamcyber.com/standard/five-laws/csf-2-0/",
+          "status": 200,
+          "final_url": "https://aamcyber.com/standard/five-laws/csf-2-0/",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 87129
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/Pharns",
+          "status": 200,
+          "final_url": "https://github.com/Pharns",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 197128
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/Pharns#start-of-content",
+          "error": "OLIR source URL policy rejected destination outside registered submission"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/",
+          "status": 200,
+          "final_url": "https://github.com/",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 524999
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FPharns",
+          "status": 200,
+          "final_url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FPharns",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 45444
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/platform",
+          "status": 200,
+          "final_url": "https://github.com/platform",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 346214
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/copilot",
+          "status": 200,
+          "final_url": "https://github.com/features/copilot",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 855431
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/actions",
+          "status": 200,
+          "final_url": "https://github.com/features/actions",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 274239
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/code-quality",
+          "status": 200,
+          "final_url": "https://github.com/features/code-quality",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 293330
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/codespaces",
+          "status": 200,
+          "final_url": "https://github.com/features/codespaces",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 296171
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/security/advanced-security/code-security",
+          "status": 200,
+          "final_url": "https://github.com/security/advanced-security/code-security",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 322448
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/security/advanced-security/secret-protection",
+          "status": 200,
+          "final_url": "https://github.com/security/advanced-security/secret-protection",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 321785
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features",
+          "status": 200,
+          "final_url": "https://github.com/features",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 386868
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/ai",
+          "status": 200,
+          "final_url": "https://github.com/features/ai",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 269737
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/marketplace",
+          "status": 400,
+          "final_url": "https://github.com/marketplace",
+          "content_type": "application/json; charset=utf-8",
+          "byte_length": 0
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/trending",
+          "status": 200,
+          "final_url": "https://github.com/trending",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 570371
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/open-source/sponsors",
+          "status": 200,
+          "final_url": "https://github.com/open-source/sponsors",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 284377
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/resources/articles",
+          "status": 200,
+          "final_url": "https://github.com/resources/articles",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 252939
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/enterprise",
+          "status": 200,
+          "final_url": "https://github.com/enterprise",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1327665
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/team",
+          "status": 200,
+          "final_url": "https://github.com/team",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 353347
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/enterprise/startups",
+          "status": 200,
+          "final_url": "https://github.com/enterprise/startups",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 399636
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/nonprofits",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/nonprofits",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 270708
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/healthcare",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/healthcare",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1143879
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/financial-services",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/financial-services",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 296585
+        }
+      ]
     },
     {
       "id": 239,
@@ -44,23 +246,225 @@
       "resolved_catalog_id": "nist-800-53",
       "reference_document_version": "SP 800-53 Rev 5.2.0",
       "version": "1.0.0",
-      "status": "Draft",
+      "status": "Final",
       "authority_description": "Owner",
       "submission_category": "Private Sector",
       "developer": "AAM Cyber",
-      "posted_date": "2026-10-06",
-      "reference_date": "2026-10-06",
+      "posted_date": "2026-11-05",
+      "reference_date": "2026-11-05",
       "submission_artifact_url": "https://doi.org/10.5281/zenodo.21271750",
-      "authority_tier": 5,
-      "authority_tier_label": "Draft",
+      "authority_tier": 4,
+      "authority_tier_label": "Validated third-party Final",
       "mapping_model": null,
       "ingested": false,
-      "availability": "not_final",
+      "availability": "retrieval_failed",
       "map_file": null,
       "artifact_id": null,
       "artifact": null,
-      "quarantine_reason": "OLIR status is \"Draft\", not Final — held out of the published graph pending NIST finalization",
-      "retrieval_attempts": []
+      "quarantine_reason": "no public relationship mapping could be downloaded from the registered NIST submission locations; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 200; artifact download OLIR source URL policy rejected destination outside registered submission; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 400; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200",
+      "retrieval_attempts": [
+        {
+          "kind": "NIST catalog detail endpoint",
+          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/239",
+          "status": 200,
+          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/239",
+          "json_file_url": null,
+          "publisher_sha256": null,
+          "submission_url": "https://aamcyber.com/standard/five-laws/sp-800-53/",
+          "reference_url": "https://doi.org/10.5281/zenodo.21271750",
+          "mapping_summary": "<p>Supportive Relationship Mapping relating the Five Laws of AI Governance to NIST SP 800-53 Rev 5.2.0. The Five Laws are five prohibitive statements about systems that can decide and act on their own: a system may not produce the measure of its own conduct; may not be governed only in retrospect; may not be the custodian of the record of its own conduct; no party may certify itself; and a system may not outlive its off-switch. This OLIR records eleven relationships between all five Laws and eleven controls and control enhancements in the AU, CA, SA, AC, CM, and IR families.</p>",
+          "mapping_comment": "<p>Relationship type for every recorded relationship is supports, with the relationship property example of. The Laws are stated prohibitively and describe properties of a governed system; SP 800-53 controls describe security and privacy outcomes an organization implements. Each recorded relationship identifies a Law as one way of achieving the control outcome in whole or in part; the outcomes can also be achieved by other means. Five relationships relate Law III to AU-09, AU-09(01), AU-09(02), AU-09(03), and AU-11, because the control statements in that family name the custodial properties the Law states. CA-02(01) and CA-07(01) both name independent assessors and are related to different Laws: CA-02(01) to Law IV, on separability of the power to measure from the act of building, and CA-07(01) to Law I, on monitoring conducted on an ongoing basis. Reference Document Element Descriptions are quoted verbatim from the Charter register of the published reference document. Security Control Baseline values are the fixed values supplied in the NIST Focal Document Template and are unmodified.</p>"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://aamcyber.com/standard/five-laws/sp-800-53/",
+          "status": 200,
+          "final_url": "https://aamcyber.com/standard/five-laws/sp-800-53/",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 96234
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/Pharns",
+          "status": 200,
+          "final_url": "https://github.com/Pharns",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 197127
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/Pharns#start-of-content",
+          "error": "OLIR source URL policy rejected destination outside registered submission"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/",
+          "status": 200,
+          "final_url": "https://github.com/",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 525000
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FPharns",
+          "status": 200,
+          "final_url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FPharns",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 45444
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/platform",
+          "status": 200,
+          "final_url": "https://github.com/platform",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 346214
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/copilot",
+          "status": 200,
+          "final_url": "https://github.com/features/copilot",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 855430
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/actions",
+          "status": 200,
+          "final_url": "https://github.com/features/actions",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 274239
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/code-quality",
+          "status": 200,
+          "final_url": "https://github.com/features/code-quality",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 293330
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/codespaces",
+          "status": 200,
+          "final_url": "https://github.com/features/codespaces",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 296170
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/security/advanced-security/code-security",
+          "status": 200,
+          "final_url": "https://github.com/security/advanced-security/code-security",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 322449
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/security/advanced-security/secret-protection",
+          "status": 200,
+          "final_url": "https://github.com/security/advanced-security/secret-protection",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 321784
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features",
+          "status": 200,
+          "final_url": "https://github.com/features",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 386869
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/ai",
+          "status": 200,
+          "final_url": "https://github.com/features/ai",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 269738
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/marketplace",
+          "status": 400,
+          "final_url": "https://github.com/marketplace",
+          "content_type": "application/json; charset=utf-8",
+          "byte_length": 0
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/trending",
+          "status": 200,
+          "final_url": "https://github.com/trending",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 570370
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/open-source/sponsors",
+          "status": 200,
+          "final_url": "https://github.com/open-source/sponsors",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 284377
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/resources/articles",
+          "status": 200,
+          "final_url": "https://github.com/resources/articles",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 252938
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/enterprise",
+          "status": 200,
+          "final_url": "https://github.com/enterprise",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1327664
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/team",
+          "status": 200,
+          "final_url": "https://github.com/team",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 353346
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/enterprise/startups",
+          "status": 200,
+          "final_url": "https://github.com/enterprise/startups",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 399635
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/nonprofits",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/nonprofits",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 270709
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/healthcare",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/healthcare",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1143879
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/financial-services",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/financial-services",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 296584
+        }
+      ]
     },
     {
       "id": 240,
@@ -70,13 +474,241 @@
       "resolved_catalog_id": "nist-ai-rmf",
       "reference_document_version": "AI RMF 1.0",
       "version": "1.0.0",
-      "status": "Draft",
+      "status": "Final",
       "authority_description": "Owner",
       "submission_category": "Private Sector",
       "developer": "AAM Cyber",
-      "posted_date": "2026-10-06",
-      "reference_date": "2026-10-06",
+      "posted_date": "2026-11-05",
+      "reference_date": "2026-11-05",
       "submission_artifact_url": "https://doi.org/10.5281/zenodo.21271750",
+      "authority_tier": 4,
+      "authority_tier_label": "Validated third-party Final",
+      "mapping_model": null,
+      "ingested": false,
+      "availability": "retrieval_failed",
+      "map_file": null,
+      "artifact_id": null,
+      "artifact": null,
+      "quarantine_reason": "no public relationship mapping could be downloaded from the registered NIST submission locations; retrieval evidence: NIST catalog detail endpoint 200; artifact download 200; artifact download 200; artifact download OLIR source URL policy rejected destination outside registered submission; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 400; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200; artifact download 200",
+      "retrieval_attempts": [
+        {
+          "kind": "NIST catalog detail endpoint",
+          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/240",
+          "status": 200,
+          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/240",
+          "json_file_url": null,
+          "publisher_sha256": null,
+          "submission_url": "https://aamcyber.com/standard/five-laws/ai-rmf/",
+          "reference_url": "https://doi.org/10.5281/zenodo.21271750",
+          "mapping_summary": "<p>Supportive Relationship Mapping relating the Five Laws of AI Governance to the NIST AI Risk Management Framework 1.0. The Five Laws are five prohibitive statements about systems that can decide and act on their own: a system may not produce the measure of its own conduct; may not be governed only in retrospect; may not be the custodian of the record of its own conduct; no party may certify itself; and a system may not outlive its off-switch. This OLIR records seven relationships between all five Laws and six AI RMF subcategories.</p>",
+          "mapping_comment": "<p>Relationship type for every recorded relationship is supports, with the relationship property example of. The Laws are stated prohibitively and describe properties of a governed system; AI RMF subcategories describe outcomes an organization seeks to achieve. Each recorded relationship identifies a Law as one way of achieving the subcategory outcome in whole or in part; the outcomes can also be achieved by other means. GOVERN 1.7 carries two relationships, to Law V and to Law III, recorded as separate entries per NIST IR 8278Ar1 Section 3.2. Reference Document Element Descriptions are quoted verbatim from the Charter register of the published reference document.</p>"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://aamcyber.com/standard/five-laws/ai-rmf/",
+          "status": 200,
+          "final_url": "https://aamcyber.com/standard/five-laws/ai-rmf/",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 89490
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/Pharns",
+          "status": 200,
+          "final_url": "https://github.com/Pharns",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 197127
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/Pharns#start-of-content",
+          "error": "OLIR source URL policy rejected destination outside registered submission"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/",
+          "status": 200,
+          "final_url": "https://github.com/",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 525000
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FPharns",
+          "status": 200,
+          "final_url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FPharns",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 45443
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/platform",
+          "status": 200,
+          "final_url": "https://github.com/platform",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 346213
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/copilot",
+          "status": 200,
+          "final_url": "https://github.com/features/copilot",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 855431
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/actions",
+          "status": 200,
+          "final_url": "https://github.com/features/actions",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 274238
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/code-quality",
+          "status": 200,
+          "final_url": "https://github.com/features/code-quality",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 293329
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/codespaces",
+          "status": 200,
+          "final_url": "https://github.com/features/codespaces",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 296171
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/security/advanced-security/code-security",
+          "status": 200,
+          "final_url": "https://github.com/security/advanced-security/code-security",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 322449
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/security/advanced-security/secret-protection",
+          "status": 200,
+          "final_url": "https://github.com/security/advanced-security/secret-protection",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 321785
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features",
+          "status": 200,
+          "final_url": "https://github.com/features",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 386869
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/ai",
+          "status": 200,
+          "final_url": "https://github.com/features/ai",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 269738
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/marketplace",
+          "status": 400,
+          "final_url": "https://github.com/marketplace",
+          "content_type": "application/json; charset=utf-8",
+          "byte_length": 0
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/trending",
+          "status": 200,
+          "final_url": "https://github.com/trending",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 570371
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/open-source/sponsors",
+          "status": 200,
+          "final_url": "https://github.com/open-source/sponsors",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 284376
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/resources/articles",
+          "status": 200,
+          "final_url": "https://github.com/resources/articles",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 252938
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/enterprise",
+          "status": 200,
+          "final_url": "https://github.com/enterprise",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1327665
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/team",
+          "status": 200,
+          "final_url": "https://github.com/team",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 353347
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/enterprise/startups",
+          "status": 200,
+          "final_url": "https://github.com/enterprise/startups",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 399636
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/nonprofits",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/nonprofits",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 270709
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/healthcare",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/healthcare",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1143880
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/financial-services",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/financial-services",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 296585
+        }
+      ]
+    },
+    {
+      "id": 242,
+      "framework_version_identifier": "OWASP-AISVS-v1.01-to-CSF-v2.0",
+      "name": "Artificial Intelligence Security Verification Standard (AISVS)",
+      "focal_document": "NIST Cybersecurity Framework",
+      "resolved_catalog_id": "csf-2",
+      "reference_document_version": "Cybersecurity Framework v2.0",
+      "version": "1.0.0",
+      "status": "Draft",
+      "authority_description": "Non-Owner",
+      "submission_category": "Other",
+      "developer": "Independent",
+      "posted_date": "2026-11-05",
+      "reference_date": "2026-11-05",
+      "submission_artifact_url": "https://github.com/OWASP/AISVS/tree/main/1.01",
       "authority_tier": 5,
       "authority_tier_label": "Draft",
       "mapping_model": null,
@@ -142,7 +774,7 @@
           "status": 200,
           "final_url": "https://drive.google.com/drive/folders/11qgNa4EavIN5YFh0gfTl9D-4VJISBe-p?usp=sharing",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 341866
+          "byte_length": 342727
         },
         {
           "kind": "artifact download",
@@ -483,7 +1115,7 @@
           "status": 200,
           "final_url": "https://drive.google.com/drive/folders/1uqUpwlj7NeP-TDSPR2sHaVXHOQlabCCG?usp=sharing",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 329918
+          "byte_length": 330695
         },
         {
           "kind": "artifact download",
@@ -586,8 +1218,8 @@
       "artifact": {
         "map_file": "maps/olir/215.json",
         "artifact_url": "https://aamcyber.com/sdos/reference/csf-2-0/",
-        "checksum": "sha256:cb76af9ac20f17c15975959d9d365f370ed384d706ca912fba56027caaa48501",
-        "byte_length": 126588,
+        "checksum": "sha256:2cd75ce4b4d7713f5410fc3ec78a034a5bc60a4a2bb3d1181fe5dec061458e09",
+        "byte_length": 126684,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
         "relationship_count": 183,
@@ -615,7 +1247,7 @@
           "status": 200,
           "final_url": "https://aamcyber.com/sdos/reference/csf-2-0/",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 126588
+          "byte_length": 126684
         }
       ]
     },
@@ -644,8 +1276,8 @@
       "artifact": {
         "map_file": "maps/olir/217.json",
         "artifact_url": "https://aamcyber.com/sdos/reference/sp-800-53/",
-        "checksum": "sha256:8c66c6414d2120bfdf9084343db2b9262d533093a0b1c5b017a46d2f600ad892",
-        "byte_length": 130992,
+        "checksum": "sha256:62829ffed44e47b8ba23791157799a575d409b39922ec38ee220662fcd0544a3",
+        "byte_length": 131088,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
         "relationship_count": 27,
@@ -673,7 +1305,7 @@
           "status": 200,
           "final_url": "https://aamcyber.com/sdos/reference/sp-800-53/",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 130992
+          "byte_length": 131088
         }
       ]
     },
@@ -801,7 +1433,7 @@
           "status": 200,
           "final_url": "https://cyberoon.com/research/ai-soc-v10-to-nist-csf-20-informative-reference-mapping",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 2093024
+          "byte_length": 2092979
         },
         {
           "kind": "artifact download",
@@ -809,7 +1441,7 @@
           "status": 200,
           "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 254074
+          "byte_length": 246336
         },
         {
           "kind": "artifact download",
@@ -817,7 +1449,7 @@
           "status": 200,
           "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/releases/tag/v1.0.0",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 157845
+          "byte_length": 150740
         },
         {
           "kind": "artifact download",
@@ -825,7 +1457,7 @@
           "status": 200,
           "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/blob/main/docs/AI_SOC_Controls_Catalog_v1_0.pdf",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 194376
+          "byte_length": 187054
         },
         {
           "kind": "GitHub Contents API",
@@ -871,8 +1503,8 @@
       "artifact": {
         "map_file": "maps/olir/220.json",
         "artifact_url": "https://aamcyber.com/sdos/reference/v1/",
-        "checksum": "sha256:beb6beeda39e9a2211fc505e0f9125267a8d36b64133262a21a14363e1ef4dbc",
-        "byte_length": 138625,
+        "checksum": "sha256:1f7d9f327f578592feb8afd510843a3aeda773e9ae09f7f54c41bd03810e9680",
+        "byte_length": 138721,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
         "relationship_count": 44,
@@ -900,7 +1532,7 @@
           "status": 200,
           "final_url": "https://aamcyber.com/sdos/reference/v1/",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 138625
+          "byte_length": 138721
         }
       ]
     },
@@ -1031,7 +1663,7 @@
           "kind": "artifact download",
           "url": "https://docs.google.com/spreadsheets/d/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP/export?format=xlsx",
           "status": 200,
-          "final_url": "https://doc-0c-98-sheets.googleusercontent.com/export/3ropqptqom1b57lc45egbob1oo/pmodhmfqbb5r7qbjvuc7bn11sk/1793806115000/100790643046296837536/*/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP?format=xlsx",
+          "final_url": "https://doc-0c-98-sheets.googleusercontent.com/export/3ropqptqom1b57lc45egbob1oo/ctvbjhvfp9j3leleeor0cktvms/1794882215000/100790643046296837536/*/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP?format=xlsx",
           "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "byte_length": 21218
         }
@@ -1062,8 +1694,8 @@
       "artifact": {
         "map_file": "maps/olir/222.json",
         "artifact_url": "https://bxaios.com/nist-alignment/",
-        "checksum": "sha256:b05cffa7b5fde89315cef637a4ac3717e522fbe4d31ea5e3a848d807e65cdb9f",
-        "byte_length": 143638,
+        "checksum": "sha256:13b3c97217187adbb3d3c6fe779b6b686f1e320cd7ba4452c08fec105b7ca9bc",
+        "byte_length": 143650,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
         "relationship_count": 7,
@@ -1092,7 +1724,7 @@
           "status": 200,
           "final_url": "https://bxaios.com/nist-alignment/",
           "content_type": "text/html; charset=UTF-8",
-          "byte_length": 143638
+          "byte_length": 143650
         }
       ]
     },
@@ -1121,8 +1753,8 @@
       "artifact": {
         "map_file": "maps/olir/203.json",
         "artifact_url": "https://bxaios.com/nist-alignment/",
-        "checksum": "sha256:b05cffa7b5fde89315cef637a4ac3717e522fbe4d31ea5e3a848d807e65cdb9f",
-        "byte_length": 143638,
+        "checksum": "sha256:13b3c97217187adbb3d3c6fe779b6b686f1e320cd7ba4452c08fec105b7ca9bc",
+        "byte_length": 143650,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
         "relationship_count": 6,
@@ -1151,7 +1783,7 @@
           "status": 200,
           "final_url": "https://bxaios.com/nist-alignment/",
           "content_type": "text/html; charset=UTF-8",
-          "byte_length": 143638
+          "byte_length": 143650
         }
       ]
     },
@@ -1198,7 +1830,7 @@
           "status": 200,
           "final_url": "https://www.infoblox.com/solutions/compliance/",
           "content_type": "text/html; charset=UTF-8",
-          "byte_length": 534806
+          "byte_length": 534816
         }
       ]
     },
@@ -1350,7 +1982,7 @@
       "retention": {
         "cause": "publisher_unavailable",
         "first_retained_at": "2026-09-21T15:12:54.460Z",
-        "consecutive_refreshes": 8
+        "consecutive_refreshes": 9
       }
     },
     {
@@ -1372,7 +2004,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": "Set Theory: Superset",
       "ingested": true,
-      "availability": "retrieval_failed",
+      "availability": "structured_artifact",
       "map_file": "maps/olir/189.json",
       "artifact_id": null,
       "artifact": {
@@ -1407,7 +2039,7 @@
           "status": 200,
           "final_url": "https://zenodo.org/records/18498447",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 94308
+          "byte_length": 92900
         },
         {
           "kind": "artifact download",
@@ -1417,38 +2049,7 @@
           "content_type": "application/octet-stream",
           "byte_length": 24838
         }
-      ],
-      "refresh_status": "retained_last_good",
-      "refresh_error": "no public relationship mapping could be downloaded from the registered NIST submission locations",
-      "latest_retrieval_attempts": [
-        {
-          "kind": "NIST catalog detail endpoint",
-          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/189",
-          "status": 200,
-          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/189",
-          "json_file_url": null,
-          "publisher_sha256": null,
-          "submission_url": "https://doi.org/10.5281/zenodo.18498447",
-          "reference_url": "https://zenodo.org/records/18363217",
-          "mapping_summary": "<p>The IRP provides a non-probabilistic, Layer-0 deterministic filter for AI execution. It introduces the Reality Sovereignty Metric (R_sov) to ensure structural invariance, treating system stability as a binary condition.</p>",
-          "mapping_comment": "<p>This reference introduces the concept of Structural Nullity and Fail-Closed mechanisms for high-integrity AI systems.</p>"
-        },
-        {
-          "kind": "artifact download",
-          "url": "https://doi.org/10.5281/zenodo.18498447",
-          "error": "strict refresh rejected stale cached bytes for https://zenodo.org/records/18498447"
-        },
-        {
-          "kind": "artifact download",
-          "url": "https://doi.org/10.5281/zenodo.18498447",
-          "error": "The user aborted a request."
-        }
-      ],
-      "retention": {
-        "cause": "publisher_unavailable",
-        "first_retained_at": "2026-11-04T15:28:31.515Z",
-        "consecutive_refreshes": 1
-      }
+      ]
     },
     {
       "id": 181,
@@ -1606,7 +2207,7 @@
           "status": 200,
           "final_url": "https://www.cisecurity.org/insights/white-papers/cis-controls-v8-1-mapping-to-nist-csf-2-0",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 116445
+          "byte_length": 116461
         }
       ]
     },
@@ -1835,7 +2436,7 @@
       "artifact": {
         "map_file": "maps/olir/176.json",
         "artifact_url": "https://www.gov.uk/government/publications/cyber-governance-mapping/mapping-cyber-governance-code-to-nist-cyber-security-framework",
-        "checksum": "sha256:63c54396825a1278f65837c6e00cb9b4a8bf3647373676814719d182b29af87f",
+        "checksum": "sha256:720f9dc1ad7e1711b438fec65b034e42089cbf5dc3d666199337f490faa0ecda",
         "byte_length": 88370,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
@@ -2925,7 +3526,7 @@
           "status": 200,
           "final_url": "https://www.cisecurity.org/controls",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 274073
+          "byte_length": 273299
         }
       ]
     },
@@ -3450,7 +4051,7 @@
           "status": 200,
           "final_url": "https://securecontrolsframework.com/free-content/scf-download",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 74814,
+          "byte_length": 74760,
           "availability": "artifact_replaced_by_html"
         }
       ]

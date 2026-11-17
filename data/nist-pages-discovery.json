@@ -2,9 +2,9 @@
   "schema_version": "1.0",
   "source": {
     "url": "https://pages.nist.gov/pages-root/",
-    "retrieved_at": "2026-11-04T15:28:00.817Z",
-    "byte_length": 32765,
-    "sha256": "sha256:f90a352e441e948d50fe9f7d886059d0868a3a01a97b18850ffbfa1853c60139"
+    "retrieved_at": "2026-11-17T02:22:58.719Z",
+    "byte_length": 32757,
+    "sha256": "sha256:90654171eb746cc5377b77c2c50df53af5773b9c2eee6c09364eec121a706c83"
   },
   "reconciliation": {
     "discovered_projects": 257,
@@ -642,7 +642,7 @@
     {
       "repo_name": "cmomy",
       "url": "https://pages.nist.gov/cmomy/",
-      "description": "cmomy — cmomy 1.2.0 documentation",
+      "description": "cmomy — cmomy 1.2.1 documentation",
       "disposition": "excluded",
       "topics": [],
       "reason": "no-cybersecurity-or-governance-title-signal"
@@ -1972,7 +1972,7 @@
     {
       "repo_name": "striqt",
       "url": "https://pages.nist.gov/striqt/",
-      "description": "Contents — striqt",
+      "description": "striqt - striqt",
       "disposition": "excluded",
       "topics": [],
       "reason": "no-cybersecurity-or-governance-title-signal"

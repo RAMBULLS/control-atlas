@@ -348,15 +348,13 @@
       "unzipper": "0.12.3"
     },
     "nanoid": "^3.3.17",
-    "minimatch@>=7.0.0 <11.0.1": "11.0.9",
-    "glob@>=9.0.0 <14.0.2": "14.0.6",
     "express": {
       "qs": "6.16.1"
     }
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
-    "@cyclonedx/cyclonedx-npm": "^6.0.1",
+    "@cyclonedx/cyclonedx-npm": "^7.0.1",
     "@eslint/js": "^10.0.1",
     "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.61.1",

@@ -2,16 +2,6 @@
    record page does not download them before its first paint (issue 411).
    Each rule keeps its original media context and relative order. */
 
-.ca-contextual-taxonomy {
-  display: grid;
-  gap: var(--ca-space-2);
-  margin-block: var(--ca-space-4);
-  padding: var(--ca-space-4);
-  border: 1px solid var(--ca-border);
-  border-radius: var(--ca-radius-sm);
-  background: var(--ca-surface-subtle);
-}
-
 .ca-contextual-taxonomy > :is(h3, p) {
   margin: 0;
 }
@@ -20,57 +10,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--ca-space-2);
-}
-
-.ca-contextual-tag-links a {
-  display: inline-flex;
-  min-height: 44px;
-  align-items: center;
-  padding: var(--ca-space-3) var(--ca-space-4);
-  border: 1px solid var(--ca-border-strong);
-  border-radius: 999px;
-  background: var(--ca-surface-raised);
-  color: var(--ca-link);
-  text-decoration: none;
-}
-
-.ca-contextual-tag-links a:is(:hover, :focus-visible) {
-  border-color: var(--ca-secondary);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.learn-article-grid > a {
-  --guide-tone: var(--ca-type-neutral);
-  position: relative;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: start;
-  gap: var(--ca-space-3);
-  min-height: 176px;
-  padding: var(--ca-space-6);
-  text-align: left;
-  color: var(--ca-text);
-  border: 1px solid var(--ca-border);
-  border-radius: var(--radius-md);
-  background: var(--ca-surface);
-  transition: border-color 120ms ease, background 120ms ease, transform 120ms ease;
-}
-
-.learn-article-grid > a::before {
-  content: "";
-  position: absolute;
-  inset-block: 0;
-  inset-inline-start: 0;
-  width: 3px;
-  background: var(--guide-tone);
-}
-
-.learn-article-grid > a:hover,
-.learn-article-grid > a:focus-visible {
-  border-color: color-mix(in srgb, var(--guide-tone) 72%, var(--ca-border));
-  background: color-mix(in srgb, var(--guide-tone) 6%, var(--ca-surface-raised));
-  transform: translateY(-1px);
 }
 
 .guide-card[data-guide-area="Governance"] { --guide-tone: var(--ca-area-governance); }
@@ -120,33 +59,6 @@
   color: var(--ca-text-muted);
 }
 
-.guide-card__body > strong {
-  font-size: 1.05rem;
-  line-height: 1.25;
-  min-height: 2.5em;
-}
-
-.learn-article-grid small {
-  color: var(--ca-text-muted);
-  font-size: 0.875rem;
-  line-height: 1.55;
-}
-
-.guide-article > nav.card-actions {
-  justify-content: space-between;
-  margin: 0;
-  padding-bottom: var(--ca-space-3);
-  border-bottom: 1px solid var(--ca-border);
-}
-
-.guide-procedure-steps {
-  display: grid;
-  gap: var(--ca-space-4);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
 .guide-procedure-steps > li {
   display: grid;
   grid-template-columns: 2rem minmax(0, 1fr);
@@ -156,20 +68,4 @@
   border: 1px solid var(--ca-border);
   border-radius: var(--radius-md);
   background: var(--ca-surface-raised);
-}
-
-.guide-procedure-step-number {
-  display: inline-grid;
-  place-items: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  background: var(--ca-secondary);
-  color: var(--ca-bg);
-  font-family: var(--ca-font-mono);
-  font-weight: 800;
-}
-
-.guide-procedure-steps p {
-  margin: 0;
 }

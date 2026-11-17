@@ -492,9 +492,9 @@ test('Catalog controls stay anchored to the records section', () => {
   assert.match(catalogPage, /Search \$\{tierLabelPlural/);
   assert.match(catalogPage, /data-published-tier/);
   assert.match(overview, /className="catalog-source-link"/);
+  assert.match(readFileSync('styles/surfaces.css', 'utf8'), /\.catalog-record-toolbar\s*\{/);
   // Publication-page rules load with that page, not the shared entry (issue 411).
   const publicationCss = readFileSync('styles/publication-trust.css', 'utf8');
-  assert.match(publicationCss, /\.catalog-record-toolbar\s*\{/);
   assert.match(publicationCss, /\.catalog-source-link\s*\{[^}]*justify-self:\s*start;/s);
 });
 

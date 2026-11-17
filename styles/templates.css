@@ -15,86 +15,12 @@
   font-size: var(--font-size-lg);
 }
 
-.nexus-section {
-  display: grid;
-  gap: var(--ca-space-4);
-  padding-top: var(--ca-space-6);
-  scroll-margin-top: var(--ca-header-safe-offset);
-}
-
-.nexus-section-header {
-  margin-bottom: var(--ca-space-1);
-}
-
-/* "Clear task" was wrapping into a cramped two-line pill. */
-.nexus-section-header button {
-  white-space: nowrap;
-}
-
-.workflow-method > summary {
-  cursor: pointer;
-  padding: var(--ca-space-2) 0;
-  color: var(--ca-text-muted);
-  font-weight: 700;
-}
-
-.workflow-method > summary:hover,
-.workflow-method > summary:focus-visible {
-  color: var(--ca-secondary);
-}
-
 .workflow-method[open] > summary {
   margin-bottom: var(--ca-space-3);
 }
 
-.nexus-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--ca-space-4);
-}
-
-.nexus-card {
-  display: grid;
-  align-content: start;
-  gap: var(--ca-space-3);
-  min-width: 0;
-  padding: var(--ca-space-4);
-  border: 1px solid var(--ca-border);
-  border-radius: var(--radius-xl);
-  background: color-mix(in srgb, var(--ca-surface) 92%, transparent);
-}
-
-.nexus-card h3,
-.workflow-steps h3 {
-  margin: 0;
-  font-size: var(--font-size-base);
-}
-
-.nexus-card p,
-.workflow-steps p {
-  margin: 0;
-}
-
-.nexus-card-heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--ca-space-3);
-}
-
 .nexus-card-heading .badge {
   flex: 0 0 auto;
-}
-
-.nexus-limitation {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--ca-space-2);
-  padding: var(--ca-space-3);
-  border-radius: var(--radius-md);
-  color: var(--ca-text-muted);
-  background: color-mix(in srgb, var(--ca-warning) 10%, transparent);
-  font-size: var(--font-size-sm);
 }
 
 .nexus-limitation svg {
@@ -108,35 +34,9 @@
   margin: 0;
 }
 
-.nexus-facts div {
-  display: grid;
-  grid-template-columns: 5rem minmax(0, 1fr);
-  gap: var(--ca-space-2);
-}
-
-.nexus-facts dt {
-  color: var(--ca-text-muted);
-  font-size: var(--font-size-xs);
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.nexus-facts dd {
-  margin: 0;
-  overflow-wrap: anywhere;
-  font-size: var(--font-size-sm);
-}
-
 .nexus-details {
   color: var(--ca-text-muted);
   font-size: var(--font-size-sm);
-}
-
-.nexus-details summary {
-  cursor: pointer;
-  color: var(--ca-secondary);
-  font-weight: 700;
 }
 
 .nexus-details[open] summary {
@@ -168,46 +68,12 @@
   outline-offset: var(--ca-space-2);
 }
 
-.workflow-steps {
-  display: grid;
-  gap: var(--ca-space-3);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.workflow-steps li {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: var(--ca-space-3);
-  padding: var(--ca-space-4);
-  border: 1px solid color-mix(in srgb, var(--ca-border-strong) 18%, transparent);
-  border-radius: var(--radius-lg);
-  background: color-mix(in srgb, var(--ca-surface-deep) 52%, transparent);
-}
-
-.workflow-step-number {
-  display: grid;
-  place-items: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 999px;
-  color: var(--ca-text);
-  background: color-mix(in srgb, var(--ca-accent) 25%, transparent);
-  font-weight: 800;
-}
-
 .template-sources-panel .nexus-grid {
   grid-template-columns: 1fr;
 }
 
 .template-sources-panel .nexus-card-heading {
   flex-wrap: wrap;
-}
-
-.template-sources-panel .nexus-card-heading > div {
-  flex: 1 1 12rem;
-  min-width: 0;
 }
 
 /* Disclosure labels inside the template sidebar. The teal secondary colour is

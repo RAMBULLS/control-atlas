@@ -66,7 +66,7 @@ test("every practitioner guide answers a real work question with a verified cita
       );
       assert.match(
         citation.url,
-        /^https:\/\/(?:csrc\.nist\.gov|www\.nist\.gov|www\.cyber\.mil|www\.fedramp\.gov)\//,
+        /^https:\/\/(?:csrc\.nist\.gov|www\.nist\.gov|nvlpubs\.nist\.gov|www\.cyber\.mil|www\.fedramp\.gov|www\.ecfr\.gov)\//,
         `${article.id} citation URL must be an authoritative federal domain`,
       );
       assert.equal(citation.role, "official-subject-source", article.id);

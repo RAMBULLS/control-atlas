@@ -40,8 +40,12 @@ const SEARCH_STOP_WORDS = new Set([
 
 const SEARCH_INTENT_ALIASES = [
   {
-    terms: [/\b(review|inspect|check)\b/i, /\baudit\s+logs?\b/i],
+    terms: [/\b(review|inspect|check)\b/i, /\bphysical\s+access\s+logs?\b/i],
     query: "monitoring physical access",
+  },
+  {
+    terms: [/\b(review|inspect|check)\b/i, /\baudit\s+logs?\b/i],
+    query: "audit record review",
   },
   {
     terms: [
@@ -80,10 +84,6 @@ const SEARCH_INTENT_ALIASES = [
     query: "incident handling",
   },
   {
-    terms: [/\b(mfa|2fa|two[- ]factor|multi[- ]factor)\b/i],
-    query: "IA-2.1",
-  },
-  {
     terms: [/\bssp\b/i],
     query: "PL-2",
   },
@@ -95,6 +95,21 @@ const SEARCH_INTENT_ALIASES = [
     query: "transmission confidentiality and integrity",
   },
 ];
+
+// Reviewed broad-topic discovery joins direct MFA controls and supporting
+// authenticator management. It is a retrieval policy, not an applicability claim.
+const MFA_DISCOVERY_IDS = ["nist-800-53:IA-2.1", "nist-800-53:IA-2.2", "nist-800-53:IA-5"];
+function resolveMfaDiscovery(value) {
+  const raw = String(value || "").trim();
+  const broad = /^(?:mfa|2fa|multi[- ]?factor|two[- ]?factor)(?:\s+authentication)?$/i.test(raw);
+  const expanded = raw.replace(/\b(?:mfa|2fa|multi[- ]?factor|two[- ]?factor)(?:\s+authentication)?\b/gi, "multifactor authentication");
+  if (!broad && expanded === raw) return null;
+  // Preserve qualified-query words; never rewrite the whole sentence to an ID.
+  return {
+    queries: [...new Set([expanded, expanded.replace(/multifactor/gi, "multi-factor")])],
+    preferredIds: broad ? MFA_DISCOVERY_IDS : [],
+  };
+}
 
 function expandLibrarySearchIntent(value) {
   const raw = String(value || "").trim();
@@ -1430,9 +1445,38 @@ export function createFederalGraphRuntime(opts) { const res = _createFederalGrap
   function libraryMatches(query, filters = {}) {
     const key = JSON.stringify([query, filters]);
     if (lastLibraryMatches?.key === key) return lastLibraryMatches.matches;
-    const matches = indexedLibraryDocumentCount
-      ? indexedLibraryMatches(query, filters)
-      : documentLibraryMatches(query, filters);
+    const discovery = resolveMfaDiscovery(query);
+    const find = value => indexedLibraryDocumentCount
+      ? indexedLibraryMatches(value, filters)
+      : documentLibraryMatches(value, filters);
+    let matches;
+    if (!discovery) matches = find(query);
+    else {
+      const idOf = match => match.index === undefined ? match.document.id : indexedLibraryValue(match.index, "id");
+      const seen = new Set();
+      matches = discovery.queries.flatMap(find).sort(compareLibraryMatches).filter(match => {
+        const id = idOf(match);
+        if (seen.has(id)) return false;
+        seen.add(id);
+        return true;
+      });
+      const preferred = [];
+      for (const id of discovery.preferredIds) {
+        if (indexedLibraryDocumentCount) {
+          for (let index = 0; index < indexedLibraryDocumentCount; index += 1) {
+            if (indexedLibraryValue(index, "id") === id && indexedLibraryFacetMatches(index, filters)) {
+              preferred.push({ index, rankBoost: 0, score: -1 });
+              break;
+            }
+          }
+        } else {
+          const document = libraryDocuments.find(document => document.id === id && matchesLibraryFacet(document, filters));
+          if (document) preferred.push({ document, rankBoost: 0, score: -1 });
+        }
+      }
+      const promoted = new Set(preferred.map(idOf));
+      matches = [...preferred, ...matches.filter(match => !promoted.has(idOf(match)))];
+    }
     lastLibraryMatches = { key, matches };
     return matches;
   }

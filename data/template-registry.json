@@ -41,8 +41,8 @@
       "official_resource_ids": ["fedramp-schema-security-decision-record-2026-06-24", "nist-oscal-models-v1-2-2", "mitre-emass-api-openapi-v3-22", "mitre-emass-client"],
       "compatibility": {
         "classification": "Field-aligned",
-        "claim": "Uses MITRE eMASS API v3.22 control field names and values. Import into eMASS is not verified.",
-        "limitations": "Not an eMASS-generated import template and not directly importable; your eMASS instance may differ."
+        "claim": "Uses selected field names and values from MITRE’s public eMASS API v3.22 representation, with additional Atlas planning fields.",
+        "limitations": "This workbook is not an eMASS import template; import and API submission are unverified. Selected planning values are not the complete API vocabulary; the target instance may differ."
       },
       "provenance": { "basis": "MITRE emass_client OpenAPI v3.22 Controls schemas", "verified_interchange": false },
       "official_alternative": {
@@ -149,8 +149,8 @@
       "official_resource_ids": ["fedramp-schema-accepted-vulnerability-info-2026-06-24", "fedramp-schema-vulnerability-detail-report-2026-06-24", "fedramp-legacy-poam", "mitre-emass-api-openapi-v3-22", "mitre-emass-client", "vulnerator"],
       "compatibility": {
         "classification": "Field-aligned",
-        "claim": "Uses MITRE eMASS API v3.22 POA&M field names and values. Import into eMASS is not verified.",
-        "limitations": "Not an eMASS-generated import template and not directly importable."
+        "claim": "Uses selected field names and values from MITRE’s public eMASS API v3.22 representation, with additional Atlas planning fields.",
+        "limitations": "This workbook is not an eMASS import template; import and API submission are unverified. Selected planning values are not the complete API vocabulary; the target instance may differ."
       },
       "provenance": { "basis": "MITRE emass_client OpenAPI v3.22 POA&M schemas; historical layout lessons from Vulnerator", "verified_interchange": false },
       "official_alternative": {
@@ -230,8 +230,8 @@
       "official_resource_ids": ["fedramp-schema-certification-package-overview-2026-06-24", "dcsa-hardware-list-2020", "fedramp-legacy-integrated-inventory", "mitre-emass-api-openapi-v3-22", "mitre-emass-client"],
       "compatibility": {
         "classification": "Field-aligned",
-        "claim": "Uses MITRE eMASS API v3.22 hardware-baseline field names and values. Import into eMASS is not verified.",
-        "limitations": "Not an eMASS-generated import template and not directly importable."
+        "claim": "Uses selected field names and values from MITRE’s public eMASS API v3.22 representation, with additional Atlas planning fields.",
+        "limitations": "This workbook is not an eMASS import template; import and API submission are unverified. Selected planning values are not the complete API vocabulary; the target instance may differ."
       },
       "provenance": { "basis": "DCSA hardware list and MITRE emass_client OpenAPI v3.22 hardware schemas", "verified_interchange": false },
       "official_alternative": {
@@ -258,7 +258,7 @@
       "compatibility": {
         "classification": "Field-aligned",
         "claim": "Uses MITRE eMASS API v3.22 software-baseline field names. Import into eMASS is not verified.",
-        "limitations": "Not an eMASS-generated import template and not directly importable."
+        "limitations": "This workbook is not an eMASS import template; import and API submission are unverified. Selected planning values are not the complete API vocabulary; the target instance may differ."
       },
       "provenance": { "basis": "DCSA software list and MITRE emass_client OpenAPI v3.22 software schemas", "verified_interchange": false },
       "official_alternative": {

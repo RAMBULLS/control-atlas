@@ -136,6 +136,11 @@ for (const query of ['AC-2', 'SP 800-37', 'POA&M', 'Windows 11', 'manage user ac
     await waitForAppReady(page);
     if (href) {
       await expect(page.locator('#library-results .workspace-result-row a[href^="#/record/"]').first()).toHaveAttribute('href', href);
+    } else if (query === 'POA&M') {
+      // No Library record matches, but Resources does: Enter keeps those
+      // matches instead of opening an empty records page (#425).
+      await expect(page).toHaveURL(/#\/resources\?q=POA(?:%26|&)M(?:&|$)/);
+      await expect(page.locator('#workspace a[href^="#/resources/"]').first()).toBeVisible();
     } else {
       await expect(page.getByRole('heading', { name: 'No records found.', exact: true })).toBeVisible();
       await page.getByRole('button', { name: 'Clear Library search', exact: true }).click();

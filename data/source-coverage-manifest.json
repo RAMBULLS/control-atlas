@@ -1,6 +1,6 @@
 {
   "schema_version": "4.0",
-  "generated_at": "2026-11-18T02:18:07.070Z",
+  "generated_at": "2026-11-18T14:41:26.986Z",
   "completeness": {
     "total_publications": 103,
     "total_artifacts": 98,
@@ -112,11 +112,11 @@
     {
       "catalog_id": "disa-srg",
       "completeness_status": "reconciled",
-      "expected_records": 2551,
+      "expected_records": 2707,
       "snapshot_expected_records": null,
       "inventory_evidence_class": "publisher_inventory",
       "independent_inventory": true,
-      "imported_records": 2551,
+      "imported_records": 2707,
       "excluded_records": 0,
       "missing_records": 0,
       "expected_basis": "Union of independently verified publisher snapshots. Current identities are listed separately; prior native editions and citations remain retained without inferred retirement.",

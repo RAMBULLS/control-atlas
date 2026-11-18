@@ -896957,6 +896957,94 @@
           "byte_length": 1804041,
           "evidence_kind": "downloaded_publisher_bytes",
           "retrieved_at": "2026-11-18T02:14:05.324Z"
+        },
+        {
+          "source_id": "artifact-disa-compilation-zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
+          "sha256": "sha256:ea581eb2d5c4a210440852b67ea4dd9564fffdf57c8c94aec971047fe0c01d1d",
+          "byte_length": 375827141,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:20.992Z"
+        },
+        {
+          "source_id": "disa-package:U_Microsoft_Project_2016_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Microsoft_Project_2016_V1R1_STIG.zip",
+          "sha256": "sha256:3c0080642e359b704a7c20035c6f00a760f6a0d2b76986f289571dadf9e40499",
+          "byte_length": 364625,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:28.054Z"
+        },
+        {
+          "source_id": "disa-package:U_MOT_Solutions_Android_13_Y25M03_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MOT_Solutions_Android_13_Y25M03_STIG.zip",
+          "sha256": "sha256:497720d0953aef9308cc6bc41738487eb18eda5ce8cbdab921bdd69345891f4a",
+          "byte_length": 2257014,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:27.913Z"
+        },
+        {
+          "source_id": "disa-package:U_Oracle_Database_12c_V3R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Oracle_Database_12c_V3R5_STIG.zip",
+          "sha256": "sha256:75398ae44f48578c74cb566ede9347b9af432ef642cf41a237c3dba377d5e8bc",
+          "byte_length": 1683866,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:28.158Z"
+        },
+        {
+          "source_id": "disa-package:U_SLES_V11_for_System_z_V1R12_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SLES_V11_for_System_z_V1R12_STIG.zip",
+          "sha256": "sha256:4a849e95ae5c5186500b20f145717aa69e7b5b3a74ec6d6b2eea25a0c71e7689",
+          "byte_length": 582292,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:28.065Z"
+        },
+        {
+          "source_id": "disa-package:U_VMware_NSX_Distributed_Logical_Router_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMware_NSX_Distributed_Logical_Router_V1R1_STIG.zip",
+          "sha256": "sha256:cc641aa051b2a375cde80c2f35aa85bda7b8f72b58a0d9a31156b575ac8edc79",
+          "byte_length": 256563,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:28.150Z"
+        },
+        {
+          "source_id": "disa-package:U_VMware_NSX_Manager_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMware_NSX_Manager_V1R1_STIG.zip",
+          "sha256": "sha256:54b8ccaa5e9031192833bce674faaf6c35e0c4fe0754fd98035ddfcd640a7d78",
+          "byte_length": 267808,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:27.977Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_27_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_27_V1R1_STIG.zip",
+          "sha256": "sha256:db83ad391f6545abce7b3c8b50c13fe7b0d9041710e77e24627c1f7ca62de6ce",
+          "byte_length": 2501445,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:28.264Z"
+        },
+        {
+          "source_id": "disa-package:U_Omnissa_Horizon_Y26M09_STIG.zip",
+          "url": "https://dl.dod.cyber.mil//wp-content/uploads/stigs/zip/U_Omnissa_Horizon_Y26M09_STIG.zip",
+          "sha256": "sha256:a93d2fc2ee3795567e51751c036d40cecbf04b491a207f484690041ab37907e6",
+          "byte_length": 2145645,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:28.226Z"
+        },
+        {
+          "source_id": "disa-package:U_MariaDB_Enterprise_Server_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MariaDB_Enterprise_Server_V1R1_STIG.zip",
+          "sha256": "sha256:74fe9de236eaa1d02b2190837c0e2197655dbe78eef430f94d02d4c5aa247201",
+          "byte_length": 1804041,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:28.298Z"
+        },
+        {
+          "source_id": "disa-package:U_GAPP_V1R1_SRG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "sha256": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49",
+          "byte_length": 1915340,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:28.513Z"
         }
       ],
       "native_files": [
@@ -903693,6 +903781,13 @@
           "sha256": "sha256:e301e1b76deb5c521f0b29cf56b03397e68f5f35bf1899fc77e86b0b2c5c8577",
           "byte_length": 93019,
           "native_rules": 24
+        },
+        {
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml",
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "sha256": "sha256:1570b13faa0f9aa41cfcd72099b43cfb7073ee46e002ace9466462e037f902ca",
+          "byte_length": 498528,
+          "native_rules": 156
         }
       ],
       "current_snapshot": {
@@ -921582,7 +921677,7 @@
     },
     "disa-srg": {
       "scope": "Union of independently verified publisher snapshots. Current identities are listed separately; prior native editions and citations remain retained without inferred retirement.",
-      "record_count": 2551,
+      "record_count": 2707,
       "record_ids": [
         "V-202013",
         "V-202014",
@@ -924134,7 +924229,163 @@
         "V-279970",
         "V-279971",
         "V-279972",
-        "V-282963"
+        "V-282963",
+        "V-288135",
+        "V-288136",
+        "V-288137",
+        "V-288138",
+        "V-288139",
+        "V-288140",
+        "V-288141",
+        "V-288142",
+        "V-288143",
+        "V-288144",
+        "V-288145",
+        "V-288146",
+        "V-288147",
+        "V-288148",
+        "V-288149",
+        "V-288150",
+        "V-288151",
+        "V-288152",
+        "V-288153",
+        "V-288154",
+        "V-288155",
+        "V-288156",
+        "V-288157",
+        "V-288158",
+        "V-288159",
+        "V-288160",
+        "V-288161",
+        "V-288163",
+        "V-288164",
+        "V-288165",
+        "V-288166",
+        "V-288167",
+        "V-288168",
+        "V-288169",
+        "V-288170",
+        "V-288171",
+        "V-288172",
+        "V-288173",
+        "V-288174",
+        "V-288176",
+        "V-288177",
+        "V-288178",
+        "V-288180",
+        "V-288181",
+        "V-288182",
+        "V-288183",
+        "V-288184",
+        "V-288185",
+        "V-288186",
+        "V-288187",
+        "V-288189",
+        "V-288190",
+        "V-288191",
+        "V-288192",
+        "V-288193",
+        "V-288194",
+        "V-288195",
+        "V-288196",
+        "V-288199",
+        "V-288200",
+        "V-288201",
+        "V-288202",
+        "V-288203",
+        "V-288204",
+        "V-288205",
+        "V-288206",
+        "V-288207",
+        "V-288208",
+        "V-288209",
+        "V-288210",
+        "V-288211",
+        "V-288212",
+        "V-288213",
+        "V-288214",
+        "V-288216",
+        "V-288217",
+        "V-288218",
+        "V-288219",
+        "V-288220",
+        "V-288221",
+        "V-288222",
+        "V-288223",
+        "V-288224",
+        "V-288225",
+        "V-288226",
+        "V-288227",
+        "V-288228",
+        "V-288229",
+        "V-288230",
+        "V-288231",
+        "V-288232",
+        "V-288233",
+        "V-288234",
+        "V-288235",
+        "V-288236",
+        "V-288237",
+        "V-288238",
+        "V-288239",
+        "V-288240",
+        "V-288241",
+        "V-288242",
+        "V-288243",
+        "V-288244",
+        "V-288245",
+        "V-288246",
+        "V-288247",
+        "V-288248",
+        "V-288249",
+        "V-288250",
+        "V-288251",
+        "V-288252",
+        "V-288253",
+        "V-288254",
+        "V-288255",
+        "V-288256",
+        "V-288257",
+        "V-288258",
+        "V-288259",
+        "V-288260",
+        "V-288261",
+        "V-288262",
+        "V-288263",
+        "V-288264",
+        "V-288265",
+        "V-288266",
+        "V-288267",
+        "V-288268",
+        "V-288269",
+        "V-288270",
+        "V-288271",
+        "V-288272",
+        "V-288273",
+        "V-288274",
+        "V-288275",
+        "V-288276",
+        "V-288277",
+        "V-288278",
+        "V-288279",
+        "V-288280",
+        "V-288281",
+        "V-288282",
+        "V-288283",
+        "V-288284",
+        "V-288285",
+        "V-288286",
+        "V-288287",
+        "V-288288",
+        "V-288289",
+        "V-288290",
+        "V-288291",
+        "V-288292",
+        "V-288293",
+        "V-288294",
+        "V-288295",
+        "V-288296",
+        "V-288297"
       ],
       "native_units": [
         {
@@ -1023053,6 +1023304,2111 @@
           ],
           "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
           "source_checksum": "sha256:ea581eb2d5c4a210440852b67ea4dd9564fffdf57c8c94aec971047fe0c01d1d"
+        },
+        {
+          "id": "V-288135",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288135r1312631_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288135",
+          "cci_ids": [
+            "CCI-000015",
+            "CCI-000166",
+            "CCI-000764",
+            "CCI-001967",
+            "CCI-004045"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288136",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288136r1312692_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288136",
+          "cci_ids": [
+            "CCI-000765",
+            "CCI-000766",
+            "CCI-000778",
+            "CCI-001953",
+            "CCI-001954",
+            "CCI-002009",
+            "CCI-002010",
+            "CCI-004046",
+            "CCI-004047"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288137",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288137r1312693_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288137",
+          "cci_ids": [
+            "CCI-000765",
+            "CCI-000766",
+            "CCI-000778",
+            "CCI-001953",
+            "CCI-001954",
+            "CCI-002009",
+            "CCI-002010",
+            "CCI-004046",
+            "CCI-004047"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288138",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288138r1312632_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288138",
+          "cci_ids": [
+            "CCI-001941"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288139",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288139r1312634_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288139",
+          "cci_ids": [
+            "CCI-000017",
+            "CCI-000795",
+            "CCI-003627"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288140",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288140r1312802_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288140",
+          "cci_ids": [
+            "CCI-000185"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288141",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288141r1312638_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288141",
+          "cci_ids": [
+            "CCI-000186"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288142",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288142r1312640_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288142",
+          "cci_ids": [
+            "CCI-000187"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288143",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288143r1312694_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288143",
+          "cci_ids": [
+            "CCI-002007"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288144",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288144r1312695_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288144",
+          "cci_ids": [
+            "CCI-002470"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288145",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288145r1312696_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288145",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-005155"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288146",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288146r1312697_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288146",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-005156"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288147",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288147r1312698_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288147",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-005157"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288148",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288148r1312641_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288148",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-005158"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288149",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288149r1312642_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288149",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-005159"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288150",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288150r1312643_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288150",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-005160"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288151",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288151r1312644_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288151",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-005161"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288152",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288152r1312645_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288152",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-005162"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288153",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288153r1312646_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288153",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-005163"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288154",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288154r1312699_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288154",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-005164"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288155",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288155r1312700_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288155",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-005165"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288156",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288156r1312701_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288156",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-005166"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288157",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288157r1312702_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288157",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-005167"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288158",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288158r1312703_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288158",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-005168"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288159",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288159r1312704_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288159",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-005169"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288160",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288160r1312705_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288160",
+          "cci_ids": [
+            "CCI-000016"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288161",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288161r1312706_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288161",
+          "cci_ids": [
+            "CCI-000017",
+            "CCI-003627"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288163",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288163r1312707_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288163",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288164",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288164r1312708_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288164",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288165",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288165r1312709_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288165",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288166",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288166r1312710_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288166",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288167",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288167r1312711_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288167",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288168",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288168r1312712_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288168",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288169",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288169r1312713_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288169",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288170",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288170r1312714_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288170",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288171",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288171r1312715_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288171",
+          "cci_ids": [
+            "CCI-000206"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288172",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288172r1312716_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288172",
+          "cci_ids": [
+            "CCI-001682"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288173",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288173r1312717_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288173",
+          "cci_ids": [
+            "CCI-004045"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288174",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288174r1312719_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288174",
+          "cci_ids": [
+            "CCI-000044",
+            "CCI-002238"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288176",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288176r1312720_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288176",
+          "cci_ids": [
+            "CCI-003628"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288177",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288177r1312721_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288177",
+          "cci_ids": [
+            "CCI-003629"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288178",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288178r1312647_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288178",
+          "cci_ids": [
+            "CCI-000197"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288180",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288180r1312722_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288180",
+          "cci_ids": [
+            "CCI-004058"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288181",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288181r1312723_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288181",
+          "cci_ids": [
+            "CCI-004059"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288182",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288182r1312724_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288182",
+          "cci_ids": [
+            "CCI-004060"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288183",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288183r1312650_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288183",
+          "cci_ids": [
+            "CCI-004061"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288184",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288184r1312725_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288184",
+          "cci_ids": [
+            "CCI-004062"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288185",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288185r1312726_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288185",
+          "cci_ids": [
+            "CCI-004063"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288186",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288186r1312727_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288186",
+          "cci_ids": [
+            "CCI-004064"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288187",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288187r1312728_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288187",
+          "cci_ids": [
+            "CCI-004065"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288189",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288189r1312729_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288189",
+          "cci_ids": [
+            "CCI-000054"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288190",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288190r1312730_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288190",
+          "cci_ids": [
+            "CCI-001133",
+            "CCI-002361"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288191",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288191r1312731_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288191",
+          "cci_ids": [
+            "CCI-001185"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288192",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288192r1312732_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288192",
+          "cci_ids": [
+            "CCI-001664"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288193",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288193r1312651_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288193",
+          "cci_ids": [
+            "CCI-001188"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288194",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288194r1312733_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288194",
+          "cci_ids": [
+            "CCI-002363"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288195",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288195r1312734_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288195",
+          "cci_ids": [
+            "CCI-002364"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288196",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288196r1312735_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288196",
+          "cci_ids": [
+            "CCI-002038"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288199",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288199r1312736_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288199",
+          "cci_ids": [
+            "CCI-001314"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288200",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288200r1312737_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288200",
+          "cci_ids": [
+            "CCI-000139"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288201",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288201r1312738_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288201",
+          "cci_ids": [
+            "CCI-001312"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288202",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288202r1312739_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288202",
+          "cci_ids": [
+            "CCI-000015"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288203",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288203r1312740_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288203",
+          "cci_ids": [
+            "CCI-000015",
+            "CCI-001858"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288204",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288204r1312741_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288204",
+          "cci_ids": [
+            "CCI-000171"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288205",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288205r1312742_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288205",
+          "cci_ids": [
+            "CCI-001464"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288206",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288206r1312743_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288206",
+          "cci_ids": [
+            "CCI-000130"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288207",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288207r1312744_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288207",
+          "cci_ids": [
+            "CCI-000131"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288208",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288208r1312745_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288208",
+          "cci_ids": [
+            "CCI-000132"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288209",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288209r1312746_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288209",
+          "cci_ids": [
+            "CCI-000134",
+            "CCI-003938"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288210",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288210r1312747_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288210",
+          "cci_ids": [
+            "CCI-000133",
+            "CCI-001487"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288211",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288211r1312748_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288211",
+          "cci_ids": [
+            "CCI-000162"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288212",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288212r1312749_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288212",
+          "cci_ids": [
+            "CCI-000163"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288213",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288213r1312750_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288213",
+          "cci_ids": [
+            "CCI-000164"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288214",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288214r1312751_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288214",
+          "cci_ids": [
+            "CCI-001493"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288216",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288216r1312752_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288216",
+          "cci_ids": [
+            "CCI-001889"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288217",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288217r1312753_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288217",
+          "cci_ids": [
+            "CCI-000172"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288218",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288218r1312754_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288218",
+          "cci_ids": [
+            "CCI-000172"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288219",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288219r1312755_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288219",
+          "cci_ids": [
+            "CCI-000172"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288220",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288220r1312756_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288220",
+          "cci_ids": [
+            "CCI-000172"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288221",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288221r1312757_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288221",
+          "cci_ids": [
+            "CCI-000172"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288222",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288222r1312758_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288222",
+          "cci_ids": [
+            "CCI-000172"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288223",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288223r1312759_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288223",
+          "cci_ids": [
+            "CCI-000172"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288224",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288224r1312760_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288224",
+          "cci_ids": [
+            "CCI-000172"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288225",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288225r1312761_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288225",
+          "cci_ids": [
+            "CCI-000172"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288226",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288226r1312762_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288226",
+          "cci_ids": [
+            "CCI-000172"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288227",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288227r1312763_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288227",
+          "cci_ids": [
+            "CCI-000172"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288228",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288228r1312764_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288228",
+          "cci_ids": [
+            "CCI-000172"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288229",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288229r1312765_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288229",
+          "cci_ids": [
+            "CCI-000172"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288230",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288230r1312766_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288230",
+          "cci_ids": [
+            "CCI-000172"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288231",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288231r1312767_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288231",
+          "cci_ids": [
+            "CCI-000172"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288232",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288232r1312768_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288232",
+          "cci_ids": [
+            "CCI-000172"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288233",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288233r1312769_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288233",
+          "cci_ids": [
+            "CCI-000172"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288234",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288234r1312770_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288234",
+          "cci_ids": [
+            "CCI-000018",
+            "CCI-000172",
+            "CCI-001403",
+            "CCI-001404",
+            "CCI-001405",
+            "CCI-002130"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288235",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288235r1312771_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288235",
+          "cci_ids": [
+            "CCI-000172"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288236",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288236r1312653_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288236",
+          "cci_ids": [
+            "CCI-001744"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288237",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288237r1312655_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288237",
+          "cci_ids": [
+            "CCI-002883"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288238",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288238r1312657_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288238",
+          "cci_ids": [
+            "CCI-002884"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288239",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288239r1312659_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288239",
+          "cci_ids": [
+            "CCI-001632"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288240",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288240r1312661_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288240",
+          "cci_ids": [
+            "CCI-002890"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288241",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288241r1312663_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288241",
+          "cci_ids": [
+            "CCI-002891"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288242",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288242r1312772_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288242",
+          "cci_ids": [
+            "CCI-000050"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288243",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288243r1312664_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288243",
+          "cci_ids": [
+            "CCI-000048",
+            "CCI-001384",
+            "CCI-001385",
+            "CCI-001386",
+            "CCI-001387",
+            "CCI-001388"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288244",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288244r1312665_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288244",
+          "cci_ids": [
+            "CCI-001348",
+            "CCI-001851"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288245",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288245r1312666_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288245",
+          "cci_ids": [
+            "CCI-002450"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288246",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288246r1312667_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288246",
+          "cci_ids": [
+            "CCI-002450"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288247",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288247r1312668_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288247",
+          "cci_ids": [
+            "CCI-000803"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288248",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288248r1312830_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288248",
+          "cci_ids": [
+            "CCI-002450"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288249",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288249r1312773_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288249",
+          "cci_ids": [
+            "CCI-002475",
+            "CCI-002476"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288250",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288250r1312669_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288250",
+          "cci_ids": [
+            "CCI-002450",
+            "CCI-003123"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288251",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288251r1312774_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288251",
+          "cci_ids": [
+            "CCI-000067"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288252",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288252r1312775_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288252",
+          "cci_ids": [
+            "CCI-002314"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288253",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288253r1312670_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288253",
+          "cci_ids": [
+            "CCI-000068",
+            "CCI-003747"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288254",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288254r1312671_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288254",
+          "cci_ids": [
+            "CCI-001184",
+            "CCI-002418",
+            "CCI-002420",
+            "CCI-002421",
+            "CCI-002422"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288255",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288255r1312672_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288255",
+          "cci_ids": [
+            "CCI-003123"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288256",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288256r1312673_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288256",
+          "cci_ids": [
+            "CCI-001453"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288257",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288257r1312674_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288257",
+          "cci_ids": [
+            "CCI-000803"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288258",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288258r1312804_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288258",
+          "cci_ids": [
+            "CCI-000185"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288259",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288259r1312806_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288259",
+          "cci_ids": [
+            "CCI-004068"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288260",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288260r1312808_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288260",
+          "cci_ids": [
+            "CCI-004068"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288261",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288261r1312679_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288261",
+          "cci_ids": [
+            "CCI-004909"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288262",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288262r1312776_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288262",
+          "cci_ids": [
+            "CCI-001813",
+            "CCI-002165",
+            "CCI-002169",
+            "CCI-003638",
+            "CCI-003639",
+            "CCI-003640",
+            "CCI-003641",
+            "CCI-003642"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288263",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288263r1312777_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288263",
+          "cci_ids": [
+            "CCI-001082",
+            "CCI-001083"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288264",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288264r1312778_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288264",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-001424"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288265",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288265r1312779_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288265",
+          "cci_ids": [
+            "CCI-001368"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288266",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288266r1312780_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288266",
+          "cci_ids": [
+            "CCI-001414"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288267",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288267r1312781_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288267",
+          "cci_ids": [
+            "CCI-001157"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288268",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288268r1312782_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288268",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-002272"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288269",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288269r1312783_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288269",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-002205"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288270",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288270r1312784_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288270",
+          "cci_ids": [
+            "CCI-004906"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288271",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288271r1312785_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288271",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-004544"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288272",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288272r1312786_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288272",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-004558"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288273",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288273r1312787_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288273",
+          "cci_ids": [
+            "CCI-003650",
+            "CCI-003652"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288274",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288274r1312788_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288274",
+          "cci_ids": [
+            "CCI-001166"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288275",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288275r1312789_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288275",
+          "cci_ids": [
+            "CCI-002460"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288276",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288276r1312790_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288276",
+          "cci_ids": [
+            "CCI-001695"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288277",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288277r1312791_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288277",
+          "cci_ids": [
+            "CCI-001662"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288278",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288278r1312792_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288278",
+          "cci_ids": [
+            "CCI-001169"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288279",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288279r1312793_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288279",
+          "cci_ids": [
+            "CCI-001170"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288280",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288280r1312794_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288280",
+          "cci_ids": [
+            "CCI-000870"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288281",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288281r1312795_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288281",
+          "cci_ids": [
+            "CCI-004964",
+            "CCI-004965"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288282",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288282r1312796_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288282",
+          "cci_ids": [
+            "CCI-001241"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288283",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288283r1312680_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288283",
+          "cci_ids": [
+            "CCI-002624"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288284",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288284r1312681_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288284",
+          "cci_ids": [
+            "CCI-001243"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288285",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288285r1312682_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288285",
+          "cci_ids": [
+            "CCI-004963"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288286",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288286r1312683_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288286",
+          "cci_ids": [
+            "CCI-004966"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288287",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288287r1312684_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288287",
+          "cci_ids": [
+            "CCI-001308"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288288",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288288r1312797_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288288",
+          "cci_ids": [
+            "CCI-003992"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288289",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288289r1312798_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288289",
+          "cci_ids": [
+            "CCI-002617"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288290",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288290r1312685_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288290",
+          "cci_ids": [
+            "CCI-002605"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288291",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288291r1312687_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288291",
+          "cci_ids": [
+            "CCI-002740"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288292",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288292r1312688_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288292",
+          "cci_ids": [
+            "CCI-000382",
+            "CCI-001762"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288293",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288293r1314239_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288293",
+          "cci_ids": [
+            "CCI-000382"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288294",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288294r1312689_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288294",
+          "cci_ids": [
+            "CCI-004922"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288295",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288295r1312800_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288295",
+          "cci_ids": [
+            "CCI-003376"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288296",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288296r1312801_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288296",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
+        },
+        {
+          "id": "V-288297",
+          "kind": "srg",
+          "benchmark_id": "General_Application_SRG",
+          "edition": "V1R1",
+          "rule_id": "SV-288297r1312691_rule",
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml#V-288297",
+          "cci_ids": [
+            "CCI-000366"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "source_checksum": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49"
         }
       ],
       "exclusions": [
@@ -1028469,6 +1030825,94 @@
           "byte_length": 1804041,
           "evidence_kind": "downloaded_publisher_bytes",
           "retrieved_at": "2026-11-18T02:14:05.324Z"
+        },
+        {
+          "source_id": "artifact-disa-compilation-zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
+          "sha256": "sha256:ea581eb2d5c4a210440852b67ea4dd9564fffdf57c8c94aec971047fe0c01d1d",
+          "byte_length": 375827141,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:20.992Z"
+        },
+        {
+          "source_id": "disa-package:U_Microsoft_Project_2016_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Microsoft_Project_2016_V1R1_STIG.zip",
+          "sha256": "sha256:3c0080642e359b704a7c20035c6f00a760f6a0d2b76986f289571dadf9e40499",
+          "byte_length": 364625,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:28.054Z"
+        },
+        {
+          "source_id": "disa-package:U_MOT_Solutions_Android_13_Y25M03_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MOT_Solutions_Android_13_Y25M03_STIG.zip",
+          "sha256": "sha256:497720d0953aef9308cc6bc41738487eb18eda5ce8cbdab921bdd69345891f4a",
+          "byte_length": 2257014,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:27.913Z"
+        },
+        {
+          "source_id": "disa-package:U_Oracle_Database_12c_V3R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Oracle_Database_12c_V3R5_STIG.zip",
+          "sha256": "sha256:75398ae44f48578c74cb566ede9347b9af432ef642cf41a237c3dba377d5e8bc",
+          "byte_length": 1683866,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:28.158Z"
+        },
+        {
+          "source_id": "disa-package:U_SLES_V11_for_System_z_V1R12_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SLES_V11_for_System_z_V1R12_STIG.zip",
+          "sha256": "sha256:4a849e95ae5c5186500b20f145717aa69e7b5b3a74ec6d6b2eea25a0c71e7689",
+          "byte_length": 582292,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:28.065Z"
+        },
+        {
+          "source_id": "disa-package:U_VMware_NSX_Distributed_Logical_Router_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMware_NSX_Distributed_Logical_Router_V1R1_STIG.zip",
+          "sha256": "sha256:cc641aa051b2a375cde80c2f35aa85bda7b8f72b58a0d9a31156b575ac8edc79",
+          "byte_length": 256563,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:28.150Z"
+        },
+        {
+          "source_id": "disa-package:U_VMware_NSX_Manager_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMware_NSX_Manager_V1R1_STIG.zip",
+          "sha256": "sha256:54b8ccaa5e9031192833bce674faaf6c35e0c4fe0754fd98035ddfcd640a7d78",
+          "byte_length": 267808,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:27.977Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_27_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_27_V1R1_STIG.zip",
+          "sha256": "sha256:db83ad391f6545abce7b3c8b50c13fe7b0d9041710e77e24627c1f7ca62de6ce",
+          "byte_length": 2501445,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:28.264Z"
+        },
+        {
+          "source_id": "disa-package:U_Omnissa_Horizon_Y26M09_STIG.zip",
+          "url": "https://dl.dod.cyber.mil//wp-content/uploads/stigs/zip/U_Omnissa_Horizon_Y26M09_STIG.zip",
+          "sha256": "sha256:a93d2fc2ee3795567e51751c036d40cecbf04b491a207f484690041ab37907e6",
+          "byte_length": 2145645,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:28.226Z"
+        },
+        {
+          "source_id": "disa-package:U_MariaDB_Enterprise_Server_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MariaDB_Enterprise_Server_V1R1_STIG.zip",
+          "sha256": "sha256:74fe9de236eaa1d02b2190837c0e2197655dbe78eef430f94d02d4c5aa247201",
+          "byte_length": 1804041,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:28.298Z"
+        },
+        {
+          "source_id": "disa-package:U_GAPP_V1R1_SRG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "sha256": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49",
+          "byte_length": 1915340,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T14:37:28.513Z"
         }
       ],
       "native_files": [
@@ -1035205,12 +1037649,19 @@
           "sha256": "sha256:e301e1b76deb5c521f0b29cf56b03397e68f5f35bf1899fc77e86b0b2c5c8577",
           "byte_length": 93019,
           "native_rules": 24
+        },
+        {
+          "locator": "U_GAPP_V1R1_Manual_SRG/U_GAPP_SRG_V1R1_Manual_xccdf.xml",
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "sha256": "sha256:1570b13faa0f9aa41cfcd72099b43cfb7073ee46e002ace9466462e037f902ca",
+          "byte_length": 498528,
+          "native_rules": 156
         }
       ],
       "current_snapshot": {
         "compilation_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
         "checksum": "sha256:ea581eb2d5c4a210440852b67ea4dd9564fffdf57c8c94aec971047fe0c01d1d",
-        "record_count": 2515,
+        "record_count": 2671,
         "record_ids": [
           "V-202013",
           "V-202014",
@@ -1037726,10 +1040177,166 @@
           "V-279970",
           "V-279971",
           "V-279972",
-          "V-282963"
+          "V-282963",
+          "V-288135",
+          "V-288136",
+          "V-288137",
+          "V-288138",
+          "V-288139",
+          "V-288140",
+          "V-288141",
+          "V-288142",
+          "V-288143",
+          "V-288144",
+          "V-288145",
+          "V-288146",
+          "V-288147",
+          "V-288148",
+          "V-288149",
+          "V-288150",
+          "V-288151",
+          "V-288152",
+          "V-288153",
+          "V-288154",
+          "V-288155",
+          "V-288156",
+          "V-288157",
+          "V-288158",
+          "V-288159",
+          "V-288160",
+          "V-288161",
+          "V-288163",
+          "V-288164",
+          "V-288165",
+          "V-288166",
+          "V-288167",
+          "V-288168",
+          "V-288169",
+          "V-288170",
+          "V-288171",
+          "V-288172",
+          "V-288173",
+          "V-288174",
+          "V-288176",
+          "V-288177",
+          "V-288178",
+          "V-288180",
+          "V-288181",
+          "V-288182",
+          "V-288183",
+          "V-288184",
+          "V-288185",
+          "V-288186",
+          "V-288187",
+          "V-288189",
+          "V-288190",
+          "V-288191",
+          "V-288192",
+          "V-288193",
+          "V-288194",
+          "V-288195",
+          "V-288196",
+          "V-288199",
+          "V-288200",
+          "V-288201",
+          "V-288202",
+          "V-288203",
+          "V-288204",
+          "V-288205",
+          "V-288206",
+          "V-288207",
+          "V-288208",
+          "V-288209",
+          "V-288210",
+          "V-288211",
+          "V-288212",
+          "V-288213",
+          "V-288214",
+          "V-288216",
+          "V-288217",
+          "V-288218",
+          "V-288219",
+          "V-288220",
+          "V-288221",
+          "V-288222",
+          "V-288223",
+          "V-288224",
+          "V-288225",
+          "V-288226",
+          "V-288227",
+          "V-288228",
+          "V-288229",
+          "V-288230",
+          "V-288231",
+          "V-288232",
+          "V-288233",
+          "V-288234",
+          "V-288235",
+          "V-288236",
+          "V-288237",
+          "V-288238",
+          "V-288239",
+          "V-288240",
+          "V-288241",
+          "V-288242",
+          "V-288243",
+          "V-288244",
+          "V-288245",
+          "V-288246",
+          "V-288247",
+          "V-288248",
+          "V-288249",
+          "V-288250",
+          "V-288251",
+          "V-288252",
+          "V-288253",
+          "V-288254",
+          "V-288255",
+          "V-288256",
+          "V-288257",
+          "V-288258",
+          "V-288259",
+          "V-288260",
+          "V-288261",
+          "V-288262",
+          "V-288263",
+          "V-288264",
+          "V-288265",
+          "V-288266",
+          "V-288267",
+          "V-288268",
+          "V-288269",
+          "V-288270",
+          "V-288271",
+          "V-288272",
+          "V-288273",
+          "V-288274",
+          "V-288275",
+          "V-288276",
+          "V-288277",
+          "V-288278",
+          "V-288279",
+          "V-288280",
+          "V-288281",
+          "V-288282",
+          "V-288283",
+          "V-288284",
+          "V-288285",
+          "V-288286",
+          "V-288287",
+          "V-288288",
+          "V-288289",
+          "V-288290",
+          "V-288291",
+          "V-288292",
+          "V-288293",
+          "V-288294",
+          "V-288295",
+          "V-288296",
+          "V-288297"
         ]
       },
-      "native_occurrences": 7580
+      "native_occurrences": 7736
     },
     "dod-zt": {
       "scope": "All native DoD ZT RA tenets/pillars, six registered primary documents, capability/activity rows and OT activity rows in complete retained official-source page captures. Seven source PDFs are freshly byte-identical at the current official CIO library. Overlay content has independent383-page archival corroboration; its current official hosting/replacement/lifecycle remains UNKNOWN.",

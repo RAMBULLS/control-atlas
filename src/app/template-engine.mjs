@@ -1484,6 +1484,56 @@ export function getControlCrossRefIndex(dataset) {
   return index;
 }
 
+const TEMPLATE_FULL_NODE_TYPES = new Set(["control", "control_enhancement", "baseline"]);
+const TEMPLATE_ID_ONLY_NODE_TYPES = new Set(["stig_rule", "srg_requirement"]);
+const TEMPLATE_ASSESSMENT_FIELDS = ["assessment_methods", "assessment_method_details", "assessment_objectives"];
+const TEMPLATE_EDGE_TYPES = new Set(["maps_to", "references", "selects", "assesses"]);
+
+/**
+ * The part of the published graph that document templates read. Building a
+ * template from it gives exactly the same document as building it from the
+ * full graph (a test compares every template), while the browser downloads a
+ * small fraction of the full graph. Node order is preserved because
+ * {@link buildTemplateDocument} takes the first node of a catalog as its
+ * source.
+ *
+ * @param {{ nodes?: any[], edges?: any[], sources?: any }} dataset
+ * @returns {{ nodes: any[], edges: any[], sources: any }}
+ */
+export function buildTemplateDataset(dataset) {
+  const catalogsSeen = new Set();
+  const nodes = [];
+  for (const node of dataset?.nodes || []) {
+    const catalogId = node.metadata?.catalog_id;
+    const firstOfCatalog = Boolean(catalogId) && !catalogsSeen.has(catalogId);
+    if (catalogId) catalogsSeen.add(catalogId);
+    const idOnly = (metadata) => ({
+      id: node.id,
+      node_type: node.node_type,
+      source_id: node.source_id,
+      metadata: { catalog_id: catalogId, item_id: node.metadata?.item_id, ...metadata },
+    });
+    if (TEMPLATE_FULL_NODE_TYPES.has(node.node_type) || firstOfCatalog) {
+      nodes.push(node);
+    } else if (TEMPLATE_ID_ONLY_NODE_TYPES.has(node.node_type)) {
+      nodes.push(idOnly({ rule_id: node.metadata?.rule_id }));
+    } else if (node.node_type === "assessment_procedure") {
+      nodes.push(idOnly(Object.fromEntries(TEMPLATE_ASSESSMENT_FIELDS.map((field) => [field, node.metadata?.[field]]))));
+    } else if (String(node.id).startsWith("disa-cci:")) {
+      nodes.push(idOnly({}));
+    }
+  }
+  const edges = (dataset?.edges || [])
+    .filter((edge) => TEMPLATE_EDGE_TYPES.has(edge.relationship_type))
+    .map((edge) => ({
+      source_node_id: edge.source_node_id,
+      target_node_id: edge.target_node_id,
+      relationship_type: edge.relationship_type,
+      relationship_class: edge.relationship_class,
+    }));
+  return { nodes, edges, sources: dataset?.sources || [] };
+}
+
 /** Templates that read the cross-reference index. */
 export const CROSS_REF_TEMPLATES = Object.freeze([
   "evidence_expectation_matrix",

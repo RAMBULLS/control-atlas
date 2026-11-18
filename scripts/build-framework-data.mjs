@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { buildTemplateDataset } from "../src/app/template-engine.mjs";
 import { buildComparisonArtifacts } from "./lib/compare-artifacts.mjs";
 import {
   existsSync,
@@ -106,6 +107,7 @@ const RUNTIME_COLLECTIONS = [
 ];
 const SHARDED_RUNTIME_COLLECTIONS = new Set(["nodes", "edges", "evidence"]);
 const RUNTIME_COLLECTION_SHARD_COUNT = 64;
+const TEMPLATE_DATASET_SHARD_COUNT = 4;
 // Search is intentionally a bounded, on-demand payload rather than an
 // initial-route payload. Sixteen chunks keep every compressed artifact under the
 // public 300 KB budget while avoiding excessive request fan-out.
@@ -4100,6 +4102,32 @@ const catalogRecords = new Map();
       `${JSON.stringify(value)}\n`,
       "utf8",
     );
+  }
+
+  // Document templates read a small slice of the graph. Shipping that slice
+  // lets the Templates page skip the full graph download (about 17x larger).
+  // It uses the same sharded manifest format as the graph collections.
+  const templateDataset = buildTemplateDataset(collections);
+  for (const [name, collection] of [["template-nodes", "nodes"], ["template-edges", "edges"]]) {
+    const values = templateDataset[collection];
+    const shardDir = join(GENERATED, "graph-data", name);
+    mkdirSync(shardDir, { recursive: true });
+    const chunkSize = Math.max(1, Math.ceil(values.length / TEMPLATE_DATASET_SHARD_COUNT));
+    const shards = [];
+    for (let index = 0; index < values.length; index += chunkSize) {
+      const path = `graph-data/${name}/${String(shards.length).padStart(3, "0")}.json`;
+      const chunk = values.slice(index, index + chunkSize);
+      writeFileSync(join(GENERATED, path), `${JSON.stringify(artifact(collection, chunk, generatedAt))}\n`, "utf8");
+      shards.push({ path, record_count: chunk.length });
+    }
+    const manifest = artifact(collection, [], generatedAt);
+    manifest.sharded_collection = {
+      collection,
+      record_count: values.length,
+      content_sha256: collectionFingerprint(values),
+      shards,
+    };
+    writeFileSync(join(GENERATED, `${name}.json`), `${JSON.stringify(manifest)}\n`, "utf8");
   }
 
   // The Sources page reports what the build actually loaded and connected.

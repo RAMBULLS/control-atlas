@@ -820,13 +820,18 @@ test("expensive graph scope begins only after an explicit graph-dependent action
     }).registries,
     true,
   );
+  // A chosen document reads the template dataset, a small slice of the graph,
+  // instead of downloading the whole graph.
+  const chosenDocument = runtimeArtifactPlan({
+    ...build,
+    buildSection: "documents",
+    templateType: "security_plan_starter",
+  });
+  assert.equal(chosenDocument.fullGraph, false);
+  assert.equal(chosenDocument.templateDataset, true);
   assert.equal(
-    runtimeArtifactPlan({
-      ...build,
-      buildSection: "documents",
-      templateType: "security_plan_starter",
-    }).fullGraph,
-    true,
+    runtimeArtifactPlan({ ...build, templateType: "security_plan_starter" }, { graphRequested: true }).templateDataset,
+    false,
   );
 });
 

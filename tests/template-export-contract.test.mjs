@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import { parse as parseYaml } from 'yaml';
-import { buildTemplateDocument, escapeMarkdownTableCell, generateTemplate } from '../src/app/template-engine.mjs';
+import { buildTemplateDataset, buildTemplateDocument, escapeMarkdownTableCell, generateTemplate } from '../src/app/template-engine.mjs';
 import { renderOfficeDocument } from '../src/app/office-export.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -520,4 +520,36 @@ test('source context with zero resolvable controls fails closed', () => {
       ),
     /No published control data is available for source context "fedramp-rev5"\. No document was generated\./,
   );
+});
+
+test('the template dataset builds every template exactly as the full graph does', () => {
+  const generated = join(__dirname, '../data/generated');
+  const sharded = (manifest, key) => JSON.parse(readFileSync(join(generated, manifest), 'utf8')).sharded_collection.shards
+    .flatMap((shard) => JSON.parse(readFileSync(join(generated, shard.path), 'utf8'))[key]);
+  const full = {
+    nodes: sharded('nodes.json', 'nodes'),
+    edges: sharded('edges.json', 'edges'),
+    sources: JSON.parse(readFileSync(join(generated, 'sources.json'), 'utf8')).sources,
+  };
+  const shipped = { nodes: sharded('template-nodes.json', 'nodes'), edges: sharded('template-edges.json', 'edges'), sources: full.sources };
+  assert.deepEqual(shipped, buildTemplateDataset(full));
+  assert.ok(shipped.nodes.length < full.nodes.length && shipped.edges.length < full.edges.length);
+  let compared = 0;
+  for (const template of registry.templates) {
+    for (const framework of ['nist-800-53', 'fedramp-rev5']) {
+      for (const baseline of ['', 'MODERATE']) {
+        const options = {
+          templateType: template.name, framework, baseline, environment: 'Cloud SaaS',
+          format: template.supported_formats[0], sourceRefs: template.source_refs || [], sources: full.sources,
+        };
+        assert.equal(
+          JSON.stringify(buildTemplateDocument(options, shipped)),
+          JSON.stringify(buildTemplateDocument(options, full)),
+          `${template.name} ${framework} ${baseline || 'all'} differs from the full graph`,
+        );
+        compared += 1;
+      }
+    }
+  }
+  assert.equal(compared, registry.templates.length * 4);
 });

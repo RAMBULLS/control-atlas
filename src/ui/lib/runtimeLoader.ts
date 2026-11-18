@@ -1065,19 +1065,15 @@ export async function loadFullGraphPhase(
 async function loadTemplateDatasetPhase(
   routePhase: Awaited<ReturnType<typeof loadRouteScopedPhase>>,
 ): Promise<RuntimeBundle> {
-  const artifact = await fetchArtifact(artifactPath("template-dataset.json"));
-  if (
-    artifact.schema_version !== "1.0" ||
-    !Array.isArray(artifact.nodes) ||
-    !Array.isArray(artifact.edges) ||
-    !Array.isArray(artifact.sources)
-  ) {
-    throw new Error("Invalid template dataset artifact.");
-  }
+  const [sources, nodes, edges] = await Promise.all([
+    fetchCollection(artifactPath("sources.json"), "sources"),
+    fetchCollection(artifactPath("template-nodes.json"), "nodes"),
+    fetchCollection(artifactPath("template-edges.json"), "edges"),
+  ]);
   const runtime = createFederalGraphRuntime({
-    sources: artifact.sources,
-    nodes: artifact.nodes,
-    edges: artifact.edges,
+    sources,
+    nodes,
+    edges,
     evidence: [],
     findings: [],
     catalogs: routePhase.bundle.runtime.getCatalogs(),

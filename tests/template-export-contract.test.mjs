@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readdirSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
@@ -524,16 +524,15 @@ test('source context with zero resolvable controls fails closed', () => {
 
 test('the template dataset builds every template exactly as the full graph does', () => {
   const generated = join(__dirname, '../data/generated');
-  const collection = (kind) => readdirSync(join(generated, 'graph-data', kind)).sort()
-    .flatMap((file) => JSON.parse(readFileSync(join(generated, 'graph-data', kind, file), 'utf8'))[kind]);
+  const sharded = (manifest, key) => JSON.parse(readFileSync(join(generated, manifest), 'utf8')).sharded_collection.shards
+    .flatMap((shard) => JSON.parse(readFileSync(join(generated, shard.path), 'utf8'))[key]);
   const full = {
-    nodes: collection('nodes'),
-    edges: collection('edges'),
+    nodes: sharded('nodes.json', 'nodes'),
+    edges: sharded('edges.json', 'edges'),
     sources: JSON.parse(readFileSync(join(generated, 'sources.json'), 'utf8')).sources,
   };
-  const shipped = JSON.parse(readFileSync(join(generated, 'template-dataset.json'), 'utf8'));
-  const expected = buildTemplateDataset(full);
-  assert.deepEqual({ nodes: shipped.nodes, edges: shipped.edges, sources: shipped.sources }, expected);
+  const shipped = { nodes: sharded('template-nodes.json', 'nodes'), edges: sharded('template-edges.json', 'edges'), sources: full.sources };
+  assert.deepEqual(shipped, buildTemplateDataset(full));
   assert.ok(shipped.nodes.length < full.nodes.length && shipped.edges.length < full.edges.length);
   let compared = 0;
   for (const template of registry.templates) {

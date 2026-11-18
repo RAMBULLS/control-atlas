@@ -265,9 +265,10 @@ test('recorded complete 417-row API fixture reconciles all lifecycle and accepte
   const coverage = JSON.parse(read('accepted-filenames.json'));
   const result = reconcileDisaPublicInventory(snapshot, { acceptedCompilationFiles: coverage.compilation, acceptedStandaloneFiles: coverage.standalone });
   assert.equal(snapshot.response_checksum, 'sha256:ea1597986b3af9cbb92db6db18acbc295eb229002383b4562459ce85c2429999');
-  assert.equal(result.record_count, 417); assert.equal(result.active_manual_candidates, 192);
-  assert.equal(result.excluded_records, 225); assert.equal(result.exclusion_reasons.publisher_sunset, 116);
-  assert.equal(result.accepted_compilation_filenames, 183); assert.equal(result.accepted_standalone_filenames, 9);
+  assert.equal(result.record_count, 417); assert.equal(result.active_manual_candidates, 191);
+  assert.equal(result.excluded_records, 226); assert.equal(result.exclusion_reasons.publisher_sunset, 116);
+  assert.equal(result.accepted_compilation_filenames, 182); assert.equal(result.accepted_standalone_filenames, 9);
   assert.equal(result.unrepresented_manual_filenames, 0);
+  assert.deepEqual(result.dispositions.filter((entry) => entry.filename === 'U_zOS_Y26M10_SRR.zip').map((entry) => [entry.disposition, entry.reason]), [['excluded', 'automation_content']]);
   assert.equal(result.source_promotion_permitted, false); assert.equal(result.native_content_verified, false);
 });

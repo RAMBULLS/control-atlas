@@ -103,6 +103,32 @@ test('strict refresh strips Github token and private headers across approved ori
   assert.equal(requests[1].headers.get('accept'), 'application/json');
 });
 
+test('refresh token reaches only api.github.com, uncached, and never follows a redirect elsewhere', async () => {
+  const requests = [];
+  const fetchSource = createStrictConditionalFetch({
+    githubToken: 'fixture-github-token',
+    fetchImpl: async (url, init) => {
+      requests.push({ url, cache: init.cache, headers: new Headers(init.headers) });
+      return url.startsWith('https://api.github.com/')
+        ? new Response('', { status: 302, headers: { location: 'https://raw.githubusercontent.com/FedRAMP/rules/main/data.json' } })
+        : new Response('bytes');
+    },
+  });
+  await fetchSource('https://api.github.com/repos/FedRAMP/rules');
+  await fetchSource('https://csrc.nist.gov/source');
+  assert.equal(requests[0].headers.get('authorization'), 'Bearer fixture-github-token');
+  assert.equal(requests[0].cache, 'no-store');
+  for (const request of requests.slice(1)) {
+    assert.equal(request.headers.get('authorization'), null);
+    assert.equal(request.cache, 'no-cache');
+  }
+  const anonymous = [];
+  await createStrictConditionalFetch({ githubToken: '', fetchImpl: async (url, init) => {
+    anonymous.push(new Headers(init.headers).get('authorization')); return new Response('bytes');
+  } })('https://api.github.com/repos/FedRAMP/rules');
+  assert.deepEqual(anonymous, [null]);
+});
+
 test('strict refresh rejects unsafe redirect transport and repository destinations', async () => {
   for (const location of [
     'http://csrc.nist.gov/bytes',

@@ -15,6 +15,7 @@ export function createStrictConditionalFetch(options = {}) {
   const cachePath = options.cachePath || process.env.CONTROL_ATLAS_HTTP_CACHE || DEFAULT_CACHE_PATH;
   const fetchImpl = options.fetchImpl || makeFetchHappen;
   const urlPolicy = options.urlPolicy || assertOfficialSourceUrl;
+  const githubToken = (options.githubToken ?? process.env.GITHUB_TOKEN ?? '').trim();
   const maxRedirects = options.maxRedirects ?? 5;
   if (!Number.isInteger(maxRedirects) || maxRedirects < 0 || maxRedirects > 20) {
     throw new Error('strict refresh redirect limit must be an integer from 0 to 20');
@@ -65,12 +66,19 @@ export function createStrictConditionalFetch(options = {}) {
       current.hash = '';
       if (visited.has(current.href)) throw new Error('strict refresh rejected redirect loop');
       visited.add(current.href);
+      // Anonymous GitHub API calls share a 60-per-hour limit per runner address,
+      // so the refresh's own token is sent, but only to api.github.com. Those
+      // calls skip the HTTP cache: GitHub varies on Authorization, so a cached
+      // entry would store the token in the cache index.
+      const githubApi = Boolean(githubToken) && current.origin === 'https://api.github.com';
+      const hopHeaders = Object.fromEntries(headers);
+      if (githubApi && !headers.has('authorization')) hopHeaders.authorization = `Bearer ${githubToken}`;
       const response = await requestWithRetry(current.href, {
         ...init,
         method,
-        headers: Object.fromEntries(headers),
+        headers: hopHeaders,
         redirect: 'manual',
-        cache: 'no-cache',
+        cache: githubApi ? 'no-store' : 'no-cache',
         cachePath,
         retry: false,
         timeout: retry.timeoutMs,

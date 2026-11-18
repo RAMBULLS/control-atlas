@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { buildTemplateDataset } from "../src/app/template-engine.mjs";
 import { buildComparisonArtifacts } from "./lib/compare-artifacts.mjs";
 import {
   existsSync,
@@ -4101,6 +4102,14 @@ const catalogRecords = new Map();
       "utf8",
     );
   }
+
+  // Document templates read a small slice of the graph. Shipping that slice
+  // lets the Templates page skip the full graph download (about 12x larger).
+  writeFileSync(
+    join(GENERATED, "template-dataset.json"),
+    `${JSON.stringify({ schema_version: "1.0", generated_at: generatedAt, ...buildTemplateDataset(collections) })}\n`,
+    "utf8",
+  );
 
   // The Sources page reports what the build actually loaded and connected.
   // Deriving it in the browser would force the monolithic graph onto a route

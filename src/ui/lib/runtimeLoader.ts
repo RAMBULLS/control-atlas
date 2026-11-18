@@ -216,6 +216,8 @@ export type RuntimeBundle = {
   sourcesReady?: boolean;
   routeReady: boolean;
   graphReady: boolean;
+  /** The template dataset is loaded: enough for document templates, not the full graph. */
+  templateDataReady?: boolean;
 };
 
 export type AtlasNeighborhoodNode = {
@@ -346,6 +348,8 @@ export type RuntimeArtifactPlan = {
   recordNodeId: string;
   registries: boolean;
   sources: boolean;
+  /** A chosen document reads the small template dataset, not the full graph. */
+  templateDataset?: boolean;
 };
 
 export function runtimeArtifactPlan(
@@ -369,10 +373,8 @@ export function runtimeArtifactPlan(
       Boolean(state.templateType));
   // Compare uses content-addressed pair shards even when a previous view had
   // requested the full graph. That request must never leak across the boundary.
-  const fullGraph = state.view !== "matrix" && (
-    Boolean(options.graphRequested) ||
-    (state.view === "templates" && Boolean(state.templateType))
-  );
+  const fullGraph = state.view !== "matrix" && Boolean(options.graphRequested);
+  const templateDataset = state.view === "templates" && Boolean(state.templateType) && !fullGraph;
   // A real record is in focus on the Atlas route — not the landing board and
   // not one of the synthetic structural nodes the drill-down uses.
   const atlasRecordFocused =
@@ -407,6 +409,7 @@ export function runtimeArtifactPlan(
       Boolean(options.searchOverlayOpen),
     commonsDirectory: state.view === "commons" && !options.searchOverlayOpen,
     fullGraph,
+    templateDataset,
     librarySearch:
       state.view === "search" ||
       state.view === "retired" ||
@@ -1055,6 +1058,34 @@ export async function loadFullGraphPhase(
   };
 }
 
+/**
+ * A chosen document needs only the template dataset, a build-time slice of the
+ * graph that yields identical documents at a fraction of the download.
+ */
+async function loadTemplateDatasetPhase(
+  routePhase: Awaited<ReturnType<typeof loadRouteScopedPhase>>,
+): Promise<RuntimeBundle> {
+  const artifact = await fetchArtifact(artifactPath("template-dataset.json"));
+  if (
+    artifact.schema_version !== "1.0" ||
+    !Array.isArray(artifact.nodes) ||
+    !Array.isArray(artifact.edges) ||
+    !Array.isArray(artifact.sources)
+  ) {
+    throw new Error("Invalid template dataset artifact.");
+  }
+  const runtime = createFederalGraphRuntime({
+    sources: artifact.sources,
+    nodes: artifact.nodes,
+    edges: artifact.edges,
+    evidence: [],
+    findings: [],
+    catalogs: routePhase.bundle.runtime.getCatalogs(),
+    librarySearch: routePhase.libraryBootstrap?.librarySearch,
+  });
+  return { ...routePhase.bundle, runtime, routeReady: true, templateDataReady: true };
+}
+
 export async function loadRuntimeDataset(): Promise<RuntimeBundle> {
   const [
     libraryBootstrap,
@@ -1476,6 +1507,11 @@ export async function loadRuntimeDatasetStaged(handlers: {
     if (handlers.state.view === "matrix") {
       const comparison = await loadComparePhase(handlers.state, routePhase.bundle, handlers.signal);
       if (!handlers.signal?.aborted) handlers.onFullReady(comparison);
+      return;
+    }
+    if (plan.templateDataset) {
+      const templateBundle = await loadTemplateDatasetPhase(routePhase);
+      if (!handlers.signal?.aborted) handlers.onFullReady(templateBundle);
       return;
     }
     if (!plan.fullGraph) {

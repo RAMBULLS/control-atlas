@@ -699,7 +699,7 @@ export function App() {
       ? "true"
     : routeBundle?.routeReady &&
         (viewState.view !== "sources" || routeBundle.sourcesReady) &&
-        (!requiresFullGraph(viewState) || routeBundle.graphReady)
+        (!requiresFullGraph(viewState) || routeBundle.graphReady || routeBundle.templateDataReady)
       ? "true"
       : routeBundle
         ? "partial"
@@ -891,6 +891,8 @@ function AppContent(props: {
   } = props;
 
   const graphReady = Boolean(bundle?.graphReady);
+  // Document templates are complete with the template dataset alone.
+  const templateGraphReady = graphReady || Boolean(bundle?.templateDataReady);
   const loadingCopy = routeLoadingCopy(state.view);
 
   if (!bundle && state.view === "search") {
@@ -915,7 +917,7 @@ function AppContent(props: {
     );
   }
 
-  if (bundle && !graphReady && requiresFullGraph(state)) {
+  if (bundle && !templateGraphReady && requiresFullGraph(state)) {
     if (loadError) {
       return (
         <LoadErrorPanel message={loadError} onRetry={onRetryLoad}>

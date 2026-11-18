@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import { parse as parseYaml } from 'yaml';
-import { buildTemplateDocument, escapeMarkdownTableCell, generateTemplate } from '../src/app/template-engine.mjs';
+import { buildTemplateDataset, buildTemplateDocument, escapeMarkdownTableCell, generateTemplate } from '../src/app/template-engine.mjs';
 import { renderOfficeDocument } from '../src/app/office-export.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -520,4 +520,37 @@ test('source context with zero resolvable controls fails closed', () => {
       ),
     /No published control data is available for source context "fedramp-rev5"\. No document was generated\./,
   );
+});
+
+test('the template dataset builds every template exactly as the full graph does', () => {
+  const generated = join(__dirname, '../data/generated');
+  const collection = (kind) => readdirSync(join(generated, 'graph-data', kind)).sort()
+    .flatMap((file) => JSON.parse(readFileSync(join(generated, 'graph-data', kind, file), 'utf8'))[kind]);
+  const full = {
+    nodes: collection('nodes'),
+    edges: collection('edges'),
+    sources: JSON.parse(readFileSync(join(generated, 'sources.json'), 'utf8')).sources,
+  };
+  const shipped = JSON.parse(readFileSync(join(generated, 'template-dataset.json'), 'utf8'));
+  const expected = buildTemplateDataset(full);
+  assert.deepEqual({ nodes: shipped.nodes, edges: shipped.edges, sources: shipped.sources }, expected);
+  assert.ok(shipped.nodes.length < full.nodes.length && shipped.edges.length < full.edges.length);
+  let compared = 0;
+  for (const template of registry.templates) {
+    for (const framework of ['nist-800-53', 'fedramp-rev5']) {
+      for (const baseline of ['', 'MODERATE']) {
+        const options = {
+          templateType: template.name, framework, baseline, environment: 'Cloud SaaS',
+          format: template.supported_formats[0], sourceRefs: template.source_refs || [], sources: full.sources,
+        };
+        assert.equal(
+          JSON.stringify(buildTemplateDocument(options, shipped)),
+          JSON.stringify(buildTemplateDocument(options, full)),
+          `${template.name} ${framework} ${baseline || 'all'} differs from the full graph`,
+        );
+        compared += 1;
+      }
+    }
+  }
+  assert.equal(compared, registry.templates.length * 4);
 });

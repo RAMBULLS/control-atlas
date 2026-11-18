@@ -5,6 +5,7 @@ import {
   DISA_PUBLIC_INVENTORY_URL, DISA_PUBLIC_REQUEST_FINGERPRINT,
   disaCanonicalHash, disaInventoryWithinBand, parseDisaPublicInventory, reconcileDisaPublicInventory,
 } from './disa-public-inventory.mjs';
+import { disaMapSupportingPaths } from './disa-map-citations.mjs';
 
 export const DISA_EVIDENCE_DIRECTORY = 'tmp/disa-cache/inventory';
 const SHA = /^sha256:[a-f0-9]{64}$/;
@@ -119,9 +120,7 @@ export function validateDisaAcceptanceEvidence(root, manifest, receipt, times) {
   }
   const proof = manifest.native_acceptance;
   if (hashDisaFile(join(root, DISA_EVIDENCE_DIRECTORY, 'native.json')).checksum !== proof.native_checksum) throw new Error('DISA native proof checksum mismatch');
-  const paths = ['data/stig-rules.json', 'data/srg-requirements.json', 'maps/stig-srg-to-cci.json',
-    'data/curated/disa/stig-previous-editions.json', 'data/curated/disa/srg-previous-editions.json'];
-  const outputs = paths.map((path) => ({ path, ...hashDisaFile(join(root, path)) }));
+  const outputs = disaAcceptedOutputPaths(root).map((path) => ({ path, ...hashDisaFile(join(root, path)) }));
   if (disaCanonicalHash(outputs) !== proof.output_checksum) throw new Error('DISA accepted output checksum mismatch');
   for (const [index, archive] of proof.archives.entries()) {
     const filename = manifest.reconciliation.standalone_packages[index - 1]?.filename;
@@ -135,3 +134,8 @@ export function validateDisaAcceptanceEvidence(root, manifest, receipt, times) {
 
 export const DISA_ACCEPTED_OUTPUT_PATHS = Object.freeze(['data/stig-rules.json', 'data/srg-requirements.json',
   'maps/stig-srg-to-cci.json', 'data/curated/disa/stig-previous-editions.json', 'data/curated/disa/srg-previous-editions.json']);
+
+/** The fixed outputs plus every citation shard the stored map references. */
+export function disaAcceptedOutputPaths(root) {
+  return [...DISA_ACCEPTED_OUTPUT_PATHS, ...disaMapSupportingPaths(root)];
+}

@@ -626,8 +626,8 @@
       "status": "OK",
       "http": "local",
       "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
-      "sha256": "sha256:77355822a792671d5a256764114eeb0c3a6631b8278b55875ddca90ddbea9e0e",
-      "byte_length": 104643640,
+      "sha256": "sha256:417e25a6a0165de20187d18dce4b1819fe023e305f6411e5663d6f6d51040594",
+      "byte_length": 61887681,
       "record_count": null,
       "retrieved_at": "2026-11-18"
     },

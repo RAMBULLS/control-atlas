@@ -5,6 +5,8 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { dedupeDisaRelationships } from './lib/disa-publication-reconciliation.mjs';
+import { readDisaMap, writeDisaMap } from './lib/disa-map-citations.mjs';
+import { disaSupportingFiles } from './lib/disa-record-history.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (path) => JSON.parse(readFileSync(join(root, path), 'utf8'));
@@ -73,7 +75,7 @@ if (process.argv.includes('--baseline-only')) {
   process.exit(0);
 }
 
-const disa = read('data/disa-artifact-manifest.json'); const map = read('maps/stig-srg-to-cci.json');
+const disa = read('data/disa-artifact-manifest.json'); const map = readDisaMap(root);
 const evidenceByUrl = new Map(proofs['disa-stig'].source_evidence.map((entry) => [entry.url, entry]));
 const native = new Map();
 for (const kind of ['stig','srg']) for (const unit of proofs[`disa-${kind}`].native_units) for (const cci of unit.cci_ids) {
@@ -98,12 +100,14 @@ disa.reconciliation.ingested_files = nativeFiles.length;
 disa.reconciliation.publisher_citation_occurrences = citations;
 assert.equal(disa.reconciliation.compilation_ingested_files + disa.reconciliation.standalone_ingested_files, nativeFiles.length);
 
-const writes = new Map([['data/800-53b-baselines.json',baselines],['data/controls-800-53.json',controls],['maps/stig-srg-to-cci.json',map],['data/disa-artifact-manifest.json',disa]]);
+const writes = new Map([['data/800-53b-baselines.json',baselines],['data/controls-800-53.json',controls],['data/disa-artifact-manifest.json',disa]]);
+// The map is stored compact with checksummed prior-edition shards; hash what lands on disk.
+const storedMap = writeDisaMap(root, map);
 for (const [id, path] of [['artifact-disa-stig-library','data/stig-rules.json'],['artifact-disa-srg-library','data/srg-requirements.json'],['artifact-disa-stig-srg-cci-references','maps/stig-srg-to-cci.json']]) {
   const artifact = registry.artifacts.find((entry) => entry.id === id);
   const bytes = writes.has(path) ? Buffer.from(encode(writes.get(path))) : readFileSync(join(root,path));
   artifact.sha256 = hash(bytes); artifact.byte_length = bytes.length; artifact.origin = 'publisher_normalized';
-  artifact.metadata = { ...(artifact.metadata || {}), byte_evidence_kind: 'normalized_projection', byte_evidence_locator: path, upstream_format: 'xccdf', serialized_format: 'normalized_json', upstream_inventory: 'data/disa-artifact-manifest.json' };
+  artifact.metadata = { ...(artifact.metadata || {}), byte_evidence_kind: 'normalized_projection', byte_evidence_locator: path, upstream_format: 'xccdf', serialized_format: 'normalized_json', upstream_inventory: 'data/disa-artifact-manifest.json', ...(path === 'maps/stig-srg-to-cci.json' ? disaSupportingFiles(storedMap) : {}) };
   const receipt = hydration.results.find((entry) => entry.id === id); if (receipt) Object.assign(receipt,{sha256:artifact.sha256,byte_length:bytes.length,attestation:'Checksum identifies the normalized local projection; upstream archive byte evidence is separately verified by the DISA source manifest and publisher-unit inventory.'});
 }
 writes.set('data/source-registry.json',registry); writes.set('data/artifact-hydration-manifest.json',hydration);

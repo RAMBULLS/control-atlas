@@ -61,6 +61,13 @@ export function writeDisaCatalog(root, kind, document) {
   return main;
 }
 
+/** Registry descriptor for the supporting files a stored DISA projection references. */
+export function disaSupportingFiles(document) {
+  if (document.record_history) return { supporting_files: [{ ...document.record_history, role: 'retained_native_editions' }] };
+  if (document.citation_history?.shards?.length) return { supporting_files: document.citation_history.shards.map((shard) => ({ ...shard, role: 'prior_edition_citations' })) };
+  return {};
+}
+
 export const DISA_OWNED_SOURCE_IDS = ['disa-stig-library', 'disa-srg-library', 'disa-stig-srg-cci-references'];
 
 /** Attest actual stored projections and supporting files without inventing publisher byte evidence. */
@@ -74,7 +81,7 @@ export function attestDisaProjections(root, manifest) {
     if (document.records) artifact.record_count = document.records.length;
     if (document.relationships) artifact.relationship_count = document.relationships.length;
     artifact.metadata = { ...artifact.metadata, byte_evidence_kind: 'normalized_projection', byte_evidence_locator: relative, current_compilation_checksum: manifest.checksum,
-      ...(document.record_history ? { supporting_files: [{ ...document.record_history, role: 'retained_native_editions' }] } : {}) };
+      ...disaSupportingFiles(document) };
     const receipt = hydration.results.find((row) => row.id === id);
     if (receipt) Object.assign(receipt, { sha256: artifact.sha256, byte_length: bytes.length, url: manifest.compilation_url, retrieved_at: artifact.retrieved_at });
   }

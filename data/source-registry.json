@@ -3764,8 +3764,8 @@
       "retrieval_method": "direct_file_import",
       "retrieved_at": "2026-11-18",
       "artifact_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
-      "byte_length": 104643640,
-      "sha256": "sha256:77355822a792671d5a256764114eeb0c3a6631b8278b55875ddca90ddbea9e0e",
+      "byte_length": 61887681,
+      "sha256": "sha256:417e25a6a0165de20187d18dce4b1819fe023e305f6411e5663d6f6d51040594",
       "parser": "xccdf",
       "parser_version": "1.0.0",
       "record_count": 0,
@@ -3784,7 +3784,25 @@
           "July 2026",
           "October 2026"
         ],
-        "current_compilation_checksum": "sha256:ea581eb2d5c4a210440852b67ea4dd9564fffdf57c8c94aec971047fe0c01d1d"
+        "current_compilation_checksum": "sha256:ea581eb2d5c4a210440852b67ea4dd9564fffdf57c8c94aec971047fe0c01d1d",
+        "supporting_files": [
+          {
+            "path": "data/curated/disa/stig-srg-to-cci-citations/standalone-packages.json",
+            "sha256": "sha256:af31ef6a326364c1a1c2a7752ca42d87c31da7c7725fd9aaa5d3b1c152482677",
+            "byte_length": 9344376,
+            "connection_count": 15799,
+            "citation_count": 16162,
+            "role": "prior_edition_citations"
+          },
+          {
+            "path": "data/curated/disa/stig-srg-to-cci-citations/U_SRG-STIG_Library_July_2026.json",
+            "sha256": "sha256:3bd0eb29ff0b7df464de8428119d2c767dffcb6c3699d49870b40746fe34b486",
+            "byte_length": 17211771,
+            "connection_count": 28412,
+            "citation_count": 28412,
+            "role": "prior_edition_citations"
+          }
+        ]
       }
     },
     {

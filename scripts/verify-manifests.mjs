@@ -17,7 +17,8 @@ import { readGeneratedCollection } from './lib/generated-graph-artifacts.mjs';
 import { resolveExpectedLocator, classifyCatalog, summarizeCompleteness } from './lib/completeness.mjs';
 import { NON_CATALOG_TECHNICAL_SHARDS } from './sync-catalog-source-bundles.mjs';
 import { writeJsonAtomically } from './lib/write-json-atomically.mjs';
-import { restoreDisaHistory } from './lib/disa-record-history.mjs';
+import { restoreDisaHistory, disaSupportingFiles } from './lib/disa-record-history.mjs';
+import { DISA_MAP_PATH, restoreDisaMapCitations } from './lib/disa-map-citations.mjs';
 import { verifyNormalizedArtifactEvidence } from './lib/normalized-artifact-evidence.mjs';
 import { verifyBaselineManifest } from './lib/nist-baseline-profiles.mjs';
 
@@ -92,6 +93,13 @@ if (!registry) {
       if (JSON.stringify(declared) !== JSON.stringify(expected)) throw new Error('Supporting history descriptor disagrees with source registry');
     } catch (error) { err(`${id}: ${error.message}`); }
   }
+  try {
+    const document = readJson(DISA_MAP_PATH);
+    if (!document) throw new Error('Missing DISA connection map');
+    restoreDisaMapCitations(document, (relative) => readFileSync(join(ROOT, relative)));
+    const declared = artifacts.find((row) => row.id === 'artifact-disa-stig-srg-cci-references')?.metadata?.supporting_files || [];
+    if (JSON.stringify(declared) !== JSON.stringify(disaSupportingFiles(document).supporting_files || [])) throw new Error('Citation shard descriptor disagrees with source registry');
+  } catch (error) { err(`artifact-disa-stig-srg-cci-references: ${error.message}`); }
   const publications = registry.publications || [];
   const sources = registry.sources || [];
   const bundles = registry.catalog_source_bundles || [];

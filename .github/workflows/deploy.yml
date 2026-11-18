@@ -247,6 +247,11 @@ jobs:
           EXPECTED_DEPLOY_SHA: ${{ needs.deploy.outputs.sha }}
           PLAYWRIGHT_BROWSER: ${{ matrix.browser }}
           PLAYWRIGHT_JSON_OUTPUT_FILE: artifacts/production-acceptance/${{ matrix.browser }}/report.json
+          # The hosted-runner gate reads these inside the container. They come
+          # from the runner's own context; the gate still confirms the job
+          # through the GitHub job readback before any test runs.
+          RUNNER_ENVIRONMENT: ${{ runner.environment }}
+          RUNNER_NAME: ${{ runner.name }}
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:

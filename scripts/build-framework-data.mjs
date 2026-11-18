@@ -19,6 +19,7 @@ import {
 } from "../src/shared/source-text-presentation.mjs";
 import { writeJsonAtomically } from "./lib/write-json-atomically.mjs";
 import { restoreDisaHistory } from "./lib/disa-record-history.mjs";
+import { restoreDisaMapCitations } from "./lib/disa-map-citations.mjs";
 import { generatedAt as reproducibleGeneratedAt } from "./lib/stable-generated-at.mjs";
 import { validateGraphArtifacts } from "../tools/validators/federal-graph.mjs";
 import { loadSourceRegistry } from "../tools/validators/source-registry.mjs";
@@ -2356,7 +2357,10 @@ function buildEdges(registry, nodes) {
   ] of MAPS) {
     const path = join(ROOT, "maps", filename);
     if (!existsSync(path)) continue;
-    const document = readJson(path);
+    // Prior-edition citations live in checksummed supporting shards.
+    const document = restoreDisaMapCitations(readJson(path), (relative) =>
+      readFileSync(join(ROOT, relative)),
+    );
     for (const [index, relationship] of (
       document.relationships || []
     ).entries()) {

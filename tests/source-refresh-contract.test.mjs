@@ -62,12 +62,10 @@ test('scheduled source and health fetches use the governed transport', () => {
   assert.match(disa, /options\.fetchImpl \|\| strictConditionalFetch/);
 });
 
-test('the DISA relationship map uses compact serialization before GitHub publication', () => {
+test('the DISA relationship map uses compact, size-bounded storage before GitHub publication', () => {
   const disa = readFileSync('scripts/fetch-disa-stigs.mjs', 'utf8');
-  assert.match(
-    disa,
-    /writeJsonAtomically\(join\(outputRoot, 'maps', 'stig-srg-to-cci\.json'\), result\.relationships, \{ space: 0 \}\)/,
-  );
+  assert.match(disa, /writeDisaMap\(outputRoot, result\.relationships\)/);
+  assert.doesNotMatch(disa, /writeJsonAtomically\(join\(outputRoot, 'maps', 'stig-srg-to-cci\.json'\)/);
 });
 
 test('the contract states the same retry, heartbeat and escalation numbers the code runs', async () => {

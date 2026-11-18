@@ -5,6 +5,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { disaNativeInventories } from '../tools/importers/disa-native-inventory.mjs';
+import { readDisaMap, disaMapSupportingPaths } from './lib/disa-map-citations.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const candidate = '.local-agent/reference-export/current-disa-candidate';
@@ -30,7 +31,7 @@ for (const [kind, inventory] of Object.entries(inventories)) {
   const old = new Set(read(path).records.map((row) => row.id)); const current = new Set(records.map((row) => row.id));
   results.push({ catalog_id: `disa-${kind}`, current_publisher_ids: current.size, added_ids: [...current].filter((id) => !old.has(id)), prior_ids_absent_current: [...old].filter((id) => !current.has(id)) });
 }
-const map = read(`${candidate}/maps/stig-srg-to-cci.json`);
+const map = readDisaMap(join(root, candidate));
 const observedPairs = new Set(map.relationships.map((row) => key(row.source_catalog.replace('disa-', ''), row.source_id, row.target_id)));
 assert.equal(observedPairs.size, map.relationships.length, 'Duplicate native connections');
 assert.deepEqual([...observedPairs].sort(), [...nativePairs].sort(), 'Every native CCI assertion must reach a connection');
@@ -49,7 +50,7 @@ for (const row of map.relationships) {
 }
 assert.equal(inventories.stig.native_files.length, manifest.reconciliation.ingested_files, 'XCCDF file count must not count ZIPs as XML');
 writeFileSync(join(root, candidate, 'native-inventories.json'), `${JSON.stringify(inventories, null, 2)}\n`);
-const inputs = ['data/stig-rules.json', 'data/srg-requirements.json', 'maps/stig-srg-to-cci.json', 'data/disa-artifact-manifest.json', 'native-inventories.json'];
+const inputs = ['data/stig-rules.json', 'data/srg-requirements.json', 'maps/stig-srg-to-cci.json', ...disaMapSupportingPaths(join(root, candidate)), 'data/disa-artifact-manifest.json', 'native-inventories.json'];
 const receipt = { status: 'PASSED', input_sha256: Object.fromEntries(inputs.map((path) => [path, sha(`${candidate}/${path}`)])), catalogs: results, native_connections: nativePairs.size, native_citations: citations, xccdf_files: inventories.stig.native_files.length };
 writeFileSync(join(root, candidate, 'native-audit.json'), `${JSON.stringify(receipt, null, 2)}\n`);
 console.log(JSON.stringify({ ...receipt, input_sha256: undefined, catalogs: results.map((row) => ({ ...row, added_ids: row.added_ids.length, prior_ids_absent_current: row.prior_ids_absent_current.length })) }, null, 2));

@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { Zip, ZipDeflate, Unzip, UnzipInflate } from 'fflate';
 import { CATALOGS, MAPS } from './build-framework-data.mjs';
 import { readGeneratedCollection } from './lib/generated-graph-artifacts.mjs';
+import { disaMapSupportingPaths } from './lib/disa-map-citations.mjs';
 import { reconcileReferenceRelationships } from './lib/reference-reconciliation.mjs';
 import { ITEM_COLUMNS, CONNECTION_COLUMNS, csvRow, referenceItemRow, referenceConnectionRow, validateReferenceIdentity } from './lib/reference-export.mjs';
 import { csvRecords } from './lib/csv-records.mjs';
@@ -51,6 +52,7 @@ for (const [file, catalog] of CATALOGS) {
   for (const record of read(`data/${file}`).records) context.originalById.set(`${catalog}:${record.id}`, record);
 }
 for (const [file] of MAPS) if (existsSync(join(ROOT, 'maps', file))) inputs.add(`maps/${file}`);
+for (const path of disaMapSupportingPaths(ROOT)) inputs.add(path);
 inputs.add('data/curated/nist-zt/mappings.json');
 inputs.add('data/curated/nist-structured-catalogs/iot-requirements.json');
 inputs.add('data/curated/reference-catalogs/source-manifest.json');

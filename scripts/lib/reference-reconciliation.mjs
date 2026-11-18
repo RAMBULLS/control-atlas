@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { restoreDisaMapCitations } from './disa-map-citations.mjs';
 import { normalizeProfileToken } from '../../src/shared/entity-profiles.mjs';
 import { resolveRedundantPublisherReference, rejectInvalidPublisherIdentifier } from '../../tools/importers/reference-dispositions.mjs';
 
@@ -68,7 +69,7 @@ export function reconcileReferenceRelationships(root, graph, contracts) {
   };
   for (const [file, sourceCatalog, targetCatalog, defaultSourceId] of contracts.maps) {
     if (!existsSync(join(root, 'maps', file))) continue;
-    const document = read(`maps/${file}`);
+    const document = restoreDisaMapCitations(read(`maps/${file}`), (relative) => readFileSync(join(root, relative)));
     for (const [index, relationship] of (document.relationships || []).entries()) {
       check({ input: `maps/${file}#${index + 1}`, source: endpoint(relationship.source_catalog || sourceCatalog, relationship.source_id),
         target: endpoint(relationship.target_catalog || targetCatalog, relationship.target_id), predicate: relationship.relationship_type || 'maps_to',

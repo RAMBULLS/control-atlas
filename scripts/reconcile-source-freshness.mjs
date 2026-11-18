@@ -4,6 +4,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadSourceChecks } from './lib/source-check-receipts.mjs';
+import { DISA_MAP_PATH, readDisaMap } from './lib/disa-map-citations.mjs';
 import { sourceCheckFreshness } from '../tools/validators/source-registry.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -143,7 +144,8 @@ export function reconcileSourceFreshness(runDate = new Date().toISOString().slic
     [...ARTIFACTS].map(([sourceId, relativePaths]) => [
       sourceId,
       (Array.isArray(relativePaths) ? relativePaths : [relativePaths]).map((relativePath) =>
-        JSON.parse(readFileSync(join(ROOT, relativePath), 'utf8')),
+        // Hash the restored map so storage layout never reads as a content change.
+        relativePath === DISA_MAP_PATH ? readDisaMap(ROOT) : JSON.parse(readFileSync(join(ROOT, relativePath), 'utf8')),
       ),
     ]),
   );

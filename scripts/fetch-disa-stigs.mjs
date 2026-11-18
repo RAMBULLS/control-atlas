@@ -19,11 +19,12 @@ import { writeJsonAtomically } from './lib/write-json-atomically.mjs';
 import { createStrictConditionalFetch, fetchDisaPublicInventoryBytes } from './lib/strict-conditional-fetch.mjs';
 import { assertOfficialSourceUrl } from './lib/source-url-policy.mjs';
 import { readDisaCatalog, writeDisaCatalog, attestDisaProjections } from './lib/disa-record-history.mjs';
+import { readDisaMap, writeDisaMap } from './lib/disa-map-citations.mjs';
 import { verifyDisaSnapshot, mergeDisaSnapshot } from './lib/disa-refresh.mjs';
 import { disaNativeInventories } from '../tools/importers/disa-native-inventory.mjs';
 
 import { DISA_INITIAL_INVENTORY_BASELINE, DISA_PUBLIC_INVENTORY_URL, parseDisaPublicInventory, reconcileDisaPublicInventory, disaCanonicalHash } from './lib/disa-public-inventory.mjs';
-import { DISA_EVIDENCE_DIRECTORY, DISA_ACCEPTED_OUTPUT_PATHS, hashDisaFile, verifyRetainedDisaFile } from './lib/disa-source-acceptance.mjs';
+import { DISA_EVIDENCE_DIRECTORY, disaAcceptedOutputPaths, hashDisaFile, verifyRetainedDisaFile } from './lib/disa-source-acceptance.mjs';
 import { recordDisaInventoryReceipt, recordDisaNativeAcceptance } from './lib/source-check-receipts.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -513,7 +514,7 @@ async function main() {
     throw new Error(`DISA refresh failed: ${result.publications.failed_publications} publication(s) failed`);
   }
   if (!requestedOutput && !result.fallbackMode) {
-    const previous = { stig: readDisaCatalog(ROOT, 'stig'), srg: readDisaCatalog(ROOT, 'srg'), relationships: JSON.parse(readFileSync(COMMITTED_ARTIFACTS.relationships)) };
+    const previous = { stig: readDisaCatalog(ROOT, 'stig'), srg: readDisaCatalog(ROOT, 'srg'), relationships: readDisaMap(ROOT) };
     const manifest = writeDisaArtifactManifest(result, outputRoot);
     const native = await disaNativeInventories(ROOT, manifest);
     verifyDisaSnapshot(result, native, new Set(JSON.parse(readFileSync(join(ROOT, 'data/ccis.json'))).records.map((row) => row.id)));
@@ -527,14 +528,15 @@ async function main() {
     writeJsonAtomically(join(outputRoot, 'data', 'stig-rules.json'), result.stig);
     writeJsonAtomically(join(outputRoot, 'data', 'srg-requirements.json'), result.srg);
   }
-  writeJsonAtomically(join(outputRoot, 'maps', 'stig-srg-to-cci.json'), result.relationships, { space: 0 });
+  // Compact main map plus checksummed prior-edition citation shards, each under GitHub's file limit.
+  writeDisaMap(outputRoot, result.relationships);
   if (!result.fallbackMode && requestedOutput) writeDisaArtifactManifest(result, outputRoot);
   if (!result.fallbackMode && !requestedOutput) {
     const path = join(ROOT, 'data/disa-artifact-manifest.json'); const manifest = readJson(path);
     manifest.native_acceptance = { scope: 'publisher_bytes_and_native_content', code_commit: result.publicInventory.receipt.code_commit, verified_at: result.nativeVerifiedAt,
       inventory_checksum: result.publicInventory.receipt.inventory_checksum, response_checksum: result.publicInventory.receipt.sha256,
       native_checksum: hashDisaFile(join(ROOT, DISA_EVIDENCE_DIRECTORY, 'native.json')).checksum,
-      output_checksum: disaCanonicalHash(DISA_ACCEPTED_OUTPUT_PATHS.map((entry) => ({ path: entry, ...hashDisaFile(join(ROOT, entry)) }))),
+      output_checksum: disaCanonicalHash(disaAcceptedOutputPaths(ROOT).map((entry) => ({ path: entry, ...hashDisaFile(join(ROOT, entry)) }))),
       archives: [result.archiveEvidence, ...(result.standaloneSuccesses || []).map(({ source_url, checksum, byte_length, retrieval_timestamp, verified_at, acquisition }) =>
         ({ source_url, checksum, byte_length, retrieval_timestamp, verified_at, acquisition }))],
     };

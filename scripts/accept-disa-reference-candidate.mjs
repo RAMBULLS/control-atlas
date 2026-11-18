@@ -6,8 +6,9 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { preserveDisaRecordHistory, preserveDisaConnectionIds } from './lib/disa-publication-reconciliation.mjs';
 import { sourceUnitInventory } from '../tools/importers/native-unit-inventories.mjs';
-import { readDisaCatalog, separateDisaHistory } from './lib/disa-record-history.mjs';
+import { readDisaCatalog, separateDisaHistory, disaSupportingFiles } from './lib/disa-record-history.mjs';
 import { writeJsonAtomically } from './lib/write-json-atomically.mjs';
+import { readDisaMap, separateDisaMapCitations } from './lib/disa-map-citations.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const candidate = '.local-agent/reference-export/current-disa-candidate';
@@ -33,8 +34,12 @@ for (const kind of ['stig', 'srg']) {
   proofs.catalogs[`disa-${kind}`] = proof;
   summary.catalogs.push({ catalog_id: `disa-${kind}`, previous: prior.records.length, current: currentCount, retained_total: next.records.length, retained_absent_current: next.records.filter((row) => !row.metadata.current_snapshot_presence).length, previous_edition_records: next.records.filter((row) => row.metadata.previous_editions?.length).length });
 }
-const mapPath = 'maps/stig-srg-to-cci.json'; const prior = read(mapPath); const next = read(`${candidate}/${mapPath}`);
-next.relationships = preserveDisaConnectionIds(prior.relationships, next.relationships); writes.set(mapPath, next);
+const mapPath = 'maps/stig-srg-to-cci.json'; const prior = readDisaMap(root); const next = readDisaMap(join(root, candidate));
+next.relationships = preserveDisaConnectionIds(prior.relationships, next.relationships);
+// Store the map compact, with prior-edition citations in checksummed shards.
+const storedMap = separateDisaMapCitations(next); writes.set(mapPath, storedMap.main);
+for (const shard of storedMap.shards) writes.set(shard.ref.path, shard.document);
+const compact = new Set([mapPath, ...storedMap.shards.map((shard) => shard.ref.path)]);
 const nativeKey = (row) => JSON.stringify([row.source_catalog, row.source_id, row.target_catalog, row.target_id, row.relationship_type]);
 const nextIds = new Map(next.relationships.map((row) => [nativeKey(row), row.atlas_connection_id]));
 prior.relationships.forEach((row, index) => assert.equal(nextIds.get(nativeKey(row)), row.atlas_connection_id || `edge:stig-srg-to-cci:${index + 1}`));
@@ -42,10 +47,10 @@ summary.connections = { previous: prior.relationships.length, current: audit.nat
 manifest.retained_snapshot_union = summary; writes.set('data/disa-artifact-manifest.json', manifest); writes.set('data/curated/reference-catalogs/publisher-inventories.json', proofs);
 const registry = read('data/source-registry.json'); const hydration = read('data/artifact-hydration-manifest.json');
 for (const [id, path] of [['artifact-disa-stig-library', 'data/stig-rules.json'], ['artifact-disa-srg-library', 'data/srg-requirements.json'], ['artifact-disa-stig-srg-cci-references', mapPath]]) {
-  const artifact = registry.artifacts.find((row) => row.id === id); const bytes = Buffer.from(encode(writes.get(path)));
+  const artifact = registry.artifacts.find((row) => row.id === id); const bytes = Buffer.from(compact.has(path) ? `${JSON.stringify(writes.get(path))}\n` : encode(writes.get(path)));
   artifact.sha256 = hash(bytes); artifact.byte_length = bytes.length; artifact.artifact_url = manifest.compilation_url; artifact.retrieved_at = manifest.retrieval_timestamp.slice(0, 10);
   artifact.metadata = { ...artifact.metadata, byte_evidence_kind: 'normalized_projection', byte_evidence_locator: path, retained_snapshots: ['July 2026', 'October 2026'], current_compilation_checksum: manifest.checksum,
-    ...(writes.get(path).record_history ? { supporting_files: [{ ...writes.get(path).record_history, role: 'retained_native_editions' }] } : {}) };
+    ...disaSupportingFiles(writes.get(path)) };
   if (id.endsWith('cci-references')) artifact.relationship_count = next.relationships.length;
   else { artifact.record_count = writes.get(path).records.length; artifact.relationship_count = writes.get(path).records.reduce((count, row) => count + (row.metadata?.relationships || []).length, 0); }
   const receipt = hydration.results.find((row) => row.id === id); if (receipt) Object.assign(receipt, { sha256: artifact.sha256, byte_length: bytes.length, url: manifest.compilation_url, retrieved_at: artifact.retrieved_at });
@@ -59,6 +64,6 @@ for (const source of registry.publications.filter((row) => ['disa-stig-library',
 }
 writes.set('data/source-registry.json', registry); writes.set('data/artifact-hydration-manifest.json', hydration);
 // All assertions above complete before the first canonical write.
-for (const [path, document] of writes) writeJsonAtomically(join(root, path), document);
+for (const [path, document] of writes) writeJsonAtomically(join(root, path), document, compact.has(path) ? { space: 0 } : {});
 writeFileSync(join(root, candidate, 'acceptance.json'), encode({ status: 'ACCEPTED_LOCAL', ...summary }));
 console.log(JSON.stringify(summary, null, 2));

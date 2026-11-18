@@ -13,9 +13,9 @@
     "reconcile",
     "publish"
   ],
-  "started_at": "2026-11-18T01:11:59.946Z",
-  "completed_at": "2026-11-18T01:17:03.539Z",
-  "status": "complete_with_quarantine",
+  "started_at": "2026-11-18T02:13:00.927Z",
+  "completed_at": "2026-11-18T02:18:27.878Z",
+  "status": "complete",
   "failed_task": null,
   "results": [
     {
@@ -30,7 +30,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 315,
+      "duration_ms": 370,
       "source_results": [
         {
           "source_id": "discover-nist-pages",
@@ -51,7 +51,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 8227,
+      "duration_ms": 4801,
       "source_results": [
         {
           "source_id": "discover-nist-structured-assets",
@@ -72,7 +72,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 28
+      "duration_ms": 41
     },
     {
       "task_id": "observe-disa-sources",
@@ -87,7 +87,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 2515,
+      "duration_ms": 2612,
       "source_results": [
         {
           "source_id": "observe-disa-sources",
@@ -107,13 +107,13 @@
       "scope": [
         "framework-catalogs"
       ],
-      "status": "partial",
+      "status": "complete",
       "attempts": 1,
-      "duration_ms": 7421,
+      "duration_ms": 9995,
       "source_results": [
         {
           "source_id": "nist-800-53-rev5",
-          "status": "quarantined",
+          "status": "accepted",
           "attempts": 1
         },
         {
@@ -166,7 +166,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 658,
+      "duration_ms": 922,
       "source_results": [
         {
           "source_id": "fetch-fedramp-rules",
@@ -189,7 +189,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 2247,
+      "duration_ms": 2797,
       "source_results": [
         {
           "source_id": "fetch-nara-cui",
@@ -212,7 +212,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 23598,
+      "duration_ms": 21983,
       "source_results": [
         {
           "source_id": "fetch-olir-catalog",
@@ -235,7 +235,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 346,
+      "duration_ms": 550,
       "source_results": [
         {
           "source_id": "fetch-olir-mappings",
@@ -258,7 +258,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 1561,
+      "duration_ms": 1839,
       "source_results": [
         {
           "source_id": "fetch-ccis",
@@ -282,7 +282,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 29492,
+      "duration_ms": 37906,
       "source_results": [
         {
           "source_id": "fetch-disa-library",
@@ -304,13 +304,13 @@
         "mitre-attack",
         "mitre-d3fend"
       ],
-      "status": "quarantined",
+      "status": "complete",
       "attempts": 1,
-      "duration_ms": 202,
+      "duration_ms": 5538,
       "source_results": [
         {
           "source_id": "fetch-mitre",
-          "status": "quarantined",
+          "status": "accepted",
           "attempts": 1
         }
       ]
@@ -330,7 +330,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 6079,
+      "duration_ms": 3089,
       "source_results": [
         {
           "source_id": "fetch-zero-trust-workbooks",
@@ -350,13 +350,13 @@
       "scope": [
         "nist-zt"
       ],
-      "status": "quarantined",
+      "status": "complete",
       "attempts": 1,
-      "duration_ms": 213,
+      "duration_ms": 4411,
       "source_results": [
         {
           "source_id": "fetch-nist-zero-trust",
-          "status": "quarantined",
+          "status": "accepted",
           "attempts": 1
         }
       ]
@@ -376,7 +376,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 2162,
+      "duration_ms": 1879,
       "source_results": [
         {
           "source_id": "fetch-nist-structured-catalogs",
@@ -397,7 +397,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 393
+      "duration_ms": 584
     },
     {
       "task_id": "sync-zero-trust-registry",
@@ -415,7 +415,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 47
+      "duration_ms": 66
     },
     {
       "task_id": "sync-source-bundles",
@@ -429,7 +429,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 37
+      "duration_ms": 51
     },
     {
       "task_id": "migrate-source-truth-before-build",
@@ -445,7 +445,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 152
+      "duration_ms": 220
     },
     {
       "task_id": "sync-inventory-contracts",
@@ -460,7 +460,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 7376
+      "duration_ms": 9863
     },
     {
       "task_id": "hydrate-artifacts",
@@ -473,9 +473,9 @@
       "scope": [
         "all-artifacts"
       ],
-      "status": "partial",
+      "status": "complete",
       "attempts": 1,
-      "duration_ms": 45155,
+      "duration_ms": 40870,
       "source_results": [
         {
           "source_id": "artifact-nist-800-171-rev2",
@@ -650,11 +650,6 @@
         {
           "source_id": "artifact-dod-rai-toolkit",
           "status": "accepted",
-          "attempts": 1
-        },
-        {
-          "source_id": "artifact-ai-mil-responsible-ai",
-          "status": "quarantined",
           "attempts": 1
         },
         {
@@ -951,7 +946,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 87944,
+      "duration_ms": 79278,
       "source_results": [
         {
           "source_id": "tool-grype-vulnerability-scanner",
@@ -1284,7 +1279,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 170
+      "duration_ms": 233
     },
     {
       "task_id": "reconcile-freshness",
@@ -1299,7 +1294,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 2590
+      "duration_ms": 3553
     },
     {
       "task_id": "build-taxonomy-registry",
@@ -1314,7 +1309,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 63
+      "duration_ms": 75
     },
     {
       "task_id": "build-framework-data",
@@ -1332,7 +1327,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 24247
+      "duration_ms": 33158
     },
     {
       "task_id": "build-source-inventory",
@@ -1348,7 +1343,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 9186
+      "duration_ms": 12343
     },
     {
       "task_id": "build-commons-index",
@@ -1365,7 +1360,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 148
+      "duration_ms": 231
     },
     {
       "task_id": "build-source-count-ledger",
@@ -1380,7 +1375,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 6844
+      "duration_ms": 10409
     },
     {
       "task_id": "check-data-size",
@@ -1394,7 +1389,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 845
+      "duration_ms": 1149
     },
     {
       "task_id": "audit-coverage",
@@ -1408,7 +1403,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 2072
+      "duration_ms": 3034
     },
     {
       "task_id": "verify-discovery",
@@ -1422,7 +1417,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 131
+      "duration_ms": 177
     },
     {
       "task_id": "verify-manifests",
@@ -1438,7 +1433,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 6266
+      "duration_ms": 8697
     },
     {
       "task_id": "build-publication-identity-index",
@@ -1453,7 +1448,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 89
+      "duration_ms": 109
     },
     {
       "task_id": "build-publication-audit-report",
@@ -1468,7 +1463,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 65
+      "duration_ms": 76
     },
     {
       "task_id": "build-source-semantic-audit",
@@ -1483,7 +1478,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 765
+      "duration_ms": 1042
     },
     {
       "task_id": "build-discovery-index",
@@ -1498,7 +1493,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 399
+      "duration_ms": 564
     },
     {
       "task_id": "verify-reference-relationships",
@@ -1513,7 +1508,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 3367
+      "duration_ms": 4597
     },
     {
       "task_id": "verify-completeness",
@@ -1527,7 +1522,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 38
+      "duration_ms": 41
     },
     {
       "task_id": "verify-ingestion-contract",
@@ -1543,7 +1538,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 3725
+      "duration_ms": 5071
     },
     {
       "task_id": "verify-resource-ingestion",
@@ -1560,7 +1555,7 @@
       ],
       "status": "complete",
       "attempts": 1,
-      "duration_ms": 78
+      "duration_ms": 93
     }
   ]
 }

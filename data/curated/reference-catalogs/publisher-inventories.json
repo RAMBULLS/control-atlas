@@ -896877,6 +896877,86 @@
           "byte_length": 1804041,
           "evidence_kind": "downloaded_publisher_bytes",
           "retrieved_at": "2026-11-18T01:13:02.204Z"
+        },
+        {
+          "source_id": "artifact-disa-compilation-zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
+          "sha256": "sha256:ea581eb2d5c4a210440852b67ea4dd9564fffdf57c8c94aec971047fe0c01d1d",
+          "byte_length": 375827141,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:13:54.334Z"
+        },
+        {
+          "source_id": "disa-package:U_Microsoft_Project_2016_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Microsoft_Project_2016_V1R1_STIG.zip",
+          "sha256": "sha256:3c0080642e359b704a7c20035c6f00a760f6a0d2b76986f289571dadf9e40499",
+          "byte_length": 364625,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:14:04.935Z"
+        },
+        {
+          "source_id": "disa-package:U_MOT_Solutions_Android_13_Y25M03_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MOT_Solutions_Android_13_Y25M03_STIG.zip",
+          "sha256": "sha256:497720d0953aef9308cc6bc41738487eb18eda5ce8cbdab921bdd69345891f4a",
+          "byte_length": 2257014,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:14:04.960Z"
+        },
+        {
+          "source_id": "disa-package:U_Oracle_Database_12c_V3R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Oracle_Database_12c_V3R5_STIG.zip",
+          "sha256": "sha256:75398ae44f48578c74cb566ede9347b9af432ef642cf41a237c3dba377d5e8bc",
+          "byte_length": 1683866,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:14:04.703Z"
+        },
+        {
+          "source_id": "disa-package:U_SLES_V11_for_System_z_V1R12_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SLES_V11_for_System_z_V1R12_STIG.zip",
+          "sha256": "sha256:4a849e95ae5c5186500b20f145717aa69e7b5b3a74ec6d6b2eea25a0c71e7689",
+          "byte_length": 582292,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:14:04.797Z"
+        },
+        {
+          "source_id": "disa-package:U_VMware_NSX_Distributed_Logical_Router_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMware_NSX_Distributed_Logical_Router_V1R1_STIG.zip",
+          "sha256": "sha256:cc641aa051b2a375cde80c2f35aa85bda7b8f72b58a0d9a31156b575ac8edc79",
+          "byte_length": 256563,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:14:04.946Z"
+        },
+        {
+          "source_id": "disa-package:U_VMware_NSX_Manager_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMware_NSX_Manager_V1R1_STIG.zip",
+          "sha256": "sha256:54b8ccaa5e9031192833bce674faaf6c35e0c4fe0754fd98035ddfcd640a7d78",
+          "byte_length": 267808,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:14:04.782Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_27_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_27_V1R1_STIG.zip",
+          "sha256": "sha256:db83ad391f6545abce7b3c8b50c13fe7b0d9041710e77e24627c1f7ca62de6ce",
+          "byte_length": 2501445,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:14:05.115Z"
+        },
+        {
+          "source_id": "disa-package:U_Omnissa_Horizon_Y26M09_STIG.zip",
+          "url": "https://dl.dod.cyber.mil//wp-content/uploads/stigs/zip/U_Omnissa_Horizon_Y26M09_STIG.zip",
+          "sha256": "sha256:a93d2fc2ee3795567e51751c036d40cecbf04b491a207f484690041ab37907e6",
+          "byte_length": 2145645,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:14:05.224Z"
+        },
+        {
+          "source_id": "disa-package:U_MariaDB_Enterprise_Server_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MariaDB_Enterprise_Server_V1R1_STIG.zip",
+          "sha256": "sha256:74fe9de236eaa1d02b2190837c0e2197655dbe78eef430f94d02d4c5aa247201",
+          "byte_length": 1804041,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:14:05.324Z"
         }
       ],
       "native_files": [
@@ -1028309,6 +1028389,86 @@
           "byte_length": 1804041,
           "evidence_kind": "downloaded_publisher_bytes",
           "retrieved_at": "2026-11-18T01:13:02.204Z"
+        },
+        {
+          "source_id": "artifact-disa-compilation-zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
+          "sha256": "sha256:ea581eb2d5c4a210440852b67ea4dd9564fffdf57c8c94aec971047fe0c01d1d",
+          "byte_length": 375827141,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:13:54.334Z"
+        },
+        {
+          "source_id": "disa-package:U_Microsoft_Project_2016_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Microsoft_Project_2016_V1R1_STIG.zip",
+          "sha256": "sha256:3c0080642e359b704a7c20035c6f00a760f6a0d2b76986f289571dadf9e40499",
+          "byte_length": 364625,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:14:04.935Z"
+        },
+        {
+          "source_id": "disa-package:U_MOT_Solutions_Android_13_Y25M03_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MOT_Solutions_Android_13_Y25M03_STIG.zip",
+          "sha256": "sha256:497720d0953aef9308cc6bc41738487eb18eda5ce8cbdab921bdd69345891f4a",
+          "byte_length": 2257014,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:14:04.960Z"
+        },
+        {
+          "source_id": "disa-package:U_Oracle_Database_12c_V3R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Oracle_Database_12c_V3R5_STIG.zip",
+          "sha256": "sha256:75398ae44f48578c74cb566ede9347b9af432ef642cf41a237c3dba377d5e8bc",
+          "byte_length": 1683866,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:14:04.703Z"
+        },
+        {
+          "source_id": "disa-package:U_SLES_V11_for_System_z_V1R12_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SLES_V11_for_System_z_V1R12_STIG.zip",
+          "sha256": "sha256:4a849e95ae5c5186500b20f145717aa69e7b5b3a74ec6d6b2eea25a0c71e7689",
+          "byte_length": 582292,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:14:04.797Z"
+        },
+        {
+          "source_id": "disa-package:U_VMware_NSX_Distributed_Logical_Router_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMware_NSX_Distributed_Logical_Router_V1R1_STIG.zip",
+          "sha256": "sha256:cc641aa051b2a375cde80c2f35aa85bda7b8f72b58a0d9a31156b575ac8edc79",
+          "byte_length": 256563,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:14:04.946Z"
+        },
+        {
+          "source_id": "disa-package:U_VMware_NSX_Manager_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMware_NSX_Manager_V1R1_STIG.zip",
+          "sha256": "sha256:54b8ccaa5e9031192833bce674faaf6c35e0c4fe0754fd98035ddfcd640a7d78",
+          "byte_length": 267808,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:14:04.782Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_27_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_27_V1R1_STIG.zip",
+          "sha256": "sha256:db83ad391f6545abce7b3c8b50c13fe7b0d9041710e77e24627c1f7ca62de6ce",
+          "byte_length": 2501445,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:14:05.115Z"
+        },
+        {
+          "source_id": "disa-package:U_Omnissa_Horizon_Y26M09_STIG.zip",
+          "url": "https://dl.dod.cyber.mil//wp-content/uploads/stigs/zip/U_Omnissa_Horizon_Y26M09_STIG.zip",
+          "sha256": "sha256:a93d2fc2ee3795567e51751c036d40cecbf04b491a207f484690041ab37907e6",
+          "byte_length": 2145645,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:14:05.224Z"
+        },
+        {
+          "source_id": "disa-package:U_MariaDB_Enterprise_Server_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MariaDB_Enterprise_Server_V1R1_STIG.zip",
+          "sha256": "sha256:74fe9de236eaa1d02b2190837c0e2197655dbe78eef430f94d02d4c5aa247201",
+          "byte_length": 1804041,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-18T02:14:05.324Z"
         }
       ],
       "native_files": [

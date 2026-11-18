@@ -1013,7 +1013,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-11-16T19:59:13Z",
-          "latestRepositoryUpdateAt": "2026-11-18T01:04:26Z",
+          "latestRepositoryUpdateAt": "2026-11-18T01:20:38Z",
           "license": "Apache-2.0",
           "description": "CLI tool and library for generating a Software Bill of Materials from container images and filesystems"
         }
@@ -1513,12 +1513,12 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-11-16T11:26:01Z",
-          "latestRepositoryUpdateAt": "2026-11-17T23:23:17Z",
+          "latestRepositoryUpdateAt": "2026-11-18T02:09:30Z",
           "license": "MIT",
           "description": "Small and highly portable detection tests based on MITRE's ATT&CK."
         }
       },
-      "publisherUpdatedAt": "2026-11-17",
+      "publisherUpdatedAt": "2026-11-18",
       "lastCommitAt": "2026-11-16T11:26:01Z",
       "license": "MIT"
     },
@@ -2264,7 +2264,7 @@
           "topics": [],
           "archived": false,
           "lastPushedAt": "2026-11-18T01:13:34Z",
-          "latestRepositoryUpdateAt": "2026-11-18T00:13:27Z",
+          "latestRepositoryUpdateAt": "2026-11-18T01:52:00Z",
           "license": "Apache-2.0",
           "description": "Six Degrees of Domain Admin"
         }
@@ -7123,7 +7123,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-11-16T04:11:19Z",
-          "latestRepositoryUpdateAt": "2026-11-18T00:17:46Z",
+          "latestRepositoryUpdateAt": "2026-11-18T01:28:05Z",
           "license": "Apache-2.0",
           "description": "The Cyber Swiss Army Knife - a web app for encryption, encoding, compression and data analysis"
         }
@@ -11553,7 +11553,7 @@
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "0.45.2",
-      "publisherUpdatedAt": "2026-11-17",
+      "publisherUpdatedAt": "2026-11-18",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -11632,7 +11632,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-11-09T06:43:23Z",
-          "latestRepositoryUpdateAt": "2026-11-17T22:30:27Z",
+          "latestRepositoryUpdateAt": "2026-11-18T02:01:10Z",
           "license": "Apache-2.0",
           "description": "Cloud Native Runtime Security"
         }
@@ -15222,7 +15222,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-11-17T17:13:20Z",
-          "latestRepositoryUpdateAt": "2026-11-18T01:04:58Z",
+          "latestRepositoryUpdateAt": "2026-11-18T01:59:14Z",
           "license": "Apache-2.0",
           "description": "Kubescape is an open-source Kubernetes security platform for your IDE, CI/CD pipelines, and clusters. It includes risk analysis, security, compliance, and misconfiguration scanning, saving Kubernetes users and administrators precious time, effort, and resources."
         }
@@ -15727,7 +15727,7 @@
       "license": "GPL-3.0",
       "maintenanceStatus": "active",
       "currentVersion": "3.1.7",
-      "publisherUpdatedAt": "2026-11-17",
+      "publisherUpdatedAt": "2026-11-18",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -15818,7 +15818,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-09-16T21:41:02Z",
-          "latestRepositoryUpdateAt": "2026-11-17T23:58:59Z",
+          "latestRepositoryUpdateAt": "2026-11-18T01:17:17Z",
           "license": "GPL-3.0",
           "description": "Lynis - Security auditing tool for Linux, macOS, and UNIX-based systems. Assists with compliance testing (HIPAA/ISO27001/PCI DSS) and system hardening. Agentless, and installation optional."
         }
@@ -17658,14 +17658,14 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-11-17T21:19:54Z",
-          "latestRepositoryUpdateAt": "2026-11-17T17:43:28Z",
+          "latestRepositoryUpdateAt": "2026-11-18T01:53:28Z",
           "license": "AGPL-3.0",
           "description": "MISP (core software) - Open Source Threat Intelligence and Sharing Platform"
         }
       },
       "currentVersion": "v2.5.51",
       "lastReleaseAt": "2026-11-11T16:05:23Z",
-      "publisherUpdatedAt": "2026-11-17",
+      "publisherUpdatedAt": "2026-11-18",
       "lastCommitAt": "2026-11-17T21:19:54Z",
       "license": "AGPL-3.0"
     },
@@ -18732,7 +18732,7 @@
             "mitre-saf"
           ],
           "archived": false,
-          "lastPushedAt": "2026-11-18T01:15:03Z",
+          "lastPushedAt": "2026-11-18T01:20:28Z",
           "latestRepositoryUpdateAt": "2026-11-12T22:20:20Z",
           "license": "NOASSERTION",
           "description": "Heimdall Enterprise Server 2 lets you view, store, and compare automated security control scan results."
@@ -18770,7 +18770,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-11-18T01:15:03Z.",
+          "text": "Latest repository push: 2026-11-18T01:20:28Z.",
           "sourceUrl": "https://api.github.com/repos/mitre/heimdall2"
         },
         "release": {
@@ -18783,7 +18783,7 @@
         }
       },
       "lastReleaseAt": "2026-10-30T21:18:43Z",
-      "lastCommitAt": "2026-11-18T01:15:03Z",
+      "lastCommitAt": "2026-11-18T01:20:28Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -21895,7 +21895,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-11-17T22:13:02Z",
-          "latestRepositoryUpdateAt": "2026-11-18T00:32:28Z",
+          "latestRepositoryUpdateAt": "2026-11-18T01:47:34Z",
           "license": "MIT",
           "description": "Nuclei is a fast, customizable vulnerability scanner powered by the global security community and built on a simple YAML-based DSL, enabling collaboration to tackle trending vulnerabilities on the internet. It helps you find vulnerabilities in your applications, APIs, networks, DNS, and cloud configurations."
         }
@@ -22734,7 +22734,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-11-18T01:01:53Z.",
+          "text": "Latest repository push: 2026-11-18T01:21:57Z.",
           "sourceUrl": "https://api.github.com/repos/OpenCTI-Platform/opencti"
         },
         "release": {
@@ -22813,16 +22813,16 @@
             "threat-intelligence"
           ],
           "archived": false,
-          "lastPushedAt": "2026-11-18T01:01:53Z",
-          "latestRepositoryUpdateAt": "2026-11-17T22:51:22Z",
+          "lastPushedAt": "2026-11-18T01:21:57Z",
+          "latestRepositoryUpdateAt": "2026-11-18T01:53:26Z",
           "license": "NOASSERTION",
           "description": "Open Cyber Threat Intelligence Platform"
         }
       },
       "currentVersion": "7.261117.0",
       "lastReleaseAt": "2026-11-17T11:08:54Z",
-      "publisherUpdatedAt": "2026-11-17",
-      "lastCommitAt": "2026-11-18T01:01:53Z"
+      "publisherUpdatedAt": "2026-11-18",
+      "lastCommitAt": "2026-11-18T01:21:57Z"
     },
     {
       "id": "tool-openscap",
@@ -23869,7 +23869,7 @@
       ],
       "overview": {
         "text": "Use OSV-Scanner to find existing vulnerabilities affecting your project's dependencies. OSV-Scanner provides an officially supported frontend to the OSV database and CLI interface to OSV-Scalibr that connects a project’s list of dependencies with the vulnerabilities that affect them.",
-        "sourceUrl": "https://github.com/google/osv-scanner/blob/2fd119e29c0b833c9ee95508c514d519b59450c9/README.md",
+        "sourceUrl": "https://github.com/google/osv-scanner/blob/eba4fa7aeb8ea9cda48759d9afd0bfe88b2983e9/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
@@ -23877,10 +23877,10 @@
         "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/google/osv-scanner",
-        "commitSha": "2fd119e29c0b833c9ee95508c514d519b59450c9",
-        "commitUrl": "https://github.com/google/osv-scanner/commit/2fd119e29c0b833c9ee95508c514d519b59450c9",
+        "commitSha": "eba4fa7aeb8ea9cda48759d9afd0bfe88b2983e9",
+        "commitUrl": "https://github.com/google/osv-scanner/commit/eba4fa7aeb8ea9cda48759d9afd0bfe88b2983e9",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/google/osv-scanner/blob/2fd119e29c0b833c9ee95508c514d519b59450c9/README.md",
+        "readmeUrl": "https://github.com/google/osv-scanner/blob/eba4fa7aeb8ea9cda48759d9afd0bfe88b2983e9/README.md",
         "readmeSha256": "sha256:ae9d6a52e41fea4dad413bf20ef6097cba581891e139e918484c38cad8fcb751",
         "readmeByteLength": 11071,
         "overviewExcerpt": "Use OSV-Scanner to find existing vulnerabilities affecting your project's dependencies. OSV-Scanner provides an officially supported frontend to the OSV database and CLI interface to OSV-Scalibr that connects a project’s list of dependencies with the vulnerabilities that affect them.",
@@ -23919,8 +23919,8 @@
             "vulnerability-scanner"
           ],
           "archived": false,
-          "lastPushedAt": "2026-11-18T01:11:24Z",
-          "latestRepositoryUpdateAt": "2026-11-18T01:04:50Z",
+          "lastPushedAt": "2026-11-18T01:54:35Z",
+          "latestRepositoryUpdateAt": "2026-11-18T01:21:24Z",
           "license": "Apache-2.0",
           "description": "Vulnerability scanner written in Go which uses the data provided by https://osv.dev"
         }
@@ -23928,7 +23928,7 @@
       "currentVersion": "v2.7.1",
       "lastReleaseAt": "2026-11-09T04:15:04Z",
       "publisherUpdatedAt": "2026-11-18",
-      "lastCommitAt": "2026-11-18T01:11:24Z",
+      "lastCommitAt": "2026-11-18T01:54:35Z",
       "license": "Apache-2.0"
     },
     {
@@ -24911,7 +24911,7 @@
       "license": "MIT",
       "maintenanceStatus": "active",
       "currentVersion": "4.30.0-PSGallery",
-      "publisherUpdatedAt": "2026-11-07",
+      "publisherUpdatedAt": "2026-11-18",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -24988,7 +24988,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-09-18T02:28:05Z",
-          "latestRepositoryUpdateAt": "2026-11-07T07:09:55Z",
+          "latestRepositoryUpdateAt": "2026-11-18T01:33:21Z",
           "license": "NOASSERTION",
           "description": "STIG Automation "
         }
@@ -25401,7 +25401,7 @@
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "5.50.0",
-      "publisherUpdatedAt": "2026-11-17",
+      "publisherUpdatedAt": "2026-11-18",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -25546,7 +25546,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-11-17T16:06:03Z",
-          "latestRepositoryUpdateAt": "2026-11-17T22:08:38Z",
+          "latestRepositoryUpdateAt": "2026-11-18T01:57:41Z",
           "license": "Apache-2.0",
           "description": "This repo hosts Prowler OSS (CLI and Local Server). Prowler is the world’s most widely used open-source cloud security platform that automates security and compliance across any cloud environment for Humans and AI Agents."
         }
@@ -27512,7 +27512,7 @@
       "license": "GPL-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "5.14.0",
-      "publisherUpdatedAt": "2026-11-16",
+      "publisherUpdatedAt": "2026-11-18",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -27593,7 +27593,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2025-09-23T18:33:52Z",
-          "latestRepositoryUpdateAt": "2026-11-16T20:32:05Z",
+          "latestRepositoryUpdateAt": "2026-11-18T02:03:05Z",
           "license": "GPL-2.0",
           "description": "Multi-Cloud Security Auditing Tool"
         }
@@ -28045,7 +28045,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-11-18T00:21:36Z",
-          "latestRepositoryUpdateAt": "2026-11-18T01:03:48Z",
+          "latestRepositoryUpdateAt": "2026-11-18T02:07:47Z",
           "license": "LGPL-2.1",
           "description": "Lightweight static analysis for many languages. Find bug variants with patterns that look like source code."
         }
@@ -28575,14 +28575,14 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-11-17T10:07:09Z",
-          "latestRepositoryUpdateAt": "2026-11-17T23:12:15Z",
+          "latestRepositoryUpdateAt": "2026-11-18T02:07:21Z",
           "license": "NOASSERTION",
           "description": "Main Sigma Rule Repository"
         }
       },
       "currentVersion": "r2026-07-01",
       "lastReleaseAt": "2026-07-09T14:51:34Z",
-      "publisherUpdatedAt": "2026-11-17",
+      "publisherUpdatedAt": "2026-11-18",
       "lastCommitAt": "2026-11-17T10:07:09Z"
     },
     {
@@ -28699,7 +28699,7 @@
       ],
       "overview": {
         "text": "Signing OCI containers (and other artifacts) using Sigstore!",
-        "sourceUrl": "https://github.com/sigstore/cosign/blob/d93bbdba1ba2544fe54fdc7db2abafb510608c5a/README.md",
+        "sourceUrl": "https://github.com/sigstore/cosign/blob/0743bfcff5f81ec49ffcea2f61b98938f6ba70ec/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
@@ -28713,17 +28713,17 @@
         "environments": [
           "Kubernetes"
         ],
-        "sourceUrl": "https://github.com/sigstore/cosign/blob/d93bbdba1ba2544fe54fdc7db2abafb510608c5a/README.md",
+        "sourceUrl": "https://github.com/sigstore/cosign/blob/0743bfcff5f81ec49ffcea2f61b98938f6ba70ec/README.md",
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
         "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/sigstore/cosign",
-        "commitSha": "d93bbdba1ba2544fe54fdc7db2abafb510608c5a",
-        "commitUrl": "https://github.com/sigstore/cosign/commit/d93bbdba1ba2544fe54fdc7db2abafb510608c5a",
+        "commitSha": "0743bfcff5f81ec49ffcea2f61b98938f6ba70ec",
+        "commitUrl": "https://github.com/sigstore/cosign/commit/0743bfcff5f81ec49ffcea2f61b98938f6ba70ec",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/sigstore/cosign/blob/d93bbdba1ba2544fe54fdc7db2abafb510608c5a/README.md",
+        "readmeUrl": "https://github.com/sigstore/cosign/blob/0743bfcff5f81ec49ffcea2f61b98938f6ba70ec/README.md",
         "readmeSha256": "sha256:ff167bbc67a9ad2a043bc0581c5f5cfd9701cf826bc8ea15c18d01b496920983",
         "readmeByteLength": 34472,
         "overviewExcerpt": "Signing OCI containers (and other artifacts) using Sigstore!",
@@ -28763,7 +28763,7 @@
           "primaryLanguage": "Go",
           "topics": [],
           "archived": false,
-          "lastPushedAt": "2026-11-17T20:35:41Z",
+          "lastPushedAt": "2026-11-18T01:34:34Z",
           "latestRepositoryUpdateAt": "2026-11-17T22:01:53Z",
           "license": "Apache-2.0",
           "description": "Code signing and transparency for containers and binaries"
@@ -28772,7 +28772,7 @@
       "currentVersion": "v3.1.4",
       "lastReleaseAt": "2026-10-20T18:27:42Z",
       "publisherUpdatedAt": "2026-11-17",
-      "lastCommitAt": "2026-11-17T20:35:41Z",
+      "lastCommitAt": "2026-11-18T01:34:34Z",
       "license": "Apache-2.0"
     },
     {
@@ -29205,7 +29205,7 @@
       "license": "AGPL-3.0",
       "maintenanceStatus": "active",
       "currentVersion": "v2.5.1",
-      "publisherUpdatedAt": "2026-11-16",
+      "publisherUpdatedAt": "2026-11-18",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -29299,7 +29299,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-11-17T15:39:57Z",
-          "latestRepositoryUpdateAt": "2026-11-16T18:09:27Z",
+          "latestRepositoryUpdateAt": "2026-11-18T02:10:57Z",
           "license": "AGPL-3.0",
           "description": "Zero-ETL, infinite possibilities. Live query APIs, code & more with SQL. No DB required."
         }
@@ -31199,7 +31199,7 @@
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "v0.76.2",
-      "publisherUpdatedAt": "2026-11-17",
+      "publisherUpdatedAt": "2026-11-18",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -31283,7 +31283,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-11-17T07:46:18Z",
-          "latestRepositoryUpdateAt": "2026-11-17T23:46:54Z",
+          "latestRepositoryUpdateAt": "2026-11-18T02:02:58Z",
           "license": "Apache-2.0",
           "description": "Find vulnerabilities, misconfigurations, secrets, SBOM in containers, Kubernetes, code repositories, clouds and more"
         }
@@ -31733,11 +31733,11 @@
         "usage": {
           "status": "documented",
           "text": "If you want to see what Velociraptor is all about simply: 1. Download the binary from the release page for your favorite platform (Windows/Linux/MacOS). 2. Start the GUI bash $ velociraptor gui This will bring up the GUI, Frontend and a local client. You can collect artifacts from the client (which is just running on your own machine) as normal. Once you are ready for a full deployment, check out the various deployment options at https://docs.velociraptor.app/docs/deployment/",
-          "sourceUrl": "https://github.com/Velocidex/velociraptor/blob/d394e33e0d7156745154ee2aba639fe2ebc07655/README.md"
+          "sourceUrl": "https://github.com/Velocidex/velociraptor/blob/4040d81cbf4064b62847b931f824abe8f6659191/README.md"
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-11-15T05:44:35Z.",
+          "text": "Latest repository push: 2026-11-18T01:32:43Z.",
           "sourceUrl": "https://api.github.com/repos/Velocidex/velociraptor"
         },
         "release": {
@@ -31751,7 +31751,7 @@
       },
       "overview": {
         "text": "Velociraptor is a tool for collecting host based state information using The Velociraptor Query Language (VQL) queries.",
-        "sourceUrl": "https://github.com/Velocidex/velociraptor/blob/d394e33e0d7156745154ee2aba639fe2ebc07655/README.md",
+        "sourceUrl": "https://github.com/Velocidex/velociraptor/blob/4040d81cbf4064b62847b931f824abe8f6659191/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
@@ -31763,17 +31763,17 @@
           "Linux"
         ],
         "environments": [],
-        "sourceUrl": "https://github.com/Velocidex/velociraptor/blob/d394e33e0d7156745154ee2aba639fe2ebc07655/README.md",
+        "sourceUrl": "https://github.com/Velocidex/velociraptor/blob/4040d81cbf4064b62847b931f824abe8f6659191/README.md",
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
         "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/Velocidex/velociraptor",
-        "commitSha": "d394e33e0d7156745154ee2aba639fe2ebc07655",
-        "commitUrl": "https://github.com/Velocidex/velociraptor/commit/d394e33e0d7156745154ee2aba639fe2ebc07655",
+        "commitSha": "4040d81cbf4064b62847b931f824abe8f6659191",
+        "commitUrl": "https://github.com/Velocidex/velociraptor/commit/4040d81cbf4064b62847b931f824abe8f6659191",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/Velocidex/velociraptor/blob/d394e33e0d7156745154ee2aba639fe2ebc07655/README.md",
+        "readmeUrl": "https://github.com/Velocidex/velociraptor/blob/4040d81cbf4064b62847b931f824abe8f6659191/README.md",
         "readmeSha256": "sha256:5db0ce6b15342a696f5e0c807d69da5fa815d14c00a80e5c581018b85f792b2e",
         "readmeByteLength": 6523,
         "overviewExcerpt": "Velociraptor is a tool for collecting host based state information using The Velociraptor Query Language (VQL) queries.",
@@ -31815,7 +31815,7 @@
             "inventory-management"
           ],
           "archived": false,
-          "lastPushedAt": "2026-11-15T05:44:35Z",
+          "lastPushedAt": "2026-11-18T01:32:43Z",
           "latestRepositoryUpdateAt": "2026-11-17T15:19:47Z",
           "license": "NOASSERTION",
           "description": "Digging Deeper...."
@@ -31824,7 +31824,7 @@
       "currentVersion": "v0.77.3",
       "lastReleaseAt": "2026-10-05T01:00:38Z",
       "publisherUpdatedAt": "2026-11-17",
-      "lastCommitAt": "2026-11-15T05:44:35Z"
+      "lastCommitAt": "2026-11-18T01:32:43Z"
     },
     {
       "id": "service-virustotal",
@@ -32420,8 +32420,8 @@
             "xdr"
           ],
           "archived": false,
-          "lastPushedAt": "2026-11-18T01:03:19Z",
-          "latestRepositoryUpdateAt": "2026-11-18T01:02:18Z",
+          "lastPushedAt": "2026-11-18T01:17:48Z",
+          "latestRepositoryUpdateAt": "2026-11-18T01:52:53Z",
           "license": "NOASSERTION",
           "description": "Wazuh - The Open Source Security Platform. Unified XDR and SIEM protection for endpoints and cloud workloads."
         }
@@ -32448,7 +32448,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-11-18T01:03:19Z.",
+          "text": "Latest repository push: 2026-11-18T01:17:48Z.",
           "sourceUrl": "https://api.github.com/repos/wazuh/wazuh"
         },
         "release": {
@@ -32461,7 +32461,7 @@
         }
       },
       "lastReleaseAt": "2026-11-09T10:33:53Z",
-      "lastCommitAt": "2026-11-18T01:03:19Z",
+      "lastCommitAt": "2026-11-18T01:17:48Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -33531,9 +33531,9 @@
     },
     {
       "id": "resource:ecosystem-osv:publisher-destination",
-      "sourceUrl": "https://github.com/google/osv-scanner/commit/2fd119e29c0b833c9ee95508c514d519b59450c9",
+      "sourceUrl": "https://github.com/google/osv-scanner/commit/eba4fa7aeb8ea9cda48759d9afd0bfe88b2983e9",
       "locatorType": "repository_commit",
-      "locator": "2fd119e29c0b833c9ee95508c514d519b59450c9",
+      "locator": "eba4fa7aeb8ea9cda48759d9afd0bfe88b2983e9",
       "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
@@ -33555,9 +33555,9 @@
     },
     {
       "id": "resource:ecosystem-sigstore-cosign:publisher-destination",
-      "sourceUrl": "https://github.com/sigstore/cosign/commit/d93bbdba1ba2544fe54fdc7db2abafb510608c5a",
+      "sourceUrl": "https://github.com/sigstore/cosign/commit/0743bfcff5f81ec49ffcea2f61b98938f6ba70ec",
       "locatorType": "repository_commit",
-      "locator": "d93bbdba1ba2544fe54fdc7db2abafb510608c5a",
+      "locator": "0743bfcff5f81ec49ffcea2f61b98938f6ba70ec",
       "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
@@ -34699,9 +34699,9 @@
     },
     {
       "id": "resource:tool-velociraptor:publisher-destination",
-      "sourceUrl": "https://github.com/Velocidex/velociraptor/commit/d394e33e0d7156745154ee2aba639fe2ebc07655",
+      "sourceUrl": "https://github.com/Velocidex/velociraptor/commit/4040d81cbf4064b62847b931f824abe8f6659191",
       "locatorType": "repository_commit",
-      "locator": "d394e33e0d7156745154ee2aba639fe2ebc07655",
+      "locator": "4040d81cbf4064b62847b931f824abe8f6659191",
       "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },

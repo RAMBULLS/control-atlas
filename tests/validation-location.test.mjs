@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { posix, win32 } from 'node:path';
-import { isHostedRunner, requireValidationLocation, verifyHostedCheckout, verifyRemoteHostedRunner } from '../tools/validation-location.mjs';
+import { isHostedRunner, isHostedRunnerContainer, requireHostedLocation, requireValidationLocation, verifyHostedCheckout, verifyRemoteHostedRunner } from '../tools/validation-location.mjs';
 import { assertCapacity, assertGrowth, assertLocalExpansion } from '../tools/run-local-validation.mjs';
 import { verifySourceBranch } from '../tools/local-source-hygiene.mjs';
 
@@ -68,6 +68,43 @@ test('hosted image names and runtime containment follow the actual runner platfo
     ...windowsOptions, executable: 'D:\\hostedtoolcache\\windows\\node.exe',
   }), false);
   assert.equal(isHostedRunner({ ...windows, ImageOS: 'win25', RUNNER_ENVIRONMENT: 'self-hosted' }, windowsOptions), false);
+});
+
+test('a hosted container job is recognized only by its mounted tool cache and runtime', () => {
+  const container = { ...hosted, ImageOS: undefined, RUNNER_TOOL_CACHE: '/__t' };
+  const inside = { ...options, executable: '/__t/node/22.0.0/x64/bin/node' };
+  assert.equal(isHostedRunnerContainer(container, inside), true);
+  assert.equal(isHostedRunner(container, inside), false, 'the sync hosted check stays image-bound');
+  assert.throws(() => requireValidationLocation({ ...inside, env: container }), /GitHub-hosted/);
+  assert.equal(isHostedRunnerContainer(container, { ...inside, executable: '/usr/bin/node' }), false);
+  assert.equal(isHostedRunnerContainer(container, { ...inside, platform: 'win32' }), false);
+  assert.equal(isHostedRunnerContainer({ ...container, RUNNER_TOOL_CACHE: '/opt/hostedtoolcache' }, inside), false);
+  assert.equal(isHostedRunnerContainer({ ...container, RUNNER_ENVIRONMENT: 'self-hosted' }, inside), false);
+  assert.equal(isHostedRunnerContainer({ ...container, RUNNER_NAME: 'my-laptop' }, inside), false);
+  assert.equal(isHostedRunnerContainer({ ...container, GITHUB_REPOSITORY: 'someone/fork' }, inside), false);
+  for (const env of [{}, { GITHUB_ACTIONS: 'true', RUNNER_ENVIRONMENT: 'github-hosted', RUNNER_TOOL_CACHE: '/__t' }]) {
+    assert.equal(isHostedRunnerContainer(env, inside), false);
+  }
+});
+
+test('hosted location always ends with the GitHub job readback, container or not', async () => {
+  const job = { id: 123, runner_name: hosted.RUNNER_NAME, runner_group_name: 'GitHub Actions',
+    status: 'in_progress', labels: ['ubuntu-latest'], head_sha: sha };
+  const request = async () => ({ ok: true, json: async () => ({ jobs: [job] }) });
+  const container = { ...hosted, ImageOS: undefined, RUNNER_TOOL_CACHE: '/__t' };
+  const inside = { ...options, executable: '/__t/node/22.0.0/x64/bin/node', sleep: async () => {} };
+  const admitted = await requireHostedLocation({ ...inside, env: container, request });
+  assert.equal(admitted.location, 'github-hosted-container');
+  assert.equal(admitted.job.id, 123);
+  await assert.rejects(requireHostedLocation({ ...inside, env: container,
+    request: async () => ({ ok: true, json: async () => ({ jobs: [] }) }) }), /absent or ambiguous/);
+  await assert.rejects(requireHostedLocation({ ...inside, env: container,
+    request: async () => ({ ok: true, json: async () => ({ jobs: [{ ...job, runner_group_name: 'self-hosted' }] }) }) }),
+  /absent or ambiguous/);
+  const direct = await requireHostedLocation({ ...options, env: hosted, request });
+  assert.equal(direct.location, 'github-hosted');
+  assert.equal(direct.job.id, 123);
+  await assert.rejects(requireHostedLocation({ ...options, env: {} }), /GitHub-hosted/);
 });
 
 test('hosted acceptance requires current GitHub job and runner readback', async () => {

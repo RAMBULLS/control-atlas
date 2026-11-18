@@ -16,6 +16,11 @@ import sys
 import tempfile
 import tomllib
 
+# Largest native JSON the gate will parse. It equals GitHub's per-file limit
+# (100 MiB), so every publisher file the repository can hold is verified.
+# Measured 2026-11-18: an 86,867,246-byte data/stig-rules.json parses at about
+# 300 MB peak memory, so this bound stays well inside a hosted runner.
+MAX_PUBLISHER_JSON_BYTES = 100 * 1024 * 1024
 REPO_CONFIG_SHA = "c5b761dd86c7abeec5569573770c860709e3edb6a2b51dfb083fc689222670de"
 PUBLISHER_RULES = [
     {
@@ -498,7 +503,7 @@ def publisher_findings_allowed(findings,arguments,cwd=None,blob_cache=None):
         ref='HEAD:'+path if snapshot else commit+':'+path
         if ref not in cache:
             raw=_git_bytes(cwd,'show',ref)
-            if len(raw)>85000000:
+            if len(raw)>MAX_PUBLISHER_JSON_BYTES:
                 return False
             # Parse the actual staged/commit object; duplicate keys stay held.
             doc=json.loads(raw,object_pairs_hook=_unique)

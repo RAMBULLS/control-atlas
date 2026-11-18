@@ -1,6 +1,6 @@
 {
   "schemaVersion": "4.0",
-  "lastUpdated": "2026-11-17",
+  "lastUpdated": "2026-11-18",
   "collections": [
     {
       "id": "dod-cybersecurity-portals",
@@ -674,7 +674,7 @@
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "v0.122.0",
-      "publisherUpdatedAt": "2026-11-17",
+      "publisherUpdatedAt": "2026-11-18",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -712,7 +712,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/anchore/grype",
         "commitSha": "4419483072181b643c3efde0fd15b9113d88887f",
@@ -769,7 +769,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-11-17T21:17:59Z",
-          "latestRepositoryUpdateAt": "2026-11-17T22:46:19Z",
+          "latestRepositoryUpdateAt": "2026-11-18T01:05:30Z",
           "license": "Apache-2.0",
           "description": "A vulnerability scanner for container images and filesystems"
         }
@@ -922,7 +922,7 @@
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "v1.57.2",
-      "publisherUpdatedAt": "2026-11-17",
+      "publisherUpdatedAt": "2026-11-18",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -960,7 +960,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/anchore/syft",
         "commitSha": "1a72047fd46c72e0a12ee77e24b23d2316753d08",
@@ -1013,7 +1013,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-11-16T19:59:13Z",
-          "latestRepositoryUpdateAt": "2026-11-17T18:43:42Z",
+          "latestRepositoryUpdateAt": "2026-11-18T01:04:26Z",
           "license": "Apache-2.0",
           "description": "CLI tool and library for generating a Software Bill of Materials from container images and filesystems"
         }
@@ -1193,7 +1193,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "organization_profile",
         "repositoryApiUrl": "https://api.github.com/repos/ansible-lockdown/.github",
         "commitSha": "d99f96bd1ebb5f208c3b26e4054df93e0b9b0216",
@@ -1475,7 +1475,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/redcanaryco/atomic-red-team",
         "commitSha": "a0e3f9bc69fed2fd711bd1f1aa87a40c33482fe6",
@@ -1706,7 +1706,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/oscal-club/awesome-oscal",
         "commitSha": "fe430cb66a6662f790a02462d4b00b956cf3fbae",
@@ -2198,7 +2198,7 @@
         "usage": {
           "status": "documented",
           "text": "Please refer to the Quickstart Guide for BloodHound Community Edition, which is part of the BloodHound documentation.",
-          "sourceUrl": "https://github.com/SpecterOps/BloodHound/blob/54b4e764e645468d8393f99214ab9611bb171f83/README.md"
+          "sourceUrl": "https://github.com/SpecterOps/BloodHound/blob/7de6abf8b03849dbaadb38987d92ad4274cbe819/README.md"
         },
         "license": {
           "status": "documented",
@@ -2207,7 +2207,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-11-17T23:41:17Z.",
+          "text": "Latest repository push: 2026-11-18T01:13:34Z.",
           "sourceUrl": "https://api.github.com/repos/SpecterOps/BloodHound"
         },
         "release": {
@@ -2221,18 +2221,18 @@
       },
       "overview": {
         "text": "BloodHound is a monolithic web application composed of an embedded React frontend with Sigma.js and a Go based REST API backend. It is deployed with a Postgresql application database and a Neo4j graph database, and is fed by the SharpHound and AzureHound data collectors.",
-        "sourceUrl": "https://github.com/SpecterOps/BloodHound/blob/54b4e764e645468d8393f99214ab9611bb171f83/README.md",
+        "sourceUrl": "https://github.com/SpecterOps/BloodHound/blob/7de6abf8b03849dbaadb38987d92ad4274cbe819/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/SpecterOps/BloodHound",
-        "commitSha": "54b4e764e645468d8393f99214ab9611bb171f83",
-        "commitUrl": "https://github.com/SpecterOps/BloodHound/commit/54b4e764e645468d8393f99214ab9611bb171f83",
+        "commitSha": "7de6abf8b03849dbaadb38987d92ad4274cbe819",
+        "commitUrl": "https://github.com/SpecterOps/BloodHound/commit/7de6abf8b03849dbaadb38987d92ad4274cbe819",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/SpecterOps/BloodHound/blob/54b4e764e645468d8393f99214ab9611bb171f83/README.md",
+        "readmeUrl": "https://github.com/SpecterOps/BloodHound/blob/7de6abf8b03849dbaadb38987d92ad4274cbe819/README.md",
         "readmeSha256": "sha256:3ba7971d833fb40f79e839343f4d0a03f3891cd510696a4929927b76a2ea6e89",
         "readmeByteLength": 4091,
         "overviewExcerpt": "BloodHound is a monolithic web application composed of an embedded React frontend with Sigma.js and a Go based REST API backend. It is deployed with a Postgresql application database and a Neo4j graph database, and is fed by the SharpHound and AzureHound data collectors.",
@@ -2263,16 +2263,16 @@
           "primaryLanguage": "Go",
           "topics": [],
           "archived": false,
-          "lastPushedAt": "2026-11-17T23:41:17Z",
-          "latestRepositoryUpdateAt": "2026-11-17T21:02:36Z",
+          "lastPushedAt": "2026-11-18T01:13:34Z",
+          "latestRepositoryUpdateAt": "2026-11-18T00:13:27Z",
           "license": "Apache-2.0",
           "description": "Six Degrees of Domain Admin"
         }
       },
       "currentVersion": "v9.10.0",
       "lastReleaseAt": "2026-11-16T19:47:15Z",
-      "publisherUpdatedAt": "2026-11-17",
-      "lastCommitAt": "2026-11-17T23:41:17Z",
+      "publisherUpdatedAt": "2026-11-18",
+      "lastCommitAt": "2026-11-18T01:13:34Z",
       "license": "Apache-2.0"
     },
     {
@@ -2733,14 +2733,14 @@
             "height": 969,
             "license": "Apache-2.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-11-17",
+            "retrievedAt": "2026-11-18",
             "commitSha": "e55b089e0298ff38c3425694862fd1e60dca3120"
           }
         ],
         "sourceUrl": "https://github.com/bridgecrewio/checkov/blob/e55b089e0298ff38c3425694862fd1e60dca3120/README.md"
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/bridgecrewio/checkov",
         "commitSha": "e55b089e0298ff38c3425694862fd1e60dca3120",
@@ -2791,7 +2791,7 @@
             "height": 969,
             "license": "Apache-2.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-11-17",
+            "retrievedAt": "2026-11-18",
             "commitSha": "e55b089e0298ff38c3425694862fd1e60dca3120"
           }
         ],
@@ -3339,7 +3339,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/cisagov/cset",
         "commitSha": "7f9df390da40e872704e590fc12aee2991dfd027",
@@ -3760,7 +3760,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/cisagov/Decider",
         "commitSha": "6290a80504561d21b641ba5bf69d1fe5c1ee0a21",
@@ -4348,7 +4348,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/cisagov/Malcolm",
         "commitSha": "8383fc77549fdb2308dda21eab1ebe55d4e18da3",
@@ -4644,7 +4644,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/cisagov/ScubaGear",
         "commitSha": "18f7930ebf663841c30c1806716dcb69c83f7977",
@@ -4931,18 +4931,18 @@
       ],
       "overview": {
         "text": "The CISA Vulnrichment project is the public repository of CISA's enrichment of public CVE records through CISA's ADP (Authorized Data Publisher) container. In this phase of the project, CISA is assessing new and recent CVEs and adding key SSVC decision points. Once scored, some higher-risk CVEs will also receive enrichment of CWE and/or CVSS data points, where possible.",
-        "sourceUrl": "https://github.com/cisagov/vulnrichment/blob/7544289798c6f73384df504cc1e494a7c0bf39c8/README.md",
+        "sourceUrl": "https://github.com/cisagov/vulnrichment/blob/ad456ad0ddf6484549252a3c645815a6a318f99b/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/cisagov/vulnrichment",
-        "commitSha": "7544289798c6f73384df504cc1e494a7c0bf39c8",
-        "commitUrl": "https://github.com/cisagov/vulnrichment/commit/7544289798c6f73384df504cc1e494a7c0bf39c8",
+        "commitSha": "ad456ad0ddf6484549252a3c645815a6a318f99b",
+        "commitUrl": "https://github.com/cisagov/vulnrichment/commit/ad456ad0ddf6484549252a3c645815a6a318f99b",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/cisagov/vulnrichment/blob/7544289798c6f73384df504cc1e494a7c0bf39c8/README.md",
+        "readmeUrl": "https://github.com/cisagov/vulnrichment/blob/ad456ad0ddf6484549252a3c645815a6a318f99b/README.md",
         "readmeSha256": "sha256:ffec1da10bdea8a98458362f7136d31b4143ef21875b6aa4b5d7bd9041164ba9",
         "readmeByteLength": 8501,
         "overviewExcerpt": "The CISA Vulnrichment project is the public repository of CISA's enrichment of public CVE records through CISA's ADP (Authorized Data Publisher) container. In this phase of the project, CISA is assessing new and recent CVEs and adding key SSVC decision points. Once scored, some higher-risk CVEs will also receive enrichment of CWE and/or CVSS data points, where possible.",
@@ -4970,14 +4970,14 @@
           "primaryLanguage": null,
           "topics": [],
           "archived": false,
-          "lastPushedAt": "2026-11-17T15:17:31Z",
+          "lastPushedAt": "2026-11-18T00:17:14Z",
           "latestRepositoryUpdateAt": "2026-11-13T21:18:21Z",
           "license": "CC0-1.0",
           "description": "A repo to conduct vulnerability enrichment."
         }
       },
       "publisherUpdatedAt": "2026-11-13",
-      "lastCommitAt": "2026-11-17T15:17:31Z",
+      "lastCommitAt": "2026-11-18T00:17:14Z",
       "license": "CC0-1.0"
     },
     {
@@ -5177,7 +5177,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/cloud-custodian/cloud-custodian",
         "commitSha": "8129e7ede8760990249388869c665d142c04bf9e",
@@ -6258,7 +6258,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/ComplianceAsCode/content",
         "commitSha": "78004410bb3d3d6c19794955ecff013c13e85f75",
@@ -6575,7 +6575,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/NSWC-Crane/C-PAT",
         "commitSha": "03485a2ec7a6da4a88e1e6dd42d8d699e4c75296",
@@ -6883,7 +6883,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/cyberark/community",
         "commitSha": "e83794e4e7e925321f01df07fcf126cd539b87ba",
@@ -7077,7 +7077,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/gchq/CyberChef",
         "commitSha": "d4d96c6c3d2597fef836d81bfc04617d97c681a5",
@@ -7123,14 +7123,14 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-11-16T04:11:19Z",
-          "latestRepositoryUpdateAt": "2026-11-17T21:44:30Z",
+          "latestRepositoryUpdateAt": "2026-11-18T00:17:46Z",
           "license": "Apache-2.0",
           "description": "The Cyber Swiss Army Knife - a web app for encryption, encoding, compression and data analysis"
         }
       },
       "currentVersion": "v11.5.0",
       "lastReleaseAt": "2026-09-18T11:54:19Z",
-      "publisherUpdatedAt": "2026-11-17",
+      "publisherUpdatedAt": "2026-11-18",
       "lastCommitAt": "2026-11-16T04:11:19Z",
       "license": "Apache-2.0"
     },
@@ -7222,7 +7222,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/CycloneDX/cyclonedx-cli",
         "commitSha": "b3cfa4b0edc356dad07e0b6e7ab6da0a94af0246",
@@ -11066,7 +11066,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/elastic/detection-rules",
         "commitSha": "c678d34edbaa6a98db56ab575334b6ad233422a0",
@@ -11583,7 +11583,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/falcosecurity/falco",
         "commitSha": "2be5618cad8beaabc2c1dc02ba5b3a5553ee923f",
@@ -13174,7 +13174,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/gitleaks/gitleaks",
         "commitSha": "5f6ec56cfa6f8c67648d863582c7ae2f206d5c1c",
@@ -13236,14 +13236,14 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-10-28T04:14:29Z",
-          "latestRepositoryUpdateAt": "2026-11-17T23:03:32Z",
+          "latestRepositoryUpdateAt": "2026-11-18T00:02:40Z",
           "license": "MIT",
           "description": "Find secrets with Gitleaks 🔑"
         }
       },
       "currentVersion": "v8.30.1",
       "lastReleaseAt": "2026-03-21T02:17:58Z",
-      "publisherUpdatedAt": "2026-11-17",
+      "publisherUpdatedAt": "2026-11-18",
       "lastCommitAt": "2026-10-28T04:14:29Z",
       "license": "MIT"
     },
@@ -13438,7 +13438,7 @@
       "verificationMethod": "official_repository",
       "nextCheckAt": "2026-11-03",
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/GSA/oscal-ssp-to-word",
         "commitSha": "925e4ce5491ce6a84c8c3b3b67e7f57cc496b5c0",
@@ -13766,7 +13766,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/scipag/HardeningKitty",
         "commitSha": "da0976073caad006c48b2478588c2f7fa572ab46",
@@ -13822,7 +13822,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-07-21T05:09:20Z",
-          "latestRepositoryUpdateAt": "2026-11-17T18:10:12Z",
+          "latestRepositoryUpdateAt": "2026-11-17T23:59:10Z",
           "license": "MIT",
           "description": "HardeningKitty - Checks and hardens your Windows configuration"
         }
@@ -14151,7 +14151,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/oscal-compass/compliance-trestle",
         "commitSha": "79e20ece7660c5a00c2a4d35c956ca630d5a0984",
@@ -14629,7 +14629,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/Checkmarx/kics",
         "commitSha": "150910f842f1c4385dbf76d57e55f2076f287375",
@@ -14861,7 +14861,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/aquasecurity/kube-bench",
         "commitSha": "e278a5915a982f2756026de6e2f9ca77077ef9f9",
@@ -15058,7 +15058,7 @@
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "v4.0.21",
-      "publisherUpdatedAt": "2026-11-17",
+      "publisherUpdatedAt": "2026-11-18",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -15111,7 +15111,7 @@
             "height": 1080,
             "license": "Apache-2.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-11-17",
+            "retrievedAt": "2026-11-18",
             "commitSha": "5b3efe319796e6edafced21565f8f916a64f8a03"
           },
           {
@@ -15126,14 +15126,14 @@
             "height": 500,
             "license": "Apache-2.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-11-17",
+            "retrievedAt": "2026-11-18",
             "commitSha": "5b3efe319796e6edafced21565f8f916a64f8a03"
           }
         ],
         "sourceUrl": "https://github.com/kubescape/kubescape/blob/5b3efe319796e6edafced21565f8f916a64f8a03/README.md"
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/kubescape/kubescape",
         "commitSha": "5b3efe319796e6edafced21565f8f916a64f8a03",
@@ -15181,7 +15181,7 @@
             "height": 1080,
             "license": "Apache-2.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-11-17",
+            "retrievedAt": "2026-11-18",
             "commitSha": "5b3efe319796e6edafced21565f8f916a64f8a03"
           },
           {
@@ -15196,7 +15196,7 @@
             "height": 500,
             "license": "Apache-2.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-11-17",
+            "retrievedAt": "2026-11-18",
             "commitSha": "5b3efe319796e6edafced21565f8f916a64f8a03"
           }
         ],
@@ -15222,7 +15222,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-11-17T17:13:20Z",
-          "latestRepositoryUpdateAt": "2026-11-17T22:50:32Z",
+          "latestRepositoryUpdateAt": "2026-11-18T01:04:58Z",
           "license": "Apache-2.0",
           "description": "Kubescape is an open-source Kubernetes security platform for your IDE, CI/CD pipelines, and clusters. It includes risk analysis, security, compliance, and misconfiguration scanning, saving Kubernetes users and administrators precious time, effort, and resources."
         }
@@ -15756,7 +15756,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/CISOfy/lynis",
         "commitSha": "9319416fa0726369ab0a48f686155a90363f3f9c",
@@ -15818,7 +15818,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-09-16T21:41:02Z",
-          "latestRepositoryUpdateAt": "2026-11-17T22:08:03Z",
+          "latestRepositoryUpdateAt": "2026-11-17T23:58:59Z",
           "license": "GPL-3.0",
           "description": "Lynis - Security auditing tool for Linux, macOS, and UNIX-based systems. Assists with compliance testing (HIPAA/ISO27001/PCI DSS) and system hardening. Agentless, and installation optional."
         }
@@ -16072,7 +16072,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/maester365/maester",
         "commitSha": "512a076de7bb173045a2ebe62b0493d613ddd0b5",
@@ -17027,7 +17027,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/microsoft/StigRepo",
         "commitSha": "1d4e5baf3c1641c7fa631c122c80253461d0440a",
@@ -17326,7 +17326,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/Microsoft365DSC/Microsoft365DSC",
         "commitSha": "8cbde93c1a7ec73f0150c99b0d73c36050c57ca8",
@@ -17549,7 +17549,7 @@
             "height": 1140,
             "license": "AGPL-3.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-11-17",
+            "retrievedAt": "2026-11-18",
             "commitSha": "04fc5f8b7ccb52bb6614ca3e9ccdbfdf6585d985"
           },
           {
@@ -17564,14 +17564,14 @@
             "height": 876,
             "license": "AGPL-3.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-11-17",
+            "retrievedAt": "2026-11-18",
             "commitSha": "04fc5f8b7ccb52bb6614ca3e9ccdbfdf6585d985"
           }
         ],
         "sourceUrl": "https://github.com/MISP/MISP/blob/04fc5f8b7ccb52bb6614ca3e9ccdbfdf6585d985/README.md"
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/MISP/MISP",
         "commitSha": "04fc5f8b7ccb52bb6614ca3e9ccdbfdf6585d985",
@@ -17604,7 +17604,7 @@
             "height": 1140,
             "license": "AGPL-3.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-11-17",
+            "retrievedAt": "2026-11-18",
             "commitSha": "04fc5f8b7ccb52bb6614ca3e9ccdbfdf6585d985"
           },
           {
@@ -17619,7 +17619,7 @@
             "height": 876,
             "license": "AGPL-3.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-11-17",
+            "retrievedAt": "2026-11-18",
             "commitSha": "04fc5f8b7ccb52bb6614ca3e9ccdbfdf6585d985"
           }
         ],
@@ -17947,7 +17947,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/mitre-attack/attack-navigator",
         "commitSha": "139d011a5ebe99465a1fcf553e672efbc85f49a3",
@@ -18172,7 +18172,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/apache/caldera",
         "commitSha": "cb8d6a8160e0f4990af323a7c071d5e8482b42c7",
@@ -18443,7 +18443,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/mitre/emass_client",
         "commitSha": "c9013aafc5319fd7e2c74bba6e56cdf535959e70",
@@ -18670,7 +18670,7 @@
       "nextCheckAt": "2026-11-03",
       "overview": {
         "text": "This repository contains the source code for Heimdall's Backend, Frontend (AKA Heimdall Lite), OHDF Converters, and InSpecJS.",
-        "sourceUrl": "https://github.com/mitre/heimdall2/blob/0704d55619e1e4902db50700119e7b37d21ca3dc/README.md",
+        "sourceUrl": "https://github.com/mitre/heimdall2/blob/960884f02d990de4443609f3e8d9676ddc12c79f/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
@@ -18683,17 +18683,17 @@
         "environments": [
           "Containers"
         ],
-        "sourceUrl": "https://github.com/mitre/heimdall2/blob/0704d55619e1e4902db50700119e7b37d21ca3dc/README.md",
+        "sourceUrl": "https://github.com/mitre/heimdall2/blob/960884f02d990de4443609f3e8d9676ddc12c79f/README.md",
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/mitre/heimdall2",
-        "commitSha": "0704d55619e1e4902db50700119e7b37d21ca3dc",
-        "commitUrl": "https://github.com/mitre/heimdall2/commit/0704d55619e1e4902db50700119e7b37d21ca3dc",
+        "commitSha": "960884f02d990de4443609f3e8d9676ddc12c79f",
+        "commitUrl": "https://github.com/mitre/heimdall2/commit/960884f02d990de4443609f3e8d9676ddc12c79f",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/mitre/heimdall2/blob/0704d55619e1e4902db50700119e7b37d21ca3dc/README.md",
+        "readmeUrl": "https://github.com/mitre/heimdall2/blob/960884f02d990de4443609f3e8d9676ddc12c79f/README.md",
         "readmeSha256": "sha256:d5ca99025946308a54d5303a577351245af7eb0abc99ce386c62d144b43256bb",
         "readmeByteLength": 28142,
         "overviewExcerpt": "This repository contains the source code for Heimdall's Backend, Frontend (AKA Heimdall Lite), OHDF Converters, and InSpecJS.",
@@ -18732,7 +18732,7 @@
             "mitre-saf"
           ],
           "archived": false,
-          "lastPushedAt": "2026-11-17T08:46:40Z",
+          "lastPushedAt": "2026-11-18T01:15:03Z",
           "latestRepositoryUpdateAt": "2026-11-12T22:20:20Z",
           "license": "NOASSERTION",
           "description": "Heimdall Enterprise Server 2 lets you view, store, and compare automated security control scan results."
@@ -18756,12 +18756,12 @@
         "installation": {
           "status": "documented",
           "text": "1. Install Docker 2. Download and extract the most recent Heimdall release from our releases page. Alternatively, you can clone this repository and navigate to the heimdall2 folder. 3. Navigate to the base folder where docker-compose.yml is located 4. By default Heimdall will generate self-signed certificates that will last for 7 days. For production use, place your certificate files in ./nginx/certs/ with the names ssl certificate.crt and ssl certificate key.key respectively. For development use, you can use the default generated certificates which means you do not need to put any certificate files in the ./nginx/certs/ folder. NGINX Configuration Note: You can configure NGINX settings by changing values in the nginx/conf/default.conf file. 5. Run the following commands in a terminal window from the Heimdall source directory. For more information on the .env file, visit Environment Variables Configuration. bash For Linux or Mac ./setup-docker-env.sh For Windows ./setup-docker-env.bat [!TIP] If you would like to further configure your Docker-based Heimdall deployment, edit the .env file located in the root directory generated after running the setup-docker-env.sh or setup-docker-env.bat scripts 6. Heimdall might need certificates to access the open internet or internal resources (ex. an LDAP server). Please convert any certificates into PEM files and place them in ./certs/ where they will be automatically ingested. Alternatively, you can place a shell script that will retrieve those certs in that directory, and modify the command attribute underneath the certs service in the docker-compose.yml to run that script. bash Below is an example of what may be in the ./certs directory, including any scripts or certificates. ./certs/ ├── dodcerts.sh └── my certificates.pem For…",
-          "sourceUrl": "https://github.com/mitre/heimdall2/blob/0704d55619e1e4902db50700119e7b37d21ca3dc/README.md"
+          "sourceUrl": "https://github.com/mitre/heimdall2/blob/960884f02d990de4443609f3e8d9676ddc12c79f/README.md"
         },
         "usage": {
           "status": "documented",
           "text": "To run Heimdall Lite locally, just use the npm built-in utility npx : bash npx @mitre/heimdall-lite If you use this tool often and want to have it installed locally, use the following command: bash npm install -g @mitre/heimdall-lite Then, any subsequent npx @mitre/heimdall-lite will use the local version and load much more quickly.",
-          "sourceUrl": "https://github.com/mitre/heimdall2/blob/0704d55619e1e4902db50700119e7b37d21ca3dc/README.md"
+          "sourceUrl": "https://github.com/mitre/heimdall2/blob/960884f02d990de4443609f3e8d9676ddc12c79f/README.md"
         },
         "license": {
           "status": "documented",
@@ -18770,7 +18770,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-11-17T08:46:40Z.",
+          "text": "Latest repository push: 2026-11-18T01:15:03Z.",
           "sourceUrl": "https://api.github.com/repos/mitre/heimdall2"
         },
         "release": {
@@ -18783,7 +18783,7 @@
         }
       },
       "lastReleaseAt": "2026-10-30T21:18:43Z",
-      "lastCommitAt": "2026-11-17T08:46:40Z",
+      "lastCommitAt": "2026-11-18T01:15:03Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -18933,7 +18933,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/mitre/saf",
         "commitSha": "fd4a3bece5622ffe53616666819bf8c4b4b3496d",
@@ -18989,7 +18989,7 @@
             "security-automation-framework"
           ],
           "archived": false,
-          "lastPushedAt": "2026-11-17T01:17:03Z",
+          "lastPushedAt": "2026-11-18T01:12:13Z",
           "latestRepositoryUpdateAt": "2026-11-17T16:40:58Z",
           "license": "NOASSERTION",
           "description": "The MITRE Security Automation Framework (SAF) Command Line Interface (CLI) brings together applications, techniques, libraries, and tools developed by MITRE and the security community to streamline security automation for systems and DevOps pipelines"
@@ -19032,7 +19032,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-11-17T01:17:03Z.",
+          "text": "Latest repository push: 2026-11-18T01:12:13Z.",
           "sourceUrl": "https://api.github.com/repos/mitre/saf"
         },
         "release": {
@@ -19045,7 +19045,7 @@
         }
       },
       "lastReleaseAt": "2026-11-02T15:12:13Z",
-      "lastCommitAt": "2026-11-17T01:17:03Z",
+      "lastCommitAt": "2026-11-18T01:12:13Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -19202,7 +19202,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/mitre/vulcan",
         "commitSha": "348cd8f8318297f56e1041e8480f6bd5ec7a66eb",
@@ -20625,7 +20625,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/usnistgov/macos_security",
         "commitSha": "2b71e9602fea2eed66a81e04d19427d46050c7b9",
@@ -21842,7 +21842,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/projectdiscovery/nuclei",
         "commitSha": "7604080285c7b5829255c095c0901327affdb6b7",
@@ -21895,14 +21895,14 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-11-17T22:13:02Z",
-          "latestRepositoryUpdateAt": "2026-11-17T23:37:55Z",
+          "latestRepositoryUpdateAt": "2026-11-18T00:32:28Z",
           "license": "MIT",
           "description": "Nuclei is a fast, customizable vulnerability scanner powered by the global security community and built on a simple YAML-based DSL, enabling collaboration to tackle trending vulnerabilities on the internet. It helps you find vulnerabilities in your applications, APIs, networks, DNS, and cloud configurations."
         }
       },
       "currentVersion": "v3.11.1",
       "lastReleaseAt": "2026-08-08T12:21:32Z",
-      "publisherUpdatedAt": "2026-11-17",
+      "publisherUpdatedAt": "2026-11-18",
       "lastCommitAt": "2026-11-17T22:13:02Z",
       "license": "MIT"
     },
@@ -22243,7 +22243,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/open-policy-agent/opa",
         "commitSha": "43bb521cde8a4cb3621fc34ed49f01c014edbbf4",
@@ -22562,7 +22562,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/opencontrol/compliance-masonry",
         "commitSha": "cb0e8dd950884cd4411bd3007aea587cd20eb6c3",
@@ -22725,16 +22725,16 @@
         "installation": {
           "status": "documented",
           "text": "All you need to install the OpenCTI platform can be found in the official documentation. For installation, you can: Use Docker Install manually Use Terraform (community) Use Helm charts (community)",
-          "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/blob/7fcb37a3da50ac75401d2c7ee66a5ec042348f20/README.md"
+          "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/blob/1f9d7cc7e168a50c35943488c7c73e2a245f379c/README.md"
         },
         "usage": {
           "status": "documented",
           "text": "To improve the features and the performances of OpenCTI, the platform collects anonymous statistical data related to its usage and health. You can find all the details on collected data and associated usage in the usage telemetry documentation.",
-          "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/blob/7fcb37a3da50ac75401d2c7ee66a5ec042348f20/README.md"
+          "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/blob/1f9d7cc7e168a50c35943488c7c73e2a245f379c/README.md"
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-11-17T23:23:38Z.",
+          "text": "Latest repository push: 2026-11-18T01:01:53Z.",
           "sourceUrl": "https://api.github.com/repos/OpenCTI-Platform/opencti"
         },
         "release": {
@@ -22748,7 +22748,7 @@
       },
       "overview": {
         "text": "Note: Building connectors, contributing to the platform, or running OpenCTI in production? Join us on the Community Slack to ask questions, talk through a PR before you open it, or compare notes on integrations.",
-        "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/blob/7fcb37a3da50ac75401d2c7ee66a5ec042348f20/README.md",
+        "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/blob/1f9d7cc7e168a50c35943488c7c73e2a245f379c/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
@@ -22758,17 +22758,17 @@
         "environments": [
           "Containers"
         ],
-        "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/blob/7fcb37a3da50ac75401d2c7ee66a5ec042348f20/README.md",
+        "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/blob/1f9d7cc7e168a50c35943488c7c73e2a245f379c/README.md",
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/OpenCTI-Platform/opencti",
-        "commitSha": "7fcb37a3da50ac75401d2c7ee66a5ec042348f20",
-        "commitUrl": "https://github.com/OpenCTI-Platform/opencti/commit/7fcb37a3da50ac75401d2c7ee66a5ec042348f20",
+        "commitSha": "1f9d7cc7e168a50c35943488c7c73e2a245f379c",
+        "commitUrl": "https://github.com/OpenCTI-Platform/opencti/commit/1f9d7cc7e168a50c35943488c7c73e2a245f379c",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/OpenCTI-Platform/opencti/blob/7fcb37a3da50ac75401d2c7ee66a5ec042348f20/README.md",
+        "readmeUrl": "https://github.com/OpenCTI-Platform/opencti/blob/1f9d7cc7e168a50c35943488c7c73e2a245f379c/README.md",
         "readmeSha256": "sha256:6d779b02cf2e638a9ad560b8892b03ab003e1b24b36f587be64fdae70872f1cf",
         "readmeByteLength": 7828,
         "overviewExcerpt": "Note: Building connectors, contributing to the platform, or running OpenCTI in production? Join us on the Community Slack to ask questions, talk through a PR before you open it, or compare notes on integrations.",
@@ -22813,7 +22813,7 @@
             "threat-intelligence"
           ],
           "archived": false,
-          "lastPushedAt": "2026-11-17T23:23:38Z",
+          "lastPushedAt": "2026-11-18T01:01:53Z",
           "latestRepositoryUpdateAt": "2026-11-17T22:51:22Z",
           "license": "NOASSERTION",
           "description": "Open Cyber Threat Intelligence Platform"
@@ -22822,7 +22822,7 @@
       "currentVersion": "7.261117.0",
       "lastReleaseAt": "2026-11-17T11:08:54Z",
       "publisherUpdatedAt": "2026-11-17",
-      "lastCommitAt": "2026-11-17T23:23:38Z"
+      "lastCommitAt": "2026-11-18T01:01:53Z"
     },
     {
       "id": "tool-openscap",
@@ -22913,7 +22913,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/OpenSCAP/openscap",
         "commitSha": "38e6d9fd84d337f0f558a7d3b95b54bf4c6c6cef",
@@ -23134,7 +23134,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/OpenSCAP/openscap",
         "commitSha": "38e6d9fd84d337f0f558a7d3b95b54bf4c6c6cef",
@@ -23366,7 +23366,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/ossf/scorecard",
         "commitSha": "6eb56f6a7e62d8f5d55800f54cd92ea305107d1d",
@@ -23600,7 +23600,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/osquery/osquery",
         "commitSha": "a44316c122a0bc95670905428ab231b4bae4cc0d",
@@ -23869,18 +23869,18 @@
       ],
       "overview": {
         "text": "Use OSV-Scanner to find existing vulnerabilities affecting your project's dependencies. OSV-Scanner provides an officially supported frontend to the OSV database and CLI interface to OSV-Scalibr that connects a project’s list of dependencies with the vulnerabilities that affect them.",
-        "sourceUrl": "https://github.com/google/osv-scanner/blob/582ac4e290b6e4d36c9ea832f854080724500257/README.md",
+        "sourceUrl": "https://github.com/google/osv-scanner/blob/2fd119e29c0b833c9ee95508c514d519b59450c9/README.md",
         "sourceType": "repository_readme",
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/google/osv-scanner",
-        "commitSha": "582ac4e290b6e4d36c9ea832f854080724500257",
-        "commitUrl": "https://github.com/google/osv-scanner/commit/582ac4e290b6e4d36c9ea832f854080724500257",
+        "commitSha": "2fd119e29c0b833c9ee95508c514d519b59450c9",
+        "commitUrl": "https://github.com/google/osv-scanner/commit/2fd119e29c0b833c9ee95508c514d519b59450c9",
         "readmePath": "README.md",
-        "readmeUrl": "https://github.com/google/osv-scanner/blob/582ac4e290b6e4d36c9ea832f854080724500257/README.md",
+        "readmeUrl": "https://github.com/google/osv-scanner/blob/2fd119e29c0b833c9ee95508c514d519b59450c9/README.md",
         "readmeSha256": "sha256:ae9d6a52e41fea4dad413bf20ef6097cba581891e139e918484c38cad8fcb751",
         "readmeByteLength": 11071,
         "overviewExcerpt": "Use OSV-Scanner to find existing vulnerabilities affecting your project's dependencies. OSV-Scanner provides an officially supported frontend to the OSV database and CLI interface to OSV-Scalibr that connects a project’s list of dependencies with the vulnerabilities that affect them.",
@@ -23919,16 +23919,16 @@
             "vulnerability-scanner"
           ],
           "archived": false,
-          "lastPushedAt": "2026-11-17T23:44:13Z",
-          "latestRepositoryUpdateAt": "2026-11-17T16:34:23Z",
+          "lastPushedAt": "2026-11-18T01:11:24Z",
+          "latestRepositoryUpdateAt": "2026-11-18T01:04:50Z",
           "license": "Apache-2.0",
           "description": "Vulnerability scanner written in Go which uses the data provided by https://osv.dev"
         }
       },
       "currentVersion": "v2.7.1",
       "lastReleaseAt": "2026-11-09T04:15:04Z",
-      "publisherUpdatedAt": "2026-11-17",
-      "lastCommitAt": "2026-11-17T23:44:13Z",
+      "publisherUpdatedAt": "2026-11-18",
+      "lastCommitAt": "2026-11-18T01:11:24Z",
       "license": "Apache-2.0"
     },
     {
@@ -23980,7 +23980,7 @@
       "license": "Apache-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "5.2.1",
-      "publisherUpdatedAt": "2026-11-17",
+      "publisherUpdatedAt": "2026-11-18",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -24009,7 +24009,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/DependencyTrack/dependency-track",
         "commitSha": "bbe04a15da033f8de9880878dd3562d2cf9990dd",
@@ -24068,7 +24068,7 @@
           ],
           "archived": false,
           "lastPushedAt": "2026-11-17T23:20:57Z",
-          "latestRepositoryUpdateAt": "2026-11-17T20:35:28Z",
+          "latestRepositoryUpdateAt": "2026-11-18T01:02:43Z",
           "license": "Apache-2.0",
           "description": "Dependency-Track is an intelligent Component Analysis platform that allows organizations to identify and reduce risk in the software supply chain."
         }
@@ -24949,7 +24949,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/microsoft/PowerSTIG",
         "commitSha": "efa8aec879259ade7db396715850c58df9f44e81",
@@ -25458,14 +25458,14 @@
             "height": 1141,
             "license": "Apache-2.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-11-17",
+            "retrievedAt": "2026-11-18",
             "commitSha": "10cca5d0ef9839de0ab794b7da055daf2e466f48"
           }
         ],
         "sourceUrl": "https://github.com/prowler-cloud/prowler/blob/10cca5d0ef9839de0ab794b7da055daf2e466f48/README.md"
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/prowler-cloud/prowler",
         "commitSha": "10cca5d0ef9839de0ab794b7da055daf2e466f48",
@@ -25507,7 +25507,7 @@
             "height": 1141,
             "license": "Apache-2.0",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-11-17",
+            "retrievedAt": "2026-11-18",
             "commitSha": "10cca5d0ef9839de0ab794b7da055daf2e466f48"
           }
         ],
@@ -27542,7 +27542,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/nccgroup/ScoutSuite",
         "commitSha": "7909f2fc6186063e5c9e7ddef8c4d7d1072c8f3d",
@@ -27937,15 +27937,15 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-11-17T22:52:19Z.",
+          "text": "Latest repository push: 2026-11-18T00:21:36Z.",
           "sourceUrl": "https://api.github.com/repos/semgrep/semgrep"
         },
         "release": {
           "status": "published",
-          "version": "v1.185.0",
-          "name": "Release v1.185.0",
-          "url": "https://github.com/semgrep/semgrep/releases/tag/v1.185.0",
-          "publishedAt": "2026-11-10T09:32:54Z",
+          "version": "v1.186.0",
+          "name": "Release v1.186.0",
+          "url": "https://github.com/semgrep/semgrep/releases/tag/v1.186.0",
+          "publishedAt": "2026-11-18T00:22:26Z",
           "prerelease": false
         }
       },
@@ -27970,14 +27970,14 @@
             "height": 1408,
             "license": "LGPL-2.1",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-11-17",
+            "retrievedAt": "2026-11-18",
             "commitSha": "cd3b439c36f43a299dffcd1e7544f6ce7ebb03cc"
           }
         ],
         "sourceUrl": "https://github.com/semgrep/semgrep/blob/cd3b439c36f43a299dffcd1e7544f6ce7ebb03cc/README.md"
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/semgrep/semgrep",
         "commitSha": "cd3b439c36f43a299dffcd1e7544f6ce7ebb03cc",
@@ -28013,16 +28013,16 @@
             "height": 1408,
             "license": "LGPL-2.1",
             "licenseBasis": "repository_license",
-            "retrievedAt": "2026-11-17",
+            "retrievedAt": "2026-11-18",
             "commitSha": "cd3b439c36f43a299dffcd1e7544f6ce7ebb03cc"
           }
         ],
         "release": {
           "status": "published",
-          "version": "v1.185.0",
-          "name": "Release v1.185.0",
-          "url": "https://github.com/semgrep/semgrep/releases/tag/v1.185.0",
-          "publishedAt": "2026-11-10T09:32:54Z",
+          "version": "v1.186.0",
+          "name": "Release v1.186.0",
+          "url": "https://github.com/semgrep/semgrep/releases/tag/v1.186.0",
+          "publishedAt": "2026-11-18T00:22:26Z",
           "prerelease": false
         },
         "facts": {
@@ -28044,16 +28044,16 @@
             "typescript"
           ],
           "archived": false,
-          "lastPushedAt": "2026-11-17T22:52:19Z",
-          "latestRepositoryUpdateAt": "2026-11-17T23:08:58Z",
+          "lastPushedAt": "2026-11-18T00:21:36Z",
+          "latestRepositoryUpdateAt": "2026-11-18T01:03:48Z",
           "license": "LGPL-2.1",
           "description": "Lightweight static analysis for many languages. Find bug variants with patterns that look like source code."
         }
       },
-      "currentVersion": "v1.185.0",
-      "lastReleaseAt": "2026-11-10T09:32:54Z",
-      "publisherUpdatedAt": "2026-11-17",
-      "lastCommitAt": "2026-11-17T22:52:19Z",
+      "currentVersion": "v1.186.0",
+      "lastReleaseAt": "2026-11-18T00:22:26Z",
+      "publisherUpdatedAt": "2026-11-18",
+      "lastCommitAt": "2026-11-18T00:21:36Z",
       "license": "LGPL-2.1"
     },
     {
@@ -28521,7 +28521,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/SigmaHQ/sigma",
         "commitSha": "088855f00b65a19e345b09c1619272b44f92fea4",
@@ -28717,7 +28717,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/sigstore/cosign",
         "commitSha": "d93bbdba1ba2544fe54fdc7db2abafb510608c5a",
@@ -29234,7 +29234,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/turbot/steampipe",
         "commitSha": "fa2bb7c7c5348f0204ba851dc375656607519462",
@@ -29494,7 +29494,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/NUWCDIVNPT/stig-manager",
         "commitSha": "882fbd728c15773c054b0fec130e5b0d2af436c6",
@@ -30451,7 +30451,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/tenable/terrascan",
         "commitSha": "dafb3e0ad72812fbecfc36d33e8bd4347f12b114",
@@ -31229,7 +31229,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/aquasecurity/trivy",
         "commitSha": "00b73947fd14332e6648b0b38edbb1ca5380a222",
@@ -31767,7 +31767,7 @@
         "note": "Supported environments stated in the commit-pinned repository README."
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/Velocidex/velociraptor",
         "commitSha": "d394e33e0d7156745154ee2aba639fe2ebc07655",
@@ -32080,7 +32080,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/volatilityfoundation/volatility3",
         "commitSha": "77ff0b1932d77527f850c8ced01d85805ea7bf97",
@@ -32336,7 +32336,7 @@
       "license": "GPL-2.0",
       "maintenanceStatus": "active",
       "currentVersion": "v4.14.10",
-      "publisherUpdatedAt": "2026-11-17",
+      "publisherUpdatedAt": "2026-11-18",
       "lastCheckedAt": "2026-08-03",
       "updateMethod": "manual",
       "officialCounterparts": [],
@@ -32365,7 +32365,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/wazuh/wazuh",
         "commitSha": "365f96fcd12a5fb16aefc8d261cd3089c7217e57",
@@ -32420,8 +32420,8 @@
             "xdr"
           ],
           "archived": false,
-          "lastPushedAt": "2026-11-17T23:05:35Z",
-          "latestRepositoryUpdateAt": "2026-11-17T23:14:27Z",
+          "lastPushedAt": "2026-11-18T01:03:19Z",
+          "latestRepositoryUpdateAt": "2026-11-18T01:02:18Z",
           "license": "NOASSERTION",
           "description": "Wazuh - The Open Source Security Platform. Unified XDR and SIEM protection for endpoints and cloud workloads."
         }
@@ -32448,7 +32448,7 @@
         },
         "maintenance": {
           "status": "active",
-          "text": "Latest repository push: 2026-11-17T23:05:35Z.",
+          "text": "Latest repository push: 2026-11-18T01:03:19Z.",
           "sourceUrl": "https://api.github.com/repos/wazuh/wazuh"
         },
         "release": {
@@ -32461,7 +32461,7 @@
         }
       },
       "lastReleaseAt": "2026-11-09T10:33:53Z",
-      "lastCommitAt": "2026-11-17T23:05:35Z",
+      "lastCommitAt": "2026-11-18T01:03:19Z",
       "entityKind": "resource",
       "profileId": "resource.tool",
       "origin": "atlas_editorial",
@@ -32784,7 +32784,7 @@
         "exactPublisherText": true
       },
       "repositoryEvidence": {
-        "capturedAt": "2026-11-17",
+        "capturedAt": "2026-11-18",
         "repositoryScope": "repository",
         "repositoryApiUrl": "https://api.github.com/repos/VirusTotal/yara-x",
         "commitSha": "8ac6b06c8d16b80f34bdff8e0f9abc07a51c167c",
@@ -32974,7 +32974,7 @@
       "sourceUrl": "https://github.com/elastic/detection-rules/commit/c678d34edbaa6a98db56ab575334b6ad233422a0",
       "locatorType": "repository_commit",
       "locator": "c678d34edbaa6a98db56ab575334b6ad233422a0",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -33086,7 +33086,7 @@
       "sourceUrl": "https://github.com/cyberark/community/commit/e83794e4e7e925321f01df07fcf126cd539b87ba",
       "locatorType": "repository_commit",
       "locator": "e83794e4e7e925321f01df07fcf126cd539b87ba",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -33307,10 +33307,10 @@
     },
     {
       "id": "resource:dataset-cisa-vulnrichment:publisher-destination",
-      "sourceUrl": "https://github.com/cisagov/vulnrichment/commit/7544289798c6f73384df504cc1e494a7c0bf39c8",
+      "sourceUrl": "https://github.com/cisagov/vulnrichment/commit/ad456ad0ddf6484549252a3c645815a6a318f99b",
       "locatorType": "repository_commit",
-      "locator": "7544289798c6f73384df504cc1e494a7c0bf39c8",
-      "retrievedAt": "2026-11-17",
+      "locator": "ad456ad0ddf6484549252a3c645815a6a318f99b",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -33518,7 +33518,7 @@
       "sourceUrl": "https://github.com/projectdiscovery/nuclei/commit/7604080285c7b5829255c095c0901327affdb6b7",
       "locatorType": "repository_commit",
       "locator": "7604080285c7b5829255c095c0901327affdb6b7",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -33531,10 +33531,10 @@
     },
     {
       "id": "resource:ecosystem-osv:publisher-destination",
-      "sourceUrl": "https://github.com/google/osv-scanner/commit/582ac4e290b6e4d36c9ea832f854080724500257",
+      "sourceUrl": "https://github.com/google/osv-scanner/commit/2fd119e29c0b833c9ee95508c514d519b59450c9",
       "locatorType": "repository_commit",
-      "locator": "582ac4e290b6e4d36c9ea832f854080724500257",
-      "retrievedAt": "2026-11-17",
+      "locator": "2fd119e29c0b833c9ee95508c514d519b59450c9",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -33550,7 +33550,7 @@
       "sourceUrl": "https://github.com/SigmaHQ/sigma/commit/088855f00b65a19e345b09c1619272b44f92fea4",
       "locatorType": "repository_commit",
       "locator": "088855f00b65a19e345b09c1619272b44f92fea4",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -33558,7 +33558,7 @@
       "sourceUrl": "https://github.com/sigstore/cosign/commit/d93bbdba1ba2544fe54fdc7db2abafb510608c5a",
       "locatorType": "repository_commit",
       "locator": "d93bbdba1ba2544fe54fdc7db2abafb510608c5a",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -33598,7 +33598,7 @@
       "sourceUrl": "https://github.com/opencontrol/compliance-masonry/commit/cb0e8dd950884cd4411bd3007aea587cd20eb6c3",
       "locatorType": "repository_commit",
       "locator": "cb0e8dd950884cd4411bd3007aea587cd20eb6c3",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -33910,7 +33910,7 @@
       "sourceUrl": "https://github.com/microsoft/StigRepo/commit/1d4e5baf3c1641c7fa631c122c80253461d0440a",
       "locatorType": "repository_commit",
       "locator": "1d4e5baf3c1641c7fa631c122c80253461d0440a",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34214,7 +34214,7 @@
       "sourceUrl": "https://github.com/ansible-lockdown/.github/commit/d99f96bd1ebb5f208c3b26e4054df93e0b9b0216",
       "locatorType": "repository_commit",
       "locator": "d99f96bd1ebb5f208c3b26e4054df93e0b9b0216",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34222,7 +34222,7 @@
       "sourceUrl": "https://github.com/redcanaryco/atomic-red-team/commit/a0e3f9bc69fed2fd711bd1f1aa87a40c33482fe6",
       "locatorType": "repository_commit",
       "locator": "a0e3f9bc69fed2fd711bd1f1aa87a40c33482fe6",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34230,15 +34230,15 @@
       "sourceUrl": "https://github.com/oscal-club/awesome-oscal/commit/fe430cb66a6662f790a02462d4b00b956cf3fbae",
       "locatorType": "repository_commit",
       "locator": "fe430cb66a6662f790a02462d4b00b956cf3fbae",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:tool-bloodhound-ce:publisher-destination",
-      "sourceUrl": "https://github.com/SpecterOps/BloodHound/commit/54b4e764e645468d8393f99214ab9611bb171f83",
+      "sourceUrl": "https://github.com/SpecterOps/BloodHound/commit/7de6abf8b03849dbaadb38987d92ad4274cbe819",
       "locatorType": "repository_commit",
-      "locator": "54b4e764e645468d8393f99214ab9611bb171f83",
-      "retrievedAt": "2026-11-17",
+      "locator": "7de6abf8b03849dbaadb38987d92ad4274cbe819",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34246,7 +34246,7 @@
       "sourceUrl": "https://github.com/bridgecrewio/checkov/commit/e55b089e0298ff38c3425694862fd1e60dca3120",
       "locatorType": "repository_commit",
       "locator": "e55b089e0298ff38c3425694862fd1e60dca3120",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34254,7 +34254,7 @@
       "sourceUrl": "https://github.com/cisagov/cset/commit/7f9df390da40e872704e590fc12aee2991dfd027",
       "locatorType": "repository_commit",
       "locator": "7f9df390da40e872704e590fc12aee2991dfd027",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34262,7 +34262,7 @@
       "sourceUrl": "https://github.com/cisagov/Decider/commit/6290a80504561d21b641ba5bf69d1fe5c1ee0a21",
       "locatorType": "repository_commit",
       "locator": "6290a80504561d21b641ba5bf69d1fe5c1ee0a21",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34270,7 +34270,7 @@
       "sourceUrl": "https://github.com/cisagov/Malcolm/commit/8383fc77549fdb2308dda21eab1ebe55d4e18da3",
       "locatorType": "repository_commit",
       "locator": "8383fc77549fdb2308dda21eab1ebe55d4e18da3",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34278,7 +34278,7 @@
       "sourceUrl": "https://github.com/cisagov/ScubaGear/commit/18f7930ebf663841c30c1806716dcb69c83f7977",
       "locatorType": "repository_commit",
       "locator": "18f7930ebf663841c30c1806716dcb69c83f7977",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34286,7 +34286,7 @@
       "sourceUrl": "https://github.com/cloud-custodian/cloud-custodian/commit/8129e7ede8760990249388869c665d142c04bf9e",
       "locatorType": "repository_commit",
       "locator": "8129e7ede8760990249388869c665d142c04bf9e",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34294,7 +34294,7 @@
       "sourceUrl": "https://github.com/ComplianceAsCode/content/commit/78004410bb3d3d6c19794955ecff013c13e85f75",
       "locatorType": "repository_commit",
       "locator": "78004410bb3d3d6c19794955ecff013c13e85f75",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34302,7 +34302,7 @@
       "sourceUrl": "https://github.com/oscal-compass/compliance-trestle/commit/79e20ece7660c5a00c2a4d35c956ca630d5a0984",
       "locatorType": "repository_commit",
       "locator": "79e20ece7660c5a00c2a4d35c956ca630d5a0984",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34310,7 +34310,7 @@
       "sourceUrl": "https://github.com/NSWC-Crane/C-PAT/commit/03485a2ec7a6da4a88e1e6dd42d8d699e4c75296",
       "locatorType": "repository_commit",
       "locator": "03485a2ec7a6da4a88e1e6dd42d8d699e4c75296",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34318,7 +34318,7 @@
       "sourceUrl": "https://github.com/gchq/CyberChef/commit/d4d96c6c3d2597fef836d81bfc04617d97c681a5",
       "locatorType": "repository_commit",
       "locator": "d4d96c6c3d2597fef836d81bfc04617d97c681a5",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34326,7 +34326,7 @@
       "sourceUrl": "https://github.com/CycloneDX/cyclonedx-cli/commit/b3cfa4b0edc356dad07e0b6e7ab6da0a94af0246",
       "locatorType": "repository_commit",
       "locator": "b3cfa4b0edc356dad07e0b6e7ab6da0a94af0246",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34334,7 +34334,7 @@
       "sourceUrl": "https://github.com/DependencyTrack/dependency-track/commit/bbe04a15da033f8de9880878dd3562d2cf9990dd",
       "locatorType": "repository_commit",
       "locator": "bbe04a15da033f8de9880878dd3562d2cf9990dd",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34358,7 +34358,7 @@
       "sourceUrl": "https://github.com/falcosecurity/falco/commit/2be5618cad8beaabc2c1dc02ba5b3a5553ee923f",
       "locatorType": "repository_commit",
       "locator": "2be5618cad8beaabc2c1dc02ba5b3a5553ee923f",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34366,7 +34366,7 @@
       "sourceUrl": "https://github.com/gitleaks/gitleaks/commit/5f6ec56cfa6f8c67648d863582c7ae2f206d5c1c",
       "locatorType": "repository_commit",
       "locator": "5f6ec56cfa6f8c67648d863582c7ae2f206d5c1c",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34374,7 +34374,7 @@
       "sourceUrl": "https://github.com/anchore/grype/commit/4419483072181b643c3efde0fd15b9113d88887f",
       "locatorType": "repository_commit",
       "locator": "4419483072181b643c3efde0fd15b9113d88887f",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34382,7 +34382,7 @@
       "sourceUrl": "https://github.com/GSA/oscal-ssp-to-word/commit/925e4ce5491ce6a84c8c3b3b67e7f57cc496b5c0",
       "locatorType": "repository_commit",
       "locator": "925e4ce5491ce6a84c8c3b3b67e7f57cc496b5c0",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34390,7 +34390,7 @@
       "sourceUrl": "https://github.com/scipag/HardeningKitty/commit/da0976073caad006c48b2478588c2f7fa572ab46",
       "locatorType": "repository_commit",
       "locator": "da0976073caad006c48b2478588c2f7fa572ab46",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34406,7 +34406,7 @@
       "sourceUrl": "https://github.com/Checkmarx/kics/commit/150910f842f1c4385dbf76d57e55f2076f287375",
       "locatorType": "repository_commit",
       "locator": "150910f842f1c4385dbf76d57e55f2076f287375",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34414,7 +34414,7 @@
       "sourceUrl": "https://github.com/aquasecurity/kube-bench/commit/e278a5915a982f2756026de6e2f9ca77077ef9f9",
       "locatorType": "repository_commit",
       "locator": "e278a5915a982f2756026de6e2f9ca77077ef9f9",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34422,7 +34422,7 @@
       "sourceUrl": "https://github.com/kubescape/kubescape/commit/5b3efe319796e6edafced21565f8f916a64f8a03",
       "locatorType": "repository_commit",
       "locator": "5b3efe319796e6edafced21565f8f916a64f8a03",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34438,7 +34438,7 @@
       "sourceUrl": "https://github.com/CISOfy/lynis/commit/9319416fa0726369ab0a48f686155a90363f3f9c",
       "locatorType": "repository_commit",
       "locator": "9319416fa0726369ab0a48f686155a90363f3f9c",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34446,7 +34446,7 @@
       "sourceUrl": "https://github.com/maester365/maester/commit/512a076de7bb173045a2ebe62b0493d613ddd0b5",
       "locatorType": "repository_commit",
       "locator": "512a076de7bb173045a2ebe62b0493d613ddd0b5",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34470,7 +34470,7 @@
       "sourceUrl": "https://github.com/Microsoft365DSC/Microsoft365DSC/commit/8cbde93c1a7ec73f0150c99b0d73c36050c57ca8",
       "locatorType": "repository_commit",
       "locator": "8cbde93c1a7ec73f0150c99b0d73c36050c57ca8",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34478,7 +34478,7 @@
       "sourceUrl": "https://github.com/MISP/MISP/commit/04fc5f8b7ccb52bb6614ca3e9ccdbfdf6585d985",
       "locatorType": "repository_commit",
       "locator": "04fc5f8b7ccb52bb6614ca3e9ccdbfdf6585d985",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34486,7 +34486,7 @@
       "sourceUrl": "https://github.com/mitre-attack/attack-navigator/commit/139d011a5ebe99465a1fcf553e672efbc85f49a3",
       "locatorType": "repository_commit",
       "locator": "139d011a5ebe99465a1fcf553e672efbc85f49a3",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34494,7 +34494,7 @@
       "sourceUrl": "https://github.com/apache/caldera/commit/cb8d6a8160e0f4990af323a7c071d5e8482b42c7",
       "locatorType": "repository_commit",
       "locator": "cb8d6a8160e0f4990af323a7c071d5e8482b42c7",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34502,15 +34502,15 @@
       "sourceUrl": "https://github.com/mitre/emass_client/commit/c9013aafc5319fd7e2c74bba6e56cdf535959e70",
       "locatorType": "repository_commit",
       "locator": "c9013aafc5319fd7e2c74bba6e56cdf535959e70",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:tool-mitre-heimdall:publisher-destination",
-      "sourceUrl": "https://github.com/mitre/heimdall2/commit/0704d55619e1e4902db50700119e7b37d21ca3dc",
+      "sourceUrl": "https://github.com/mitre/heimdall2/commit/960884f02d990de4443609f3e8d9676ddc12c79f",
       "locatorType": "repository_commit",
-      "locator": "0704d55619e1e4902db50700119e7b37d21ca3dc",
-      "retrievedAt": "2026-11-17",
+      "locator": "960884f02d990de4443609f3e8d9676ddc12c79f",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34518,7 +34518,7 @@
       "sourceUrl": "https://github.com/mitre/saf/commit/fd4a3bece5622ffe53616666819bf8c4b4b3496d",
       "locatorType": "repository_commit",
       "locator": "fd4a3bece5622ffe53616666819bf8c4b4b3496d",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34526,7 +34526,7 @@
       "sourceUrl": "https://github.com/mitre/vulcan/commit/348cd8f8318297f56e1041e8480f6bd5ec7a66eb",
       "locatorType": "repository_commit",
       "locator": "348cd8f8318297f56e1041e8480f6bd5ec7a66eb",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34534,7 +34534,7 @@
       "sourceUrl": "https://github.com/usnistgov/macos_security/commit/2b71e9602fea2eed66a81e04d19427d46050c7b9",
       "locatorType": "repository_commit",
       "locator": "2b71e9602fea2eed66a81e04d19427d46050c7b9",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34550,15 +34550,15 @@
       "sourceUrl": "https://github.com/open-policy-agent/opa/commit/43bb521cde8a4cb3621fc34ed49f01c014edbbf4",
       "locatorType": "repository_commit",
       "locator": "43bb521cde8a4cb3621fc34ed49f01c014edbbf4",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
       "id": "resource:tool-opencti:publisher-destination",
-      "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/commit/7fcb37a3da50ac75401d2c7ee66a5ec042348f20",
+      "sourceUrl": "https://github.com/OpenCTI-Platform/opencti/commit/1f9d7cc7e168a50c35943488c7c73e2a245f379c",
       "locatorType": "repository_commit",
-      "locator": "7fcb37a3da50ac75401d2c7ee66a5ec042348f20",
-      "retrievedAt": "2026-11-17",
+      "locator": "1f9d7cc7e168a50c35943488c7c73e2a245f379c",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34566,7 +34566,7 @@
       "sourceUrl": "https://github.com/OpenSCAP/openscap/commit/38e6d9fd84d337f0f558a7d3b95b54bf4c6c6cef",
       "locatorType": "repository_commit",
       "locator": "38e6d9fd84d337f0f558a7d3b95b54bf4c6c6cef",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34574,7 +34574,7 @@
       "sourceUrl": "https://github.com/OpenSCAP/openscap/commit/38e6d9fd84d337f0f558a7d3b95b54bf4c6c6cef",
       "locatorType": "repository_commit",
       "locator": "38e6d9fd84d337f0f558a7d3b95b54bf4c6c6cef",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34582,7 +34582,7 @@
       "sourceUrl": "https://github.com/ossf/scorecard/commit/6eb56f6a7e62d8f5d55800f54cd92ea305107d1d",
       "locatorType": "repository_commit",
       "locator": "6eb56f6a7e62d8f5d55800f54cd92ea305107d1d",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34590,7 +34590,7 @@
       "sourceUrl": "https://github.com/osquery/osquery/commit/a44316c122a0bc95670905428ab231b4bae4cc0d",
       "locatorType": "repository_commit",
       "locator": "a44316c122a0bc95670905428ab231b4bae4cc0d",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34606,7 +34606,7 @@
       "sourceUrl": "https://github.com/microsoft/PowerSTIG/commit/efa8aec879259ade7db396715850c58df9f44e81",
       "locatorType": "repository_commit",
       "locator": "efa8aec879259ade7db396715850c58df9f44e81",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34614,7 +34614,7 @@
       "sourceUrl": "https://github.com/prowler-cloud/prowler/commit/10cca5d0ef9839de0ab794b7da055daf2e466f48",
       "locatorType": "repository_commit",
       "locator": "10cca5d0ef9839de0ab794b7da055daf2e466f48",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34622,7 +34622,7 @@
       "sourceUrl": "https://github.com/nccgroup/ScoutSuite/commit/7909f2fc6186063e5c9e7ddef8c4d7d1072c8f3d",
       "locatorType": "repository_commit",
       "locator": "7909f2fc6186063e5c9e7ddef8c4d7d1072c8f3d",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34638,7 +34638,7 @@
       "sourceUrl": "https://github.com/semgrep/semgrep/commit/cd3b439c36f43a299dffcd1e7544f6ce7ebb03cc",
       "locatorType": "repository_commit",
       "locator": "cd3b439c36f43a299dffcd1e7544f6ce7ebb03cc",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34646,7 +34646,7 @@
       "sourceUrl": "https://github.com/turbot/steampipe/commit/fa2bb7c7c5348f0204ba851dc375656607519462",
       "locatorType": "repository_commit",
       "locator": "fa2bb7c7c5348f0204ba851dc375656607519462",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34654,7 +34654,7 @@
       "sourceUrl": "https://github.com/NUWCDIVNPT/stig-manager/commit/882fbd728c15773c054b0fec130e5b0d2af436c6",
       "locatorType": "repository_commit",
       "locator": "882fbd728c15773c054b0fec130e5b0d2af436c6",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34670,7 +34670,7 @@
       "sourceUrl": "https://github.com/anchore/syft/commit/1a72047fd46c72e0a12ee77e24b23d2316753d08",
       "locatorType": "repository_commit",
       "locator": "1a72047fd46c72e0a12ee77e24b23d2316753d08",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34686,7 +34686,7 @@
       "sourceUrl": "https://github.com/tenable/terrascan/commit/dafb3e0ad72812fbecfc36d33e8bd4347f12b114",
       "locatorType": "repository_commit",
       "locator": "dafb3e0ad72812fbecfc36d33e8bd4347f12b114",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34694,7 +34694,7 @@
       "sourceUrl": "https://github.com/aquasecurity/trivy/commit/00b73947fd14332e6648b0b38edbb1ca5380a222",
       "locatorType": "repository_commit",
       "locator": "00b73947fd14332e6648b0b38edbb1ca5380a222",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34702,7 +34702,7 @@
       "sourceUrl": "https://github.com/Velocidex/velociraptor/commit/d394e33e0d7156745154ee2aba639fe2ebc07655",
       "locatorType": "repository_commit",
       "locator": "d394e33e0d7156745154ee2aba639fe2ebc07655",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34710,7 +34710,7 @@
       "sourceUrl": "https://github.com/volatilityfoundation/volatility3/commit/77ff0b1932d77527f850c8ced01d85805ea7bf97",
       "locatorType": "repository_commit",
       "locator": "77ff0b1932d77527f850c8ced01d85805ea7bf97",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34718,7 +34718,7 @@
       "sourceUrl": "https://github.com/wazuh/wazuh/commit/365f96fcd12a5fb16aefc8d261cd3089c7217e57",
       "locatorType": "repository_commit",
       "locator": "365f96fcd12a5fb16aefc8d261cd3089c7217e57",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {
@@ -34734,7 +34734,7 @@
       "sourceUrl": "https://github.com/VirusTotal/yara-x/commit/8ac6b06c8d16b80f34bdff8e0f9abc07a51c167c",
       "locatorType": "repository_commit",
       "locator": "8ac6b06c8d16b80f34bdff8e0f9abc07a51c167c",
-      "retrievedAt": "2026-11-17",
+      "retrievedAt": "2026-11-18",
       "reviewStatus": "reviewed"
     },
     {

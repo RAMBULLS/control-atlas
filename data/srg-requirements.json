@@ -31569,7 +31569,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -31596,7 +31599,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -31623,7 +31629,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -31650,7 +31659,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -31677,7 +31689,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -31704,7 +31719,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -31731,7 +31749,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -31758,7 +31779,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -31785,7 +31809,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -31812,7 +31839,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -31839,7 +31869,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -31866,7 +31899,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -31893,7 +31929,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -31920,7 +31959,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -31947,7 +31989,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -31974,7 +32019,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -32001,7 +32049,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -32028,7 +32079,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -32055,7 +32109,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -32082,7 +32139,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -32109,7 +32169,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -32136,7 +32199,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -32163,7 +32229,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -32190,7 +32259,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -32217,7 +32289,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -32244,7 +32319,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -32271,7 +32349,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -32298,7 +32379,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -32325,7 +32409,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -32352,7 +32439,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -43125,7 +43215,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -63078,7 +63171,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -63105,7 +63201,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {
@@ -63132,7 +63231,10 @@
         "benchmark_description": "This Security Requirements Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
         "relationship_catalog": "disa-cci",
         "relationships": [],
-        "current_snapshot_presence": true
+        "current_snapshot_presence": false,
+        "source_warnings": [
+          "Absent from the latest selected publisher snapshot; retained from its verified prior edition. Current applicability/lifecycle is UNKNOWN; no retirement is inferred."
+        ]
       }
     },
     {

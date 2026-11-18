@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-17T23:44:29.470Z",
+  "generated_at": "2026-11-18T01:12:27.802Z",
   "source": "https://csrc.nist.gov/projects/olir/informative-reference-catalog",
   "api_endpoint": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog",
   "total_entries": 106,
@@ -8,7 +8,7 @@
   "ingested_count": 42,
   "quarantined_count": 64,
   "unresolved_count": 13,
-  "retained_count": 1,
+  "retained_count": 8,
   "processed_items": [
     {
       "id": 238,
@@ -61,7 +61,7 @@
           "status": 200,
           "final_url": "https://github.com/Pharns",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 197045
+          "byte_length": 197051
         },
         {
           "kind": "artifact download",
@@ -74,7 +74,7 @@
           "status": 200,
           "final_url": "https://github.com/",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 524839
+          "byte_length": 524824
         },
         {
           "kind": "artifact download",
@@ -82,7 +82,7 @@
           "status": 200,
           "final_url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FPharns",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 45506
+          "byte_length": 45512
         },
         {
           "kind": "artifact download",
@@ -90,7 +90,7 @@
           "status": 200,
           "final_url": "https://github.com/platform",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 323217
+          "byte_length": 323222
         },
         {
           "kind": "artifact download",
@@ -98,7 +98,7 @@
           "status": 200,
           "final_url": "https://github.com/features/copilot",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 858212
+          "byte_length": 858218
         },
         {
           "kind": "artifact download",
@@ -106,7 +106,7 @@
           "status": 200,
           "final_url": "https://github.com/features/actions",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 251236
+          "byte_length": 251248
         },
         {
           "kind": "artifact download",
@@ -114,7 +114,7 @@
           "status": 200,
           "final_url": "https://github.com/features/code-quality",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 270025
+          "byte_length": 270030
         },
         {
           "kind": "artifact download",
@@ -122,7 +122,7 @@
           "status": 200,
           "final_url": "https://github.com/features/codespaces",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 273480
+          "byte_length": 273180
         },
         {
           "kind": "artifact download",
@@ -130,7 +130,7 @@
           "status": 200,
           "final_url": "https://github.com/security/advanced-security/code-security",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 299450
+          "byte_length": 299458
         },
         {
           "kind": "artifact download",
@@ -138,7 +138,7 @@
           "status": 200,
           "final_url": "https://github.com/security/advanced-security/secret-protection",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 298788
+          "byte_length": 298794
         },
         {
           "kind": "artifact download",
@@ -146,7 +146,7 @@
           "status": 200,
           "final_url": "https://github.com/features",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 363872
+          "byte_length": 363878
         },
         {
           "kind": "artifact download",
@@ -154,7 +154,7 @@
           "status": 200,
           "final_url": "https://github.com/features/ai",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 246739
+          "byte_length": 246747
         },
         {
           "kind": "artifact download",
@@ -170,7 +170,7 @@
           "status": 200,
           "final_url": "https://github.com/trending",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 584144
+          "byte_length": 583747
         },
         {
           "kind": "artifact download",
@@ -178,7 +178,7 @@
           "status": 200,
           "final_url": "https://github.com/open-source/sponsors",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 261380
+          "byte_length": 261386
         },
         {
           "kind": "artifact download",
@@ -186,7 +186,7 @@
           "status": 200,
           "final_url": "https://github.com/resources/articles",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 230192
+          "byte_length": 230200
         },
         {
           "kind": "artifact download",
@@ -194,7 +194,7 @@
           "status": 200,
           "final_url": "https://github.com/enterprise",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 1304668
+          "byte_length": 1304674
         },
         {
           "kind": "artifact download",
@@ -202,7 +202,7 @@
           "status": 200,
           "final_url": "https://github.com/team",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 330042
+          "byte_length": 330047
         },
         {
           "kind": "artifact download",
@@ -210,7 +210,7 @@
           "status": 200,
           "final_url": "https://github.com/enterprise/startups",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 376639
+          "byte_length": 376645
         },
         {
           "kind": "artifact download",
@@ -226,7 +226,7 @@
           "status": 200,
           "final_url": "https://github.com/solutions/industry/healthcare",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 1080791
+          "byte_length": 1121439
         },
         {
           "kind": "artifact download",
@@ -234,7 +234,7 @@
           "status": 200,
           "final_url": "https://github.com/solutions/industry/financial-services",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 274136
+          "byte_length": 234086
         }
       ]
     },
@@ -289,7 +289,7 @@
           "status": 200,
           "final_url": "https://github.com/Pharns",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 197039
+          "byte_length": 197051
         },
         {
           "kind": "artifact download",
@@ -302,7 +302,7 @@
           "status": 200,
           "final_url": "https://github.com/",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 524837
+          "byte_length": 524824
         },
         {
           "kind": "artifact download",
@@ -310,7 +310,7 @@
           "status": 200,
           "final_url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FPharns",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 45506
+          "byte_length": 45512
         },
         {
           "kind": "artifact download",
@@ -318,7 +318,7 @@
           "status": 200,
           "final_url": "https://github.com/platform",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 323217
+          "byte_length": 323223
         },
         {
           "kind": "artifact download",
@@ -326,7 +326,7 @@
           "status": 200,
           "final_url": "https://github.com/features/copilot",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 858212
+          "byte_length": 858218
         },
         {
           "kind": "artifact download",
@@ -334,7 +334,7 @@
           "status": 200,
           "final_url": "https://github.com/features/actions",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 251242
+          "byte_length": 251248
         },
         {
           "kind": "artifact download",
@@ -342,7 +342,7 @@
           "status": 200,
           "final_url": "https://github.com/features/code-quality",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 270023
+          "byte_length": 270031
         },
         {
           "kind": "artifact download",
@@ -350,7 +350,7 @@
           "status": 200,
           "final_url": "https://github.com/features/codespaces",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 273482
+          "byte_length": 273180
         },
         {
           "kind": "artifact download",
@@ -358,7 +358,7 @@
           "status": 200,
           "final_url": "https://github.com/security/advanced-security/code-security",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 299452
+          "byte_length": 299457
         },
         {
           "kind": "artifact download",
@@ -366,7 +366,7 @@
           "status": 200,
           "final_url": "https://github.com/security/advanced-security/secret-protection",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 298786
+          "byte_length": 298794
         },
         {
           "kind": "artifact download",
@@ -374,7 +374,7 @@
           "status": 200,
           "final_url": "https://github.com/features",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 363870
+          "byte_length": 363878
         },
         {
           "kind": "artifact download",
@@ -382,7 +382,7 @@
           "status": 200,
           "final_url": "https://github.com/features/ai",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 246741
+          "byte_length": 246747
         },
         {
           "kind": "artifact download",
@@ -398,7 +398,7 @@
           "status": 200,
           "final_url": "https://github.com/trending",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 584142
+          "byte_length": 583746
         },
         {
           "kind": "artifact download",
@@ -406,7 +406,7 @@
           "status": 200,
           "final_url": "https://github.com/open-source/sponsors",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 261380
+          "byte_length": 261386
         },
         {
           "kind": "artifact download",
@@ -414,7 +414,7 @@
           "status": 200,
           "final_url": "https://github.com/resources/articles",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 230194
+          "byte_length": 230200
         },
         {
           "kind": "artifact download",
@@ -422,7 +422,7 @@
           "status": 200,
           "final_url": "https://github.com/enterprise",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 1304668
+          "byte_length": 1304674
         },
         {
           "kind": "artifact download",
@@ -430,7 +430,7 @@
           "status": 200,
           "final_url": "https://github.com/team",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 330042
+          "byte_length": 330048
         },
         {
           "kind": "artifact download",
@@ -438,7 +438,7 @@
           "status": 200,
           "final_url": "https://github.com/enterprise/startups",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 376637
+          "byte_length": 376645
         },
         {
           "kind": "artifact download",
@@ -454,7 +454,7 @@
           "status": 200,
           "final_url": "https://github.com/solutions/industry/healthcare",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 1080791
+          "byte_length": 1121440
         },
         {
           "kind": "artifact download",
@@ -462,7 +462,7 @@
           "status": 200,
           "final_url": "https://github.com/solutions/industry/financial-services",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 274138
+          "byte_length": 234086
         }
       ]
     },
@@ -517,7 +517,7 @@
           "status": 200,
           "final_url": "https://github.com/Pharns",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 197045
+          "byte_length": 197050
         },
         {
           "kind": "artifact download",
@@ -530,7 +530,7 @@
           "status": 200,
           "final_url": "https://github.com/",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 524839
+          "byte_length": 524823
         },
         {
           "kind": "artifact download",
@@ -538,7 +538,7 @@
           "status": 200,
           "final_url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FPharns",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 45504
+          "byte_length": 45511
         },
         {
           "kind": "artifact download",
@@ -546,7 +546,7 @@
           "status": 200,
           "final_url": "https://github.com/platform",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 323215
+          "byte_length": 323223
         },
         {
           "kind": "artifact download",
@@ -554,7 +554,7 @@
           "status": 200,
           "final_url": "https://github.com/features/copilot",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 858210
+          "byte_length": 858217
         },
         {
           "kind": "artifact download",
@@ -562,7 +562,7 @@
           "status": 200,
           "final_url": "https://github.com/features/actions",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 251242
+          "byte_length": 251247
         },
         {
           "kind": "artifact download",
@@ -570,7 +570,7 @@
           "status": 200,
           "final_url": "https://github.com/features/code-quality",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 270025
+          "byte_length": 270031
         },
         {
           "kind": "artifact download",
@@ -578,7 +578,7 @@
           "status": 200,
           "final_url": "https://github.com/features/codespaces",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 273482
+          "byte_length": 273179
         },
         {
           "kind": "artifact download",
@@ -586,7 +586,7 @@
           "status": 200,
           "final_url": "https://github.com/security/advanced-security/code-security",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 299452
+          "byte_length": 299458
         },
         {
           "kind": "artifact download",
@@ -594,7 +594,7 @@
           "status": 200,
           "final_url": "https://github.com/security/advanced-security/secret-protection",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 298788
+          "byte_length": 298794
         },
         {
           "kind": "artifact download",
@@ -602,7 +602,7 @@
           "status": 200,
           "final_url": "https://github.com/features",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 363872
+          "byte_length": 363878
         },
         {
           "kind": "artifact download",
@@ -610,7 +610,7 @@
           "status": 200,
           "final_url": "https://github.com/features/ai",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 246741
+          "byte_length": 246747
         },
         {
           "kind": "artifact download",
@@ -626,7 +626,7 @@
           "status": 200,
           "final_url": "https://github.com/trending",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 584144
+          "byte_length": 583747
         },
         {
           "kind": "artifact download",
@@ -634,7 +634,7 @@
           "status": 200,
           "final_url": "https://github.com/open-source/sponsors",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 261380
+          "byte_length": 261386
         },
         {
           "kind": "artifact download",
@@ -642,7 +642,7 @@
           "status": 200,
           "final_url": "https://github.com/resources/articles",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 230194
+          "byte_length": 230200
         },
         {
           "kind": "artifact download",
@@ -650,7 +650,7 @@
           "status": 200,
           "final_url": "https://github.com/enterprise",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 1304668
+          "byte_length": 1304673
         },
         {
           "kind": "artifact download",
@@ -658,7 +658,7 @@
           "status": 200,
           "final_url": "https://github.com/team",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 330040
+          "byte_length": 330048
         },
         {
           "kind": "artifact download",
@@ -666,7 +666,7 @@
           "status": 200,
           "final_url": "https://github.com/enterprise/startups",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 376639
+          "byte_length": 376645
         },
         {
           "kind": "artifact download",
@@ -682,7 +682,7 @@
           "status": 200,
           "final_url": "https://github.com/solutions/industry/healthcare",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 1080791
+          "byte_length": 1121440
         },
         {
           "kind": "artifact download",
@@ -690,7 +690,7 @@
           "status": 200,
           "final_url": "https://github.com/solutions/industry/financial-services",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 274138
+          "byte_length": 234086
         }
       ]
     },
@@ -774,7 +774,7 @@
           "status": 200,
           "final_url": "https://drive.google.com/drive/folders/11qgNa4EavIN5YFh0gfTl9D-4VJISBe-p?usp=sharing",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 343700
+          "byte_length": 343982
         },
         {
           "kind": "artifact download",
@@ -889,7 +889,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": "intersects with",
       "ingested": true,
-      "availability": "structured_artifact",
+      "availability": "retrieval_failed",
       "map_file": "maps/olir/230.json",
       "artifact_id": null,
       "artifact": {
@@ -934,7 +934,217 @@
           "content_type": "application/octet-stream",
           "byte_length": 154777
         }
-      ]
+      ],
+      "refresh_status": "retained_last_good",
+      "refresh_error": "no public relationship mapping could be downloaded from the registered NIST submission locations",
+      "latest_retrieval_attempts": [
+        {
+          "kind": "NIST catalog detail endpoint",
+          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/230",
+          "status": 200,
+          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/230",
+          "json_file_url": null,
+          "publisher_sha256": null,
+          "submission_url": "https://github.com/OraclesTech/guardian-sdk/tree/main/docs/compliance/olir/SP%20800-53",
+          "reference_url": "https://github.com/OraclesTech/guardian-sdk",
+          "mapping_summary": "<p>Guardian SDK is a production-grade, real-time threat detection library for Python LLM and agentic applications. It operates as an eight-intercept pipeline &mdash; four pre-flight layers (Pattern, Semantic, Behavioral, ML), two post-flight layers (OutputAnalyzer, AdversarialLearner), and two agentic pipeline gates (ToolCallValidator, ToolOutputScanner) &mdash; detecting and blocking prompt injection, jailbreaks, role hijacking, system-prompt exfiltration, RAG/indirect injection, agentic tool hijacking, and multimodal threats (image-embedded payloads, cross-modal attacks, and video payload injection) introduced in v2.1.0. All inference runs on-device via ONNX Runtime with no input data leaving the deployment. This OLIR maps Guardian SDK's capabilities to NIST SP 800-53 Release 5.2.0.</p>",
+          "mapping_comment": "<p>Mapping covers Guardian SDK v2.7.0 against NIST SP 800-53 Release 5.2.0 (Set Theory). 40 relationship rows across SI, AU, AC, SC, SR, SA, RA, CM, IR, and CA. Reference elements GS-CF-04..07 (supply-chain integrity/SBOM, self-integrity verification, rate limiting/quota, and adversarial benchmark/red-team) extend the element catalog used in the CSF 2.0 and AI RMF submissions. Guardian is positioned as a software component operating within the customer authorization boundary; controls are related where Guardian implements the AI-layer portion. Inherited/customer-responsible controls (identity, boundary, crypto modules, contingency, physical, audit retention) are deliberately not claimed.</p>"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/OraclesTech/guardian-sdk/tree/main/docs/compliance/olir/SP%20800-53",
+          "status": 200,
+          "final_url": "https://github.com/OraclesTech/guardian-sdk/tree/main/docs/compliance/olir/SP%20800-53",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 167091
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/OraclesTech/guardian-sdk/tree/main/docs/compliance/olir/SP%20800-53#start-of-content",
+          "error": "OLIR source URL policy rejected destination outside registered submission"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/",
+          "status": 200,
+          "final_url": "https://github.com/",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 524824
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FOraclesTech%2Fguardian-sdk%2Ftree%2Fmain%2Fdocs%2Fcompliance%2Folir%2FSP%2520800-53",
+          "status": 200,
+          "final_url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FOraclesTech%2Fguardian-sdk%2Ftree%2Fmain%2Fdocs%2Fcompliance%2Folir%2FSP%2520800-53",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 45804
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/platform",
+          "status": 200,
+          "final_url": "https://github.com/platform",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 323223
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/copilot",
+          "status": 200,
+          "final_url": "https://github.com/features/copilot",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 858218
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/actions",
+          "status": 200,
+          "final_url": "https://github.com/features/actions",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 251248
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/code-quality",
+          "status": 200,
+          "final_url": "https://github.com/features/code-quality",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 270031
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/codespaces",
+          "status": 200,
+          "final_url": "https://github.com/features/codespaces",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 273180
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/security/advanced-security/code-security",
+          "status": 200,
+          "final_url": "https://github.com/security/advanced-security/code-security",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 299458
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/security/advanced-security/secret-protection",
+          "status": 200,
+          "final_url": "https://github.com/security/advanced-security/secret-protection",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 298793
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features",
+          "status": 200,
+          "final_url": "https://github.com/features",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 363878
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/ai",
+          "status": 200,
+          "final_url": "https://github.com/features/ai",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 246746
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/marketplace",
+          "status": 400,
+          "final_url": "https://github.com/marketplace",
+          "content_type": "application/json; charset=utf-8",
+          "byte_length": 0
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/trending",
+          "status": 200,
+          "final_url": "https://github.com/trending",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 583747
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/open-source/sponsors",
+          "status": 200,
+          "final_url": "https://github.com/open-source/sponsors",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 261386
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/resources/articles",
+          "status": 200,
+          "final_url": "https://github.com/resources/articles",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 230200
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/enterprise",
+          "status": 200,
+          "final_url": "https://github.com/enterprise",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1304674
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/team",
+          "status": 200,
+          "final_url": "https://github.com/team",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 330048
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/enterprise/startups",
+          "status": 200,
+          "final_url": "https://github.com/enterprise/startups",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 376645
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/nonprofits",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/nonprofits",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 206476
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/healthcare",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/healthcare",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1121440
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/financial-services",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/financial-services",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 234086
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/manufacturing",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/manufacturing",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1078671
+        }
+      ],
+      "retention": {
+        "cause": "publisher_unavailable",
+        "first_retained_at": "2026-11-18T01:12:27.802Z",
+        "consecutive_refreshes": 1
+      }
     },
     {
       "id": 229,
@@ -1014,7 +1224,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": "Concept Crosswalk",
       "ingested": true,
-      "availability": "structured_artifact",
+      "availability": "unexpected_html_response",
       "map_file": "maps/olir/225.json",
       "artifact_id": null,
       "artifact": {
@@ -1059,7 +1269,46 @@
           "content_type": "application/octet-stream",
           "byte_length": 33225
         }
-      ]
+      ],
+      "refresh_status": "retained_last_good",
+      "refresh_error": "no public relationship mapping could be downloaded from the registered NIST submission locations",
+      "latest_retrieval_attempts": [
+        {
+          "kind": "NIST catalog detail endpoint",
+          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/225",
+          "status": 200,
+          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/225",
+          "json_file_url": null,
+          "publisher_sha256": null,
+          "submission_url": "https://github.com/greerfam2020-rgb/IPAC-AI-Framework-Review/blob/main/IPACS_AI_RMF_Crosswalk_v3-5.xlsx",
+          "reference_url": "https://github.com/greerfam2020-rgb/IPAC-AI-Framework-Review/blob/main/IPACS_AI_NIST_Submission_Final-1.pdf",
+          "mapping_summary": "<p>AI stays open. Anonymity for malicious use ends.</p>\n<p>Every component of this framework - FIDO2 hardware attestation, the middleware layer, direct memory injection, and the WORM immutable audit trail - exists to enforce one guarantee: legitimate developers lose nothing, malicious actors lose anonymity.</p>\n<p>This Informative Reference maps the Identity-Proofed Access Control System for AI (IPACS-AI) - a zero-trust middleware framework for AI coding tools-to the NIST AI RMF 1.0. IPACS-AI closes the accountability gap created by anonymous AI access through identity-proofed, hardware-attested, time-bounded session controls. It eliminates clipboard code smuggling via direct memory injection, classifies AI-generated code risk via AST parsing, and maintains an immutable WORM hash-chained audit trail at zero per-transaction cost using local FIDO2/TPM 2.0 attestation and OIDC/SAML 2.0 federated identity. The crosswalk shows strong or exact alignment across all four AI RMF functions.</p>",
+          "mapping_comment": "<p>IPACS-AI is an independent, open-source framework submission. All 72 AI RMF 1.0 subcategories are addressed in the crosswalk. Documented gaps (DEI team documentation, formal TEVV testing) are transparently disclosed with planned remediation through a mandatory independent security audit prior to production deployment. The framework is licensed MIT/Apache 2.0 with no commercial restrictions. Local FIDO2/TPM attestation enables zero per-transaction cost and full offline resilience. Scope is explicitly bounded to API-connected AI services; fully air-gapped local inference is acknowledged as out of scope.</p>"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/greerfam2020-rgb/IPAC-AI-Framework-Review/blob/main/IPACS_AI_RMF_Crosswalk_v3-5.xlsx",
+          "status": 200,
+          "final_url": "https://github.com/greerfam2020-rgb/IPAC-AI-Framework-Review/blob/main/IPACS_AI_RMF_Crosswalk_v3-5.xlsx",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 164978,
+          "availability": "unexpected_html_response"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/greerfam2020-rgb/IPAC-AI-Framework-Review/blob/main/IPACS_AI_RMF_Crosswalk_v3-5.xlsx",
+          "status": 200,
+          "final_url": "https://github.com/greerfam2020-rgb/IPAC-AI-Framework-Review/blob/main/IPACS_AI_RMF_Crosswalk_v3-5.xlsx",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 164978,
+          "availability": "unexpected_html_response"
+        }
+      ],
+      "retention": {
+        "cause": "publisher_unavailable",
+        "first_retained_at": "2026-11-18T01:12:27.802Z",
+        "consecutive_refreshes": 1
+      }
     },
     {
       "id": 227,
@@ -1115,7 +1364,7 @@
           "status": 200,
           "final_url": "https://drive.google.com/drive/folders/1uqUpwlj7NeP-TDSPR2sHaVXHOQlabCCG?usp=sharing",
           "content_type": "text/html; charset=utf-8",
-          "byte_length": 331605
+          "byte_length": 331630
         },
         {
           "kind": "artifact download",
@@ -1146,7 +1395,7 @@
       "authority_tier_label": "Community candidate Final",
       "mapping_model": "Concept Crosswalk",
       "ingested": true,
-      "availability": "structured_artifact",
+      "availability": "retrieval_failed",
       "map_file": "maps/olir/218.json",
       "artifact_id": null,
       "artifact": {
@@ -1191,7 +1440,217 @@
           "content_type": "application/octet-stream",
           "byte_length": 21824
         }
-      ]
+      ],
+      "refresh_status": "retained_last_good",
+      "refresh_error": "no public relationship mapping could be downloaded from the registered NIST submission locations",
+      "latest_retrieval_attempts": [
+        {
+          "kind": "NIST catalog detail endpoint",
+          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/218",
+          "status": 200,
+          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/218",
+          "json_file_url": null,
+          "publisher_sha256": null,
+          "submission_url": "https://github.com/JoergPauloweit/ISO27001-NIST-Mapping",
+          "reference_url": "https://www.iso.org/obp/ui/#iso:std:iso-iec:27001:ed-3:v1:en",
+          "mapping_summary": "<p>Mapping of ISO/IEC 27001:2022 controls to the NIST Cybersecurity Framework 2.0 using the OLIR Crosswalk template.</p>",
+          "mapping_comment": "<p>N/A</p>"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/JoergPauloweit/ISO27001-NIST-Mapping",
+          "status": 200,
+          "final_url": "https://github.com/JoergPauloweit/ISO27001-NIST-Mapping",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 190536
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/JoergPauloweit/ISO27001-NIST-Mapping#start-of-content",
+          "error": "OLIR source URL policy rejected destination outside registered submission"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/",
+          "status": 200,
+          "final_url": "https://github.com/",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 524828
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FJoergPauloweit%2FISO27001-NIST-Mapping",
+          "status": 200,
+          "final_url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FJoergPauloweit%2FISO27001-NIST-Mapping",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 45638
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/platform",
+          "status": 200,
+          "final_url": "https://github.com/platform",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 323223
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/copilot",
+          "status": 200,
+          "final_url": "https://github.com/features/copilot",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 858218
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/actions",
+          "status": 200,
+          "final_url": "https://github.com/features/actions",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 251248
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/code-quality",
+          "status": 200,
+          "final_url": "https://github.com/features/code-quality",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 270030
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/codespaces",
+          "status": 200,
+          "final_url": "https://github.com/features/codespaces",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 273180
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/security/advanced-security/code-security",
+          "status": 200,
+          "final_url": "https://github.com/security/advanced-security/code-security",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 299458
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/security/advanced-security/secret-protection",
+          "status": 200,
+          "final_url": "https://github.com/security/advanced-security/secret-protection",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 298794
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features",
+          "status": 200,
+          "final_url": "https://github.com/features",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 363877
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/ai",
+          "status": 200,
+          "final_url": "https://github.com/features/ai",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 246747
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/marketplace",
+          "status": 400,
+          "final_url": "https://github.com/marketplace",
+          "content_type": "application/json; charset=utf-8",
+          "byte_length": 0
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/trending",
+          "status": 200,
+          "final_url": "https://github.com/trending",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 583747
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/open-source/sponsors",
+          "status": 200,
+          "final_url": "https://github.com/open-source/sponsors",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 261385
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/resources/articles",
+          "status": 200,
+          "final_url": "https://github.com/resources/articles",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 230199
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/enterprise",
+          "status": 200,
+          "final_url": "https://github.com/enterprise",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1304674
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/team",
+          "status": 200,
+          "final_url": "https://github.com/team",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 330048
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/enterprise/startups",
+          "status": 200,
+          "final_url": "https://github.com/enterprise/startups",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 376645
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/nonprofits",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/nonprofits",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 206476
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/healthcare",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/healthcare",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1121440
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/financial-services",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/financial-services",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 234086
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/manufacturing",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/manufacturing",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1078671
+        }
+      ],
+      "retention": {
+        "cause": "publisher_unavailable",
+        "first_retained_at": "2026-11-18T01:12:27.802Z",
+        "consecutive_refreshes": 1
+      }
     },
     {
       "id": 215,
@@ -1328,7 +1787,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": "Intersects with, Set Theory: Subset, Set Theory: Superset",
       "ingested": true,
-      "availability": "structured_artifact",
+      "availability": "retrieval_failed",
       "map_file": "maps/olir/209.json",
       "artifact_id": null,
       "artifact": {
@@ -1375,7 +1834,217 @@
           "content_type": "application/octet-stream",
           "byte_length": 23832
         }
-      ]
+      ],
+      "refresh_status": "retained_last_good",
+      "refresh_error": "no public relationship mapping could be downloaded from the registered NIST submission locations",
+      "latest_retrieval_attempts": [
+        {
+          "kind": "NIST catalog detail endpoint",
+          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/209",
+          "status": 200,
+          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/209",
+          "json_file_url": null,
+          "publisher_sha256": null,
+          "submission_url": "https://github.com/OraclesTech/guardian-sdk/tree/main/docs/compliance/olir/csf20",
+          "reference_url": "https://github.com/OraclesTech/guardian-sdk",
+          "mapping_summary": "<p>Guardian SDK is a production-grade, real-time threat detection library for Python LLM and agentic applications. It operates as an eight-intercept pipeline &mdash; four pre-flight layers (Pattern, Semantic, Behavioral, ML), two post-flight layers (OutputAnalyzer, AdversarialLearner), and two agentic pipeline gates (ToolCallValidator, ToolOutputScanner) &mdash; detecting and blocking prompt injection, jailbreaks, role hijacking, system-prompt exfiltration, RAG/indirect injection, agentic tool hijacking, and multimodal threats (image-embedded payloads, cross-modal attacks, and video payload injection) introduced in v2.1.0. All inference runs on-device via ONNX Runtime with no input data leaving the deployment. This OLIR maps Guardian SDK's capabilities to CSF 2.0 subcategory outcomes across all six Functions using the Set Theory Relationship Mapping approach.</p>",
+          "mapping_comment": "<p>Mapping covers Guardian SDK v2.1.0. Tier availability is noted in the Comments column of each mapping row (All tiers / API tiers). The Relationship Type field (semantic / syntactic / functional, per IR 8278Ar1 &sect;3.2.7) is included in the Comments column of the Relationships sheet.</p>"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/OraclesTech/guardian-sdk/tree/main/docs/compliance/olir/csf20",
+          "status": 200,
+          "final_url": "https://github.com/OraclesTech/guardian-sdk/tree/main/docs/compliance/olir/csf20",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 166890
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/OraclesTech/guardian-sdk/tree/main/docs/compliance/olir/csf20#start-of-content",
+          "error": "OLIR source URL policy rejected destination outside registered submission"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/",
+          "status": 200,
+          "final_url": "https://github.com/",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 524828
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FOraclesTech%2Fguardian-sdk%2Ftree%2Fmain%2Fdocs%2Fcompliance%2Folir%2Fcsf20",
+          "status": 200,
+          "final_url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FOraclesTech%2Fguardian-sdk%2Ftree%2Fmain%2Fdocs%2Fcompliance%2Folir%2Fcsf20",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 45774
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/platform",
+          "status": 200,
+          "final_url": "https://github.com/platform",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 323223
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/copilot",
+          "status": 200,
+          "final_url": "https://github.com/features/copilot",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 858218
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/actions",
+          "status": 200,
+          "final_url": "https://github.com/features/actions",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 251248
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/code-quality",
+          "status": 200,
+          "final_url": "https://github.com/features/code-quality",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 270030
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/codespaces",
+          "status": 200,
+          "final_url": "https://github.com/features/codespaces",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 273180
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/security/advanced-security/code-security",
+          "status": 200,
+          "final_url": "https://github.com/security/advanced-security/code-security",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 299458
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/security/advanced-security/secret-protection",
+          "status": 200,
+          "final_url": "https://github.com/security/advanced-security/secret-protection",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 298794
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features",
+          "status": 200,
+          "final_url": "https://github.com/features",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 363878
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/ai",
+          "status": 200,
+          "final_url": "https://github.com/features/ai",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 246746
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/marketplace",
+          "status": 400,
+          "final_url": "https://github.com/marketplace",
+          "content_type": "application/json; charset=utf-8",
+          "byte_length": 0
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/trending",
+          "status": 200,
+          "final_url": "https://github.com/trending",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 583747
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/open-source/sponsors",
+          "status": 200,
+          "final_url": "https://github.com/open-source/sponsors",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 261386
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/resources/articles",
+          "status": 200,
+          "final_url": "https://github.com/resources/articles",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 230200
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/enterprise",
+          "status": 200,
+          "final_url": "https://github.com/enterprise",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1304674
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/team",
+          "status": 200,
+          "final_url": "https://github.com/team",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 330048
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/enterprise/startups",
+          "status": 200,
+          "final_url": "https://github.com/enterprise/startups",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 376644
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/nonprofits",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/nonprofits",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 206476
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/healthcare",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/healthcare",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1121440
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/financial-services",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/financial-services",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 234086
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/manufacturing",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/manufacturing",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1078670
+        }
+      ],
+      "retention": {
+        "cause": "publisher_unavailable",
+        "first_retained_at": "2026-11-18T01:12:27.802Z",
+        "consecutive_refreshes": 1
+      }
     },
     {
       "id": 214,
@@ -1396,7 +2065,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": "Set Theory: Equal, Set Theory: Subset, intersects with",
       "ingested": true,
-      "availability": "structured_artifact",
+      "availability": "retrieval_failed",
       "map_file": "maps/olir/214.json",
       "artifact_id": null,
       "artifact": {
@@ -1476,7 +2145,217 @@
           "content_type": "text/plain; charset=utf-8",
           "byte_length": 52610
         }
-      ]
+      ],
+      "refresh_status": "retained_last_good",
+      "refresh_error": "no public relationship mapping could be downloaded from the registered NIST submission locations",
+      "latest_retrieval_attempts": [
+        {
+          "kind": "NIST catalog detail endpoint",
+          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/214",
+          "status": 200,
+          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/214",
+          "json_file_url": null,
+          "publisher_sha256": null,
+          "submission_url": "https://cyberoon.com/research/ai-soc-v10-to-nist-csf-20-informative-reference-mapping",
+          "reference_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/blob/main/docs/AI_SOC_Controls_Catalog_v1_0.pdf",
+          "mapping_summary": "<p>This Informative Reference maps AI-driven threat detection and autonomous Security Operations Center (SOC) controls to the NIST Cybersecurity Framework (CSF) 2.0. The mapping supports enterprise cybersecurity teams, healthcare security environments, managed security service providers, and AI-enabled SOC operations by aligning behavioral anomaly detection, endpoint telemetry analytics, ransomware behavior detection, threat intelligence enrichment, autonomous alert triage, containment recommendations, and recovery prioritization with CSF 2.0 outcomes.</p>",
+          "mapping_comment": "<p>This OLIR uses a functional relationship mapping approach to align operational AI-driven cybersecurity controls with NIST CSF 2.0 outcomes. The public repository includes the OLIR-style mapping workbook, CSV export, standalone reference document, methodology, relationship definitions, usage guidance, citations, and submission metadata. Repository root: https://github.com/cyberoon/ai-soc-nist-csf-mapping</p>"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://cyberoon.com/research/ai-soc-v10-to-nist-csf-20-informative-reference-mapping",
+          "status": 200,
+          "final_url": "https://cyberoon.com/research/ai-soc-v10-to-nist-csf-20-informative-reference-mapping",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 2092843
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping",
+          "status": 200,
+          "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 246305
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/releases/tag/v1.0.0",
+          "status": 200,
+          "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/releases/tag/v1.0.0",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 150835
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/blob/main/docs/AI_SOC_Controls_Catalog_v1_0.pdf",
+          "status": 200,
+          "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/blob/main/docs/AI_SOC_Controls_Catalog_v1_0.pdf",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 187033
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/tree/main/mappings",
+          "status": 200,
+          "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/tree/main/mappings",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 164618
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/tree/main/metadata",
+          "status": 200,
+          "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/tree/main/metadata",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 161535
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/u003c/p/u003e/r/n/u003cp/u003eVersion",
+          "status": 404,
+          "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/u003c/p/u003e/r/n/u003cp/u003eVersion",
+          "content_type": "text/plain; charset=utf-8",
+          "byte_length": 9
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/releases/tag/v1.0.0/u003c/p/u003e/r/n/u003cp/u003eReference",
+          "status": 200,
+          "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/releases/tag/v1.0.0/u003c/p/u003e/r/n/u003cp/u003eReference",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 151276
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/blob/main/docs/AI_SOC_Controls_Catalog_v1_0.pdf/u003c/p/u003e/r/n/u003cp/u003eOLIR",
+          "status": 404,
+          "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/blob/main/docs/AI_SOC_Controls_Catalog_v1_0.pdf/u003c/p/u003e/r/n/u003cp/u003eOLIR",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 141437
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/tree/main/mappings/u003c/p/u003e/r/n/u003cp/u003eSubmission",
+          "status": 404,
+          "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/tree/main/mappings/u003c/p/u003e/r/n/u003cp/u003eSubmission",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 154320
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/tree/main/metadata/u003c/p/u003e/r/n/u003cp/u003eMethodology/u003c/p/u003e/r/n/u003cp/u003eThe",
+          "status": 404,
+          "final_url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping/tree/main/metadata/u003c/p/u003e/r/n/u003cp/u003eMethodology/u003c/p/u003e/r/n/u003cp/u003eThe",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 157164
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/cyberoon/ai-soc-nist-csf-mapping#start-of-content",
+          "error": "OLIR source URL policy rejected destination outside registered submission"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/",
+          "status": 200,
+          "final_url": "https://github.com/",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 525016
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Fcyberoon%2Fai-soc-nist-csf-mapping",
+          "status": 200,
+          "final_url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Fcyberoon%2Fai-soc-nist-csf-mapping",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 45622
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/platform",
+          "status": 200,
+          "final_url": "https://github.com/platform",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 323223
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/copilot",
+          "status": 200,
+          "final_url": "https://github.com/features/copilot",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 858218
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/actions",
+          "status": 200,
+          "final_url": "https://github.com/features/actions",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 251248
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/code-quality",
+          "status": 200,
+          "final_url": "https://github.com/features/code-quality",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 270030
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/codespaces",
+          "status": 200,
+          "final_url": "https://github.com/features/codespaces",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 273180
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/security/advanced-security/code-security",
+          "status": 200,
+          "final_url": "https://github.com/security/advanced-security/code-security",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 299458
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/security/advanced-security/secret-protection",
+          "status": 200,
+          "final_url": "https://github.com/security/advanced-security/secret-protection",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 298794
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features",
+          "status": 200,
+          "final_url": "https://github.com/features",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 363878
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/ai",
+          "status": 200,
+          "final_url": "https://github.com/features/ai",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 246746
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/marketplace",
+          "status": 400,
+          "final_url": "https://github.com/marketplace",
+          "content_type": "application/json; charset=utf-8",
+          "byte_length": 0
+        }
+      ],
+      "retention": {
+        "cause": "publisher_unavailable",
+        "first_retained_at": "2026-11-18T01:12:27.802Z",
+        "consecutive_refreshes": 1
+      }
     },
     {
       "id": 220,
@@ -1555,7 +2434,7 @@
       "authority_tier_label": "Validated third-party Final",
       "mapping_model": "Intersects with, Set Theory: Superset",
       "ingested": true,
-      "availability": "structured_artifact",
+      "availability": "retrieval_failed",
       "map_file": "maps/olir/223.json",
       "artifact_id": null,
       "artifact": {
@@ -1601,7 +2480,217 @@
           "content_type": "application/octet-stream",
           "byte_length": 19302
         }
-      ]
+      ],
+      "refresh_status": "retained_last_good",
+      "refresh_error": "no public relationship mapping could be downloaded from the registered NIST submission locations",
+      "latest_retrieval_attempts": [
+        {
+          "kind": "NIST catalog detail endpoint",
+          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/223",
+          "status": 200,
+          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/223",
+          "json_file_url": null,
+          "publisher_sha256": null,
+          "submission_url": "https://github.com/OraclesTech/guardian-sdk/tree/main/docs/compliance/olir/AI_RMF",
+          "reference_url": "https://github.com/OraclesTech/guardian-sdk",
+          "mapping_summary": "<p>Guardian SDK is a production-grade, real-time threat detection library for Python LLM and agentic applications. It operates as an eight-intercept pipeline &mdash; four pre-flight layers (Pattern, Semantic, Behavioral, ML), two post-flight layers (OutputAnalyzer, AdversarialLearner), and two agentic pipeline gates (ToolCallValidator, ToolOutputScanner) &mdash; detecting and blocking prompt injection, jailbreaks, role hijacking, system-prompt exfiltration, RAG/indirect injection, agentic tool hijacking, and multimodal threats (image, video, cross-modal attacks) introduced in v2.1.0. All inference runs on-device via ONNX Runtime with no input data leaving the deployment.&nbsp;</p>\n<p>The OLIR maps across all four functions addressing AI risk governance policy, threat context documentation, TEVV-informed security design, privacy-by-architecture, continuous improvement, and post-deployment monitoring as they apply specifically to the LLM and agentic AI application security domain.</p>",
+          "mapping_comment": "<p>Mapping covers Guardian SDK v2.1.0, which introduced multimodal threat detection (image, video, QR code, cross-modal attacks). Tier availability is noted in the Comments column of each mapping row (All tiers / API tiers). Relationship type (Functional/Semantic/Syntactic per IR 8278Ar1 &sect;3.2.7) is noted in Column C (Rationale) and elaborated in Column G (Comments) of the Relationships sheet. A separate CSF 2.0 OLIR submission (GuardianSDK-CSF20) has also been submitted concurrently.</p>"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/OraclesTech/guardian-sdk/tree/main/docs/compliance/olir/AI_RMF",
+          "status": 200,
+          "final_url": "https://github.com/OraclesTech/guardian-sdk/tree/main/docs/compliance/olir/AI_RMF",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 166886
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/OraclesTech/guardian-sdk/tree/main/docs/compliance/olir/AI_RMF#start-of-content",
+          "error": "OLIR source URL policy rejected destination outside registered submission"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/",
+          "status": 200,
+          "final_url": "https://github.com/",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 524828
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FOraclesTech%2Fguardian-sdk%2Ftree%2Fmain%2Fdocs%2Fcompliance%2Folir%2FAI_RMF",
+          "status": 200,
+          "final_url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FOraclesTech%2Fguardian-sdk%2Ftree%2Fmain%2Fdocs%2Fcompliance%2Folir%2FAI_RMF",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 45778
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/platform",
+          "status": 200,
+          "final_url": "https://github.com/platform",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 323223
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/copilot",
+          "status": 200,
+          "final_url": "https://github.com/features/copilot",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 858218
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/actions",
+          "status": 200,
+          "final_url": "https://github.com/features/actions",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 251248
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/code-quality",
+          "status": 200,
+          "final_url": "https://github.com/features/code-quality",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 270030
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/codespaces",
+          "status": 200,
+          "final_url": "https://github.com/features/codespaces",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 273180
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/security/advanced-security/code-security",
+          "status": 200,
+          "final_url": "https://github.com/security/advanced-security/code-security",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 299458
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/security/advanced-security/secret-protection",
+          "status": 200,
+          "final_url": "https://github.com/security/advanced-security/secret-protection",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 298794
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features",
+          "status": 200,
+          "final_url": "https://github.com/features",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 363878
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/ai",
+          "status": 200,
+          "final_url": "https://github.com/features/ai",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 246746
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/marketplace",
+          "status": 400,
+          "final_url": "https://github.com/marketplace",
+          "content_type": "application/json; charset=utf-8",
+          "byte_length": 0
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/trending",
+          "status": 200,
+          "final_url": "https://github.com/trending",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 583746
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/open-source/sponsors",
+          "status": 200,
+          "final_url": "https://github.com/open-source/sponsors",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 261386
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/resources/articles",
+          "status": 200,
+          "final_url": "https://github.com/resources/articles",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 230200
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/enterprise",
+          "status": 200,
+          "final_url": "https://github.com/enterprise",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1304674
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/team",
+          "status": 200,
+          "final_url": "https://github.com/team",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 330048
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/enterprise/startups",
+          "status": 200,
+          "final_url": "https://github.com/enterprise/startups",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 376645
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/nonprofits",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/nonprofits",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 206476
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/healthcare",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/healthcare",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1121440
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/financial-services",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/financial-services",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 234086
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/manufacturing",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/manufacturing",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1078671
+        }
+      ],
+      "retention": {
+        "cause": "publisher_unavailable",
+        "first_retained_at": "2026-11-18T01:12:27.802Z",
+        "consecutive_refreshes": 1
+      }
     },
     {
       "id": 221,
@@ -1663,7 +2752,7 @@
           "kind": "artifact download",
           "url": "https://docs.google.com/spreadsheets/d/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP/export?format=xlsx",
           "status": 200,
-          "final_url": "https://doc-0c-98-sheets.googleusercontent.com/export/3ropqptqom1b57lc45egbob1oo/a2v7fhdfusgj2ia34gb3vffb08/1794959070000/100790643046296837536/*/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP?format=xlsx",
+          "final_url": "https://doc-0c-98-sheets.googleusercontent.com/export/3ropqptqom1b57lc45egbob1oo/hfh4iuh0055100j4fn2uercb2s/1794964355000/100790643046296837536/*/1HnbzkMSaUVcqj4hqaDFxTTfcyc5RyOeP?format=xlsx",
           "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "byte_length": 21218
         }
@@ -1694,7 +2783,7 @@
       "artifact": {
         "map_file": "maps/olir/222.json",
         "artifact_url": "https://bxaios.com/nist-alignment/",
-        "checksum": "sha256:03a0db9e375bdbf086e45deb5f778f9bbdec98653ecb5ecf01d5d9be9167a806",
+        "checksum": "sha256:fbb2a73379bc284a5641ec0135328e1ee78ecc34be2cd031b96b6e362a86dee3",
         "byte_length": 143650,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
@@ -1753,7 +2842,7 @@
       "artifact": {
         "map_file": "maps/olir/203.json",
         "artifact_url": "https://bxaios.com/nist-alignment/",
-        "checksum": "sha256:03a0db9e375bdbf086e45deb5f778f9bbdec98653ecb5ecf01d5d9be9167a806",
+        "checksum": "sha256:fbb2a73379bc284a5641ec0135328e1ee78ecc34be2cd031b96b6e362a86dee3",
         "byte_length": 143650,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",
@@ -1884,16 +2973,8 @@
           "mapping_comment": "<p>To the developer's knowledge, this is the first OLIR submission mapping an AI security framework to CSF 2.0.</p>"
         },
         {
-          "kind": "GitHub Contents API",
-          "url": "https://github.com/Aviral2642/nist-olir-owasp-llm-top10-csf2/raw/main/NIST_CSF2.0_to_OWASP_LLM_Top10_v2.0_OLIR.xlsx",
-          "status": 200,
-          "resolved_urls": [
-            "https://raw.githubusercontent.com/Aviral2642/nist-olir-owasp-llm-top10-csf2/main/NIST_CSF2.0_to_OWASP_LLM_Top10_v2.0_OLIR.xlsx"
-          ]
-        },
-        {
           "kind": "artifact download",
-          "url": "https://raw.githubusercontent.com/Aviral2642/nist-olir-owasp-llm-top10-csf2/main/NIST_CSF2.0_to_OWASP_LLM_Top10_v2.0_OLIR.xlsx",
+          "url": "https://github.com/Aviral2642/nist-olir-owasp-llm-top10-csf2/raw/main/NIST_CSF2.0_to_OWASP_LLM_Top10_v2.0_OLIR.xlsx",
           "status": 200,
           "final_url": "https://raw.githubusercontent.com/Aviral2642/nist-olir-owasp-llm-top10-csf2/main/NIST_CSF2.0_to_OWASP_LLM_Top10_v2.0_OLIR.xlsx",
           "content_type": "application/octet-stream",
@@ -1982,7 +3063,7 @@
       "retention": {
         "cause": "publisher_unavailable",
         "first_retained_at": "2026-09-21T15:12:54.460Z",
-        "consecutive_refreshes": 10
+        "consecutive_refreshes": 11
       }
     },
     {
@@ -2117,7 +3198,7 @@
       "authority_tier_label": "Community candidate Final",
       "mapping_model": "Supportive",
       "ingested": true,
-      "availability": "structured_artifact",
+      "availability": "retrieval_failed",
       "map_file": "maps/olir/183.json",
       "artifact_id": null,
       "artifact": {
@@ -2162,7 +3243,217 @@
           "content_type": "application/octet-stream",
           "byte_length": 67547
         }
-      ]
+      ],
+      "refresh_status": "retained_last_good",
+      "refresh_error": "no public relationship mapping could be downloaded from the registered NIST submission locations",
+      "latest_retrieval_attempts": [
+        {
+          "kind": "NIST catalog detail endpoint",
+          "url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/183",
+          "status": 200,
+          "final_url": "https://csrc.nist.gov/extensions/nudp/services/json/olir/informative-reference-catalog/details/183",
+          "json_file_url": null,
+          "publisher_sha256": null,
+          "submission_url": "https://github.com/Glimpz1/grc-mappings/tree/main/olir/csf-2.0_pci-4.0.1_supportive",
+          "reference_url": "https://www.pcisecuritystandards.org/document_library/",
+          "mapping_summary": "<p>This OLIR provides a Set Theory mapping from NIST CSF 2.0 Subcategories (focal) to PCI DSS v4.0.1 Defined Approach Requirements (reference). Each relationship is expressed as supports / is supported by, with Relationship Property classified as example of, integral to, or precedes. PCI requirements are referenced by their official identifiers. Intended use: scoping, gap analysis, and traceability with CSF as the pivot.</p>",
+          "mapping_comment": "<p>Mappings are performed at the level of CSF Subcategory and PCI DSS Defined Approach Requirement.</p>"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/Glimpz1/grc-mappings/tree/main/olir/csf-2.0_pci-4.0.1_supportive",
+          "status": 200,
+          "final_url": "https://github.com/Glimpz1/grc-mappings/tree/main/olir/csf-2.0_pci-4.0.1_supportive",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 164433
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/Glimpz1/grc-mappings/tree/main/olir/csf-2.0_pci-4.0.1_supportive#start-of-content",
+          "error": "OLIR source URL policy rejected destination outside registered submission"
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/",
+          "status": 200,
+          "final_url": "https://github.com/",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 524828
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FGlimpz1%2Fgrc-mappings%2Ftree%2Fmain%2Folir%2Fcsf-2.0_pci-4.0.1_supportive",
+          "status": 200,
+          "final_url": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FGlimpz1%2Fgrc-mappings%2Ftree%2Fmain%2Folir%2Fcsf-2.0_pci-4.0.1_supportive",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 45777
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/platform",
+          "status": 200,
+          "final_url": "https://github.com/platform",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 323223
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/copilot",
+          "status": 200,
+          "final_url": "https://github.com/features/copilot",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 858218
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/actions",
+          "status": 200,
+          "final_url": "https://github.com/features/actions",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 251248
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/code-quality",
+          "status": 200,
+          "final_url": "https://github.com/features/code-quality",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 270030
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/codespaces",
+          "status": 200,
+          "final_url": "https://github.com/features/codespaces",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 273180
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/security/advanced-security/code-security",
+          "status": 200,
+          "final_url": "https://github.com/security/advanced-security/code-security",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 299458
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/security/advanced-security/secret-protection",
+          "status": 200,
+          "final_url": "https://github.com/security/advanced-security/secret-protection",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 298794
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features",
+          "status": 200,
+          "final_url": "https://github.com/features",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 363878
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/features/ai",
+          "status": 200,
+          "final_url": "https://github.com/features/ai",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 246746
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/marketplace",
+          "status": 400,
+          "final_url": "https://github.com/marketplace",
+          "content_type": "application/json; charset=utf-8",
+          "byte_length": 0
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/trending",
+          "status": 200,
+          "final_url": "https://github.com/trending",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 583746
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/open-source/sponsors",
+          "status": 200,
+          "final_url": "https://github.com/open-source/sponsors",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 261386
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/resources/articles",
+          "status": 200,
+          "final_url": "https://github.com/resources/articles",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 230200
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/enterprise",
+          "status": 200,
+          "final_url": "https://github.com/enterprise",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1304674
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/team",
+          "status": 200,
+          "final_url": "https://github.com/team",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 330048
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/enterprise/startups",
+          "status": 200,
+          "final_url": "https://github.com/enterprise/startups",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 376645
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/nonprofits",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/nonprofits",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 206476
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/healthcare",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/healthcare",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1121440
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/financial-services",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/financial-services",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 234086
+        },
+        {
+          "kind": "artifact download",
+          "url": "https://github.com/solutions/industry/manufacturing",
+          "status": 200,
+          "final_url": "https://github.com/solutions/industry/manufacturing",
+          "content_type": "text/html; charset=utf-8",
+          "byte_length": 1078671
+        }
+      ],
+      "retention": {
+        "cause": "publisher_unavailable",
+        "first_retained_at": "2026-11-18T01:12:27.802Z",
+        "consecutive_refreshes": 1
+      }
     },
     {
       "id": 185,
@@ -2436,7 +3727,7 @@
       "artifact": {
         "map_file": "maps/olir/176.json",
         "artifact_url": "https://www.gov.uk/government/publications/cyber-governance-mapping/mapping-cyber-governance-code-to-nist-cyber-security-framework",
-        "checksum": "sha256:a487b43a246cff7ce1c2a57d0d62cc72ff41f05e5738f579c2a5896cba084b01",
+        "checksum": "sha256:9ed4534ddde13c0d7d2ab832501fa9d3f1d487948e42fad92a28047bf1872ae8",
         "byte_length": 88370,
         "parser": "olir-html",
         "extraction_scope": "published_html_relationships",

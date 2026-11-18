@@ -1,8 +1,8 @@
 {
   "source": "https://csrc.nist.gov/extensions/nudp/services/json/csf/download?olirids=all",
-  "sha256": "sha256:f009a6330861aca35154c305cc8276dc65e4a81a7ac865bb7b25ec45752cab63",
-  "byte_length": 146545,
-  "retrieved_at": "2026-11-17T23:44:07.241Z",
+  "sha256": "sha256:c95b5bfda58f1f49f352201b8200e477655a4f94878b19005d349c9cd14eac04",
+  "byte_length": 146546,
+  "retrieved_at": "2026-11-18T01:12:12.116Z",
   "reconciliation": {
     "functions": 6,
     "categories": 22,

@@ -30,7 +30,9 @@ export function classifyDisaZip(filename) {
   if (/Library/i.test(filename)) {
     return { category: 'compilation', reason: EXCLUSION_REASONS.HISTORICAL_COMPILATION, isCandidate: false };
   }
-  if (/Ansible|Chef|PowerShell_DSC|cinc_cac/i.test(filename)) {
+  // _SRR packages are Security Readiness Review job scripts (text, JCL and a
+  // dataset dump) with no XCCDF benchmark, like the configuration bundles here.
+  if (/Ansible|Chef|PowerShell_DSC|cinc_cac|_SRR\.zip$/i.test(filename)) {
     return { category: 'automation', reason: EXCLUSION_REASONS.AUTOMATION_CONTENT, isCandidate: false };
   }
   if (/SCAP/i.test(filename)) {

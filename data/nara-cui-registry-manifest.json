@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-18T02:13:21.243Z",
+  "generated_at": "2026-11-18T14:30:41.005Z",
   "source": "https://www.archives.gov/cui/registry/category-list",
   "list_page": {
     "url": "https://www.archives.gov/cui/registry/category-list",
@@ -243,7 +243,7 @@
       "last_modified": "2025-05-13T12:13:39-04:00",
       "detail_url": "https://www.archives.gov/cui/registry/category-detail/protected-critical-infrastructure-information",
       "byte_length": 35111,
-      "sha256": "e00a4af57c4f01afb3effd0a0dbddf8675fa7960d8af500e6cacc07a64735aa4",
+      "sha256": "12a55d2e0a786aa7d811892fe66a80b6e07ccf68f3cc1fad3df631e61e5f991d",
       "status": "OK"
     },
     {
@@ -1286,7 +1286,7 @@
       "last_modified": "2025-07-25T14:31:57-04:00",
       "detail_url": "https://www.archives.gov/cui/registry/category-detail/visas",
       "byte_length": 34697,
-      "sha256": "8a4a76445bb9261153d268010b7b4493f6e4373fa06297a71bc2142133859ca7",
+      "sha256": "5785c1293226e2fae80c65168ac0984918e28d23801f41660c363c9f6febdd70",
       "status": "OK"
     },
     {
@@ -2437,7 +2437,7 @@
       "last_modified": "2025-07-29T09:27:59-04:00",
       "detail_url": "https://www.archives.gov/cui/registry/category-detail/federal-grand-jury",
       "byte_length": 36038,
-      "sha256": "e88d61334e6be1a9b33735f991a76b6edf3ab8532849261c71a8556595219cbf",
+      "sha256": "26b19a258a148664c374cb19912fc009870a7d5da127be75f9243644c127c69b",
       "status": "OK"
     },
     {
@@ -5284,7 +5284,7 @@
       "last_modified": "2025-06-25T11:04:28-04:00",
       "detail_url": "https://www.archives.gov/cui/registry/category-detail/taxpayer-advocate-info",
       "byte_length": 35667,
-      "sha256": "5d529325a7c5e9cd9e972193739aaf940d3914abe2c28627d852cc8383a8f5d6",
+      "sha256": "970b3de690d12e62b9f28e765f8513213c894aff6ab402135bd591e5f8164a26",
       "status": "OK"
     },
     {
@@ -5308,7 +5308,7 @@
       "last_modified": "2025-06-13T08:28:54-04:00",
       "detail_url": "https://www.archives.gov/cui/registry/category-detail/written-determinations",
       "byte_length": 35108,
-      "sha256": "157638308a690514bdf7479637a8c867baef9a5c766e61cc0901ff1df2c90bf9",
+      "sha256": "9965d00eb012fe4d83a3adea587fa8891cb77cdda09cb65da428340bc3050fe5",
       "status": "OK"
     },
     {

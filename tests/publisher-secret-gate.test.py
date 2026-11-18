@@ -136,6 +136,15 @@ class NativeFieldTests(unittest.TestCase):
         gate._git_bytes.side_effect = lambda cwd, *args: json.dumps(changed, indent=2).encode() if args[0] == "show" and args[1].endswith(path) else git_bytes(cwd, *args)
         self.assertFalse(gate.publisher_findings_allowed([f for f in FINDINGS if f["File"] == path], ["dir", "."]))
 
+    def test_native_json_read_cap_matches_github_file_limit(self):
+        self.assertEqual(gate.MAX_PUBLISHER_JSON_BYTES, 100 * 1024 * 1024)
+        path = "data/srg-requirements.json"
+        findings = [f for f in FINDINGS if f["File"] == path]
+        with mock.patch.object(gate, "MAX_PUBLISHER_JSON_BYTES", len(RAW[path])):
+            self.assertTrue(gate.publisher_findings_allowed(findings, ["dir", "."]))
+        with mock.patch.object(gate, "MAX_PUBLISHER_JSON_BYTES", len(RAW[path]) - 1):
+            self.assertFalse(gate.publisher_findings_allowed(findings, ["dir", "."]))
+
     def test_duplicate_json_key_held(self):
         self.assertRaises(ValueError, gate._unique, [("records", []), ("records", [])])
 

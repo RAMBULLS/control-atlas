@@ -2,14 +2,14 @@
   "schema_version": "1.0",
   "olir_id": 203,
   "source_artifact": "https://bxaios.com/nist-alignment/",
-  "sha256": "sha256:fbb2a73379bc284a5641ec0135328e1ee78ecc34be2cd031b96b6e362a86dee3",
-  "byte_length": 143650,
+  "sha256": "sha256:ca7f9d21228908759274ceaa3faac1a20327e210d876b4ebdb0fb05a6cc669f8",
+  "byte_length": 190886,
   "parser": "olir-html",
   "extraction_scope": "published_html_relationships",
   "relationships": [
     {
       "focal_id": "ID.AM-01",
-      "reference_id": "Step 1 — Map the Chaos (Shadow Ledger)",
+      "reference_id": "Step 1: Map the Chaos (Shadow Ledger)",
       "relationship_type": "Set Theory: Superset",
       "raw_relationship_type": "Superset of",
       "relationship_strength": null,
@@ -19,17 +19,37 @@
     },
     {
       "focal_id": "GV.OC-01",
-      "reference_id": "Step 2 — Unify the Vision",
+      "reference_id": "Step 2: Unify the Vision",
       "relationship_type": "Supportive",
       "raw_relationship_type": "Supports",
+      "relationship_strength": null,
+      "relationship_explanation": "Functional",
+      "rationale": null,
+      "source_locator": "table-1#row-3"
+    },
+    {
+      "focal_id": "GV.PO-01",
+      "reference_id": "Step 3: The Charter (POP Framework)",
+      "relationship_type": "Set Theory: Superset",
+      "raw_relationship_type": "Superset of",
       "relationship_strength": null,
       "relationship_explanation": "Functional",
       "rationale": null,
       "source_locator": "table-1#row-4"
     },
     {
-      "focal_id": "GV.PO-01",
-      "reference_id": "Step 3 — The Charter (POP Framework)",
+      "focal_id": "PR.DS-01",
+      "reference_id": "Step 4: Architect the Receipts",
+      "relationship_type": "Set Theory: Superset",
+      "raw_relationship_type": "Superset of",
+      "relationship_strength": null,
+      "relationship_explanation": "Functional",
+      "rationale": null,
+      "source_locator": "table-1#row-5"
+    },
+    {
+      "focal_id": "ID.AM-01",
+      "reference_id": "Step 5: Blueprint the Ecosystem",
       "relationship_type": "Set Theory: Superset",
       "raw_relationship_type": "Superset of",
       "relationship_strength": null,
@@ -38,34 +58,14 @@
       "source_locator": "table-1#row-6"
     },
     {
-      "focal_id": "PR.DS-01",
-      "reference_id": "Step 4 — Architect the Receipts",
-      "relationship_type": "Set Theory: Superset",
-      "raw_relationship_type": "Superset of",
-      "relationship_strength": null,
-      "relationship_explanation": "Functional",
-      "rationale": null,
-      "source_locator": "table-1#row-8"
-    },
-    {
-      "focal_id": "ID.AM-01",
-      "reference_id": "Step 5 — Blueprint the Ecosystem",
-      "relationship_type": "Set Theory: Superset",
-      "raw_relationship_type": "Superset of",
-      "relationship_strength": null,
-      "relationship_explanation": "Functional",
-      "rationale": null,
-      "source_locator": "table-1#row-10"
-    },
-    {
       "focal_id": "GV.RR-01",
-      "reference_id": "Step 8 — Activate the Champions",
+      "reference_id": "Step 8: Activate the Champions",
       "relationship_type": "Supportive",
       "raw_relationship_type": "Supports",
       "relationship_strength": null,
       "relationship_explanation": "Functional",
       "rationale": null,
-      "source_locator": "table-1#row-16"
+      "source_locator": "table-1#row-9"
     }
   ]
 }

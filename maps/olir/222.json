@@ -2,14 +2,14 @@
   "schema_version": "1.0",
   "olir_id": 222,
   "source_artifact": "https://bxaios.com/nist-alignment/",
-  "sha256": "sha256:fbb2a73379bc284a5641ec0135328e1ee78ecc34be2cd031b96b6e362a86dee3",
-  "byte_length": 143650,
+  "sha256": "sha256:ca7f9d21228908759274ceaa3faac1a20327e210d876b4ebdb0fb05a6cc669f8",
+  "byte_length": 190886,
   "parser": "olir-html",
   "extraction_scope": "published_html_relationships",
   "relationships": [
     {
       "focal_id": "GOVERN 1.1",
-      "reference_id": "Step 1 — Map the Chaos (Shadow Ledger)",
+      "reference_id": "Step 1: Map the Chaos (Shadow Ledger)",
       "relationship_type": "Set Theory: Superset",
       "raw_relationship_type": "Superset of",
       "relationship_strength": null,
@@ -19,27 +19,47 @@
     },
     {
       "focal_id": "GOVERN 1.1",
-      "reference_id": "Step 2 — Unify the Vision",
+      "reference_id": "Step 2: Unify the Vision",
       "relationship_type": "Supportive",
       "raw_relationship_type": "Supports",
+      "relationship_strength": null,
+      "relationship_explanation": "Functional",
+      "rationale": null,
+      "source_locator": "table-1#row-3"
+    },
+    {
+      "focal_id": "GOVERN 1.2",
+      "reference_id": "Step 3: The Charter (POP Framework)",
+      "relationship_type": "Set Theory: Superset",
+      "raw_relationship_type": "Superset of",
       "relationship_strength": null,
       "relationship_explanation": "Functional",
       "rationale": null,
       "source_locator": "table-1#row-4"
     },
     {
-      "focal_id": "GOVERN 1.2",
-      "reference_id": "Step 3 — The Charter (POP Framework)",
+      "focal_id": "MEASURE 2.8",
+      "reference_id": "Step 4: Architect the Receipts",
       "relationship_type": "Set Theory: Superset",
       "raw_relationship_type": "Superset of",
       "relationship_strength": null,
       "relationship_explanation": "Functional",
       "rationale": null,
-      "source_locator": "table-1#row-6"
+      "source_locator": "table-1#row-5"
     },
     {
-      "focal_id": "MEASURE 2.8",
-      "reference_id": "Step 4 — Architect the Receipts",
+      "focal_id": "GOVERN 1.2",
+      "reference_id": "Step 6: Install the Router",
+      "relationship_type": "Supportive",
+      "raw_relationship_type": "Supports",
+      "relationship_strength": null,
+      "relationship_explanation": "Functional",
+      "rationale": null,
+      "source_locator": "table-1#row-7"
+    },
+    {
+      "focal_id": "MEASURE 2.6",
+      "reference_id": "Step 7: Deploy the Governor",
       "relationship_type": "Set Theory: Superset",
       "raw_relationship_type": "Superset of",
       "relationship_strength": null,
@@ -48,34 +68,14 @@
       "source_locator": "table-1#row-8"
     },
     {
-      "focal_id": "GOVERN 1.2",
-      "reference_id": "Step 6 — Install the Router",
-      "relationship_type": "Supportive",
-      "raw_relationship_type": "Supports",
-      "relationship_strength": null,
-      "relationship_explanation": "Functional",
-      "rationale": null,
-      "source_locator": "table-1#row-12"
-    },
-    {
-      "focal_id": "MEASURE 2.6",
-      "reference_id": "Step 7 — Deploy the Governor",
-      "relationship_type": "Set Theory: Superset",
-      "raw_relationship_type": "Superset of",
-      "relationship_strength": null,
-      "relationship_explanation": "Functional",
-      "rationale": null,
-      "source_locator": "table-1#row-14"
-    },
-    {
       "focal_id": "GOVERN 1.3",
-      "reference_id": "Step 9 — Prove the ROI Multiplier",
+      "reference_id": "Step 9: Prove the ROI Multiplier",
       "relationship_type": "Set Theory: Superset",
       "raw_relationship_type": "Superset of",
       "relationship_strength": null,
       "relationship_explanation": "Functional",
       "rationale": null,
-      "source_locator": "table-1#row-18"
+      "source_locator": "table-1#row-10"
     }
   ]
 }

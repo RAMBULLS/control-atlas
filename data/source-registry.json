@@ -3561,7 +3561,7 @@
       "authority_class": "publisher",
       "format": "html",
       "version": null,
-      "lifecycle_status": "active",
+      "lifecycle_status": "historical",
       "retrieval_method": "extracted_from_official_publication",
       "retrieved_at": "2026-10-28",
       "artifact_url": "https://www.ai.mil/Initiatives/About/Resources/Pathway-to-AI-Readiness/Responsible-AI/",
@@ -3573,7 +3573,11 @@
       "relationship_count": 0,
       "license_or_use": "U.S. Government Work / Public Domain",
       "metadata": {
-        "version_unknown_reason": "The current publisher landing page does not expose a release version."
+        "version_unknown_reason": "The current publisher landing page does not expose a release version.",
+        "publisher_retirement": {
+          "observed_at": "2026-11-18",
+          "observation": "The page redirects to the https://www.si.mil/ home page after the ai.mil rebrand; no replacement Responsible AI page was found there. The 2026-10-28 retrieval is kept as historical evidence."
+        }
       },
       "entity_kind": "artifact",
       "profile_id": "artifact.html",

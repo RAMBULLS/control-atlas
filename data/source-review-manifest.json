@@ -200,7 +200,7 @@
       "reviewed_at": "2026-08-13",
       "semantic_content_review": "reviewed_no_known_mismatch",
       "locator_only_review": "justified",
-      "upstream_currentness_review": "current_as_checked",
+      "upstream_currentness_review": "blocked",
       "representative_samples": [
         {
           "record_id": "PRINCIPLE-MODULAR",
@@ -218,15 +218,15 @@
       "official_sources": [
         {
           "url": "https://www.ai.mil/Initiatives/About/Resources/Pathway-to-AI-Readiness/Responsible-AI/",
-          "supports": "Current CDAO Responsible AI program page and official AI Assurance Toolkit handoff."
+          "supports": "CDAO Responsible AI program page and AI Assurance Toolkit handoff, last retrieved 2026-10-28; retired by the publisher."
         },
         {
           "url": "https://www.ai.mil/Latest/Blog/Article-Display/Article/3940314/responsible-ai-toolkit/",
-          "supports": "Official CDAO article preserving the toolkit's modular and tailorable origin."
+          "supports": "CDAO article preserving the toolkit's modular and tailorable origin; retired by the publisher."
         }
       ],
       "rationale": "The normalized concepts agree with current CDAO material. The publisher has renamed the operational product AI Assurance Toolkit while retaining the Responsible AI program lineage, modular and tailorable principles, and SHIELD activities. The stable catalog ID is retained, while current display identity and official-to-operational handoff stay explicit.",
-      "follow_up": null
+      "follow_up": "On 2026-11-18 both CDAO pages redirect to the https://www.si.mil/ home page after the ai.mil rebrand, and that page has no Responsible AI content. The 2026-10-28 retrieval stays as historical evidence; a publisher replacement, withdrawal or currentness is UNKNOWN."
     },
     {
       "catalog_id": "dod-zt",

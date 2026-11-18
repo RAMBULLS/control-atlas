@@ -153,9 +153,10 @@ export const BASE_RESOLUTIONS = Object.freeze([
   // and the acqbot.com page itself carrying the CDAO logo asset. Not a
   // third-party mirror; this is where CDAO ships the toolkit.
   { id: 'artifact-dod-rai-toolkit', url: 'https://rai.acqbot.com/executive-summary', format: 'html', parser: 'dod-rai-toolkit-html', parser_version: '1.0.0' },
-  // Reconciliation evidence: the official ai.mil page that links to the
-  // acqbot.com toolkit, establishing CDAO's endorsement of that hosting.
-  { id: 'artifact-ai-mil-responsible-ai', url: 'https://www.ai.mil/Initiatives/About/Resources/Pathway-to-AI-Readiness/Responsible-AI/', format: 'html', parser: 'ai-mil-responsible-ai-html', parser_version: '1.0.0', userAgent: 'Control-Atlas-source-currentness-review/1.0' },
+  // artifact-ai-mil-responsible-ai (the ai.mil page that linked the acqbot.com
+  // toolkit) is not fetched: since November 2026 the publisher redirects it to
+  // the si.mil home page. Its 2026-10-28 attestation stays in the hydration
+  // manifest as historical evidence; the registry marks it historical.
   // CUI: 32 CFR Part 2002 from the eCFR versioner API (date-pinned = byte-stable).
   { id: 'artifact-isoo-cui-regulation', url: 'https://www.ecfr.gov/api/versioner/v1/full/2026-08-01/title-32.xml?part=2002', format: 'xml', parser: 'ecfr-xml', parser_version: '1.0.0' },
   // CMMC: 32 CFR Part 170 from the eCFR versioner API (date-pinned).

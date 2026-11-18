@@ -1,6 +1,6 @@
 {
   "schema_version": "4.0",
-  "generated_at": "2026-11-18T01:16:45.218Z",
+  "generated_at": "2026-11-18T02:18:07.070Z",
   "completeness": {
     "total_publications": 103,
     "total_artifacts": 98,
@@ -221,7 +221,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-11-18",
+      "last_refresh": "2026-11-04",
       "has_shard": true
     },
     {
@@ -336,7 +336,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-11-17",
+      "last_refresh": "2026-11-18",
       "has_shard": true
     },
     {
@@ -359,7 +359,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-11-17",
+      "last_refresh": "2026-11-18",
       "has_shard": true
     },
     {
@@ -382,7 +382,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-11-17",
+      "last_refresh": "2026-11-18",
       "has_shard": true
     },
     {

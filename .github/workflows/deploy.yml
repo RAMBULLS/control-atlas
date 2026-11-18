@@ -214,6 +214,12 @@ jobs:
     needs: [deploy, edge-ready]
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    # Playwright's own image already holds every browser and its system
+    # packages, so a slow Ubuntu mirror cannot stall the run. Keep the tag and
+    # digest in step with the @playwright/test version in package-lock.json.
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      options: --user 1001
     strategy:
       fail-fast: false
       max-parallel: 1
@@ -230,7 +236,10 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Confirm the test runner matches the container browsers
+        run: |
+          node -e "const v = require('@playwright/test/package.json').version;
+            if (v !== '1.62.1') { console.error('@playwright/test ' + v + ' does not match the 1.62.1 container image. Update the acceptance image tag and digest.'); process.exit(1); }"
       - name: Verify live journeys, mobile layouts and retry cases
         run: npm run test:e2e:acceptance -- --reporter=line,json --global-timeout=900000
         env:

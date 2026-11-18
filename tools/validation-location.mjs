@@ -28,6 +28,30 @@ export function isHostedRunner(env = process.env, options = {}) {
   }
 }
 
+// A GitHub-hosted job that runs inside a container sees the runner's tool cache
+// mounted at /__t and does not receive the image identity (ImageOS). Its
+// environment could be copied anywhere, so this shape never authorizes work by
+// itself: requireHostedLocation() admits it only after the GitHub job readback
+// confirms an in-progress job on a GitHub-hosted runner for this commit.
+export const HOSTED_CONTAINER_TOOL_CACHE = '/__t';
+
+export function isHostedRunnerContainer(env = process.env, options = {}) {
+  const realpath = options.realpath ?? realpathSync;
+  const executable = options.executable ?? process.execPath;
+  const platform = options.platform ?? process.platform;
+  if (platform !== 'linux' || env.GITHUB_ACTIONS !== 'true' || env.RUNNER_ENVIRONMENT !== 'github-hosted' ||
+      !/^GitHub Actions \S+/.test(env.RUNNER_NAME ?? '') ||
+      !/^\d+$/.test(env.GITHUB_RUN_ID ?? '') || !/^[a-f0-9]{40}$/i.test(env.GITHUB_SHA ?? '') ||
+      env.GITHUB_REPOSITORY?.toLowerCase() !== 'rambulls/control-atlas') return false;
+  try {
+    if (realpath(env.RUNNER_TOOL_CACHE) !== HOSTED_CONTAINER_TOOL_CACHE) return false;
+    const path = posix.relative(HOSTED_CONTAINER_TOOL_CACHE, realpath(executable));
+    return path !== '' && !path.startsWith('..') && !posix.isAbsolute(path);
+  } catch {
+    return false;
+  }
+}
+
 export function requireValidationLocation(options = {}) {
   const env = options.env ?? process.env;
   if (isHostedRunner(env, options)) return { location: 'github-hosted' };
@@ -104,6 +128,19 @@ export async function verifyRemoteHostedRunner(env = process.env, options = {}) 
   throw new Error('Current hosted runner is absent or ambiguous in GitHub job readback after bounded verification.');
 }
 
+// Hosted work always ends with the GitHub job readback. A container job on a
+// hosted runner is admitted only through that readback; it is never a sync
+// location, so callers of requireValidationLocation() are unchanged.
+export async function requireHostedLocation(options = {}) {
+  const env = options.env ?? process.env;
+  if (isHostedRunnerContainer(env, options)) {
+    return { location: 'github-hosted-container', job: await verifyRemoteHostedRunner(env, options) };
+  }
+  const result = requireValidationLocation(options);
+  if (result.location === 'github-hosted') result.job = await verifyRemoteHostedRunner(env, options);
+  return result;
+}
+
 export function verifyHostedCheckout(options = {}) {
   const env = options.env ?? process.env;
   if (!isHostedRunner(env, options)) throw new Error('Fresh-checkout acceptance requires a GitHub-hosted runner.');
@@ -114,8 +151,9 @@ export function verifyHostedCheckout(options = {}) {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
-    const result = process.argv.includes('--checkout') ? verifyHostedCheckout() : requireValidationLocation();
-    if (result.location === 'github-hosted' || process.argv.includes('--checkout')) result.job = await verifyRemoteHostedRunner();
+    const result = process.argv.includes('--checkout')
+      ? { ...verifyHostedCheckout(), job: await verifyRemoteHostedRunner() }
+      : await requireHostedLocation();
     console.log(JSON.stringify({ allowed: true, ...result }));
   } catch (error) {
     console.error(JSON.stringify({ allowed: false, reason: error.message }));

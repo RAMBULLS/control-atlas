@@ -42,6 +42,14 @@ for (const viewport of VIEWPORTS) {
       await test.step(route, async () => {
         await gotoApp(page, route);
         await waitForAppReady(page, { allowPartial: true });
+        // React hands off from the static shell one frame after it mounts.
+        // Count landmarks only after that hand-off, or the static skip link
+        // is still present and the React footer is not.
+        await expect(page.locator("#root")).toHaveAttribute(
+          "data-progressive-shell-released",
+          "true",
+          { timeout: 15_000 },
+        );
 
         if (route === "/#/explore") {
           const sheet = page.locator(".atl");

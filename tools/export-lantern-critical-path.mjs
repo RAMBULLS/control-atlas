@@ -95,7 +95,7 @@ export async function exportLanternCriticalPath({ cwd = process.cwd(), route = '
   if (!requestedHash) throw new Error('Unknown diagnostic route.');
   const reportDirectory = join(cwd, '.lighthouseci');
   const output = join(cwd, 'artifacts/lighthouse-ci/lantern', route === 'record' ? '' : 'resources');
-  const reports = readdirSync(reportDirectory).filter(name => /^lhr-\d+\.json$/.test(name)).map(name => {
+  const reports = readdirSync(reportDirectory).filter(name => /^lhr-\d+(-\d+)?\.json$/.test(name)).map(name => {
     const bytes = readFileSync(join(reportDirectory, name));
     return { name, bytes, report: JSON.parse(bytes) };
   }).filter(({ report }) => report.requestedUrl?.endsWith(requestedHash));

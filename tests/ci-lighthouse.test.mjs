@@ -163,7 +163,7 @@ test('two fixed host warmups are retained separately and never enter measured as
   assert.equal(readdirSync(join(cwd, config.ci.upload.outputDir, 'warmups')).filter(name => REPORT_FILE_FOR_TEST.test(name)).length, 6);
 });
 
-const REPORT_FILE_FOR_TEST = /^lhr-\d+\.json$/;
+const REPORT_FILE_FOR_TEST = /^lhr-\d+(-\d+)?\.json$/;
 
 test('requested-route inventory rejects missing, duplicate, unexpected and failed reports', () => {
   const reports = reportsFor();
@@ -210,8 +210,8 @@ for (const scenario of [
     const cwd = fixture(t);
     const reports = reportsFor(scenario.options);
     writeReports(cwd, reports);
-    // Demonstrate the upstream pooling defect against the same configured audits.
-    assert.equal(assertWithCli(cwd).status, 0);
+    // LHCI 0.16 keeps SPA hashes when grouping, so upstream now agrees with the per-route result.
+    assert.equal(assertWithCli(cwd).status, scenario.fails ? 1 : 0);
     const calls = [];
     const evidence = runCiLighthouse({ cwd, runCommand(command, args) {
       calls.push(command);
@@ -249,7 +249,7 @@ test('diagnostic export selects the middle LCP sample and preserves all original
   assert.equal(result.samples.length, 3);
   assert.deepEqual(result.samples.map(sample => sample.lcpMs), [1800, 2300, 3100]);
   assert.ok(result.samples.every(sample => /^[a-f0-9]{64}$/.test(sample.sha256)));
-  assert.equal(readdirSync(join(cwd, '.lighthouseci')).filter(name => /^lhr-\d+\.json$/.test(name)).length, 3);
+  assert.equal(readdirSync(join(cwd, '.lighthouseci')).filter(name => /^lhr-\d+(-\d+)?\.json$/.test(name)).length, 3);
 });
 
 test('raw assets belong to this collection and enter its existing artifact export', t => {

@@ -389,7 +389,7 @@
     "@xyflow/react": "^12.11.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "elkjs": "^0.12.0",
+    "elkjs": "^0.12.1",
     "exceljs": "^4.4.0",
     "fflate": "^0.8.3",
     "graphology": "^0.26.0",

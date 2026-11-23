@@ -6,7 +6,7 @@ import { runNodeSync } from './lib/process-runner.mjs';
 import { assertHttp2Report, prepareLighthouseHttp2 } from './lighthouse-http2.mjs';
 import { validateLighthouseReport } from './lighthouse-metrics.mjs';
 
-const REPORT_FILE = /^lhr-\d+\.json$/;
+const REPORT_FILE = /^lhr-\d+(-\d+)?\.json$/;
 const RAW_ASSET_FILE = /_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}-\d+\.(trace|devtoolslog)\.json$/;
 
 export function inventoryCiReports(config, reports) {
@@ -68,7 +68,7 @@ export function runCiLighthouse({ cwd = process.cwd(), runCommand, exportDiagnos
   rmSync(join(reportDirectory, 'metric-inputs'), { recursive: true, force: true });
   // A failed collection must never upload evidence from an earlier invocation.
   for (const filename of readdirSync(reportDirectory)) {
-    if (/^lhr-\d+\.(json|html)$/.test(filename) || filename === 'assertion-results.json') {
+    if (/^lhr-\d+(-\d+)?\.(json|html)$/.test(filename) || filename === 'assertion-results.json') {
       rmSync(join(reportDirectory, filename));
     }
   }
@@ -91,7 +91,7 @@ export function runCiLighthouse({ cwd = process.cwd(), runCommand, exportDiagnos
       // Fixed before any scores exist. Retain all warmups separately, then
       // collect new cold-browser measurements with every original assertion.
       for (const filename of readdirSync(reportDirectory)) {
-        if (/^lhr-\d+\.(json|html)$/.test(filename) || filename === 'metric-inputs') {
+        if (/^lhr-\d+(-\d+)?\.(json|html)$/.test(filename) || filename === 'metric-inputs') {
           renameSync(join(reportDirectory, filename), join(warmupDirectory, filename));
         }
       }

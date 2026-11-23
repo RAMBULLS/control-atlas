@@ -4,7 +4,6 @@ import { readFileSync, realpathSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { applyLhciYamlPatch, verifyLhciYamlPatch } from './lhci-yaml-patch.mjs';
 
 const ROOT = fileURLToPath(new URL('../../', import.meta.url));
 export const HTTP_PATCH = Object.freeze({
@@ -99,7 +98,5 @@ export function verifyDependencyPatches(root = ROOT) {
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   assert.ok(['--apply', '--check'].includes(process.argv[2]), 'Use --apply or --check');
   const count = process.argv[2] === '--apply' ? applyDependencyPatches() : verifyDependencyPatches();
-  const lhciCount = process.argv[2] === '--apply' ? applyLhciYamlPatch() : verifyLhciYamlPatch();
   console.log(`Verified ${count} downstream HTTP cache patch target(s).`);
-  console.log(`Verified ${lhciCount} LHCI YAML compatibility patch target(s).`);
 }

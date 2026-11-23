@@ -13,7 +13,7 @@ const require = createRequire(import.meta.url);
 const lock = JSON.parse(readFileSync('package-lock.json', 'utf8'));
 const adapters = Object.entries(lock.packages).filter(([path]) =>
   path === 'node_modules/get-uri' || path.endsWith('/node_modules/get-uri'));
-assert.deepEqual(adapters.map(([, record]) => record.version).sort(), ['6.0.5', '8.0.2']);
+assert.deepEqual(adapters.map(([, record]) => record.version).sort(), ['8.0.2']);
 const payload = 'function FindProxyForURL() { return "DIRECT"; }\n';
 const ordinaryListing = `-rw-r--r-- 1 owner group ${Buffer.byteLength(payload)} Jan 1 2026 source.pac\r\n`;
 

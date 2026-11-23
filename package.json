@@ -357,7 +357,7 @@
     "@axe-core/playwright": "^4.14.0",
     "@cyclonedx/cyclonedx-npm": "^7.0.1",
     "@eslint/js": "^10.0.1",
-    "@lhci/cli": "^0.15.1",
+    "@lhci/cli": "^0.16.1",
     "@playwright/test": "^1.61.1",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^26.6.6",

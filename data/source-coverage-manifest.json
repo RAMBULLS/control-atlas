@@ -1,6 +1,6 @@
 {
   "schema_version": "4.0",
-  "generated_at": "2026-11-18T14:41:26.986Z",
+  "generated_at": "2026-11-25T18:04:34.476Z",
   "completeness": {
     "total_publications": 103,
     "total_artifacts": 98,
@@ -60,7 +60,7 @@
         "direct_file_import",
         "extracted_from_official_publication"
       ],
-      "last_refresh": "2026-11-18",
+      "last_refresh": "2026-11-25",
       "has_shard": true
     },
     {
@@ -83,7 +83,7 @@
       "methods": [
         "extracted_from_official_publication"
       ],
-      "last_refresh": "2026-11-18",
+      "last_refresh": "2026-11-25",
       "has_shard": true
     },
     {
@@ -106,7 +106,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-11-18",
+      "last_refresh": "2026-11-25",
       "has_shard": true
     },
     {
@@ -129,17 +129,17 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-11-18",
+      "last_refresh": "2026-11-25",
       "has_shard": true
     },
     {
       "catalog_id": "disa-stig",
       "completeness_status": "reconciled",
-      "expected_records": 27430,
+      "expected_records": 27636,
       "snapshot_expected_records": null,
       "inventory_evidence_class": "publisher_inventory",
       "independent_inventory": true,
-      "imported_records": 27430,
+      "imported_records": 27636,
       "excluded_records": 0,
       "missing_records": 0,
       "expected_basis": "Union of independently verified publisher snapshots. Current identities are listed separately; prior native editions and citations remain retained without inferred retirement.",
@@ -152,7 +152,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-11-18",
+      "last_refresh": "2026-11-25",
       "has_shard": true
     },
     {
@@ -221,7 +221,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-11-04",
+      "last_refresh": "2026-11-25",
       "has_shard": true
     },
     {
@@ -336,7 +336,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-11-18",
+      "last_refresh": "2026-11-25",
       "has_shard": true
     },
     {
@@ -359,7 +359,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-11-18",
+      "last_refresh": "2026-11-25",
       "has_shard": true
     },
     {
@@ -382,7 +382,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-11-18",
+      "last_refresh": "2026-11-25",
       "has_shard": true
     },
     {
@@ -498,7 +498,7 @@
         "extracted_from_official_publication",
         "direct_file_import"
       ],
-      "last_refresh": "2026-11-18",
+      "last_refresh": "2026-11-25",
       "has_shard": true
     },
     {
@@ -544,7 +544,7 @@
       "methods": [
         "direct_file_import"
       ],
-      "last_refresh": "2026-11-18",
+      "last_refresh": "2026-11-25",
       "has_shard": true
     },
     {

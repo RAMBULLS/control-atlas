@@ -20,7 +20,7 @@
       },
       "source": {
         "key": "nist-fips-199",
-        "snapshot_date": "2026-11-18T16:33:55.025Z",
+        "snapshot_date": "2026-11-25T17:59:32.714Z",
         "locator": "fips-199#low-impact"
       }
     },
@@ -42,7 +42,7 @@
       },
       "source": {
         "key": "nist-fips-199",
-        "snapshot_date": "2026-11-18T16:33:55.025Z",
+        "snapshot_date": "2026-11-25T17:59:32.714Z",
         "locator": "fips-199#moderate-impact"
       }
     },
@@ -64,7 +64,7 @@
       },
       "source": {
         "key": "nist-fips-199",
-        "snapshot_date": "2026-11-18T16:33:55.025Z",
+        "snapshot_date": "2026-11-25T17:59:32.714Z",
         "locator": "fips-199#high-impact"
       }
     }

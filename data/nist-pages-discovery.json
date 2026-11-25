@@ -2,9 +2,9 @@
   "schema_version": "1.0",
   "source": {
     "url": "https://pages.nist.gov/pages-root/",
-    "retrieved_at": "2026-11-18T14:30:15.276Z",
+    "retrieved_at": "2026-11-25T17:58:57.657Z",
     "byte_length": 32757,
-    "sha256": "sha256:d85fe43cbfdc3f5b9dd335bd210200ab708a82d683c5d70510256c0e37c11f15"
+    "sha256": "sha256:e2e43cc8dc9afb76201f1d0e96dfbff34a658780de6071d09b7c2be20c48af3c"
   },
   "reconciliation": {
     "discovered_projects": 257,

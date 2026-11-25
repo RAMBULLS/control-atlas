@@ -9243,8 +9243,8 @@
     "raw_identity_sha256": "sha256:6ca06c15edaca0311d22938bfd03ba705bcd9a7ca4c7ff75c659642c67ca54d1",
     "imported_identity_sha256": "sha256:6ceda3e66f0d8543a1682dc9fb8fd876c7f129436fad7e2063946f81299d85e1",
     "source_url": "https://csrc.nist.gov/extensions/nudp/services/json/csf/download?olirids=all",
-    "source_sha256": "sha256:9faeb6cf361006ff15e36d3d9de9d727e8996e87710807b5a4e10984af5743dd",
-    "source_byte_length": 146543,
+    "source_sha256": "sha256:11b4b0ccd2f4b5b3b262b45a329596f61959946cbefe6f3c7fc295758ce7292c",
+    "source_byte_length": 146546,
     "publisher_version": "2.0"
   }
 }

@@ -13603,7 +13603,7 @@
     },
     "disa-stig": {
       "scope": "Union of independently verified publisher snapshots. Current identities are listed separately; prior native editions and citations remain retained without inferred retirement.",
-      "record_count": 27430,
+      "record_count": 27636,
       "record_ids": [
         "V-1010",
         "V-1011",
@@ -40140,6 +40140,50 @@
         "V-288459",
         "V-288474",
         "V-288475",
+        "V-288476",
+        "V-288477",
+        "V-288478",
+        "V-288479",
+        "V-288480",
+        "V-288481",
+        "V-288482",
+        "V-288483",
+        "V-288484",
+        "V-288487",
+        "V-288488",
+        "V-288498",
+        "V-288501",
+        "V-288503",
+        "V-288505",
+        "V-288506",
+        "V-288507",
+        "V-288508",
+        "V-288509",
+        "V-288511",
+        "V-288512",
+        "V-288515",
+        "V-288517",
+        "V-288518",
+        "V-288519",
+        "V-288520",
+        "V-288524",
+        "V-288537",
+        "V-288545",
+        "V-288555",
+        "V-288559",
+        "V-288560",
+        "V-288579",
+        "V-288595",
+        "V-288605",
+        "V-288631",
+        "V-288634",
+        "V-288667",
+        "V-288694",
+        "V-288695",
+        "V-288709",
+        "V-288715",
+        "V-288740",
+        "V-288783",
         "V-288812",
         "V-288813",
         "V-288814",
@@ -40170,6 +40214,168 @@
         "V-288845",
         "V-288846",
         "V-288847",
+        "V-288848",
+        "V-288849",
+        "V-288850",
+        "V-288851",
+        "V-288852",
+        "V-288853",
+        "V-288854",
+        "V-288855",
+        "V-288856",
+        "V-288857",
+        "V-288858",
+        "V-288859",
+        "V-288860",
+        "V-288861",
+        "V-288862",
+        "V-288863",
+        "V-288864",
+        "V-288865",
+        "V-288866",
+        "V-288867",
+        "V-288868",
+        "V-288869",
+        "V-288870",
+        "V-288871",
+        "V-288872",
+        "V-288873",
+        "V-288874",
+        "V-288875",
+        "V-288876",
+        "V-288877",
+        "V-288878",
+        "V-288879",
+        "V-288880",
+        "V-288881",
+        "V-288882",
+        "V-288883",
+        "V-288884",
+        "V-288885",
+        "V-288886",
+        "V-288887",
+        "V-288888",
+        "V-288889",
+        "V-288890",
+        "V-288891",
+        "V-288892",
+        "V-288893",
+        "V-288894",
+        "V-288895",
+        "V-288896",
+        "V-288897",
+        "V-288898",
+        "V-288899",
+        "V-288900",
+        "V-288901",
+        "V-288902",
+        "V-288903",
+        "V-288904",
+        "V-288905",
+        "V-288906",
+        "V-288907",
+        "V-288908",
+        "V-288909",
+        "V-288910",
+        "V-288911",
+        "V-288912",
+        "V-288913",
+        "V-288914",
+        "V-288915",
+        "V-288916",
+        "V-288917",
+        "V-288918",
+        "V-288919",
+        "V-288920",
+        "V-288921",
+        "V-288922",
+        "V-288923",
+        "V-288924",
+        "V-288925",
+        "V-288926",
+        "V-288927",
+        "V-288928",
+        "V-288929",
+        "V-288930",
+        "V-288931",
+        "V-288932",
+        "V-288933",
+        "V-288934",
+        "V-288935",
+        "V-288936",
+        "V-288937",
+        "V-288938",
+        "V-288939",
+        "V-288940",
+        "V-288941",
+        "V-288942",
+        "V-288943",
+        "V-288944",
+        "V-288945",
+        "V-288946",
+        "V-288947",
+        "V-288948",
+        "V-288949",
+        "V-288950",
+        "V-288951",
+        "V-288952",
+        "V-288953",
+        "V-288954",
+        "V-288955",
+        "V-288956",
+        "V-288957",
+        "V-288958",
+        "V-288959",
+        "V-288960",
+        "V-288961",
+        "V-288962",
+        "V-288963",
+        "V-288964",
+        "V-288965",
+        "V-288966",
+        "V-288967",
+        "V-288968",
+        "V-288969",
+        "V-288970",
+        "V-288971",
+        "V-288972",
+        "V-288973",
+        "V-288974",
+        "V-288975",
+        "V-288976",
+        "V-288977",
+        "V-288978",
+        "V-288979",
+        "V-288980",
+        "V-288981",
+        "V-288982",
+        "V-288983",
+        "V-288984",
+        "V-288985",
+        "V-288986",
+        "V-288987",
+        "V-288988",
+        "V-288989",
+        "V-288990",
+        "V-288991",
+        "V-288992",
+        "V-288993",
+        "V-288994",
+        "V-288995",
+        "V-288996",
+        "V-288997",
+        "V-288998",
+        "V-288999",
+        "V-289000",
+        "V-289001",
+        "V-289002",
+        "V-289003",
+        "V-289004",
+        "V-289005",
+        "V-289006",
+        "V-289007",
+        "V-289008",
+        "V-289067",
         "V-289259",
         "V-289260",
         "V-289261",
@@ -891541,6 +891747,2824 @@
           ],
           "source_url": "https://dl.dod.cyber.mil//wp-content/uploads/stigs/zip/U_Omnissa_Horizon_Y26M09_STIG.zip",
           "source_checksum": "sha256:a93d2fc2ee3795567e51751c036d40cecbf04b491a207f484690041ab37907e6"
+        },
+        {
+          "id": "V-288848",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288848r1316735_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288848",
+          "cci_ids": [
+            "CCI-000056"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288849",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288849r1316044_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288849",
+          "cci_ids": [
+            "CCI-000056"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288850",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288850r1316047_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288850",
+          "cci_ids": [
+            "CCI-000056"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288851",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288851r1316050_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288851",
+          "cci_ids": [
+            "CCI-000057"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288852",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288852r1316709_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288852",
+          "cci_ids": [
+            "CCI-000060"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288853",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288853r1316056_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288853",
+          "cci_ids": [
+            "CCI-000060"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288854",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288854r1316059_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288854",
+          "cci_ids": [
+            "CCI-000016",
+            "CCI-001682"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288855",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288855r1316737_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288855",
+          "cci_ids": [
+            "CCI-000056",
+            "CCI-004923",
+            "CCI-004926"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288856",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288856r1316065_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288856",
+          "cci_ids": [
+            "CCI-000044",
+            "CCI-002238"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288857",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288857r1316712_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288857",
+          "cci_ids": [
+            "CCI-000048",
+            "CCI-000050"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288858",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288858r1316071_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288858",
+          "cci_ids": [
+            "CCI-000048",
+            "CCI-000050"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288859",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288859r1316713_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288859",
+          "cci_ids": [
+            "CCI-000016",
+            "CCI-000048",
+            "CCI-000050",
+            "CCI-001682"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288860",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288860r1316077_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288860",
+          "cci_ids": [
+            "CCI-000056",
+            "CCI-000162",
+            "CCI-000163",
+            "CCI-004923",
+            "CCI-004926"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288861",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288861r1316080_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288861",
+          "cci_ids": [
+            "CCI-000048",
+            "CCI-000050",
+            "CCI-000162",
+            "CCI-000163"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288862",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288862r1316083_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288862",
+          "cci_ids": [
+            "CCI-000213"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288863",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288863r1316086_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288863",
+          "cci_ids": [
+            "CCI-001133"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288864",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288864r1316089_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288864",
+          "cci_ids": [
+            "CCI-001133"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288865",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288865r1316092_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288865",
+          "cci_ids": [
+            "CCI-001133"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288866",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288866r1316095_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288866",
+          "cci_ids": [
+            "CCI-000068",
+            "CCI-000803"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288867",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288867r1316724_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288867",
+          "cci_ids": [
+            "CCI-000068",
+            "CCI-000803"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288868",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288868r1316101_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288868",
+          "cci_ids": [
+            "CCI-000044",
+            "CCI-002238"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288869",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288869r1316104_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288869",
+          "cci_ids": [
+            "CCI-000057"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288870",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288870r1316107_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288870",
+          "cci_ids": [
+            "CCI-000764",
+            "CCI-004045"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288871",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288871r1316110_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288871",
+          "cci_ids": [
+            "CCI-000213",
+            "CCI-000764",
+            "CCI-004045"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288872",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288872r1316727_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288872",
+          "cci_ids": [
+            "CCI-001133"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288873",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288873r1316116_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288873",
+          "cci_ids": [
+            "CCI-001133",
+            "CCI-002361"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288874",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288874r1316119_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288874",
+          "cci_ids": [
+            "CCI-001133",
+            "CCI-002361"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288875",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288875r1316730_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288875",
+          "cci_ids": [
+            "CCI-001133"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288876",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288876r1316125_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288876",
+          "cci_ids": [
+            "CCI-002361"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288877",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288877r1316128_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288877",
+          "cci_ids": [
+            "CCI-004923",
+            "CCI-004926"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288878",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288878r1316131_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288878",
+          "cci_ids": [
+            "CCI-004923",
+            "CCI-004926"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288879",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288879r1316134_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288879",
+          "cci_ids": [
+            "CCI-000172"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288880",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288880r1316137_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288880",
+          "cci_ids": [
+            "CCI-000018",
+            "CCI-001403"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288881",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288881r1316140_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288881",
+          "cci_ids": [
+            "CCI-000044",
+            "CCI-000067",
+            "CCI-000172",
+            "CCI-002238"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288882",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288882r1316143_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288882",
+          "cci_ids": [
+            "CCI-000130",
+            "CCI-000131",
+            "CCI-001133"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288883",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288883r1316146_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288883",
+          "cci_ids": [
+            "CCI-000130",
+            "CCI-000131",
+            "CCI-000162",
+            "CCI-000163",
+            "CCI-001133"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288884",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288884r1316149_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288884",
+          "cci_ids": [
+            "CCI-000162",
+            "CCI-000163"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288885",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288885r1316152_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288885",
+          "cci_ids": [
+            "CCI-000162",
+            "CCI-000163"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288886",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288886r1316155_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288886",
+          "cci_ids": [
+            "CCI-000162",
+            "CCI-000163"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288887",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288887r1316158_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288887",
+          "cci_ids": [
+            "CCI-000162",
+            "CCI-000163"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288888",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288888r1316161_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288888",
+          "cci_ids": [
+            "CCI-000162",
+            "CCI-000163"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288889",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288889r1316164_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288889",
+          "cci_ids": [
+            "CCI-000162",
+            "CCI-000163"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288890",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288890r1316167_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288890",
+          "cci_ids": [
+            "CCI-000162",
+            "CCI-000163"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288891",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288891r1316170_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288891",
+          "cci_ids": [
+            "CCI-000162",
+            "CCI-000163"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288892",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288892r1316173_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288892",
+          "cci_ids": [
+            "CCI-000162",
+            "CCI-000163"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288893",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288893r1316176_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288893",
+          "cci_ids": [
+            "CCI-000162",
+            "CCI-000163",
+            "CCI-000172",
+            "CCI-003938"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288894",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288894r1316179_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288894",
+          "cci_ids": [
+            "CCI-001849"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288895",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288895r1316182_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288895",
+          "cci_ids": [
+            "CCI-000139",
+            "CCI-001855"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288896",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288896r1316185_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288896",
+          "cci_ids": [
+            "CCI-001858"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288897",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288897r1316188_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288897",
+          "cci_ids": [
+            "CCI-002884",
+            "CCI-003938"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288898",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288898r1316191_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288898",
+          "cci_ids": [
+            "CCI-000185",
+            "CCI-001954"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288899",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288899r1316194_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288899",
+          "cci_ids": [
+            "CCI-001813",
+            "CCI-004045"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288900",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288900r1316197_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288900",
+          "cci_ids": [
+            "CCI-000162",
+            "CCI-000163"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288901",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288901r1316200_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288901",
+          "cci_ids": [
+            "CCI-000162",
+            "CCI-000163"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288902",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288902r1316203_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288902",
+          "cci_ids": [
+            "CCI-000162",
+            "CCI-000163"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288903",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288903r1316206_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288903",
+          "cci_ids": [
+            "CCI-000162",
+            "CCI-000163"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288904",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288904r1316209_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288904",
+          "cci_ids": [
+            "CCI-000186",
+            "CCI-000765"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288905",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288905r1316212_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288905",
+          "cci_ids": [
+            "CCI-000213"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288906",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288906r1316215_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288906",
+          "cci_ids": [
+            "CCI-000213"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288907",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288907r1316218_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288907",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288908",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288908r1316221_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288908",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288909",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288909r1316224_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288909",
+          "cci_ids": [
+            "CCI-000213"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288910",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288910r1316739_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288910",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288911",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288911r1316230_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288911",
+          "cci_ids": [
+            "CCI-000213"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288912",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288912r1316741_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288912",
+          "cci_ids": [
+            "CCI-000139",
+            "CCI-000213",
+            "CCI-000381",
+            "CCI-001855"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288913",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288913r1316733_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288913",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288914",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288914r1316743_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288914",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288915",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288915r1316745_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288915",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288916",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288916r1316747_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288916",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288917",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288917r1316749_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288917",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288918",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288918r1316751_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288918",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288919",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288919r1316753_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288919",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288920",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288920r1316755_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288920",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288921",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288921r1316757_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288921",
+          "cci_ids": [
+            "CCI-001312",
+            "CCI-001314"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288922",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288922r1316263_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288922",
+          "cci_ids": [
+            "CCI-000213",
+            "CCI-000382"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288923",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288923r1316759_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288923",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288924",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288924r1316761_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288924",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288925",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288925r1316763_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288925",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288926",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288926r1316765_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288926",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288927",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288927r1316767_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288927",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288928",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288928r1316281_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288928",
+          "cci_ids": [
+            "CCI-000197",
+            "CCI-000213"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288929",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288929r1316769_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288929",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288930",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288930r1316771_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288930",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288931",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288931r1316773_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288931",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288932",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288932r1316775_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288932",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288933",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288933r1316777_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288933",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288934",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288934r1316299_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288934",
+          "cci_ids": [
+            "CCI-000213"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288935",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288935r1316302_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288935",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288936",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288936r1316305_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288936",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288937",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288937r1316308_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288937",
+          "cci_ids": [
+            "CCI-003992"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288938",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288938r1316311_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288938",
+          "cci_ids": [
+            "CCI-002418"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288939",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288939r1316314_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288939",
+          "cci_ids": [
+            "CCI-001813"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288940",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288940r1316779_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288940",
+          "cci_ids": [
+            "CCI-003992"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288941",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288941r1316320_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288941",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-000764"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288942",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288942r1316323_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288942",
+          "cci_ids": [
+            "CCI-000366"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288943",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288943r1316326_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288943",
+          "cci_ids": [
+            "CCI-002235"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288944",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288944r1316781_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288944",
+          "cci_ids": [
+            "CCI-000381",
+            "CCI-001443"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288945",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288945r1316783_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288945",
+          "cci_ids": [
+            "CCI-000056"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288946",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288946r1316335_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288946",
+          "cci_ids": [
+            "CCI-000213"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288947",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288947r1316338_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288947",
+          "cci_ids": [
+            "CCI-000213",
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288948",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288948r1316785_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288948",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288949",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288949r1316787_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288949",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288950",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288950r1316789_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288950",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288951",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288951r1316791_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288951",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288952",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288952r1316793_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288952",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288953",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288953r1316795_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288953",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288954",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288954r1316797_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288954",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288955",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288955r1316362_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288955",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288956",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288956r1316799_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288956",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288957",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288957r1316368_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288957",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288958",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288958r1316715_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288958",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288959",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288959r1316374_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288959",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288960",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288960r1316801_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288960",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288961",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288961r1316803_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288961",
+          "cci_ids": [
+            "CCI-000213",
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288962",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288962r1316383_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288962",
+          "cci_ids": [
+            "CCI-002470",
+            "CCI-004909"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288963",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288963r1316386_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288963",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288964",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288964r1316389_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288964",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288965",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288965r1316392_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288965",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288966",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288966r1316716_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288966",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288967",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288967r1316398_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288967",
+          "cci_ids": [
+            "CCI-000206"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288968",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288968r1316401_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288968",
+          "cci_ids": [
+            "CCI-000206"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288969",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288969r1316404_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288969",
+          "cci_ids": [
+            "CCI-000186",
+            "CCI-000765"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288970",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288970r1316407_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288970",
+          "cci_ids": [
+            "CCI-000162",
+            "CCI-000163",
+            "CCI-000187",
+            "CCI-000765"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288971",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288971r1316717_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288971",
+          "cci_ids": [
+            "CCI-000765",
+            "CCI-000766"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288972",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288972r1316718_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288972",
+          "cci_ids": [
+            "CCI-000765",
+            "CCI-000766"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288973",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288973r1316719_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288973",
+          "cci_ids": [
+            "CCI-000765",
+            "CCI-000766"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288974",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288974r1316419_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288974",
+          "cci_ids": [
+            "CCI-000162",
+            "CCI-000163",
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288975",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288975r1316422_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288975",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288976",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288976r1316425_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288976",
+          "cci_ids": [
+            "CCI-003627",
+            "CCI-003628"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288977",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288977r1316428_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288977",
+          "cci_ids": [
+            "CCI-001312",
+            "CCI-001314"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288978",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288978r1316431_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288978",
+          "cci_ids": [
+            "CCI-001312",
+            "CCI-001314"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288979",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288979r1316434_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288979",
+          "cci_ids": [
+            "CCI-002038"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288980",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288980r1316437_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288980",
+          "cci_ids": [
+            "CCI-001312",
+            "CCI-001314"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288981",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288981r1316440_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288981",
+          "cci_ids": [
+            "CCI-001312",
+            "CCI-001314"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288982",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288982r1316443_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288982",
+          "cci_ids": [
+            "CCI-001849"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288983",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288983r1316446_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288983",
+          "cci_ids": [
+            "CCI-002038"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288984",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288984r1316449_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288984",
+          "cci_ids": [
+            "CCI-000154",
+            "CCI-000158"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288985",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288985r1316452_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288985",
+          "cci_ids": [
+            "CCI-001199",
+            "CCI-002475"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288986",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288986r1316455_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288986",
+          "cci_ids": [
+            "CCI-000366"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288987",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288987r1316458_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288987",
+          "cci_ids": [
+            "CCI-000764"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288988",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288988r1316805_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288988",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288989",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288989r1316807_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288989",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288990",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288990r1316809_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288990",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288991",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288991r1316811_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288991",
+          "cci_ids": [
+            "CCI-000213",
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288992",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288992r1316813_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288992",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288993",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288993r1316815_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288993",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288994",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288994r1316479_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288994",
+          "cci_ids": [
+            "CCI-000213"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288995",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288995r1316482_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288995",
+          "cci_ids": [
+            "CCI-003980"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288996",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288996r1316817_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288996",
+          "cci_ids": [
+            "CCI-001958",
+            "CCI-003959"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288997",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288997r1316488_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288997",
+          "cci_ids": [
+            "CCI-000381",
+            "CCI-002696",
+            "CCI-002699"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288998",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288998r1316707_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288998",
+          "cci_ids": [
+            "CCI-000366"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288999",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288999r1316721_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-288999",
+          "cci_ids": [
+            "CCI-000366"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-289000",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-289000r1316497_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-289000",
+          "cci_ids": [
+            "CCI-000366"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-289001",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-289001r1316819_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-289001",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-289002",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-289002r1316821_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-289002",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-289003",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-289003r1316823_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-289003",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-289004",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-289004r1316825_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-289004",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-289005",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-289005r1316512_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-289005",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-289006",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-289006r1316827_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-289006",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-289007",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-289007r1316829_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-289007",
+          "cci_ids": [
+            "CCI-000381"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-289008",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-289008r1316521_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-289008",
+          "cci_ids": [
+            "CCI-003376"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-289067",
+          "kind": "stig",
+          "benchmark_id": "Apple_macOS_27_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-289067r1316698_rule",
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml#V-289067",
+          "cci_ids": [
+            "CCI-002605"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "source_checksum": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db"
+        },
+        {
+          "id": "V-288476",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288476r1315661_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288476",
+          "cci_ids": [
+            "CCI-001094",
+            "CCI-001095"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288477",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288477r1315586_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288477",
+          "cci_ids": [
+            "CCI-002233"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288478",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288478r1315588_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288478",
+          "cci_ids": [
+            "CCI-000068",
+            "CCI-001184",
+            "CCI-002418",
+            "CCI-002420",
+            "CCI-002421",
+            "CCI-002422"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288479",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288479r1314588_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288479",
+          "cci_ids": [
+            "CCI-002605",
+            "CCI-003376"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288480",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288480r1315663_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288480",
+          "cci_ids": [
+            "CCI-000054",
+            "CCI-001095"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288481",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288481r1315593_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288481",
+          "cci_ids": [
+            "CCI-001094"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288482",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288482r1315714_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288482",
+          "cci_ids": [
+            "CCI-002233"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288483",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288483r1315597_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288483",
+          "cci_ids": [
+            "CCI-000068",
+            "CCI-001184",
+            "CCI-002418",
+            "CCI-002420",
+            "CCI-002421",
+            "CCI-002422"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288484",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288484r1315742_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288484",
+          "cci_ids": [
+            "CCI-000054"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288487",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288487r1315767_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288487",
+          "cci_ids": [
+            "CCI-000015"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288488",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288488r1315744_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288488",
+          "cci_ids": [
+            "CCI-000016"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288498",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288498r1315745_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288498",
+          "cci_ids": [
+            "CCI-000166"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288501",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288501r1315728_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288501",
+          "cci_ids": [
+            "CCI-000162"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288503",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288503r1314660_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288503",
+          "cci_ids": [
+            "CCI-001350"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288505",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288505r1314666_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288505",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288506",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288506r1314669_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288506",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288507",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288507r1314672_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288507",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288508",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288508r1314675_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288508",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288509",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288509r1314678_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288509",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288511",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288511r1315730_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288511",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288512",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288512r1314687_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288512",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288515",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288515r1315746_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288515",
+          "cci_ids": [
+            "CCI-001133",
+            "CCI-002361"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288517",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288517r1314702_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288517",
+          "cci_ids": [
+            "CCI-000382",
+            "CCI-002314"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288518",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288518r1314705_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288518",
+          "cci_ids": [
+            "CCI-000067",
+            "CCI-001348",
+            "CCI-001851"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288519",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288519r1315748_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288519",
+          "cci_ids": [
+            "CCI-004922",
+            "CCI-004923",
+            "CCI-004926"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288520",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288520r1315751_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288520",
+          "cci_ids": [
+            "CCI-001967"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288524",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288524r1315753_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288524",
+          "cci_ids": [
+            "CCI-000068",
+            "CCI-000884",
+            "CCI-001184",
+            "CCI-001453",
+            "CCI-001941",
+            "CCI-001958",
+            "CCI-002418",
+            "CCI-002420",
+            "CCI-002421",
+            "CCI-002422"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288537",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288537r1315678_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288537",
+          "cci_ids": [
+            "CCI-001967"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288545",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288545r1315680_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288545",
+          "cci_ids": [
+            "CCI-003638",
+            "CCI-003639",
+            "CCI-003640"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288555",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288555r1315762_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288555",
+          "cci_ids": [
+            "CCI-004066"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288559",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288559r1314828_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288559",
+          "cci_ids": [
+            "CCI-000068",
+            "CCI-001958",
+            "CCI-001967"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288560",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288560r1314831_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288560",
+          "cci_ids": [
+            "CCI-000166",
+            "CCI-000764",
+            "CCI-000765",
+            "CCI-000766",
+            "CCI-001953",
+            "CCI-001954",
+            "CCI-004045",
+            "CCI-004046",
+            "CCI-004047"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288579",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288579r1315683_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288579",
+          "cci_ids": [
+            "CCI-000366",
+            "CCI-005155"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288595",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288595r1314936_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288595",
+          "cci_ids": [
+            "CCI-000135"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288605",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288605r1315768_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288605",
+          "cci_ids": [
+            "CCI-000764",
+            "CCI-000877"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288631",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288631r1315044_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288631",
+          "cci_ids": [
+            "CCI-001084"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288634",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288634r1315053_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288634",
+          "cci_ids": [
+            "CCI-001094",
+            "CCI-001095"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288667",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288667r1315152_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288667",
+          "cci_ids": [
+            "CCI-002233"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288694",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288694r1315771_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288694",
+          "cci_ids": [
+            "CCI-002007"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288695",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288695r1315236_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288695",
+          "cci_ids": [
+            "CCI-000185",
+            "CCI-004068"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288709",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288709r1315278_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288709",
+          "cci_ids": [
+            "CCI-000185",
+            "CCI-002470",
+            "CCI-004909"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288715",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288715r1315685_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288715",
+          "cci_ids": [
+            "CCI-000068",
+            "CCI-001184",
+            "CCI-002418",
+            "CCI-002420",
+            "CCI-002421",
+            "CCI-002422"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288740",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288740r1315687_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288740",
+          "cci_ids": [
+            "CCI-002740",
+            "CCI-003992"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
+        },
+        {
+          "id": "V-288783",
+          "kind": "stig",
+          "benchmark_id": "Idira_PAM_SH_STIG",
+          "edition": "V1R1",
+          "rule_id": "SV-288783r1315689_rule",
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml#V-288783",
+          "cci_ids": [
+            "CCI-004068"
+          ],
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "source_checksum": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc"
         }
       ],
       "exclusions": [
@@ -897133,6 +900157,110 @@
           "byte_length": 1915340,
           "evidence_kind": "downloaded_publisher_bytes",
           "retrieved_at": "2026-11-18T16:34:51.152Z"
+        },
+        {
+          "source_id": "artifact-disa-compilation-zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
+          "sha256": "sha256:ea581eb2d5c4a210440852b67ea4dd9564fffdf57c8c94aec971047fe0c01d1d",
+          "byte_length": 375827141,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:07.754Z"
+        },
+        {
+          "source_id": "disa-package:U_Microsoft_Project_2016_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Microsoft_Project_2016_V1R1_STIG.zip",
+          "sha256": "sha256:3c0080642e359b704a7c20035c6f00a760f6a0d2b76986f289571dadf9e40499",
+          "byte_length": 364625,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.352Z"
+        },
+        {
+          "source_id": "disa-package:U_MOT_Solutions_Android_13_Y25M03_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MOT_Solutions_Android_13_Y25M03_STIG.zip",
+          "sha256": "sha256:497720d0953aef9308cc6bc41738487eb18eda5ce8cbdab921bdd69345891f4a",
+          "byte_length": 2257014,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.368Z"
+        },
+        {
+          "source_id": "disa-package:U_Oracle_Database_12c_V3R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Oracle_Database_12c_V3R5_STIG.zip",
+          "sha256": "sha256:75398ae44f48578c74cb566ede9347b9af432ef642cf41a237c3dba377d5e8bc",
+          "byte_length": 1683866,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.268Z"
+        },
+        {
+          "source_id": "disa-package:U_SLES_V11_for_System_z_V1R12_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SLES_V11_for_System_z_V1R12_STIG.zip",
+          "sha256": "sha256:4a849e95ae5c5186500b20f145717aa69e7b5b3a74ec6d6b2eea25a0c71e7689",
+          "byte_length": 582292,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.121Z"
+        },
+        {
+          "source_id": "disa-package:U_VMware_NSX_Distributed_Logical_Router_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMware_NSX_Distributed_Logical_Router_V1R1_STIG.zip",
+          "sha256": "sha256:cc641aa051b2a375cde80c2f35aa85bda7b8f72b58a0d9a31156b575ac8edc79",
+          "byte_length": 256563,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.105Z"
+        },
+        {
+          "source_id": "disa-package:U_VMware_NSX_Manager_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMware_NSX_Manager_V1R1_STIG.zip",
+          "sha256": "sha256:54b8ccaa5e9031192833bce674faaf6c35e0c4fe0754fd98035ddfcd640a7d78",
+          "byte_length": 267808,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.337Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_27_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_27_V1R1_STIG.zip",
+          "sha256": "sha256:db83ad391f6545abce7b3c8b50c13fe7b0d9041710e77e24627c1f7ca62de6ce",
+          "byte_length": 2501445,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.567Z"
+        },
+        {
+          "source_id": "disa-package:U_Omnissa_Horizon_Y26M09_STIG.zip",
+          "url": "https://dl.dod.cyber.mil//wp-content/uploads/stigs/zip/U_Omnissa_Horizon_Y26M09_STIG.zip",
+          "sha256": "sha256:a93d2fc2ee3795567e51751c036d40cecbf04b491a207f484690041ab37907e6",
+          "byte_length": 2145645,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.508Z"
+        },
+        {
+          "source_id": "disa-package:U_MariaDB_Enterprise_Server_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MariaDB_Enterprise_Server_V1R1_STIG.zip",
+          "sha256": "sha256:74fe9de236eaa1d02b2190837c0e2197655dbe78eef430f94d02d4c5aa247201",
+          "byte_length": 1804041,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.622Z"
+        },
+        {
+          "source_id": "disa-package:U_GAPP_V1R1_SRG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "sha256": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49",
+          "byte_length": 1915340,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.744Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_macOS_27_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "sha256": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db",
+          "byte_length": 2576846,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.674Z"
+        },
+        {
+          "source_id": "disa-package:U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "sha256": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc",
+          "byte_length": 1712484,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.465Z"
         }
       ],
       "native_files": [
@@ -903876,12 +907004,26 @@
           "sha256": "sha256:1570b13faa0f9aa41cfcd72099b43cfb7073ee46e002ace9466462e037f902ca",
           "byte_length": 498528,
           "native_rules": 156
+        },
+        {
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml",
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "sha256": "sha256:844c689b9259bc7cb501ed53fb5d675122b837a838b5b99f8fa475e822de0b0f",
+          "byte_length": 473819,
+          "native_rules": 162
+        },
+        {
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml",
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "sha256": "sha256:132c3c904df4cad4c61f377f00a13ebaa725e90bc6deaec07d6e656f4e29596c",
+          "byte_length": 200244,
+          "native_rules": 44
         }
       ],
       "current_snapshot": {
         "compilation_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
         "checksum": "sha256:ea581eb2d5c4a210440852b67ea4dd9564fffdf57c8c94aec971047fe0c01d1d",
-        "record_count": 17876,
+        "record_count": 18082,
         "record_ids": [
           "V-1010",
           "V-1011",
@@ -921156,6 +924298,50 @@
           "V-288459",
           "V-288474",
           "V-288475",
+          "V-288476",
+          "V-288477",
+          "V-288478",
+          "V-288479",
+          "V-288480",
+          "V-288481",
+          "V-288482",
+          "V-288483",
+          "V-288484",
+          "V-288487",
+          "V-288488",
+          "V-288498",
+          "V-288501",
+          "V-288503",
+          "V-288505",
+          "V-288506",
+          "V-288507",
+          "V-288508",
+          "V-288509",
+          "V-288511",
+          "V-288512",
+          "V-288515",
+          "V-288517",
+          "V-288518",
+          "V-288519",
+          "V-288520",
+          "V-288524",
+          "V-288537",
+          "V-288545",
+          "V-288555",
+          "V-288559",
+          "V-288560",
+          "V-288579",
+          "V-288595",
+          "V-288605",
+          "V-288631",
+          "V-288634",
+          "V-288667",
+          "V-288694",
+          "V-288695",
+          "V-288709",
+          "V-288715",
+          "V-288740",
+          "V-288783",
           "V-288812",
           "V-288814",
           "V-288815",
@@ -921180,6 +924366,168 @@
           "V-288842",
           "V-288843",
           "V-288845",
+          "V-288848",
+          "V-288849",
+          "V-288850",
+          "V-288851",
+          "V-288852",
+          "V-288853",
+          "V-288854",
+          "V-288855",
+          "V-288856",
+          "V-288857",
+          "V-288858",
+          "V-288859",
+          "V-288860",
+          "V-288861",
+          "V-288862",
+          "V-288863",
+          "V-288864",
+          "V-288865",
+          "V-288866",
+          "V-288867",
+          "V-288868",
+          "V-288869",
+          "V-288870",
+          "V-288871",
+          "V-288872",
+          "V-288873",
+          "V-288874",
+          "V-288875",
+          "V-288876",
+          "V-288877",
+          "V-288878",
+          "V-288879",
+          "V-288880",
+          "V-288881",
+          "V-288882",
+          "V-288883",
+          "V-288884",
+          "V-288885",
+          "V-288886",
+          "V-288887",
+          "V-288888",
+          "V-288889",
+          "V-288890",
+          "V-288891",
+          "V-288892",
+          "V-288893",
+          "V-288894",
+          "V-288895",
+          "V-288896",
+          "V-288897",
+          "V-288898",
+          "V-288899",
+          "V-288900",
+          "V-288901",
+          "V-288902",
+          "V-288903",
+          "V-288904",
+          "V-288905",
+          "V-288906",
+          "V-288907",
+          "V-288908",
+          "V-288909",
+          "V-288910",
+          "V-288911",
+          "V-288912",
+          "V-288913",
+          "V-288914",
+          "V-288915",
+          "V-288916",
+          "V-288917",
+          "V-288918",
+          "V-288919",
+          "V-288920",
+          "V-288921",
+          "V-288922",
+          "V-288923",
+          "V-288924",
+          "V-288925",
+          "V-288926",
+          "V-288927",
+          "V-288928",
+          "V-288929",
+          "V-288930",
+          "V-288931",
+          "V-288932",
+          "V-288933",
+          "V-288934",
+          "V-288935",
+          "V-288936",
+          "V-288937",
+          "V-288938",
+          "V-288939",
+          "V-288940",
+          "V-288941",
+          "V-288942",
+          "V-288943",
+          "V-288944",
+          "V-288945",
+          "V-288946",
+          "V-288947",
+          "V-288948",
+          "V-288949",
+          "V-288950",
+          "V-288951",
+          "V-288952",
+          "V-288953",
+          "V-288954",
+          "V-288955",
+          "V-288956",
+          "V-288957",
+          "V-288958",
+          "V-288959",
+          "V-288960",
+          "V-288961",
+          "V-288962",
+          "V-288963",
+          "V-288964",
+          "V-288965",
+          "V-288966",
+          "V-288967",
+          "V-288968",
+          "V-288969",
+          "V-288970",
+          "V-288971",
+          "V-288972",
+          "V-288973",
+          "V-288974",
+          "V-288975",
+          "V-288976",
+          "V-288977",
+          "V-288978",
+          "V-288979",
+          "V-288980",
+          "V-288981",
+          "V-288982",
+          "V-288983",
+          "V-288984",
+          "V-288985",
+          "V-288986",
+          "V-288987",
+          "V-288988",
+          "V-288989",
+          "V-288990",
+          "V-288991",
+          "V-288992",
+          "V-288993",
+          "V-288994",
+          "V-288995",
+          "V-288996",
+          "V-288997",
+          "V-288998",
+          "V-288999",
+          "V-289000",
+          "V-289001",
+          "V-289002",
+          "V-289003",
+          "V-289004",
+          "V-289005",
+          "V-289006",
+          "V-289007",
+          "V-289008",
+          "V-289067",
           "V-289259",
           "V-289260",
           "V-289261",
@@ -921761,7 +925109,7 @@
           "V-995"
         ]
       },
-      "native_occurrences": 63079
+      "native_occurrences": 63285
     },
     "disa-srg": {
       "scope": "Union of independently verified publisher snapshots. Current identities are listed separately; prior native editions and citations remain retained without inferred retirement.",
@@ -1031089,6 +1034437,110 @@
           "byte_length": 1915340,
           "evidence_kind": "downloaded_publisher_bytes",
           "retrieved_at": "2026-11-18T16:34:51.152Z"
+        },
+        {
+          "source_id": "artifact-disa-compilation-zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SRG-STIG_Library_October_2026.zip",
+          "sha256": "sha256:ea581eb2d5c4a210440852b67ea4dd9564fffdf57c8c94aec971047fe0c01d1d",
+          "byte_length": 375827141,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:07.754Z"
+        },
+        {
+          "source_id": "disa-package:U_Microsoft_Project_2016_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Microsoft_Project_2016_V1R1_STIG.zip",
+          "sha256": "sha256:3c0080642e359b704a7c20035c6f00a760f6a0d2b76986f289571dadf9e40499",
+          "byte_length": 364625,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.352Z"
+        },
+        {
+          "source_id": "disa-package:U_MOT_Solutions_Android_13_Y25M03_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MOT_Solutions_Android_13_Y25M03_STIG.zip",
+          "sha256": "sha256:497720d0953aef9308cc6bc41738487eb18eda5ce8cbdab921bdd69345891f4a",
+          "byte_length": 2257014,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.368Z"
+        },
+        {
+          "source_id": "disa-package:U_Oracle_Database_12c_V3R5_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Oracle_Database_12c_V3R5_STIG.zip",
+          "sha256": "sha256:75398ae44f48578c74cb566ede9347b9af432ef642cf41a237c3dba377d5e8bc",
+          "byte_length": 1683866,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.268Z"
+        },
+        {
+          "source_id": "disa-package:U_SLES_V11_for_System_z_V1R12_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_SLES_V11_for_System_z_V1R12_STIG.zip",
+          "sha256": "sha256:4a849e95ae5c5186500b20f145717aa69e7b5b3a74ec6d6b2eea25a0c71e7689",
+          "byte_length": 582292,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.121Z"
+        },
+        {
+          "source_id": "disa-package:U_VMware_NSX_Distributed_Logical_Router_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMware_NSX_Distributed_Logical_Router_V1R1_STIG.zip",
+          "sha256": "sha256:cc641aa051b2a375cde80c2f35aa85bda7b8f72b58a0d9a31156b575ac8edc79",
+          "byte_length": 256563,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.105Z"
+        },
+        {
+          "source_id": "disa-package:U_VMware_NSX_Manager_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_VMware_NSX_Manager_V1R1_STIG.zip",
+          "sha256": "sha256:54b8ccaa5e9031192833bce674faaf6c35e0c4fe0754fd98035ddfcd640a7d78",
+          "byte_length": 267808,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.337Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_iOS-iPadOS_27_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_iOS-iPadOS_27_V1R1_STIG.zip",
+          "sha256": "sha256:db83ad391f6545abce7b3c8b50c13fe7b0d9041710e77e24627c1f7ca62de6ce",
+          "byte_length": 2501445,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.567Z"
+        },
+        {
+          "source_id": "disa-package:U_Omnissa_Horizon_Y26M09_STIG.zip",
+          "url": "https://dl.dod.cyber.mil//wp-content/uploads/stigs/zip/U_Omnissa_Horizon_Y26M09_STIG.zip",
+          "sha256": "sha256:a93d2fc2ee3795567e51751c036d40cecbf04b491a207f484690041ab37907e6",
+          "byte_length": 2145645,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.508Z"
+        },
+        {
+          "source_id": "disa-package:U_MariaDB_Enterprise_Server_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_MariaDB_Enterprise_Server_V1R1_STIG.zip",
+          "sha256": "sha256:74fe9de236eaa1d02b2190837c0e2197655dbe78eef430f94d02d4c5aa247201",
+          "byte_length": 1804041,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.622Z"
+        },
+        {
+          "source_id": "disa-package:U_GAPP_V1R1_SRG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_GAPP_V1R1_SRG.zip",
+          "sha256": "sha256:809c9eb1b4f2781e301d34a25915505d788813495f5cf6cffde787d53c81bf49",
+          "byte_length": 1915340,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.744Z"
+        },
+        {
+          "source_id": "disa-package:U_Apple_macOS_27_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "sha256": "sha256:f65940624f97891d450560682831f8e3029e8fdcebf5827cf3e13aec7757b6db",
+          "byte_length": 2576846,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.674Z"
+        },
+        {
+          "source_id": "disa-package:U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "sha256": "sha256:677cf1ee9120f269a7a88d532d325da768bc666cfcc4ba11fe24619fb12bd6fc",
+          "byte_length": 1712484,
+          "evidence_kind": "downloaded_publisher_bytes",
+          "retrieved_at": "2026-11-25T18:00:18.465Z"
         }
       ],
       "native_files": [
@@ -1037832,6 +1041284,20 @@
           "sha256": "sha256:1570b13faa0f9aa41cfcd72099b43cfb7073ee46e002ace9466462e037f902ca",
           "byte_length": 498528,
           "native_rules": 156
+        },
+        {
+          "locator": "U_Apple_macOS_27_V1R1_Manual_STIG/U_Apple_macOS_27_STIG_V1R1_Manual-xccdf.xml",
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Apple_macOS_27_V1R1_STIG.zip",
+          "sha256": "sha256:844c689b9259bc7cb501ed53fb5d675122b837a838b5b99f8fa475e822de0b0f",
+          "byte_length": 473819,
+          "native_rules": 162
+        },
+        {
+          "locator": "U_PAN_Idira_PAM_Self-Hosted_V1R1_Manual_STIG/U_PAN_Idira_PAM_Self-Hosted_STIG_V1R1_Manual-xccdf.xml",
+          "source_url": "https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_PAN_Idira_PAM_Self-Hosted_V1R1_STIG.zip",
+          "sha256": "sha256:132c3c904df4cad4c61f377f00a13ebaa725e90bc6deaec07d6e656f4e29596c",
+          "byte_length": 200244,
+          "native_rules": 44
         }
       ],
       "current_snapshot": {

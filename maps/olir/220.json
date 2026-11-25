@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "olir_id": 220,
   "source_artifact": "https://aamcyber.com/sdos/reference/v1/",
-  "sha256": "sha256:1f7d9f327f578592feb8afd510843a3aeda773e9ae09f7f54c41bd03810e9680",
+  "sha256": "sha256:531bb092f150268c6afa59513cb4e2984c4db1a4acdbffe18c13e0e3fc32f20c",
   "byte_length": 138721,
   "parser": "olir-html",
   "extraction_scope": "published_html_relationships",
